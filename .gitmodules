@@ -1,0 +1,21 @@
+[submodule "3rdparty/opencv"]
+	path = 3rdparty/opencv
+	url = https://github.com/opencv/opencv.git
+[submodule "3rdparty/eigen"]
+	path = 3rdparty/eigen
+	url = https://github.com/eigenteam/eigen-git-mirror.git
+[submodule "3rdparty/frugally-deep"]
+	path = 3rdparty/frugally-deep
+	url = https://github.com/Dobiasd/frugally-deep.git
+[submodule "3rdparty/json"]
+	path = 3rdparty/json
+	url = https://github.com/nlohmann/json
+[submodule "3rdparty/FunctionalPlus"]
+	path = 3rdparty/FunctionalPlus
+	url = https://github.com/Dobiasd/FunctionalPlus
+[submodule "3rdparty/rapidjson"]
+	path = 3rdparty/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
+[submodule "3rdparty/openbabel"]
+	path = 3rdparty/openbabel
+	url = https://github.com/openbabel/openbabel.git
