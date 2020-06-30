@@ -49,11 +49,11 @@ cmake --build . -j 8 --target install --config Release && cd ../..
 
 
 # config openbabel
-cd 3rdparty/openbabel && git checkout openbabel-3-0-0 && cd ../..
+cd 3rdparty/openbabel && git checkout openbabel-2-4-1 && cd ../..
 
 mkdir -p lib/openbabel build/openbabel && cd build/openbabel
 
-cmake ../../3rdparty/openbabel -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../lib/openbabel -DBUILD_TESTING=OFF -DRAPIDJSON_INCLUDE_DIRS=../../lib/rapidjson/include/rapidjson -DBUILD_GUI=OFF -DWITH_INCHI=OFF -DWITH_STATIC_INCHI=OFF -DOPENBABEL_USE_SYSTEM_INCHI=OFF
+cmake ../../3rdparty/openbabel -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../lib/openbabel -DBUILD_TESTING=OFF -DRAPIDJSON_INCLUDE_DIRS=../../lib/rapidjson/include/rapidjson -DBUILD_GUI=OFF -DWITH_INCHI=OFF -DWITH_STATIC_INCHI=OFF -DOPENBABEL_USE_SYSTEM_INCHI=OFF -DWITH_MAEPARSER=OFF 
 
 cmake --build . -j 8 --target install --config Release && cd ../..
 
