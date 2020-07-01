@@ -232,13 +232,14 @@ int main(int argc, char **argv) {
     ForceField f;
     auto coor = f.getCoordinate("c1ccccc1", "smiles", "mol2", "mmff94");
     cout << "coor=" << coor << endl;
-    Mat img = imread("/home/xgd/Pictures/backup/4.jpg");
-    if (img.empty()) {
-        cout << "打开图像失败！" << endl;
-    } else {
-        imshow("image", img);
-        waitKey();
-    }
+//    Mat img = imread("/home/xgd/Pictures/backup/4.jpg");
+//    Mat img=imread("C:\\Users\\xgd\\Pictures\\2017\\IMG_20170630_125619.jpg");
+//    if (img.empty()) {
+//        cout << "打开图像失败！" << endl;
+//    } else {
+//        imshow("image", img);
+//        waitKey();
+//    }
     return app.exec();
 }
 

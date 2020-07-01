@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(TestModuleImport)
+project(COCR-dev)
 set(CMAKE_CXX_STANDARD 14)
 
 if (MSVC)
@@ -13,7 +13,7 @@ if (UNIX)
     set(Qt5_DIR "/home/xgd/Qt/5.15.0/gcc_64/lib/cmake/Qt5")
 elseif (MSVC)
     # FIXME: windows下修改到本地 Qt 库的cmake文件夹位置
-    set(Qt5_DIR "C:/Qt/5.12.6/msvc2019_64/lib/cmake/Qt5")
+    set(Qt5_DIR "C:/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5")
 endif ()
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 set(CMAKE_AUTOUIC ON)
