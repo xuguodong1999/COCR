@@ -46,14 +46,31 @@ cmake ../../3rdparty/frugally-deep  -DFunctionalPlus_DIR=../../lib/FunctionalPlu
 
 cmake --build . -j 8 --target install --config Release && cd ../..
 
+cd 3rdparty/zlib && git checkout v1.2.11
+cd ../..
+mkdir -p lib/zlib build/zlib
+cd build/zlib
+cmake ../../3rdparty/zlib -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../lib/zlib -DBUILD_TESTING=OFF
+cmake --build . -j 8 --target install --config Release
+cd ../..
+
+
+
+cd 3rdparty/libxml2 && git checkout  1e7851b 
+cd ../..
+mkdir -p lib/libxml2 build/libxml2
+cd build/libxml2
+cmake ../../3rdparty/libxml2 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../lib/libxml2 -DBUILD_TESTING=OFF -DLIBXML2_WITH_PYTHON=OFF
+cmake --build . -j 8 --target install --config Release
+cd ../..
 
 
 # config openbabel
-cd 3rdparty/openbabel && git checkout openbabel-2-4-1 && cd ../..
+cd 3rdparty/openbabel && git checkout openbabel-3-1-1 && cd ../..
 
 mkdir -p lib/openbabel build/openbabel && cd build/openbabel
 
-cmake ../../3rdparty/openbabel -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../lib/openbabel -DBUILD_TESTING=OFF -DRAPIDJSON_INCLUDE_DIRS=../../lib/rapidjson/include/rapidjson -DBUILD_GUI=OFF -DWITH_INCHI=OFF -DWITH_STATIC_INCHI=OFF -DOPENBABEL_USE_SYSTEM_INCHI=OFF -DWITH_MAEPARSER=OFF 
+cmake ../../3rdparty/openbabel -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../lib/openbabel -DBUILD_TESTING=OFF -DRAPIDJSON_INCLUDE_DIRS=../../lib/rapidjson/include/rapidjson -DBUILD_GUI=OFF -DWITH_INCHI=OFF -DWITH_STATIC_INCHI=OFF -DOPENBABEL_USE_SYSTEM_INCHI=OFF -DWITH_MAEPARSER=OFF -DZLIB_LIBRARY_RELEASE=../../lib/zlib/lib/libz.so -DZLIB_INCLUDE_DIR=../../lib/zlib/include -DLIBXML2_INCLUDE_DIR=../../lib/libxml2/include/libxml2 -DLIBXML2_LIBRARY=../../lib/libxml2/lib/libxml2.so 
 
 cmake --build . -j 8 --target install --config Release && cd ../..
 
