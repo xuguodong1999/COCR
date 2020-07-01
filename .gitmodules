@@ -19,3 +19,9 @@
 [submodule "3rdparty/openbabel"]
 	path = 3rdparty/openbabel
 	url = https://github.com/openbabel/openbabel.git
+[submodule "3rdparty/zlib"]
+	path = 3rdparty/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "3rdparty/libxml2"]
+	path = 3rdparty/libxml2
+	url = https://github.com/GNOME/libxml2.git

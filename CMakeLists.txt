@@ -2,15 +2,19 @@ cmake_minimum_required(VERSION 3.16)
 project(TestModuleImport)
 set(CMAKE_CXX_STANDARD 14)
 
+if(UNIX)
 set(OpenCV_DIR "lib/opencv/lib/cmake/opencv4")
+elseif(MSVC)
+set(OpenCV_DIR "lib/opencv/x64/vc16/lib")
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+endif()
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS}/opencv2)
 
 # OpenBabel2 Support
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
-set(OpenBabel2_DIR "lib/openbabel/lib/cmake/openbabel2")
-set(OPENBABEL2_INCLUDE_DIR lib/openbabel/include/openbabel-2.0)
-find_package(OpenBabel2 REQUIRED)
+set(OPENBABEL2_INCLUDE_DIR lib/openbabel/include/openbabel3)
+set(OPENBABEL2_LIBRARIES ${CMAKE_SOURCE_DIR}/lib/openbabel/bin/openbabel-3.lib)
 include_directories(${OPENBABEL2_INCLUDE_DIR})
 
 # Eigen3 Support

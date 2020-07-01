@@ -4,10 +4,12 @@
 
 x86/
 x64/
-Release/
-release/
-Debug/
-debug/
+Release*/
+release*/
+Debug*/
+debug*/
+cmake-*/
+
 
 *.o
 *.s
@@ -21,7 +23,6 @@ debug/
 *.pdb
 
 backup/
-lib/
-3rdparty/
+lib*/
 build*/
 .build*/

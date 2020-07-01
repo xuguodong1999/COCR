@@ -8,6 +8,8 @@
 # git submodule add https://github.com/Dobiasd/FunctionalPlus             3rdparty/FunctionalPlus
 # git submodule add https://github.com/Tencent/rapidjson.git              3rdparty/rapidjson
 # git submodule add https://github.com/openbabel/openbabel.git            3rdparty/openbabel
+# git submodule add https://github.com/madler/zlib.git                    3rdparty/zlib
+# git submodule add https://github.com/GNOME/libxml2.git                  3rdparty/libxml2
 git submodule init
 git submodule update
 git submodule foreach --recursive git submodule update
