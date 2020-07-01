@@ -222,18 +222,23 @@ double ForceField::getEnergy(
     return energy;
 }
 
+#include <QApplication>
+#include <QWidget>
 
 int main(int argc, char **argv) {
+    QApplication app(argc, argv);
+    QWidget w;
+    w.show();
     ForceField f;
     auto coor = f.getCoordinate("c1ccccc1", "smiles", "mol2", "mmff94");
     cout << "coor=" << coor << endl;
-//    Mat img = imread("/home/xgd/Pictures/backup/4.jpg");
-//    if (img.empty()) {
-//        cout << "打开图像失败！" << endl;
-//        return -1;
-//    }
-//    imshow("image", img);
-//    waitKey();
-    return 0;
+    Mat img = imread("/home/xgd/Pictures/backup/4.jpg");
+    if (img.empty()) {
+        cout << "打开图像失败！" << endl;
+    } else {
+        imshow("image", img);
+        waitKey();
+    }
+    return app.exec();
 }
 
