@@ -1,0 +1,53 @@
+[33mcommit c1f2dd55015388bb98c21a3aa2ad12356749e49f[m[33m ([m[1;36mHEAD -> [m[1;32mdev[m[33m)[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Thu Jul 2 21:06:28 2020 +0800
+
+    win下全部转静态编译
+
+[33mcommit 7181cdccc20f5e146957b89221f7e60c2116bcc9[m[33m ([m[1;31morigin/dev[m[33m, [m[1;31mnju/dev[m[33m)[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Wed Jul 1 21:55:38 2020 +0800
+
+    搞定linux上的自动构建和运行，win上openbabel运行时找不到力场等插件
+
+[33mcommit 2792b44df389efa9f731bbecc2ba1c1e413d6b09[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Wed Jul 1 21:38:39 2020 +0800
+
+    搞定Qt部分
+
+[33mcommit ff2bd850b44260c619b58d8d011cb81075a9963e[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Wed Jul 1 21:25:54 2020 +0800
+
+    delete cmake dir
+
+[33mcommit 49cb86b2c9535ab52c5bb3b41e96b06189fbd2a2[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Wed Jul 1 21:25:15 2020 +0800
+
+    跑通g++构建
+
+[33mcommit 88d4ad149230aeb1158dd9ddf9e077e3c88367c1[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Wed Jul 1 20:52:57 2020 +0800
+
+    跑通MSVC自动构建
+
+[33mcommit f2b66b2ad4c5db4f18a3f63adca6a92f31bdad1e[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Tue Jun 30 23:54:24 2020 +0800
+
+    OpenBabel的引用还有问题
+
+[33mcommit e5cf8539cf9dae4216e043b5dd54155633af1e4b[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Tue Jun 30 23:08:29 2020 +0800
+
+    添加自动构建脚本
+
+[33mcommit b17b9673e2796b9c895b237c95836b0fa651d7b3[m
+Author: Xuguodong1999 <171860633@smail.nju.edu.cn>
+Date:   Tue Jun 30 23:02:05 2020 +0800
+
+    add dev branch

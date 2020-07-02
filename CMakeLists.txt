@@ -26,7 +26,7 @@ elseif (MSVC)
     set(OpenCV_DIR lib/opencv/x64/vc16/staticlib)
 endif ()
 find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS}/opencv2)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 # 配置 OpenBabel
 set(OPENBABEL2_INCLUDE_DIR lib/openbabel/include/openbabel3)
