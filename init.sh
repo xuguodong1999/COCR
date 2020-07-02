@@ -1,4 +1,3 @@
-
 # set 3rdparty as sub modules
 # git init .
 # git submodule add https://github.com/opencv/opencv.git                  3rdparty/opencv
@@ -13,5 +12,3 @@
 git submodule init
 git submodule update
 git submodule foreach --recursive git submodule update
-git submodule foreach git checkout master
-git submodule foreach git pull
