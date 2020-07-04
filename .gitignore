@@ -1,7 +1,9 @@
 .vscode/
 .idea/
 .vs/
+CMakeSettings.json
 
+out/
 x86/
 x64/
 Release*/

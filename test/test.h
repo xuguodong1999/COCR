@@ -3,9 +3,10 @@
 #include <rapidjson/stringbuffer.h>
 #include <iostream>
 
-void helloRapidJson() {
+inline std::string helloRapidJson() {
     using namespace rapidjson;
     using namespace std;
+    // README 里面的样例
     // 1. 把 JSON 解析至 DOM。
     const char *json = "{\"project\":\"rapidjson\",\"stars\":10}";
     Document d;
@@ -18,13 +19,13 @@ void helloRapidJson() {
     Writer<StringBuffer> writer(buffer);
     d.Accept(writer);
     // Output {"project":"rapidjson","stars":11}
-    cout << buffer.GetString() << endl;
+    return buffer.GetString();
 }
 
-#include <QWidget>
+#include <QStringList>
 
-void helloQt() {
-    (new QWidget)->show();
+inline QString helloQt() {
+    return QString::number(100.1).split(".").at(0);
 }
 
 #include <openbabel/mol.h>
@@ -33,7 +34,7 @@ void helloQt() {
 #include <openbabel/obconversion.h>
 #include <iostream>
 
-void helloOpenBabel() {
+inline std::string helloOpenBabel() {
     using namespace OpenBabel;
     using namespace std;
     OBConversion conv;
@@ -52,17 +53,17 @@ void helloOpenBabel() {
     pFF->UpdateCoordinates(mol);
     stringstream osm;
     conv.Write(&mol, &osm);
-    cout << osm.str() << endl;
+    return osm.str();
 }
 
 #include <Eigen/Eigen>
 #include <iostream>
 
-void helloEigen() {
+inline Eigen::Vector2d helloEigen() {
     using namespace Eigen;
     using namespace std;
     Vector2d p1(1, 2);
-    cout << p1 + p1 * 1.2 << endl;
+    return p1 + p1 * 1.2;
 }
 
 #include <opencv2/dnn.hpp>
@@ -70,13 +71,13 @@ void helloEigen() {
 #include <chrono>
 #include <vector>
 
-void helloOpenCV() {
+inline float helloOpenCV() {
     using namespace cv;
     using namespace dnn;
     using namespace std;
     using namespace chrono;
-    const char *cfg = "../weights/enetb0.cfg";
-    const char *weights = "../weights/enetb0.weights";
+    const char *cfg = "../../weights/enetb0.cfg";
+    const char *weights = "../../weights/enetb0.weights";
     auto net = dnn::readNetFromDarknet(cfg, weights);
     net.setPreferableBackend(dnn::DNN_BACKEND_OPENCV);
     net.setPreferableTarget(dnn::DNN_TARGET_CPU);
@@ -86,7 +87,7 @@ void helloOpenCV() {
     for (auto i = 0; i < outLayerIndices.size(); i++) {
         outBlobNames.at(i) = layerNames.at(outLayerIndices.at(i) - 1);
     }
-    auto img = imread("../ui/1a0n.jpg", IMREAD_COLOR);
+    auto img = imread("../../test/1a0n.jpg", IMREAD_COLOR);
     Size inputSize(img.rows - img.rows % 32, img.cols - img.cols % 32);
     Mat vec4d;
     blobFromImage(img, vec4d, 1 / 255.0, inputSize);
@@ -96,7 +97,5 @@ void helloOpenCV() {
     net.forward(outs, outBlobNames);
     auto end = system_clock::now();
     auto duration = duration_cast<microseconds>(end - start);
-    cout << "net.forward costs "
-         << duration.count() * milliseconds::period::num / milliseconds::period::den
-         << " ms" << endl;
+    return duration.count() * milliseconds::period::num / milliseconds::period::den;
 }

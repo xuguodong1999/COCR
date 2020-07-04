@@ -152,12 +152,13 @@ namespace cocr {
         }
 
         friend ostream &operator<<(ostream &out, const Fraction &x) {
-            out << x.first << " " << x.second;
+            out << x.first << " / " << x.second;
             return out;
         }
 
         friend istream &operator>>(istream &in, Fraction &x) {
-            in >> x.first >> x.second;
+            char c;
+            in >> x.first >> c >> x.second;
             return in;
         }
     };
