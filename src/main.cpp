@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 ////    cout<<sizeof(unsigned)<<endl;
 //    return 0;
 
-    cocr::dumpCouchToFile("/home/xgd/dataset/SCUT_IRAC/Couch", "../../backup/dls");
+    cocr::dumpCouchToFile("/home/xgd/dataset/SCUT_IRAC/Couch", "../../backup/gb2");
     vector<cocr::SampleData> samples;
     cocr::loadCouchFromFile("../../backup/dls", samples);
     cout << "get " << samples.size() << " samples in main" << endl;
@@ -34,11 +34,11 @@ int main(int argc, char **argv) {
         labels.insert(s.getLabel());
     }
     cout<<"count="<<labels.size()<<endl;
-    for (auto &sample:samples) {
-        cout << sample << endl;
-        sample.visualize(2);
-//        sample.visualize(2, "/tmp/sample.jpg");
-    }
+//    for (auto &sample:samples) {
+//        cout << sample << endl;
+//        sample.visualize(2);
+////        sample.visualize(2, "/tmp/sample.jpg");
+//    }
     return 0;
 
     //qApp->setAttribute(Qt::AA_EnableHighDpiScaling);

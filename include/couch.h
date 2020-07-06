@@ -14,6 +14,10 @@
 #include <string>
 #include <vector>
 
+
+#include <unordered_set>
+#include <unordered_map>
+
 #ifdef Q_OS_LINUX
 
 #include <iconv.h>
@@ -42,6 +46,8 @@ int gbk2utf8(char *inbuf, size_t inlen, char *outbuf, size_t outlen) {
 #endif
 namespace cocr {
     using namespace std;
+    unordered_set<string> labelSet;
+    unordered_map<string, int> labelMap;
 
     class StrokeData {
     private:
@@ -281,7 +287,6 @@ namespace cocr {
         }
 
         friend inline QDataStream &operator<<(QDataStream &s, const SampleData &o) {
-            cout<<"#"<<o.getLabel().c_str()<<endl;
             s << o.height << o.width << o.lineNum << QString(o.getLabel().c_str());
             for (auto &stroke:o.strokes) {
                 s << stroke;
@@ -290,17 +295,10 @@ namespace cocr {
         }
 
         friend inline QDataStream &operator>>(QDataStream &s, SampleData &o) {
-//            char *a=new char[100];
-//            memset(a,'\0',100);
-//            s >> o.height >> o.width >> o.lineNum >> a;
-//            a[2]='\0';
-//            cout<<"@@"<<a<<endl;
-//            o.setLabel(a);
-//            delete a;
-            QString byteArray;
-            s >> o.height >> o.width >> o.lineNum >> byteArray;
-            o.setLabel(byteArray.toStdString());
-            qDebug()<<byteArray;
+            QString index;
+            s >> o.height >> o.width >> o.lineNum >> index;
+            o.setLabel(index.toStdString());
+            cout << "@" << o.getLabel() << endl;
             o.strokes.resize(o.lineNum);
             for (auto &stroke:o.strokes) {
                 s >> stroke;
@@ -399,11 +397,14 @@ namespace cocr {
                 datIfsm.read((char *) &getTimePointNum, 2);
                 dst.emplace_back(SampleData(lineNum));
                 SampleData &sample = dst.back();
-#ifdef Q_OS_LINUX
-                char a[100] = {'\0'};
-                gbk2utf8((char *) wordCode, 3, a, 3);
-                sample.setLabel(a);
-                cout << sample.getLabel() << endl;
+#ifndef Q_OS_LINUX
+                char*tmp=new char[6];
+                memset(tmp,'\0',6);
+                gbk2utf8((char *) wordCode, 5,
+                         tmp, 5);
+                sample.setLabel(tmp);
+                delete tmp;
+                cout << "!" << sample.getLabel() << endl;
 #else
                 sample.setLabel((char *) wordCode);
 #endif
@@ -493,7 +494,22 @@ namespace cocr {
         couchReader.washDataSet(samples);
 //        cout << samples.size() << endl;
 
-        QFile f((couchTopDir + "/couch.txt").c_str());
+        // 转换标签
+        auto &labels = labelSet;
+        labels.clear();
+        for (auto &s : samples) {
+            labels.insert(s.getLabel());
+        }
+        int i = labels.size();
+        for (const auto &l:labels) {
+            labelMap.insert(make_pair(l, i--));
+        }
+        for (auto &s:samples) {
+            s.setLabel(QString::number(labelMap.find(s.getLabel())->second).toStdString());
+        }
+
+
+        QFile f((saveDir + "/couch.txt").c_str());
         f.open(QIODevice::WriteOnly);
         if (!f.isOpen()) {
             return false;
@@ -505,16 +521,14 @@ namespace cocr {
         }
         f.close();
 
-        set<string> labels;
-        for (auto &s : samples) {
-            labels.insert(s.getLabel());
-        }
-        ofstream ofsm(couchTopDir + "/labels.txt", ios::out);
+
+        ofstream ofsm(saveDir + "/labels.txt", ios::out);
         if (!ofsm.is_open()) {
             return false;
         }
-        for (auto &l : labels) {
-            ofsm << l << endl;
+        for (auto &l : labelMap) {
+//            ofsm << l.first<<endl;
+            ofsm << l.first << " " << l.second << endl;
         }
         ofsm.close();
         return true;
