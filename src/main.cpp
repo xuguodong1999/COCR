@@ -1,63 +1,48 @@
 #include "couch.h"
 #include <QApplication>
-#include <QWidget>
-#include <set>
 #include <QTextCodec>
-using namespace cocr;
+#include <QWidget>
+#include "isomer.h"
+
+using namespace std;
 
 int main(int argc, char **argv) {
-    vector<SampleData> samples;
-    auto &couchReader = CouchReader::GetInstance();
+//    cocr::UnrootedTree ut;
+//    ut.add(1, 0);
+//    ut.add(1, 1);
+//    ut.add(1, 2);
+//    ut.add(2, 1);
+//    cout << ut << endl;
+//    auto f = [](const cocr::Graph<unsigned short>& g,const unsigned short& current,const unsigned short& from) {
+//        cout << current << " is visited! My father node is "<<from<<" and here are my neighbors: [";
+//        for (auto &neighbor:g.data[current]) {
+//            cout << neighbor << ",";
+//        }
+//        cout << "]" << endl;
+//
+//    };
+//    ut.dfsWrapper(f);
+////    cout<<sizeof(unsigned)<<endl;
+//    return 0;
 
-//    // 读原始数据集，序列化成单独文件
-//    couchReader.readCouchTopDir("G:/dataset/SCUT_IRAC/Couch", samples);
-//    cout << samples.size() << endl;
-//    couchReader.washDataSet(samples);
-//    cout << samples.size() << endl;
-//    QFile f("/tmp/couch.txt");
-//    f.open(QIODevice::WriteOnly);
-//    if (!f.isOpen()) {
-//        return -1;
-//    }
-//    QDataStream writter(&f);
-//    writter << (int) samples.size();
-//    for (auto &s:samples) {
-//        writter << s;
-//    }
-//    f.close();
-//    ofstream ofsm("/tmp/labels.txt");
-//    set <string> labels;
-//    for (auto &s : samples) {
-//        labels.insert(s.getLabel());
-//    }
-//    for (auto &l : labels) {
-//        ofsm << l << endl;
-//    }
-//    ofsm.close();
-
-    // 从序列化文件加载数据
-#ifdef Q_OS_UNIX
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("gb2312"));
-#endif
-    QFile f2("../../backup/dls/couch.txt");
-    f2.open(QIODevice::ReadOnly);
-    QDataStream reader(&f2);
-    int size;
-    reader>>size;
-    samples.resize(size);
-    for(auto&s:samples){
-        reader>>s;
+    cocr::dumpCouchToFile("/home/xgd/dataset/SCUT_IRAC/Couch", "../../backup/dls");
+    vector<cocr::SampleData> samples;
+    cocr::loadCouchFromFile("../../backup/dls", samples);
+    cout << "get " << samples.size() << " samples in main" << endl;
+    set<string> labels;
+    for (auto &s : samples) {
+        labels.insert(s.getLabel());
     }
-    f2.close();
-    cout<<samples.size()<<endl;
-    random_shuffle(samples.begin(), samples.end());
-    couchReader.washDataSet(samples);
-    cout<<samples.size()<<endl;
+    cout<<"count="<<labels.size()<<endl;
+    for (auto &sample:samples) {
+        cout << sample << endl;
+        sample.visualize(2);
+//        sample.visualize(2, "/tmp/sample.jpg");
+    }
     return 0;
 
     //qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     //QApplication a(argc, argv);
     //(new QWidget)->show();
     //return a.exec();
-
 }

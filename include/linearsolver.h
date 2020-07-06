@@ -13,11 +13,22 @@ namespace cocr {
 
     class LinearSolver {
     public:
+        /**
+         * @return 线性求解类单例
+         * @brief 获得一个线性求解类单例
+         * @example auto& ls=LinearSolver::getInstance();
+         */
         static LinearSolver &GetInstance() {
             static LinearSolver ls;
             return ls;
         }
 
+        /**
+         * @param in 增广矩阵
+         * @param out 一组解
+         * @return 能否找到一组解
+         * @brief 以分数形式求解增广矩阵表达的线性方程组
+         */
         bool solve(const vector<vector<int>> &in, vector<int> &out) {
             try {// 不搞越界判断和无解处理了，有可能出问题的地方用at，直接抛异常返回false
                 auto rowSize = in.size(), colSize = in.at(0).size();

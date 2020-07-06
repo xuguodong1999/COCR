@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QDataStream>
+#include <QTextCodec>
 
 #include <opencv2/opencv.hpp>
 
@@ -13,6 +14,32 @@
 #include <string>
 #include <vector>
 
+#ifdef Q_OS_LINUX
+
+#include <iconv.h>
+
+/**
+ * @reference https://www.cnblogs.com/Ivanhan2019/p/11633247.html
+ */
+int code_convert(
+        char *from_charset, char *to_charset,
+        char *inbuf, size_t inlen,
+        char *outbuf, size_t outlen) {
+    char **pin = &inbuf;
+    char **pout = &outbuf;
+    iconv_t cd = iconv_open(to_charset, from_charset);
+    if (cd == 0) return -1;
+    if (iconv(cd, pin, &inlen, pout, &outlen) == -1) return -1;
+    iconv_close(cd);
+    return 0;
+}
+
+int gbk2utf8(char *inbuf, size_t inlen, char *outbuf, size_t outlen) {
+    return code_convert("gb2312", "utf-8",
+                        inbuf, inlen, outbuf, outlen);
+}
+
+#endif
 namespace cocr {
     using namespace std;
 
@@ -80,7 +107,7 @@ namespace cocr {
         }
 
         friend inline ostream &operator<<(ostream &out, const StrokeData &sd) {
-            out << "下一个笔画有" << sd.strokePointNum << "个点" << endl;
+            out << "next stroke with " << sd.strokePointNum << " points" << endl;
             for (const auto &point:sd.points) {
                 out << "(" << point.x << "," << point.y << "), ";
             }
@@ -111,6 +138,7 @@ namespace cocr {
         unsigned short int lineNum;
         vector<StrokeData> strokes;
         string label;
+//        char label[4]={'\0','\0','\0','\0'};
         int width, height;
     public:
         int getWidth() const {
@@ -161,7 +189,7 @@ namespace cocr {
             }
         }
 
-        void visualize(int thickness = 3) {
+        void visualize(int thickness = 3, const string &dumpToFile = "") {
             auto getOffsetPoint = [&](const StrokeData::Point &p) -> cv::Point {
                 return p + cv::Point(floor(thickness / 2), floor(thickness / 2));
             };
@@ -190,9 +218,14 @@ namespace cocr {
             image.copyTo(panel(rect));
             cv::rectangle(panel, rect, black, 1);
             cv::destroyAllWindows();
-            cv::imshow("display", panel);
-//            cv::imshow("display", image);
-            cv::waitKey(0);
+            if (dumpToFile.empty()) {
+                cv::imshow("display", panel);
+                cv::waitKey(0);
+            } else {
+                cv::imwrite(dumpToFile, panel);
+                cout << endl << "press any key to continue..." << endl;
+                getchar();
+            }
         }
 
         bool normalize() {
@@ -221,8 +254,6 @@ namespace cocr {
                 getHeight() < 0 || getHeight() > 2000) {
                 return false;
             }
-            cout << *this << endl;
-            visualize();
             return true;
         }
 
@@ -242,7 +273,7 @@ namespace cocr {
         }
 
         friend inline ostream &operator<<(ostream &out, const SampleData &s) {
-            out << "样本\"" << s.label << "\"有" << s.lineNum << "个笔画" << endl;
+            out << "sample \"" << s.label << "\" has " << s.lineNum << " strokes" << endl;
             for (auto &stroke:s.strokes) {
                 out << stroke;
             }
@@ -250,7 +281,8 @@ namespace cocr {
         }
 
         friend inline QDataStream &operator<<(QDataStream &s, const SampleData &o) {
-            s << o.height << o.width << o.lineNum << QString(o.label.c_str());
+            cout<<"#"<<o.getLabel().c_str()<<endl;
+            s << o.height << o.width << o.lineNum << QString(o.getLabel().c_str());
             for (auto &stroke:o.strokes) {
                 s << stroke;
             }
@@ -258,18 +290,17 @@ namespace cocr {
         }
 
         friend inline QDataStream &operator>>(QDataStream &s, SampleData &o) {
-            QString tmp;
-            s >> o.height >> o.width >> o.lineNum >> tmp;
-//#ifdef Q_OS_UNIX
-//            auto gbk = QTextCodec::codecForName("gb2312");
-//            auto utf8 = QTextCodec::codecForName("UTF-8");
-//            tmp = gbk->toUnicode(tmp.toStdString().c_str());
-//            qDebug() << tmp;
-//            QByteArray utf8_bytes = utf8->fromUnicode(tmp);
-//            tmp = utf8_bytes.data();
-//            qDebug() << tmp;
-//#endif
-            o.label = tmp.toStdString();
+//            char *a=new char[100];
+//            memset(a,'\0',100);
+//            s >> o.height >> o.width >> o.lineNum >> a;
+//            a[2]='\0';
+//            cout<<"@@"<<a<<endl;
+//            o.setLabel(a);
+//            delete a;
+            QString byteArray;
+            s >> o.height >> o.width >> o.lineNum >> byteArray;
+            o.setLabel(byteArray.toStdString());
+            qDebug()<<byteArray;
             o.strokes.resize(o.lineNum);
             for (auto &stroke:o.strokes) {
                 s >> stroke;
@@ -306,7 +337,7 @@ namespace cocr {
             QDir dir(couchTopDir.c_str());
             dir.setFilter(QDir::Files | QDir::Hidden | QDir::AllDirs);
             QFileInfoList fileInfoList = dir.entryInfoList();
-            qDebug() << dir << fileInfoList;
+//            qDebug() << dir << fileInfoList;
             while (!fileInfoList.isEmpty()) {
                 QFileInfo tempFileInfo = fileInfoList.last();
                 if (!tempFileInfo.isDir()) {
@@ -328,12 +359,12 @@ namespace cocr {
 
         void readIdxFile(const string &idxFileName, vector<SampleData> &dst) {
             if (idxFileName.find(".idx") == string::npos) {
-                cerr << "打开文件失败：" << idxFileName << endl;
+                cerr << "fail to open: " << idxFileName << endl;
                 return;
             }
             ifstream idxIfsm(idxFileName, ios::in | ios::binary);
             if (!idxIfsm.is_open()) {
-                cerr << "打开文件失败：" << idxFileName << endl;
+                cerr << "fail to open: " << idxFileName << endl;
                 return;
             }
 //          idxIfsm >> sampleSum;
@@ -347,7 +378,7 @@ namespace cocr {
                 datFileName.replace(suffixIndex + 1, 3, "DAT");
                 datIfsm.open(datFileName, ios::in | ios::binary);
                 if (!datIfsm.is_open()) {
-                    cerr << "打开文件失败：" << datFileName << endl;
+                    cerr << "fail to open: " << datFileName << endl;
                     return;
                 }
             }
@@ -368,7 +399,14 @@ namespace cocr {
                 datIfsm.read((char *) &getTimePointNum, 2);
                 dst.emplace_back(SampleData(lineNum));
                 SampleData &sample = dst.back();
+#ifdef Q_OS_LINUX
+                char a[100] = {'\0'};
+                gbk2utf8((char *) wordCode, 3, a, 3);
+                sample.setLabel(a);
+                cout << sample.getLabel() << endl;
+#else
                 sample.setLabel((char *) wordCode);
+#endif
                 getTimePointIndex = new unsigned short int[2 * (size_t) getTimePointNum];
                 elapsedTime = new int[4 * (size_t) getTimePointNum];
                 datIfsm.read((char *) getTimePointIndex, 2 * (size_t) getTimePointNum);
@@ -376,7 +414,7 @@ namespace cocr {
                 datIfsm >> sample;
                 freeUselessParm();
 //                cout << sample << endl;
-//                getchar();
+//                cin.get();
             }
             datIfsm.close();
             idxIfsm.close();
@@ -388,7 +426,7 @@ namespace cocr {
                         getTimePointIndex(nullptr),
                         elapsedTime(nullptr) {}
 
-        ~CouchReader() {}
+        ~CouchReader() { freeUselessParm(); }
 
         CouchReader(const CouchReader &) = delete;
 
@@ -422,5 +460,64 @@ namespace cocr {
         unsigned short int *getTimePointIndex;  //2*getTimePointNum
         int *elapsedTime;                       //4*getTimePointNum
     };
+
+    inline bool loadCouchFromFile(const string &saveDir, vector<SampleData> &samples) {
+        auto &couchReader = CouchReader::GetInstance();
+        // 从序列化文件加载数据
+        QFile f((saveDir + "/couch.txt").c_str());
+        f.open(QIODevice::ReadOnly);
+        if (!f.isOpen()) {
+            return false;
+        }
+        QDataStream reader(&f);
+        int size;
+        reader >> size;
+        samples.resize(size);
+        for (auto &s:samples) {
+            reader >> s;
+        }
+        f.close();
+        cout << "load " << samples.size() << " samples from " << saveDir << endl;
+        random_shuffle(samples.begin(), samples.end());
+        couchReader.washDataSet(samples);
+        cout << "after validation, " << samples.size() << " samples exist" << endl;
+        return true;
+    }
+
+    inline bool dumpCouchToFile(const string &couchTopDir, const string &saveDir) {
+        vector<SampleData> samples;
+        auto &couchReader = CouchReader::GetInstance();
+        // 读原始数据集，序列化成单独文件
+        couchReader.readCouchTopDir(couchTopDir, samples);
+//        cout << samples.size() << endl;
+        couchReader.washDataSet(samples);
+//        cout << samples.size() << endl;
+
+        QFile f((couchTopDir + "/couch.txt").c_str());
+        f.open(QIODevice::WriteOnly);
+        if (!f.isOpen()) {
+            return false;
+        }
+        QDataStream writter(&f);
+        writter << (int) samples.size();
+        for (auto &s:samples) {
+            writter << s;
+        }
+        f.close();
+
+        set<string> labels;
+        for (auto &s : samples) {
+            labels.insert(s.getLabel());
+        }
+        ofstream ofsm(couchTopDir + "/labels.txt", ios::out);
+        if (!ofsm.is_open()) {
+            return false;
+        }
+        for (auto &l : labels) {
+            ofsm << l << endl;
+        }
+        ofsm.close();
+        return true;
+    }
 }
 #endif //_COUCH_H_
