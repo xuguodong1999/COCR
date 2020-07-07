@@ -15,14 +15,11 @@
 #include <unordered_map>
 
 namespace cocr {
-    using namespace std;
-
-
     class Equation {
     public:
 //        static mutex mu;
 //        static Equation *ep;
-//        static Equation &GetInstance() { // 锁代码段实现懒汉式单例类
+//        static Equation &getInstance() { // 锁代码段实现懒汉式单例类
 //            if (ep) return *ep;
 //            mu.lock();
 //            if (!ep)
@@ -35,16 +32,16 @@ namespace cocr {
          * @brief 获得一个方程类单例
          * @example auto& equation=Equation::getInstance();
          */
-        static Equation &GetInstance() { // 函数内静态变量实现懒汉式单例类
+        static Equation &getInstance() { // 函数内静态变量实现懒汉式单例类
             static Equation e;
             return e;
         }
 
         void test() {
             cout << "Equation::test" << endl;
-            Fraction f1(3, 5), f2(5, 3), f3(0);
+            frac f1(3, 5), f2(5, 3), f3(0);
             auto s1 = f1.toString();
-            Fraction f4;
+            frac f4;
             f4.fromString(s1);
             cout << f4 << endl;
             f4 += 1;
@@ -76,7 +73,6 @@ namespace cocr {
          * @brief 验证是否正确配平
          */
         bool isBalanced(const string &equation) {
-
         }
 
         /**
@@ -88,7 +84,6 @@ namespace cocr {
          */
         bool isBalanced(const vector<string> &reactants, const vector<string> &products,
                         const vector<int> &coefficient) {
-
         }
 
     private:

@@ -3,36 +3,37 @@
 
 #include <vector>
 #include <iostream>
-#include <list>
 
+#define LogName(value) std::cout << (#value) << "=" << (value) << std::endl;
+#define LogLine(value) std::cout << (value) << std::endl;
+#define LogValue(value) std::cout << (value);
+#define LogPressKey2Continue() std::cout << std::endl << "press any key to continue..." << std::endl;
 namespace cocr {
-    using namespace std;
-
     template<typename T>
-    inline void show(const T &t, ostream &out = cout) {
-        out << t << endl;
+    inline void show(const T &t, std::ostream &out = std::cout) {
+        out << t << std::endl;
     }
 
     template<typename T>
-    inline void show(const vector<vector<T>> &arr2d, ostream &out = cout) {
-        out << "[" << endl;
+    inline void show(const std::vector<std::vector<T>> &arr2d, std::ostream &out = std::cout) {
+        out << "[" << std::endl;
         for (auto &arr : arr2d) {
             out << " [";
             for (auto &ele : arr) {
                 out << ele << ",";
             }
-            out << "]" << endl;
+            out << "]" << std::endl;
         }
-        out << "]" << endl;
+        out << "]" << std::endl;
     }
 
     template<typename T>
-    inline void show(const vector<T> &arr, ostream &out = cout) {
+    inline void show(const std::vector<T> &arr, std::ostream &out = std::cout) {
         out << "[";
         for (auto &ele : arr) {
             out << ele << ",";
         }
-        out << "]" << endl;
+        out << "]" << std::endl;
     }
 }
 #endif

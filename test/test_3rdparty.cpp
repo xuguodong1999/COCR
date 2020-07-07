@@ -1,7 +1,6 @@
+#include "gtest/gtest.h"
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
-#include <iostream>
 
 inline std::string helloRapidJson() {
     using namespace rapidjson;
@@ -98,4 +97,12 @@ inline float helloOpenCV() {
     auto end = system_clock::now();
     auto duration = duration_cast<microseconds>(end - start);
     return duration.count() * milliseconds::period::num / milliseconds::period::den;
+}
+
+TEST(ThirdPartyTestSuite, ThirdPartyTest) {
+    EXPECT_EQ(helloEigen().size(), 2);
+    EXPECT_EQ(helloOpenBabel().size() > 1, true);
+    EXPECT_EQ(helloOpenCV() < 2000, true);
+    EXPECT_EQ(helloRapidJson(), "{\"project\":\"rapidjson\",\"stars\":11}");
+    EXPECT_EQ(helloQt(), "100");
 }

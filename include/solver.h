@@ -18,7 +18,7 @@ namespace cocr {
          * @brief 获得一个线性求解类单例
          * @example auto& ls=LinearSolver::getInstance();
          */
-        static LinearSolver &GetInstance() {
+        static LinearSolver &getInstance() {
             static LinearSolver ls;
             return ls;
         }
@@ -32,7 +32,7 @@ namespace cocr {
         bool solve(const vector<vector<int>> &in, vector<int> &out) {
             try {// 不搞越界判断和无解处理了，有可能出问题的地方用at，直接抛异常返回false
                 auto rowSize = in.size(), colSize = in.at(0).size();
-                vector<vector<Fraction>> aMatrix(rowSize);// augmentedMatrix,增广矩阵
+                vector<vector<frac>> aMatrix(rowSize);// augmentedMatrix,增广矩阵
                 for (auto &rMatrix:aMatrix) {
                     rMatrix.resize(colSize);
                 }
@@ -68,7 +68,7 @@ namespace cocr {
                     }
 //                    show(aMatrix);
                 }
-                vector<Fraction> oMatrix(n);
+                vector<frac> oMatrix(n);
                 for (auto i = 0; i < n; i++) {
                     oMatrix[i] = aMatrix[i][colSize - 1];
                 }

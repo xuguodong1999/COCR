@@ -1,4 +1,5 @@
 #include "chemdata.h"
+
 using namespace std;
 const vector<float> massData =
         {0, 1.007947, 4.0026022, 6.9412, 9.0121823, 10.8117, 12.01078, 14.00672, 15.99943, 18.99840325,
@@ -13,7 +14,6 @@ const vector<float> massData =
          232.038062, 231.035882, 238.028913, 238.8486, 242.8798, 244.8594, 246.911, 248.9266, 252.9578,
          253.9656, 259.0046, 260.0124, 261.0202, 264.0436, 269.0826, 270.0904, 273.1138, 274.1216, 272.106,
          278.1528, 283.1918, 282.184, 287.223};
-
 const vector<float> electronegativityData =
         {0, 2.20, 3.89, 0.98, 1.57, 2.04, 2.55, 3.04, 3.44, 3.98, 3.67, 0.93, 1.31, 1.61, 1.90, 2.19, 2.58,
          3.16, 3.3, 0.82, 1.00, 1.36, 1.54, 1.63, 1.66, 1.55, 1.83, 1.88, 1.91, 1.90, 1.65, 1.81, 2.01, 2.18,
@@ -22,8 +22,7 @@ const vector<float> electronegativityData =
          1.25, 1.1, 1.27, 1.3, 1.5, 2.36, 1.9, 2.2, 2.20, 2.28, 2.54, 2.00, 1.62, 2.33, 2.02, 2.0, 2.2, 2.2,
          0.7, 0.9, 1.1, 1.3, 1.5, 1.38, 1.36, 1.28, 1.13, 1.28, 1.3, 1.3, 1.3, 1.3, 1.3, 1.3, 1.291, 1.3, 1.5,
          2.36, 1.9, 2.2, 2.20, 2.28, 2.54, 2.00};
-
-const vector <string> nameData =
+const vector<string> nameData =
         {"None", "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl",
          "Ar",
          "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br",
@@ -32,7 +31,7 @@ const vector <string> nameData =
          "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn",
          "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr",
          "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn"};
-const vector <string> formulaData =
+const vector<string> formulaData =
         {"CCl4", "CH3Cl", "C2H5OC2H5", "KO2", "CuCl2", "CHCl3", "CH3COONa", "CH3COOCH3", "CH3COOC2H5",
          "CH3CH2Br", "CH2Cl2", "C2H5ONa", "(C2H5O)2Mg", "C2H5ONO2", "CH3CH2OSO3H", "(C2H5O)3Al", "CH3CH2OH",
          "C11H22O11", "Ba(NO3)2", "Al2S3", "NaAlO2", "NH3·H2O", "AgOH", "Ca(ClO)2", "Ca(H2PO4)2", "CH4", "C2H6",
@@ -73,8 +72,7 @@ const vector <string> formulaData =
          "Ag2CrO4", "Ag", "(NH4)3PO4", "(NH4)2SO4", "(NH4)2S", "(NH4)2PtCl6", "(NH4)2MoO4", "(NH4)2HPO4",
          "(NH4)2Fe(SO4)2", "(NH4)2CO3", "(NH4)2C2O4", "(CH3COO)2UO2", "(CH3COO)2Pb", "(CH3CO)2O",
          "(CH2COO)2Zn"};
-
-const vector <string> valenceData =
+const vector<string> valenceData =
         {"CCl4", "4 1", "-1 1", "CH3Cl", "-2 1", "-1 1", "1 1", "C2H5OC2H5", "-2 1", "1 1", "-2 1", "KO2",
          "1 1", "-1 2", "CuCl2", "-1 1", "2 1", "CHCl3", "2 1", "-1 1", "1 1", "CH3Cl", "-2 1", "-1 1", "1 1",
          "CH3COONa", "0 1", "1 1", "1 1", "-2 1", "CH3COOCH3", "-2 3", "1 1", "-2 1", "CH3COOC2H5", "-1 1",
@@ -197,7 +195,7 @@ const vector <string> valenceData =
          "2 1", "1 1", "-3 1", "Th(C2O4)2", "3 1", "-2 1", "4 1", "(CH3COO)2UO2", "0 1", "1 1", "-2 1", "6 1",
          "H2O2", "1 1", "-1 1", "K2O", "1 1", "-2 1", "KO2", "1 1", "-1 2", "BaO2", "2 1", "-1 1", "K2O2",
          "1 1", "-1 1", "Na2O2", "1 1", "-1 1"};
-const vector <string> state =
+const vector<string> state =
         {
                 "ZnSO4", "r", "ZnCl2", "r", "Zn(NO3)2", "r", "Zn", "m", "X", "x", "WO3", "s", "W", "m", "V2O5",
                 "s", "V", "m", "SiO2", "s", "SiF4", "g", "Si", "s", "SO3", "l", "SO2", "g", "S", "s", "PhSO3H",
@@ -238,5 +236,4 @@ namespace cocr {
             name(nameData),
             formula(formulaData),
             valence(valenceData) {}
-
 }

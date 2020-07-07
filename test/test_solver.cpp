@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
-#include "linearsolver.h"
-#include "test.h"
+#include "solver.h"
+#include <vector>
 
 TEST(LinearSolverTestSuite, LinearSolverTest) {
     using namespace cocr;
-    auto &solver = LinearSolver::GetInstance();
+    auto &solver = LinearSolver::getInstance();
     vector<vector<int>> in = {{1, 1, 1,  6},
                               {1, 2, 2,  11},
                               {1, 4, -1, 6}};
@@ -23,12 +23,6 @@ TEST(LinearSolverTestSuite, LinearSolverTest) {
     ok = solver.solve(in, out);
     EXPECT_EQ(ok, true);
     EXPECT_EQ(out, vector<int>({2, 5, 3, 1, 2, 8, 5}));
-}
-
-TEST(ThirdPartyTestSuite, ThirdPartyTest) {
-    EXPECT_EQ(helloEigen().size(), 2);
-    EXPECT_EQ(helloOpenBabel().size() > 1, true);
-    EXPECT_EQ(helloOpenCV() < 2000, true);
-    EXPECT_EQ(helloRapidJson(), "{\"project\":\"rapidjson\",\"stars\":11}");
-    EXPECT_EQ(helloQt(), "100");
+    show(in);
+    show(out);
 }

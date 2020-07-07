@@ -1,15 +1,16 @@
 cmake_minimum_required(VERSION 3.15)
 project(COCR-dev)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE CXX_STA)
 
 if (MSVC)
     add_compile_options($<$<C_COMPILER_ID:MSVC>:/utf-8>)
     add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
 endif ()
-# ÅäÖÃQt
-if (UNIX)       # FIXME: linuxÏÂĞŞ¸Äµ½Qt¿âµÄcmakeÎÄ¼ş¼ĞÎ»ÖÃ
+# é…ç½®Qt
+if (UNIX)       # FIXME: linuxï¿½ï¿½ï¿½Ş¸Äµï¿½Qtï¿½ï¿½ï¿½cmakeï¿½Ä¼ï¿½ï¿½ï¿½Î»ï¿½ï¿½
     set(Qt5_DIR /home/xgd/Qt/5.15.0/gcc_64/lib/cmake/Qt5)
-elseif (MSVC)   # FIXME: windowsÏÂĞŞ¸Äµ½Qt¿âµÄcmakeÎÄ¼ş¼ĞÎ»ÖÃ
+elseif (MSVC)   # FIXME: windowsï¿½ï¿½ï¿½Ş¸Äµï¿½Qtï¿½ï¿½ï¿½cmakeï¿½Ä¼ï¿½ï¿½ï¿½Î»ï¿½ï¿½
     # set(Qt5_DIR C:/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5)
     set(Qt5_DIR C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5)
 endif ()
@@ -17,7 +18,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-# ÅäÖÃ OpenCV
+# é…ç½® OpenCV
 if (UNIX)
     set(OpenCV_DIR ${CMAKE_SOURCE_DIR}/lib/opencv/lib/cmake/opencv4)
 elseif (MSVC)
@@ -25,7 +26,7 @@ elseif (MSVC)
 endif ()
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
-# ÅäÖÃ OpenBabel
+# é…ç½® OpenBabel
 set(OPENBABEL2_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/lib/openbabel/include/openbabel3)
 if (MSVC)
     if (CMAKE_BUILD_TYPE)
@@ -41,18 +42,16 @@ elseif (UNIX)
     set(OPENBABEL2_LIBRARIES ${CMAKE_SOURCE_DIR}/lib/openbabel/lib/libopenbabel.so)
 endif ()
 include_directories(${OPENBABEL2_INCLUDE_DIR})
-# ÅäÖÃ Eigen3
+# é…ç½® Eigen3
 set(Eigen3_DIR ${CMAKE_SOURCE_DIR}/lib/eigen/share/eigen3/cmake)
 find_package(Eigen3 REQUIRED NO_MODULE)
 include_directories(${EIGEN3_INCLUDE_DIR})
-# ÅäÖÃ FrugallyDeep
+# é…ç½® FrugallyDeep
 include_directories(${CMAKE_SOURCE_DIR}/lib/json/include)
 include_directories(${CMAKE_SOURCE_DIR}/lib/FunctionalPlus/include)
 include_directories(${CMAKE_SOURCE_DIR}/lib/frugally-deep/include)
-# ÅäÖÃ RapidJson
+# é…ç½® RapidJson
 include_directories(${CMAKE_SOURCE_DIR}/lib/rapidjson/include)
 
 add_subdirectory(src)
-if (UNIX)
-    add_subdirectory(test)
-endif ()
+add_subdirectory(test)

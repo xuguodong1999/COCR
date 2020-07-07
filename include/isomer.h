@@ -1,159 +1,84 @@
 #ifndef _ISOMER_H_
 #define _ISOMER_H_
 
+#include "graph.h"
 #include <vector>
+#include <list>
 #include <string>
-#include <set>
-#include <algorithm>
 
 namespace cocr {
-    using namespace std;
-
-    template<typename T>
-    class Graph {
+    class IsomerCounter {
     public:
-        vector<set<T>> data;
-        string name;
-        enum Color {
-            WHITE, GRAY, BLACK
-        };
-        vector<Color> state;
-    public:
-        Graph(const string &name = "graph") : name(name) {}
-
-        ~Graph() {}
-
-        virtual void add(T from, T to) {
-            if (from > data.size()) {
-                data.resize(1 + from);
-            }
-            data[from].insert(to);
+        static IsomerCounter &getInstance() {
+            static IsomerCounter e;
+            return e;
         }
 
-        virtual void del(T from, T to) {
-            try {
-                data.at(from).erase(to);
-                auto mm = from;
-                if (mm + 1 == data.size() && data[mm].empty()) {// 去掉末尾
-                    data.resize(mm);
-                }
-            } catch (exception e) {}
+        int n;
+        typedef UGraph<unsigned char> CGraph;
+        std::set<std::string> smiles;                   // C1-n alkanetopos' structure
+        std::set<std::string> newSmiles;                // 新增部分的smiles
+        std::list<CGraph> lastSet, curSet;              // C(i,i-1) alkanetopos' structure
+        std::vector<long long> counter;                 // C1-n alkanetopo 数量计数器
+        std::string convertGraphToString(CGraph &g) {
+
         }
 
-        virtual bool exist(T from, T to) {
-            if (from >= data.size()) {
+        CGraph getCarbon() {
+            return CGraph();
+        }
+
+        bool calculate(const int &numOfCarbon) {
+            if (numOfCarbon <= 0) {
                 return false;
             }
-            return data[from].find(to) != data[from].end();
-        }
-
-        typedef function<void(const Graph<T> &, const T &, const T &)> traverse;
-
-        /**
-         * @param f 处理每个节点的函数指针，两个参数分别是邻接表、当前节点
-         * @brief 深度优先遍历
-         */
-        virtual void dfsWrapper(traverse) = 0;
-
-        /**
-         * @param f 处理每个节点的函数指针，两个参数分别是邻接表、当前节点
-         * @brief 广度优先遍历
-         */
-        virtual void bfsWrapper(traverse) = 0;
-
-//        template<typename T>
-        friend inline istream &operator>>(istream &in, Graph<T> &g) {
-            return in;
-        }
-
-//        template<typename T>
-        friend inline ostream &operator<<(ostream &out, const Graph<T> &g) {
-            out << ">>>>> " << g.name << " begin >>>>>" << endl;
-            for (auto i = 0; i < g.data.size(); i++) {
-                out << i << "->[";
-                auto &node = g.data[i];
-                for (auto &neighbor:node) {
-                    out << neighbor << ",";
-                }
-                out << "]" << endl;
-            }
-            out << ">>>>> " << g.name << " end >>>>>" << endl;
-            return out;
-        }
-    };
-
-    class UnrootedTree : public Graph<unsigned short> {
-    public:
-        UnrootedTree(const string name = "UnrootedTree") : Graph<unsigned short>(name) {}
-
-        void add(unsigned short from, unsigned short to) override {
-            if (from >= data.size()) {
-                data.resize(1 + from);
-            }
-            data[from].insert(to);
-            if (to >= data.size()) {
-                data.resize(1 + to);
-            }
-            data[to].insert(from);
-        }
-
-        void del(unsigned short from, unsigned short to) override {
+            n = numOfCarbon;
+            counter.clear();
+            counter.resize(n + 1, 0);
             try {
-                data.at(from).erase(to);
-                data.at(to).erase(from);
-                auto mm = std::max(from, to);
-                if (mm + 1 == data.size() && data[mm].empty()) {// 去掉末尾
-                    data.resize(mm);
-                }
-            } catch (exception e) {}
-        }
-
-        void dfs(traverse f, unsigned short current, unsigned short from) {
-            state[current] = GRAY;
-            f(*this, current, from);// do something with f
-            for (auto &neighborId:data[current]) {
-                if (state[neighborId] == WHITE) {
-                    dfs(f, neighborId, current);
-                }
-            }
-            state[current] = BLACK;
-        }
-
-        void dfsWrapper(traverse f) override {
-            state.resize(data.size(), WHITE);
-            for (auto i = 0; i < data.size(); i++) {
-                if (state[i] == WHITE) {
-                    dfs(f, i, numeric_limits<unsigned short>::max());// 出发：设置父节点为空
-                }
-            }
-        }
-
-        string toSequence() {
-            int n = data.size();
-            vector<int> son1(n, 0), son2(n, 0);
-            traverse findLeastNodeNumAmongAllSubTrees = [&](
-                    const Graph<unsigned short> &g, const unsigned short &current, const unsigned short &from) {
-                son1[current] = 1;// 当前节点初始化大小为1，临时变量，记录x所在子树的大小
-                son2[current] = 0;//记录x所在的最大子树的大小
-                for (auto &neighbor:g.data[current]) {// 遍历当前节点的邻居
-                    if (neighbor == from) {// 如果是父节点，跳过
-                        continue;
+                smiles.insert("C");
+                lastSet.emplace_back(getCarbon());                    // C1
+                if (n == 1) {
+                    return true;
+                } else {
+                    CGraph current;                                 // current structure
+                    for (int i = 2; i <= n; i++) {        // 由少到多迭代地计算
+                        newSmiles.clear();
+                        curSet.clear();
+                        for (auto &old:lastSet) {                   // 对于i-1碳的所有合法结构
+                            current = old;                          // 记录，对一个合法结构添加新碳
+                            const auto size = current.getData().size();
+                            for (auto j = 0; j < size; j++) {       // 尝试在这个结构的所有位置插入新原子
+                                auto &node = current.getData()[j];
+                                if (node.size() >= 4) { continue; }
+                                current.add(j, size);// 获得一个新结构
+                                auto hash = current.toString();
+                                if (newSmiles.insert(hash).second) {// 遇到一种新结构
+                                    counter[j]++;                   // 计数++
+                                    curSet.emplace_back(current);   // 记下新结构的图数据
+                                }
+                                current.del(j, size);               // 撤销新结构
+                            }
+                        }
+                        swap(lastSet, curSet);               // 用i碳图结构置换i-1碳图结构
+                        smiles.insert(newSmiles.begin(), newSmiles.end());
                     }
-                    findLeastNodeNumAmongAllSubTrees(g, neighbor, current);// 深度优先
-                    son1[current] += son1[neighbor];//当前子树大小为邻居节点字数大小的累加
-                    son2[current] = std::max(son2[current], son1[neighbor]);// son2记录当前节点相连的最大子树的大小
                 }
-                son2[current] = std::max(son2[current], n - 1 - son1[current]);// 另一侧会不会更大呢
-            };
-            dfsWrapper(findLeastNodeNumAmongAllSubTrees);
-            vector<string> partSeq(n, ""), allSeq(n, "");
-            //树的重心：找到一个点,其所有的子树中最大的子树节点数最少
-            return "";
+            } catch (std::exception e) {
+                LogLine(e.what());
+                return false;
+            }
+            return true;
         }
 
-        void bfsWrapper(traverse f) override {
+    private:
+        IsomerCounter() {}
 
-        }
+        ~IsomerCounter() {}
+
+        IsomerCounter(const IsomerCounter &) = delete;
+
+        const IsomerCounter &operator=(const IsomerCounter &) = delete;
     };
 }
 #endif //_ISOMER_H_

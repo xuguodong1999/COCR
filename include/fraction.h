@@ -8,51 +8,29 @@
 #include <limits>
 
 namespace cocr {
-    using namespace std;
-
+    template<typename T>
     class Fraction {
-    private:
-        int first, second;
-
-        int gcd(const int &x, const int &y) const {
-            return x % y == 0 ? y : gcd(y, x % y);
-        }
-
-        Fraction &reduce() {
-            if (!first) {
-                second = 1;
-            } else if (!second) {
-                second = 1;
-                first = first > 0 ? numeric_limits<int>::max() : numeric_limits<int>::min();
-            } else {
-                int x = gcd(first, second);
-                first /= x;
-                second /= x;
-            }
-            return *this;
-        }
-
     public:
-        void set(const int &numerator, const int &denominator = 1) {
+        void set(const T &numerator, const T &denominator = 1) {
             first = numerator;
             second = denominator;
             assert(denominator != 0);
             reduce();
         }
 
-        const int &numerator() const { return first; }
+        const T &numerator() const { return first; }
 
-        const int &denominator() const { return second; }
+        const T &denominator() const { return second; }
 
         Fraction() : first(0), second(1) {}
 
-        Fraction(const int &num, const int &den) : first(num), second(den) { reduce(); }
+        Fraction(const T &num, const T &den) : first(num), second(den) { reduce(); }
 
-        Fraction(const int &num) : first(num), second(1) {}
+        Fraction(const T &num) : first(num), second(1) {}
 
         ~Fraction() {}
 
-        Fraction &operator=(const int &integer) {
+        Fraction &operator=(const T &integer) {
             first = integer;
             second = 1;
             return *this;
@@ -140,27 +118,50 @@ namespace cocr {
             return *this;
         }
 
-        void fromString(const string &s) {
-            istringstream is(s);
+        void fromString(const std::string &s) {
+            std::istringstream is(s);
             is >> *this;
         }
 
-        string toString() const {
-            ostringstream os;
+        std::string toString() const {
+            std::ostringstream os;
             os << *this;
             return os.str();
         }
 
-        friend ostream &operator<<(ostream &out, const Fraction &x) {
+        friend std::ostream &operator<<(std::ostream &out, const Fraction &x) {
             out << x.first << " / " << x.second;
             return out;
         }
 
-        friend istream &operator>>(istream &in, Fraction &x) {
+        friend std::istream &operator>>(std::istream &in, Fraction &x) {
             char c;
             in >> x.first >> c >> x.second;
             return in;
         }
+
+    private:
+        T first, second;
+
+        T gcd(const T &x, const T &y) const {
+            return x % y == 0 ? y : gcd(y, x % y);
+        }
+
+        Fraction &reduce() {
+            if (!first) {
+                second = 1;
+            } else if (!second) {
+                second = 1;
+                first = first > 0 ? std::numeric_limits<T>::max() : std::numeric_limits<T>::min();
+            } else {
+                T x = gcd(first, second);
+                first /= x;
+                second /= x;
+            }
+            return *this;
+        }
     };
+
+    typedef Fraction<long long> frac;
 }
 #endif //!_FRACTION_H_

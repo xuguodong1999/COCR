@@ -1,48 +1,67 @@
+#include "cocr.h"
 #include "couch.h"
+#include "isomer.h"
 #include <QApplication>
 #include <QTextCodec>
 #include <QWidget>
-#include "isomer.h"
 
 using namespace std;
 
+void saveCouchToFile() {
+    cocr::dumpCouchToFile(
+            "/home/xgd/dataset/SCUT_IRAC/Couch",
+            "../../backup/gb2"
+    );
+}
+
 int main(int argc, char **argv) {
-//    cocr::UnrootedTree ut;
-//    ut.add(1, 0);
-//    ut.add(1, 1);
-//    ut.add(1, 2);
-//    ut.add(2, 1);
-//    cout << ut << endl;
-//    auto f = [](const cocr::Graph<unsigned short>& g,const unsigned short& current,const unsigned short& from) {
-//        cout << current << " is visited! My father node is "<<from<<" and here are my neighbors: [";
-//        for (auto &neighbor:g.data[current]) {
-//            cout << neighbor << ",";
-//        }
-//        cout << "]" << endl;
-//
-//    };
-//    ut.dfsWrapper(f);
-////    cout<<sizeof(unsigned)<<endl;
-//    return 0;
-
-    cocr::dumpCouchToFile("/home/xgd/dataset/SCUT_IRAC/Couch", "../../backup/gb2");
-    vector<cocr::SampleData> samples;
-    cocr::loadCouchFromFile("../../backup/dls", samples);
-    cout << "get " << samples.size() << " samples in main" << endl;
-    set<string> labels;
-    for (auto &s : samples) {
-        labels.insert(s.getLabel());
-    }
-    cout<<"count="<<labels.size()<<endl;
-//    for (auto &sample:samples) {
-//        cout << sample << endl;
-//        sample.visualize(2);
-////        sample.visualize(2, "/tmp/sample.jpg");
-//    }
+//    auto &ic = cocr::IsomerCounter::getInstance();
+//    ic.calculate(6);
+//    cocr::show(ic.counter);
+    typedef unsigned char number;
+    stringstream input("6 1 "
+                       "5 1 "
+                       "2 1 "
+                       "3 1 "
+                       "7 2 "
+                       "0 3 "
+                       "0 4 ");
+    cocr::UGraph<number> ut;
+    input >> ut;
+    LogLine(ut);
+    LogName(ut.toString());
     return 0;
+//     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+//     QApplication a(argc, argv);
+//     (new QWidget)->show();
+//     return a.exec();
+}
 
-    //qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
-    //QApplication a(argc, argv);
-    //(new QWidget)->show();
-    //return a.exec();
+namespace learn {
+    class A {//1
+    } a;
+
+    class B {//8
+    public:
+        virtual void hehe() {}
+    } b;
+
+    class B1 : public B {//8
+    public:
+        void hehe() override {}
+    } b1;
+
+    class C {
+    public:
+        virtual void hehe() = 0;
+    };
+
+    class C1 : public C {//8
+    public:
+        void hehe() override {}
+    } c1;
+
+    void hello() {
+        cout << sizeof(a) << "," << sizeof(b) << "," << sizeof(b1) << "," << sizeof(c1) << "," << endl;
+    }
 }
