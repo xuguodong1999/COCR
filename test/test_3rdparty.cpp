@@ -75,8 +75,8 @@ inline float helloOpenCV() {
     using namespace dnn;
     using namespace std;
     using namespace chrono;
-    const char *cfg = "../../weights/enetb0.cfg";
-    const char *weights = "../../weights/enetb0.weights";
+    const char *cfg = "../../res/weights/enetb0.cfg";
+    const char *weights = "../../res/weights/enetb0.weights";
     auto net = dnn::readNetFromDarknet(cfg, weights);
     net.setPreferableBackend(dnn::DNN_BACKEND_OPENCV);
     net.setPreferableTarget(dnn::DNN_TARGET_CPU);
@@ -86,7 +86,7 @@ inline float helloOpenCV() {
     for (auto i = 0; i < outLayerIndices.size(); i++) {
         outBlobNames.at(i) = layerNames.at(outLayerIndices.at(i) - 1);
     }
-    auto img = imread("../../test/1a0n.jpg", IMREAD_COLOR);
+    auto img = imread("../../res/img/1a0n.jpg", IMREAD_COLOR);
     Size inputSize(img.rows - img.rows % 32, img.cols - img.cols % 32);
     Mat vec4d;
     blobFromImage(img, vec4d, 1 / 255.0, inputSize);

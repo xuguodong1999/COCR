@@ -21,7 +21,7 @@ namespace cocr {
         std::list<CGraph> lastSet, curSet;              // C(i,i-1) alkanetopos' structure
         std::vector<long long> counter;                 // C1-n alkanetopo 数量计数器
         std::string convertGraphToString(CGraph &g) {
-
+            return "";
         }
 
         CGraph getCarbon() {
