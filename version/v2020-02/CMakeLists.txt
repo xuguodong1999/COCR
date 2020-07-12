@@ -11,6 +11,7 @@ add_executable(${MODULE_NAME} ${DIR_SRCS})
 
 # 修改MSVC为静态编译
 if (MSVC)
+    Set_Target_Properties(${MODULE_NAME} PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
     if (CMAKE_BUILD_TYPE)
         if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
             target_compile_options(${MODULE_NAME} PRIVATE /MTd)
@@ -22,7 +23,7 @@ if (MSVC)
     endif ()
 endif ()
 
-target_link_libraries(${MODULE_NAME}
+target_link_libraries(${MODULE_NAME} 
         ${OPENBABEL2_LIBRARIES}
         ${OpenCV_LIBS}
         Qt5::Widgets)

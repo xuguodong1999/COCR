@@ -12,7 +12,7 @@ void sosoTest();
 int  main(int argc, char* argv[]) {
 	setAppAttribute();
 	QApplication app(argc, argv);
-    IOUtil::print(":/");
+    // IOUtil::print(":/");
 	OBUtil ob;
 	ob.releasePlugin();
 //	std::string s;
@@ -22,9 +22,9 @@ int  main(int argc, char* argv[]) {
 //	exit(-1);
 
 
-	if (QLocale().language() == QLocale::Chinese) {
-		setAppTranslator("zh_CN");
-	}
+	// if (QLocale().language() == QLocale::Chinese) {
+	// 	setAppTranslator("zh_CN");
+	// }
 	//sosoTest();
 	(new AppWindow)->showMaximized();
 #ifdef USE_QT_ANDROID
