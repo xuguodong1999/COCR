@@ -8,9 +8,9 @@ if (MSVC)
     add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
 endif ()
 # 配置Qt
-if (UNIX)       # FIXME: linux���޸ĵ�Qt���cmake�ļ���λ��
+if (UNIX)       # FIXME:
     set(Qt5_DIR /home/xgd/Qt/5.15.0/gcc_64/lib/cmake/Qt5)
-elseif (MSVC)   # FIXME: windows���޸ĵ�Qt���cmake�ļ���λ��
+elseif (MSVC)   # FIXME:
     # set(Qt5_DIR C:/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5)
     set(Qt5_DIR C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5)
 endif ()
@@ -53,5 +53,7 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/frugally-deep/include)
 # 配置 RapidJson
 include_directories(${CMAKE_SOURCE_DIR}/lib/rapidjson/include)
 
+
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(demo-2020-02)
