@@ -8,9 +8,9 @@ if (MSVC)
     add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
 endif ()
 # 配置Qt
-if (UNIX)       # FIXME:
+if (UNIX)       # FIXME: linux下修改到Qt库的cmake文件夹位置
     set(Qt5_DIR /home/xgd/Qt/5.15.0/gcc_64/lib/cmake/Qt5)
-elseif (MSVC)   # FIXME:
+elseif (MSVC)   # FIXME: windows下修改到Qt库的cmake文件夹位置
     # set(Qt5_DIR C:/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5)
     set(Qt5_DIR C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5)
 endif ()
@@ -56,4 +56,4 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/rapidjson/include)
 
 add_subdirectory(src)
 add_subdirectory(test)
-add_subdirectory(demo-2020-02)
+add_subdirectory(version/v2020-02)
