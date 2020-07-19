@@ -12,7 +12,6 @@ Debug*/
 debug*/
 cmake-*/
 
-
 *.o
 *.s
 *.i
@@ -25,7 +24,7 @@ cmake-*/
 *.pdb
 *.pro.user
 
-backup/
+.backup/
 lib*/
 build*/
 .build*/
