@@ -41,6 +41,7 @@ namespace cocr {
         }
         out << "]" << std::endl;
     }
+
     template<typename T>
     inline void show(const std::list<T> &arr, std::ostream &out = std::cout) {
         out << "[";

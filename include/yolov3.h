@@ -173,7 +173,7 @@ namespace cocr {
             assert(width % gw == 0 && height % gh == 0);
             const int gridNumX = width / gw, gridNumY = height / gh;
             const int offset = 4 + 1 + classes;
-            auto len=scaleOut.size();
+            auto len = scaleOut.size();
 //            LogName(len);
 //            LogName(gridNumX);
 //            LogName(gridNumY);
@@ -202,8 +202,8 @@ namespace cocr {
                         confIter = start + 4;
 //                        LogName("@");
 //                        transform(confIter, end, cp.begin(), sigmod);
-                        vector<float> cp(1 + classes,0);
-                        copy(start+5,end,cp.begin());
+                        vector<float> cp(1 + classes, 0);
+                        copy(start + 5, end, cp.begin());
                         for (auto i = cp.begin(); i != cp.end(); i++) { *i = sigmod(*i); }
 //                        LogName("#@");
                         for (auto i = cp.begin() + 1; i != cp.end(); i++) { *i *= cp.front(); }

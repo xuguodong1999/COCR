@@ -2,8 +2,8 @@
 
 ## Apply object-detection model on OCR of structure formulas in chemistry
 
-![object-detection demo](../../res/testcase/screenshot-2020-0217.jpg)
-![graphics demo](../../res/testcase/screenshot-2020-0222.gif)
+![object-detection demo](../../res/assert/screenshot-2020-0217.jpg)
+![graphics demo](../../res/assert/screenshot-2020-0222.gif)
 
 ## Application Introduction
 

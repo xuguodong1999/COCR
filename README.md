@@ -71,5 +71,5 @@ $(MSVC x64) nmake && nmake install
 
 ## 2020年2月，大创中期检查的效果展示
 
-![目标检测示例](./res/testcase/screenshot-2020-0217.jpg)
-![图元编辑示例](./res/testcase/screenshot-2020-0222.gif)
+![目标检测示例](./res/assert/screenshot-2020-0217.jpg)
+![图元编辑示例](./res/assert/screenshot-2020-0222.gif)

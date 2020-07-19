@@ -222,7 +222,7 @@ namespace cocr {
             dfsWrapper(before, in, after);
             auto minST = *min_element(maxSubTreeSize.begin(), maxSubTreeSize.end());//  最大子树的节点数
             cout << minST << std::endl;
-            
+
 //            std::string finalSeq = "";
 //            std::vector<std::string> partSeq, allSeq;
 //            partSeq.resize(size, "");
