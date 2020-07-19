@@ -62,10 +62,78 @@
 // creation has to have a sufficiently high version number for the features that are in
 // use, and (2) the shader code's version directive is different.
 
+#include <QDir>
+#include <QFileInfoList>
+#include <QDebug>
+void print(const QString& _qrcTopDir) {
+    QDir qrcTopDir(_qrcTopDir);
+    QFileInfoList fileInfoList = qrcTopDir.entryInfoList();
+    while (!fileInfoList.isEmpty()) {
+        QFileInfo tempFileInfo = fileInfoList.last();
+        qDebug() << tempFileInfo.absoluteFilePath();
+        if (tempFileInfo.isDir()) {
+            if (tempFileInfo.fileName() != "." && tempFileInfo.fileName() != "..") {
+                QDir subDir(tempFileInfo.filePath());
+                fileInfoList.removeLast();
+                fileInfoList.append(subDir.entryInfoList());
+            }
+        }
+        else {
+            fileInfoList.removeLast();
+        }
+    }
+}
+
+bool release(const QString& _qrcTopDir, const QString& _targetDir) {
+    QDir qrcTopDir(_qrcTopDir);
+    if (!qrcTopDir.exists()) {
+        qDebug() << "!qrcTopDir.exists()";
+        return false;
+    }
+    QDir targetDir(_targetDir);
+    if (!targetDir.exists()) {
+        if (!targetDir.mkpath(_targetDir)) {
+            qDebug() << "!targetDir.mkpath(_targetDir)";
+            return false;
+        }
+    }
+    QFileInfoList fileInfoList = qrcTopDir.entryInfoList();
+    while (!fileInfoList.isEmpty()) {
+        QFileInfo tempFileInfo = fileInfoList.last();
+        if (tempFileInfo.isFile()) {
+            const QString newFilePath = _targetDir + "/" + tempFileInfo.fileName();
+            if (!QFile::exists(newFilePath)) {
+                QFile::copy(tempFileInfo.absoluteFilePath(), newFilePath);
+            }
+            if (!QFile::exists(newFilePath)) {
+                qDebug() << "!QFile::exists(newFilePath)";
+                return false;
+            }
+            fileInfoList.removeLast();
+        }
+        else if (tempFileInfo.isDir()) {
+            if (tempFileInfo.fileName() != "." && tempFileInfo.fileName() != "..") {
+                QDir subDir(tempFileInfo.filePath());
+                fileInfoList.removeLast();
+                fileInfoList.append(subDir.entryInfoList());
+            }
+        }
+        else {
+            fileInfoList.removeLast();
+        }
+    }
+    return true;
+}
+
+#ifdef Q_OS_ANDROID
+#include <QtAndroidExtras/QtAndroid>
+#endif
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-
+    print(":/");
+    QString cacheDir="/data/data/com.xgd.cocr/cache/obabel";
+    release(":/obabel",cacheDir);
     QSurfaceFormat fmt;
     fmt.setDepthBufferSize(24);
 
