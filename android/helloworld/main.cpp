@@ -65,6 +65,33 @@
 #include <QDir>
 #include <QFileInfoList>
 #include <QDebug>
+#include <openbabel/mol.h>
+#include <openbabel/builder.h>
+#include <openbabel/forcefield.h>
+#include <openbabel/obconversion.h>
+#include <iostream>
+#include <string>
+std::string testob(){
+    using namespace OpenBabel;
+    using namespace std;
+    OBConversion conv;
+    auto format_in = conv.FindFormat("smiles");
+    auto format_out = conv.FindFormat("pdb");
+    stringstream ism("c1ccccc1");
+    OBMol mol;
+    conv.SetInFormat(format_in);
+    conv.SetOutFormat(format_out);
+    conv.Read(&mol, &ism);
+    OBForceField *pFF = OBForceField::FindForceField("uff");
+    OBBuilder builder;
+    builder.Build(mol);
+    mol.AddHydrogens(false, true);
+    pFF->Setup(mol);
+    pFF->UpdateCoordinates(mol);
+    stringstream osm;
+    conv.Write(&mol, &osm);
+    return osm.str();
+}
 void print(const QString& _qrcTopDir) {
     QDir qrcTopDir(_qrcTopDir);
     QFileInfoList fileInfoList = qrcTopDir.entryInfoList();
@@ -134,6 +161,9 @@ int main(int argc, char *argv[])
     print(":/");
     QString cacheDir="/data/data/com.xgd.cocr/cache/obabel";
     release(":/obabel",cacheDir);
+    putenv("BABEL_DATADIR=/data/data/com.xgd.cocr/cache/obabel");
+    qDebug()<<testob().c_str();
+
     QSurfaceFormat fmt;
     fmt.setDepthBufferSize(24);
 

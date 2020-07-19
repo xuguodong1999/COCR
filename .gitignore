@@ -28,3 +28,4 @@ cmake-*/
 lib*/
 build*/
 .build*/
+android/openbabel/
