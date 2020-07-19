@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     using namespace fdeep;
     using namespace cocr;
     auto model = load_model("../../res/weights/mv2-fdeep.json", false);
-    QImage img("../../res/img/1a0n.jpg");
+    QImage img("../../res/testcase/1a0n.jpg");
     img = img.convertToFormat(QImage::Format::Format_RGB666)
             .scaled(mod32(img.width()), mod32(img.height()));
     tensors input({tensor_from_bytes(img.constBits(), img.width(), img.height(), 3)});
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
                                {180, 30},
                        }, 11, 3, 32, 32);
     yolov3.log();
-    list<Object> result;
+    list<RectObj> result;
     yolov3.handleOneScale(result, vec32, 0, img.width(), img.height());
     yolov3.handleOneScale(result, vec16, 1, img.width(), img.height());
     yolov3.handleOneScale(result, vec8, 2, img.width(), img.height());

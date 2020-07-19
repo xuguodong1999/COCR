@@ -23,6 +23,7 @@ cmake-*/
 *.ilk
 *.exp
 *.pdb
+*.pro.user
 
 backup/
 lib*/

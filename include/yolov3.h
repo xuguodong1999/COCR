@@ -10,21 +10,21 @@
 
 using namespace std;
 namespace cocr {
-    class Object {
+    class RectObj {
     private:
         float x, y, w, h, conf;
         int index;
     public:
-        Object() {}
+        RectObj() {}
 
-        Object(float x, float y, float w, float h, float conf, int index)
+        RectObj(float x, float y, float w, float h, float conf, int index)
                 : x(x), y(y), w(w), h(h), conf(conf), index(index) {}
 
         QRectF toQRectF() {
             return QRectF(x - w / 2, y - h / 2, w, h);
         }
 
-        friend std::ostream &operator<<(std::ostream &out, const Object &o) {
+        friend std::ostream &operator<<(std::ostream &out, const RectObj &o) {
             out << "\n[" << o.x << "," << o.y << "," << o.w << "," << o.h << "," << o.conf << "," << o.index << "]";
             return out;
         }
@@ -34,7 +34,7 @@ namespace cocr {
         }
 
         void setIndex(int index) {
-            Object::index = index;
+            RectObj::index = index;
         }
 
         float getX() const {
@@ -42,7 +42,7 @@ namespace cocr {
         }
 
         void setX(float x) {
-            Object::x = x;
+            RectObj::x = x;
         }
 
         float getY() const {
@@ -50,7 +50,7 @@ namespace cocr {
         }
 
         void setY(float y) {
-            Object::y = y;
+            RectObj::y = y;
         }
 
         float getW() const {
@@ -58,7 +58,7 @@ namespace cocr {
         }
 
         void setW(float w) {
-            Object::w = w;
+            RectObj::w = w;
         }
 
         float getH() const {
@@ -66,7 +66,7 @@ namespace cocr {
         }
 
         void setH(float h) {
-            Object::h = h;
+            RectObj::h = h;
         }
 
         float getConf() const {
@@ -74,10 +74,10 @@ namespace cocr {
         }
 
         void setConf(float conf) {
-            Object::conf = conf;
+            RectObj::conf = conf;
         }
 
-        float iou(const Object &o) const {
+        float iou(const RectObj &o) const {
             float x0 = x - w / 2, y0 = y - h / 2,
                     x1 = x + w / 2, y1 = y + h / 2;
             float x2 = o.x - o.w / 2, y2 = o.y - o.h / 2,
@@ -91,7 +91,7 @@ namespace cocr {
             return ss / (sa + sb - ss);
         }
 
-        friend inline void nms(list<Object> &objects,
+        friend inline void nms(list<RectObj> &objects,
                                const float &conf_thresh = 0.5, const float &iou_thresh = 0.5) {
             for (auto it = objects.begin(); it != objects.end();) {
                 if (it->conf < conf_thresh) {
@@ -100,7 +100,7 @@ namespace cocr {
                     it++;
                 }
             }
-            objects.sort([](const Object &a, const Object &b) {
+            objects.sort([](const RectObj &a, const RectObj &b) {
                 return a.conf > b.conf;
             });
             for (auto it1 = objects.cbegin(); it1 != objects.end(); it1++) {
@@ -119,13 +119,6 @@ namespace cocr {
 
     class Yolov3Layer {
     public:
-        /*
-         *         int classes;
-        int how_many_scales;// 通常是在2/3个尺度下检测
-        vector<pair<float, float>> anchors;
-        int how_many_anchors_per_grid;// 支持更多anchor数目（yolov3及其变种几乎都使用3）
-        int max_grid_width, max_grid_height;// 支持矩形grid（yolov3及其变种几乎都使用32x32）
-         */
         void log() {
             LogName(classes);
             LogName(how_many_scales);
@@ -161,7 +154,7 @@ namespace cocr {
          * @param width 输入图像的宽，要满足倍数要求
          * @param height 输入图像的高，要满足倍数要求
          */
-        void handleOneScale(list<Object> &objects,
+        void handleOneScale(list<RectObj> &objects,
                             const vector<float> &scaleOut, const int &scaleIndex = 0,
                             const int &width = 416, const int &height = 416) {
             assert(scaleIndex < how_many_scales);
@@ -216,7 +209,7 @@ namespace cocr {
                         hh = exp(*wIter) * anchor.second;
 //                        LogName(")");
                         objects.emplace_back(
-                                Object(xx, yy, ww, hh, *maxProbIter, maxProbIndex));
+                                RectObj(xx, yy, ww, hh, *maxProbIter, maxProbIndex));
 //                        LogName("*");
                     }
                 }

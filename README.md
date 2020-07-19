@@ -5,6 +5,7 @@
 * 【完结】 构建过程全面脚本化，摆脱手动下载编译链接各个库的过程
 * 【完结】 支持 linux 和 win10 PC端 OpenBabel>=3.0.0、OpenCV>=4.3的自动构建、运行、插件加载
 * 【正在做……】 用 c++ 重写 ChemInk 里 c with class 的代码，重构 COCR 主分支中数据集生成代码
+* 【正在做……】 跑通OpenCV和OpenBabel的安卓构建，尝试编写qml
 * 【计划中……】 客户端开发彻底 Qt 化，充分利用框架提供的序列化、线程管理、网络通信机制，从长计议开发桌面应用
 * 【计划中……】 客户端的需求列表：
 * 【计划中……】 基于控件拖动的结构式编辑器
@@ -12,6 +13,18 @@
 * 【计划中……】 基于目标检测的结构式编辑器
 * 【计划中……】 OpenBabel 的图形界面，抄写并改进 OpenBabel 的设计，去 OpenBabel
 * 【计划中……】 Gromacs 的图形界面
+
+## 代码结构
+
+1. 3rdparty 目录：通过submodule引用的其它项目
+2. include 目录：当前开发版本的头文件
+3. src 目录：当前开发版本的源文件和CMake配置文件
+4. test 目录：当前开发分支的gtest测试源文件
+5. res 目录：资源文件和qrc资源引用文件
+6. script 目录：submodule初始化脚本和第三方库编译脚本
+7. version 目录：存放历史版本（因为码龄3年的萌新的代码能力在快速变化，看几个月前的代码像屎山……）
+8. android 目录：qmake构建配置，考虑到qt在快速更新对安卓的支持（就是现在的支持不够完善），始终使用qt-creator作为COCR安卓开发的IDE
+9. . 目录：COCR 根目录存放CMake配置文件，引用来自version下各个版本子工程、src下的开发子工程和test测试子工程的CMake配置文件
 
 ## 第三方库的构建
 
@@ -39,11 +52,11 @@ $(MSVC x64, git, CMake) .\script\build.bat
 
 * 修改 CMakeList.txt 中 Qt 配置
 ```txt
-if (UNIX)       # FIXME: linux下修改到Qt库的cmake文件夹位置
-    set(Qt5_DIR /home/xgd/Qt/5.15.0/gcc_64/lib/cmake/Qt5)
-elseif (MSVC)   # FIXME: windows下修改到Qt库的cmake文件夹位置
-    set(Qt5_DIR C:/Qt/5.12.6/msvc2019_64/lib/cmake/Qt5)
-    # set(Qt5_DIR lib/Qt/5.15.0/msvc2017_64/lib/cmake/Qt5)
+if (UNIX) # FIXME: linux下修改到Qt库的cmake文件夹位置
+ set(Qt5_DIR /home/xgd/Qt/5.15.0/gcc_64/lib/cmake/Qt5)
+elseif (MSVC) # FIXME: windows下修改到Qt库的cmake文件夹位置
+ set(Qt5_DIR C:/Qt/5.12.6/msvc2019_64/lib/cmake/Qt5)
+ # set(Qt5_DIR lib/Qt/5.15.0/msvc2017_64/lib/cmake/Qt5)
 endif ()
 ```
 

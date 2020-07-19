@@ -26,7 +26,7 @@
 * No Introduction on DataSet. 
 * Maybe a better DataSet can put OCR of structure formulas into pratical use 1st time in history. Who knows. 
 * OSRA tried, but ten years ago, only template-based method can be used. What a wrong time birth. 
-* Object-detection method seems still not to be a final solution. 
+* RectObj-detection method seems still not to be a final solution. 
 * Papers on CapsuleNet and GNN are enlightening. Who knows. 
 * What's the meaning of this universe. Who knows.
 
