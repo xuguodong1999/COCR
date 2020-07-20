@@ -50,7 +50,7 @@ $(MSVC x64, git, CMake) .\script\build.bat
 
 * Android
 ```shell
-7z x android/openbabel.7z android
+7z x android/openbabel.7z -oandroid
 wget https://github.com/opencv/opencv/releases/download/4.3.0/opencv-4.3.0-android-sdk.zip
 unzip opencv-4.3.0-android-sdk.zip -d android/
 mv android/OpenCV-android-sdk android/opencv
