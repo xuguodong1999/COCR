@@ -23,9 +23,11 @@ cmake-*/
 *.exp
 *.pdb
 *.pro.user
+*.zip
 
 .backup/
 lib*/
 build*/
 .build*/
 android/openbabel/
+android/opencv/

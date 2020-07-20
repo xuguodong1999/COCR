@@ -48,6 +48,18 @@ REM checkout指定版本，按照设定的选项编译
 $(MSVC x64, git, CMake) .\script\build.bat
 ```
 
+* Android
+```shell
+7z x android/openbabel.7z android
+wget https://github.com/opencv/opencv/releases/download/4.3.0/opencv-4.3.0-android-sdk.zip
+unzip opencv-4.3.0-android-sdk.zip -d android/
+mv android/OpenCV-android-sdk android/opencv
+# OpenBabel for Android 的编译命令
+# export NDK_ROOT=/home/xgd/Android/Sdk/ndk/21.1.6352462
+# mkdir build-openbabel-android && cd build-openbabel-android
+# cmake ../3rdparty/openbabel -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../android/openbabel -DBUILD_TESTING=OFF -DRAPIDJSON_INCLUDE_DIRS=../lib/rapidjson/include/rapidjson -DBUILD_GUI=OFF -DWITH_INCHI=OFF -DWITH_STATIC_INCHI=OFF -DOPENBABEL_USE_SYSTEM_INCHI=OFF -DWITH_MAEPARSER=OFF -DANDROID_ABI="armeabi-v7a with NEON" -DCMAKE_TOOLCHAIN_FILE="/home/xgd/Android/Sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake" -DANDROID_NATIVE_API_LEVEL=21 -DANDROID_NDK="${NDK_ROOT}" -DBUILD_SHARED=OFF 
+```
+
 ## Qt引入
 
 * 修改 CMakeList.txt 中 Qt 配置

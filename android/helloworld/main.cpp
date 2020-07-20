@@ -155,10 +155,66 @@ bool release(const QString& _qrcTopDir, const QString& _targetDir) {
 #ifdef Q_OS_ANDROID
 #include <QtAndroidExtras/QtAndroid>
 #endif
+
+#include <opencv2/dnn.hpp>
+#include <opencv2/opencv.hpp>
+#include <chrono>
+#include <vector>
+
+inline float helloOpenCV() {
+    using namespace cv;
+    using namespace dnn;
+    using namespace std;
+    using namespace chrono;
+    QByteArray weights, cfg;
+    const char *cfgPath = ":/weights/enetb0.cfg";
+    const char *weightsPath = ":/weights/enetb0.weights";
+    QFile cf(cfgPath);
+    if (!cf.exists()) {
+        qDebug()<<cfgPath;
+        qDebug() << "!cf.exists()";
+        return false;
+    }
+    cf.open(QIODevice::ReadOnly);
+    cfg = cf.readAll();
+    cf.close();
+    QFile wf(weightsPath);
+    if (!wf.exists()) {
+        qDebug() << "!wf.exists()";
+        return false;
+    }
+    wf.open(QIODevice::ReadOnly);
+    weights = wf.readAll();
+    wf.close();
+    auto net =cv::dnn::readNetFromDarknet(cfg.constData(), cfg.length(), weights.constData(), weights.length());
+    net.setPreferableBackend(dnn::DNN_BACKEND_OPENCV);
+    net.setPreferableTarget(dnn::DNN_TARGET_CPU);
+    auto outLayerIndices = net.getUnconnectedOutLayers();
+    auto layerNames = net.getLayerNames();
+    vector<String> outBlobNames(outLayerIndices.size());
+    for (auto i = 0; i < outLayerIndices.size(); i++) {
+        outBlobNames.at(i) = layerNames.at(outLayerIndices.at(i) - 1);
+    }
+    auto img = Mat();
+    img.create(128,128,CV_8UC3);
+    Size inputSize(img.rows - img.rows % 32, img.cols - img.cols % 32);
+    Mat vec4d;
+    blobFromImage(img, vec4d, 1 / 255.0, inputSize);
+    net.setInput(vec4d);
+    auto start = system_clock::now();
+    vector<Mat> outs;
+    net.forward(outs, outBlobNames);
+    auto end = system_clock::now();
+    auto duration = duration_cast<microseconds>(end - start);
+    return duration.count() * milliseconds::period::num / milliseconds::period::den;
+}
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     print(":/");
+    cv::Mat m;
+    qDebug()<<helloOpenCV()<<"ms";
     QString cacheDir="/data/data/com.xgd.cocr/cache/obabel";
     release(":/obabel",cacheDir);
     putenv("BABEL_DATADIR=/data/data/com.xgd.cocr/cache/obabel");
