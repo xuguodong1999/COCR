@@ -104,3 +104,4 @@ const QStringList IOUtil::getLanguageList(const QString& _langDir) {
 	}
 	return result;
 }
+

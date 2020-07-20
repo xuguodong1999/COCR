@@ -4,8 +4,8 @@ set(MODULE_NAME COCR-app-v2020-02)
 include_directories(${CMAKE_SOURCE_DIR}/version/v2020-02)
 aux_source_directory(${CMAKE_SOURCE_DIR}/version/v2020-02 DIR_SRCS)
 
-qt5_add_resources(DIR_SRCS ../../res/img.qrc ../../res/obabel.qrc)
-qt5_add_big_resources(DIR_SRCS ../../res/weights.qrc)
+#qt5_add_resources(DIR_SRCS ../../res/img.qrc ../../res/obabel.qrc)
+#qt5_add_big_resources(DIR_SRCS ../../res/weights.qrc)
 
 add_executable(${MODULE_NAME} ${DIR_SRCS})
 

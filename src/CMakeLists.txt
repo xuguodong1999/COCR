@@ -3,6 +3,10 @@ set(MODULE_NAME COCR-app)
 # 自己的代码
 include_directories(${CMAKE_SOURCE_DIR}/include)
 aux_source_directory(${CMAKE_SOURCE_DIR}/src DIR_SRCS)
+
+qt5_add_resources(DIR_SRCS ../res/img.qrc ../res/obabel.qrc)
+qt5_add_big_resources(DIR_SRCS ../res/weights.qrc)
+
 add_executable(${MODULE_NAME} ${DIR_SRCS})
 
 # 修改MSVC为静态编译

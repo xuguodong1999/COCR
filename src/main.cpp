@@ -19,10 +19,12 @@ void saveCouchToFile() {
 #include <fdeep/fdeep.hpp>
 #include <QImage>
 #include "yolov3.h"
-
+#include "obtoolbox.h"
 int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
+    auto& ob=cocr::OBToolBox::getInstance();
+    return 0;
     using namespace fdeep;
     using namespace cocr;
     auto model = load_model("../../res/weights/mv2-fdeep.json", false);

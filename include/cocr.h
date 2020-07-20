@@ -10,6 +10,17 @@
 #define LogValue(value) std::cout << (value);
 #define LogPressKey2Continue() std::cout << std::endl << "press any key to continue..." << std::endl;
 namespace cocr {
+    enum class ErrorCode{
+        NormalExec,
+        OBForceFieldMissing,
+        OBFormatMissing,
+        OBReadError,
+        InputDirMissing,
+        OutputDirMissing,
+        MoveFileFailed,
+        CreateFileFailed,
+        DeleteFileFailed,
+    };
     template<typename T>
     inline T mod32(const T &t) {
         return t - t % 32;
