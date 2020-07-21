@@ -2,10 +2,12 @@
 #define _SKETCHWIDGET_H_
 
 #include "cocr.h"
-#include "sketchview.h"
-#include "sketchscene.h"
 #include <QPainter>
 #include <QWidget>
+
+class SketchView;
+
+class SketchScene;
 
 class SketchWidget : public QWidget {
 Q_OBJECT
@@ -46,6 +48,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
     void paintEvent(QPaintEvent *event) override;
+
+    void resizeEvent(QResizeEvent*event)override;
 
 private:
     QList<SketchScene *> scenes;

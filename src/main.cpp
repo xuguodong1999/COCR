@@ -1,4 +1,4 @@
-//#include "cocr.h"
+#include "cocr.h"
 //#include "couch.h"
 //#include "isomer.h"
 //#include <QLabel>
@@ -20,13 +20,12 @@ using namespace std;
 //#include <QImage>
 //#include "yolov3.h"
 //#include "obtoolbox.h"
-#include "sketchwidget.h"
+#include "mainwindow.h"
 
 int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
-    SketchWidget w;
-    w.show();
+    (new MainWindow)->show();
     return a.exec();
 //    auto& ob=cocr::OBToolBox::getInstance();
 //    return 0;
@@ -150,6 +149,6 @@ namespace learn {
     } c1;
 
     void hello() {
-        cout << sizeof(a) << "," << sizeof(b) << "," << sizeof(b1) << "," << sizeof(c1) << "," << endl;
+        std::cout << sizeof(a) << "," << sizeof(b) << "," << sizeof(b1) << "," << sizeof(c1) << "," << std::endl;
     }
 }

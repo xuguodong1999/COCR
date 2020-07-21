@@ -1,22 +1,19 @@
 #include "sketchwidget.h"
+
+#include "sketchview.h"
+#include "sketchscene.h"
+
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
+#include <QResizeEvent>
 #include <QToolButton>
 #include <QDesktopWidget>
 #include <QApplication>
 
 SketchWidget::SketchWidget(QWidget *parent) : QWidget(parent) {
-    resize(qApp->desktop()->size() / 2);
     penWidth = 5;
-    bufPixmap = QPixmap(size());
-    bufPixmap.fill(Qt::white);
-    painter.begin(&bufPixmap);
-    painter.setPen(QPen(Qt::black, penWidth));
-    painter.setRenderHint(QPainter::Antialiasing);
-
 
     view = new SketchView(this);
-    view->resize(size());
     view->setRenderHint(QPainter::Antialiasing);
     view->setCacheMode(QGraphicsView::CacheBackground);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -31,7 +28,6 @@ SketchWidget::SketchWidget(QWidget *parent) : QWidget(parent) {
     auto backItem = currentScene->addPixmap(bufPixmap);
     backItem->setZValue(-1);
     backItem->setActive(false);
-    currentScene->setSceneRect(0, 0, width(), height());
     scenes.push_back(currentScene);
     view->setScene(currentScene);
     view->hide();
@@ -44,6 +40,9 @@ void SketchWidget::mousePressEvent(QMouseEvent *event) {
 
     QWidget::mousePressEvent(event);
     lastPos = event->pos();
+    painter.begin(&bufPixmap);
+    painter.setPen(QPen(Qt::black, penWidth));
+    painter.setRenderHint(QPainter::Antialiasing);
     painter.drawLine(lastPos, lastPos);
     updateRect(lastPos, lastPos);
 
@@ -69,6 +68,7 @@ void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
     item->setPen(QPen(Qt::black, penWidth));
     currentScene->clearPath();
     view->render(&painter, rect(), rect());
+    painter.end();
     update();
 }
 
@@ -100,7 +100,10 @@ void SketchWidget::updateRect(const QPoint &p1, const QPoint &p2) {
 }
 
 void SketchWidget::showScribbleArea() {
+    bufPixmap.fill(Qt::white);
+    painter.begin(&bufPixmap);
     view->render(&painter, rect(), rect());
+    painter.end();
     view->hide();
 }
 
@@ -122,4 +125,15 @@ const QColor &SketchWidget::getPenColor() const {
 
 void SketchWidget::setPenColor(const QColor &penColor) {
     SketchWidget::penColor = penColor;
+}
+void SketchWidget::resizeEvent(QResizeEvent*event){
+    // qDebug()<<"resize...";
+    QWidget::resizeEvent(event);
+    bufPixmap = QPixmap(size());
+    bufPixmap.fill(Qt::white);
+    
+    currentScene->setSceneRect(0, 0, width(), height());
+    view->resize(size());
+    showScribbleArea();
+    // showSketchView();
 }
