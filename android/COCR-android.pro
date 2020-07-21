@@ -1,4 +1,4 @@
-QT += quick
+QT += quick gui widgets
 
 CONFIG += c++14 resources_big androidextras
 
@@ -8,7 +8,9 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 
 INCLUDEPATH +=  $${PWD}/openbabel/include/openbabel3 \
                 # FIXME: point to opencv include directory here
-                $${PWD}/../lib/opencv/include/opencv4
+                $${PWD}/../lib/opencv/include/opencv4 \
+                $${PWD}/../include
+
 
 LIBS += $${PWD}/openbabel/lib/libopenbabel.a \
         $${PWD}/opencv/sdk/native/staticlibs/armeabi-v7a/libopencv_dnn.a \
@@ -45,6 +47,7 @@ HEADERS += \
     helloworld/logo.h
 
 SOURCES += \
+    ../src/yolov3.cpp \
     helloworld/glwindow.cpp \
     helloworld/logo.cpp \
     helloworld/main.cpp

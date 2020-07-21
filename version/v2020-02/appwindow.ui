@@ -196,7 +196,7 @@
   </action>
   <action name="actionScribbleArea">
    <property name="text">
-    <string>ScribbleArea</string>
+    <string>SketchWidget</string>
    </property>
   </action>
   <action name="action3D">

@@ -60,15 +60,23 @@ namespace cocr {
         pFF->WeightedRotorSearch(50, 10);
         pFF->SteepestDescent(100, 1.0e-6);
         pFF->UpdateCoordinates(mol);
-        stringstream writter(result);
+        stringstream writter;
         conv.Write(&mol, &writter);
+        result = writter.str();
         return ErrorCode::NormalExec;
     }
 
     OBToolBox::OBToolBox() {
+#ifdef Q_OS_ANDROID
+        const auto obDataPath = "/data/data/com.xgd.cocr/cache/obabel";
+        const auto envEntry = "BABEL_DATADIR=/data/data/com.xgd.cocr/cache/obabel";
+        putenv(const_cast<char *>(envEntry));
+        releaseToDir(":/obabel", obDataPath);
+#else
         const auto obDataPath = qApp->applicationDirPath().toStdString() + "/obabel";
         const auto envEntry = "BABEL_DATADIR=" + obDataPath;
         putenv(const_cast<char *>(envEntry.c_str()));
         releaseToDir(":/obabel", obDataPath.c_str());
+#endif
     }
 }

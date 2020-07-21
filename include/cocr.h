@@ -1,16 +1,19 @@
 #ifndef _COCR_H_
 #define _COCR_H_
 
-#include <vector>
 #include <iostream>
+#include <vector>
 #include <list>
+#include <utility>
+#include <algorithm>
+#include <QDebug>
 
 #define LogName(value) std::cout << (#value) << "=" << (value) << std::endl;
 #define LogLine(value) std::cout << (value) << std::endl;
 #define LogValue(value) std::cout << (value);
 #define LogPressKey2Continue() std::cout << std::endl << "press any key to continue..." << std::endl;
 namespace cocr {
-    enum class ErrorCode{
+    enum class ErrorCode {
         NormalExec,
         OBForceFieldMissing,
         OBFormatMissing,
@@ -20,7 +23,9 @@ namespace cocr {
         MoveFileFailed,
         CreateFileFailed,
         DeleteFileFailed,
+        CvDnnError,
     };
+
     template<typename T>
     inline T mod32(const T &t) {
         return t - t % 32;

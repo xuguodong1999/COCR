@@ -2,7 +2,7 @@
 #define _OBTOOLBOX_H_
 
 #include "cocr.h"
-#include <QApplication>
+#include <QGuiApplication>
 #include <string>
 #include <iostream>
 #include <memory>
@@ -31,7 +31,7 @@ namespace cocr {
 
 
     private:
-        OBToolBox() ;
+        OBToolBox();
 
         ~OBToolBox() {}
 
