@@ -9,11 +9,11 @@ SketchScene::SketchScene(QObject *parent)
 }
 
 SketchScene::SketchScene(const QRectF &sceneRect, QObject *parent)
-        : QGraphicsScene(sceneRect, parent) {
+        : QGraphicsScene(sceneRect, parent), bgPixmapItem(nullptr) {
 }
 
 SketchScene::SketchScene(qreal x, qreal y, qreal width, qreal height, QObject *parent)
-        : QGraphicsScene(x, y, width, height, parent) {
+        : QGraphicsScene(x, y, width, height, parent), bgPixmapItem(nullptr) {
 }
 
 SketchScene::~SketchScene() {
