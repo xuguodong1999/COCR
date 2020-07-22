@@ -24,6 +24,10 @@ public:
 
     void clearPath();
 
+    void addBackGround(const QSize &size);
+
+    void clearAll();
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
@@ -33,7 +37,7 @@ protected:
 
 private:
     QPainterPath currentPath;
-
+    QGraphicsPixmapItem *bgPixmapItem;
 };
 
 #endif

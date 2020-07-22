@@ -31,14 +31,18 @@ signals:
 
     void penWidthChanged();
 
+    void focusStateChanged(bool focusIn);
+
+    void closed();
+
 public:
     explicit SketchWidget(QWidget *parent = nullptr);
 
     ~SketchWidget();
 
-    void showScribbleArea();
+    void switchMode(bool);
 
-    void showSketchView();
+    void clearScene();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -49,17 +53,26 @@ protected:
 
     void paintEvent(QPaintEvent *event) override;
 
-    void resizeEvent(QResizeEvent*event)override;
+    void resizeEvent(QResizeEvent *event) override;
+
+    void focusInEvent(QFocusEvent *event) override;
+
+    void closeEvent(QCloseEvent *event) override;
 
 private:
-    QList<SketchScene *> scenes;
     SketchScene *currentScene;
     SketchView *view;
     QPoint lastPos;
     QPixmap bufPixmap;
     QPainter painter;
 
+    void syncSketchView();
+
     void updateRect(const QPoint &p1, const QPoint &p2);
+
+    void showScribbleArea();
+
+    void showSketchView();
 };
 
 #endif

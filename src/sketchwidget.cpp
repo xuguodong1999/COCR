@@ -12,7 +12,7 @@
 
 SketchWidget::SketchWidget(QWidget *parent) : QWidget(parent) {
     penWidth = 5;
-
+    setFocusPolicy(Qt::StrongFocus);
     view = new SketchView(this);
     view->setRenderHint(QPainter::Antialiasing);
     view->setCacheMode(QGraphicsView::CacheBackground);
@@ -21,14 +21,9 @@ SketchWidget::SketchWidget(QWidget *parent) : QWidget(parent) {
 //    view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 //    view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setRubberBandSelectionMode(Qt::ItemSelectionMode::ContainsItemBoundingRect);
-    connect(view, &SketchView::hideFromTop, this, &SketchWidget::showScribbleArea);
-    connect(view, &SketchView::showAtTop, this, &SketchWidget::showSketchView);
-
+//    connect(view, &SketchView::hideFromTop, this, &SketchWidget::showScribbleArea);
+//    connect(view, &SketchView::showAtTop, this, &SketchWidget::showSketchView);
     currentScene = new SketchScene();
-    auto backItem = currentScene->addPixmap(bufPixmap);
-    backItem->setZValue(-1);
-    backItem->setActive(false);
-    scenes.push_back(currentScene);
     view->setScene(currentScene);
     view->hide();
 }
@@ -37,8 +32,10 @@ SketchWidget::~SketchWidget() {
 }
 
 void SketchWidget::mousePressEvent(QMouseEvent *event) {
-
     QWidget::mousePressEvent(event);
+    if (!view->isHidden()) {
+        return;
+    }
     lastPos = event->pos();
     painter.begin(&bufPixmap);
     painter.setPen(QPen(Qt::black, penWidth));
@@ -52,6 +49,9 @@ void SketchWidget::mousePressEvent(QMouseEvent *event) {
 
 void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
     QWidget::mouseMoveEvent(event);
+    if (!view->isHidden()) {
+        return;
+    }
     auto currentPos = event->pos();
     painter.drawLine(lastPos, currentPos);
     updateRect(currentPos, lastPos);
@@ -61,15 +61,18 @@ void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
     QWidget::mouseReleaseEvent(event);
+    if (!view->isHidden()) {
+        return;
+    }
     auto item = currentScene->commitPath();
     item->setFlags(QGraphicsItem::ItemIsMovable
-                   | QGraphicsItem::ItemIsFocusable);
-//                   | QGraphicsItem::ItemIsSelectable);
+                   | QGraphicsItem::ItemIsFocusable
+                   | QGraphicsItem::ItemIsSelectable);
     item->setPen(QPen(Qt::black, penWidth));
     currentScene->clearPath();
-    view->render(&painter, rect(), rect());
+//    view->render(&painter, rect(), rect());
     painter.end();
-    update();
+//    update();
 }
 
 void SketchWidget::paintEvent(QPaintEvent *event) {
@@ -100,11 +103,9 @@ void SketchWidget::updateRect(const QPoint &p1, const QPoint &p2) {
 }
 
 void SketchWidget::showScribbleArea() {
-    bufPixmap.fill(Qt::white);
-    painter.begin(&bufPixmap);
-    view->render(&painter, rect(), rect());
-    painter.end();
     view->hide();
+    currentScene->clearSelection();
+    syncSketchView();
 }
 
 void SketchWidget::showSketchView() {
@@ -126,14 +127,49 @@ const QColor &SketchWidget::getPenColor() const {
 void SketchWidget::setPenColor(const QColor &penColor) {
     SketchWidget::penColor = penColor;
 }
-void SketchWidget::resizeEvent(QResizeEvent*event){
+
+void SketchWidget::resizeEvent(QResizeEvent *event) {
     // qDebug()<<"resize...";
     QWidget::resizeEvent(event);
+    view->resize(size());// 必须先更新view，否则scene的坐标系更新不会被view感知到
+    currentScene->setSceneRect(0, 0, width(), height());
+    currentScene->addBackGround(size());
+//    view->resize(size());// FIXME: 导致缩放后出现错位重绘
+    syncSketchView();
+}
+
+void SketchWidget::switchMode(bool _showScribbleArea) {
+    if (_showScribbleArea) {
+        showSketchView();
+    } else {
+        showScribbleArea();
+    }
+}
+
+void SketchWidget::syncSketchView() {
     bufPixmap = QPixmap(size());
     bufPixmap.fill(Qt::white);
-    
-    currentScene->setSceneRect(0, 0, width(), height());
-    view->resize(size());
-    showScribbleArea();
-    // showSketchView();
+    if (bufPixmap.width() == 0 || bufPixmap.height() == 0) { return; }
+    painter.begin(&bufPixmap);
+    view->render(&painter, rect(), rect());
+    painter.end();
+}
+
+void SketchWidget::clearScene() {
+//    qDebug() << "clearScene()";
+    if (currentScene != nullptr) {
+        currentScene->clearAll();
+        currentScene->addBackGround(size());
+        syncSketchView();
+    }
+}
+
+void SketchWidget::focusInEvent(QFocusEvent *event) {
+    QWidget::focusInEvent(event);
+    emit focusStateChanged(true);
+}
+
+void SketchWidget::closeEvent(QCloseEvent *event) {
+    QWidget::closeEvent(event);
+    emit closed();
 }

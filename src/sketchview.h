@@ -19,6 +19,10 @@ protected:
 
     void focusInEvent(QFocusEvent *event) override;
 
+    void mousePressEvent(QMouseEvent *event) override;
+
+    void mouseReleaseEvent(QMouseEvent *event) override;
+
 signals:
 
     void hideFromTop();

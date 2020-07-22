@@ -1,4 +1,4 @@
-QT += quick gui widgets
+QT += core gui sql quick widgets
 
 CONFIG += c++14 resources_big androidextras
 
@@ -9,7 +9,10 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 INCLUDEPATH +=  $${PWD}/openbabel/include/openbabel3 \
                 # FIXME: point to opencv include directory here
                 $${PWD}/../lib/opencv/include/opencv4 \
-                $${PWD}/../include
+                $${PWD}/../lib/eigen/include/eigen3 \
+                $${PWD}/../lib/frugally-deep/include \
+                $${PWD}/../lib/FunctionalPlus/include \
+                $${PWD}/../lib/json/include
 
 
 LIBS += $${PWD}/openbabel/lib/libopenbabel.a \
@@ -42,21 +45,42 @@ LIBS += $${PWD}/openbabel/lib/libopenbabel.a \
         $${PWD}/opencv/sdk/native/3rdparty/libs/armeabi-v7a/liblibwebp.a \
         $${PWD}/opencv/sdk/native/3rdparty/libs/armeabi-v7a/libtbb.a
 
-HEADERS += \
-    helloworld/glwindow.h \
-    helloworld/logo.h
+INCLUDEPATH +=  $${PWD}/../include
 
-SOURCES += \
-    ../src/yolov3.cpp \
-    helloworld/glwindow.cpp \
-    helloworld/logo.cpp \
-    helloworld/main.cpp
+HEADERS +=  \
+    ../include/chemdata.h \
+    ../include/cocr.h \
+    ../include/couch.h \
+    ../include/equation.h \
+    ../include/fraction.h \
+    ../include/graph.h \
+    ../include/ioutil.h \
+    ../include/isomer.h \
+    ../include/obtoolbox.h \
+    ../include/solver.h \
+    ../include/yolov3.h \
+    ../src/mainwindow.h \
+    ../src/sketchscene.h \
+    ../src/sketchview.h \
+    ../src/sketchwidget.h \
+    ../src/switchbutton.h
+
+SOURCES +=  \
+    ../src/chemdata.cpp \
+    ../src/ioutil.cpp \
+    ../src/main.cpp \
+    ../src/mainwindow.cpp \
+    ../src/obtoolbox.cpp \
+    ../src/sketchscene.cpp \
+    ../src/sketchview.cpp \
+    ../src/sketchwidget.cpp \
+    ../src/switchbutton.cpp \
+    ../src/yolov3.cpp
 
 RESOURCES += \
     ../res/img.qrc \
     ../res/obabel.qrc \
-    ../res/weights.qrc \
-    helloworld/hellogles3.qrc
+    ../res/weights.qrc 
 
 TRANSLATIONS += \
     COCR-android_zh_CN.ts
@@ -79,7 +103,12 @@ DISTFILES += \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew \
     android/gradlew.bat \
-    android/res/values/libs.xml
+    android/res/values/libs.xml \
+    android/src/activity/MainActivity.java \
+    android/src/service/NativeService.java
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+FORMS += \
+    ../src/mainwindow.ui
 

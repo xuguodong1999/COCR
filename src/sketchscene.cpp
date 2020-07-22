@@ -1,7 +1,10 @@
 #include "sketchscene.h"
 #include <QGraphicsSceneMouseEvent>
+#include <QCursor>
+#include <QGraphicsPixmapItem>
 
-SketchScene::SketchScene(QObject *parent) : QGraphicsScene(parent) {
+SketchScene::SketchScene(QObject *parent)
+        : QGraphicsScene(parent), bgPixmapItem(nullptr) {
 
 }
 
@@ -19,8 +22,6 @@ SketchScene::~SketchScene() {
 void SketchScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
 //    qDebug()<<"press..."<<event->scenePos();
-
-
 }
 
 void SketchScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
@@ -47,5 +48,33 @@ void SketchScene::addPathLineTo(const QPointF &p) {
 
 void SketchScene::clearPath() {
     currentPath.clear();
+}
+
+void SketchScene::addBackGround(const QSize &size) {
+    if (bgPixmapItem != nullptr) {
+        if (bgPixmapItem->pixmap().size() == size) {
+            return;
+        }
+        removeItem(reinterpret_cast<QGraphicsItem *>(bgPixmapItem));
+    }
+    QPixmap tmp(size);
+    tmp.fill(Qt::white);
+    bgPixmapItem = addPixmap(tmp);
+    bgPixmapItem->setZValue(-1);
+    bgPixmapItem->setActive(false);
+}
+
+void SketchScene::clearAll() {
+    clear();
+    bgPixmapItem = nullptr;
+//    if (bgPixmapItem == nullptr) {
+//        clear();
+//    } else {
+//        for (auto &i:items()) {
+//            if (i->type() != bgPixmapItem->type()) {
+//                removeItem(i);
+//            }
+//        }
+//    }
 }
 

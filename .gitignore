@@ -1,6 +1,8 @@
 .vscode/
 .idea/
 .vs/
+.gradle/
+.settings/
 CMakeSettings.json
 
 out/
@@ -24,6 +26,7 @@ cmake-*/
 *.pdb
 *.pro.user
 *.zip
+*.project
 
 .backup/
 lib*/

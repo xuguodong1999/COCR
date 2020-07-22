@@ -21,7 +21,7 @@
 3. src 目录：当前开发版本的源文件和CMake配置文件
 4. test 目录：当前开发分支的gtest测试源文件
 5. res 目录：资源文件和qrc资源引用文件
-6. script 目录：submodule初始化脚本和第三方库编译脚本
+6. tools 目录：submodule初始化脚本、第三方库编译脚本、实用小工具
 7. version 目录：存放历史版本（因为码龄3年的萌新的代码能力在快速变化，看几个月前的代码像屎山……）
 8. android 目录：qmake构建配置，考虑到qt在快速更新对安卓的支持（就是现在的支持不够完善），始终使用qt-creator作为COCR安卓开发的IDE
 9. . 目录：COCR 根目录存放CMake配置文件，引用来自version下各个版本子工程、src下的开发子工程和test测试子工程的CMake配置文件
@@ -35,7 +35,7 @@ $(git, CMake) git clone https://github.com/Xuguodong1999/COCR.git -b dev && cd C
 # 从github拉取第三方库
 $(git, CMake) git submodule update --init --recursive
 # checkout指定版本，按照设定的选项编译
-$(git, CMake) ./script/build.sh
+$(git, CMake) ./tools/build.sh
 ```
 
 * Windows
@@ -45,7 +45,7 @@ $(git, CMake) git clone https://github.com/Xuguodong1999/COCR.git -b dev && cd C
 REM 从github拉取第三方库
 $(MSVC x64, git, CMake) git submodule update --init --recursive
 REM checkout指定版本，按照设定的选项编译
-$(MSVC x64, git, CMake) .\script\build.bat
+$(MSVC x64, git, CMake) .\tools\build.bat
 ```
 
 * Android

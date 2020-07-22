@@ -3,24 +3,34 @@
 
 #include <QMainWindow>
 #include <QMdiArea>
-#include <QToolButton>
+#include <QHash>
+
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 class SketchWidget;
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+
+class SwitchButton;
+
+class MainWindow : public QMainWindow {
+Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+
     ~MainWindow();
+
+protected:
+    void resizeEvent(QResizeEvent *e) override;
 
 private:
     Ui::MainWindow *ui;
-    SketchWidget* sketchWidget;
-    QMdiArea*mdiArea;
-    QToolButton*dragButton,*drawButton;
+    QMdiArea *mdiArea;
+    SwitchButton *modeSwitchButton;
+    SketchWidget *currentSketchWidget;
+    QHash<SketchWidget *, QString> sketchWidgetNameMap;
+
+    void newSketchWidget(const QString &docName = "");
 };
 
 #endif // MAINWINDOW_H
