@@ -11,7 +11,7 @@ endif ()
 if (MSVC)   # FIXME: windows下修改到Qt库的cmake文件夹位置
     # set(Qt5_DIR C:/Qt/5.14.2/msvc2017_64/lib/cmake/Qt5)
     set(Qt5_DIR C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5)
-elseif(APPLE)
+elseif (APPLE)
     set(Qt5_DIR /Users/xgd/Qt/5.14.2/clang_64/lib/cmake/Qt5)
 elseif (UNIX)       # FIXME: linux下修改到Qt库的cmake文件夹位置
     set(Qt5_DIR /home/xgd/Qt/5.15.0/gcc_64/lib/cmake/Qt5)
