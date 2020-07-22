@@ -14,6 +14,7 @@ Debug*/
 debug*/
 cmake-*/
 
+*.DS_Store
 *.o
 *.s
 *.i
