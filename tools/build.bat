@@ -78,13 +78,12 @@ cd ../..
 mkdir lib\opencv build\opencv
 cd build\opencv
 cmake ../../3rdparty/opencv -DCMAKE_INSTALL_PREFIX=../../lib/opencv -DBUILD_opencv_python_tests=OFF -DBUILD_opencv_python_bindings_generator=OFF -DBUILD_JAVA=OFF -DBUILD_opencv_java_bindings_generator=OFF -DBUILD_TESTS=OFF -DBUILD_PREF_TESTS=OFF -DWITH_ADE=OFF -DWITH_FFMPEG=OFF -DWITH_IPP=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_opencv_world=OFF
-cmake --build . -j 8 --target install --config Debug
 cmake --build . -j 8 --target install --config Release
 cd ../..
 
 
 REM config gtest
 cd 3rdparty/googletest && git checkout master && cd ../..
-mkdir -p lib\googletest build\googletest && cd build\googletest
+mkdir lib\googletest build\googletest && cd build\googletest
 cmake ../../3rdparty/googletest -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../lib/googletest
 cmake --build . -j 8 --target install --config Release && cd ../..
