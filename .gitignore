@@ -15,6 +15,7 @@ debug*/
 cmake-*/
 __pycache__/
 
+*.DS_Store
 *.o
 *.s
 *.i
