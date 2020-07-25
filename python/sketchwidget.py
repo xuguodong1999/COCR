@@ -1,6 +1,6 @@
 from PySide2.QtCore import Qt, Signal, QPoint, QRect
 from PySide2.QtGui import QColor, QPixmap, QPainter, QPen
-from PySide2.QtWidgets import QWidget, QGraphicsItem, QGraphicsView
+from PySide2.QtWidgets import QWidget, QGraphicsItem, QGraphicsView,QLabel
 
 from sketchscene import SketchScene
 from sketchview import SketchView
@@ -29,8 +29,8 @@ class SketchWidget(QWidget):
         self.view.setScene(self.current_scene)
         self.view.hide()
 
-    def switchMode(self, _show_scribble_area):
-        if _show_scribble_area:
+    def switch_mode(self, _show_sketch_view):
+        if _show_sketch_view:
             self.show_sketch_view()
         else:
             self.show_scribble_area()
@@ -59,11 +59,11 @@ class SketchWidget(QWidget):
     pen_width_changed = Signal()
     focus_state_changed = Signal(bool)
 
-    def clearScene(self):
+    def clear_scene(self):
         if self.current_scene is not None:
-            self.current_scene.clearAll()
-            self.current_scene.addBackGround(self.size())
-            self.syncSketchView()
+            self.current_scene.clear_all()
+            self.current_scene.add_back_ground(self.size())
+            self.sync_sketch_view()
 
     def mousePressEvent(self, event):
         super(SketchWidget, self).mousePressEvent(event)
@@ -74,7 +74,7 @@ class SketchWidget(QWidget):
         self.painter.setPen(QPen(Qt.black, self.pen_width))
         self.painter.setRenderHint(QPainter.Antialiasing)
         self.painter.drawLine(self.last_pos, self.last_pos)
-        self.updateRect(self.last_pos, self.last_pos)
+        self.update_rect(self.last_pos, self.last_pos)
         self.current_scene.addPathMoveTo(self.last_pos)
         self.current_scene.addPathLineTo(self.last_pos)
 
@@ -84,7 +84,7 @@ class SketchWidget(QWidget):
             return
         current_pos = event.pos()
         self.painter.drawLine(self.last_pos, current_pos)
-        self.updateRect(current_pos, self.last_pos)
+        self.update_rect(current_pos, self.last_pos)
         self.last_pos = current_pos
         self.current_scene.addPathLineTo(self.last_pos)
 
@@ -109,8 +109,8 @@ class SketchWidget(QWidget):
         super(SketchWidget, self).resizeEvent(event)
         self.view.resize(self.size())
         self.current_scene.setSceneRect(0, 0, self.width(), self.height())
-        self.current_scene.addBackGround(self.size())
-        self.syncSketchView()
+        self.current_scene.add_back_ground(self.size())
+        self.sync_sketch_view()
 
     def focusInEvent(self, event):
         super(SketchWidget, self).focusInEvent(event)
@@ -120,17 +120,22 @@ class SketchWidget(QWidget):
         super(SketchWidget, self).closeEvent(event)
         self.closed.emit()
 
-    def syncSketchView(self):
+    def sync_sketch_view(self):
         self.buf_pixmap = QPixmap(self.size())
-        # print(self.size())
         self.buf_pixmap.fill(Qt.white)
         if self.buf_pixmap.width() == 0 or self.buf_pixmap.height() == 0:
             return
+        print('1:',self.size())
         self.painter.begin(self.buf_pixmap)
         self.view.render(self.painter, self.rect(), self.rect())
         self.painter.end()
+        print('hello')
+        # self.label=QLabel()
+        # self.label.resize(self.buf_pixmap.size())
+        # self.label.setPixmap(self.buf_pixmap)
+        # self.label.show()
 
-    def updateRect(self, p1, p2):
+    def update_rect(self, p1, p2):
         if p2.x() < p1.x():
             xmin = p2.x()
             xmax = p1.x()
@@ -149,7 +154,8 @@ class SketchWidget(QWidget):
     def show_scribble_area(self):
         self.view.hide()
         self.current_scene.clearSelection()
-        self.syncSketchView()
+        self.sync_sketch_view()
+        self.update()
 
     def show_sketch_view(self):
         self.view.show()

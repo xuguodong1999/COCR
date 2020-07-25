@@ -106,6 +106,7 @@ void SketchWidget::showScribbleArea() {
     view->hide();
     currentScene->clearSelection();
     syncSketchView();
+    update();
 }
 
 void SketchWidget::showSketchView() {
@@ -138,8 +139,8 @@ void SketchWidget::resizeEvent(QResizeEvent *event) {
     syncSketchView();
 }
 
-void SketchWidget::switchMode(bool _showScribbleArea) {
-    if (_showScribbleArea) {
+void SketchWidget::switchMode(bool _showSketchView) {
+    if (_showSketchView) {
         showSketchView();
     } else {
         showScribbleArea();

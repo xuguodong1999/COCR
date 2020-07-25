@@ -30,7 +30,7 @@ class SketchScene(QGraphicsScene):
     def clearPath(self):
         self.current_path = QPainterPath()
 
-    def addBackGround(self, size):
+    def add_back_ground(self, size):
         if self.bg_pixmap_item is not None:
             if self.bg_pixmap_item.pixmap().size() == size:
                 return
@@ -41,6 +41,6 @@ class SketchScene(QGraphicsScene):
         self.bg_pixmap_item.setZValue(-1)
         self.bg_pixmap_item.setActive(False)
 
-    def clearAll(self):
+    def clear_all(self):
         self.clear()
         self.bg_pixmap_item = None

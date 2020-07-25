@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
 
         def clear_sketch_widget():
             if self.current_sketch_widget is not None:
-                self.current_sketch_widget.clearScene()
+                self.current_sketch_widget.clear_scene()
                 self.current_sketch_widget.update()
 
         self.ui.clearSceneButton.clicked.connect(clear_sketch_widget)
@@ -43,10 +43,10 @@ class MainWindow(QMainWindow):
 
     def new_sketch_widget(self, doc_name=''):
         sketch_widget = SketchWidget()
-        self.mode_switch_button.clicked.connect(sketch_widget.switchMode)
+        self.mode_switch_button.clicked.connect(sketch_widget.switch_mode)
         self.mdi_area.addSubWindow(sketch_widget, Qt.FramelessWindowHint)
         sketch_widget.showMaximized()
-        sketch_widget.switchMode(self.mode_switch_button.isChecked())
+        sketch_widget.switch_mode(self.mode_switch_button.isChecked())
 
         def removeName():
             del self.sketch_widget_name_map[sketch_widget]
