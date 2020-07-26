@@ -2,16 +2,13 @@
 
 ## 进度
 
-* 【完结】 构建过程全面脚本化，摆脱手动下载编译链接各个库的过程
-* 【完结】 支持 linux 和 win10 PC端 OpenBabel>=3.0.0、OpenCV>=4.3的自动构建、运行、插件加载
-* 【正在做……】 用 c++ 重写 ChemInk 里 c with class 的代码，重构 COCR 主分支中数据集生成代码
-* 【正在做……】 跑通OpenCV和OpenBabel的安卓构建，尝试编写qml
-* 【计划中……】 客户端开发彻底 Qt 化，充分利用框架提供的序列化、线程管理、网络通信机制，从长计议开发桌面应用
-* 【计划中……】 客户端的需求列表：
-* 【计划中……】 基于控件拖动的结构式编辑器
-* 【计划中……】 基于手势交互的结构式编辑器
-* 【计划中……】 基于目标检测的结构式编辑器
-* 【计划中……】 OpenBabel 的图形界面，抄写并改进 OpenBabel 的设计，去 OpenBabel
+* 【完结】 构建过程的全面脚本化，摆脱手动下载编译链接各个库的过程
+* 【完结】 完成 linux 和 win10 PC端 OpenBabel>=3.0.0、OpenCV>=4.3的自动构建、运行、插件加载
+* 【完结】 完成 OpenCV 和 OpenBabel 的安卓构建
+* 【完结】 完成 Qt-WASM 的本地调试、局限性了解
+* 【正在做……】 用 C++ 重写 ChemInk 里 C with Class 的代码，重构 COCR 主分支中数据集生成代码
+* 【计划中……】 客户端的需求列表：基于控件拖动的结构式编辑器，基于手势交互的结构式编辑器，基于目标检测的结构式编辑器
+* 【计划中……】 OpenBabel 的图形界面，抄写并重新实现 OpenBabel
 * 【计划中……】 Gromacs 的图形界面
 
 ## 代码结构
@@ -60,6 +57,11 @@ mv android/OpenCV-android-sdk android/opencv
 # cmake ../3rdparty/openbabel -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../android/openbabel -DBUILD_TESTING=OFF -DRAPIDJSON_INCLUDE_DIRS=../lib/rapidjson/include/rapidjson -DBUILD_GUI=OFF -DWITH_INCHI=OFF -DWITH_STATIC_INCHI=OFF -DOPENBABEL_USE_SYSTEM_INCHI=OFF -DWITH_MAEPARSER=OFF -DANDROID_ABI="armeabi-v7a with NEON" -DCMAKE_TOOLCHAIN_FILE="/home/xgd/Android/Sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake" -DANDROID_NATIVE_API_LEVEL=21 -DANDROID_NDK="${NDK_ROOT}" -DBUILD_SHARED=OFF 
 ```
 
+## 2020年2月，大创中期检查的效果展示
+
+![目标检测示例](./res/assert/screenshot-2020-0217.jpg)
+![图元编辑示例](./res/assert/screenshot-2020-0222.gif)
+
 ## Qt引入
 
 * 修改 CMakeList.txt 中 Qt 配置
@@ -94,7 +96,46 @@ $(MSVC x64) ..\path to\qt-everywhere-src-5.15.0\configure.bat -static -prefix "p
 $(MSVC x64) nmake && nmake install
 ```
 
-## 2020年2月，大创中期检查的效果展示
+## Qt 5.15.0 WASM 开发环境在 win10 下的搭建
 
-![目标检测示例](./res/assert/screenshot-2020-0217.jpg)
-![图元编辑示例](./res/assert/screenshot-2020-0222.gif)
+```bat
+REM 执行过的命令，供参考
+REM 使用 Qt 源提供的 wasm-32 包，假设下载的时候已经勾选这个选项，下面拉取 emsdk
+C:
+cd C:/
+git clone git@github.com:emscripten-core/emsdk.git
+cd emsdk
+.\emsdk install sdk-fastcomp-1.39.7-64bit
+.\emsdk activate sdk-fastcomp-1.39.7-64bit
+REM 在 Qt-Creator 里添加 wasm 的 c++ 编译器：工具->选项->kits->编译器->添加->WebAssembly
+REM 为 qt-5.15.0-wasm-32 设置编译器，工具->选项->kits->kits->自动检测->Qt 5.15.0 for WebAssembly->Compiler->c++
+REM 在用户根目录添加.emscriptrn文件
+```
+```txt
+import os
+
+emsdk_path = 'C:/emsdk'	#emsdk的目录（根据需要设置这个目录即可）
+
+NODE_JS = 'C:/emsdk/node/12.18.1_64bit/bin/node.exe'
+PYTHON = 'C:/emsdk/python/3.7.4-pywin32_64bit/python.exe'
+JAVA = 'C:/emsdk/java/8.152_64bit/bin/java.exe'
+LLVM_ROOT = 'C:/emsdk/fastcomp/bin'
+BINARYEN_ROOT = 'C:/emsdk/fastcomp'
+EMSCRIPTEN_ROOT = 'C:/emsdk/fastcomp/emscripten'
+TEMP_DIR = 'C:/emsdk/tmp'
+COMPILER_ENGINE = NODE_JS
+JS_ENGINES = [NODE_JS]
+
+EMSDK = emsdk_path
+EMSCRIPTEN_NATIVE_OPTIMIZER = 'C:/emsdk/fastcomp/bin/optimizer.exe'
+```
+```bat
+REM 把 .emscriptrn 文件转成 gbk 编码
+REM 否则编译期间 python 会报错，无法用gbk编码读取配置文件
+REM 可以用 wsl 做：enca -L zh_CN -x GBK path/to/.emscripten
+REM 正式编译可以用 Qt-Creator 做，也可以用命令行
+.\emsdk activate sdk-fastcomp-1.39.7-64bit
+C:\Qt\5.15.0\wasm_32\bin\qmake.exe path/to/project.pro
+REM 如果没有mingw编译器，可以用 Qt安装目录下的 MaintenanceTool 安装一下 mingw，把 path\to\Qt\Tools\mingw810_64\bin 加入环境变量，否则找不到 make 命令
+emmake make -j 8
+```

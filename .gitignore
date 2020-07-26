@@ -26,9 +26,11 @@ __pycache__/
 *.ilk
 *.exp
 *.pdb
-*.pro.user
+*.pro.user*
 *.zip
 *.project
+msvc_make.bat
+*.wasm
 
 .backup/
 lib*/

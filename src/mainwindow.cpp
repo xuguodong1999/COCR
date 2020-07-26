@@ -54,7 +54,7 @@ void MainWindow::newSketchWidget(const QString &docName) {
         }
     });
     if (docName.isEmpty()) {
-        QString tmpDocName = "新文档-" + QDateTime::currentDateTime()
+        QString tmpDocName = "file-" + QDateTime::currentDateTime()
                 .toString(Qt::DateFormat::ISODate)
                 .replace(QRegExp("\\s|/|:"), "-");
         sketchWidget->setWindowTitle(tmpDocName);

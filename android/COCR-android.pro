@@ -8,12 +8,13 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 
 INCLUDEPATH +=  $${PWD}/openbabel/include/openbabel3 \
                 # FIXME: point to opencv include directory here
-                $${PWD}/../lib/opencv/include/opencv4 \
+                $${PWD}/../lib/opencv/include \
                 $${PWD}/../lib/eigen/include/eigen3 \
                 $${PWD}/../lib/frugally-deep/include \
                 $${PWD}/../lib/FunctionalPlus/include \
                 $${PWD}/../lib/json/include
 
+android:{
 
 LIBS += $${PWD}/openbabel/lib/libopenbabel.a \
         $${PWD}/opencv/sdk/native/staticlibs/armeabi-v7a/libopencv_dnn.a \
@@ -81,6 +82,7 @@ RESOURCES += \
     ../res/img.qrc \
     ../res/obabel.qrc \
     ../res/weights.qrc 
+}
 
 TRANSLATIONS += \
     COCR-android_zh_CN.ts

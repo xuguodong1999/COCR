@@ -47,7 +47,7 @@ private:
             mBGColorOn = Qt::lightGray,
             mBgColorOff = Qt::darkGray,
             mTextColor = Qt::black;
-    const QString mTextOn = "绘制", mTextOff = "拖动";
+    const QString mTextOn = "Draw", mTextOff = "Drag";
 };
 
 #endif
