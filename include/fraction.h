@@ -6,6 +6,7 @@
 #include <sstream>
 #include <cassert>
 #include <limits>
+#include <algorithm>
 
 namespace cocr {
     template<typename T>
@@ -14,7 +15,9 @@ namespace cocr {
         void set(const T &numerator, const T &denominator = 1) {
             first = numerator;
             second = denominator;
-            assert(denominator != 0);
+            if (denominator == 0) {
+                denominator = eps();
+            }
             reduce();
         }
 
@@ -109,7 +112,7 @@ namespace cocr {
         }
 
         bool operator!=(const Fraction &x) const {
-            return *this != x;
+            return first * x.second != second * x.first;
         }
 
         Fraction &abs() {
@@ -163,5 +166,10 @@ namespace cocr {
     };
 
     typedef Fraction<long long> frac;
+
+    template<typename T>
+    inline float abs(const Fraction<T> &f) {
+        return std::abs(f.floatValue());
+    }
 }
 #endif //!_FRACTION_H_

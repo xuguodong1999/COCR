@@ -29,7 +29,8 @@ namespace cocr {
          * @return 能否找到一组解
          * @brief 以分数形式求解增广矩阵表达的线性方程组
          */
-        bool solve(const vector<vector<int>> &in, vector<int> &out) {
+        template<typename T>
+        bool solve(const vector<vector<T>> &in, vector<T> &out) {
             try {// 不搞越界判断和无解处理了，有可能出问题的地方用at，直接抛异常返回false
                 auto rowSize = in.size(), colSize = in.at(0).size();
                 vector<vector<frac>> aMatrix(rowSize);// augmentedMatrix,增广矩阵

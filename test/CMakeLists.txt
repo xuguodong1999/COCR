@@ -9,10 +9,13 @@ include_directories(${GTEST_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 aux_source_directory(${CMAKE_SOURCE_DIR}/test DIR_SRCS)
-add_executable(${MODULE_NAME} ${DIR_SRCS})
+
+add_executable(${MODULE_NAME} ${DIR_SRCS} ${QT_RES_SRC})
+add_dependencies(${MODULE_NAME} res_qrc)
 
 if (UNIX)
     target_link_libraries(${MODULE_NAME}
+#            ${QT_BIG_RES_SRC}
             ${GTEST_ROOT}/lib/libgtest.a
             ${GTEST_ROOT}/lib/libgtest_main.a
             ${OPENBABEL2_LIBRARIES}
@@ -30,6 +33,7 @@ elseif (MSVC)
         target_compile_options(${MODULE_NAME} PRIVATE /MT)
     endif ()
     target_link_libraries(${MODULE_NAME}
+#            ${QT_BIG_RES_SRC}
             ${GTEST_ROOT}/lib/gtest.lib
             ${GTEST_ROOT}/lib/gtest_main.lib
             ${OPENBABEL2_LIBRARIES}

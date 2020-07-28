@@ -4,6 +4,13 @@
 #include <set>
 #include <string>
 
+inline void saveCouchToFile() {
+    cocr::dumpCouchToFile(
+            "/home/xgd/dataset/SCUT_IRAC/Couch",
+            "../../backup/gb2"
+    );
+}
+
 TEST(CouchTestSuite, CouchTest) {
     using namespace std;
     vector<cocr::SampleData> samples;

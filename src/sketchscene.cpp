@@ -3,6 +3,7 @@
 #include <QCursor>
 #include <QGraphicsPixmapItem>
 #include <QPainterPath>
+
 SketchScene::SketchScene(QObject *parent)
         : QGraphicsScene(parent), bgPixmapItem(nullptr) {
 
@@ -48,7 +49,7 @@ void SketchScene::addPathLineTo(const QPointF &p) {
 
 void SketchScene::clearPath() {
 //    currentPath.clear();
-    currentPath=QPainterPath();
+    currentPath = QPainterPath();
 }
 
 void SketchScene::addBackGround(const QSize &size) {

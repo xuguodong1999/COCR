@@ -57,7 +57,11 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/frugally-deep/include)
 # 配置 RapidJson
 include_directories(${CMAKE_SOURCE_DIR}/lib/rapidjson/include)
 
+qt5_add_resources(QT_RES_SRC ./res/img.qrc ./res/obabel.qrc)
+qt5_add_big_resources(QT_BIG_RES_SRC ./res/weights.qrc)
+
+add_custom_target(res_qrc DEPENDS ${QT_RES_SRC} ${QT_BIG_RES_SRC})
 
 add_subdirectory(src)
-#add_subdirectory(test)
+add_subdirectory(test)
 add_subdirectory(version/v2020-02)

@@ -13,6 +13,14 @@
 #define LogValue(value) std::cout << (value);
 #define LogPressKey2Continue() std::cout << std::endl << "press any key to continue..." << std::endl;
 namespace cocr {
+    inline const float &eps() {
+        return 0.0000000000000001;
+    }
+
+    inline const float &epsNeg() {
+        return -0.0000000000000001;
+    }
+
     enum class ErrorCode {
         NormalExec,
         OBForceFieldMissing,
@@ -24,6 +32,15 @@ namespace cocr {
         CreateFileFailed,
         DeleteFileFailed,
         CvDnnError,
+
+        CEPreProcessFailed,
+        CELexicalAnalysisFailed,
+        CEUnknownLetter,
+        CEUnknownChar,
+        CEElementFailed,
+        CEMissingValence,
+        CEDivElementFailed,
+        CEFormatError,
     };
 
     template<typename T>
@@ -65,6 +82,27 @@ namespace cocr {
             out << ele << ",";
         }
         out << "]" << std::endl;
+    }
+
+    inline void removeAllSubStr(std::string &target, const std::string &subStr) {
+        while (true) {
+            auto pos = target.find(subStr);
+            if (pos == std::string::npos) {
+                return;
+            }
+            target.erase(pos, subStr.length());
+        }
+    }
+
+    inline void replaceAllSubStr(std::string &target, const std::string &subSrc, const std::string &subDst) {
+        for (auto pos = 0; pos != std::string::npos; pos += subDst.length()) {
+            pos = target.find(subSrc, pos);
+            if (pos != std::string::npos) {
+                target.replace(pos, subSrc.length(), subDst);
+            } else {
+                break;
+            }
+        }
     }
 }
 #endif

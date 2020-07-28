@@ -1,9 +1,3 @@
-/*
-南京大学计算机科学与技术系 171860633 徐国栋
-Github : https://github.com/Xuguodong1999
-Gitlab : https://git.nju.edu.cn/Xuguodong1999
-This file is a part of COCR project.
-*/
 #include "cvutil.h"
 #include "colorutil.h"
 #include "ioutil.h"
@@ -35,7 +29,7 @@ bool CVUtil::init(const char *weightsPath, const char *cfgPath, const char *name
     QByteArray weights, cfg;
     QFile cf(cfgPath);
     if (!cf.exists()) {
-        qDebug()<<cfgPath;
+        qDebug() << cfgPath;
         qDebug() << "!cf.exists()";
         return false;
     }

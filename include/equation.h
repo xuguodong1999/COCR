@@ -63,7 +63,7 @@ namespace cocr {
          * @return 正确的系数
          * @brief 配平reactants->products代表的化学方程式
          */
-        vector<int> balance(const vector<string> &reactants, const vector<string> &products) {
+        vector<int> balance(const vector <string> &reactants, const vector <string> &products) {
             return vector<int>();
         }
 
@@ -82,7 +82,7 @@ namespace cocr {
          * @return 是否正确配平
          * @brief 验证是否正确配平
          */
-        bool isBalanced(const vector<string> &reactants, const vector<string> &products,
+        bool isBalanced(const vector <string> &reactants, const vector <string> &products,
                         const vector<int> &coefficient) {
         }
 
