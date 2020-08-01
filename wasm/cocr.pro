@@ -13,6 +13,7 @@ INCLUDEPATH += $${PWD}/../include
 SOURCES += \
     ../src/chemdata.cpp \
     ../src/ioutil.cpp \
+    ../src/itemform.cpp \
     ../src/main.cpp \
     ../src/mainwindow.cpp \
     ../src/sketchscene.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     ../include/isomer.h \
     ../include/solver.h \
     ../include/tmp.h \
+    ../src/itemform.h \
     ../src/mainwindow.h \
     ../src/sketchscene.h \
     ../src/sketchview.h \
@@ -38,14 +40,13 @@ HEADERS += \
     ../src/switchbutton.h
 
 msvc {
-    RC_ICONS = $${PWD}\..\\res\\img\\jellyxu.ico
-    QMAKE_TARGET_COMPANY=1
-    QMAKE_TARGET_DESCRIPTION=2
-    QMAKE_TARGET_COPYRIGHT=3
-    QMAKE_TARGET_PRODUCT=4
-    RC_CODEPAGE=5
-    RC_LANG=6
-    VERSION=1.0
+    RC_ICONS = $${PWD}/../res/img/app.ico
+    QMAKE_TARGET_COMPANY=helloworld
+    QMAKE_TARGET_DESCRIPTION=cocr is a tool for chemistry.
+    QMAKE_TARGET_COPYRIGHT=@1999-2020. Guodong Xu. All rights reserved.
+    QMAKE_TARGET_PRODUCT=cocr
+    RC_LANG=0x0004
+    VERSION=1.0.0.0
     QMAKE_CFLAGS += /utf-8
     QMAKE_CXXFLAGS += /utf-8 /openmp
 }
@@ -57,3 +58,8 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    ../res/img.qrc \
+    ../res/lang.qrc \
+    ../res/obabel.qrc

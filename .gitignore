@@ -5,6 +5,19 @@
 .settings/
 CMakeSettings.json
 
+# ignore wasm tmp file
+wasm/*.cpp
+wasm/*.Debug
+wasm/*.Release
+wasm/Makefile*
+wasm/*.obj
+wasm/*.h
+wasm/*.rc
+wasm/*.stash
+wasm/*.tmp
+wasm/*.bat
+wasm/*.wasm
+
 out/
 x86/
 x64/

@@ -13,10 +13,16 @@ class SketchWidget : public QWidget {
 Q_OBJECT
     int penWidth;
     QColor penColor;
+    QPen pen;
     Q_PROPERTY(QColor penColor READ getPenColor WRITE setPenColor NOTIFY penColorChanged)
     Q_PROPERTY(int penWidth READ getPenWidth WRITE setPenWidth NOTIFY penWidthChanged)
+    Q_PROPERTY(QPen pen READ getPen WRITE setPen NOTIFY penChanged)
 
 public:
+    QPen getPen()const;
+
+    void setPen(const QPen&pen);
+
     int getPenWidth() const;
 
     void setPenWidth(int penWidth);
@@ -27,9 +33,11 @@ public:
 
 signals:
 
-    void penColorChanged();
+    void penColorChanged(const QColor&color);
 
-    void penWidthChanged();
+    void penWidthChanged(int width);
+
+    void penChanged(const QPen&pen);
 
     void focusStateChanged(bool focusIn);
 

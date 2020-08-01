@@ -21,10 +21,15 @@ SketchWidget::SketchWidget(QWidget *parent) : QWidget(parent) {
 //    view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 //    view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setRubberBandSelectionMode(Qt::ItemSelectionMode::ContainsItemBoundingRect);
-//    connect(view, &SketchView::hideFromTop, this, &SketchWidget::showScribbleArea);
-//    connect(view, &SketchView::showAtTop, this, &SketchWidget::showSketchView);
     currentScene = new SketchScene();
     view->setScene(currentScene);
+
+    connect(this,&SketchWidget::penWidthChanged,this,[&](){
+        pen.setWidth(penWidth);
+    });
+    connect(this,&SketchWidget::penColorChanged,this,[&]{
+        pen.setColor(penColor);
+    });
     view->hide();
 }
 
@@ -38,7 +43,7 @@ void SketchWidget::mousePressEvent(QMouseEvent *event) {
     }
     lastPos = event->pos();
     painter.begin(&bufPixmap);
-    painter.setPen(QPen(Qt::black, penWidth));
+    painter.setPen(pen);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawLine(lastPos, lastPos);
     updateRect(lastPos, lastPos);
@@ -68,7 +73,7 @@ void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
     item->setFlags(QGraphicsItem::ItemIsMovable
                    | QGraphicsItem::ItemIsFocusable
                    | QGraphicsItem::ItemIsSelectable);
-    item->setPen(QPen(Qt::black, penWidth));
+    item->setPen(pen);
     currentScene->clearPath();
 //    view->render(&painter, rect(), rect());
     painter.end();
@@ -119,6 +124,7 @@ int SketchWidget::getPenWidth() const {
 
 void SketchWidget::setPenWidth(int penWidth) {
     SketchWidget::penWidth = penWidth;
+    emit penWidthChanged(penWidth);
 }
 
 const QColor &SketchWidget::getPenColor() const {
@@ -127,6 +133,7 @@ const QColor &SketchWidget::getPenColor() const {
 
 void SketchWidget::setPenColor(const QColor &penColor) {
     SketchWidget::penColor = penColor;
+    emit penColorChanged(penColor);
 }
 
 void SketchWidget::resizeEvent(QResizeEvent *event) {
@@ -173,4 +180,13 @@ void SketchWidget::focusInEvent(QFocusEvent *event) {
 void SketchWidget::closeEvent(QCloseEvent *event) {
     QWidget::closeEvent(event);
     emit closed();
+}
+
+QPen SketchWidget::getPen() const {
+    return pen;
+}
+
+void SketchWidget::setPen(const QPen &pen) {
+    SketchWidget::pen = pen;
+    emit penChanged(pen);
 }

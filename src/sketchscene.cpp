@@ -69,14 +69,5 @@ void SketchScene::addBackGround(const QSize &size) {
 void SketchScene::clearAll() {
     clear();
     bgPixmapItem = nullptr;
-//    if (bgPixmapItem == nullptr) {
-//        clear();
-//    } else {
-//        for (auto &i:items()) {
-//            if (i->type() != bgPixmapItem->type()) {
-//                removeItem(i);
-//            }
-//        }
-//    }
 }
 

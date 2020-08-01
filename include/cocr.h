@@ -13,13 +13,7 @@
 #define LogValue(value) std::cout << (value);
 #define LogPressKey2Continue() std::cout << std::endl << "press any key to continue..." << std::endl;
 namespace cocr {
-    inline const float &eps() {
-        return 0.0000000000000001;
-    }
 
-    inline const float &epsNeg() {
-        return -0.0000000000000001;
-    }
 
     enum class ErrorCode {
         NormalExec,
