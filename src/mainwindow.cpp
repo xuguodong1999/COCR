@@ -1,13 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "sketchwidget.h"
-#include "switchbutton.h"
-#include "itemform.h"
-
 #include <QDateTime>
 #include <QMessageBox>
-#include <QColorDialog>
 #include <QPropertyAnimation>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -26,8 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mdiArea = ui->mdiArea;
 
     modeSwitchButton = new SwitchButton(ui->switchContainer);
-
-    setUpSketchCtrl();
+    modeSwitchButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    ui->switchContainer->layout()->addWidget(modeSwitchButton);
+    setupSketchControl();
 
     connect(ui->newSketchButton, &QToolButton::clicked, [&]() { newSketchWidget(); });
     connect(ui->clearSceneButton, &QToolButton::clicked, [&]() {
@@ -37,7 +33,11 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     });
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::showAboutDialog);
-    showMaximized();
+    newSketchWidget();
+    ui->widthSlider->setValue(3);
+    showMaximized();// 先确定窗体布局
+    colorDialog->colorSelected(Qt::black);
+    itemForm->clickFirstItem();
 }
 
 MainWindow::~MainWindow() {
@@ -46,7 +46,9 @@ MainWindow::~MainWindow() {
 
 void MainWindow::resizeEvent(QResizeEvent *e) {
     QWidget::resizeEvent(e);
-    modeSwitchButton->resize(ui->switchContainer->size());
+    ui->colorButton->setIconSize(ui->colorButton->size() / 2);
+    itemForm->resize(mdiArea->width() / 5, mdiArea->height());
+    colorDialog->resize(size() / 2);
 }
 
 SketchWidget *MainWindow::newSketchWidget(const QString &docName) {
@@ -66,7 +68,7 @@ SketchWidget *MainWindow::newSketchWidget(const QString &docName) {
         }
     });
     if (docName.isEmpty()) {
-        QString tmpDocName = "file-" + QDateTime::currentDateTime()
+        QString tmpDocName = "doc-" + QDateTime::currentDateTime()
                 .toString(Qt::DateFormat::ISODate)
                 .replace(QRegExp("\\s|/|:"), "-");
         sketchWidget->setWindowTitle(tmpDocName);
@@ -105,21 +107,21 @@ void MainWindow::showAboutDialog() {
     msgBox->exec();
 }
 
-void MainWindow::setUpSketchCtrl() {
+void MainWindow::setupSketchControl() {
     connect(ui->widthSlider, &QSlider::valueChanged, this, [&](int value) {
         if (currentSketchWidget != nullptr) {
-            currentSketchWidget->setPenWidth(qMax(1, qRound(value / 4.0)));
-            ui->widthHintLabel->setText(QString("线宽:%0px").arg(currentSketchWidget->getPenWidth()));
+            currentSketchWidget->setPenWidth(value);
+            ui->widthHintLabel->setText(
+                    QString("w:%0px").arg(currentSketchWidget->getPenWidth(), 2, 10, QChar(' ')));
         }
     });
-    static auto colorDialog = new QColorDialog(this);
+    colorDialog = new QColorDialog(this);
     connect(ui->colorButton, &QToolButton::clicked, colorDialog, [&]() {
-        colorDialog->resize(size() / 2);
         colorDialog->show();
     });
     connect(colorDialog, &QColorDialog::colorSelected,
             this, [&](const QColor &color) {
-                QPixmap tmp(ui->colorButton->size());
+                QPixmap tmp(ui->colorButton->iconSize());
                 tmp.fill(color);
                 ui->colorButton->setIcon(QIcon(tmp));
                 if (currentSketchWidget != nullptr) {
@@ -127,25 +129,41 @@ void MainWindow::setUpSketchCtrl() {
                 }
             }
     );
-    static auto itemForm = new ItemForm(items, this);
+    ui->shapeButton->setCheckable(true);
+    itemForm = new ItemForm(items, this);
     itemForm->hide();
-    connect(itemForm, &ItemForm::itemChanged, this, [&](const QString&item) {
-        ui->shapeButton->setText(item);
+    connect(itemForm, &ItemForm::itemChanged, this, [&](const QString &item) {
+        currentItem = item;
+        ui->shapeButton->setText(currentItem);         // 改按钮图标
+        if (currentSketchWidget != nullptr) {   // 改鼠标形状
+            QCursor cursor;
+            if (currentItem == "笔") {
+                int w = qMax(24, qMin(currentSketchWidget->width(), currentSketchWidget->height() / 10));
+                cursor = QCursor(QPixmap(cocr::getPenCursorXpm()).scaled(w, w), 0, w);
+            } else {
+                cursor.setShape(Qt::CrossCursor);
+            }
+            currentSketchWidget->setCursor(cursor);
+        }
     });
-    ui->shapeButton->setFont(QFont("simhei",ui->shapeButton->width()/3));
     connect(ui->shapeButton, &QToolButton::clicked, this, [&](bool checked) {
         if (itemForm->isHidden()) {
-            itemForm->move(ui->mdiArea->x(),
-                           ui->drawCtrlContainer->y());
-            itemForm->resize(mdiArea->width() / 5, mdiArea->height());
+            itemForm->move(ui->mdiArea->x(), ui->drawCtrlContainer->y());
             itemForm->show();
         } else {
             itemForm->hide();
         }
     });
-    auto sketchWidget = newSketchWidget();
+}
 
-    colorDialog->colorSelected(Qt::black);
-    ui->widthSlider->setValue(10);
-    itemForm->clickFirstItem();
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    QWidget::keyPressEvent(event);
+    if (currentSketchWidget == nullptr || currentItem.isEmpty()) { return; }
+    switch (event->key()) {
+        case Qt::Key_Space:
+//            currentSketchWidget->
+            break;
+        default:
+            break;
+    }
 }

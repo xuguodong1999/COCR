@@ -9,6 +9,7 @@ inline void seeEmptyClassSize();
 
 int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    qApp->setAttribute(Qt::AA_SynthesizeMouseForUnhandledTouchEvents);
     QApplication a(argc, argv);
     QFontDatabase::addApplicationFont(":/lang/simhei.subset.ttf");
     qApp->setFont(QFont("simhei"));

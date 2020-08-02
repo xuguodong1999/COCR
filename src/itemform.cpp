@@ -5,7 +5,7 @@
 #include <QTextBrowser>
 
 ItemForm::ItemForm(const QList<QPair<QString, QString>> &items, QWidget *parent)
-        : QFrame(parent), firstItemButton(nullptr) ,currentPressedButton(nullptr){
+        : QScrollArea(parent), firstItemButton(nullptr), currentPressedButton(nullptr) {
     setFont(QFont("Arial"));
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
     setFrameShape(Shape::Box);
@@ -29,10 +29,10 @@ ItemForm::ItemForm(const QList<QPair<QString, QString>> &items, QWidget *parent)
         button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         button->setText(items[i].first);
         connect(button, &QToolButton::clicked, this, [&]() {
-            if(currentPressedButton!= nullptr){
+            if (currentPressedButton != nullptr) {
                 currentPressedButton->setChecked(false);
             }
-            currentPressedButton=qobject_cast<QToolButton*>(sender());
+            currentPressedButton = qobject_cast<QToolButton *>(sender());
             currentPressedButton->setChecked(true);
             emit itemChanged(qobject_cast<QToolButton *>(sender())->text());
         });
@@ -44,15 +44,18 @@ ItemForm::ItemForm(const QList<QPair<QString, QString>> &items, QWidget *parent)
 //        layout->addWidget(label, i + 1, 1);
         layout->setRowStretch(i + 1, 2);
     }
-    static auto pBrowser = new QTextBrowser(this);
-    layout->addWidget(pBrowser, 1, 1, items.size(), 1);
+    static auto pTextBrowser = new QTextBrowser(this);
+    layout->addWidget(pTextBrowser, 1, 1, items.size(), 1);
     connect(this, &ItemForm::itemChanged, this, [&](const QString &text) {
-        pBrowser->setText("Hint: " + hint[text]);
+        pTextBrowser->setText(hint[text]);
     });
     layout->setColumnStretch(0, 1);
     layout->setColumnStretch(1, 2);
-    layout->setSpacing(1);
-    setLayout(layout);
+    layout->setSpacing(3);
+    container = new QWidget(this);
+    container->setLayout(layout);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setWidget(container);
 }
 
 ItemForm::~ItemForm() {
@@ -62,4 +65,9 @@ void ItemForm::clickFirstItem() {
     if (firstItemButton != nullptr) {
         firstItemButton->click();
     }
+}
+
+void ItemForm::resizeEvent(QResizeEvent *e) {
+    QScrollArea::resizeEvent(e);
+    container->resize(width() * 0.9, container->height());
 }

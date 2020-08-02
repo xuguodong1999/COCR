@@ -38,6 +38,7 @@ protected:
 private:
     QPainterPath currentPath;
     QGraphicsPixmapItem *bgPixmapItem;
+
 };
 
 #endif

@@ -81,7 +81,7 @@ void SwitchButton::drawSlider(QPainter &painter) {
 void SwitchButton::drawBackGround(QPainter &painter) {
     painter.save();
     painter.setPen(Qt::NoPen);
-    QColor bgColor = isChecked() ? mBgColorOff : mBGColorOn;
+    QColor bgColor = isChecked() ? mBgColorOff : mBgColorOn;
     if (isEnabled()) {
         bgColor.setAlpha(127);
     }
@@ -131,5 +131,4 @@ void SwitchButton::resizeEvent(QResizeEvent *e) {
         mEndX = width() - height();
         mStartX = 0;
     }
-    update();
 }

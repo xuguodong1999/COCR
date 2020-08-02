@@ -21,13 +21,13 @@ SketchWidget::SketchWidget(QWidget *parent) : QWidget(parent) {
 //    view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 //    view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setRubberBandSelectionMode(Qt::ItemSelectionMode::ContainsItemBoundingRect);
-    currentScene = new SketchScene();
-    view->setScene(currentScene);
+    scene = new SketchScene();
+    view->setScene(scene);
 
-    connect(this,&SketchWidget::penWidthChanged,this,[&](){
+    connect(this, &SketchWidget::penWidthChanged, this, [&]() {
         pen.setWidth(penWidth);
     });
-    connect(this,&SketchWidget::penColorChanged,this,[&]{
+    connect(this, &SketchWidget::penColorChanged, this, [&] {
         pen.setColor(penColor);
     });
     view->hide();
@@ -48,8 +48,8 @@ void SketchWidget::mousePressEvent(QMouseEvent *event) {
     painter.drawLine(lastPos, lastPos);
     updateRect(lastPos, lastPos);
 
-    currentScene->addPathMoveTo(lastPos);
-    currentScene->addPathLineTo(lastPos);
+    scene->addPathMoveTo(lastPos);
+    scene->addPathLineTo(lastPos + QPoint(1, 1));
 }
 
 void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
@@ -61,7 +61,7 @@ void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
     painter.drawLine(lastPos, currentPos);
     updateRect(currentPos, lastPos);
     lastPos = currentPos;
-    currentScene->addPathLineTo(lastPos);
+    scene->addPathLineTo(lastPos);
 }
 
 void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
@@ -69,12 +69,12 @@ void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
     if (!view->isHidden()) {
         return;
     }
-    auto item = currentScene->commitPath();
+    auto item = scene->commitPath();
     item->setFlags(QGraphicsItem::ItemIsMovable
                    | QGraphicsItem::ItemIsFocusable
                    | QGraphicsItem::ItemIsSelectable);
     item->setPen(pen);
-    currentScene->clearPath();
+    scene->clearPath();
 //    view->render(&painter, rect(), rect());
     painter.end();
 //    update();
@@ -109,7 +109,7 @@ void SketchWidget::updateRect(const QPoint &p1, const QPoint &p2) {
 
 void SketchWidget::showScribbleArea() {
     view->hide();
-    currentScene->clearSelection();
+    scene->clearSelection();
     syncSketchView();
     update();
 }
@@ -140,8 +140,8 @@ void SketchWidget::resizeEvent(QResizeEvent *event) {
     // qDebug()<<"resize...";
     QWidget::resizeEvent(event);
     view->resize(size());// 必须先更新view，否则scene的坐标系更新不会被view感知到
-    currentScene->setSceneRect(0, 0, width(), height());
-    currentScene->addBackGround(size());
+    scene->setSceneRect(0, 0, width(), height());
+    scene->addBackGround(size());
 //    view->resize(size());// FIXME: 导致缩放后出现错位重绘
     syncSketchView();
 }
@@ -165,9 +165,9 @@ void SketchWidget::syncSketchView() {
 
 void SketchWidget::clearScene() {
 //    qDebug() << "clearScene()";
-    if (currentScene != nullptr) {
-        currentScene->clearAll();
-        currentScene->addBackGround(size());
+    if (scene != nullptr) {
+        scene->clearAll();
+        scene->addBackGround(size());
         syncSketchView();
     }
 }
@@ -190,3 +190,5 @@ void SketchWidget::setPen(const QPen &pen) {
     SketchWidget::pen = pen;
     emit penChanged(pen);
 }
+
+

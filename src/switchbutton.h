@@ -44,7 +44,7 @@ private:
     QTimer *mTimer;
     const QColor mRoundButtonColorOn = Qt::white,
             mRoundButtonColorOff = Qt::white,
-            mBGColorOn = Qt::lightGray,
+            mBgColorOn = Qt::lightGray,
             mBgColorOff = Qt::darkGray,
             mTextColor = Qt::black;
     const QString mTextOn = "Draw", mTextOff = "Drag";

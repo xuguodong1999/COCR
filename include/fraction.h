@@ -9,13 +9,14 @@
 #include <algorithm>
 
 namespace cocr {
-inline const float &eps() {
-    return 0.0000000000000001;
-}
+    inline const float &eps() {
+        return 0.0000000000000001;
+    }
 
-inline const float &epsNeg() {
-    return -0.0000000000000001;
-}
+    inline const float &epsNeg() {
+        return -0.0000000000000001;
+    }
+
     template<typename T>
     class Fraction {
     public:

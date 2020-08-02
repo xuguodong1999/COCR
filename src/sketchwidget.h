@@ -19,9 +19,17 @@ Q_OBJECT
     Q_PROPERTY(QPen pen READ getPen WRITE setPen NOTIFY penChanged)
 
 public:
-    QPen getPen()const;
+    explicit SketchWidget(QWidget *parent = nullptr);
 
-    void setPen(const QPen&pen);
+    ~SketchWidget();
+
+    void switchMode(bool);
+
+    void clearScene();
+
+    QPen getPen() const;
+
+    void setPen(const QPen &pen);
 
     int getPenWidth() const;
 
@@ -33,24 +41,16 @@ public:
 
 signals:
 
-    void penColorChanged(const QColor&color);
+    void penColorChanged(const QColor &color);
 
     void penWidthChanged(int width);
 
-    void penChanged(const QPen&pen);
+    void penChanged(const QPen &pen);
 
     void focusStateChanged(bool focusIn);
 
     void closed();
 
-public:
-    explicit SketchWidget(QWidget *parent = nullptr);
-
-    ~SketchWidget();
-
-    void switchMode(bool);
-
-    void clearScene();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -68,7 +68,7 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private:
-    SketchScene *currentScene;
+    SketchScene *scene;
     SketchView *view;
     QPoint lastPos;
     QPixmap bufPixmap;
@@ -81,6 +81,7 @@ private:
     void showScribbleArea();
 
     void showSketchView();
+
 };
 
 #endif

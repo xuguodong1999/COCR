@@ -21,7 +21,7 @@ if (MSVC)
 endif ()
 
 target_link_libraries(${MODULE_NAME} PRIVATE
-#        ${QT_BIG_RES_SRC}
+        #        ${QT_BIG_RES_SRC}
         ${OPENBABEL2_LIBRARIES}
         ${OpenCV_LIBS}
         Qt5::Widgets)

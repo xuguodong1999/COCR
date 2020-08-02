@@ -114,3 +114,12 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 FORMS += \
     ../src/mainwindow.ui
 
+HEADERS += \
+    ../src/itemform.h
+
+SOURCES += \
+    ../src/itemform.cpp
+
+RESOURCES += \
+    ../res/lang.qrc
+

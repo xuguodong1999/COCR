@@ -4,11 +4,13 @@
 #include <QFrame>
 #include <QHash>
 #include <QToolButton>
-class ItemForm : public QFrame {
+#include <QScrollArea>
+
+class ItemForm : public QScrollArea {
 Q_OBJECT
 
 public:
-    explicit ItemForm(const QList<QPair<QString,QString>> &items, QWidget *parent = nullptr);
+    explicit ItemForm(const QList<QPair<QString, QString>> &items, QWidget *parent = nullptr);
 
     ~ItemForm();
 
@@ -18,9 +20,13 @@ signals:
 
     void itemChanged(const QString &item);
 
+protected:
+    void resizeEvent(QResizeEvent *e) override;
+
 private:
-    QHash<QString,QString> hint;
-    QToolButton*firstItemButton,*currentPressedButton;
+    QHash<QString, QString> hint;
+    QToolButton *firstItemButton, *currentPressedButton;
+    QWidget *container;
 };
 
 #endif // _ITEMFORM_H_

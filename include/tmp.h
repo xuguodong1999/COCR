@@ -20,7 +20,7 @@ using std::string;
 using std::cout;
 using std::endl;
 using std::vector;
-const int maxEleStrSize =3;
+const int maxEleStrSize = 3;
 using namespace cocr;
 
 class Element {
@@ -652,7 +652,6 @@ void Equation::addStateInfo() {
             products[i].stateHint = "↓";
     }
 }
-
 
 
 ErrorCode Equation::intoElement() {
