@@ -6,43 +6,40 @@
 
 // ./darknet nightmare cfg/extractor.recon.cfg ~/trained/yolo-coco.conv frame6.png -reconstruct -iters 500 -i 3 -lambda .1 -rate .01 -smooth 2
 
-float abs_mean(float *x, int n)
-{
+float abs_mean(float *x, int n) {
     int i;
     float sum = 0;
-    for (i = 0; i < n; ++i){
+    for (i = 0; i < n; ++i) {
         sum += fabs(x[i]);
     }
-    return sum/n;
+    return sum / n;
 }
 
-void calculate_loss(float *output, float *delta, int n, float thresh)
-{
+void calculate_loss(float *output, float *delta, int n, float thresh) {
     int i;
     float mean = mean_array(output, n);
     float var = variance_array(output, n);
-    for(i = 0; i < n; ++i){
-        if(delta[i] > mean + thresh*sqrt(var)) delta[i] = output[i];
+    for (i = 0; i < n; ++i) {
+        if (delta[i] > mean + thresh * sqrt(var)) delta[i] = output[i];
         else delta[i] = 0;
     }
 }
 
-void optimize_picture(network *net, image orig, int max_layer, float scale, float rate, float thresh, int norm)
-{
+void optimize_picture(network *net, image orig, int max_layer, float scale, float rate, float thresh, int norm) {
     //scale_image(orig, 2);
     //translate_image(orig, -1);
     net->n = max_layer + 1;
 
-    int dx = rand()%16 - 8;
-    int dy = rand()%16 - 8;
-    int flip = rand()%2;
+    int dx = rand() % 16 - 8;
+    int dy = rand() % 16 - 8;
+    int flip = rand() % 2;
 
     image crop = crop_image(orig, dx, dy, orig.w, orig.h);
-    image im = resize_image(crop, (int)(orig.w * scale), (int)(orig.h * scale));
-    if(flip) flip_image(im);
+    image im = resize_image(crop, (int) (orig.w * scale), (int) (orig.h * scale));
+    if (flip) flip_image(im);
 
     resize_network(net, im.w, im.h);
-    layer last = net->layers[net->n-1];
+    layer last = net->layers[net->n - 1];
     //net->layers[net->n - 1].activation = LINEAR;
 
     image delta = make_image(im.w, im.h, im.c);
@@ -50,8 +47,8 @@ void optimize_picture(network *net, image orig, int max_layer, float scale, floa
     network_state state = {0};
 
 #ifdef GPU
-    state.input = cuda_make_array(im.data, im.w*im.h*im.c);
-    state.delta = cuda_make_array(im.data, im.w*im.h*im.c);
+    state.input = cuda_make_array(im.data, im.w * im.h * im.c);
+    state.delta = cuda_make_array(im.data, im.w * im.h * im.c);
 
     forward_network_gpu(*net, state);
     copy_ongpu(last.outputs, last.output_gpu, 1, last.delta_gpu, 1);
@@ -62,7 +59,7 @@ void optimize_picture(network *net, image orig, int max_layer, float scale, floa
 
     backward_network_gpu(*net, state);
 
-    cuda_pull_array(state.delta, delta.data, im.w*im.h*im.c);
+    cuda_pull_array(state.delta, delta.data, im.w * im.h * im.c);
     cuda_free(state.input);
     cuda_free(state.delta);
 #else
@@ -74,7 +71,7 @@ void optimize_picture(network *net, image orig, int max_layer, float scale, floa
     backward_network(*net, state);
 #endif
 
-    if(flip) flip_image(delta);
+    if (flip) flip_image(delta);
     //normalize_array(delta.data, delta.w*delta.h*delta.c);
     image resized = resize_image(delta, orig.w, orig.h);
     image out = crop_image(resized, -dx, -dy, orig.w, orig.h);
@@ -87,8 +84,8 @@ void optimize_picture(network *net, image orig, int max_layer, float scale, floa
 
     //rate = rate / abs_mean(out.data, out.w*out.h*out.c);
 
-    if(norm) normalize_array(out.data, out.w*out.h*out.c);
-    axpy_cpu(orig.w*orig.h*orig.c, rate, out.data, 1, orig.data, 1);
+    if (norm) normalize_array(out.data, out.w * out.h * out.c);
+    axpy_cpu(orig.w * orig.h * orig.c, rate, out.data, 1, orig.data, 1);
 
     /*
        normalize_array(orig.data, orig.w*orig.h*orig.c);
@@ -110,19 +107,18 @@ void optimize_picture(network *net, image orig, int max_layer, float scale, floa
 
 }
 
-void smooth(image recon, image update, float lambda, int num)
-{
+void smooth(image recon, image update, float lambda, int num) {
     int i, j, k;
     int ii, jj;
-    for(k = 0; k < recon.c; ++k){
-        for(j = 0; j < recon.h; ++j){
-            for(i = 0; i < recon.w; ++i){
-                int out_index = i + recon.w*(j + recon.h*k);
-                for(jj = j-num; jj <= j + num && jj < recon.h; ++jj){
+    for (k = 0; k < recon.c; ++k) {
+        for (j = 0; j < recon.h; ++j) {
+            for (i = 0; i < recon.w; ++i) {
+                int out_index = i + recon.w * (j + recon.h * k);
+                for (jj = j - num; jj <= j + num && jj < recon.h; ++jj) {
                     if (jj < 0) continue;
-                    for(ii = i-num; ii <= i + num && ii < recon.w; ++ii){
+                    for (ii = i - num; ii <= i + num && ii < recon.w; ++ii) {
                         if (ii < 0) continue;
-                        int in_index = ii + recon.w*(jj + recon.h*k);
+                        int in_index = ii + recon.w * (jj + recon.h * k);
                         update.data[out_index] += lambda * (recon.data[in_index] - recon.data[out_index]);
                     }
                 }
@@ -131,22 +127,23 @@ void smooth(image recon, image update, float lambda, int num)
     }
 }
 
-void reconstruct_picture(network net, float *features, image recon, image update, float rate, float momentum, float lambda, int smooth_size, int iters)
-{
+void
+reconstruct_picture(network net, float *features, image recon, image update, float rate, float momentum, float lambda,
+                    int smooth_size, int iters) {
     int iter = 0;
     for (iter = 0; iter < iters; ++iter) {
         image delta = make_image(recon.w, recon.h, recon.c);
 
         network_state state = {0};
 #ifdef GPU
-        state.input = cuda_make_array(recon.data, recon.w*recon.h*recon.c);
-        state.delta = cuda_make_array(delta.data, delta.w*delta.h*delta.c);
+        state.input = cuda_make_array(recon.data, recon.w * recon.h * recon.c);
+        state.delta = cuda_make_array(delta.data, delta.w * delta.h * delta.c);
         state.truth = cuda_make_array(features, get_network_output_size(net));
 
         forward_network_gpu(net, state);
         backward_network_gpu(net, state);
 
-        cuda_pull_array(state.delta, delta.data, delta.w*delta.h*delta.c);
+        cuda_pull_array(state.delta, delta.data, delta.w * delta.h * delta.c);
 
         cuda_free(state.input);
         cuda_free(state.delta);
@@ -160,11 +157,11 @@ void reconstruct_picture(network net, float *features, image recon, image update
         backward_network(net, state);
 #endif
 
-        axpy_cpu(recon.w*recon.h*recon.c, 1, delta.data, 1, update.data, 1);
+        axpy_cpu(recon.w * recon.h * recon.c, 1, delta.data, 1, update.data, 1);
         smooth(recon, update, lambda, smooth_size);
 
-        axpy_cpu(recon.w*recon.h*recon.c, rate, update.data, 1, recon.data, 1);
-        scal_cpu(recon.w*recon.h*recon.c, momentum, update.data, 1);
+        axpy_cpu(recon.w * recon.h * recon.c, rate, update.data, 1, recon.data, 1);
+        scal_cpu(recon.w * recon.h * recon.c, momentum, update.data, 1);
 
         //float mag = mag_array(recon.data, recon.w*recon.h*recon.c);
         //scal_cpu(recon.w*recon.h*recon.c, 600/mag, recon.data, 1);
@@ -175,10 +172,9 @@ void reconstruct_picture(network net, float *features, image recon, image update
 }
 
 
-void run_nightmare(int argc, char **argv)
-{
+void run_nightmare(int argc, char **argv) {
     srand(time(0));
-    if(argc < 4){
+    if (argc < 4) {
         fprintf(stderr, "usage: %s %s [cfg] [weights] [image] [layer] [options! (optional)]\n", argv[0], argv[1]);
         return;
     }
@@ -210,30 +206,30 @@ void run_nightmare(int argc, char **argv)
 
     set_batch_network(&net, 1);
     image im = load_image_color(input, 0, 0);
-    if(0){
+    if (0) {
         float scale = 1;
-        if(im.w > 512 || im.h > 512){
-            if(im.w > im.h) scale = 512.0/im.w;
-            else scale = 512.0/im.h;
+        if (im.w > 512 || im.h > 512) {
+            if (im.w > im.h) scale = 512.0 / im.w;
+            else scale = 512.0 / im.h;
         }
-        image resized = resize_image(im, scale*im.w, scale*im.h);
+        image resized = resize_image(im, scale * im.w, scale * im.h);
         free_image(im);
         im = resized;
     }
 
     float *features = 0;
     image update;
-    if (reconstruct){
+    if (reconstruct) {
         resize_network(&net, im.w, im.h);
 
         int zz = 0;
         network_predict(net, im.data);
         image out_im = get_network_image(net);
-        image crop = crop_image(out_im, zz, zz, out_im.w-2*zz, out_im.h-2*zz);
+        image crop = crop_image(out_im, zz, zz, out_im.w - 2 * zz, out_im.h - 2 * zz);
         //flip_image(crop);
         image f_im = resize_image(crop, out_im.w, out_im.h);
         free_image(crop);
-        printf("%d features\n", out_im.w*out_im.h*out_im.c);
+        printf("%d features\n", out_im.w * out_im.h * out_im.c);
 
 
         im = resize_image(im, im.w, im.h);
@@ -241,7 +237,7 @@ void run_nightmare(int argc, char **argv)
         features = f_im.data;
 
         int i;
-        for(i = 0; i < 14*14*512; ++i){
+        for (i = 0; i < 14 * 14 * 512; ++i) {
             features[i] += rand_uniform(-.19, .19);
         }
 
@@ -253,48 +249,48 @@ void run_nightmare(int argc, char **argv)
 
     int e;
     int n;
-    for(e = 0; e < rounds; ++e){
+    for (e = 0; e < rounds; ++e) {
         fprintf(stderr, "Iteration: ");
         fflush(stderr);
-        for(n = 0; n < iters; ++n){
+        for (n = 0; n < iters; ++n) {
             fprintf(stderr, "%d, ", n);
             fflush(stderr);
-            if(reconstruct){
+            if (reconstruct) {
                 reconstruct_picture(net, features, im, update, rate, momentum, lambda, smooth_size, 1);
                 //if ((n+1)%30 == 0) rate *= .5;
                 show_image(im, "reconstruction");
 #ifdef OPENCV
                 wait_key_cv(10);
 #endif
-            }else{
-                int layer = max_layer + rand()%range - range/2;
-                int octave = rand()%octaves;
-                optimize_picture(&net, im, layer, 1/pow(1.33333333, octave), rate, thresh, norm);
+            } else {
+                int layer = max_layer + rand() % range - range / 2;
+                int octave = rand() % octaves;
+                optimize_picture(&net, im, layer, 1 / pow(1.33333333, octave), rate, thresh, norm);
             }
         }
         fprintf(stderr, "done\n");
-        if(0){
+        if (0) {
             image g = grayscale_image(im);
             free_image(im);
             im = g;
         }
         char buff[256];
-        if (prefix){
-            sprintf(buff, "%s/%s_%s_%d_%06d",prefix, imbase, cfgbase, max_layer, e);
-        }else{
-            sprintf(buff, "%s_%s_%d_%06d",imbase, cfgbase, max_layer, e);
+        if (prefix) {
+            sprintf(buff, "%s/%s_%s_%d_%06d", prefix, imbase, cfgbase, max_layer, e);
+        } else {
+            sprintf(buff, "%s_%s_%d_%06d", imbase, cfgbase, max_layer, e);
         }
         printf("%d %s\n", e, buff);
         save_image(im, buff);
         //show_image(im, buff);
         //wait_key_cv(0);
 
-        if(rotate){
+        if (rotate) {
             image rot = rotate_image(im, rotate);
             free_image(im);
             im = rot;
         }
-        image crop = crop_image(im, im.w * (1. - zoom)/2., im.h * (1.-zoom)/2., im.w*zoom, im.h*zoom);
+        image crop = crop_image(im, im.w * (1. - zoom) / 2., im.h * (1. - zoom) / 2., im.w * zoom, im.h * zoom);
         image resized = resize_image(crop, im.w, im.h);
         free_image(im);
         free_image(crop);

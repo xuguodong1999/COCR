@@ -66,7 +66,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #define WIN32_LEAN_AND_MEAN
+
 #include <windows.h>
 
 #ifdef __cplusplus
@@ -105,14 +107,14 @@ static char EMSG[] = "";
 #define EMSG ""
 #endif
 
-static int getopt_internal(int, char* const*, const char*,
-    const struct option*, int*, int);
-static int parse_long_options(char* const*, const char*,
-    const struct option*, int*, int);
+static int getopt_internal(int, char *const *, const char *,
+                           const struct option *, int *, int);
+static int parse_long_options(char *const *, const char *,
+                              const struct option *, int *, int);
 static int gcd(int, int);
-static void permute_args(int, int, int, char* const*);
+static void permute_args(int, int, int, char *const *);
 
-static char* place = EMSG; /* option letter processing */
+static char *place = EMSG; /* option letter processing */
 
 /* XXX: set optreset to 1 rather than these two */
 static int nonopt_start = -1; /* first non option argument (for permute) */
@@ -126,9 +128,9 @@ static const char noarg[] = "option doesn't take an argument -- %.*s";
 static const char illoptchar[] = "unknown option -- %c";
 static const char illoptstring[] = "unknown option -- %s";
 
-static void _vwarnx(const char* fmt, va_list ap);
+static void _vwarnx(const char *fmt, va_list ap);
 
-static void warnx(const char* fmt, ...);
+static void warnx(const char *fmt, ...);
 
 /*
  * Compute the greatest common divisor of a and b.
@@ -140,7 +142,7 @@ static int gcd(int a, int b);
  * from nonopt_end to opt_end (keeping the same order of arguments
  * in each block).
  */
-static void permute_args(int panonopt_start, int panonopt_end, int opt_end, char* const* nargv);
+static void permute_args(int panonopt_start, int panonopt_end, int opt_end, char *const *nargv);
 
 #ifdef REPLACE_GETOPT
 /*
@@ -149,7 +151,7 @@ static void permute_args(int panonopt_start, int panonopt_end, int opt_end, char
  *
  * [eventually this will replace the BSD getopt]
  */
-int getopt(int nargc, char* const* nargv, const char* options);
+int getopt(int nargc, char *const *nargv, const char *options);
 #endif /* REPLACE_GETOPT */
 
 //extern int getopt(int nargc, char * const *nargv, const char *options);
@@ -202,13 +204,13 @@ extern "C" {
  * getopt_long --
  *	Parse argc/argv argument vector.
  */
-int getopt_long(int nargc, char* const* nargv, const char* options, const struct option* long_options, int* idx);
+int getopt_long(int nargc, char *const *nargv, const char *options, const struct option *long_options, int *idx);
 
 /*
  * getopt_long_only --
  *	Parse argc/argv argument vector.
  */
-int getopt_long_only(int nargc, char* const* nargv, const char* options, const struct option* long_options, int* idx);
+int getopt_long_only(int nargc, char *const *nargv, const char *options, const struct option *long_options, int *idx);
 
 /*
  * Previous MinGW implementation had...

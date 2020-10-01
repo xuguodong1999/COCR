@@ -1,4 +1,5 @@
 #define _XOPEN_SOURCE
+
 #include "image.h"
 #include "http_stream.h"
 
@@ -16,6 +17,7 @@
 #include <thread>
 #include <atomic>
 #include <ctime>
+
 using std::cerr;
 using std::endl;
 
@@ -28,15 +30,18 @@ using std::endl;
 #endif
 #define WIN32_LEAN_AND_MEAN
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include "gettimeofday.h"
+
 #define PORT        unsigned long
 #define ADDRPOINTER   int*
-struct _INIT_W32DATA
-{
+
+struct _INIT_W32DATA {
     WSADATA w;
+
     _INIT_W32DATA() { WSAStartup(MAKEWORD(2, 1), &w); }
 } _init_once;
 
@@ -46,7 +51,7 @@ struct _INIT_W32DATA
 // the connection can be closed fully, with no risk of reset.
 static int close_socket(SOCKET s) {
     int close_output = ::shutdown(s, 1); // 0 close input, 1 close output, 2 close both
-    char *buf = (char *)calloc(1024, sizeof(char));
+    char *buf = (char *) calloc(1024, sizeof(char));
     ::recv(s, buf, 1024, 0);
     free(buf);
     int close_input = ::shutdown(s, 0);
@@ -54,6 +59,7 @@ static int close_socket(SOCKET s) {
     cerr << "Close socket: out = " << close_output << ", in = " << close_input << " \n";
     return result;
 }
+
 #else   // _WIN32 - else: nix
 #include "darkunistd.h"
 #include <fcntl.h>
@@ -97,16 +103,14 @@ static int close_socket(SOCKET s) {
 #endif // _WIN32
 
 
-class JSON_sender
-{
+class JSON_sender {
     SOCKET sock;
     SOCKET maxfd;
     fd_set master;
     int timeout; // master sock timeout, shutdown after timeout usec.
     int close_all_sockets;
 
-    int _write(int sock, char const*const s, int len)
-    {
+    int _write(int sock, char const *const s, int len) {
         if (len < 1) { len = strlen(s); }
         return ::send(sock, s, len, 0);
     }
@@ -114,37 +118,31 @@ class JSON_sender
 public:
 
     JSON_sender(int port = 0, int _timeout = 400000)
-        : sock(INVALID_SOCKET)
-        , timeout(_timeout)
-    {
+            : sock(INVALID_SOCKET), timeout(_timeout) {
         close_all_sockets = 0;
         FD_ZERO(&master);
         if (port)
             open(port);
     }
 
-    ~JSON_sender()
-    {
+    ~JSON_sender() {
         close_all();
         release();
     }
 
-    bool release()
-    {
+    bool release() {
         if (sock != INVALID_SOCKET)
             ::shutdown(sock, 2);
         sock = (INVALID_SOCKET);
         return false;
     }
 
-    void close_all()
-    {
+    void close_all() {
         close_all_sockets = 1;
         write("\n]");   // close JSON array
     }
 
-    bool open(int port)
-    {
+    bool open(int port) {
         sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
         SOCKADDR_IN address;
@@ -152,7 +150,7 @@ public:
         address.sin_family = AF_INET;
         address.sin_port = htons(port);    // ::htons(port);
         int reuse = 1;
-        if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuse, sizeof(reuse)) < 0)
+        if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char *) &reuse, sizeof(reuse)) < 0)
             cerr << "setsockopt(SO_REUSEADDR) failed" << endl;
 
         // Non-blocking sockets
@@ -173,13 +171,11 @@ public:
         if (setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, (const char*)&reuse, sizeof(reuse)) < 0)
             cerr << "setsockopt(SO_REUSEPORT) failed" << endl;
 #endif
-        if (::bind(sock, (SOCKADDR*)&address, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
-        {
+        if (::bind(sock, (SOCKADDR *) &address, sizeof(SOCKADDR_IN)) == SOCKET_ERROR) {
             cerr << "error JSON_sender: couldn't bind sock " << sock << " to port " << port << "!" << endl;
             return release();
         }
-        if (::listen(sock, 10) == SOCKET_ERROR)
-        {
+        if (::listen(sock, 10) == SOCKET_ERROR) {
             cerr << "error JSON_sender: couldn't listen on sock " << sock << " on port " << port << " !" << endl;
             return release();
         }
@@ -189,67 +185,62 @@ public:
         return true;
     }
 
-    bool isOpened()
-    {
+    bool isOpened() {
         return sock != INVALID_SOCKET;
     }
 
-    bool write(char const* outputbuf)
-    {
+    bool write(char const *outputbuf) {
         fd_set rread = master;
-        struct timeval select_timeout = { 0, 0 };
-        struct timeval socket_timeout = { 0, timeout };
+        struct timeval select_timeout = {0, 0};
+        struct timeval socket_timeout = {0, timeout};
         if (::select(maxfd + 1, &rread, NULL, NULL, &select_timeout) <= 0)
             return true; // nothing broken, there's just noone listening
 
         int outlen = static_cast<int>(strlen(outputbuf));
 
 #ifdef _WIN32
-        for (unsigned i = 0; i<rread.fd_count; i++)
-        {
+        for (unsigned i = 0; i < rread.fd_count; i++) {
             int addrlen = sizeof(SOCKADDR);
             SOCKET s = rread.fd_array[i];    // fd_set on win is an array, while ...
 #else
-        for (int s = 0; s <= maxfd; s++)
-        {
-            socklen_t addrlen = sizeof(SOCKADDR);
-            if (!FD_ISSET(s, &rread))      // ... on linux it's a bitmask ;)
-                continue;
+            for (int s = 0; s <= maxfd; s++)
+            {
+                socklen_t addrlen = sizeof(SOCKADDR);
+                if (!FD_ISSET(s, &rread))      // ... on linux it's a bitmask ;)
+                    continue;
 #endif
             if (s == sock) // request on master socket, accept and send main header.
             {
-                SOCKADDR_IN address = { 0 };
-                SOCKET      client = ::accept(sock, (SOCKADDR*)&address, &addrlen);
-                if (client == SOCKET_ERROR)
-                {
+                SOCKADDR_IN address = {0};
+                SOCKET client = ::accept(sock, (SOCKADDR *) &address, &addrlen);
+                if (client == SOCKET_ERROR) {
                     cerr << "error JSON_sender: couldn't accept connection on sock " << sock << " !" << endl;
                     return false;
                 }
-                if (setsockopt(client, SOL_SOCKET, SO_RCVTIMEO, (char *)&socket_timeout, sizeof(socket_timeout)) < 0) {
+                if (setsockopt(client, SOL_SOCKET, SO_RCVTIMEO, (char *) &socket_timeout, sizeof(socket_timeout)) < 0) {
                     cerr << "error JSON_sender: SO_RCVTIMEO setsockopt failed\n";
                 }
-                if (setsockopt(client, SOL_SOCKET, SO_SNDTIMEO, (char *)&socket_timeout, sizeof(socket_timeout)) < 0) {
+                if (setsockopt(client, SOL_SOCKET, SO_SNDTIMEO, (char *) &socket_timeout, sizeof(socket_timeout)) < 0) {
                     cerr << "error JSON_sender: SO_SNDTIMEO setsockopt failed\n";
                 }
-                maxfd = (maxfd>client ? maxfd : client);
+                maxfd = (maxfd > client ? maxfd : client);
                 FD_SET(client, &master);
                 _write(client, "HTTP/1.0 200 OK\r\n", 0);
                 _write(client,
-                    "Server: Mozarella/2.2\r\n"
-                    "Accept-Range: bytes\r\n"
-                    "Connection: close\r\n"
-                    "Max-Age: 0\r\n"
-                    "Expires: 0\r\n"
-                    "Cache-Control: no-cache, private\r\n"
-                    "Pragma: no-cache\r\n"
-                    "Content-Type: application/json\r\n"
-                    //"Content-Type: multipart/x-mixed-replace; boundary=boundary\r\n"
-                    "\r\n", 0);
+                       "Server: Mozarella/2.2\r\n"
+                       "Accept-Range: bytes\r\n"
+                       "Connection: close\r\n"
+                       "Max-Age: 0\r\n"
+                       "Expires: 0\r\n"
+                       "Cache-Control: no-cache, private\r\n"
+                       "Pragma: no-cache\r\n"
+                       "Content-Type: application/json\r\n"
+                       //"Content-Type: multipart/x-mixed-replace; boundary=boundary\r\n"
+                       "\r\n", 0);
                 _write(client, "[\n", 0);   // open JSON array
                 int n = _write(client, outputbuf, outlen);
                 cerr << "JSON_sender: new client " << client << endl;
-            }
-            else // existing client, just stream pix
+            } else // existing client, just stream pix
             {
                 //char head[400];
                 // application/x-resource+json or application/x-collection+json -  when you are representing REST resources and collections
@@ -260,8 +251,7 @@ public:
                 //_write(s, head, 0);
                 if (!close_all_sockets) _write(s, ", \n", 0);
                 int n = _write(s, outputbuf, outlen);
-                if (n < (int)outlen)
-                {
+                if (n < (int) outlen) {
                     cerr << "JSON_sender: kill client " << s << endl;
                     close_socket(s);
                     //::shutdown(s, 2);
@@ -280,24 +270,22 @@ public:
             cerr << "JSON_sender: close acceptor: " << result << " \n\n";
         }
         return true;
-        }
+    }
 };
 // ----------------------------------------
 
 static std::unique_ptr<JSON_sender> js_ptr;
 static std::mutex mtx;
 
-void delete_json_sender()
-{
+void delete_json_sender() {
     std::lock_guard<std::mutex> lock(mtx);
     js_ptr.release();
 }
 
-void send_json_custom(char const* send_buf, int port, int timeout)
-{
+void send_json_custom(char const *send_buf, int port, int timeout) {
     try {
         std::lock_guard<std::mutex> lock(mtx);
-        if(!js_ptr) js_ptr.reset(new JSON_sender(port, timeout));
+        if (!js_ptr) js_ptr.reset(new JSON_sender(port, timeout));
 
         js_ptr->write(send_buf);
     }
@@ -306,8 +294,7 @@ void send_json_custom(char const* send_buf, int port, int timeout)
     }
 }
 
-void send_json(detection *dets, int nboxes, int classes, char **names, long long int frame_id, int port, int timeout)
-{
+void send_json(detection *dets, int nboxes, int classes, char **names, long long int frame_id, int port, int timeout) {
     try {
         char *send_buf = detection_to_json(dets, nboxes, classes, names, frame_id, NULL);
 
@@ -329,15 +316,16 @@ void send_json(detection *dets, int nboxes, int classes, char **names, long long
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/highgui/highgui_c.h>
 #include <opencv2/imgproc/imgproc_c.h>
+
 #ifndef CV_VERSION_EPOCH
+
 #include <opencv2/videoio/videoio.hpp>
+
 #endif
 using namespace cv;
 
 
-
-class MJPG_sender
-{
+class MJPG_sender {
     SOCKET sock;
     SOCKET maxfd;
     fd_set master;
@@ -345,8 +333,7 @@ class MJPG_sender
     int quality; // jpeg compression [1..100]
     int close_all_sockets;
 
-    int _write(int sock, char const*const s, int len)
-    {
+    int _write(int sock, char const *const s, int len) {
         if (len < 1) { len = strlen(s); }
         return ::send(sock, s, len, 0);
     }
@@ -354,39 +341,32 @@ class MJPG_sender
 public:
 
     MJPG_sender(int port = 0, int _timeout = 400000, int _quality = 30)
-        : sock(INVALID_SOCKET)
-        , timeout(_timeout)
-        , quality(_quality)
-    {
+            : sock(INVALID_SOCKET), timeout(_timeout), quality(_quality) {
         close_all_sockets = 0;
         FD_ZERO(&master);
         if (port)
             open(port);
     }
 
-    ~MJPG_sender()
-    {
+    ~MJPG_sender() {
         close_all();
         release();
     }
 
-    bool release()
-    {
+    bool release() {
         if (sock != INVALID_SOCKET)
             ::shutdown(sock, 2);
         sock = (INVALID_SOCKET);
         return false;
     }
 
-    void close_all()
-    {
+    void close_all() {
         close_all_sockets = 1;
         cv::Mat tmp(cv::Size(10, 10), CV_8UC3);
         write(tmp);
     }
 
-    bool open(int port)
-    {
+    bool open(int port) {
         sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
         SOCKADDR_IN address;
@@ -394,7 +374,7 @@ public:
         address.sin_family = AF_INET;
         address.sin_port = htons(port);    // ::htons(port);
         int reuse = 1;
-        if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuse, sizeof(reuse)) < 0)
+        if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char *) &reuse, sizeof(reuse)) < 0)
             cerr << "setsockopt(SO_REUSEADDR) failed" << endl;
 
         // Non-blocking sockets
@@ -415,13 +395,11 @@ public:
         if (setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, (const char*)&reuse, sizeof(reuse)) < 0)
             cerr << "setsockopt(SO_REUSEPORT) failed" << endl;
 #endif
-        if (::bind(sock, (SOCKADDR*)&address, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
-        {
+        if (::bind(sock, (SOCKADDR *) &address, sizeof(SOCKADDR_IN)) == SOCKET_ERROR) {
             cerr << "error MJPG_sender: couldn't bind sock " << sock << " to port " << port << "!" << endl;
             return release();
         }
-        if (::listen(sock, 10) == SOCKET_ERROR)
-        {
+        if (::listen(sock, 10) == SOCKET_ERROR) {
             cerr << "error MJPG_sender: couldn't listen on sock " << sock << " on port " << port << " !" << endl;
             return release();
         }
@@ -431,16 +409,14 @@ public:
         return true;
     }
 
-    bool isOpened()
-    {
+    bool isOpened() {
         return sock != INVALID_SOCKET;
     }
 
-    bool write(const Mat & frame)
-    {
+    bool write(const Mat &frame) {
         fd_set rread = master;
-        struct timeval select_timeout = { 0, 0 };
-        struct timeval socket_timeout = { 0, timeout };
+        struct timeval select_timeout = {0, 0};
+        struct timeval socket_timeout = {0, timeout};
         if (::select(maxfd + 1, &rread, NULL, NULL, &select_timeout) <= 0)
             return true; // nothing broken, there's just noone listening
 
@@ -454,48 +430,45 @@ public:
         int outlen = static_cast<int>(outbuf.size());
 
 #ifdef _WIN32
-        for (unsigned i = 0; i<rread.fd_count; i++)
-        {
+        for (unsigned i = 0; i < rread.fd_count; i++) {
             int addrlen = sizeof(SOCKADDR);
             SOCKET s = rread.fd_array[i];    // fd_set on win is an array, while ...
 #else
-        for (int s = 0; s <= maxfd; s++)
-        {
-            socklen_t addrlen = sizeof(SOCKADDR);
-            if (!FD_ISSET(s, &rread))      // ... on linux it's a bitmask ;)
-                continue;
+            for (int s = 0; s <= maxfd; s++)
+            {
+                socklen_t addrlen = sizeof(SOCKADDR);
+                if (!FD_ISSET(s, &rread))      // ... on linux it's a bitmask ;)
+                    continue;
 #endif
             if (s == sock) // request on master socket, accept and send main header.
             {
-                SOCKADDR_IN address = { 0 };
-                SOCKET      client = ::accept(sock, (SOCKADDR*)&address, &addrlen);
-                if (client == SOCKET_ERROR)
-                {
+                SOCKADDR_IN address = {0};
+                SOCKET client = ::accept(sock, (SOCKADDR *) &address, &addrlen);
+                if (client == SOCKET_ERROR) {
                     cerr << "error MJPG_sender: couldn't accept connection on sock " << sock << " !" << endl;
                     return false;
                 }
-                if (setsockopt(client, SOL_SOCKET, SO_RCVTIMEO, (char *)&socket_timeout, sizeof(socket_timeout)) < 0) {
+                if (setsockopt(client, SOL_SOCKET, SO_RCVTIMEO, (char *) &socket_timeout, sizeof(socket_timeout)) < 0) {
                     cerr << "error MJPG_sender: SO_RCVTIMEO setsockopt failed\n";
                 }
-                if (setsockopt(client, SOL_SOCKET, SO_SNDTIMEO, (char *)&socket_timeout, sizeof(socket_timeout)) < 0) {
+                if (setsockopt(client, SOL_SOCKET, SO_SNDTIMEO, (char *) &socket_timeout, sizeof(socket_timeout)) < 0) {
                     cerr << "error MJPG_sender: SO_SNDTIMEO setsockopt failed\n";
                 }
-                maxfd = (maxfd>client ? maxfd : client);
+                maxfd = (maxfd > client ? maxfd : client);
                 FD_SET(client, &master);
                 _write(client, "HTTP/1.0 200 OK\r\n", 0);
                 _write(client,
-                    "Server: Mozarella/2.2\r\n"
-                    "Accept-Range: bytes\r\n"
-                    "Connection: close\r\n"
-                    "Max-Age: 0\r\n"
-                    "Expires: 0\r\n"
-                    "Cache-Control: no-cache, private\r\n"
-                    "Pragma: no-cache\r\n"
-                    "Content-Type: multipart/x-mixed-replace; boundary=mjpegstream\r\n"
-                    "\r\n", 0);
+                       "Server: Mozarella/2.2\r\n"
+                       "Accept-Range: bytes\r\n"
+                       "Connection: close\r\n"
+                       "Max-Age: 0\r\n"
+                       "Expires: 0\r\n"
+                       "Cache-Control: no-cache, private\r\n"
+                       "Pragma: no-cache\r\n"
+                       "Content-Type: multipart/x-mixed-replace; boundary=mjpegstream\r\n"
+                       "\r\n", 0);
                 cerr << "MJPG_sender: new client " << client << endl;
-            }
-            else // existing client, just stream pix
+            } else // existing client, just stream pix
             {
                 if (close_all_sockets) {
                     int result = close_socket(s);
@@ -506,10 +479,9 @@ public:
                 char head[400];
                 sprintf(head, "--mjpegstream\r\nContent-Type: image/jpeg\r\nContent-Length: %zu\r\n\r\n", outlen);
                 _write(s, head, 0);
-                int n = _write(s, (char*)(&outbuf[0]), outlen);
+                int n = _write(s, (char *) (&outbuf[0]), outlen);
                 cerr << "known client: " << s << ", sent = " << n << ", must be sent outlen = " << outlen << endl;
-                if (n < (int)outlen)
-                {
+                if (n < (int) outlen) {
                     cerr << "MJPG_sender: kill client " << s << endl;
                     //::shutdown(s, 2);
                     close_socket(s);
@@ -530,13 +502,12 @@ static std::mutex mtx_mjpeg;
 
 //struct mat_cv : cv::Mat { int a[0]; };
 
-void send_mjpeg(mat_cv* mat, int port, int timeout, int quality)
-{
+void send_mjpeg(mat_cv *mat, int port, int timeout, int quality) {
     try {
         std::lock_guard<std::mutex> lock(mtx_mjpeg);
         static MJPG_sender wri(port, timeout, quality);
         //cv::Mat mat = cv::cvarrToMat(ipl);
-        wri.write(*(cv::Mat*)mat);
+        wri.write(*(cv::Mat *) mat);
         std::cout << " MJPEG-stream sent. \n";
     }
     catch (...) {
@@ -545,8 +516,7 @@ void send_mjpeg(mat_cv* mat, int port, int timeout, int quality)
 }
 // ----------------------------------------
 
-std::string get_system_frame_time_string()
-{
+std::string get_system_frame_time_string() {
     std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     static std::mutex mtx;
     std::lock_guard<std::mutex> lock(mtx);
@@ -583,14 +553,14 @@ int send_http_post_request(char *http_post_host, int server_port, const char *vi
 // https://github.com/yhirose/cpp-httplib
 // sent POST http request
 int send_http_post_request(char *http_post_host, int server_port, const char *videosource,
-    detection *dets, int nboxes, int classes, char **names, long long int frame_id, int ext_output, int timeout)
-{
+                           detection *dets, int nboxes, int classes, char **names, long long int frame_id,
+                           int ext_output, int timeout) {
     const float thresh = 0.005; // function get_network_boxes() has already filtred dets by actual threshold
 
     std::string message;
 
     for (int i = 0; i < nboxes; ++i) {
-        char labelstr[4096] = { 0 };
+        char labelstr[4096] = {0};
         int class_id = -1;
         for (int j = 0; j < classes; ++j) {
             int show = strncmp(names[j], "dont_show", 9);
@@ -601,8 +571,7 @@ int send_http_post_request(char *http_post_host, int server_port, const char *vi
                     char buff[10];
                     sprintf(buff, " (%2.0f%%)", dets[i].prob[j] * 100);
                     strcat(labelstr, buff);
-                }
-                else {
+                } else {
                     strcat(labelstr, ", ");
                     strcat(labelstr, names[j]);
                 }
@@ -614,8 +583,7 @@ int send_http_post_request(char *http_post_host, int server_port, const char *vi
         }
     }
 
-    if (!message.empty())
-    {
+    if (!message.empty()) {
         std::string time = get_system_frame_time_string();
         message += "\ntime:\n" + time + "\n";
         message += "videosource:\n" + std::string(videosource);
@@ -635,6 +603,7 @@ int send_http_post_request(char *http_post_host, int server_port, const char *vi
 
     return 0;
 }
+
 #endif   //  __CYGWIN__
 
 #endif      // OPENCV
@@ -685,50 +654,45 @@ void show_total_time() {
 }
 
 
-int custom_create_thread(custom_thread_t * tid, const custom_attr_t * attr, void *(*func) (void *), void *arg)
-{
+int custom_create_thread(custom_thread_t *tid, const custom_attr_t *attr, void *(*func)(void *), void *arg) {
     std::thread *ptr = new std::thread(func, arg);
-    *tid = (custom_thread_t *)ptr;
+    *tid = (custom_thread_t *) ptr;
     if (tid) return 0;
     else return -1;
 }
 
-int custom_join(custom_thread_t tid, void **value_ptr)
-{
-    std::thread *ptr = (std::thread *)tid;
+int custom_join(custom_thread_t tid, void **value_ptr) {
+    std::thread *ptr = (std::thread *) tid;
     if (ptr) {
         ptr->join();
         delete ptr;
         return 0;
-    }
-    else printf(" Error: ptr of thread is NULL in custom_join() \n");
+    } else printf(" Error: ptr of thread is NULL in custom_join() \n");
 
     return -1;
 }
 
-int custom_atomic_load_int(volatile int* obj)
-{
-    const volatile std::atomic<int>* ptr_a = (const volatile std::atomic<int>*)obj;
+int custom_atomic_load_int(volatile int *obj) {
+    const volatile std::atomic<int> *ptr_a = (const volatile std::atomic<int> *) obj;
     return std::atomic_load(ptr_a);
 }
 
-void custom_atomic_store_int(volatile int* obj, int desr)
-{
-    volatile std::atomic<int>* ptr_a = (volatile std::atomic<int>*)obj;
+void custom_atomic_store_int(volatile int *obj, int desr) {
+    volatile std::atomic<int> *ptr_a = (volatile std::atomic<int> *) obj;
     std::atomic_store(ptr_a, desr);
 }
 
-int get_num_threads()
-{
+int get_num_threads() {
     return std::thread::hardware_concurrency();
 }
 
 #if !defined(__MINGW64__)
-void this_thread_sleep_for(int ms_time)
-{
+
+void this_thread_sleep_for(int ms_time) {
     std::chrono::milliseconds dura(ms_time);
     std::this_thread::sleep_for(dura);
 }
+
 #else
 void this_thread_sleep_for(int ms_time)
 {
@@ -737,8 +701,7 @@ void this_thread_sleep_for(int ms_time)
 }
 #endif
 
-void this_thread_yield()
-{
+void this_thread_yield() {
     std::this_thread::yield();
 }
 
@@ -767,16 +730,14 @@ struct similarity_detections_t {
     float sim;
 };
 
-int check_prob(detection det, float thresh)
-{
+int check_prob(detection det, float thresh) {
     for (int i = 0; i < det.classes; ++i) {
         if (det.prob[i] > thresh) return 1;
     }
     return 0;
 }
 
-int check_classes_id(detection det1, detection det2, float thresh)
-{
+int check_classes_id(detection det1, detection det2, float thresh) {
     if (det1.classes != det2.classes) {
         printf(" Error: det1.classes != det2.classes \n");
         getchar();
@@ -788,8 +749,7 @@ int check_classes_id(detection det1, detection det2, float thresh)
     return 0;
 }
 
-int fill_remaining_id(detection *new_dets, int new_dets_num, int new_track_id, float thresh, int detection_count)
-{
+int fill_remaining_id(detection *new_dets, int new_dets_num, int new_track_id, float thresh, int detection_count) {
     for (int i = 0; i < new_dets_num; ++i) {
         if (new_dets[i].track_id == 0 && check_prob(new_dets[i], thresh)) {
             //printf(" old_tid = %d, new_tid = %d, sim = %f \n", new_dets[i].track_id, new_track_id, new_dets[i].sim);
@@ -802,24 +762,22 @@ int fill_remaining_id(detection *new_dets, int new_dets_num, int new_track_id, f
     return new_track_id;
 }
 
-float *make_float_array(float* src, size_t size)
-{
-    float *dst = (float*)xcalloc(size, sizeof(float));
-    memcpy(dst, src, size*sizeof(float));
+float *make_float_array(float *src, size_t size) {
+    float *dst = (float *) xcalloc(size, sizeof(float));
+    memcpy(dst, src, size * sizeof(float));
     return dst;
 }
 
 struct detection_t : detection {
     int det_count;
-    detection_t(detection det) : detection(det), det_count(0)
-    {
+
+    detection_t(detection det) : detection(det), det_count(0) {
         if (embeddings) embeddings = make_float_array(det.embeddings, embedding_size);
         if (prob) prob = make_float_array(det.prob, classes);
         if (uc) uc = make_float_array(det.uc, 4);
     }
 
-    detection_t(detection_t const& det) : detection(det)
-    {
+    detection_t(detection_t const &det) : detection(det) {
         if (embeddings) embeddings = make_float_array(det.embeddings, embedding_size);
         if (prob) prob = make_float_array(det.prob, classes);
         if (uc) uc = make_float_array(det.uc, 4);
@@ -833,9 +791,8 @@ struct detection_t : detection {
 };
 
 
-
-void set_track_id(detection *new_dets, int new_dets_num, float thresh, float sim_thresh, float track_ciou_norm, int deque_size, int dets_for_track, int dets_for_show)
-{
+void set_track_id(detection *new_dets, int new_dets_num, float thresh, float sim_thresh, float track_ciou_norm,
+                  int deque_size, int dets_for_track, int dets_for_show) {
     static int new_track_id = 1;
     static std::deque<std::vector<detection_t>> old_dets_dq;
 
@@ -852,8 +809,9 @@ void set_track_id(detection *new_dets, int new_dets_num, float thresh, float sim
     // calculate similarity
     for (int old_id = 0; old_id < old_dets.size(); ++old_id) {
         for (int new_id = 0; new_id < new_dets_num; ++new_id) {
-            const int index = old_id*new_dets_num + new_id;
-            const float sim = cosine_similarity(new_dets[new_id].embeddings, old_dets[old_id].embeddings, old_dets[0].embedding_size);
+            const int index = old_id * new_dets_num + new_id;
+            const float sim = cosine_similarity(new_dets[new_id].embeddings, old_dets[old_id].embeddings,
+                                                old_dets[0].embedding_size);
             sim_det[index].new_id = new_id;
             sim_det[index].old_id = old_id;
             sim_det[index].sim = sim;
@@ -861,7 +819,8 @@ void set_track_id(detection *new_dets, int new_dets_num, float thresh, float sim
     }
 
     // sort similarity
-    std::sort(sim_det.begin(), sim_det.end(), [](similarity_detections_t v1, similarity_detections_t v2) { return v1.sim > v2.sim; });
+    std::sort(sim_det.begin(), sim_det.end(),
+              [](similarity_detections_t v1, similarity_detections_t v2) { return v1.sim > v2.sim; });
     //if(sim_det.size() > 0) printf(" sim_det_first = %f, sim_det_end = %f \n", sim_det.begin()->sim, sim_det.rbegin()->sim);
 
 
@@ -870,13 +829,14 @@ void set_track_id(detection *new_dets, int new_dets_num, float thresh, float sim
     std::vector<int> track_idx(new_track_id, 1);
 
     // match objects
-    for (int index = 0; index < new_dets_num*old_dets.size(); ++index) {
+    for (int index = 0; index < new_dets_num * old_dets.size(); ++index) {
         const int new_id = sim_det[index].new_id;
         const int old_id = sim_det[index].old_id;
         const int track_id = old_dets[old_id].track_id;
         const int det_count = old_dets[old_id].sort_class;
         //printf(" ciou = %f \n", box_ciou(new_dets[new_id].bbox, old_dets[old_id].bbox));
-        if (track_idx[track_id] && new_idx[new_id] && old_idx[old_id] && check_classes_id(new_dets[new_id], old_dets[old_id], thresh)) {
+        if (track_idx[track_id] && new_idx[new_id] && old_idx[old_id] &&
+            check_classes_id(new_dets[new_id], old_dets[old_id], thresh)) {
             float sim = sim_det[index].sim;
             float ciou = box_ciou(new_dets[new_id].bbox, old_dets[old_id].bbox);
             sim = sim * (1 - track_ciou_norm) + ciou * track_ciou_norm;
@@ -886,7 +846,7 @@ void set_track_id(detection *new_dets, int new_dets_num, float thresh, float sim
                 new_dets[new_id].sort_class = det_count + 1;
                 new_idx[new_id] = 0;
                 old_idx[old_id] = 0;
-                if(track_id) track_idx[track_id] = 0;
+                if (track_id) track_idx[track_id] = 0;
             }
         }
     }

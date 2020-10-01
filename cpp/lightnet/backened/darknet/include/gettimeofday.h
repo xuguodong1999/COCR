@@ -1,5 +1,6 @@
 #ifdef _MSC_VER
 #define WIN32_LEAN_AND_MEAN
+
 #include <windows.h>
 #include <winsock2.h>
 #include <stdint.h>
@@ -28,8 +29,9 @@ extern "C" {
 static unsigned char g_first_time = 1;
 static LARGE_INTEGER g_counts_per_sec;
 
-int gettimeofday(struct timeval*, struct timezone*);
-int clock_gettime(int, struct timespec*);
+int gettimeofday(struct timeval *, struct timezone *);
+
+int clock_gettime(int, struct timespec *);
 
 #ifdef __cplusplus
 }

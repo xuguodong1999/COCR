@@ -27,21 +27,19 @@ extern "C" {
 //static Detector* detector = NULL;
 static std::unique_ptr<Detector> detector;
 
-int init(const char *configurationFilename, const char *weightsFilename, int gpu)
-{
+int init(const char *configurationFilename, const char *weightsFilename, int gpu) {
     detector.reset(new Detector(configurationFilename, weightsFilename, gpu));
     return 1;
 }
 
-int detect_image(const char *filename, bbox_t_container &container)
-{
+int detect_image(const char *filename, bbox_t_container &container) {
     std::vector<bbox_t> detection = detector->detect(filename);
     for (size_t i = 0; i < detection.size() && i < C_SHARP_MAX_OBJECTS; ++i)
         container.candidates[i] = detection[i];
     return detection.size();
 }
 
-int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &container) {
+int detect_mat(const uint8_t *data, const size_t data_length, bbox_t_container &container) {
 #ifdef OPENCV
     std::vector<char> vdata(data, data + data_length);
     cv::Mat image = imdecode(cv::Mat(vdata), 1);
@@ -69,10 +67,10 @@ int get_device_count() {
     return count;
 #else
     return -1;
-#endif	// GPU
+#endif    // GPU
 }
 
-bool built_with_cuda(){
+bool built_with_cuda() {
 #ifdef GPU
     return true;
 #else
@@ -80,7 +78,7 @@ bool built_with_cuda(){
 #endif
 }
 
-bool built_with_cudnn(){
+bool built_with_cudnn() {
 #ifdef CUDNN
     return true;
 #else
@@ -88,7 +86,7 @@ bool built_with_cudnn(){
 #endif
 }
 
-bool built_with_opencv(){
+bool built_with_opencv() {
 #ifdef OPENCV
     return true;
 #else
@@ -97,7 +95,7 @@ bool built_with_opencv(){
 }
 
 
-int get_device_name(int gpu, char* deviceName) {
+int get_device_name(int gpu, char *deviceName) {
 #ifdef GPU
     cudaDeviceProp prop;
     cudaGetDeviceProperties(&prop, gpu);
@@ -106,33 +104,34 @@ int get_device_name(int gpu, char* deviceName) {
     return 1;
 #else
     return -1;
-#endif	// GPU
+#endif    // GPU
 }
 
 #ifdef GPU
+
 void check_cuda(cudaError_t status) {
     if (status != cudaSuccess) {
         const char *s = cudaGetErrorString(status);
         printf("CUDA Error Prev: %s\n", s);
     }
 }
+
 #endif
 
 struct detector_gpu_t {
     network net;
     image images[NFRAMES];
     float *avg;
-    float* predictions[NFRAMES];
+    float *predictions[NFRAMES];
     int demo_index;
     unsigned int *track_id;
 };
 
-LIB_API Detector::Detector(std::string cfg_filename, std::string weight_filename, int gpu_id) : cur_gpu_id(gpu_id)
-{
+LIB_API Detector::Detector(std::string cfg_filename, std::string weight_filename, int gpu_id) : cur_gpu_id(gpu_id) {
     wait_stream = 0;
 #ifdef GPU
     int old_gpu_index;
-    check_cuda( cudaGetDevice(&old_gpu_index) );
+    check_cuda(cudaGetDevice(&old_gpu_index));
 #endif
 
     detector_gpu_ptr = std::make_shared<detector_gpu_t>();
@@ -164,21 +163,20 @@ LIB_API Detector::Detector(std::string cfg_filename, std::string weight_filename
     layer l = net.layers[net.n - 1];
     int j;
 
-    detector_gpu.avg = (float *)calloc(l.outputs, sizeof(float));
-    for (j = 0; j < NFRAMES; ++j) detector_gpu.predictions[j] = (float*)calloc(l.outputs, sizeof(float));
+    detector_gpu.avg = (float *) calloc(l.outputs, sizeof(float));
+    for (j = 0; j < NFRAMES; ++j) detector_gpu.predictions[j] = (float *) calloc(l.outputs, sizeof(float));
     for (j = 0; j < NFRAMES; ++j) detector_gpu.images[j] = make_image(1, 1, 3);
 
-    detector_gpu.track_id = (unsigned int *)calloc(l.classes, sizeof(unsigned int));
+    detector_gpu.track_id = (unsigned int *) calloc(l.classes, sizeof(unsigned int));
     for (j = 0; j < l.classes; ++j) detector_gpu.track_id[j] = 1;
 
 #ifdef GPU
-    check_cuda( cudaSetDevice(old_gpu_index) );
+    check_cuda(cudaSetDevice(old_gpu_index));
 #endif
 }
 
 
-LIB_API Detector::~Detector()
-{
+LIB_API Detector::~Detector() {
     detector_gpu_t &detector_gpu = *static_cast<detector_gpu_t *>(detector_gpu_ptr.get());
     //layer l = detector_gpu.net.layers[detector_gpu.net.n - 1];
 
@@ -205,25 +203,28 @@ LIB_API int Detector::get_net_width() const {
     detector_gpu_t &detector_gpu = *static_cast<detector_gpu_t *>(detector_gpu_ptr.get());
     return detector_gpu.net.w;
 }
+
 LIB_API int Detector::get_net_height() const {
     detector_gpu_t &detector_gpu = *static_cast<detector_gpu_t *>(detector_gpu_ptr.get());
     return detector_gpu.net.h;
 }
+
 LIB_API int Detector::get_net_color_depth() const {
     detector_gpu_t &detector_gpu = *static_cast<detector_gpu_t *>(detector_gpu_ptr.get());
     return detector_gpu.net.c;
 }
 
 
-LIB_API std::vector<bbox_t> Detector::detect(std::string image_filename, float thresh, bool use_mean)
-{
-    std::shared_ptr<image_t> image_ptr(new image_t, [](image_t *img) { if (img->data) free(img->data); delete img; });
+LIB_API std::vector<bbox_t> Detector::detect(std::string image_filename, float thresh, bool use_mean) {
+    std::shared_ptr<image_t> image_ptr(new image_t, [](image_t *img) {
+        if (img->data) free(img->data);
+        delete img;
+    });
     *image_ptr = load_image(image_filename);
     return detect(*image_ptr, thresh, use_mean);
 }
 
-static image load_image_stb(char *filename, int channels)
-{
+static image load_image_stb(char *filename, int channels) {
     int w, h, c;
     unsigned char *data = stbi_load(filename, &w, &h, &c, channels);
     if (!data)
@@ -234,9 +235,9 @@ static image load_image_stb(char *filename, int channels)
     for (k = 0; k < c; ++k) {
         for (j = 0; j < h; ++j) {
             for (i = 0; i < w; ++i) {
-                int dst_index = i + w*j + w*h*k;
-                int src_index = k + c*i + c*w*j;
-                im.data[dst_index] = (float)data[src_index] / 255.;
+                int dst_index = i + w * j + w * h * k;
+                int src_index = k + c * i + c * w * j;
+                im.data[dst_index] = (float) data[src_index] / 255.;
             }
         }
     }
@@ -244,8 +245,7 @@ static image load_image_stb(char *filename, int channels)
     return im;
 }
 
-LIB_API image_t Detector::load_image(std::string image_filename)
-{
+LIB_API image_t Detector::load_image(std::string image_filename) {
     char *input = const_cast<char *>(image_filename.c_str());
     image im = load_image_stb(input, 3);
 
@@ -259,21 +259,19 @@ LIB_API image_t Detector::load_image(std::string image_filename)
 }
 
 
-LIB_API void Detector::free_image(image_t m)
-{
+LIB_API void Detector::free_image(image_t m) {
     if (m.data) {
         free(m.data);
     }
 }
 
-LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use_mean)
-{
+LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use_mean) {
     detector_gpu_t &detector_gpu = *static_cast<detector_gpu_t *>(detector_gpu_ptr.get());
     network &net = detector_gpu.net;
 #ifdef GPU
     int old_gpu_index;
     cudaGetDevice(&old_gpu_index);
-    if(cur_gpu_id != old_gpu_index)
+    if (cur_gpu_id != old_gpu_index)
         cudaSetDevice(net.gpu_index);
 
     net.wait_stream = wait_stream;    // 1 - wait CUDA-stream, 0 - not to wait
@@ -290,9 +288,8 @@ LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use
 
     if (net.w == im.w && net.h == im.h) {
         sized = make_image(im.w, im.h, im.c);
-        memcpy(sized.data, im.data, im.w*im.h*im.c * sizeof(float));
-    }
-    else
+        memcpy(sized.data, im.data, im.w * im.h * im.c * sizeof(float));
+    } else
         sized = resize_image(im, net.w, net.h);
 
     layer l = net.layers[net.n - 1];
@@ -323,13 +320,12 @@ LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use
         int const obj_id = max_index(dets[i].prob, l.classes);
         float const prob = dets[i].prob[obj_id];
 
-        if (prob > thresh)
-        {
+        if (prob > thresh) {
             bbox_t bbox;
-            bbox.x = std::max((double)0, (b.x - b.w / 2.)*im.w);
-            bbox.y = std::max((double)0, (b.y - b.h / 2.)*im.h);
-            bbox.w = b.w*im.w;
-            bbox.h = b.h*im.h;
+            bbox.x = std::max((double) 0, (b.x - b.w / 2.) * im.w);
+            bbox.y = std::max((double) 0, (b.y - b.h / 2.) * im.h);
+            bbox.w = b.w * im.w;
+            bbox.h = b.h * im.h;
             bbox.obj_id = obj_id;
             bbox.prob = prob;
             bbox.track_id = 0;
@@ -343,7 +339,7 @@ LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use
     }
 
     free_detections(dets, nboxes);
-    if(sized.data)
+    if (sized.data)
         free(sized.data);
 
 #ifdef GPU
@@ -355,8 +351,7 @@ LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use
 }
 
 LIB_API std::vector<bbox_t> Detector::tracking_id(std::vector<bbox_t> cur_bbox_vec, bool const change_history,
-    int const frames_story, int const max_dist)
-{
+                                                  int const frames_story, int const max_dist) {
     detector_gpu_t &det_gpu = *static_cast<detector_gpu_t *>(detector_gpu_ptr.get());
 
     bool prev_track_id_present = false;
@@ -377,11 +372,11 @@ LIB_API std::vector<bbox_t> Detector::tracking_id(std::vector<bbox_t> cur_bbox_v
         for (auto &i : prev_bbox_vec) {
             int cur_index = -1;
             for (size_t m = 0; m < cur_bbox_vec.size(); ++m) {
-                bbox_t const& k = cur_bbox_vec[m];
+                bbox_t const &k = cur_bbox_vec[m];
                 if (i.obj_id == k.obj_id) {
-                    float center_x_diff = (float)(i.x + i.w/2) - (float)(k.x + k.w/2);
-                    float center_y_diff = (float)(i.y + i.h/2) - (float)(k.y + k.h/2);
-                    unsigned int cur_dist = sqrt(center_x_diff*center_x_diff + center_y_diff*center_y_diff);
+                    float center_x_diff = (float) (i.x + i.w / 2) - (float) (k.x + k.w / 2);
+                    float center_y_diff = (float) (i.y + i.h / 2) - (float) (k.y + k.h / 2);
+                    unsigned int cur_dist = sqrt(center_x_diff * center_x_diff + center_y_diff * center_y_diff);
                     if (cur_dist < max_dist && (k.track_id == 0 || dist_vec[m] > cur_dist)) {
                         dist_vec[m] = cur_dist;
                         cur_index = m;
@@ -390,9 +385,11 @@ LIB_API std::vector<bbox_t> Detector::tracking_id(std::vector<bbox_t> cur_bbox_v
             }
 
             bool track_id_absent = !std::any_of(cur_bbox_vec.begin(), cur_bbox_vec.end(),
-                [&i](bbox_t const& b) { return b.track_id == i.track_id && b.obj_id == i.obj_id; });
+                                                [&i](bbox_t const &b) {
+                                                    return b.track_id == i.track_id && b.obj_id == i.obj_id;
+                                                });
 
-            if (cur_index >= 0 && track_id_absent){
+            if (cur_index >= 0 && track_id_absent) {
                 cur_bbox_vec[cur_index].track_id = i.track_id;
                 cur_bbox_vec[cur_index].w = (cur_bbox_vec[cur_index].w + i.w) / 2;
                 cur_bbox_vec[cur_index].h = (cur_bbox_vec[cur_index].h + i.h) / 2;
@@ -413,8 +410,7 @@ LIB_API std::vector<bbox_t> Detector::tracking_id(std::vector<bbox_t> cur_bbox_v
 }
 
 
-void *Detector::get_cuda_context()
-{
+void *Detector::get_cuda_context() {
 #ifdef GPU
     int old_gpu_index;
     cudaGetDevice(&old_gpu_index);

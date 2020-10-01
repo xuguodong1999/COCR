@@ -15,7 +15,9 @@ extern "C" {
 #ifdef GPU
 void forward_convolutional_layer_gpu(convolutional_layer layer, network_state state);
 void backward_convolutional_layer_gpu(convolutional_layer layer, network_state state);
-void update_convolutional_layer_gpu(convolutional_layer layer, int batch, float learning_rate, float momentum, float decay, float loss_scale);
+void
+update_convolutional_layer_gpu(convolutional_layer layer, int batch, float learning_rate, float momentum, float decay,
+                               float loss_scale);
 
 void push_convolutional_layer(convolutional_layer layer);
 void pull_convolutional_layer(convolutional_layer layer);
@@ -25,13 +27,17 @@ void backward_bias_gpu(float *bias_updates, float *delta, int batch, int n, int 
 #ifdef CUDNN
 void cudnn_convolutional_setup(layer *l, int cudnn_preference, size_t workspace_size_specify);
 void create_convolutional_cudnn_tensors(layer *l);
-void cuda_convert_f32_to_f16(float* input_f32, size_t size, float *output_f16);
+void cuda_convert_f32_to_f16(float *input_f32, size_t size, float *output_f16);
 #endif
 #endif
 void free_convolutional_batchnorm(convolutional_layer *l);
 
 size_t get_convolutional_workspace_size(layer l);
-convolutional_layer make_convolutional_layer(int batch, int steps, int h, int w, int c, int n, int groups, int size, int stride_x, int stride_y, int dilation, int padding, ACTIVATION activation, int batch_normalize, int binary, int xnor, int adam, int use_bin_output, int index, int antialiasing, convolutional_layer *share_layer, int assisted_excitation, int deform, int train);
+convolutional_layer
+make_convolutional_layer(int batch, int steps, int h, int w, int c, int n, int groups, int size, int stride_x,
+                         int stride_y, int dilation, int padding, ACTIVATION activation, int batch_normalize,
+                         int binary, int xnor, int adam, int use_bin_output, int index, int antialiasing,
+                         convolutional_layer *share_layer, int assisted_excitation, int deform, int train);
 void denormalize_convolutional_layer(convolutional_layer l);
 void set_specified_workspace_limit(convolutional_layer *l, size_t workspace_size_limit);
 void resize_convolutional_layer(convolutional_layer *layer, int w, int h);

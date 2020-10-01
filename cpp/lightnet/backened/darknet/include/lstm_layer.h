@@ -4,6 +4,7 @@
 #include "activations.h"
 #include "layer.h"
 #include "network.h"
+
 #define USET
 
 #ifdef __cplusplus

@@ -6,9 +6,8 @@
 #include <string.h>
 #include <float.h>
 
-char *get_activation_string(ACTIVATION a)
-{
-    switch(a){
+char *get_activation_string(ACTIVATION a) {
+    switch (a) {
         case LOGISTIC:
             return "logistic";
         case LOGGY:
@@ -45,38 +44,36 @@ char *get_activation_string(ACTIVATION a)
     return "relu";
 }
 
-ACTIVATION get_activation(char *s)
-{
-    if (strcmp(s, "logistic")==0) return LOGISTIC;
+ACTIVATION get_activation(char *s) {
+    if (strcmp(s, "logistic") == 0) return LOGISTIC;
     if (strcmp(s, "swish") == 0) return SWISH;
     if (strcmp(s, "mish") == 0) return MISH;
     if (strcmp(s, "hard_mish") == 0) return HARD_MISH;
     if (strcmp(s, "normalize_channels") == 0) return NORM_CHAN;
     if (strcmp(s, "normalize_channels_softmax") == 0) return NORM_CHAN_SOFTMAX;
     if (strcmp(s, "normalize_channels_softmax_maxval") == 0) return NORM_CHAN_SOFTMAX_MAXVAL;
-    if (strcmp(s, "loggy")==0) return LOGGY;
-    if (strcmp(s, "relu")==0) return RELU;
+    if (strcmp(s, "loggy") == 0) return LOGGY;
+    if (strcmp(s, "relu") == 0) return RELU;
     if (strcmp(s, "relu6") == 0) return RELU6;
-    if (strcmp(s, "elu")==0) return ELU;
+    if (strcmp(s, "elu") == 0) return ELU;
     if (strcmp(s, "selu") == 0) return SELU;
     if (strcmp(s, "gelu") == 0) return GELU;
-    if (strcmp(s, "relie")==0) return RELIE;
-    if (strcmp(s, "plse")==0) return PLSE;
-    if (strcmp(s, "hardtan")==0) return HARDTAN;
-    if (strcmp(s, "lhtan")==0) return LHTAN;
-    if (strcmp(s, "linear")==0) return LINEAR;
-    if (strcmp(s, "ramp")==0) return RAMP;
+    if (strcmp(s, "relie") == 0) return RELIE;
+    if (strcmp(s, "plse") == 0) return PLSE;
+    if (strcmp(s, "hardtan") == 0) return HARDTAN;
+    if (strcmp(s, "lhtan") == 0) return LHTAN;
+    if (strcmp(s, "linear") == 0) return LINEAR;
+    if (strcmp(s, "ramp") == 0) return RAMP;
     if (strcmp(s, "revleaky") == 0) return REVLEAKY;
-    if (strcmp(s, "leaky")==0) return LEAKY;
-    if (strcmp(s, "tanh")==0) return TANH;
-    if (strcmp(s, "stair")==0) return STAIR;
+    if (strcmp(s, "leaky") == 0) return LEAKY;
+    if (strcmp(s, "tanh") == 0) return TANH;
+    if (strcmp(s, "stair") == 0) return STAIR;
     fprintf(stderr, "Couldn't find activation function %s, going with ReLU\n", s);
     return RELU;
 }
 
-float activate(float x, ACTIVATION a)
-{
-    switch(a){
+float activate(float x, ACTIVATION a) {
+    switch (a) {
         case LINEAR:
             return linear_activate(x);
         case LOGISTIC:
@@ -112,33 +109,29 @@ float activate(float x, ACTIVATION a)
     return 0;
 }
 
-void activate_array(float *x, const int n, const ACTIVATION a)
-{
+void activate_array(float *x, const int n, const ACTIVATION a) {
     int i;
     if (a == LINEAR) {}
     else if (a == LEAKY) {
-        #pragma omp parallel for
+#pragma omp parallel for
         for (i = 0; i < n; ++i) {
             x[i] = leaky_activate(x[i]);
         }
-    }
-    else if (a == LOGISTIC) {
-        #pragma omp parallel for
+    } else if (a == LOGISTIC) {
+#pragma omp parallel for
         for (i = 0; i < n; ++i) {
             x[i] = logistic_activate(x[i]);
         }
-    }
-    else {
+    } else {
         for (i = 0; i < n; ++i) {
             x[i] = activate(x[i], a);
         }
     }
 }
 
-void activate_array_swish(float *x, const int n, float * output_sigmoid, float * output)
-{
+void activate_array_swish(float *x, const int n, float *output_sigmoid, float *output) {
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < n; ++i) {
         float x_val = x[i];
         float sigmoid = logistic_activate(x_val);
@@ -148,20 +141,18 @@ void activate_array_swish(float *x, const int n, float * output_sigmoid, float *
 }
 
 // https://github.com/digantamisra98/Mish
-void activate_array_mish(float *x, const int n, float * activation_input, float * output)
-{
+void activate_array_mish(float *x, const int n, float *activation_input, float *output) {
     const float MISH_THRESHOLD = 20;
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < n; ++i) {
         float x_val = x[i];
         activation_input[i] = x_val;    // store value before activation
-        output[i] = x_val * tanh_activate( softplus_activate(x_val, MISH_THRESHOLD) );
+        output[i] = x_val * tanh_activate(softplus_activate(x_val, MISH_THRESHOLD));
     }
 }
 
-static float hard_mish_yashas(float x)
-{
+static float hard_mish_yashas(float x) {
     if (x > 0)
         return x;
     if (x > -2)
@@ -169,10 +160,9 @@ static float hard_mish_yashas(float x)
     return 0;
 }
 
-void activate_array_hard_mish(float *x, const int n, float * activation_input, float * output)
-{
+void activate_array_hard_mish(float *x, const int n, float *activation_input, float *output) {
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < n; ++i) {
         float x_val = x[i];
         activation_input[i] = x_val;    // store value before activation
@@ -180,12 +170,11 @@ void activate_array_hard_mish(float *x, const int n, float * activation_input, f
     }
 }
 
-void activate_array_normalize_channels(float *x, const int n, int batch, int channels, int wh_step, float *output)
-{
+void activate_array_normalize_channels(float *x, const int n, int batch, int channels, int wh_step, float *output) {
     int size = n / channels;
 
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < size; ++i) {
         int wh_i = i % wh_step;
         int b = i / wh_step;
@@ -195,25 +184,26 @@ void activate_array_normalize_channels(float *x, const int n, int batch, int cha
             float sum = eps;
             int k;
             for (k = 0; k < channels; ++k) {
-                float val = x[wh_i + k * wh_step + b*wh_step*channels];
+                float val = x[wh_i + k * wh_step + b * wh_step * channels];
                 if (val > 0) sum += val;
             }
             for (k = 0; k < channels; ++k) {
-                float val = x[wh_i + k * wh_step + b*wh_step*channels];
+                float val = x[wh_i + k * wh_step + b * wh_step * channels];
                 if (val > 0) val = val / sum;
                 else val = 0;
-                output[wh_i + k * wh_step + b*wh_step*channels] = val;
+                output[wh_i + k * wh_step + b * wh_step * channels] = val;
             }
         }
     }
 }
 
-void activate_array_normalize_channels_softmax(float *x, const int n, int batch, int channels, int wh_step, float *output, int use_max_val)
-{
+void
+activate_array_normalize_channels_softmax(float *x, const int n, int batch, int channels, int wh_step, float *output,
+                                          int use_max_val) {
     int size = n / channels;
 
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < size; ++i) {
         int wh_i = i % wh_step;
         int b = i / wh_step;
@@ -225,32 +215,31 @@ void activate_array_normalize_channels_softmax(float *x, const int n, int batch,
             int k;
             if (use_max_val) {
                 for (k = 0; k < channels; ++k) {
-                    float val = x[wh_i + k * wh_step + b*wh_step*channels];
+                    float val = x[wh_i + k * wh_step + b * wh_step * channels];
                     if (val > max_val || k == 0) max_val = val;
                 }
-            }
-            else
+            } else
                 max_val = 0;
 
             for (k = 0; k < channels; ++k) {
-                float val = x[wh_i + k * wh_step + b*wh_step*channels];
+                float val = x[wh_i + k * wh_step + b * wh_step * channels];
                 sum += expf(val - max_val);
             }
             for (k = 0; k < channels; ++k) {
-                float val = x[wh_i + k * wh_step + b*wh_step*channels];
+                float val = x[wh_i + k * wh_step + b * wh_step * channels];
                 val = expf(val - max_val) / sum;
-                output[wh_i + k * wh_step + b*wh_step*channels] = val;
+                output[wh_i + k * wh_step + b * wh_step * channels] = val;
             }
         }
     }
 }
 
-void gradient_array_normalize_channels_softmax(float *x, const int n, int batch, int channels, int wh_step, float *delta)
-{
+void
+gradient_array_normalize_channels_softmax(float *x, const int n, int batch, int channels, int wh_step, float *delta) {
     int size = n / channels;
 
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < size; ++i) {
         int wh_i = i % wh_step;
         int b = i / wh_step;
@@ -259,13 +248,13 @@ void gradient_array_normalize_channels_softmax(float *x, const int n, int batch,
             float grad = 0;
             int k;
             for (k = 0; k < channels; ++k) {
-                const int index = wh_i + k * wh_step + b*wh_step*channels;
+                const int index = wh_i + k * wh_step + b * wh_step * channels;
                 float out = x[index];
                 float d = delta[index];
-                grad += out*d;
+                grad += out * d;
             }
             for (k = 0; k < channels; ++k) {
-                const int index = wh_i + k * wh_step + b*wh_step*channels;
+                const int index = wh_i + k * wh_step + b * wh_step * channels;
                 float d = delta[index];
                 d = d * grad;
                 delta[index] = d;
@@ -274,12 +263,11 @@ void gradient_array_normalize_channels_softmax(float *x, const int n, int batch,
     }
 }
 
-void gradient_array_normalize_channels(float *x, const int n, int batch, int channels, int wh_step, float *delta)
-{
+void gradient_array_normalize_channels(float *x, const int n, int batch, int channels, int wh_step, float *delta) {
     int size = n / channels;
 
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < size; ++i) {
         int wh_i = i % wh_step;
         int b = i / wh_step;
@@ -288,13 +276,13 @@ void gradient_array_normalize_channels(float *x, const int n, int batch, int cha
             float grad = 0;
             int k;
             for (k = 0; k < channels; ++k) {
-                const int index = wh_i + k * wh_step + b*wh_step*channels;
+                const int index = wh_i + k * wh_step + b * wh_step * channels;
                 float out = x[index];
                 float d = delta[index];
-                grad += out*d;
+                grad += out * d;
             }
             for (k = 0; k < channels; ++k) {
-                const int index = wh_i + k * wh_step + b*wh_step*channels;
+                const int index = wh_i + k * wh_step + b * wh_step * channels;
                 if (x[index] > 0) {
                     float d = delta[index];
                     d = d * grad;
@@ -305,9 +293,8 @@ void gradient_array_normalize_channels(float *x, const int n, int batch, int cha
     }
 }
 
-float gradient(float x, ACTIVATION a)
-{
-    switch(a){
+float gradient(float x, ACTIVATION a) {
+    switch (a) {
         case LINEAR:
             return linear_gradient(x);
         case LOGISTIC:
@@ -353,31 +340,28 @@ float gradient(float x, ACTIVATION a)
     return 0;
 }
 
-void gradient_array(const float *x, const int n, const ACTIVATION a, float *delta)
-{
+void gradient_array(const float *x, const int n, const ACTIVATION a, float *delta) {
     int i;
-    #pragma omp parallel for
-    for(i = 0; i < n; ++i){
+#pragma omp parallel for
+    for (i = 0; i < n; ++i) {
         delta[i] *= gradient(x[i], a);
     }
 }
 
 // https://github.com/BVLC/caffe/blob/04ab089db018a292ae48d51732dd6c66766b36b6/src/caffe/layers/swish_layer.cpp#L54-L56
-void gradient_array_swish(const float *x, const int n, const float * sigmoid, float * delta)
-{
+void gradient_array_swish(const float *x, const int n, const float *sigmoid, float *delta) {
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < n; ++i) {
         float swish = x[i];
-        delta[i] *= swish + sigmoid[i]*(1 - swish);
+        delta[i] *= swish + sigmoid[i] * (1 - swish);
     }
 }
 
 // https://github.com/digantamisra98/Mish
-void gradient_array_mish(const int n, const float * activation_input, float * delta)
-{
+void gradient_array_mish(const int n, const float *activation_input, float *delta) {
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < n; ++i) {
         const float MISH_THRESHOLD = 20.0f;
 
@@ -387,7 +371,7 @@ void gradient_array_mish(const int n, const float * activation_input, float * de
         const float sp = softplus_activate(inp, MISH_THRESHOLD);
         const float grad_sp = 1 - exp(-sp);
         const float tsp = tanh(sp);
-        const float grad_tsp = (1 - tsp*tsp) * grad_sp;
+        const float grad_tsp = (1 - tsp * tsp) * grad_sp;
         const float grad = inp * grad_tsp + tsp;
         delta[i] *= grad;
 
@@ -400,8 +384,7 @@ void gradient_array_mish(const int n, const float * activation_input, float * de
     }
 }
 
-static float hard_mish_yashas_grad(float x)
-{
+static float hard_mish_yashas_grad(float x) {
     if (x > 0)
         return 1;
     if (x > -2)
@@ -409,10 +392,9 @@ static float hard_mish_yashas_grad(float x)
     return 0;
 }
 
-void gradient_array_hard_mish(const int n, const float * activation_input, float * delta)
-{
+void gradient_array_hard_mish(const int n, const float *activation_input, float *delta) {
     int i;
-    #pragma omp parallel for
+#pragma omp parallel for
     for (i = 0; i < n; ++i) {
         float inp = activation_input[i];
         delta[i] *= hard_mish_yashas_grad(inp);
