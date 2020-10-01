@@ -1,6 +1,5 @@
 bak/
 *.h5
-data/
 *.list
 .idea/
 __pycache__/
