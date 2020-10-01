@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">安卓实验室</string>
+
+    <string name="press_again_to_exit">再按一次退出程序</string>
+    <string name="phone">联系电话</string>
+    <string name="website">访问网站</string>
+    <string name="scribble">矢量画板</string>
+    <string name="media">多媒体</string>
+
+    <string name="phone_link">tel:15150513434</string>
+    <string name="website_link">https://cs.nju.edu.cn</string>
+</resources>

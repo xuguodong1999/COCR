@@ -1,0 +1,11 @@
+bak/
+*.h5
+data/
+*.list
+.idea/
+__pycache__/
+*.tflite
+build/
+.vs/
+.build/
+.vscode/
