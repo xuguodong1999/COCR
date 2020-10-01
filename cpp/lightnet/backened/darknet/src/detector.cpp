@@ -28,8 +28,11 @@ static int coco_ids[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 
                          56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 67, 70, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84,
                          85, 86, 87, 88, 89, 90};
 
-void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, int ngpus, int clear, int dont_show,
-                    int calc_map, int mjpeg_port, int show_imgs, int benchmark_layers, char *chart_path) {
+void train_detector(
+        char *datacfg, char *cfgfile, char *weightfile,
+        int *gpus, int ngpus,
+        int clear, int dont_show,int calc_map, int mjpeg_port, int show_imgs,
+        int benchmark_layers, char *chart_path) {
     list *options = read_data_cfg(datacfg);
     char *train_images = option_find_str(options, "train", "data/train.txt");
     char *valid_images = option_find_str(options, "valid", train_images);

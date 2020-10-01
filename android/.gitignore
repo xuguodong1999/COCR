@@ -193,8 +193,8 @@ lint/tmp/
 *.cmd
 .tmp_versions/
 modules.order
-Module.symvers
-Mkfile.old
+odule.symvers
+kfile.old
 dkms.conf
 
 # java
@@ -249,7 +249,7 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
+ANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -392,7 +392,7 @@ qrc_*.cpp
 ui_*.h
 *.qmlc
 *.jsc
-Makefile*
+akefile*
 *build-*
 *.qm
 *.prl
