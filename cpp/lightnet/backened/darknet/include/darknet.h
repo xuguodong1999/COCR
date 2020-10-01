@@ -872,6 +872,7 @@ typedef struct image {
     int h;
     int c;
     float *data;
+    int getPixelNum() const { return w * h * c; }
 } image;
 
 //typedef struct {

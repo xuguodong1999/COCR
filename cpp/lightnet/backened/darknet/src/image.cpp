@@ -6,13 +6,14 @@
 #include "utils.h"
 #include "blas.h"
 #include "dark_cuda.h"
-#include <stdio.h>
+#include <cstdio>
+#include <vector>
 
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
 
-#include <math.h>
+#include <cmath>
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
@@ -698,15 +699,17 @@ void save_image_png(image im, const char *name) {
     char buff[256];
     //sprintf(buff, "%s (%d)", name, windows);
     sprintf(buff, "%s.png", name);
-    unsigned char *data = (unsigned char *) xcalloc(im.w * im.h * im.c, sizeof(unsigned char));
+    std::vector<unsigned char> data;
+    data.resize(im.getPixelNum());
+//    unsigned char *data = (unsigned char *) xcalloc(im.w * im.h * im.c, sizeof(unsigned char));
     int i, k;
     for (k = 0; k < im.c; ++k) {
         for (i = 0; i < im.w * im.h; ++i) {
             data[i * im.c + k] = (unsigned char) (255 * im.data[i + k * im.w * im.h]);
         }
     }
-    int success = stbi_write_png(buff, im.w, im.h, im.c, data, im.w * im.c);
-    free(data);
+    int success = stbi_write_png(buff, im.w, im.h, im.c, data.data(), im.w * im.c);
+//    free(data);
     if (!success) fprintf(stderr, "Failed to write image %s\n", buff);
 }
 
