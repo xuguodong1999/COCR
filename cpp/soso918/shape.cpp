@@ -29,7 +29,7 @@ void Shape::paintTo(cv::Mat &canvas) {
  * 获取平行于二维坐标轴的最小边框
  * @return
  */
-cv::Rect2f Shape::getBoundingBox() const {
+const cv::Rect2f Shape::getBoundingBox() const {
     return getRect(mData);
 }
 
@@ -48,7 +48,7 @@ void Shape::rotate(float angle) {
 
 void Shape::rotateBy(float angle, const cv::Point2f &cent) {
     float theta = -M_PI * angle / 180;
-    rotateBy(theta, cent);
+    rotateThetaBy(theta, cent);
 }
 
 /**

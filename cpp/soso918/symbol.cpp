@@ -138,13 +138,15 @@ void Symbol::resizeTo(float w, float h, bool keepRatio) {
 
 void Symbol::moveLeftTopTo(const cv::Point2f &leftTop) {
     cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f offset = bBox.tl() - leftTop;
+    cv::Point2f offset = -bBox.tl() + leftTop;
     move(offset);
 }
 
 void Symbol::moveCenterTo(const cv::Point2f &newCenter) {
-    cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
+//    cv::Rect2f bBox = getBoundingBox();
+//    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
+    auto oldCenter = getCenter();
+//    std::cout<<"in Symbol::moveCenterTo: old cent="<<oldCenter<<std::endl;
     cv::Point2f offset = newCenter - oldCenter;
     move(offset);
 }
@@ -156,15 +158,15 @@ void Symbol::move(const cv::Point2f &offset) {
 }
 
 void Symbol::rotate(float angle) {
-    // FIXME: 旋转的逻辑
-    float theta = -M_PI * angle / 180;
-    cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
-    moveCenterTo(cv::Point2f(0, 0));
+    float theta = -M_PI * angle / 180.0;
+    auto oldCenter = getCenter();
+//    std::cout<<"in Symbol::rotate: old cent="<<oldCenter<<std::endl;
+//    moveCenterTo(cv::Point2f(0, 0));
     for (auto &s:shapes) {
-        s.rotateTheta(theta);
+//        s.rotateTheta(theta);
+        s.rotateThetaBy(theta, oldCenter);
     }
-    moveCenterTo(oldCenter);
+//    moveCenterTo(oldCenter);
 }
 
 void Symbol::rotateBy(float angle, const cv::Point2f &cent) {
@@ -174,13 +176,13 @@ void Symbol::rotateBy(float angle, const cv::Point2f &cent) {
     }
 }
 
-cv::Rect2f Symbol::getBoundingBox() const {
+const cv::Rect2f Symbol::getBoundingBox() const {
     if (shapes.empty()) {
         return cv::Rect2f(0, 0, 1, 1);
     }
     float minx, miny, maxx, maxy;
     minx = miny = std::numeric_limits<float>::max();
-    maxx = maxy = std::numeric_limits<float>::min();
+    maxx = maxy = std::numeric_limits<float>::lowest();
     for (auto &s :shapes) {
         auto rect = s.getBoundingBox();
         minx = std::min(minx, rect.x);

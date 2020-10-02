@@ -12,8 +12,9 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <iostream>
 
-#include <opencv2//core/types.hpp>
+#include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>
 #include <set>
 
@@ -128,7 +129,7 @@ public:
      * 获取平行于二维坐标轴的最小边框
      * @return
      */
-    virtual cv::Rect2f getBoundingBox() const = 0;
+    virtual const cv::Rect2f getBoundingBox() const = 0;
 
     /**
      * 顺时针旋转，绕图元中心
@@ -141,6 +142,13 @@ public:
      * @param angle 角度制
      */
     virtual void rotateBy(float angle, const cv::Point2f &cent) = 0;
+
+    virtual const cv::Point2f getCenter() {
+        auto rect = getBoundingBox();
+//        std::cout<<rect<<std::endl;
+        return cv::Point2f(rect.x + rect.width / 2.0, rect.y + rect.height / 2.0);
+//        return (rect.tl() + rect.br()) / 2.;
+    }
 
     /**
      * 将数据点整体移动 offset

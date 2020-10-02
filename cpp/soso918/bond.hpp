@@ -18,18 +18,19 @@
 class Bond : public Symbol {
 protected:
     Bond(const std::string &_bondType)
-            : bondType(_bondType), mUseHWChar(false), mIsDataGenerated(false) {
-        isRotateAllowed=true;
+            : mUseHWChar(true) {
+        isRotateAllowed = true;
+        name = _bondType;
     }
 
-    bool mUseHWChar, mIsDataGenerated;
+    bool mUseHWChar;
+
+    virtual void updateShapes() = 0;
 
 public:
     void setUseHandWrittenWChar(bool useHandWrittenChar) {
         mUseHWChar = useHandWrittenChar;
     }
-
-    std::string bondType;
 
     static std::shared_ptr<Bond> GetBond(const std::string &_bondType = "Single");
 
@@ -40,10 +41,10 @@ class CircleBond : public Bond {
     cv::Point2f center;
     float r;
 
-public:
-    CircleBond(const std::string &_bondType) : Bond(_bondType) {
+    void updateShapes() override;
 
-    }
+public:
+    CircleBond(const std::string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 
@@ -62,16 +63,17 @@ public:
         for (auto &pt:pts)
             r += distance(center, pt);
         r /= pts.size();
+        updateShapes();
     }
 };
 
 class SingleBond : public Bond {
+    virtual void updateShapes() override;
+
 protected:
     cv::Point2f from, to;
 public:
-    SingleBond(const std::string &_bondType) : Bond(_bondType) {
-
-    }
+    SingleBond(const std::string &_bondType);
 
     virtual void paintTo(cv::Mat &canvas) override;
 
@@ -83,50 +85,51 @@ public:
         }
         from = pts[0];
         to = pts[1];
+        updateShapes();
     }
 };
 
 class DoubleBond : public SingleBond {
-public:
-    DoubleBond(const std::string &_bondType) : SingleBond(_bondType) {
+    void updateShapes() override;
 
-    }
+public:
+    DoubleBond(const std::string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };
 
 class TripleBond : public SingleBond {
-public:
-    TripleBond(const std::string &_bondType) : SingleBond(_bondType) {
+    void updateShapes() override;
 
-    }
+public:
+    TripleBond(const std::string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };
 
 class SolidWedgeBond : public SingleBond {
-public:
-    SolidWedgeBond(const std::string &_bondType) : SingleBond(_bondType) {
+    void updateShapes() override;
 
-    }
+public:
+    SolidWedgeBond(const std::string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };
 
 class DashWedgeBond : public SingleBond {
-public:
-    DashWedgeBond(const std::string &_bondType) : SingleBond(_bondType) {
+    void updateShapes() override;
 
-    }
+public:
+    DashWedgeBond(const std::string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };
 
 class WaveBond : public SingleBond {
-public:
-    WaveBond(const std::string &_bondType) : SingleBond(_bondType) {
+    void updateShapes() override;
 
-    }
+public:
+    WaveBond(const std::string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };

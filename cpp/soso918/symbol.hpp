@@ -16,17 +16,21 @@
  * CH3COOH,COOH,...,etc.
  */
 class Symbol : public ShapeInterface {
-protected:
+public:
     std::vector<Shape> shapes;
+    std::string name;
 public:
     static std::shared_ptr<Symbol> GetSymbol(const std::string &_symbolType = "");
 
-    Symbol() {isRotateAllowed=false;}
+    Symbol() : name("Symbol") { isRotateAllowed = false; }
 
     Symbol(const NString &name) {
+        isRotateAllowed = false;
         shapes.clear();
+        this->name.clear();
         for (auto &c:name) {
             append(c);
+            this->name.append(c.second);
         }
     }
 
@@ -41,9 +45,10 @@ public:
     void move(const cv::Point2f &offset);
 
     void rotate(float angle);
+
     void rotateBy(float angle, const cv::Point2f &cent);
 
-    cv::Rect2f getBoundingBox() const override;
+    const cv::Rect2f getBoundingBox() const override;
 
     virtual void paintTo(cv::Mat &canvas);
 

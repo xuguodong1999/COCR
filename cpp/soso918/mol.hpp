@@ -15,12 +15,12 @@
 
 class Mol : public ShapeInterface {
 protected:
-    std::vector<std::shared_ptr<Symbol>>symbols;
+    std::vector<std::shared_ptr<Symbol>> symbols;
     OpenBabel::OBMol obMol;
     std::map<int, OpenBabel::OBAtom *> aidMap;
     std::string inSmiles;
 
-    void test();
+    void testRing();
 
 public:
     Mol();
@@ -46,14 +46,16 @@ public:
      * 获取平行于二维坐标轴的最小边框
      * @return
      */
-    cv::Rect2f getBoundingBox() const override;
+    const cv::Rect2f getBoundingBox() const override;
 
     /**
      * 顺时针旋转，绕骨架中心
      * @param angle 角度制
      */
     void rotate(float angle) override;
-    void rotateBy(float angle, const cv::Point2f &cent)override;
+
+    void rotateBy(float angle, const cv::Point2f &cent) override;
+
     /**
      * 将数据点整体移动 offset
      * @param offset
@@ -79,6 +81,8 @@ public:
      * @param keepRatio 是否保持比例，为 true 时撑满长边
      */
     void resizeTo(float w, float h, bool keepRatio = true) override;
+
+    void testDraw();
 };
 
 

@@ -11,6 +11,7 @@
 #include <rapidjson/document.h>
 
 #include <set>
+#include <opencv2/opencv.hpp>
 
 Mol::Mol() {
 
@@ -28,14 +29,11 @@ std::string Mol::getStandardSMILES() {
     return std::move(ism.str());
 }
 
-void Mol::test() {
-    symbols.clear();
+void Mol::testRing() {
     for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
         std::cout << R::sElementData[(*it)->GetAtomicNum()] << ","
                   << (*it)->GetId() << "," << (*it)->GetIdx() << ",("
                   << (*it)->GetX() << "," << (*it)->GetY() << ")" << std::endl;
-        auto sym = Symbol::GetSymbol(R::sElementData[(*it)->GetAtomicNum()]);
-        symbols.emplace_back(std::move(sym));
     }
     for (auto it = obMol.BeginBonds(); it != obMol.EndBonds(); it++) {
         // bond.atom.idx 根据 atom.idx
@@ -47,21 +45,6 @@ void Mol::test() {
                   << (*it)->GetBondOrder() << ",(" << (*it)->IsWedge() << ","
                   << (*it)->IsHash() << "," << (*it)->IsInRing() << ")"
                   << std::endl;
-        std::shared_ptr<Symbol> sym;
-        if ((*it)->GetBondOrder() == 1) {
-            if ((*it)->IsWedge()) {
-                sym = Bond::GetBond("SolidWedge");
-            } else if ((*it)->IsHash()) {
-                sym = Bond::GetBond("DashWedge");
-            } else {
-                sym = Bond::GetBond("Single");
-            }
-        } else if ((*it)->GetBondOrder() == 2) {
-            sym = Bond::GetBond("Double");
-        } else if ((*it)->GetBondOrder() == 3) {
-            sym = Bond::GetBond("Triple");
-        }
-        symbols.emplace_back(std::move(sym));
     }
     auto rings = obMol.GetSSSR();
     for (auto &ring:rings) {
@@ -75,8 +58,11 @@ void Mol::test() {
 }
 
 void Mol::run(const std::string &taskName) {
-    if (taskName == "test") {
-        test();
+    if (taskName == "testDraw") {
+        testDraw();
+        return;
+    } else if (taskName == "testRing") {
+        testRing();
     } else if (taskName == "log") {
         std::cout << "input=" << inSmiles << std::endl;
         std::cout << "final=" << getStandardSMILES() << std::endl;
@@ -93,9 +79,16 @@ void Mol::paintTo(cv::Mat &canvas) {
         sym->paintTo(canvas);
     }
 }
-void Mol::rotateBy(float angle, const cv::Point2f &cent){
 
+void Mol::rotateBy(float angle, const cv::Point2f &cent) {
+    for (auto &s:symbols) {
+        s->rotateBy(angle, cent);
+        if (!s->IsRotateAllowed()) {
+            s->rotate(-angle);
+        }
+    }
 }
+
 void Mol::LoopOn(const char *filename, const std::string &taskName) {
     std::ifstream ifsm(filename);
     rapidjson::Document doc;
@@ -178,7 +171,7 @@ void Mol::addBond(int from, int to, const std::string &type, const std::string &
 //    obbonds.emplace_back(std::move(obbond));
 }
 
-cv::Rect2f Mol::getBoundingBox() const {
+const cv::Rect2f Mol::getBoundingBox() const {
     if (symbols.empty()) {
         return cv::Rect2f(0, 0, 1, 1);
     }
@@ -196,14 +189,12 @@ cv::Rect2f Mol::getBoundingBox() const {
 }
 
 void Mol::rotate(float angle) {
-    // FIXME: 旋转的逻辑，骨架直接旋转，字符只做平移
-    // 骨架旋转和字符校正
-    //
+    // 旋转的逻辑，骨架直接旋转，字符只做平移
+    auto cent = getCenter();
     for (auto &sym:symbols) {
-        if(sym->IsRotateAllowed()){
-            sym->rotate(angle);
-        }else{
-
+        sym->rotateBy(angle, cent);
+        if (!sym->IsRotateAllowed()) {
+            sym->rotate(-angle);
         }
     }
 }
@@ -215,8 +206,9 @@ void Mol::move(const cv::Point2f &offset) {
 }
 
 void Mol::moveCenterTo(const cv::Point2f &newCenter) {
-    cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
+//    cv::Rect2f bBox = getBoundingBox();
+//    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
+    auto oldCenter = getCenter();
     cv::Point2f offset = newCenter - oldCenter;
     move(offset);
 }
@@ -230,6 +222,7 @@ void Mol::moveLeftTopTo(const cv::Point2f &leftTop) {
 void Mol::resizeTo(float w, float h, bool keepRatio) {
     cv::Rect2f bBox = getBoundingBox();
     cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
+//    auto oldCenter=getCenter();
     float oldW = bBox.width, oldH = bBox.height;
     float kx = w / oldW;
     float ky = h / oldH;
@@ -238,7 +231,57 @@ void Mol::resizeTo(float w, float h, bool keepRatio) {
         kx = ky = std::min(kx, ky);
     }
     for (auto &s:symbols) {
-        s->resizeTo(kx, ky, keepRatio);
+//        s->resizeTo(kx, ky, keepRatio);
+        for (auto &ss:s->shapes) {
+            ss.mulK(kx, ky);
+        }
     }
     moveCenterTo(oldCenter);
+}
+
+void Mol::testDraw() {
+    symbols.clear();
+    for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
+        auto sym = Symbol::GetSymbol(R::sElementData[(*it)->GetAtomicNum()]);
+        // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
+        sym->resizeTo(10, 10);
+        sym->moveCenterTo(cv::Point2f((*it)->GetX(), (*it)->GetY()));
+        symbols.emplace_back(std::move(sym));
+    }
+    for (auto it = obMol.BeginBonds(); it != obMol.EndBonds(); it++) {
+        // bond.atom.idx 根据 atom.idx
+        std::shared_ptr<Bond> sym;
+        if ((*it)->GetBondOrder() == 1) {
+            if ((*it)->IsWedge()) {
+                sym = Bond::GetBond("SolidWedge");
+            } else if ((*it)->IsHash()) {
+                sym = Bond::GetBond("DashWedge");
+            } else {
+                sym = Bond::GetBond("Single");
+            }
+        } else if ((*it)->GetBondOrder() == 2) {
+            sym = Bond::GetBond("Double");
+        } else if ((*it)->GetBondOrder() == 3) {
+            sym = Bond::GetBond("Triple");
+        }
+//        std::cout<<sym->shapes.size()<<"*"<<sym->getBoundingBox()<<std::endl;
+        sym->setVertices(
+                {cv::Point2f((*it)->GetBeginAtom()->GetX(), (*it)->GetBeginAtom()->GetY()),
+                 cv::Point2f((*it)->GetEndAtom()->GetX(), (*it)->GetEndAtom()->GetY())
+                });
+        symbols.emplace_back(std::move(sym));
+    }
+//    std::cout<<this->getBoundingBox()<<std::endl;
+//    for(auto&s:symbols){
+//        std::cout<<"*"<<s->name<<"*"<<s->getBoundingBox()<<"*"<<std::endl;
+//    }
+    const int www = 480 * 2, hhh = 320 * 2;
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    this->rotate(90);
+    this->resizeTo(www - 20, hhh - 20);
+    this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
+//    std::cout << this->getBoundingBox() << std::endl;
+    this->paintTo(img1);
+    cv::imshow("1", img1);
+    cv::waitKey(0);
 }

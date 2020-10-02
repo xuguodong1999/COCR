@@ -23,7 +23,7 @@ public:
      * 获取平行于二维坐标轴的最小边框
      * @return
      */
-    virtual cv::Rect2f getBoundingBox() const;
+    virtual const cv::Rect2f getBoundingBox() const override;
 
     /**
      * 顺时针旋转
@@ -64,7 +64,7 @@ public:
      * @param p1 起点
      * @param p2 终点
      */
-    void castToLine(const cv::Point2f &p1, const cv::Point2f &p2, const float lThresh = 0.05);
+    void castToLine(const cv::Point2f &p1, const cv::Point2f &p2, const float lThresh = 0.1);
 
     /**
      *
@@ -114,7 +114,7 @@ public:
         }
     }
 
-protected:
+public:
     Script mData;
 public:
     Script &getData();

@@ -27,7 +27,8 @@ void demoBond();
 void makeIcon();
 
 void demoMol() {
-    Mol::LoopOn(get_chonps_json_path(), "test");
+    srand(918);
+    Mol::LoopOn(get_chonps_json_path(), "testDraw");
 }
 
 //#include <fdeep/fdeep.hpp>
@@ -137,11 +138,18 @@ void demoRichText() {
 //                {Normal, RightButtom, Normal, Normal, RightButtom, Normal, Normal, Normal, RightButtom, Normal}
 //                "SO42-",
 //                {Normal, Normal, RightButtom, Up, RightTop}
-                "CuSO4",
-                {Normal, RightButtom, Normal, Normal, RightButtom}
+                "W",
+                {Normal}
+//                "CuSO4",
+//                {Normal, RightButtom, Normal, Normal, RightButtom}
         ));
-        hehe.resizeTo(www - 20, hhh - 20);
-        hehe.moveCenterTo(cv::Point2f(www / 2, hhh / 2));
+        hehe.resizeTo(50, 50);
+        hehe.moveLeftTopTo(cv::Point2f(0, 0));
+//        hehe.moveCenterTo(cv::Point2f(25,25));
+        hehe.rotate(180);
+//        hehe.moveCenterTo(cv::Point2f(www / 2, hhh / 2));
+//        hehe.rotate(90);
+//        hehe.resizeTo(www /3, hhh /3);
         hehe.paintTo(img1);
         cv::imshow("1", img1);
         cv::waitKey(0);
