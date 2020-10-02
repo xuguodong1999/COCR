@@ -244,9 +244,9 @@ void Mol::testDraw() {
     for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
         auto sym = Symbol::GetSymbol(R::sElementData[(*it)->GetAtomicNum()]);
         // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
-        sym->resizeTo(10, 10);
+        sym->resizeTo(5, 5);
         sym->moveCenterTo(cv::Point2f((*it)->GetX(), (*it)->GetY()));
-        symbols.emplace_back(std::move(sym));
+//        symbols.emplace_back(std::move(sym));
     }
     for (auto it = obMol.BeginBonds(); it != obMol.EndBonds(); it++) {
         // bond.atom.idx 根据 atom.idx
@@ -277,7 +277,7 @@ void Mol::testDraw() {
 //    }
     const int www = 480 * 2, hhh = 320 * 2;
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
-    this->rotate(90);
+    this->rotate(rand() % 360);
     this->resizeTo(www - 20, hhh - 20);
     this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
 //    std::cout << this->getBoundingBox() << std::endl;

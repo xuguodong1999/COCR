@@ -64,7 +64,7 @@ public:
      * @param p1 起点
      * @param p2 终点
      */
-    void castToLine(const cv::Point2f &p1, const cv::Point2f &p2, const float lThresh = 0.1);
+    void castToLine(const cv::Point2f &p1, const cv::Point2f &p2, const float lThresh = 0.05);
 
     /**
      *

@@ -4,6 +4,7 @@
 
 #include "utils.hpp"
 #include "shape.hpp"
+#include "hwchar.hpp"
 #include <opencv2/opencv.hpp>
 
 Shape::Shape() {
@@ -130,7 +131,14 @@ void Shape::castToCircle(const cv::Point2f &center, float rx, float ry) {
  * @param p1 起点
  * @param p2 终点
  */
-void Shape::castToLine(const cv::Point2f &p1, const cv::Point2f &p2, const float lThresh) {
+void Shape::castToLine(const cv::Point2f &pp1, const cv::Point2f &pp2, const float lThresh) {
+    L:;
+    cv::Point2f p1 = pp1, p2 = pp2;
+    float lenPP = distance(p1, p2);
+    p1.x += lenPP * (rand() % 10) / 100 - 0.05;
+    p2.x += lenPP * (rand() % 10) / 100 - 0.05;
+    p1.y += lenPP * (rand() % 10) / 100 - 0.05;
+    p2.y += lenPP * (rand() % 10) / 100 - 0.05;
     std::vector<cv::Point2f> from(4), to;
     std::vector<cv::Point2f> input;
     for (auto &stroke:mData) {
@@ -147,10 +155,11 @@ void Shape::castToLine(const cv::Point2f &p1, const cv::Point2f &p2, const float
         vecT /= cv::norm(vecT);
     }
     float kk = s03 / s01;
-    if (lThresh < kk && kk < 1 / lThresh) {
+    while (lThresh < kk && kk < 1 / lThresh) {
         mData.clear();
-        mData.emplace_back(Stroke({p1, p2}));
-        return;
+        mData = std::move(HWChar::GetShape("line").mData);
+//        mData.emplace_back(Stroke({p1, p2}));
+        goto L;
     }
     if (s03 > s01) {    // 长边是03、12，给【短长】
         auto offset = vecT * cv::norm(vec) / s03 * s01 / 2.0;
