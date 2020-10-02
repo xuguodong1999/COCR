@@ -133,7 +133,10 @@ void Shape::castToCircle(const cv::Point2f &center, float rx, float ry) {
  */
 void Shape::castToLine(const cv::Point2f &pp1, const cv::Point2f &pp2, const float lThresh) {
     L:;
-    cv::Point2f p1 = pp1, p2 = pp2;
+    float kLen1=(rand() % 10) / 100 - 0.05;
+    float kLen2=(rand() % 10) / 100 - 0.05;
+    cv::Point2f p1 = pp1+(pp1-pp2)*kLen1, p2 = pp2+(pp2-pp1)*kLen2;
+//    cv::Point2f p1=pp1,p2=pp2;
     float lenPP = distance(p1, p2);
     p1.x += lenPP * (rand() % 10) / 100 - 0.05;
     p2.x += lenPP * (rand() % 10) / 100 - 0.05;
