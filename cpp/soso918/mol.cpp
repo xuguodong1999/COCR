@@ -31,7 +31,7 @@ std::string Mol::getStandardSMILES() {
 
 void Mol::testRing() {
     for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
-        std::cout << R::sElementData[(*it)->GetAtomicNum()] << ","
+        std::cout << RC::sElementData[(*it)->GetAtomicNum()] << ","
                   << (*it)->GetId() << "," << (*it)->GetIdx() << ",("
                   << (*it)->GetX() << "," << (*it)->GetY() << ")" << std::endl;
     }
@@ -121,16 +121,16 @@ void Mol::LoopOn(const char *filename, const std::string &taskName) {
                         atom["x"].GetFloat(), atom["y"].GetFloat(),
                         atom["element"].GetString(),
                         atom["charge"].GetInt());
-            R::aeSet.insert(atom["element"].GetString());
-            R::acSet.insert(atom["charge"].GetInt());
+            RC::aeSet.insert(atom["element"].GetString());
+            RC::acSet.insert(atom["charge"].GetInt());
         }
         for (const auto &bondObj : bonds) {
             auto &&bond = bondObj.GetObject();
             mol.addBond(bond["from"].GetInt(), bond["to"].GetInt(),
                         bond["type"].GetString(),
                         bond["stereo"].GetString());
-            R::btSet.insert(bond["type"].GetString());
-            R::bsSet.insert(bond["stereo"].GetString());
+            RC::btSet.insert(bond["type"].GetString());
+            RC::bsSet.insert(bond["stereo"].GetString());
         }
         mol.run(taskName);
     }
@@ -138,9 +138,9 @@ void Mol::LoopOn(const char *filename, const std::string &taskName) {
 
 void Mol::addAtom(int id, float x, float y, const std::string &element, int charge) {
     OpenBabel::OBAtom obatom;
-    auto it = std::find(R::sElementData.begin(), R::sElementData.end(), element);
+    auto it = std::find(RC::sElementData.begin(), RC::sElementData.end(), element);
     obatom.SetId(id);
-    obatom.SetAtomicNum(std::distance(R::sElementData.begin(), it));
+    obatom.SetAtomicNum(std::distance(RC::sElementData.begin(), it));
     obatom.SetFormalCharge(charge);
     obatom.SetVector(x, y, 0);
 //    std::cout << x << "," << y << std::endl;
@@ -242,7 +242,7 @@ void Mol::resizeTo(float w, float h, bool keepRatio) {
 void Mol::testDraw() {
     symbols.clear();
     for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
-        auto sym = Symbol::GetSymbol(R::sElementData[(*it)->GetAtomicNum()]);
+        auto sym = Symbol::GetSymbol(RC::sElementData[(*it)->GetAtomicNum()]);
         // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
         sym->resizeTo(5, 5);
         sym->moveCenterTo(cv::Point2f((*it)->GetX(), (*it)->GetY()));

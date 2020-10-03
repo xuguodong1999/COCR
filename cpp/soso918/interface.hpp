@@ -30,61 +30,72 @@ enum StringNote {
     UpRand,
     DownRand
 };
-using BInt = std::pair<bool, bool>;
-
-class BVector {
-    BInt *data;
-public:
-    BVector() {
-
-    }
-};
-
-inline bool operator!=(const BInt &a, const BInt &b) {
-    return (a.first ^ b.first) | (a.second ^ b.second);
-}
-
-inline bool operator==(const BInt &a, const BInt &b) {
-    return !(a != b);
-}
-
-
-inline int toInt(const BInt &num) {
-    // 0 1 2 3
-    if (num.first) {
-        if (num.second) {
-            return 3;
-        } else {
-            return 2;
-        }
-    } else {
-        if (num.second) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-}
-
-enum BIntEnum {
-    BIntCarbon,
-    BIntLeft,
-    BIntRight,
-    BIntEnd
-};
-
-inline BInt toBInt(BIntEnum num) {
-    switch (num) {
-        case BIntCarbon:
-            return std::make_pair(false, false);
-        case BIntLeft:
-            return std::make_pair(false, true);
-        case BIntRight:
-            return std::make_pair(true, false);
-        default:
-            return std::make_pair(true, true);
-    }
-}
+//using BInt = std::pair<bool, bool>;
+//
+//inline bool operator!=(const BInt &a, const BInt &b) {
+//    return (a.first ^ b.first) | (a.second ^ b.second);
+//}
+//
+//inline bool operator==(const BInt &a, const BInt &b) {
+//    return !(a != b);
+//}
+//
+//inline std::vector<char> toCharList(const std::vector<BInt> &v) {
+//    char a;
+//    std::vector<char> ret;
+//    auto len = v.size();
+//    auto len_mod4 = len - len % 4;
+//    for (int i = 0; i < len_mod4; i += 4) {
+//        a = '\0';
+//        for (int j = 0; j < 4; j++) {
+//            a |= v[i + j].first << (j * 2);
+//            a |= v[i + j].second << (j*2+1);
+//        }
+//        ret.push_back(a);
+//    }
+//    for (int i = len_mod4; i < len; i++) {
+//
+//    }
+//    ret.resize(ret.size());
+//    return std::move(ret);
+//}
+//
+//inline int toInt(const BInt &num) {
+//    // 0 1 2 3
+//    if (num.first) {
+//        if (num.second) {
+//            return 3;
+//        } else {
+//            return 2;
+//        }
+//    } else {
+//        if (num.second) {
+//            return 1;
+//        } else {
+//            return 0;
+//        }
+//    }
+//}
+//
+//enum BIntEnum {
+//    BIntCarbon,
+//    BIntLeft,
+//    BIntRight,
+//    BIntEnd
+//};
+//
+//inline BInt toBInt(BIntEnum num) {
+//    switch (num) {
+//        case BIntCarbon:
+//            return std::make_pair(false, false);
+//        case BIntLeft:
+//            return std::make_pair(false, true);
+//        case BIntRight:
+//            return std::make_pair(true, false);
+//        default:
+//            return std::make_pair(true, true);
+//    }
+//}
 
 using NChar = std::pair<StringNote, std::string>;
 using NString = std::vector<NChar>;
@@ -216,7 +227,11 @@ const char *get_drugbank_h_json_path();
 
 const char *get_chonps_json_path();
 
-class R {
+/**
+ * randomization controller
+ * 意图：1、插桩执行数据分布统计；2、控制随机性
+ */
+class RC {
 public:
     static float sNormSizeK;    // (-1,1)*100
     static float sSubSizeK;     // (-1,1)*50

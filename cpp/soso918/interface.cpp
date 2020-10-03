@@ -1,15 +1,15 @@
 #include "interface.hpp"
 
-float R::sNormSizeK = 1.0;
-float R::sSubSizeK = 1.0;
-float R::sNormOffsetKx = 0.2;
-float R::sNormOffsetKy = 0.2;
-float R::sSubOffsetKx = 0.1;
-float R::sSubOffsetKy = 0.1;
-float R::sAngleK = 0.0;
-std::set<std::string> R::bsSet, R::aeSet, R::btSet;
-std::set<int> R::acSet;
-std::vector<std::string> R::sElementData = {
+float RC::sNormSizeK = 1.0;
+float RC::sSubSizeK = 1.0;
+float RC::sNormOffsetKx = 0.2;
+float RC::sNormOffsetKy = 0.2;
+float RC::sSubOffsetKx = 0.1;
+float RC::sSubOffsetKy = 0.1;
+float RC::sAngleK = 0.0;
+std::set<std::string> RC::bsSet, RC::aeSet, RC::btSet;
+std::set<int> RC::acSet;
+std::vector<std::string> RC::sElementData = {
         "None", "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne",
         "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca",
         "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn",

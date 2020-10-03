@@ -4,11 +4,69 @@
 #include "chemparser.hpp"
 #include "bond.hpp"
 #include "mol.hpp"
+#include "bitvector.hpp"
+#include "solver.hpp"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
 using namespace std;
 const int www = 480, hhh = 320;
+void demoSolver(){
+    vector<vector<frac>> in = {{1, 1, 1,  6},
+                               {1, 2, 2,  11},
+                               {1, 4, -1, 6}};
+    vector<frac> out;
+    bool ok = LinearSolver::Solve(in, out);
+    for(auto&i:out){
+        std::cout<<i<<",";
+    }std::cout<<std::endl;
+//    EXPECT_EQ(ok, true);
+//    EXPECT_EQ(out, vector<frac>({1, 2, 3}));
+    in = {{0, 2,  2, 0,  0,  -2, 0,  0},
+          {1, 0,  0, -2, 0,  0,  0,  0},
+          {1, 0,  0, 0,  -1, 0,  0,  0},
+          {4, 2,  4, -4, -4, -1, -2, 0},
+          {0, 0,  1, -1, -1, 0,  0,  0},
+          {5, -2, 0, 0,  0,  0,  0,  0},   // 化合价因素
+          {0, 0,  0, 0,  0,  0,  1,  1}    // 待定系数
+    };
+    ok = LinearSolver::Solve(in, out);
+    for(auto&i:out){
+        std::cout<<i<<",";
+    }std::cout<<std::endl;
+}
+void demoBitVector() {
+    BitVector bits, b1, b2;
+    size_t end = size_t(1024) * size_t(1024) * size_t(1024) * size_t(8) / size_t(1024);
+    end = 100;
+//    bits.resize(end);
+//    while (1) { ; }
+    for (size_t i = 0; i < end; i++) {
+        bits.push(i % 3 == 0);
+    }
+    ofstream ofsm("D:/fuck.txt");
+    ofsm << bits;
+    for (size_t i = 0; i < end; i++) {
+        bits.push(i % 3 == 0);
+    }
+    ofsm << bits;
+    ofsm.close();
+    ifstream ifsm("D:/fuck.txt");
+    ifsm >> b1 >> b2;
+    ifsm.close();
+    for (auto bit:b1) {
+        std::cout << bit;
+    }
+    std::cout << std::endl << "************************" << std::endl;
+    for (auto bit:b2) {
+        std::cout << bit;
+    }
+    std::cout << std::endl << sizeof(b1)<< std::endl;
+    std::cout << std::endl << sizeof(b2)<< std::endl;
+    std::cout << std::endl << sizeof(vector<int>)<< std::endl;
+    std::cout << std::endl << sizeof(string)<< std::endl;
+    std::cout << std::endl << sizeof(size_t)<< std::endl;
+}
 
 void demoSingle();
 
@@ -63,7 +121,9 @@ int main() {
 //    demoSpecialText();
 //    demoBond();
 //    makeIcon();
-    demoMol();
+//    demoMol();
+//    demoBitVector();
+    demoSolver();
     return 0;
 }
 

@@ -1,6 +1,7 @@
 #ifndef _FRACTION_H_
 #define _FRACTION_H_
 
+#include "soso918.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -11,15 +12,13 @@
 
 template<typename T>
 class Fraction {
-#define EPS 0.0000000000000001
+    static_assert(std::is_same_v<T, short> || std::is_same_v<T, int>
+                  || std::is_same_v<T, long> || std::is_same_v<T, long long>);
 
 public:
     void set(const T &numerator, const T &denominator = 1) {
         first = numerator;
         second = denominator;
-        if (denominator == 0) {
-            denominator = EPS;
-        }
         reduce();
     }
 
@@ -88,9 +87,10 @@ public:
         second *= x.first;
         return reduce();
     }
-
+    bool isZero()const{return first==0;}
     float floatValue() const {
-        return first / second;
+        return static_cast<float>(first) / static_cast<float>(second);
+//        return first/second;
     }
 
     bool operator<(const Fraction &x) const {
@@ -135,7 +135,7 @@ public:
     }
 
     friend std::ostream &operator<<(std::ostream &out, const Fraction &x) {
-        out << x.first << " / " << x.second;
+        out << " " << x.first << " / " << x.second << " ";
         return out;
     }
 
@@ -148,16 +148,12 @@ public:
 private:
     T first, second;
 
-    T gcd(const T &x, const T &y) const {
-        return x % y == 0 ? y : gcd(y, x % y);
-    }
-
     Fraction &reduce() {
-        if (!first) {
+        if (0==first) {
             second = 1;
-        } else if (!second) {
+        } else if (0==second) {
             second = 1;
-            first = first > 0 ? std::numeric_limits<T>::max() : std::numeric_limits<T>::min();
+            first = first > 0 ? std::numeric_limits<T>::max() : std::numeric_limits<T>::lowest();
         } else {
             T x = gcd(first, second);
             first /= x;
@@ -167,7 +163,7 @@ private:
     }
 };
 
-typedef Fraction<long long> frac;
+typedef Fraction<int> frac;
 
 template<typename T>
 inline float abs(const Fraction<T> &f) {

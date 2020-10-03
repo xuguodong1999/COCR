@@ -7,31 +7,31 @@
 
 
 void Symbol::setSNormSizeK(float sNormSizeK) {
-    R::sNormSizeK = sNormSizeK;
+    RC::sNormSizeK = sNormSizeK;
 }
 
 void Symbol::setSSubSizeK(float sSubSizeK) {
-    R::sSubSizeK = sSubSizeK;
+    RC::sSubSizeK = sSubSizeK;
 }
 
 void Symbol::setSNormOffsetKx(float sNormOffsetKx) {
-    R::sNormOffsetKx = sNormOffsetKx;
+    RC::sNormOffsetKx = sNormOffsetKx;
 }
 
 void Symbol::setSNormOffsetKy(float sNormOffsetKy) {
-    R::sNormOffsetKy = sNormOffsetKy;
+    RC::sNormOffsetKy = sNormOffsetKy;
 }
 
 void Symbol::setSSubOffsetKx(float sSubOffsetKx) {
-    R::sSubOffsetKx = sSubOffsetKx;
+    RC::sSubOffsetKx = sSubOffsetKx;
 }
 
 void Symbol::setSSubOffsetKy(float sSubOffsetKy) {
-    R::sSubOffsetKy = sSubOffsetKy;
+    RC::sSubOffsetKy = sSubOffsetKy;
 }
 
 void Symbol::setSAngleK(float sAngleK) {
-    R::sAngleK = sAngleK;
+    RC::sAngleK = sAngleK;
 }
 
 std::shared_ptr<Symbol> Symbol::GetSymbol(const std::string &_symbolType) {
@@ -59,13 +59,13 @@ std::shared_ptr<Symbol> Symbol::GetSymbol(const std::string &_symbolType) {
 
 void Symbol::append(const NChar &c) {
     auto sym = HWChar::GetByStrLabel(c.second);
-    sym.rotate(30 * R::sAngleK);
-    float s = 100 * R::sNormSizeK;
-    float sx = 100 * R::sNormOffsetKx;
-    float sy = 100 * R::sNormOffsetKy;
-    float ss = 50 * R::sSubSizeK;
-    float ssx = 50 * R::sSubOffsetKx;
-    float ssy = 50 * R::sSubOffsetKy;
+    sym.rotate(30 * RC::sAngleK);
+    float s = 100 * RC::sNormSizeK;
+    float sx = 100 * RC::sNormOffsetKx;
+    float sy = 100 * RC::sNormOffsetKy;
+    float ss = 50 * RC::sSubSizeK;
+    float ssx = 50 * RC::sSubOffsetKx;
+    float ssy = 50 * RC::sSubOffsetKy;
     if (shapes.empty()) {
         sym.resizeTo(s, s, true);
         sym.moveLeftTopTo(cv::Point2f(0, 0));
