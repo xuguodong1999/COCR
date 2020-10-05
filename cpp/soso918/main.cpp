@@ -8,10 +8,21 @@
 #include "solver.hpp"
 #include <opencv2/opencv.hpp>
 #include <iostream>
-
+//#include <Windows.h>
+//#undef max
+//#undef min
 using namespace std;
 const int www = 480, hhh = 320;
+//inline const int getXRES() {
+//    static const int ret = GetSystemMetrics(SM_CXFULLSCREEN);
+//    return ret;
+//}
+//inline const int getYRES() {
+//    static const int ret = GetSystemMetrics(SM_CYFULLSCREEN);
+//    return ret;
+//}
 void demoSolver(){
+//    std::cout<<getXRES()<<","<<getYRES()<<std::endl;
     vector<vector<frac>> in = {{1, 1, 1,  6},
                                {1, 2, 2,  11},
                                {1, 4, -1, 6}};

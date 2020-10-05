@@ -44,6 +44,16 @@ if (NOT MSVC)
 endif ()
 add_executable(${MODULE_NAME} ${darknet_src} ${darknet_cuda_src})
 
+# CAUSE ERROR FOR CUDA
+#if (MSVC)
+#    target_compile_options(${MODULE_NAME} PRIVATE -MT)
+#    if (CMAKE_BUILD_TYPE)
+#        if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
+#            target_compile_options(${MODULE_NAME} PRIVATE -MTd)
+#        endif ()
+#    endif ()
+#endif ()
+
 if (MSVC)
     target_link_libraries(${MODULE_NAME} PRIVATE ws2_32 PThreads_windows::PThreads_windows)
     target_compile_definitions(${MODULE_NAME} PRIVATE -D_CRT_RAND_S -DNOMINMAX -D_USE_MATH_DEFINES -D_TIMESPEC_DEFINED)
