@@ -1,7 +1,14 @@
 #include "shape.hpp"
 #include "handwritting.hpp"
-
+#include "statistic.hpp"
 #include <opencv2/opencv.hpp>
+ShapeInterface::ShapeInterface() :  isRotateAllowed(true){
+}
+
+const Point ShapeInterface::getCenter() {
+    auto rect = getBoundingBox();
+    return Point(rect.x + rect.width / 2.0, rect.y + rect.height / 2.0);
+}
 
 Shape::Shape() : mLabel(-1) {
 }
@@ -13,11 +20,19 @@ Shape::Shape() : mLabel(-1) {
 void Shape::paintTo(cv::Mat &canvas) {
     for (auto &stroke:mData) {
         if (stroke.size() == 0)continue;
+        RC::update_shape_attr();
         cv::line(canvas, stroke[0], stroke[0],
-                 color, thickness, lineType, shift);
+                 RC::get_shape_color(),
+                 RC::get_shape_thickness(),
+                 RC::get_shape_lineType(),
+                 RC::get_shape_shift());
         for (size_t i = 1; i < stroke.size(); i++) {
+            RC::update_shape_attr();
             cv::line(canvas, stroke[i], stroke[i - 1],
-                     color, thickness, lineType, shift);
+                     RC::get_shape_color(),
+                     RC::get_shape_thickness(),
+                     RC::get_shape_lineType(),
+                     RC::get_shape_shift());
         }
     }
 }
@@ -147,9 +162,15 @@ void Shape::castToLine(const Point &pp1, const Point &pp2, const float lThresh) 
     cv::minAreaRect(input).points(from.data());
     auto s03 = distance(from[0], from[3]);
     auto s01 = distance(from[0], from[1]);
+    while (s03 < std::numeric_limits<float>::epsilon()
+           || s01 < std::numeric_limits<float>::epsilon()) {
+        mData.clear();
+        mData = std::move(HandWritting::GetShape("line").mData);
+        goto L;// FIXME: i heard that goto considered harmful?
+    }
     Point vec = p1 - p2;
     Point vecT(0, 1);
-    if (vec.y != 0) {
+    if (fabs(vec.y) > std::numeric_limits<float>::epsilon()) {
         vecT = Point(-1, vec.x / vec.y);
         vecT /= cv::norm(vecT);
     }
@@ -192,10 +213,44 @@ Script &Shape::getData() {
     return mData;
 }
 
+void Shape::mulK(float kx, float ky) {
+    for (auto &stroke:mData) {
+        for (auto &p:stroke) {
+            p.x *= kx;
+            p.y *= ky;
+        }
+    }
+}
+
+void Shape::rotateTheta(float theta) {
+    float x, y;
+    for (auto &stroke:mData) {
+        for (auto &p:stroke) {
+            x = p.x * std::cos(theta) + p.y * std::sin(theta);
+            y = p.y * std::cos(theta) - p.x * std::sin(theta);
+            p.x = x;
+            p.y = y;
+        }
+    }
+}
+
+void Shape::rotateThetaBy(float theta, const cv::Point2f &cent) {
+    float x, y;
+    for (auto &stroke:mData) {
+        for (auto &p:stroke) {
+            x = (p.x - cent.x) * std::cos(theta) + (p.y - cent.y) * std::sin(theta) + cent.x;
+            y = (p.y - cent.y) * std::cos(theta) - (p.x - cent.x) * std::sin(theta) + cent.y;
+            p.x = x;
+            p.y = y;
+        }
+    }
+}
+
 cv::Rect2f getRect(const Stroke &stroke) {
     if (stroke.empty()) {
-//        exit(-1);
-        return cv::Rect2f(0, 0, 1, 1);
+        std::cerr << "stroke.empty() in cv::Rect2f getRect(const Stroke &stroke)" << std::endl;
+        exit(-1);
+//        return cv::Rect2f(0, 0, 0, 0);
     }
     float minx, miny, maxx, maxy;
     minx = miny = std::numeric_limits<float>::max();
@@ -211,8 +266,9 @@ cv::Rect2f getRect(const Stroke &stroke) {
 
 cv::Rect2f getRect(const Script &script) {
     if (script.empty()) {
-//        exit(-1);
-        return cv::Rect2f(0, 0, 1, 1);
+        std::cerr << "script.empty() in cv::Rect2f getRect(const Script &script)" << std::endl;
+        exit(-1);
+//        return cv::Rect2f(0, 0, 0, 0);
     }
     float minx, miny, maxx, maxy;
     minx = miny = std::numeric_limits<float>::max();

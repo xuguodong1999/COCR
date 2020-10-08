@@ -43,6 +43,6 @@ int main(int argc, char **argv) {
 //    demo_opencv();
 //    demo_torch();
 //    std::cout<<demo_openbabel()<<std::endl;
-    loop(demo_torch);
+    loop(demoMol);
     return 0;
 }

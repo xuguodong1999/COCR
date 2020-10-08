@@ -1,28 +1,20 @@
 #include "mol.hpp"
-#include "handwritting.hpp"
 #include "bond.hpp"
 #include "statistic.hpp"
-
-#include <openbabel/obconversion.h>
 #include <openbabel/ring.h>
-
-#include <boost/algorithm/algorithm.hpp>
-#include <boost/algorithm/string.hpp>
-
-#include <rapidjson/document.h>
-
-#include <set>
+#include <openbabel/obconversion.h>
 #include <opencv2/opencv.hpp>
+#include <boost/algorithm/string.hpp>
+#include <rapidjson/document.h>
+#include <set>
 
 Mol::Mol() {
-
 }
 
 Mol::~Mol() {
-
 }
 
-std::string Mol::getStandardSMILES() {
+s Mol::getStandardSMILES() {
     OpenBabel::OBConversion obConversion;
     obConversion.SetOutFormat("can");
     std::stringstream ism;
@@ -58,7 +50,7 @@ void Mol::testRing() {
     }
 }
 
-void Mol::run(const std::string &taskName) {
+void Mol::run(const s &taskName) {
     if (taskName == "testDraw") {
         testDraw();
         return;
@@ -90,10 +82,10 @@ void Mol::rotateBy(float angle, const cv::Point2f &cent) {
     }
 }
 
-void Mol::LoopOn(const char *filename, const std::string &taskName) {
+void Mol::LoopOn(const char *filename, const s &taskName) {
     std::ifstream ifsm(filename);
     rapidjson::Document doc;
-    std::string buffer;
+    s buffer;
     if (!ifsm.is_open()) {
         std::cerr << "fail to open " << filename << std::endl;
         exit(-1);
@@ -137,7 +129,7 @@ void Mol::LoopOn(const char *filename, const std::string &taskName) {
     }
 }
 
-void Mol::addAtom(int id, float x, float y, const std::string &element, int charge) {
+void Mol::addAtom(int id, float x, float y, const s &element, int charge) {
     OpenBabel::OBAtom obatom;
     auto it = std::find(RC::sElementData.begin(), RC::sElementData.end(), element);
     obatom.SetId(id);
@@ -146,13 +138,11 @@ void Mol::addAtom(int id, float x, float y, const std::string &element, int char
     obatom.SetVector(x, y, 0);
 //    std::cout << x << "," << y << std::endl;
     obatom.SetCoordPtr(nullptr);
-//    obatoms.emplace_back(std::move(obatom));
     obMol.AddAtom(obatom, false);
     aidMap[id] = obMol.GetAtomById(id);
 }
 
-
-void Mol::addBond(int from, int to, const std::string &type, const std::string &stereo) {
+void Mol::addBond(int from, int to, const s &type, const s &stereo) {
     OpenBabel::OBBond obbond;
     obbond.SetBegin(aidMap[from]);
     obbond.SetEnd(aidMap[to]);
@@ -169,7 +159,6 @@ void Mol::addBond(int from, int to, const std::string &type, const std::string &
         obbond.SetBondOrder(3);
     }
     obMol.AddBond(obbond);
-//    obbonds.emplace_back(std::move(obbond));
 }
 
 const cv::Rect2f Mol::getBoundingBox() const {
@@ -207,8 +196,6 @@ void Mol::move(const cv::Point2f &offset) {
 }
 
 void Mol::moveCenterTo(const cv::Point2f &newCenter) {
-//    cv::Rect2f bBox = getBoundingBox();
-//    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
     auto oldCenter = getCenter();
     cv::Point2f offset = newCenter - oldCenter;
     move(offset);
@@ -223,7 +210,6 @@ void Mol::moveLeftTopTo(const cv::Point2f &leftTop) {
 void Mol::resizeTo(float w, float h, bool keepRatio) {
     cv::Rect2f bBox = getBoundingBox();
     cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
-//    auto oldCenter=getCenter();
     float oldW = bBox.width, oldH = bBox.height;
     float kx = w / oldW;
     float ky = h / oldH;
@@ -231,12 +217,7 @@ void Mol::resizeTo(float w, float h, bool keepRatio) {
     if (keepRatio) {
         kx = ky = std::min(kx, ky);
     }
-    for (auto &s:symbols) {
-//        s->resizeTo(kx, ky, keepRatio);
-        for (auto &ss:s->shapes) {
-            ss.mulK(kx, ky);
-        }
-    }
+    mulK(kx, ky);
     moveCenterTo(oldCenter);
 }
 
@@ -247,11 +228,11 @@ void Mol::testDraw() {
         // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
         sym->resizeTo(5, 5);
         sym->moveCenterTo(cv::Point2f((*it)->GetX(), (*it)->GetY()));
-//        symbols.emplace_back(std::move(sym));
+        symbols.push_back(std::move(sym));
     }
     for (auto it = obMol.BeginBonds(); it != obMol.EndBonds(); it++) {
         // bond.atom.idx 根据 atom.idx
-        std::shared_ptr<Bond> sym;
+        p < Bond > sym;
         if ((*it)->GetBondOrder() == 1) {
             if ((*it)->IsWedge()) {
                 sym = Bond::GetBond("SolidWedge");
@@ -265,24 +246,27 @@ void Mol::testDraw() {
         } else if ((*it)->GetBondOrder() == 3) {
             sym = Bond::GetBond("Triple");
         }
-//        std::cout<<sym->shapes.size()<<"*"<<sym->getBoundingBox()<<std::endl;
         sym->setVertices(
                 {cv::Point2f((*it)->GetBeginAtom()->GetX(), (*it)->GetBeginAtom()->GetY()),
                  cv::Point2f((*it)->GetEndAtom()->GetX(), (*it)->GetEndAtom()->GetY())
                 });
-        symbols.emplace_back(std::move(sym));
+        symbols.push_back(std::move(sym));
     }
-//    std::cout<<this->getBoundingBox()<<std::endl;
-//    for(auto&s:symbols){
-//        std::cout<<"*"<<s->name<<"*"<<s->getBoundingBox()<<"*"<<std::endl;
-//    }
     const int www = 480 * 2, hhh = 320 * 2;
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
     this->rotate(rand() % 360);
     this->resizeTo(www - 20, hhh - 20);
     this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
-//    std::cout << this->getBoundingBox() << std::endl;
     this->paintTo(img1);
+    for (auto &ss:symbols) {
+        cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
+    }
     cv::imshow("1", img1);
     cv::waitKey(0);
+}
+
+void Mol::mulK(float kx, float ky) {
+    for (auto &s:symbols) {
+        s->mulK(kx, ky);
+    }
 }

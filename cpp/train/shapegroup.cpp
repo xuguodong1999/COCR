@@ -31,8 +31,8 @@ void ShapeGroup::setSAngleK(float sAngleK) {
     RC::sAngleK = sAngleK;
 }
 
-std::shared_ptr<ShapeGroup> ShapeGroup::GetShapeGroup(const std::string &_textType) {
-    std::shared_ptr<ShapeGroup> text;
+p<ShapeGroup> ShapeGroup::GetShapeGroup(const s &_textType) {
+    p<ShapeGroup> text;
     if (_textType == "positive") {
         auto sym = HandWritting::GetByStrLabel("⊕");
         text = std::make_shared<ShapeGroup>();
@@ -187,7 +187,7 @@ const cv::Rect2f ShapeGroup::getBoundingBox() const {
         maxx = std::max(maxx, rect.x + rect.width);
         maxy = std::max(maxy, rect.y + rect.height);
     }
-    return cv::Rect2f(minx, miny, maxx - minx, maxy - miny);
+    return cv::Rect2f(minx-1, miny-1, maxx - minx+2, maxy - miny+2);
 }
 
 void ShapeGroup::paintTo(cv::Mat &canvas) {

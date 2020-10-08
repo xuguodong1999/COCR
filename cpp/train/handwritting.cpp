@@ -1,19 +1,15 @@
 #include "handwritting.hpp"
-
 #include <fstream>
 #include <iostream>
 
 bool HandWritting::sIsLoaded = false;
-
-std::vector<std::vector<Script>> HandWritting::sData;
-
-std::vector<int>HandWritting::sLabelCharLikeLine = {
+v<v<Script>> HandWritting::sData;
+v<int>HandWritting::sLabelCharLikeLine = {
         8, 24, 53,
         130, 134, 141, 146, 158,
         172
 };
-
-std::vector<int>HandWritting::sLabelCharLikeCircle = {9, 21, 47};
+v<int>HandWritting::sLabelCharLikeCircle = {9, 21, 47};
 
 Shape HandWritting::GetByIntLabel(int label) {
     if (!sIsLoaded) {

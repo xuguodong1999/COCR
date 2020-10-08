@@ -2,6 +2,9 @@
 #define _STATISTIC_HPP_
 
 #include "config.hpp"
+#include "shape.hpp"
+#include <opencv2/core/types.hpp>
+
 #include <set>
 
 /**
@@ -20,6 +23,32 @@ public:
     static v<s> sElementData;
     static std::set<s> bsSet, aeSet, btSet;
     static std::set<int> acSet;
+
+
+    struct ShapeAttr{
+        //color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0)
+         int thickness;
+         int lineType;
+         int shift;
+         cv::Scalar color;
+         ShapeAttr():color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0){}
+     };
+    static void update_shape_attr(){
+
+    }
+    static ShapeAttr shapeAttr;
+    static const int get_shape_shift(){
+        return shapeAttr.shift;
+    }
+    static const int get_shape_thickness(){
+        return shapeAttr.thickness;
+    }
+    static const int get_shape_lineType(){
+        return shapeAttr.lineType;
+    }
+    static const cv::Scalar get_shape_color(){
+        return shapeAttr.color;
+    }
 };
 
 #endif//_STATISTIC_HPP_

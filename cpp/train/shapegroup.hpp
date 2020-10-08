@@ -13,28 +13,28 @@ enum StringNote {
     UpRand,
     DownRand
 };
-using NChar = std::pair<StringNote, std::string>;
-using NString = std::vector<NChar>;
+using NChar = std::pair<StringNote, s>;
+using NString = v<NChar>;
 
-inline NString makeNotedStringByChar(const std::string &text, StringNote note = Normal) {
+inline NString makeNotedStringByChar(const s &text, StringNote note = Normal) {
     NString ns;
     for (auto c:text) {
-        ns.push_back(std::make_pair(note, std::string(1, c)));
+        ns.push_back(std::make_pair(note, s(1, c)));
     }
     return ns;
 }
 
 inline NString makeNotedString(
-        const std::string &text, const std::vector<StringNote> &note) {
+        const s &text, const v<StringNote> &note) {
     NString ns;
-    std::vector<StringNote> _note = note;
+    v<StringNote> _note = note;
     if (_note.size() == 0) {
         _note.resize(text.size(), Normal);
     } else {
         _note.resize(text.size(), _note.back());
     }
     for (size_t i = 0; i < text.size(); i++) {
-        ns.push_back(std::make_pair(_note[i], std::string(1, text[i])));
+        ns.push_back(std::make_pair(_note[i], s(1, text[i])));
     }
     return ns;
 }
@@ -48,10 +48,10 @@ inline NString makeNotedString(
  */
 class ShapeGroup : public ShapeInterface {
 public:
-    std::vector<Shape> shapes;
-    std::string name;
+    v<Shape> shapes;
+    s name;
 public:
-    static std::shared_ptr<ShapeGroup> GetShapeGroup(const std::string &_textType = "");
+    static p<ShapeGroup> GetShapeGroup(const s &_textType = "");
 
     ShapeGroup() : name("ShapeGroup") { isRotateAllowed = false; }
 
@@ -64,20 +64,24 @@ public:
             this->name.append(c.second);
         }
     }
+    void mulK(float kx, float ky)override{
+        for(auto&s:shapes){
+            s.mulK(kx,ky);
+        }
+    }
+    virtual void append(const NChar &c);
 
-    void append(const NChar &c);
+    virtual void resizeTo(float w, float h, bool keepRatio = true);
 
-    void resizeTo(float w, float h, bool keepRatio = true);
+    virtual void moveLeftTopTo(const cv::Point2f &leftTop);
 
-    void moveLeftTopTo(const cv::Point2f &leftTop);
+    virtual void moveCenterTo(const cv::Point2f &newCenter);
 
-    void moveCenterTo(const cv::Point2f &newCenter);
+    virtual void move(const cv::Point2f &offset);
 
-    void move(const cv::Point2f &offset);
+    virtual void rotate(float angle);
 
-    void rotate(float angle);
-
-    void rotateBy(float angle, const cv::Point2f &cent);
+    virtual void rotateBy(float angle, const cv::Point2f &cent);
 
     const cv::Rect2f getBoundingBox() const override;
 

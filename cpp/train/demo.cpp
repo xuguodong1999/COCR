@@ -19,7 +19,7 @@
 const int www = 480, hhh = 320;
 
 void demoSingle() {
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
     auto tmp = HandWritting::GetByIntLabel(1 + rand() % 182);
     tmp.resizeTo(200, 200);
     tmp.rotate(-10 + rand() % 20);
@@ -31,7 +31,7 @@ void demoSingle() {
 }
 
 void demoLine() {
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
     auto line = HandWritting::GetShape("line");
     line.castToLine(cv::Point2f(50, 50), cv::Point2f(50, 250));
     line.paintTo(img1);
@@ -40,7 +40,7 @@ void demoLine() {
 }
 
 void demoCircle() {
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
     auto circle = HandWritting::GetShape("circle");
     circle.castToCircle(cv::Point2f(400, 200), 100, 100);
     circle.paintTo(img1);
@@ -49,7 +49,7 @@ void demoCircle() {
 }
 
 void demoShapeGroup() {
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
     ShapeGroup hehe(makeNotedStringByChar("1234567890"));
     hehe.resizeTo(400, 100);
     hehe.moveCenterTo(cv::Point2f(www / 2, hhh / 2));
@@ -59,7 +59,7 @@ void demoShapeGroup() {
 }
 
 void demoRichShapeGroup() {
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
     ShapeGroup::setSAngleK((rand() % 20 - 10) / 100.0);
     ShapeGroup::setSNormSizeK((rand() % 10 - 5) / 100.0 + 1.0);
     ShapeGroup::setSNormOffsetKx((rand() % 10 - 5) / 100.0);
@@ -90,7 +90,7 @@ void demoRichShapeGroup() {
 }
 
 void demoSpecialShapeGroup() {
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
 //        auto positiveSym = ShapeGroup::GetShapeGroup("positive");
     auto positiveSym = ShapeGroup::GetShapeGroup("negative");
     positiveSym->resizeTo(200, 200);
@@ -107,7 +107,7 @@ void demoMol() {
 }
 
 void demoBond() {
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, WHITE);
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
     auto bond = Bond::GetBond("DashWedge");
     bond->setUseHandWrittenWChar(true);
     bond->setVertices({cv::Point2f(20, 20),
@@ -120,8 +120,8 @@ void demoBond() {
 }
 
 void makeIcon() {
-    const std::string dir = "C:\\Users\\xgd\\source\\COCR\\android\\app\\src\\main\\res\\drawable\\";
-    std::vector<std::string> sym = {
+    const s dir = "C:\\Users\\xgd\\source\\COCR\\android\\app\\src\\main\\res\\drawable\\";
+    v<s> sym = {
             "positive", "negative"};
 //    for (auto &s:sym) {
 //        cv::Mat img = cv::Mat(256, 256, CV_8UC3, WHITE);
@@ -133,7 +133,7 @@ void makeIcon() {
 //    }
     sym = {"SolidWedge", "DashWedge", "Single", "Double", "Triple", "Wave"};
     for (auto &s:sym) {
-        cv::Mat img = cv::Mat(256, 256, CV_8UC3, WHITE);
+        cv::Mat img = cv::Mat(256, 256, CV_8UC3, cvWhite);
         auto tmp = Bond::GetBond(s);
         tmp->setUseHandWrittenWChar(true);
 //        tmp->resizeTo(200, 200);
@@ -157,7 +157,7 @@ void demo_torch() {
     const int64_t batch_size = 100;
     const size_t num_epochs = 5;
     const double learning_rate = 0.001;
-    const std::string MNIST_data_path = "C:/Users/xgd/.keras/datasets/pytorch-cpp/mnist/";
+    const s MNIST_data_path = "C:/Users/xgd/.keras/datasets/pytorch-cpp/mnist/";
     // MNIST Dataset
     auto train_dataset = torch::data::datasets::MNIST(MNIST_data_path)
             .map(torch::data::transforms::Normalize<>(0.1307, 0.3081))
@@ -239,7 +239,7 @@ void demo_opencv() {
 
 #define RET_EMPTY_STRING_IF_NOT(condition) if(!(condition))return ""
 
-std::string demo_openbabel(const char *smi) {
+s demo_openbabel(const char *smi) {
     using namespace OpenBabel;
     using namespace std;
     OBConversion conv;

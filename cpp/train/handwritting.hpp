@@ -18,9 +18,9 @@ private:
 public:
     static Shape GetByIntLabel(int label);
 
-    static Shape GetByStrLabel(const std::string &label);
+    static Shape GetByStrLabel(const s &label);
 
-    static Shape GetShape(const std::string &shape);
+    static Shape GetShape(const s &shape);
 };
 
 #endif//_HANDWRITTING_HPP_
