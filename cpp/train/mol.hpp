@@ -5,7 +5,8 @@
 #ifndef PLAY_OPENCV_MOL_HPP
 #define PLAY_OPENCV_MOL_HPP
 
-#include "symbol.hpp"
+#include "shape.hpp"
+#include "shapegroup.hpp"
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/mol.h>
@@ -14,14 +15,12 @@
 #include <map>
 
 class Mol : public ShapeInterface {
-protected:
-    std::vector<std::shared_ptr<Symbol>> symbols;
+    std::vector<std::shared_ptr<ShapeGroup>> symbols;
     OpenBabel::OBMol obMol;
     std::map<int, OpenBabel::OBAtom *> aidMap;
     std::string inSmiles;
-
     void testRing();
-
+    void testDraw();
 public:
     Mol();
 
@@ -82,7 +81,6 @@ public:
      */
     void resizeTo(float w, float h, bool keepRatio = true) override;
 
-    void testDraw();
 };
 
 

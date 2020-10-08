@@ -1,12 +1,43 @@
-//
-// Created by xgd on 2020/9/18.
-//
+#ifndef _TEXT_HPP_
+#define _TEXT_HPP_
 
-#ifndef PLAY_OPENCV_SYMBOL_HPP
-#define PLAY_OPENCV_SYMBOL_HPP
-
-#include "interface.hpp"
+#include "config.hpp"
 #include "shape.hpp"
+
+enum StringNote {
+    Normal,
+    RightButtom,
+    RightTop,
+    Up,
+    Down,
+    UpRand,
+    DownRand
+};
+using NChar = std::pair<StringNote, std::string>;
+using NString = std::vector<NChar>;
+
+inline NString makeNotedStringByChar(const std::string &text, StringNote note = Normal) {
+    NString ns;
+    for (auto c:text) {
+        ns.push_back(std::make_pair(note, std::string(1, c)));
+    }
+    return ns;
+}
+
+inline NString makeNotedString(
+        const std::string &text, const std::vector<StringNote> &note) {
+    NString ns;
+    std::vector<StringNote> _note = note;
+    if (_note.size() == 0) {
+        _note.resize(text.size(), Normal);
+    } else {
+        _note.resize(text.size(), _note.back());
+    }
+    for (size_t i = 0; i < text.size(); i++) {
+        ns.push_back(std::make_pair(_note[i], std::string(1, text[i])));
+    }
+    return ns;
+}
 
 /**
  * 作为独立分类的符号【20分类】：
@@ -15,16 +46,16 @@
  * 聚集的元素串、符号串【1分类】，需要由文本识别系统二次识别：
  * CH3COOH,COOH,...,etc.
  */
-class Symbol : public ShapeInterface {
+class ShapeGroup : public ShapeInterface {
 public:
     std::vector<Shape> shapes;
     std::string name;
 public:
-    static std::shared_ptr<Symbol> GetSymbol(const std::string &_symbolType = "");
+    static std::shared_ptr<ShapeGroup> GetShapeGroup(const std::string &_textType = "");
 
-    Symbol() : name("Symbol") { isRotateAllowed = false; }
+    ShapeGroup() : name("ShapeGroup") { isRotateAllowed = false; }
 
-    Symbol(const NString &name) {
+    ShapeGroup(const NString &name) {
         isRotateAllowed = false;
         shapes.clear();
         this->name.clear();
@@ -67,5 +98,4 @@ public:
     static void setSAngleK(float sAngleK);
 };
 
-
-#endif //PLAY_OPENCV_SYMBOL_HPP
+#endif//_TEXT_HPP_

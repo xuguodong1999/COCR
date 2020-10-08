@@ -1,7 +1,8 @@
-#ifndef _FRACTION_H_
-#define _FRACTION_H_
+#ifndef _FRACTION_HPP_
+#define _FRACTION_HPP_
 
-#include "soso918.hpp"
+#include "config.hpp"
+
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -87,10 +88,11 @@ public:
         second *= x.first;
         return reduce();
     }
-    bool isZero()const{return first==0;}
+
+    bool isZero() const { return first == 0; }
+
     float floatValue() const {
         return static_cast<float>(first) / static_cast<float>(second);
-//        return first/second;
     }
 
     bool operator<(const Fraction &x) const {
@@ -131,17 +133,17 @@ public:
     std::string toString() const {
         std::ostringstream os;
         os << *this;
-        return os.str();
+        return std::move(os.str());
     }
 
     friend std::ostream &operator<<(std::ostream &out, const Fraction &x) {
-        out << " " << x.first << " / " << x.second << " ";
+        out << "[ " << x.first << " / " << x.second << " ]";
         return out;
     }
 
     friend std::istream &operator>>(std::istream &in, Fraction &x) {
         char c;
-        in >> x.first >> c >> x.second;
+        in >> c >> x.first >> c >> x.second >> c;
         return in;
     }
 
@@ -149,11 +151,12 @@ private:
     T first, second;
 
     Fraction &reduce() {
-        if (0==first) {
+        if (!first) {
             second = 1;
-        } else if (0==second) {
+        } else if (!second) {
             second = 1;
-            first = first > 0 ? std::numeric_limits<T>::max() : std::numeric_limits<T>::lowest();
+            first = first > 0 ? std::numeric_limits<T>::max() :
+                    std::numeric_limits<T>::lowest();
         } else {
             T x = gcd(first, second);
             first /= x;
@@ -163,11 +166,11 @@ private:
     }
 };
 
-typedef Fraction<int> frac;
+using frac = Fraction<int>;
 
 template<typename T>
 inline float abs(const Fraction<T> &f) {
     return std::abs(f.floatValue());
 }
 
-#endif //!_FRACTION_H_
+#endif//_FRACTION_HPP_

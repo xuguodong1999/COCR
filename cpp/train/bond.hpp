@@ -1,12 +1,8 @@
-//
-// Created by xgd on 2020/9/18.
-//
+#ifndef _BOND_HPP_
+#define _BOND_HPP_
 
-#ifndef PLAY_OPENCV_BOND_HPP
-#define PLAY_OPENCV_BOND_HPP
-
-#include "utils.hpp"
-#include "symbol.hpp"
+#include "config.hpp"
+#include "shapegroup.hpp"
 #include <memory>
 #include <iostream>
 
@@ -15,7 +11,7 @@
  * [-1,-7]
  * 圆圈、单键、双键、三键、实楔形键、虚楔形键、波浪线
  */
-class Bond : public Symbol {
+class Bond : public ShapeGroup {
 protected:
     Bond(const std::string &_bondType)
             : mUseHWChar(true) {
@@ -134,4 +130,4 @@ public:
     void paintTo(cv::Mat &canvas) override;
 };
 
-#endif //PLAY_OPENCV_BOND_HPP
+#endif //_BOND_HPP_

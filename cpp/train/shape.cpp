@@ -1,13 +1,9 @@
-//
-// Created by xgd on 2020/9/18.
-//
-
-#include "utils.hpp"
 #include "shape.hpp"
-#include "hwchar.hpp"
+#include "handwritting.hpp"
+
 #include <opencv2/opencv.hpp>
 
-Shape::Shape() {
+Shape::Shape() : mLabel(-1) {
 }
 
 /**
@@ -41,13 +37,13 @@ const cv::Rect2f Shape::getBoundingBox() const {
 void Shape::rotate(float angle) {
     float theta = -M_PI * angle / 180;
     cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
-    moveCenterTo(cv::Point2f(0, 0));
+    Point oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
+    moveCenterTo(Point(0, 0));
     rotateTheta(theta);
     moveCenterTo(oldCenter);
 }
 
-void Shape::rotateBy(float angle, const cv::Point2f &cent) {
+void Shape::rotateBy(float angle, const Point &cent) {
     float theta = -M_PI * angle / 180;
     rotateThetaBy(theta, cent);
 }
@@ -56,7 +52,7 @@ void Shape::rotateBy(float angle, const cv::Point2f &cent) {
  * 将数据点整体移动 offset
  * @param offset
  */
-void Shape::move(const cv::Point2f &offset) {
+void Shape::move(const Point &offset) {
     for (auto &stroke:mData) {
         for (auto &p:stroke)
             p += offset;
@@ -67,10 +63,10 @@ void Shape::move(const cv::Point2f &offset) {
  * 将数据点的中心移动到 newCenter
  * @param newCenter
  */
-void Shape::moveCenterTo(const cv::Point2f &newCenter) {
+void Shape::moveCenterTo(const Point &newCenter) {
     cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
-    cv::Point2f offset = newCenter - oldCenter;
+    Point oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
+    Point offset = newCenter - oldCenter;
     move(offset);
 }
 
@@ -78,9 +74,9 @@ void Shape::moveCenterTo(const cv::Point2f &newCenter) {
  * 将数据点的边框左上角移动到 leftTop
  * @param leftTop
  */
-void Shape::moveLeftTopTo(const cv::Point2f &leftTop) {
+void Shape::moveLeftTopTo(const Point &leftTop) {
     cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f offset = -bBox.tl() + leftTop;
+    Point offset = -bBox.tl() + leftTop;
     move(offset);
 }
 
@@ -92,11 +88,11 @@ void Shape::moveLeftTopTo(const cv::Point2f &leftTop) {
  */
 void Shape::resizeTo(float w, float h, bool keepRatio) {
     cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
+    Point oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
     float oldW = bBox.width, oldH = bBox.height;
     float kx = w / oldW;
     float ky = h / oldH;
-    moveLeftTopTo(cv::Point2f(0, 0));
+    moveLeftTopTo(Point(0, 0));
     if (keepRatio) {
         kx = ky = std::min(kx, ky);
     }
@@ -110,12 +106,12 @@ void Shape::resizeTo(float w, float h, bool keepRatio) {
  * @param rx 椭圆水平半径
  * @param ry 椭圆竖直半径
  */
-void Shape::castToCircle(const cv::Point2f &center, float rx, float ry) {
-    std::vector<cv::Point2f> from(4), to = {// just a square box
-            cv::Point2f(0, 0), cv::Point2f(0, 100),
-            cv::Point2f(100, 100), cv::Point2f(100, 0)
+void Shape::castToCircle(const Point &center, float rx, float ry) {
+    v<Point> from(4), to = {// just a square box
+            Point(0, 0), Point(0, 100),
+            Point(100, 100), Point(100, 0)
     };
-    std::vector<cv::Point2f> input;
+    v<Point> input;
     for (auto &stroke:mData) {
         std::copy(stroke.begin(), stroke.end(),
                   std::inserter(input, input.end()));
@@ -131,19 +127,19 @@ void Shape::castToCircle(const cv::Point2f &center, float rx, float ry) {
  * @param p1 起点
  * @param p2 终点
  */
-void Shape::castToLine(const cv::Point2f &pp1, const cv::Point2f &pp2, const float lThresh) {
+void Shape::castToLine(const Point &pp1, const Point &pp2, const float lThresh) {
     L:;
-    float kLen1=(rand() % 10) / 100 - 0.05;
-    float kLen2=(rand() % 10) / 100 - 0.05;
-    cv::Point2f p1 = pp1+(pp1-pp2)*kLen1, p2 = pp2+(pp2-pp1)*kLen2;
-//    cv::Point2f p1=pp1,p2=pp2;
+    float kLen1 = (rand() % 10) / 100 - 0.05;
+    float kLen2 = (rand() % 10) / 100 - 0.05;
+    Point p1 = pp1 + (pp1 - pp2) * kLen1, p2 = pp2 + (pp2 - pp1) * kLen2;
+//    Point p1=pp1,p2=pp2;
     float lenPP = distance(p1, p2);
     p1.x += lenPP * (rand() % 10) / 100 - 0.05;
     p2.x += lenPP * (rand() % 10) / 100 - 0.05;
     p1.y += lenPP * (rand() % 10) / 100 - 0.05;
     p2.y += lenPP * (rand() % 10) / 100 - 0.05;
-    std::vector<cv::Point2f> from(4), to;
-    std::vector<cv::Point2f> input;
+    v<Point> from(4), to;
+    v<Point> input;
     for (auto &stroke:mData) {
         std::copy(stroke.begin(), stroke.end(),
                   std::inserter(input, input.end()));
@@ -151,16 +147,16 @@ void Shape::castToLine(const cv::Point2f &pp1, const cv::Point2f &pp2, const flo
     cv::minAreaRect(input).points(from.data());
     auto s03 = distance(from[0], from[3]);
     auto s01 = distance(from[0], from[1]);
-    cv::Point2f vec = p1 - p2;
-    cv::Point2f vecT(0, 1);
+    Point vec = p1 - p2;
+    Point vecT(0, 1);
     if (vec.y != 0) {
-        vecT = cv::Point2f(-1, vec.x / vec.y);
+        vecT = Point(-1, vec.x / vec.y);
         vecT /= cv::norm(vecT);
     }
     float kk = s03 / s01;
     while (lThresh < kk && kk < 1 / lThresh) {
         mData.clear();
-        mData = std::move(HWChar::GetShape("line").mData);
+        mData = std::move(HandWritting::GetShape("line").mData);
 //        mData.emplace_back(Stroke({p1, p2}));
         goto L;
     }
@@ -179,7 +175,7 @@ void Shape::castToLine(const cv::Point2f &pp1, const cv::Point2f &pp2, const flo
  * @param from 三角形1
  * @param to 三角形2
  */
-void Shape::castBy(const PointArr &from, const PointArr &to) {
+void Shape::castBy(const v<Point> &from, const v<Point> &to) {
     // 2x3 仿射变换矩阵
     auto affine = cv::getAffineTransform(from.data(), to.data());
     for (auto &stroke:mData) {
@@ -194,4 +190,42 @@ void Shape::castBy(const PointArr &from, const PointArr &to) {
 
 Script &Shape::getData() {
     return mData;
+}
+
+cv::Rect2f getRect(const Stroke &stroke) {
+    if (stroke.empty()) {
+//        exit(-1);
+        return cv::Rect2f(0, 0, 1, 1);
+    }
+    float minx, miny, maxx, maxy;
+    minx = miny = std::numeric_limits<float>::max();
+    maxx = maxy = std::numeric_limits<float>::lowest();
+    for (auto &p:stroke) {
+        minx = std::min(minx, p.x);
+        miny = std::min(miny, p.y);
+        maxx = std::max(maxx, p.x);
+        maxy = std::max(maxy, p.y);
+    }
+    return cv::Rect2f(minx, miny, maxx - minx, maxy - miny);
+}
+
+cv::Rect2f getRect(const Script &script) {
+    if (script.empty()) {
+//        exit(-1);
+        return cv::Rect2f(0, 0, 1, 1);
+    }
+    float minx, miny, maxx, maxy;
+    minx = miny = std::numeric_limits<float>::max();
+    maxx = maxy = std::numeric_limits<float>::lowest();
+    for (auto &stroke:script) {
+        if (stroke.empty()) {
+            continue;
+        }
+        auto rect = getRect(stroke);
+        minx = std::min(minx, rect.x);
+        miny = std::min(miny, rect.y);
+        maxx = std::max(maxx, rect.x + rect.width);
+        maxy = std::max(maxy, rect.y + rect.height);
+    }
+    return cv::Rect2f(minx, miny, maxx - minx, maxy - miny);
 }

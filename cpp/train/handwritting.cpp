@@ -1,47 +1,74 @@
-//
-// Created by xgd on 2020/9/18.
-//
+#include "handwritting.hpp"
 
-#include "hwchar.hpp"
 #include <fstream>
+#include <iostream>
 
-bool HWChar::sIsLoaded = false;
+bool HandWritting::sIsLoaded = false;
 
-std::vector<std::vector<Script>> HWChar::sData;
+std::vector<std::vector<Script>> HandWritting::sData;
 
-std::vector<int>HWChar::sLabelCharLikeLine = {
+std::vector<int>HandWritting::sLabelCharLikeLine = {
         8, 24, 53,
         130, 134, 141, 146, 158,
         172
 };
 
-std::vector<int>HWChar::sLabelCharLikeCircle = {9, 21, 47};
+std::vector<int>HandWritting::sLabelCharLikeCircle = {9, 21, 47};
 
-HWChar::HWChar(int label) {
+Shape HandWritting::GetByIntLabel(int label) {
     if (!sIsLoaded) {
         LoadDataSet(get_couch_data_path());
         if (!sIsLoaded) {
-            std::cerr << "fail to load data from " << get_couch_data_path() << std::endl;
+            std::cerr << "fail to load data from "
+                      << get_couch_data_path() << std::endl;
             exit(-1);
         }
     }
     if (label >= sData.size()) {
-        std::cerr << "label " << label <<
-                  "out of boundary: [0," << sData.size() << ")" << std::endl;
+        std::cerr << "label " << label << "out of boundary: [0," <<
+                  sData.size() << ")" << std::endl;
         exit(-1);
     }
-    mLabel = label;
-    auto &scripts = sData[mLabel];
+    auto &scripts = sData[label];
     int tmp = rand() % scripts.size();
-    if (mLabel == 43) {
+    if (label == 43) {
         while (tmp == 43) {// 补丁：这个字符有问题
             tmp = rand() % scripts.size();
         }
     }
-    mData = scripts[tmp];
+    Shape shape;
+    shape.mLabel = label;
+    shape.mData = scripts[tmp];// 深拷贝
+    return std::move(shape);
 }
 
-std::map<std::string, int> HWChar::sStr2IntMap = {
+Shape HandWritting::GetByStrLabel(const std::string &label) {
+    auto resItr = sStr2IntMap.find(label);
+    if (resItr == sStr2IntMap.end()) {
+        std::cerr << "fail to find " << label
+                  << "in HWChar::sStr2IntMap" << std::endl;
+        exit(-1);
+    }
+    return std::move(GetByIntLabel(resItr->second));
+}
+
+Shape HandWritting::GetShape(const std::string &shape) {
+    if (shape == "line") {
+        return std::move(GetByIntLabel(
+                sLabelCharLikeLine[rand() % sLabelCharLikeLine.size()]));
+    } else if (shape == "circle") {
+        auto circle = GetByIntLabel(
+                sLabelCharLikeCircle[rand() % sLabelCharLikeCircle.size()]);
+        circle.castToCircle(cv::Point2f(50, 50), 50, 50);
+        return std::move(circle);
+    } else {
+        std::cerr << shape << " not supported! "
+                  << "Only \"line\" and \"circle\" supported!" << std::endl;
+        exit(-1);
+    }
+}
+
+std::map<std::string, int> HandWritting::sStr2IntMap = {
         {"!",  183},
         {"Ⅴ",  182},
         {"\"", 181},
@@ -227,17 +254,15 @@ std::map<std::string, int> HWChar::sStr2IntMap = {
         {"9",  1}
 };
 
-bool HWChar::LoadDataSet(const char *filename, bool clearBefore) {
-    if (clearBefore) {
-        sData.clear();
-    }
-    int a, b, c, d, e;
+void HandWritting::LoadDataSet(const char *filename, bool clearBefore) {
     std::ifstream ifsm(filename, std::ios::in | std::ios::binary);
     if (!ifsm.is_open()) {
         std::cerr << "fail to open " << filename << std::endl;
         sIsLoaded = false;
-        return sIsLoaded;
+        return;
     }
+    if (clearBefore) sData.clear();
+    int a, b, c, d, e;
     // 【标签索引】、【宽度】、【长度】、【笔画数目】
     while (ifsm.read(reinterpret_cast<char *>(&a), 4)) {
         ifsm.read(reinterpret_cast<char *>(&b), 4);
@@ -257,11 +282,11 @@ bool HWChar::LoadDataSet(const char *filename, bool clearBefore) {
         if (a >= sData.size()) {
             sData.resize(a + 1);
         }
-        sData[a].emplace_back(std::move(script));
+        sData[a].push_back(std::move(script));
     }
+    ifsm.close();
     for (auto &dat:sData) {
         dat.resize(dat.size());
     }
     sIsLoaded = true;
-    return sIsLoaded;
 }

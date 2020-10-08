@@ -1,4 +1,4 @@
-#include "interface.hpp"
+#include "statistic.hpp"
 
 float RC::sNormSizeK = 1.0;
 float RC::sSubSizeK = 1.0;
@@ -22,35 +22,3 @@ std::vector<std::string> RC::sElementData = {
         "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No",
         "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn"
 };
-
-const char *get_couch_data_path() {
-#ifdef WIN32
-    return "C:\\Users\\xgd\\source\\COCR\\data\\couch.dat";
-#elif defined(unix)
-    return "/media/xgd/Windows-SSD/Users/xgd/source/COCR/data/couch.dat";
-#endif
-}
-
-const char *get_drugbank_json_path() {
-#ifdef WIN32
-    return "C:\\Users\\xgd\\source\\COCR\\data\\drugbank.json";
-#elif defined(unix)
-    return "/media/xgd/Windows-SSD/Users/xgd/source/COCR/data/drugbank.json";
-#endif
-}
-
-const char *get_drugbank_h_json_path() {
-#ifdef WIN32
-    return "C:\\Users\\xgd\\source\\COCR\\data\\drugbank_h.json";
-#elif defined(unix)
-    return "/media/xgd/Windows-SSD/Users/xgd/source/COCR/data/drugbank_h.json";
-#endif
-}
-
-const char *get_chonps_json_path() {
-#ifdef WIN32
-    return "C:\\Users\\xgd\\source\\COCR\\data\\fake_chonps12345.json";
-#elif defined(unix)
-    return "/media/xgd/Windows-SSD/Users/xgd/source/COCR/data/fake_chonps12345.json";
-#endif
-}

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>part.simhei.ttf</file>
+    </qresource>
+</RCC>

@@ -1,6 +1,7 @@
 #include "mol.hpp"
-#include "hwchar.hpp"
+#include "handwritting.hpp"
 #include "bond.hpp"
+#include "statistic.hpp"
 
 #include <openbabel/obconversion.h>
 #include <openbabel/ring.h>
@@ -242,7 +243,7 @@ void Mol::resizeTo(float w, float h, bool keepRatio) {
 void Mol::testDraw() {
     symbols.clear();
     for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
-        auto sym = Symbol::GetSymbol(RC::sElementData[(*it)->GetAtomicNum()]);
+        auto sym = ShapeGroup::GetShapeGroup(RC::sElementData[(*it)->GetAtomicNum()]);
         // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
         sym->resizeTo(5, 5);
         sym->moveCenterTo(cv::Point2f((*it)->GetX(), (*it)->GetY()));

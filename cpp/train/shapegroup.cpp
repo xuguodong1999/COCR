@@ -1,64 +1,61 @@
-//
-// Created by xgd on 2020/9/18.
-//
-
-#include "symbol.hpp"
-#include "hwchar.hpp"
+#include "shapegroup.hpp"
+#include "statistic.hpp"
+#include "handwritting.hpp"
 
 
-void Symbol::setSNormSizeK(float sNormSizeK) {
+void ShapeGroup::setSNormSizeK(float sNormSizeK) {
     RC::sNormSizeK = sNormSizeK;
 }
 
-void Symbol::setSSubSizeK(float sSubSizeK) {
+void ShapeGroup::setSSubSizeK(float sSubSizeK) {
     RC::sSubSizeK = sSubSizeK;
 }
 
-void Symbol::setSNormOffsetKx(float sNormOffsetKx) {
+void ShapeGroup::setSNormOffsetKx(float sNormOffsetKx) {
     RC::sNormOffsetKx = sNormOffsetKx;
 }
 
-void Symbol::setSNormOffsetKy(float sNormOffsetKy) {
+void ShapeGroup::setSNormOffsetKy(float sNormOffsetKy) {
     RC::sNormOffsetKy = sNormOffsetKy;
 }
 
-void Symbol::setSSubOffsetKx(float sSubOffsetKx) {
+void ShapeGroup::setSSubOffsetKx(float sSubOffsetKx) {
     RC::sSubOffsetKx = sSubOffsetKx;
 }
 
-void Symbol::setSSubOffsetKy(float sSubOffsetKy) {
+void ShapeGroup::setSSubOffsetKy(float sSubOffsetKy) {
     RC::sSubOffsetKy = sSubOffsetKy;
 }
 
-void Symbol::setSAngleK(float sAngleK) {
+void ShapeGroup::setSAngleK(float sAngleK) {
     RC::sAngleK = sAngleK;
 }
 
-std::shared_ptr<Symbol> Symbol::GetSymbol(const std::string &_symbolType) {
-    std::shared_ptr<Symbol> symbol;
-    if (_symbolType == "positive") {
-        auto sym = HWChar::GetByStrLabel("⊕");
-        symbol = std::make_shared<Symbol>();
-        symbol->shapes.emplace_back(std::move(sym));
-    } else if (_symbolType == "negative") {
-        auto sym1 = HWChar::GetShape("circle");
+std::shared_ptr<ShapeGroup> ShapeGroup::GetShapeGroup(const std::string &_textType) {
+    std::shared_ptr<ShapeGroup> text;
+    if (_textType == "positive") {
+        auto sym = HandWritting::GetByStrLabel("⊕");
+        text = std::make_shared<ShapeGroup>();
+        text->shapes.emplace_back(std::move(sym));
+    } else if (_textType == "negative") {
+        auto sym1 = HandWritting::GetShape("circle");
         sym1.resizeTo(100, 100);
         sym1.moveCenterTo(cv::Point2f(50, 50));
-        auto sym2 = HWChar::GetByStrLabel("-");
+        auto sym2 = HandWritting::GetByStrLabel("-");
         // TODO: 分离随机要素
         sym2.resizeTo(80, 80);
         sym2.moveCenterTo(cv::Point2f(50, 50));
-        symbol = std::make_shared<Symbol>();
-        symbol->shapes.emplace_back(std::move(sym1));
-        symbol->shapes.emplace_back(std::move(sym2));
+        text = std::make_shared<ShapeGroup>();
+        text->shapes.emplace_back(std::move(sym1));
+        text->shapes.emplace_back(std::move(sym2));
     } else {
-        symbol = std::make_shared<Symbol>(makeNotedStringByChar(_symbolType));
+        text = std::make_shared<ShapeGroup>(makeNotedStringByChar(_textType));
     }
-    return symbol;
+    return text;
 }
 
-void Symbol::append(const NChar &c) {
-    auto sym = HWChar::GetByStrLabel(c.second);
+void ShapeGroup::append(const NChar &c) {
+    auto sym = HandWritting::GetByStrLabel(c.second);
     sym.rotate(30 * RC::sAngleK);
     float s = 100 * RC::sNormSizeK;
     float sx = 100 * RC::sNormOffsetKx;
@@ -120,7 +117,7 @@ void Symbol::append(const NChar &c) {
     shapes.emplace_back(std::move(sym));
 }
 
-void Symbol::resizeTo(float w, float h, bool keepRatio) {
+void ShapeGroup::resizeTo(float w, float h, bool keepRatio) {
     cv::Rect2f bBox = getBoundingBox();
     cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
     float oldW = bBox.width, oldH = bBox.height;
@@ -136,31 +133,31 @@ void Symbol::resizeTo(float w, float h, bool keepRatio) {
     moveCenterTo(oldCenter);
 }
 
-void Symbol::moveLeftTopTo(const cv::Point2f &leftTop) {
+void ShapeGroup::moveLeftTopTo(const cv::Point2f &leftTop) {
     cv::Rect2f bBox = getBoundingBox();
     cv::Point2f offset = -bBox.tl() + leftTop;
     move(offset);
 }
 
-void Symbol::moveCenterTo(const cv::Point2f &newCenter) {
+void ShapeGroup::moveCenterTo(const cv::Point2f &newCenter) {
 //    cv::Rect2f bBox = getBoundingBox();
 //    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
     auto oldCenter = getCenter();
-//    std::cout<<"in Symbol::moveCenterTo: old cent="<<oldCenter<<std::endl;
+//    std::cout<<"in ShapeGroup::moveCenterTo: old cent="<<oldCenter<<std::endl;
     cv::Point2f offset = newCenter - oldCenter;
     move(offset);
 }
 
-void Symbol::move(const cv::Point2f &offset) {
+void ShapeGroup::move(const cv::Point2f &offset) {
     for (auto &s:shapes) {
         s.move(offset);
     }
 }
 
-void Symbol::rotate(float angle) {
+void ShapeGroup::rotate(float angle) {
     float theta = -M_PI * angle / 180.0;
     auto oldCenter = getCenter();
-//    std::cout<<"in Symbol::rotate: old cent="<<oldCenter<<std::endl;
+//    std::cout<<"in ShapeGroup::rotate: old cent="<<oldCenter<<std::endl;
 //    moveCenterTo(cv::Point2f(0, 0));
     for (auto &s:shapes) {
 //        s.rotateTheta(theta);
@@ -169,14 +166,14 @@ void Symbol::rotate(float angle) {
 //    moveCenterTo(oldCenter);
 }
 
-void Symbol::rotateBy(float angle, const cv::Point2f &cent) {
+void ShapeGroup::rotateBy(float angle, const cv::Point2f &cent) {
     float theta = -M_PI * angle / 180;
     for (auto &s:shapes) {
         s.rotateThetaBy(theta, cent);
     }
 }
 
-const cv::Rect2f Symbol::getBoundingBox() const {
+const cv::Rect2f ShapeGroup::getBoundingBox() const {
     if (shapes.empty()) {
         return cv::Rect2f(0, 0, 1, 1);
     }
@@ -193,7 +190,7 @@ const cv::Rect2f Symbol::getBoundingBox() const {
     return cv::Rect2f(minx, miny, maxx - minx, maxy - miny);
 }
 
-void Symbol::paintTo(cv::Mat &canvas) {
+void ShapeGroup::paintTo(cv::Mat &canvas) {
     for (auto &shape:shapes) {
         shape.paintTo(canvas);
     }
