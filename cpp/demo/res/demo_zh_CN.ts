@@ -30,9 +30,13 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../main.qml" line="10"/>
         <source>Tabs</source>
-        <translation>标题</translation>
+        <translation type="vanished">标题</translation>
+    </message>
+    <message>
+        <location filename="../main.qml" line="10"/>
+        <source>MyTabs</source>
+        <translation>我的标签</translation>
     </message>
     <message>
         <location filename="../main.qml" line="34"/>
