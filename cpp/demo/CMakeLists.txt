@@ -1,13 +1,17 @@
 project(demo)
 
 set(TS_FILES ${CMAKE_CURRENT_LIST_DIR}/res/demo_zh_CN.ts)
-set(QM_FILES_INSTALL_PATH ${CMAKE_CURRENT_LIST_DIR}/res)
-qt5_create_translation(QM_FILES ${QM_FILES_INSTALL_PATH} ${TS_FILES})
+qt5_create_translation(QM_FILES
+        ${CMAKE_CURRENT_LIST_DIR}/main.qml
+        ${CMAKE_CURRENT_LIST_DIR}/Page1Form.ui.qml
+        ${CMAKE_CURRENT_LIST_DIR}/Page2Form.ui.qml
+        ${TS_FILES})
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc
         "<RCC>\n<qresource prefix=\"/\">\n<file alias=\"demo_zh_CN.qm\">demo_zh_CN.qm</file>\n</qresource>\n</RCC>")
 
 qt5_add_resources(RES_FILES
+        ${CMAKE_CURRENT_LIST_DIR}/qml.qrc
         ${CMAKE_CURRENT_LIST_DIR}/res/res.qrc
         ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc)
 
@@ -16,6 +20,12 @@ qt5_add_big_resources(BIG_RES_FILES ${CMAKE_CURRENT_LIST_DIR}/res/big_res.qrc)
 aux_source_directory(${CMAKE_CURRENT_LIST_DIR} SRC_FILES)
 
 set(EXECUTABLE_NAME ${PROJECT_NAME})
+
+add_custom_target(translations ALL DEPENDS ${QM_FILES})
+
+add_custom_target(resources ALL DEPENDS ${RES_FILES})
+
+add_dependencies(resources translations)
 
 if (ANDROID)
     add_library(${EXECUTABLE_NAME} SHARED ${SRC_FILES} ${RES_FILES} ${BIG_RES_FILES})
