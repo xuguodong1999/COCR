@@ -102,7 +102,6 @@ void Mol::LoopOn(const char *filename, const s &taskName) {
               << "ErrorOffset=" << doc.GetErrorOffset() << std::endl
               << "HasParseError=" << doc.HasParseError() << std::endl
               << "count=" << doc.GetArray().Size() << std::endl;
-    int ii = 0;
     for (const auto &obj:doc.GetArray()) {
         const auto smiles = obj["smiles"].GetString();
         Mol mol;
@@ -127,7 +126,6 @@ void Mol::LoopOn(const char *filename, const s &taskName) {
             RC::bsSet.insert(bond["stereo"].GetString());
         }
         mol.run(taskName);
-        std::cout << ii++ << ",";
     }
 }
 
@@ -248,6 +246,7 @@ void Mol::testDraw() {
         } else if ((*it)->GetBondOrder() == 3) {
             sym = Bond::GetBond("Triple");
         }
+        sym->setUseHandWrittenWChar(false);
         sym->setVertices(
                 {cv::Point2f((*it)->GetBeginAtom()->GetX(), (*it)->GetBeginAtom()->GetY()),
                  cv::Point2f((*it)->GetEndAtom()->GetX(), (*it)->GetEndAtom()->GetY())
@@ -263,8 +262,8 @@ void Mol::testDraw() {
     for (auto &ss:symbols) {
         cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
     }
-//    cv::imshow("1", img1);
-//    cv::waitKey(1);
+    cv::imshow("testDraw", img1);
+    cv::waitKey(0);
 }
 
 void Mol::mulK(float kx, float ky) {

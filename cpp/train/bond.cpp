@@ -10,7 +10,9 @@ Bond::Bond(const s &_bondType)
 }
 
 void Bond::updateShapes() {
-    isLatest = true;
+    if(mUseHWChar) {
+        isLatest = true;
+    }
     shapes.clear();
 }
 
@@ -132,7 +134,7 @@ void CircleBond::paintTo(cv::Mat &canvas) {
 }
 
 const cv::Rect2f CircleBond::getBoundingBox() const {
-    if (isLatest) { return ShapeGroup::getBoundingBox(); }
+    if (isLatest && mUseHWChar) { return ShapeGroup::getBoundingBox(); }
     float x, y;
     x = center.x - r;
     y = center.y - r;
@@ -457,8 +459,31 @@ void DashWedgeBond::paintTo(cv::Mat &canvas) {
             vecT /= cv::norm(vecT);
         }
         auto offset = vecT * length * intervalK;
-//        v<cv::Point> polygon = {from, to + offset / 2, to - offset / 2};
-//        cv::fillConvexPoly(canvas, polygon, color, lineType, shift);
+        auto to1 = to + offset / 2, to2 = to - offset / 2;
+        //         _ to1
+        // from--<          from-to1,from-to2采样
+        //        \__to2
+        float d[4] = {
+                -from.x + to1.x,
+                -from.y + to1.y,
+                -from.x + to2.x,
+                -from.y + to2.y
+        };
+        for (int i = 0; i < 4; i++)d[i] /= numOfSplit;
+        float x1, y1, x2, y2;
+        x1 = x2 = from.x;
+        y1 = y2 = from.y;
+        for (float i = 0; i <= 1.0; i += 1.0 / numOfSplit) {
+            cv::line(canvas, Point (x1,y1),Point (x2,y2),
+                     RC::get_shape_color(),
+                     RC::get_shape_thickness(),
+                     RC::get_shape_lineType(),
+                     RC::get_shape_shift());
+            x1 += d[0];
+            y1 += d[1];
+            x2 += d[2];
+            y2 += d[3];
+        }
     }
 }
 
