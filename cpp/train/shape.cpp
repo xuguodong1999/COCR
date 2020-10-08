@@ -2,7 +2,8 @@
 #include "handwritting.hpp"
 #include "statistic.hpp"
 #include <opencv2/opencv.hpp>
-ShapeInterface::ShapeInterface() :  isRotateAllowed(true){
+
+ShapeInterface::ShapeInterface() : isRotateAllowed(true) {
 }
 
 const Point ShapeInterface::getCenter() {

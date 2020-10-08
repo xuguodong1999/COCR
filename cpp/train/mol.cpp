@@ -102,6 +102,7 @@ void Mol::LoopOn(const char *filename, const s &taskName) {
               << "ErrorOffset=" << doc.GetErrorOffset() << std::endl
               << "HasParseError=" << doc.HasParseError() << std::endl
               << "count=" << doc.GetArray().Size() << std::endl;
+    int ii = 0;
     for (const auto &obj:doc.GetArray()) {
         const auto smiles = obj["smiles"].GetString();
         Mol mol;
@@ -126,6 +127,7 @@ void Mol::LoopOn(const char *filename, const s &taskName) {
             RC::bsSet.insert(bond["stereo"].GetString());
         }
         mol.run(taskName);
+        std::cout << ii++ << ",";
     }
 }
 
@@ -232,7 +234,7 @@ void Mol::testDraw() {
     }
     for (auto it = obMol.BeginBonds(); it != obMol.EndBonds(); it++) {
         // bond.atom.idx 根据 atom.idx
-        p < Bond > sym;
+        p <Bond> sym;
         if ((*it)->GetBondOrder() == 1) {
             if ((*it)->IsWedge()) {
                 sym = Bond::GetBond("SolidWedge");
@@ -252,7 +254,7 @@ void Mol::testDraw() {
                 });
         symbols.push_back(std::move(sym));
     }
-    const int www = 480 * 2, hhh = 320 * 2;
+    const int www = 1256, hhh = 640;
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
     this->rotate(rand() % 360);
     this->resizeTo(www - 20, hhh - 20);
@@ -261,8 +263,8 @@ void Mol::testDraw() {
     for (auto &ss:symbols) {
         cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
     }
-    cv::imshow("1", img1);
-    cv::waitKey(0);
+//    cv::imshow("1", img1);
+//    cv::waitKey(1);
 }
 
 void Mol::mulK(float kx, float ky) {

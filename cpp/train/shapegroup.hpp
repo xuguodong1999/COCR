@@ -64,11 +64,13 @@ public:
             this->name.append(c.second);
         }
     }
-    void mulK(float kx, float ky)override{
-        for(auto&s:shapes){
-            s.mulK(kx,ky);
+
+    void mulK(float kx, float ky) override {
+        for (auto &s:shapes) {
+            s.mulK(kx, ky);
         }
     }
+
     virtual void append(const NChar &c);
 
     virtual void resizeTo(float w, float h, bool keepRatio = true);

@@ -25,28 +25,35 @@ public:
     static std::set<int> acSet;
 
 
-    struct ShapeAttr{
+    struct ShapeAttr {
         //color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0)
-         int thickness;
-         int lineType;
-         int shift;
-         cv::Scalar color;
-         ShapeAttr():color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0){}
-     };
-    static void update_shape_attr(){
+        int thickness;
+        int lineType;
+        int shift;
+        cv::Scalar color;
+
+        ShapeAttr() : color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0) {}
+    };
+
+    static void update_shape_attr() {
 
     }
+
     static ShapeAttr shapeAttr;
-    static const int get_shape_shift(){
+
+    static const int get_shape_shift() {
         return shapeAttr.shift;
     }
-    static const int get_shape_thickness(){
+
+    static const int get_shape_thickness() {
         return shapeAttr.thickness;
     }
-    static const int get_shape_lineType(){
+
+    static const int get_shape_lineType() {
         return shapeAttr.lineType;
     }
-    static const cv::Scalar get_shape_color(){
+
+    static const cv::Scalar get_shape_color() {
         return shapeAttr.color;
     }
 };

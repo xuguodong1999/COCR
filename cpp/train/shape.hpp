@@ -5,10 +5,10 @@
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>
 
-const cv::Scalar cvBlack =cv::Scalar(0, 0, 0);
-const cv::Scalar cvWhite= cv::Scalar(255, 255, 255);
-const cv::Scalar cvBlue= cv::Scalar(255, 0, 0);
-const cv::Scalar cvRed =cv::Scalar(0, 0, 255);
+const cv::Scalar cvBlack = cv::Scalar(0, 0, 0);
+const cv::Scalar cvWhite = cv::Scalar(255, 255, 255);
+const cv::Scalar cvBlue = cv::Scalar(255, 0, 0);
+const cv::Scalar cvRed = cv::Scalar(0, 0, 255);
 
 using Point = cv::Point2f;
 using Stroke = v<Point>;
@@ -80,7 +80,7 @@ public:
 protected:
     bool isRotateAllowed;
 
-    ShapeInterface() ;
+    ShapeInterface();
 };
 
 class Shape : public ShapeInterface {

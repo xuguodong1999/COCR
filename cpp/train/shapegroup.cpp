@@ -187,7 +187,7 @@ const cv::Rect2f ShapeGroup::getBoundingBox() const {
         maxx = std::max(maxx, rect.x + rect.width);
         maxy = std::max(maxy, rect.y + rect.height);
     }
-    return cv::Rect2f(minx-1, miny-1, maxx - minx+2, maxy - miny+2);
+    return cv::Rect2f(minx - 1, miny - 1, maxx - minx + 2, maxy - miny + 2);
 }
 
 void ShapeGroup::paintTo(cv::Mat &canvas) {
