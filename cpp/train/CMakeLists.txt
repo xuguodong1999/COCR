@@ -4,22 +4,6 @@ aux_source_directory(${CMAKE_CURRENT_LIST_DIR} SRC_FILES)
 
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
-if (MSVC)
-    set(OpenBabel_DIR ${STATIC_LIBS_DIR}/openbabel-3.1.1)
-    include_directories(${OpenBabel_DIR}/include)
-    if (CMAKE_BUILD_TYPE)
-        if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
-            set(OpenBabel_LIBS ${OpenBabel_DIR}/staticlibs/openbabel-3d.lib)
-        endif ()
-    endif ()
-    if (NOT OpenBabel_LIBS)
-        set(OpenBabel_LIBS ${OpenBabel_DIR}/staticlibs/openbabel-3.lib)
-    endif ()
-elseif (UNIX)
-    set(OpenBabel_DIR /home/xgd/install/openbabel)
-    set(OpenBabel_LIBS ${OpenBabel_DIR}/lib/libopenbabel.so)
-endif ()
-
 add_executable(${EXECUTABLE_NAME} ${SRC_FILES})
 
 if (MSVC)

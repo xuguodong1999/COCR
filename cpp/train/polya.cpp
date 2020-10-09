@@ -22,7 +22,7 @@ void TryCalc_C_m(unsigned long long m);
 
 void Calc_C_m(unsigned long long m);
 
-int main() {
+int test() {
     unsigned long long num = 0;
 
     Calc_A_m(0);

@@ -1,32 +1,52 @@
 #include <QFont>
 #include <QFontDatabase>
+
 #include <QDebug>
+
 #include <QTranslator>
+
 #include <QApplication>
 #include <QQmlApplicationEngine>
-#include <QWidget>
+
 #include <QDir>
+#include <QWidget>
+
+#include <string>
+#include <filesystem>
+
 int main(int argc, char **argv) {
-#ifdef WIN32
-    _putenv("BABEL_DATADIR=C:\\StaticLibs\\openbabel-3.1.1\\data");
-#elif defined(unix)
-    putenv("BABEL_DATADIR=/home/xgd/install/openbabel/share/openbabel/3.1.0");
-#endif
+    qputenv("QML_DISABLE_DISK_CACHE", "1");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
-    QFontDatabase::addApplicationFont(QStringLiteral(":/fonts/cocr.simhei.ttf"));
-    QGuiApplication::setFont(QFont("simhei"));
-    QDir dir(":/");
-    qInfo()<<dir.entryList();
-    static QString fuck = QWidget::tr("test");
-    QTranslator translator;
-    if (translator.load(QStringLiteral(":/demo_zh_CN.qm"))) {
-        qInfo() << "load translation file: "
-                << QApplication::installTranslator(&translator);
+#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
+    const std::string obFsPrefix(std::filesystem::current_path().string() + "/data/");
+    _putenv_s("BABEL_DATADIR", obFsPrefix.c_str());
+    QDir dataDir(obFsPrefix.c_str());
+    if (!dataDir.exists()) {
+        dataDir.mkpath(obFsPrefix.c_str());
     }
-//    (new QWidget)->showNormal();
+    const QString obRccPrefix(":/obabel/");
+    for (const auto &entry:QDir(obRccPrefix).entryList()) {
+        QFile fileFs(obFsPrefix.c_str() + entry);
+        if (fileFs.exists())continue;
+        QFile fileRcc(obRccPrefix + entry);
+        fileRcc.open(QIODevice::ReadOnly);
+        fileFs.open(QIODevice::WriteOnly);
+        fileFs.write(fileRcc.readAll());
+        fileFs.close();
+        fileRcc.close();
+    }
+#endif//!Q_OS_ANDROID && !Q_OS_IOS
+    QFontDatabase::addApplicationFont(":/part.simhei.ttf");
+    QGuiApplication::setFont(QFont("simhei"));
+    QTranslator translator;
+    if (translator.load(":/demo_zh_CN.qm")) {
+        if (!QApplication::installTranslator(&translator)) {
+            qDebug() << "fail to load " << translator.filePath();
+        }
+    }
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url("qrc:/main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &a, [url](QObject *obj, const QUrl &objUrl) {
                 if (!obj && url == objUrl)

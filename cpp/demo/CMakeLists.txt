@@ -12,6 +12,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc
 
 qt5_add_resources(RES_FILES
         ${CMAKE_CURRENT_LIST_DIR}/qml.qrc
+        ${CMAKE_CURRENT_LIST_DIR}/res/obabel.qrc
         ${CMAKE_CURRENT_LIST_DIR}/res/res.qrc
         ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc)
 
@@ -47,11 +48,11 @@ target_compile_definitions(${EXECUTABLE_NAME} PRIVATE
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         ${OpenCV_LIBS}
-        # ${Qt_LIBRARIES}
-        Qt5::Core Qt5::Quick
+        ${OpenBabel_LIBS}
+        Qt5::Core Qt5::Quick Qt5::Widgets
         ${VTK_LIBRARIES}
         ${Boost_LIBRARIES}
-        ${TORCH_LIBRARIES})
+        ${TORCH_LIBRARIES} )
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES
         CXX_STANDARD 17

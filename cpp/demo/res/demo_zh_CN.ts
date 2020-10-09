@@ -30,13 +30,9 @@
 <context>
     <name>main</name>
     <message>
-        <source>Tabs</source>
-        <translation type="vanished">标题</translation>
-    </message>
-    <message>
         <location filename="../main.qml" line="10"/>
         <source>MyTabs</source>
-        <translation>我的标签</translation>
+        <translation>我的标题</translation>
     </message>
     <message>
         <location filename="../main.qml" line="34"/>
@@ -52,10 +48,6 @@
         <location filename="../main.qml" line="40"/>
         <source>Page 3</source>
         <translation>第三页</translation>
-    </message>
-    <message>
-        <source>nice to meet you</source>
-        <translation type="vanished">见到你真高兴</translation>
     </message>
 </context>
 </TS>

@@ -30,7 +30,8 @@ if (MSVC)
     include_directories(${EIGEN3_INCLUDE_DIR})
 
     set(Qt5_DIR C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5)
-    find_package(Qt5 REQUIRED COMPONENTS Core Quick LinguistTools)
+    find_package(Qt5 COMPONENTS Core Quick LinguistTools)
+
     set(CMAKE_AUTOUIC ON)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTORCC ON)
@@ -55,6 +56,23 @@ if (MSVC)
     include_directories(${RAPIDJSON_INCLUDE_DIRS})
 
 endif (MSVC)
+
+if (MSVC)
+    set(OpenBabel_DIR ${STATIC_LIBS_DIR}/openbabel-3.1.1)
+    include_directories(${OpenBabel_DIR}/include)
+    if (CMAKE_BUILD_TYPE)
+        if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
+            set(OpenBabel_LIBS ${OpenBabel_DIR}/staticlibs/openbabel-3d.lib)
+        endif ()
+    endif ()
+    if (NOT OpenBabel_LIBS)
+        set(OpenBabel_LIBS ${OpenBabel_DIR}/staticlibs/openbabel-3.lib)
+    endif ()
+elseif (UNIX)
+    set(OpenBabel_DIR /home/xgd/install/openbabel)
+    set(OpenBabel_LIBS ${OpenBabel_DIR}/lib/libopenbabel.so)
+endif ()
+
 
 set(CMAKE_DEBUG_POSTFIX d)
 
