@@ -76,5 +76,6 @@ endif ()
 
 set(CMAKE_DEBUG_POSTFIX d)
 
+# add_subdirectory(app)
 add_subdirectory(demo)
 add_subdirectory(train)
