@@ -232,7 +232,7 @@ void Mol::testDraw() {
     }
     for (auto it = obMol.BeginBonds(); it != obMol.EndBonds(); it++) {
         // bond.atom.idx 根据 atom.idx
-        p <Bond> sym;
+        p < Bond > sym;
         if ((*it)->GetBondOrder() == 1) {
             if ((*it)->IsWedge()) {
                 sym = Bond::GetBond("SolidWedge");
@@ -246,7 +246,7 @@ void Mol::testDraw() {
         } else if ((*it)->GetBondOrder() == 3) {
             sym = Bond::GetBond("Triple");
         }
-        sym->setUseHandWrittenWChar(false);
+        sym->setUseHandWrittenWChar(true);
         sym->setVertices(
                 {cv::Point2f((*it)->GetBeginAtom()->GetX(), (*it)->GetBeginAtom()->GetY()),
                  cv::Point2f((*it)->GetEndAtom()->GetX(), (*it)->GetEndAtom()->GetY())

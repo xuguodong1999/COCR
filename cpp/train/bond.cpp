@@ -10,7 +10,7 @@ Bond::Bond(const s &_bondType)
 }
 
 void Bond::updateShapes() {
-    if(mUseHWChar) {
+    if (mUseHWChar) {
         isLatest = true;
     }
     shapes.clear();
@@ -474,7 +474,7 @@ void DashWedgeBond::paintTo(cv::Mat &canvas) {
         x1 = x2 = from.x;
         y1 = y2 = from.y;
         for (float i = 0; i <= 1.0; i += 1.0 / numOfSplit) {
-            cv::line(canvas, Point (x1,y1),Point (x2,y2),
+            cv::line(canvas, Point(x1, y1), Point(x2, y2),
                      RC::get_shape_color(),
                      RC::get_shape_thickness(),
                      RC::get_shape_lineType(),

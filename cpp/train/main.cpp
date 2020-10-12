@@ -34,9 +34,12 @@ void loop(f<void(void)> demoFunc) {
     while (true) { demoFunc(); }
 }
 
+void trainSimpleClassifier();
+
+
 int main(int argc, char **argv) {
 #ifdef WIN32
-    _putenv("BABEL_DATADIR=C:\\StaticLibs\\openbabel-3.1.1\\data");
+    _putenv("BABEL_DATADIR=C:/StaticLibs/openbabel-3.1.1/data");
 #elif defined(unix)
     putenv("BABEL_DATADIR=/home/xgd/install/openbabel/share/openbabel/3.1.0");
 #endif
@@ -44,6 +47,10 @@ int main(int argc, char **argv) {
 //    demo_torch();
 //    std::cout<<demo_openbabel()<<std::endl;
 //    loop(demoMol);
-    demoMol();
+//    demoMol();
+
+
+        trainSimpleClassifier();
+
     return 0;
 }

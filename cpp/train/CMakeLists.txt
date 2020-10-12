@@ -18,7 +18,7 @@ endif (MSVC)
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         ${OpenBabel_LIBS}
         ${OpenCV_LIBS}
-        ${Boost_LIBRARIES}
+        # ${Boost_LIBRARIES}
         ${TORCH_LIBRARIES})
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES

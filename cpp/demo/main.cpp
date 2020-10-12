@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     QApplication a(argc, argv);
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     const std::string obFsPrefix(std::filesystem::current_path().string() + "/data/");
-    _putenv_s("BABEL_DATADIR", obFsPrefix.c_str());
+    putenv(const_cast<char*>(("BABEL_DATADIR="+obFsPrefix).c_str()));
     QDir dataDir(obFsPrefix.c_str());
     if (!dataDir.exists()) {
         dataDir.mkpath(obFsPrefix.c_str());
@@ -37,6 +37,7 @@ int main(int argc, char **argv) {
         fileRcc.close();
     }
 #endif//!Q_OS_ANDROID && !Q_OS_IOS
+    qInfo()<<QDir(":/").entryList();
     QFontDatabase::addApplicationFont(":/part.simhei.ttf");
     QGuiApplication::setFont(QFont("simhei"));
     QTranslator translator;

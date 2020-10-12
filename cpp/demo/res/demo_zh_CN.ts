@@ -6,12 +6,12 @@
     <message>
         <location filename="../Page1Form.ui.qml" line="9"/>
         <source>Page 1</source>
-        <translation>第一页</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Page1Form.ui.qml" line="15"/>
         <source>You are on Page 1.</source>
-        <translation>你在第一页哦</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -19,12 +19,12 @@
     <message>
         <location filename="../Page2Form.ui.qml" line="9"/>
         <source>Page 2</source>
-        <translation>第二页</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Page2Form.ui.qml" line="15"/>
         <source>You are on Page 2.</source>
-        <translation>你在第二页哈</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -32,22 +32,22 @@
     <message>
         <location filename="../main.qml" line="10"/>
         <source>MyTabs</source>
-        <translation>我的标题</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../main.qml" line="34"/>
         <source>Page 1</source>
-        <translation>第一页</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../main.qml" line="37"/>
         <source>Page 2</source>
-        <translation>第二页</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../main.qml" line="40"/>
         <source>Page 3</source>
-        <translation>第三页</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
