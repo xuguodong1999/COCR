@@ -1,0 +1,37 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(train)
+
+#opencv
+find_package(OpenCV REQUIRED)
+#boost
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost REQUIRED COMPONENTS coroutine filesystem thread)
+include_directories(${Boost_INCLUDE_DIR})
+#torch
+set(Torch_DIR /home/xgd/install/libtorch-latest/share/cmake/Torch)
+set(PYTORCH_VERSION "1.6.0")
+find_package(Torch ${PYTORCH_VERSION})
+include_directories(${TORCH_INCLUDE_DIRS})
+#rapidjson
+find_package(RapidJSON REQUIRED)
+include_directories(${RAPIDJSON_INCLUDE_DIRS})
+#openbabel
+set(OpenBabel_DIR /home/xgd/install/openbabel)
+include_directories(${OpenBabel_DIR}/include/openbabel3)
+set(OpenBabel_LIBS libopenbabel.so)
+# ${OpenBabel_DIR}/lib/libopenbabel.so)
+
+aux_source_directory(/mnt/c/Users/xgd/source/COCR/cpp/train SRC_FILES)
+
+set(EXECUTABLE_NAME ${PROJECT_NAME})
+
+add_executable(${EXECUTABLE_NAME} ${SRC_FILES})
+
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE
+	            ${OpenBabel_LIBS}
+		            ${OpenCV_LIBS}
+			            ${Boost_LIBRARIES}
+				            ${TORCH_LIBRARIES})
+
+

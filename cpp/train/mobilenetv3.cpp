@@ -334,19 +334,12 @@ MobileNetV3::MobileNetV3(int num_classes) :
 }
 
 torch::Tensor MobileNetV3::forward(torch::Tensor x) {
-    std::cout<<"0:"<<x.sizes()<<std::endl;
     auto out = act_in->forward(bn_in->forward(conv_in->forward(x)));
-    std::cout<<"1:"<<out.sizes()<<std::endl;
     out = bneck->forward(out);
-    std::cout<<"2:"<<out.sizes()<<std::endl;
     out = act_bneck_out->forward(bn_bneck_out->forward(conv_bneck_out->forward(out)));
-    std::cout<<"3:"<<out.sizes()<<std::endl;
     out = torch::adaptive_avg_pool2d(out, {1, 1});
-    std::cout<<"4:"<<out.sizes()<<std::endl;
     out = act_fc1->forward(bn_fc1->forward(conv_fc1->forward(out)));
-    std::cout<<"5:"<<out.sizes()<<std::endl;
     out = conv_fc2->forward(out);
-    std::cout<<"6:"<<out.sizes()<<std::endl;
     out = out.view({out.size(0), -1});
     return torch::log_softmax(out, 1);
 }

@@ -2,24 +2,24 @@
 #include <torch/torch.h>
 #include <fstream>
 
+#include <Windows.h>
 void trainSimpleClassifier() {
     auto cuda_available = torch::cuda::is_available();
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
-    auto net = std::make_shared<MobileNetV3>(10);
+    auto net = std::make_shared<MobileNetV3>(4096);
     net->to(device);
 //    torch::load(net,"/tmp/mv3.pt");
-    auto test_img = torch::rand({2, 3, 640, 416}).to(device);
-    std::cout << test_img.sizes() << std::endl;
-    // try {
-        while(1){
+    auto test_img = torch::rand({10, 3, 416, 416}).to(device);
+    while(1) {
+//        std::cout << test_img.sizes() << std::endl;
         auto test_out = net->forward(test_img);
+//        std::cout << test_out.sizes() << std::endl;
+//        Sleep(10);
+    }
+}
 
-        std::cout << test_out.sizes() << std::endl;
-        }
-    // } catch (std::exception e) {
-        // std::cerr << e.what() << std::endl;
-    // }
-//    s model_path = "D:/mv3.pt";
+void test_() {
+    //    s model_path = "D:/mv3.pt";
     // way 1 2 work between cpp but error from cpp to python
     // way 1
 //    torch::serialize::OutputArchive output_archive;
