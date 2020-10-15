@@ -13,11 +13,7 @@
 
 #include <string>
 #include <filesystem>
-
-int main(int argc, char **argv) {
-    qputenv("QML_DISABLE_DISK_CACHE", "1");
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QApplication a(argc, argv);
+void releaseOBabelData(){
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     const std::string obFsPrefix(std::filesystem::current_path().string() + "/data/");
     putenv(const_cast<char*>(("BABEL_DATADIR="+obFsPrefix).c_str()));
@@ -37,21 +33,34 @@ int main(int argc, char **argv) {
         fileRcc.close();
     }
 #endif//!Q_OS_ANDROID && !Q_OS_IOS
-    qInfo()<<QDir(":/").entryList();
+}
+void addFontData(){
     QFontDatabase::addApplicationFont(":/part.simhei.ttf");
     QGuiApplication::setFont(QFont("simhei"));
-    QTranslator translator;
+}
+void addTranslator(){
+    static QTranslator translator;
     if (translator.load(":/demo_zh_CN.qm")) {
         if (!QApplication::installTranslator(&translator)) {
             qDebug() << "fail to load " << translator.filePath();
         }
     }
+}
+int main(int argc, char **argv) {
+    qputenv("QML_DISABLE_DISK_CACHE", "1");
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication a(argc, argv);
+    releaseOBabelData();
+    qInfo()<<QDir(":/").entryList();
+    addFontData();
+    addTranslator();
     QQmlApplicationEngine engine;
     const QUrl url("qrc:/main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &a, [url](QObject *obj, const QUrl &objUrl) {
-                if (!obj && url == objUrl)
+                if (!obj && url == objUrl) {
                     QCoreApplication::exit(-1);
+                }
             }, Qt::QueuedConnection);
     engine.load(url);
     return a.exec();

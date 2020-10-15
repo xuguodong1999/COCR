@@ -1,20 +1,20 @@
 #include "mobilenetv3.hpp"
 #include <torch/torch.h>
 #include <fstream>
-
-#include <Windows.h>
+#include<chrono>
+#include<thread>
 void trainSimpleClassifier() {
     auto cuda_available = torch::cuda::is_available();
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
     auto net = std::make_shared<MobileNetV3>(4096);
     net->to(device);
-//    torch::load(net,"/tmp/mv3.pt");
     auto test_img = torch::rand({10, 3, 416, 416}).to(device);
     while(1) {
 //        std::cout << test_img.sizes() << std::endl;
         auto test_out = net->forward(test_img);
 //        std::cout << test_out.sizes() << std::endl;
-//        Sleep(10);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
     }
 }
 

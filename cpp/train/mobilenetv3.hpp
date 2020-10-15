@@ -3,7 +3,7 @@
 
 #include "config.hpp"
 
-#include <torch/nn.h>
+#include <torch/torch.h>
 
 class HSwishImpl : public torch::nn::Module {
 public:

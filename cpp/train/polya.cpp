@@ -6,19 +6,11 @@ unsigned long long A[MAX_CARBON + 1] = {0};
 unsigned long long P[MAX_CARBON + 1] = {0}, Q[MAX_CARBON + 1] = {0};
 unsigned long long C[MAX_CARBON + 1] = {0};
 
-void TryCalc_A_m(unsigned long long m);
-
 void Calc_A_m(unsigned long long m);
-
-void TryCalc_P_m(unsigned long long m);
 
 void Calc_P_m(unsigned long long m);
 
-void TryCalc_Q_m(unsigned long long m);
-
 void Calc_Q_m(unsigned long long m);
-
-void TryCalc_C_m(unsigned long long m);
 
 void Calc_C_m(unsigned long long m);
 
@@ -43,15 +35,6 @@ int test() {
     return 0;
 }
 
-void TryCalc_A_m(unsigned long long m) {
-    /*  m >= 0 for A[m]  */
-    unsigned long long i = 0;
-
-    for (i = 0; i <= m; i++)
-        if (!A[i])
-            Calc_A_m(i);
-    return;
-}
 
 void Calc_A_m(unsigned long long m) {
     /*  m >= 0 for A[m]  */
@@ -85,17 +68,6 @@ void Calc_A_m(unsigned long long m) {
     return;
 }
 
-void TryCalc_P_m(unsigned long long m) {
-    /*  m >= 1 for P[m]  */
-    unsigned long long i = 0;
-
-    for (i = 0; i <= m; i++)
-        if (!A[i])
-            Calc_A_m(i);
-    if (!P[m])
-        Calc_P_m(m);
-    return;
-}
 
 void Calc_P_m(unsigned long long m) {
     /*  m >= 1 for P[m]  */
@@ -137,17 +109,6 @@ void Calc_P_m(unsigned long long m) {
     return;
 }
 
-void TryCalc_Q_m(unsigned long long m) {
-    /*  m >= 1 for Q[m]  */
-    unsigned long long i = 0;
-
-    for (i = 0; i <= m; i++)
-        if (!A[i])
-            Calc_A_m(i);
-    if (!Q[m] && m != 1)
-        Calc_Q_m(m);
-    return;
-}
 
 void Calc_Q_m(unsigned long long m) {
     /*  m >= 1 for Q[m]  */
@@ -176,26 +137,6 @@ void Calc_Q_m(unsigned long long m) {
     return;
 }
 
-void TryCalc_C_m(unsigned long long m) {
-    /*  m >= 1 for C[m]  */
-    unsigned long long i = 1;
-
-    if (!A[0])
-        Calc_A_m(0);
-    if (!A[1])
-        Calc_A_m(1);
-    if (!P[1])
-        Calc_P_m(1);
-    for (i = 2; i <= m; i++) {
-        if (!A[i])
-            Calc_A_m(i);
-        if (!P[i])
-            Calc_P_m(i);
-        if (!Q[i])
-            Calc_Q_m(i);
-    }
-    return;
-}
 
 void Calc_C_m(unsigned long long m) {
     /*  m >= 1 for C[m]  */
