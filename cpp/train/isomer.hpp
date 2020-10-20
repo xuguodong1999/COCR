@@ -36,7 +36,7 @@ public:
         counter.clear();
         counter.resize(n + 1, 0);
         try {
-            smiles.insert("C");
+            smiles.insert("()");
             lastSet.emplace_back(getCarbon());                    // C1
             if (n == 1) {
                 return true;
@@ -54,14 +54,15 @@ public:
                             current.add(j, size);// 获得一个新结构
                             auto hash = current.toString();
                             if (newSmiles.insert(hash).second) {// 遇到一种新结构
-                                counter[j]++;                   // 计数++
+                                counter[i]++;                   // 计数++
                                 curSet.emplace_back(current);   // 记下新结构的图数据
+//                                std::cout<<"hash="<<hash<<std::endl;
                             }
                             current.del(j, size);               // 撤销新结构
                         }
                     }
                     swap(lastSet, curSet);               // 用i碳图结构置换i-1碳图结构
-                    smiles.insert(newSmiles.begin(), newSmiles.end());
+//                    smiles.insert(newSmiles.begin(), newSmiles.end());
                 }
             }
         } catch (std::exception e) {

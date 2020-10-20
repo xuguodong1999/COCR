@@ -54,11 +54,9 @@ template<typename T>
 inline void test_graph() {
     using namespace std;
     using number = T;
-    stringstream input("0 1 "
-                       "2 1 "
-                       "2 3 "
-                       "3 4 "
-                       "4 5 ");
+    stringstream input("1 0 "
+                       "1 2 "
+                       "1 3 ");
     UGraph<number> ut;
     input >> ut;
     std::cout << ut.toString() << std::endl;
@@ -96,6 +94,15 @@ int main(int argc, char **argv) {
 //    trainSimpleClassifier();
 //    auto &ic = IsomerCounter::getInstance();
 //    ic.calculate(1);
-    test_graph<int>();
+//    test_graph<int>();
+    auto &IC = IsomerCounter::getInstance();
+    IC.calculate(23);
+//    for(auto &i:IC.smiles){
+//        std::cout<<i<<std::endl;
+//    }
+    for (auto &i:IC.counter) {
+        std::cout << i << std::endl;
+    }
     return 0;
+
 }

@@ -225,6 +225,7 @@ public:
     std::string toString() override {
         using namespace std;
         auto size = getNodeNum();
+//        std::cout << size << std::endl;
         vector<int> subTreeSize(size, 0), maxSubTreeSize(size, 0);
         auto before = [&](Graph<T> &g, const T &current, const T &from) {
             subTreeSize[current] = 1;       // 当前节点初始化大小为1，临时变量，记录current所在子树的大小
@@ -242,23 +243,22 @@ public:
                     (int) size - subTreeSize[current]);// 另一侧会不会更大呢
         };
         dfsWrapper(before, in, after);
-        auto minST = *min_element(maxSubTreeSize.begin(), maxSubTreeSize.end());//  最大子树的节点数
-        cout << minST << std::endl;
+        auto minST = *min_element(maxSubTreeSize.begin(), maxSubTreeSize.end());//  最大子树的节点数最小
+//        cout << minST << std::endl;
 
         std::string finalSeq = "";
         std::vector<std::string> partSeq, allSeq;
         partSeq.resize(size, "");
         allSeq.resize(size, "");
         auto before2 = [&](Graph<T> &_g, const T &current, const T &from) {
-            allSeq[current] = "(C";
+            allSeq[current] = "(";
         };
         auto in2 = [&](Graph<T> &_g, const T &current, const T &from) {
-
         };
         auto after2 = [&](Graph<T> &_g, const T &current, const T &from) {
             int now = 0;
             for (auto &neighbor:_g.getData().at(current)) {
-                if (neighbor != from) {
+                if (neighbor != from || from == std::numeric_limits<T>::max()) {
                     partSeq[now++] = allSeq[neighbor];
                 }
             }
@@ -270,11 +270,15 @@ public:
         };
         for (auto i = 0; i < size; i++) {                //  处理两个重心
             if (maxSubTreeSize[i] == minST) {        //  等于最大子树的节点数
-                dfsWrapper(before2, in2, after2);
+//                std::cout<<"i="<<i<<std::endl;
+                dfs2(i, std::numeric_limits<T>::max(), before2, in2, after2);
                 if (allSeq[i] > finalSeq)
                     finalSeq = allSeq[i];
             }
         }
+//        for(auto&i:allSeq){
+//            std::cout<<i<<",";
+//        }std::cout<<std::endl;
         return finalSeq;
     }
 
@@ -290,6 +294,21 @@ private:
         }
         after(*this, current, from);
         state[current] = Graph<T>::BLACK;
+    }
+
+    void dfs2(const T &current, const T &from, traverse before, traverse in, traverse after) {
+//        state[current] = Graph<T>::GRAY;
+        before(*this, current, from);
+        for (auto &neighbor:dat[current]) {
+//            if (state[neighbor] == Graph<T>::WHITE && neighbor != from) {
+            if (neighbor != from || from == std::numeric_limits<T>::max()) {
+//                std::cout<<"neighbor="<<neighbor<<std::endl;
+                dfs2(neighbor, current, before, in, after);
+                in(*this, neighbor, current);
+            }
+        }
+        after(*this, current, from);// ( ((())) (()) )
+//        state[current] = Graph<T>::BLACK;
     }
 };
 
