@@ -76,7 +76,7 @@ private:
 
     ~IsomerCounter() {}
 
-    IsomerCounter(const IsomerCounter &)=delete;
+    IsomerCounter(const IsomerCounter &) = delete;
 
     const IsomerCounter &operator=(const IsomerCounter &) = delete;
 };

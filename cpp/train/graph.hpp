@@ -8,6 +8,10 @@
 #include <algorithm>
 #include <functional>
 
+/**
+ * 图的虚基类
+ * @tparam T 索引类型
+ */
 template<typename T>
 class Graph {
 public:
@@ -53,7 +57,8 @@ public:
         return dat[from].find(to) != dat[from].end();
     }
 
-    typedef std::function<void(Graph<T> &, const T &, const T &)> traverse;
+    using traverse = std::function<void(Graph<T> &, const T &, const T &)>;
+
     const traverse idle = [](Graph<T> &, const T &, const T &) {};
 
     /**
@@ -61,14 +66,15 @@ public:
      * @param in 处理一个结点的一个邻居节点后
      * @param after 处理完一个节点的额所有节点，即将离开这个节点
      */
-    virtual void dfsWrapper(traverse before, traverse in, traverse after) =0;
+    virtual void dfsWrapper(traverse before, traverse in, traverse after) = 0;
 
     /**
      * @param enterQueue 遇到一个节点，将它加入队列
      * @param in 从队列取出一个节点，处理这个节点
      * @param after 一个节点的所有邻居入队列，即将离开or丢失这个节点
      */
-    virtual void bfsWrapper(traverse enterQueue, traverse in, traverse after) =0;
+    virtual void bfsWrapper(traverse enterQueue, traverse in, traverse after) = 0;
+
     virtual std::string toString() = 0;
 
     friend inline std::istream &operator>>(std::istream &in, Graph<T> &g) {
@@ -122,6 +128,10 @@ public:
 
 };
 
+/**
+ * 无向图实现
+ * @tparam T 索引类型
+ */
 template<typename T>
 class UGraph : public Graph<T> {
 public:
@@ -131,6 +141,7 @@ public:
     using Graph<T>::state;
     using Graph<T>::dat;
     using Graph<T>::idle;
+    using typename Graph<T>::traverse;
 
     UGraph(const std::string name = "UnrootedTree") : Graph<T>(name) {
         dat.resize(1);
@@ -158,7 +169,6 @@ public:
         } catch (std::exception e) {}
     }
 
-    using typename Graph<T>::traverse;
     /**
      * @param before 来到一个结点，处理它的邻居节点之前
      * @param in 处理一个结点的一个邻居节点后
@@ -235,38 +245,37 @@ public:
         auto minST = *min_element(maxSubTreeSize.begin(), maxSubTreeSize.end());//  最大子树的节点数
         cout << minST << std::endl;
 
-//            std::string finalSeq = "";
-//            std::vector<std::string> partSeq, allSeq;
-//            partSeq.resize(size, "");
-//            allSeq.resize(size, "");
-//            auto before2 = [&](cocr::Graph<unsigned char> &_g, const unsigned char &current,
-//                               const unsigned char &from) {
-//                allSeq[current] = "(";
-//            };
-//            auto in2 = [&](cocr::Graph<unsigned char> &_g, const unsigned char &current, const unsigned char &from) {
-//
-//            };
-//            auto after2 = [&](cocr::Graph<unsigned char> &_g, const unsigned char &current, const unsigned char &from) {
-//                int now = 0;
-//                for (auto &neighbor:_g.getData().at(current)) {
-//                    if (neighbor != from) {
-//                        partSeq[now++] = allSeq[neighbor];
-//                    }
-//                }
-//                sort(partSeq.begin(), partSeq.begin() + now);
-//                for (int i = 0; i < now; i++)
-//                    allSeq[current] += partSeq[i];
-//                allSeq[current] += ")";
-//            };
-//            for (auto i = 0; i < size; i++) {                //  处理两个重心
-//                if (maxSubTreeSize[i] == minST) {        //  等于最大子树的节点数
-//                    dfsWrapper(before2, in2, after2);
-//                    if (allSeq[i] > finalSeq)
-//                        finalSeq = allSeq[i];
-//                }
-//            }
-//            return finalSeq;
-        return "";
+        std::string finalSeq = "";
+        std::vector<std::string> partSeq, allSeq;
+        partSeq.resize(size, "");
+        allSeq.resize(size, "");
+        auto before2 = [&](Graph<T> &_g, const T &current, const T &from) {
+            allSeq[current] = "(C";
+        };
+        auto in2 = [&](Graph<T> &_g, const T &current, const T &from) {
+
+        };
+        auto after2 = [&](Graph<T> &_g, const T &current, const T &from) {
+            int now = 0;
+            for (auto &neighbor:_g.getData().at(current)) {
+                if (neighbor != from) {
+                    partSeq[now++] = allSeq[neighbor];
+                }
+            }
+            sort(partSeq.begin(), partSeq.begin() + now);
+            for (int i = 0; i < now; i++) {
+                allSeq[current] += partSeq[i];
+            }
+            allSeq[current] += ")";
+        };
+        for (auto i = 0; i < size; i++) {                //  处理两个重心
+            if (maxSubTreeSize[i] == minST) {        //  等于最大子树的节点数
+                dfsWrapper(before2, in2, after2);
+                if (allSeq[i] > finalSeq)
+                    finalSeq = allSeq[i];
+            }
+        }
+        return finalSeq;
     }
 
 private:

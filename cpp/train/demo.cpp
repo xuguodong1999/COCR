@@ -14,14 +14,16 @@
 
 
 #include "activation.hpp"
-void testSwish(){
-    torch::Tensor x=torch::tensor(0.5);
+
+void testSwish() {
+    torch::Tensor x = torch::tensor(0.5);
     MemoryEfficientSwish activation;
-    auto y=activation->forward(x);
-    std::cout<<"y="<<y<<std::endl;
-    y=activation->forward(x);
-    std::cout<<"y="<<y<<std::endl;
+    auto y = activation->forward(x);
+    std::cout << "y=" << y << std::endl;
+    y = activation->forward(x);
+    std::cout << "y=" << y << std::endl;
 }
+
 const int www = 480, hhh = 320;
 
 void demoSingle() {

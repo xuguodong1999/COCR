@@ -49,28 +49,26 @@ inline void put_env() {
 #include "isomer.hpp"
 #include "graph.hpp"
 #include <sstream>
+
 template<typename T>
 inline void test_graph() {
     using namespace std;
-    using number=T;
-    stringstream input("6 1 "
-                       "5 1 "
+    using number = T;
+    stringstream input("0 1 "
                        "2 1 "
-                       "3 1 "
-                       "7 2 "
-                       "4 2 "
-                       "0 3 "
-                       "0 4 ");
+                       "2 3 "
+                       "3 4 "
+                       "4 5 ");
     UGraph<number> ut;
     input >> ut;
-    ut.toString();
+    std::cout << ut.toString() << std::endl;
     exit(-1);
     set<number> nodes;
     auto simpleLogTraverse = [&](Graph<number> &g, const number &current, const number &from) {
         cout << (long long) current << " is visited! My father node is "
              << (long long) from << " and here are my neighbors: [";
         // 节点只被处理一次
-        std::cout<<"gtest::EXPECT_EQ="<<(nodes.find(current)==nodes.end())<<std::endl;
+        std::cout << "gtest::EXPECT_EQ=" << (nodes.find(current) == nodes.end()) << std::endl;
         nodes.insert(current);
         for (auto &neighbor:g.getData()[current]) {
             cout << (long long) neighbor << ",";

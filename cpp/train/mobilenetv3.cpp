@@ -17,7 +17,7 @@ torch::Tensor HSigmoidImpl::forward(torch::Tensor x) {
     return y;
 }
 
-SeModuleImpl::SeModuleImpl(int in_size, int reduction) :se(
+SeModuleImpl::SeModuleImpl(int in_size, int reduction) : se(
         torch::nn::AdaptiveAvgPool2d(torch::nn::AdaptiveAvgPool2dOptions({1, 1})),
 //        torch::nn::Linear(torch::nn::LinearOptions(in_size,in_size/reduction)),
         torch::nn::Conv2d(torch::nn::Conv2dOptions(
@@ -27,10 +27,10 @@ SeModuleImpl::SeModuleImpl(int in_size, int reduction) :se(
         torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
         torch::nn::Conv2d(torch::nn::Conv2dOptions(
                 in_size / reduction, in_size, {1, 1}
-                ).bias(false)),
+        ).bias(false)),
 //        torch::nn::Linear(torch::nn::LinearOptions(in_size/reduction,in_size)),
         torch::nn::BatchNorm2d(in_size),
-        HSigmoid())  {
+        HSigmoid()) {
     register_module("se", se);
 };
 
@@ -169,7 +169,7 @@ BlockReLUModuleImpl::BlockReLUModuleImpl(
                 torch::nn::Conv2d(torch::nn::Conv2dOptions(
                         in_size, out_size, {1, 1}).bias(false)),
                 torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_size))
-                );
+        );
     }
 
     register_module("conv1", conv1);
