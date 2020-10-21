@@ -1,7 +1,7 @@
 #include <cstdio>
 
-#define MAX_CARBON 10240
-#define CALC_CARBON 28
+#define MAX_CARBON 1024000
+#define CALC_CARBON 32
 unsigned long long A[MAX_CARBON + 1] = {0};
 unsigned long long P[MAX_CARBON + 1] = {0}, Q[MAX_CARBON + 1] = {0};
 unsigned long long C[MAX_CARBON + 1] = {0};
@@ -14,7 +14,10 @@ void Calc_Q_m(unsigned long long m);
 
 void Calc_C_m(unsigned long long m);
 
+#include <iostream>
+
 int test() {
+    std::cout<<std::numeric_limits<unsigned long long>::max()<<std::endl;
     unsigned long long num = 0;
 
     Calc_A_m(0);

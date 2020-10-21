@@ -47,41 +47,7 @@ inline void put_env() {
 }
 
 #include "isomer.hpp"
-#include "graph.hpp"
 #include <sstream>
-
-template<typename T>
-inline void test_graph() {
-    using namespace std;
-    using number = T;
-    stringstream input("1 0 "
-                       "1 2 "
-                       "1 3 ");
-    UGraph<number> ut;
-    input >> ut;
-    std::cout << ut.toString() << std::endl;
-    exit(-1);
-    set<number> nodes;
-    auto simpleLogTraverse = [&](Graph<number> &g, const number &current, const number &from) {
-        cout << (long long) current << " is visited! My father node is "
-             << (long long) from << " and here are my neighbors: [";
-        // 节点只被处理一次
-        std::cout << "gtest::EXPECT_EQ=" << (nodes.find(current) == nodes.end()) << std::endl;
-        nodes.insert(current);
-        for (auto &neighbor:g.getData()[current]) {
-            cout << (long long) neighbor << ",";
-        }
-        cout << "]" << endl;
-    };
-    cout << "dfs" << endl;
-    nodes.clear();
-    ut.dfsWrapper(simpleLogTraverse, ut.idle, ut.idle);
-//    EXPECT_EQ(ut.getNodeNum(), nodes.size());
-    cout << "bfs" << endl;
-    nodes.clear();
-    ut.bfsWrapper(simpleLogTraverse, ut.idle, ut.idle);
-//    EXPECT_EQ(ut.getNodeNum(), nodes.size());
-}
 
 int main(int argc, char **argv) {
     put_env();
@@ -92,17 +58,23 @@ int main(int argc, char **argv) {
 //    demoMol();
 
 //    trainSimpleClassifier();
-//    auto &ic = IsomerCounter::getInstance();
-//    ic.calculate(1);
-//    test_graph<int>();
-    auto &IC = IsomerCounter::getInstance();
-    IC.calculate(23);
-//    for(auto &i:IC.smiles){
-//        std::cout<<i<<std::endl;
-//    }
-    for (auto &i:IC.counter) {
-        std::cout << i << std::endl;
-    }
+//    auto ag=AlkaneGraph<unsigned char>::GetInstance();
+//    ag.push_back(0,1);
+//    ag.push_back(1,2);
+//    ag.push_back(2,3);
+//    //212
+//    //10001010
+//    //100010011
+//    //11010100
+//    //( () () () )
+//    std::cout<<"hash by string="<<ag.toString()<<std::endl;
+//    std::cout<<"hash by uint_64="<<ag.hash()<<std::endl;
+//    ag.fromHash(ag.hash(),4);
+//    // 100
+//    // 001 000 000
+//    exit(-1);
+    auto &IC = IsomerCounter::GetInstance();
+    IC.calculate(30);
     return 0;
 
 }
