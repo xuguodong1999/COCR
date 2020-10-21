@@ -17,7 +17,7 @@ void Calc_C_m(unsigned long long m);
 #include <iostream>
 
 int test() {
-    std::cout<<std::numeric_limits<unsigned long long>::max()<<std::endl;
+    std::cout << std::numeric_limits<unsigned long long>::max() << std::endl;
     unsigned long long num = 0;
 
     Calc_A_m(0);

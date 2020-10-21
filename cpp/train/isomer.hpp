@@ -256,12 +256,13 @@ class IsomerCounter {
     int n;
     using node_type = unsigned char;
     std::unordered_set<hash_type> curSet;                // 新增部分的smiles
+    std::vector<hash_type> lastVec;
     using graph = AlkaneGraph<node_type>;
     std::vector<count_type> counter;                 // C1-n alkanetopo 数量计数器
 public:
     static IsomerCounter &GetInstance();
 
-    bool calculate(const int &numOfCarbon);
+    bool calculate(const int &numOfCarbon, const char *cache_dir = nullptr);
 
 private:
     IsomerCounter();
@@ -273,6 +274,8 @@ private:
     const IsomerCounter &operator=(const IsomerCounter &) = delete;
 
     void dump(const char *save_dir, const int &carbonNum);
+
+    void IsomerCounter::recover(const char *save_dir, const int &carbonNum);
 };
 
 #endif //_ISOMER_HPP_

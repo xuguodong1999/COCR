@@ -29,64 +29,81 @@ IsomerCounter &IsomerCounter::GetInstance() {
 }
 
 void IsomerCounter::dump(const char *save_dir, const int &carbonNum) {
-    std::ofstream ofsm(save_dir + std::string("/") + std::to_string(carbonNum) + ".dat");
+    std::ofstream ofsm(save_dir + std::string("/") + std::to_string(carbonNum) + ".dat",
+                       std::ios::out | std::ios::binary);
+    hash_type len = curSet.size();
+    ofsm.write(reinterpret_cast<const char *>( &len ), sizeof(len));
     for (auto &i:curSet) {
         ofsm.write(reinterpret_cast<const char *>( &i ), sizeof(i));
     }
     ofsm.close();
 }
 
-bool IsomerCounter::calculate(const int &numOfCarbon) {
+void IsomerCounter::recover(const char *save_dir, const int &carbonNum) {
+    std::ifstream ifsm(save_dir + std::string("/") + std::to_string(carbonNum) + ".dat",
+                       std::ios::in | std::ios::binary);
+    hash_type len;
+    ifsm.read(reinterpret_cast<char *>(&len), sizeof(len));
+    lastVec.resize(len);
+    for (hash_type i = 0; i < len; i++) {
+        ifsm.read(reinterpret_cast< char *>(&lastVec[i]), sizeof(hash_type));
+    }
+    ifsm.close();
+}
+
+bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
     if (numOfCarbon <= 0) {
         return false;
     }
     n = numOfCarbon;
     counter.clear();
     counter.resize(n + 1, 0);
-    try {
+
 //            smiles.insert(1);
-        std::unordered_set<hash_type> lastSet;
-        lastSet.insert(graph::GetInstance().hash());                    // C1
-        if (n == 1) {
-            return true;
-        } else {
-            graph current;                                 // current structure
-            for (int i = 2; i <= n; i++) {        // 由少到多迭代地计算
-                Timer timer;
-                timer.start();
-                curSet.clear();
-                while (!lastSet.empty()) {
-//                    for (auto &old:lastSet) {     // 对于i-1碳的所有合法结构
-                    current = graph(*lastSet.begin(), i - 1);    // 记录，对一个合法结构添加新碳
-                    lastSet.erase(lastSet.begin());
-                    const auto size = current.size();
-                    for (auto j = 0; j < size; j++) {       // 尝试在这个结构的所有位置插入新原子
-                        auto &node = current.at(j);
-                        if (node.size() >= 4) { continue; }
-                        auto check_and_record = [&]() -> void {
-                            auto hash_value = current.hash();
-                            if (curSet.insert(hash_value).second) {// 遇到一种新结构
-                                counter[i]++;                   // 计数++
-//                                curSet.push(current.hash());   // 记下新结构的图数据
-//                                if (hash_value != graph(hash_value, i).hash()) {
-//                                    std::cerr << hash_value << " vs "
-//                                              << graph(hash_value, i).hash() << std::endl;
-//                                }
-                            }
-                        };
-                        current.add_do_del(j, size, check_and_record);
+    lastVec.clear();
+    lastVec.push_back(graph::GetInstance().hash());                    // C1
+    if (n == 1) {
+        return true;
+    }
+    graph current;                                 // current structure
+    for (int i = 2; i <= n; i++) {        // 由少到多迭代地计算
+        Timer timer;
+        timer.start();
+        while (!lastVec.empty()) {
+            // 记录，对一个合法结构添加新碳
+            current = graph(lastVec.back(), i - 1);
+            lastVec.pop_back();
+            const auto size = current.size();
+            for (auto j = 0; j < size; j++) {       // 尝试在这个结构的所有位置插入新原子
+                auto &node = current.at(j);
+                if (node.size() >= 4) { continue; }
+                auto check_and_record = [&]() -> void {
+                    auto hash_value = current.hash();
+                    if (curSet.insert(hash_value).second) {// 遇到一种新结构
+                        counter[i]++;                   // 计数++
                     }
-                }
-                std::cout << "c-" << i << ": " << counter[i] << std::endl;
-                timer.stop(true);
-                dump("E:/alkane/",i);
-                swap(lastSet, curSet);  // 用i碳图结构置换i-1碳图结构
+                };
+                current.add_do_del(j, size, check_and_record);
             }
         }
-    } catch (std::exception e) {
-        std::cerr << e.what() << std::endl;
-        return false;
+        std::cout << "c-" << i << ": " << counter[i] << std::endl;
+        timer.stop(true);
+        std::vector<hash_type>().swap(lastVec);
+        if (nullptr == cache_dir) {
+            while (!curSet.empty()) {
+                lastVec.push_back(*curSet.begin());
+                curSet.erase(curSet.begin());
+            }
+            curSet.clear();
+            lastVec.resize(lastVec.size());
+        } else {
+            dump(cache_dir, i);
+            curSet.clear();
+            recover(cache_dir, i);
+        }
     }
+
+
     return true;
 }
 
