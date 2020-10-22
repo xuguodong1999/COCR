@@ -141,8 +141,8 @@ public:
         content.resize(1);
     }
 
-    AlkaneGraph(const hash_type &hash_value, const count_type &carbonNum) {
-        fromHash(hash_value, carbonNum);
+    AlkaneGraph(const hash_type &hash_value) {
+        fromHash(hash_value);
     }
 
     AlkaneGraph(const AlkaneGraph &_ag) {
@@ -193,8 +193,8 @@ public:
         return AlkaneGraph<T>();
     }
 
-    void fromHash(const hash_type &hash_value, int numOfCarbon) {
-        if (numOfCarbon == 1) {
+    void fromHash(const hash_type &hash_value) {
+        if (hash_value <= 2) {
             *this = GetInstance();
             return;
         }
@@ -263,7 +263,7 @@ public:
     static IsomerCounter &GetInstance();
 
     bool calculate(const int &numOfCarbon, const char *cache_dir = nullptr);
-
+    void calculate_i_from_imm(const char *_cache_dir,const int&_i);
 private:
     IsomerCounter();
 

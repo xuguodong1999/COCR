@@ -74,7 +74,8 @@ int main(int argc, char **argv) {
 //    // 001 000 000
 //    exit(-1);
     auto &IC = IsomerCounter::GetInstance();
-    IC.calculate(32, "D:\\TEMP\\alkane");
+    //IC.calculate(18, "D:/alkane");
+    IC.calculate_i_from_imm("D:/alkane",21);
     return 0;
 
 }

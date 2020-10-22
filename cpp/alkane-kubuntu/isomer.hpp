@@ -1,7 +1,7 @@
 #ifndef _ISOMER_HPP_
 #define _ISOMER_HPP_
 
-#include <algorithm>
+//#include "graph.hpp"
 #include <vector>
 #include <string>
 #include <chrono>
@@ -13,7 +13,6 @@
 #include <iomanip>
 #include <map>
 #include <stack>
-using namespace std;
 
 class Timer {
     decltype(std::chrono::system_clock::now()) start_stamp, end_stamp;
@@ -142,8 +141,8 @@ public:
         content.resize(1);
     }
 
-    AlkaneGraph(const hash_type &hash_value, const count_type &carbonNum) {
-        fromHash(hash_value, carbonNum);
+    AlkaneGraph(const hash_type &hash_value) {
+        fromHash(hash_value);
     }
 
     AlkaneGraph(const AlkaneGraph &_ag) {
@@ -194,8 +193,8 @@ public:
         return AlkaneGraph<T>();
     }
 
-    void fromHash(const hash_type &hash_value, int numOfCarbon) {
-        if (numOfCarbon == 1) {
+    void fromHash(const hash_type &hash_value) {
+        if (hash_value <= 2) {
             *this = GetInstance();
             return;
         }
@@ -259,12 +258,12 @@ class IsomerCounter {
     std::unordered_set<hash_type> curSet;                // 新增部分的smiles
     std::vector<hash_type> lastVec;
     using graph = AlkaneGraph<node_type>;
-    //std::vector<count_type> counter;                 // C1-n alkanetopo 数量计数器
+    std::vector<count_type> counter;                 // C1-n alkanetopo 数量计数器
 public:
     static IsomerCounter &GetInstance();
 
     bool calculate(const int &numOfCarbon, const char *cache_dir = nullptr);
-
+    void calculate_i_from_imm(const char *_cache_dir,const int&_i);
 private:
     IsomerCounter();
 
@@ -276,7 +275,7 @@ private:
 
     void dump(const char *save_dir, const int &carbonNum);
 
-    void recover(const char *save_dir, const int &carbonNum);
+    void IsomerCounter::recover(const char *save_dir, const int &carbonNum);
 };
 
 #endif //_ISOMER_HPP_
