@@ -13,7 +13,7 @@
 #include <iomanip>
 #include <map>
 #include <stack>
-
+#include <algorithm>
 class Timer {
     decltype(std::chrono::system_clock::now()) start_stamp, end_stamp;
 public:
@@ -275,7 +275,7 @@ private:
 
     void dump(const char *save_dir, const int &carbonNum);
 
-    void IsomerCounter::recover(const char *save_dir, const int &carbonNum);
+    void recover(const char *save_dir, const int &carbonNum);
 };
 
 #endif //_ISOMER_HPP_
