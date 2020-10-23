@@ -13,9 +13,9 @@
 #include <iomanip>
 #include <map>
 #include <stack>
-
+#include <algorithm>
 class Timer {
-    decltype(std::chrono::system_clock::now()) start_stamp, end_stamp;
+    decltype(std::chrono::system_clock::now()) start_stamp, end_stamp,last_stamp;
 public:
     void start();
 
@@ -36,7 +36,7 @@ using count_type = unsigned long long;
  */
 template<typename T>
 class AlkaneGraph {
-    static std::vector<NodeColor> state;
+    std::vector<NodeColor> state;
     std::vector<std::vector<T>> content;
     using traverse = std::function<void(const T &, const T &)>;
     using idle = std::function<void(void)>;
@@ -183,7 +183,10 @@ public:
         func();
         pop_back(a, b);
     }
-
+    void add_do(T a, T b, idle func) {
+        push_back(a, b);
+        func();
+    }
 
     unsigned long long hash() {
         return std::stoull(toString(), 0, 2);
@@ -275,7 +278,7 @@ private:
 
     void dump(const char *save_dir, const int &carbonNum);
 
-    void IsomerCounter::recover(const char *save_dir, const int &carbonNum);
+    void recover(const char *save_dir, const int &carbonNum);
 };
 
 #endif //_ISOMER_HPP_

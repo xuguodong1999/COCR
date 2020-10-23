@@ -128,6 +128,7 @@ void IsomerCounter::calculate_i_from_imm(const char *_cache_dir, const int &_i) 
     ifsm.read(reinterpret_cast<char *>(&len), sizeof(len));
     std::cout << "len=" << len << std::endl;
     std::vector<hash_type>().swap(lastVec);
+    std::vector<hash_type> curSet2;
     graph current;
     Timer timer;
     timer.start();
@@ -148,7 +149,9 @@ void IsomerCounter::calculate_i_from_imm(const char *_cache_dir, const int &_i) 
                     if (node.size() >= 4) { continue; }
                     auto check_and_record = [&]() -> void {
                         auto hash_value = current.hash();
-                        if (curSet.insert(hash_value).second) {
+                        if(curSet2.find(hash_value) == curSet2.end()){
+                            curSet2.push_back(hash_value);
+                        //if (curSet.insert(hash_value).second) {
                             count++;
                             if (count % 1000000 == 0) {
                                 std::cout << "count/1000000=" << count / 1000000 << std::endl;
@@ -172,7 +175,9 @@ void IsomerCounter::calculate_i_from_imm(const char *_cache_dir, const int &_i) 
                 if (node.size() >= 4) { continue; }
                 auto check_and_record = [&]() -> void {
                     auto hash_value = current.hash();
-                    if (curSet.insert(hash_value).second) {
+                    if(curSet2.find(hash_value) == curSet2.end()){
+                        curSet2.push_back(hash_value);
+                    //if (curSet.insert(hash_value).second) {
                         count++;
                         if (count % 1000000 == 0) {
                             std::cout << "count/1000000=" << count / 1000000 << std::endl;
@@ -184,7 +189,15 @@ void IsomerCounter::calculate_i_from_imm(const char *_cache_dir, const int &_i) 
         }
     }
     ifsm.close();
-    dump(_cache_dir, _i);
+    //dump(_cache_dir, _i);
+    std::ofstream ofsm(_cache_dir + std::string("/") + std::to_string(_i) + ".dat",
+                       std::ios::out | std::ios::binary);
+    hash_type len = curSet2.size();
+    ofsm.write(reinterpret_cast<const char *>( &len ), sizeof(len));
+    for (auto &i:curSet2) {
+        ofsm.write(reinterpret_cast<const char *>( &i ), sizeof(i));
+    }
+    ofsm.close();
     std::cout << "c-" << _i << ": " << count << std::endl;
     timer.stop(true);
 }
