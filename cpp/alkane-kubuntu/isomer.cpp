@@ -1,30 +1,36 @@
 #include "isomer.hpp"
 #include <fstream>
 
-template<typename T>
-std::vector<NodeColor> AlkaneGraph<T>::state;
 
 void Timer::start() {
-    start_stamp = std::chrono::system_clock::now();
+    start_stamp = last_stamp = std::chrono::system_clock::now();
 }
 
 void Timer::display_duration() {
+    end_stamp = std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
-            end_stamp - start_stamp);
-    std::cout << "Timer: [takes "
+            end_stamp - last_stamp);
+    std::cout << "Timer mid: [takes "
               << duration.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den
               << " ms]" << std::endl;
+    last_stamp = end_stamp;
 }
 
 void Timer::stop(bool _display_duration) {
-    end_stamp = std::chrono::system_clock::now();
+    end_stamp = last_stamp = std::chrono::system_clock::now();
     if (_display_duration) {
-        display_duration();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+                end_stamp - start_stamp);
+        std::cout << "Timer end: [takes "
+                  << duration.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den
+                  << " ms]" << std::endl;
     }
 }
 
 IsomerCounter &IsomerCounter::GetInstance() {
     static IsomerCounter e;
+    //e.curSet.max_load_factor(std::numeric_limits<float>::max());
+    //e.curSet.rehash(1024ULL*1024ULL*512ULL);
     return e;
 }
 
@@ -122,82 +128,112 @@ void IsomerCounter::calculate_i_from_imm(const char *_cache_dir, const int &_i) 
     }
     std::ifstream ifsm(_cache_dir + std::string("/") + std::to_string(_i - 1) + ".dat",
                        std::ios::in | std::ios::binary);
-    const size_t cache_size = 1024ULL*1024ULL;
-    hash_type len, tmp,  count=0;
-    std::vector<hash_type>tmp1(cache_size);
+    size_t pool_size = 1024ULL * 128ULL;
+    hash_type len, tmp;
+    std::vector<hash_type> hash_pool(1024ULL * 128ULL);
     ifsm.read(reinterpret_cast<char *>(&len), sizeof(len));
-    std::cout << "len=" << len << std::endl;
+    std::cout << "load_" << _i - 1 << "=" << len << std::endl;
     std::vector<hash_type>().swap(lastVec);
-    std::vector<hash_type> curSet2;
+    mm_set curSet2;
+    //std::cin.get();
     graph current;
     Timer timer;
     timer.start();
     hash_type i = 0;
-    Timer timer2;
-    timer2.start();
+    const int thread_num = 11;
     while (i < len) {
-        if (i + cache_size < len) {
-            for (int k = 0; k < cache_size; k++) {
-                ifsm.read(reinterpret_cast< char *>(&tmp1[k]), sizeof(hash_type));
+        if (i + pool_size < len) {
+            for (int k = 0; k < pool_size; k++) {
+                ifsm.read(reinterpret_cast< char *>(&hash_pool[k]), sizeof(hash_type));
             }
-            for (int k = 0; k < cache_size; k++) {
+            for (int k = 0; k < pool_size; k++) {
                 // 记录，对一个合法结构添加新碳
-                current = graph(tmp1[k]);
+                current = graph(hash_pool[k]);
                 const auto size = current.size();
+                std::vector<hash_type> tmpSet(size, 0);
+#pragma omp parallel for num_threads(thread_num)
                 for (auto j = 0; j < size; j++) {
-                    auto &node = current.at(j);
-                    if (node.size() >= 4) { continue; }
-                    auto check_and_record = [&]() -> void {
-                        auto hash_value = current.hash();
-                        if(curSet2.find(hash_value) == curSet2.end()){
-                            curSet2.push_back(hash_value);
-                        //if (curSet.insert(hash_value).second) {
-                            count++;
-                            if (count % 1000000 == 0) {
-                                std::cout << "count/1000000=" << count / 1000000 << std::endl;
-				timer2.stop(true);
-				timer2.start();
+                    auto current2 = current;
+                    auto &node = current2.at(j);
+                    if (node.size() < 4) {
+                        auto check_and_record = [&]() -> void {
+                            auto hash_value = current2.hash();
+                            if (!curSet2.exist(hash_value)) {
+                                tmpSet[j] = hash_value;
                             }
-                        }
-                    };
-                    current.add_do_del(j, size, check_and_record);
+                        };
+                        current2.add_do(j, size, check_and_record);
+                    }
+                }
+                std::unordered_set<hash_type> tmpSet2;
+                for (auto &mm:tmpSet) {
+                    if (mm != 0) {tmpSet2.insert(mm);}
+                }
+                for (auto &mm:tmpSet2) {
+                    curSet2.insert(mm);
                 }
             }
-            i += cache_size;
-        } else {
-            i++;
+            if (i % pool_size == 0) {
+                std::cout<<"i="<<i<<std::endl;
+                std::cout << "curSet.size()/"<<std::to_string(pool_size)<<"=" << curSet2.size() / pool_size << std::endl;
+                std::cout << "curSet.size()/1000000=" << curSet2.size() / 1000000ULL << std::endl;
+                timer.display_duration();
+            }
+            i += pool_size;
+        } 
+        else if(pool_size > 4){
+            pool_size /= 2;
+            std::cout<<"i="<<i<<std::endl;
+            std::cout<<"decrease pool_size="<<pool_size<<std::endl;
+            timer.display_duration();
+            continue;
+        }else {
+            std::cout<<"i="<<i<<std::endl;
+            std::cout << "curSet.size()/"<<std::to_string(pool_size)<<"=" << curSet2.size() / pool_size << std::endl;
+            std::cout << "curSet.size()/1000000=" << curSet2.size() / 1000000ULL << std::endl;
+            timer.display_duration();
             ifsm.read(reinterpret_cast< char *>(&tmp), sizeof(hash_type));
             // 记录，对一个合法结构添加新碳
             current = graph(tmp);
             const auto size = current.size();
-            for (auto j = 0; j < size; j++) {
-                auto &node = current.at(j);
-                if (node.size() >= 4) { continue; }
-                auto check_and_record = [&]() -> void {
-                    auto hash_value = current.hash();
-                    if(curSet2.find(hash_value) == curSet2.end()){
-                        curSet2.push_back(hash_value);
-                    //if (curSet.insert(hash_value).second) {
-                        count++;
-                        if (count % 1000000 == 0) {
-                            std::cout << "count/1000000=" << count / 1000000 << std::endl;
-                        }
+                std::vector<hash_type> tmpSet(size, 0);
+#pragma omp parallel for num_threads(thread_num)
+                for (auto j = 0; j < size; j++) {
+                    auto current2 = current;
+                    auto &node = current2.at(j);
+                    if (node.size() < 4) {
+                        auto check_and_record = [&]() -> void {
+                            auto hash_value = current2.hash();
+                            if (!curSet2.exist(hash_value)) {
+                                tmpSet[j] = hash_value;
+                            }
+                        };
+                        current2.add_do(j, size, check_and_record);
                     }
-                };
-                current.add_do_del(j, size, check_and_record);
-            }
+                }
+                std::unordered_set<hash_type> tmpSet2;
+                for (auto &mm:tmpSet) {
+                    if (mm != 0) {tmpSet2.insert(mm);}
+                }
+                for (auto &mm:tmpSet2) {
+                    curSet2.insert(mm);
+                }
+            i++;
         }
     }
     ifsm.close();
-    //dump(_cache_dir, _i);
+    std::cout << "generation done." << std::endl;
+    hash_type len2 = curSet2.size();
+    std::cout << "c-" << _i << ": " << len2 << std::endl;
+    timer.stop(true);
     std::ofstream ofsm(_cache_dir + std::string("/") + std::to_string(_i) + ".dat",
                        std::ios::out | std::ios::binary);
-    hash_type len = curSet2.size();
-    ofsm.write(reinterpret_cast<const char *>( &len ), sizeof(len));
-    for (auto &i:curSet2) {
-        ofsm.write(reinterpret_cast<const char *>( &i ), sizeof(i));
+    ofsm.write(reinterpret_cast<const char *>( &len2 ), sizeof(len2));
+    size_t sss=0;
+    for (auto &mmm:curSet2.mData) {
+        for(auto&mm:mmm){
+            ofsm.write(reinterpret_cast<const char *>( &mm ), sizeof(mm));
+        }
     }
     ofsm.close();
-    std::cout << "c-" << _i << ": " << count << std::endl;
-    timer.stop(true);
 }

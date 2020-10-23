@@ -1,0 +1,7432 @@
+xgd@k2004:~/source/COCR/cpp/alkane-kubuntu$ ./alkane_c
+load_27=240215803
+i=0
+curSet.size()/131072=19
+curSet.size()/1000000=2
+Timer mid: [takes 6316 ms]
+i=131072
+curSet.size()/131072=38
+curSet.size()/1000000=5
+Timer mid: [takes 6872 ms]
+i=262144
+curSet.size()/131072=58
+curSet.size()/1000000=7
+Timer mid: [takes 7014 ms]
+i=393216
+curSet.size()/131072=77
+curSet.size()/1000000=10
+Timer mid: [takes 7171 ms]
+i=524288
+curSet.size()/131072=96
+curSet.size()/1000000=12
+Timer mid: [takes 7268 ms]
+i=655360
+curSet.size()/131072=115
+curSet.size()/1000000=15
+Timer mid: [takes 7204 ms]
+i=786432
+curSet.size()/131072=134
+curSet.size()/1000000=17
+Timer mid: [takes 7283 ms]
+i=917504
+curSet.size()/131072=152
+curSet.size()/1000000=20
+Timer mid: [takes 7196 ms]
+i=1048576
+curSet.size()/131072=171
+curSet.size()/1000000=22
+Timer mid: [takes 7555 ms]
+i=1179648
+curSet.size()/131072=189
+curSet.size()/1000000=24
+Timer mid: [takes 6650 ms]
+i=1310720
+curSet.size()/131072=208
+curSet.size()/1000000=27
+Timer mid: [takes 6661 ms]
+i=1441792
+curSet.size()/131072=226
+curSet.size()/1000000=29
+Timer mid: [takes 6713 ms]
+i=1572864
+curSet.size()/131072=244
+curSet.size()/1000000=32
+Timer mid: [takes 6857 ms]
+i=1703936
+curSet.size()/131072=262
+curSet.size()/1000000=34
+Timer mid: [takes 6874 ms]
+i=1835008
+curSet.size()/131072=280
+curSet.size()/1000000=36
+Timer mid: [takes 6851 ms]
+i=1966080
+curSet.size()/131072=298
+curSet.size()/1000000=39
+Timer mid: [takes 6981 ms]
+i=2097152
+curSet.size()/131072=316
+curSet.size()/1000000=41
+Timer mid: [takes 6883 ms]
+i=2228224
+curSet.size()/131072=333
+curSet.size()/1000000=43
+Timer mid: [takes 7303 ms]
+i=2359296
+curSet.size()/131072=351
+curSet.size()/1000000=46
+Timer mid: [takes 7294 ms]
+i=2490368
+curSet.size()/131072=369
+curSet.size()/1000000=48
+Timer mid: [takes 6938 ms]
+i=2621440
+curSet.size()/131072=386
+curSet.size()/1000000=50
+Timer mid: [takes 7075 ms]
+i=2752512
+curSet.size()/131072=403
+curSet.size()/1000000=52
+Timer mid: [takes 6774 ms]
+i=2883584
+curSet.size()/131072=421
+curSet.size()/1000000=55
+Timer mid: [takes 6705 ms]
+i=3014656
+curSet.size()/131072=438
+curSet.size()/1000000=57
+Timer mid: [takes 6660 ms]
+i=3145728
+curSet.size()/131072=455
+curSet.size()/1000000=59
+Timer mid: [takes 6709 ms]
+i=3276800
+curSet.size()/131072=472
+curSet.size()/1000000=61
+Timer mid: [takes 6702 ms]
+i=3407872
+curSet.size()/131072=489
+curSet.size()/1000000=64
+Timer mid: [takes 6677 ms]
+i=3538944
+curSet.size()/131072=506
+curSet.size()/1000000=66
+Timer mid: [takes 6677 ms]
+i=3670016
+curSet.size()/131072=523
+curSet.size()/1000000=68
+Timer mid: [takes 6680 ms]
+i=3801088
+curSet.size()/131072=539
+curSet.size()/1000000=70
+Timer mid: [takes 6675 ms]
+i=3932160
+curSet.size()/131072=556
+curSet.size()/1000000=72
+Timer mid: [takes 6656 ms]
+i=4063232
+curSet.size()/131072=573
+curSet.size()/1000000=75
+Timer mid: [takes 6666 ms]
+i=4194304
+curSet.size()/131072=589
+curSet.size()/1000000=77
+Timer mid: [takes 6678 ms]
+i=4325376
+curSet.size()/131072=606
+curSet.size()/1000000=79
+Timer mid: [takes 6650 ms]
+i=4456448
+curSet.size()/131072=622
+curSet.size()/1000000=81
+Timer mid: [takes 6670 ms]
+i=4587520
+curSet.size()/131072=638
+curSet.size()/1000000=83
+Timer mid: [takes 6657 ms]
+i=4718592
+curSet.size()/131072=655
+curSet.size()/1000000=85
+Timer mid: [takes 6629 ms]
+i=4849664
+curSet.size()/131072=671
+curSet.size()/1000000=87
+Timer mid: [takes 6630 ms]
+i=4980736
+curSet.size()/131072=687
+curSet.size()/1000000=90
+Timer mid: [takes 6629 ms]
+i=5111808
+curSet.size()/131072=703
+curSet.size()/1000000=92
+Timer mid: [takes 6644 ms]
+i=5242880
+curSet.size()/131072=719
+curSet.size()/1000000=94
+Timer mid: [takes 6643 ms]
+i=5373952
+curSet.size()/131072=735
+curSet.size()/1000000=96
+Timer mid: [takes 7147 ms]
+i=5505024
+curSet.size()/131072=751
+curSet.size()/1000000=98
+Timer mid: [takes 9357 ms]
+i=5636096
+curSet.size()/131072=767
+curSet.size()/1000000=100
+Timer mid: [takes 7462 ms]
+i=5767168
+curSet.size()/131072=782
+curSet.size()/1000000=102
+Timer mid: [takes 6651 ms]
+i=5898240
+curSet.size()/131072=798
+curSet.size()/1000000=104
+Timer mid: [takes 6638 ms]
+i=6029312
+curSet.size()/131072=814
+curSet.size()/1000000=106
+Timer mid: [takes 7026 ms]
+i=6160384
+curSet.size()/131072=829
+curSet.size()/1000000=108
+Timer mid: [takes 6909 ms]
+i=6291456
+curSet.size()/131072=845
+curSet.size()/1000000=110
+Timer mid: [takes 6911 ms]
+i=6422528
+curSet.size()/131072=860
+curSet.size()/1000000=112
+Timer mid: [takes 6919 ms]
+i=6553600
+curSet.size()/131072=875
+curSet.size()/1000000=114
+Timer mid: [takes 6927 ms]
+i=6684672
+curSet.size()/131072=891
+curSet.size()/1000000=116
+Timer mid: [takes 6897 ms]
+i=6815744
+curSet.size()/131072=906
+curSet.size()/1000000=118
+Timer mid: [takes 6905 ms]
+i=6946816
+curSet.size()/131072=921
+curSet.size()/1000000=120
+Timer mid: [takes 6904 ms]
+i=7077888
+curSet.size()/131072=936
+curSet.size()/1000000=122
+Timer mid: [takes 6904 ms]
+i=7208960
+curSet.size()/131072=951
+curSet.size()/1000000=124
+Timer mid: [takes 6912 ms]
+i=7340032
+curSet.size()/131072=966
+curSet.size()/1000000=126
+Timer mid: [takes 6900 ms]
+i=7471104
+curSet.size()/131072=981
+curSet.size()/1000000=128
+Timer mid: [takes 6884 ms]
+i=7602176
+curSet.size()/131072=996
+curSet.size()/1000000=130
+Timer mid: [takes 6884 ms]
+i=7733248
+curSet.size()/131072=1011
+curSet.size()/1000000=132
+Timer mid: [takes 6889 ms]
+i=7864320
+curSet.size()/131072=1025
+curSet.size()/1000000=134
+Timer mid: [takes 6881 ms]
+i=7995392
+curSet.size()/131072=1040
+curSet.size()/1000000=136
+Timer mid: [takes 6886 ms]
+i=8126464
+curSet.size()/131072=1055
+curSet.size()/1000000=138
+Timer mid: [takes 6890 ms]
+i=8257536
+curSet.size()/131072=1069
+curSet.size()/1000000=140
+Timer mid: [takes 6881 ms]
+i=8388608
+curSet.size()/131072=1084
+curSet.size()/1000000=142
+Timer mid: [takes 6864 ms]
+i=8519680
+curSet.size()/131072=1098
+curSet.size()/1000000=143
+Timer mid: [takes 6884 ms]
+i=8650752
+curSet.size()/131072=1112
+curSet.size()/1000000=145
+Timer mid: [takes 6856 ms]
+i=8781824
+curSet.size()/131072=1127
+curSet.size()/1000000=147
+Timer mid: [takes 6874 ms]
+i=8912896
+curSet.size()/131072=1141
+curSet.size()/1000000=149
+Timer mid: [takes 6867 ms]
+i=9043968
+curSet.size()/131072=1155
+curSet.size()/1000000=151
+Timer mid: [takes 6847 ms]
+i=9175040
+curSet.size()/131072=1169
+curSet.size()/1000000=153
+Timer mid: [takes 6863 ms]
+i=9306112
+curSet.size()/131072=1183
+curSet.size()/1000000=155
+Timer mid: [takes 6866 ms]
+i=9437184
+curSet.size()/131072=1197
+curSet.size()/1000000=157
+Timer mid: [takes 6855 ms]
+i=9568256
+curSet.size()/131072=1212
+curSet.size()/1000000=158
+Timer mid: [takes 6848 ms]
+i=9699328
+curSet.size()/131072=1225
+curSet.size()/1000000=160
+Timer mid: [takes 6841 ms]
+i=9830400
+curSet.size()/131072=1239
+curSet.size()/1000000=162
+Timer mid: [takes 6824 ms]
+i=9961472
+curSet.size()/131072=1253
+curSet.size()/1000000=164
+Timer mid: [takes 6677 ms]
+i=10092544
+curSet.size()/131072=1267
+curSet.size()/1000000=166
+Timer mid: [takes 6690 ms]
+i=10223616
+curSet.size()/131072=1281
+curSet.size()/1000000=167
+Timer mid: [takes 6710 ms]
+i=10354688
+curSet.size()/131072=1294
+curSet.size()/1000000=169
+Timer mid: [takes 6684 ms]
+i=10485760
+curSet.size()/131072=1308
+curSet.size()/1000000=171
+Timer mid: [takes 6711 ms]
+i=10616832
+curSet.size()/131072=1321
+curSet.size()/1000000=173
+Timer mid: [takes 6699 ms]
+i=10747904
+curSet.size()/131072=1335
+curSet.size()/1000000=175
+Timer mid: [takes 6990 ms]
+i=10878976
+curSet.size()/131072=1348
+curSet.size()/1000000=176
+Timer mid: [takes 6981 ms]
+i=11010048
+curSet.size()/131072=1362
+curSet.size()/1000000=178
+Timer mid: [takes 6930 ms]
+i=11141120
+curSet.size()/131072=1375
+curSet.size()/1000000=180
+Timer mid: [takes 6905 ms]
+i=11272192
+curSet.size()/131072=1388
+curSet.size()/1000000=182
+Timer mid: [takes 6944 ms]
+i=11403264
+curSet.size()/131072=1402
+curSet.size()/1000000=183
+Timer mid: [takes 7007 ms]
+i=11534336
+curSet.size()/131072=1415
+curSet.size()/1000000=185
+Timer mid: [takes 6952 ms]
+i=11665408
+curSet.size()/131072=1428
+curSet.size()/1000000=187
+Timer mid: [takes 6944 ms]
+i=11796480
+curSet.size()/131072=1441
+curSet.size()/1000000=188
+Timer mid: [takes 6928 ms]
+i=11927552
+curSet.size()/131072=1454
+curSet.size()/1000000=190
+Timer mid: [takes 7435 ms]
+i=12058624
+curSet.size()/131072=1467
+curSet.size()/1000000=192
+Timer mid: [takes 8339 ms]
+i=12189696
+curSet.size()/131072=1480
+curSet.size()/1000000=194
+Timer mid: [takes 6985 ms]
+i=12320768
+curSet.size()/131072=1493
+curSet.size()/1000000=195
+Timer mid: [takes 6945 ms]
+i=12451840
+curSet.size()/131072=1506
+curSet.size()/1000000=197
+Timer mid: [takes 6985 ms]
+i=12582912
+curSet.size()/131072=1518
+curSet.size()/1000000=199
+Timer mid: [takes 6991 ms]
+i=12713984
+curSet.size()/131072=1531
+curSet.size()/1000000=200
+Timer mid: [takes 6959 ms]
+i=12845056
+curSet.size()/131072=1544
+curSet.size()/1000000=202
+Timer mid: [takes 6938 ms]
+i=12976128
+curSet.size()/131072=1556
+curSet.size()/1000000=204
+Timer mid: [takes 6881 ms]
+i=13107200
+curSet.size()/131072=1569
+curSet.size()/1000000=205
+Timer mid: [takes 6826 ms]
+i=13238272
+curSet.size()/131072=1582
+curSet.size()/1000000=207
+Timer mid: [takes 6825 ms]
+i=13369344
+curSet.size()/131072=1594
+curSet.size()/1000000=208
+Timer mid: [takes 6782 ms]
+i=13500416
+curSet.size()/131072=1606
+curSet.size()/1000000=210
+Timer mid: [takes 6791 ms]
+i=13631488
+curSet.size()/131072=1619
+curSet.size()/1000000=212
+Timer mid: [takes 6810 ms]
+i=13762560
+curSet.size()/131072=1631
+curSet.size()/1000000=213
+Timer mid: [takes 6843 ms]
+i=13893632
+curSet.size()/131072=1643
+curSet.size()/1000000=215
+Timer mid: [takes 7149 ms]
+i=14024704
+curSet.size()/131072=1656
+curSet.size()/1000000=217
+Timer mid: [takes 7059 ms]
+i=14155776
+curSet.size()/131072=1668
+curSet.size()/1000000=218
+Timer mid: [takes 7084 ms]
+i=14286848
+curSet.size()/131072=1680
+curSet.size()/1000000=220
+Timer mid: [takes 7111 ms]
+i=14417920
+curSet.size()/131072=1692
+curSet.size()/1000000=221
+Timer mid: [takes 7108 ms]
+i=14548992
+curSet.size()/131072=1704
+curSet.size()/1000000=223
+Timer mid: [takes 7139 ms]
+i=14680064
+curSet.size()/131072=1716
+curSet.size()/1000000=225
+Timer mid: [takes 7139 ms]
+i=14811136
+curSet.size()/131072=1728
+curSet.size()/1000000=226
+Timer mid: [takes 7095 ms]
+i=14942208
+curSet.size()/131072=1740
+curSet.size()/1000000=228
+Timer mid: [takes 7047 ms]
+i=15073280
+curSet.size()/131072=1752
+curSet.size()/1000000=229
+Timer mid: [takes 6976 ms]
+i=15204352
+curSet.size()/131072=1764
+curSet.size()/1000000=231
+Timer mid: [takes 7092 ms]
+i=15335424
+curSet.size()/131072=1776
+curSet.size()/1000000=232
+Timer mid: [takes 7781 ms]
+i=15466496
+curSet.size()/131072=1787
+curSet.size()/1000000=234
+Timer mid: [takes 6440 ms]
+i=15597568
+curSet.size()/131072=1799
+curSet.size()/1000000=235
+Timer mid: [takes 6515 ms]
+i=15728640
+curSet.size()/131072=1811
+curSet.size()/1000000=237
+Timer mid: [takes 6549 ms]
+i=15859712
+curSet.size()/131072=1822
+curSet.size()/1000000=238
+Timer mid: [takes 6542 ms]
+i=15990784
+curSet.size()/131072=1834
+curSet.size()/1000000=240
+Timer mid: [takes 6550 ms]
+i=16121856
+curSet.size()/131072=1845
+curSet.size()/1000000=241
+Timer mid: [takes 6555 ms]
+i=16252928
+curSet.size()/131072=1857
+curSet.size()/1000000=243
+Timer mid: [takes 6536 ms]
+i=16384000
+curSet.size()/131072=1868
+curSet.size()/1000000=244
+Timer mid: [takes 6530 ms]
+i=16515072
+curSet.size()/131072=1880
+curSet.size()/1000000=246
+Timer mid: [takes 6555 ms]
+i=16646144
+curSet.size()/131072=1891
+curSet.size()/1000000=247
+Timer mid: [takes 6545 ms]
+i=16777216
+curSet.size()/131072=1902
+curSet.size()/1000000=249
+Timer mid: [takes 6541 ms]
+i=16908288
+curSet.size()/131072=1914
+curSet.size()/1000000=250
+Timer mid: [takes 6526 ms]
+i=17039360
+curSet.size()/131072=1925
+curSet.size()/1000000=252
+Timer mid: [takes 6468 ms]
+i=17170432
+curSet.size()/131072=1936
+curSet.size()/1000000=253
+Timer mid: [takes 6451 ms]
+i=17301504
+curSet.size()/131072=1947
+curSet.size()/1000000=255
+Timer mid: [takes 6475 ms]
+i=17432576
+curSet.size()/131072=1958
+curSet.size()/1000000=256
+Timer mid: [takes 6465 ms]
+i=17563648
+curSet.size()/131072=1969
+curSet.size()/1000000=258
+Timer mid: [takes 6716 ms]
+i=17694720
+curSet.size()/131072=1980
+curSet.size()/1000000=259
+Timer mid: [takes 6781 ms]
+i=17825792
+curSet.size()/131072=1991
+curSet.size()/1000000=261
+Timer mid: [takes 6782 ms]
+i=17956864
+curSet.size()/131072=2002
+curSet.size()/1000000=262
+Timer mid: [takes 6716 ms]
+i=18087936
+curSet.size()/131072=2013
+curSet.size()/1000000=263
+Timer mid: [takes 6689 ms]
+i=18219008
+curSet.size()/131072=2024
+curSet.size()/1000000=265
+Timer mid: [takes 6682 ms]
+i=18350080
+curSet.size()/131072=2035
+curSet.size()/1000000=266
+Timer mid: [takes 6678 ms]
+i=18481152
+curSet.size()/131072=2045
+curSet.size()/1000000=268
+Timer mid: [takes 6735 ms]
+i=18612224
+curSet.size()/131072=2056
+curSet.size()/1000000=269
+Timer mid: [takes 6724 ms]
+i=18743296
+curSet.size()/131072=2067
+curSet.size()/1000000=270
+Timer mid: [takes 6719 ms]
+i=18874368
+curSet.size()/131072=2077
+curSet.size()/1000000=272
+Timer mid: [takes 6726 ms]
+i=19005440
+curSet.size()/131072=2088
+curSet.size()/1000000=273
+Timer mid: [takes 6691 ms]
+i=19136512
+curSet.size()/131072=2099
+curSet.size()/1000000=275
+Timer mid: [takes 6724 ms]
+i=19267584
+curSet.size()/131072=2109
+curSet.size()/1000000=276
+Timer mid: [takes 6692 ms]
+i=19398656
+curSet.size()/131072=2120
+curSet.size()/1000000=277
+Timer mid: [takes 6697 ms]
+i=19529728
+curSet.size()/131072=2130
+curSet.size()/1000000=279
+Timer mid: [takes 6753 ms]
+i=19660800
+curSet.size()/131072=2141
+curSet.size()/1000000=280
+Timer mid: [takes 6754 ms]
+i=19791872
+curSet.size()/131072=2151
+curSet.size()/1000000=281
+Timer mid: [takes 6756 ms]
+i=19922944
+curSet.size()/131072=2161
+curSet.size()/1000000=283
+Timer mid: [takes 6744 ms]
+i=20054016
+curSet.size()/131072=2171
+curSet.size()/1000000=284
+Timer mid: [takes 6727 ms]
+i=20185088
+curSet.size()/131072=2182
+curSet.size()/1000000=286
+Timer mid: [takes 6747 ms]
+i=20316160
+curSet.size()/131072=2192
+curSet.size()/1000000=287
+Timer mid: [takes 6735 ms]
+i=20447232
+curSet.size()/131072=2202
+curSet.size()/1000000=288
+Timer mid: [takes 6734 ms]
+i=20578304
+curSet.size()/131072=2212
+curSet.size()/1000000=290
+Timer mid: [takes 6707 ms]
+i=20709376
+curSet.size()/131072=2223
+curSet.size()/1000000=291
+Timer mid: [takes 6769 ms]
+i=20840448
+curSet.size()/131072=2235
+curSet.size()/1000000=293
+Timer mid: [takes 6838 ms]
+i=20971520
+curSet.size()/131072=2247
+curSet.size()/1000000=294
+Timer mid: [takes 6837 ms]
+i=21102592
+curSet.size()/131072=2259
+curSet.size()/1000000=296
+Timer mid: [takes 6833 ms]
+i=21233664
+curSet.size()/131072=2270
+curSet.size()/1000000=297
+Timer mid: [takes 6855 ms]
+i=21364736
+curSet.size()/131072=2282
+curSet.size()/1000000=299
+Timer mid: [takes 6847 ms]
+i=21495808
+curSet.size()/131072=2293
+curSet.size()/1000000=300
+Timer mid: [takes 6840 ms]
+i=21626880
+curSet.size()/131072=2305
+curSet.size()/1000000=302
+Timer mid: [takes 6842 ms]
+i=21757952
+curSet.size()/131072=2316
+curSet.size()/1000000=303
+Timer mid: [takes 6821 ms]
+i=21889024
+curSet.size()/131072=2328
+curSet.size()/1000000=305
+Timer mid: [takes 6818 ms]
+i=22020096
+curSet.size()/131072=2339
+curSet.size()/1000000=306
+Timer mid: [takes 6822 ms]
+i=22151168
+curSet.size()/131072=2350
+curSet.size()/1000000=308
+Timer mid: [takes 6837 ms]
+i=22282240
+curSet.size()/131072=2362
+curSet.size()/1000000=309
+Timer mid: [takes 6824 ms]
+i=22413312
+curSet.size()/131072=2373
+curSet.size()/1000000=311
+Timer mid: [takes 6856 ms]
+i=22544384
+curSet.size()/131072=2384
+curSet.size()/1000000=312
+Timer mid: [takes 6854 ms]
+i=22675456
+curSet.size()/131072=2395
+curSet.size()/1000000=314
+Timer mid: [takes 6822 ms]
+i=22806528
+curSet.size()/131072=2406
+curSet.size()/1000000=315
+Timer mid: [takes 6807 ms]
+i=22937600
+curSet.size()/131072=2417
+curSet.size()/1000000=316
+Timer mid: [takes 6792 ms]
+i=23068672
+curSet.size()/131072=2428
+curSet.size()/1000000=318
+Timer mid: [takes 6776 ms]
+i=23199744
+curSet.size()/131072=2439
+curSet.size()/1000000=319
+Timer mid: [takes 6844 ms]
+i=23330816
+curSet.size()/131072=2450
+curSet.size()/1000000=321
+Timer mid: [takes 6813 ms]
+i=23461888
+curSet.size()/131072=2461
+curSet.size()/1000000=322
+Timer mid: [takes 6815 ms]
+i=23592960
+curSet.size()/131072=2472
+curSet.size()/1000000=324
+Timer mid: [takes 6833 ms]
+i=23724032
+curSet.size()/131072=2482
+curSet.size()/1000000=325
+Timer mid: [takes 6820 ms]
+i=23855104
+curSet.size()/131072=2493
+curSet.size()/1000000=326
+Timer mid: [takes 6851 ms]
+i=23986176
+curSet.size()/131072=2503
+curSet.size()/1000000=328
+Timer mid: [takes 6899 ms]
+i=24117248
+curSet.size()/131072=2514
+curSet.size()/1000000=329
+Timer mid: [takes 6909 ms]
+i=24248320
+curSet.size()/131072=2525
+curSet.size()/1000000=330
+Timer mid: [takes 6916 ms]
+i=24379392
+curSet.size()/131072=2535
+curSet.size()/1000000=332
+Timer mid: [takes 6930 ms]
+i=24510464
+curSet.size()/131072=2545
+curSet.size()/1000000=333
+Timer mid: [takes 6898 ms]
+i=24641536
+curSet.size()/131072=2556
+curSet.size()/1000000=335
+Timer mid: [takes 7506 ms]
+i=24772608
+curSet.size()/131072=2566
+curSet.size()/1000000=336
+Timer mid: [takes 7046 ms]
+i=24903680
+curSet.size()/131072=2576
+curSet.size()/1000000=337
+Timer mid: [takes 7087 ms]
+i=25034752
+curSet.size()/131072=2587
+curSet.size()/1000000=339
+Timer mid: [takes 7096 ms]
+i=25165824
+curSet.size()/131072=2597
+curSet.size()/1000000=340
+Timer mid: [takes 7080 ms]
+i=25296896
+curSet.size()/131072=2607
+curSet.size()/1000000=341
+Timer mid: [takes 7113 ms]
+i=25427968
+curSet.size()/131072=2617
+curSet.size()/1000000=343
+Timer mid: [takes 7092 ms]
+i=25559040
+curSet.size()/131072=2627
+curSet.size()/1000000=344
+Timer mid: [takes 7015 ms]
+i=25690112
+curSet.size()/131072=2637
+curSet.size()/1000000=345
+Timer mid: [takes 6940 ms]
+i=25821184
+curSet.size()/131072=2647
+curSet.size()/1000000=347
+Timer mid: [takes 6909 ms]
+i=25952256
+curSet.size()/131072=2657
+curSet.size()/1000000=348
+Timer mid: [takes 6907 ms]
+i=26083328
+curSet.size()/131072=2667
+curSet.size()/1000000=349
+Timer mid: [takes 7389 ms]
+i=26214400
+curSet.size()/131072=2677
+curSet.size()/1000000=350
+Timer mid: [takes 6690 ms]
+i=26345472
+curSet.size()/131072=2687
+curSet.size()/1000000=352
+Timer mid: [takes 6745 ms]
+i=26476544
+curSet.size()/131072=2696
+curSet.size()/1000000=353
+Timer mid: [takes 6768 ms]
+i=26607616
+curSet.size()/131072=2706
+curSet.size()/1000000=354
+Timer mid: [takes 6713 ms]
+i=26738688
+curSet.size()/131072=2716
+curSet.size()/1000000=356
+Timer mid: [takes 6314 ms]
+i=26869760
+curSet.size()/131072=2725
+curSet.size()/1000000=357
+Timer mid: [takes 6307 ms]
+i=27000832
+curSet.size()/131072=2735
+curSet.size()/1000000=358
+Timer mid: [takes 6339 ms]
+i=27131904
+curSet.size()/131072=2744
+curSet.size()/1000000=359
+Timer mid: [takes 6346 ms]
+i=27262976
+curSet.size()/131072=2754
+curSet.size()/1000000=361
+Timer mid: [takes 6362 ms]
+i=27394048
+curSet.size()/131072=2763
+curSet.size()/1000000=362
+Timer mid: [takes 6359 ms]
+i=27525120
+curSet.size()/131072=2773
+curSet.size()/1000000=363
+Timer mid: [takes 6368 ms]
+i=27656192
+curSet.size()/131072=2782
+curSet.size()/1000000=364
+Timer mid: [takes 6402 ms]
+i=27787264
+curSet.size()/131072=2791
+curSet.size()/1000000=365
+Timer mid: [takes 6524 ms]
+i=27918336
+curSet.size()/131072=2800
+curSet.size()/1000000=367
+Timer mid: [takes 6564 ms]
+i=28049408
+curSet.size()/131072=2810
+curSet.size()/1000000=368
+Timer mid: [takes 6555 ms]
+i=28180480
+curSet.size()/131072=2819
+curSet.size()/1000000=369
+Timer mid: [takes 6531 ms]
+i=28311552
+curSet.size()/131072=2828
+curSet.size()/1000000=370
+Timer mid: [takes 6498 ms]
+i=28442624
+curSet.size()/131072=2837
+curSet.size()/1000000=371
+Timer mid: [takes 6499 ms]
+i=28573696
+curSet.size()/131072=2846
+curSet.size()/1000000=373
+Timer mid: [takes 6506 ms]
+i=28704768
+curSet.size()/131072=2855
+curSet.size()/1000000=374
+Timer mid: [takes 6476 ms]
+i=28835840
+curSet.size()/131072=2864
+curSet.size()/1000000=375
+Timer mid: [takes 6743 ms]
+i=28966912
+curSet.size()/131072=2873
+curSet.size()/1000000=376
+Timer mid: [takes 6703 ms]
+i=29097984
+curSet.size()/131072=2882
+curSet.size()/1000000=377
+Timer mid: [takes 6700 ms]
+i=29229056
+curSet.size()/131072=2891
+curSet.size()/1000000=378
+Timer mid: [takes 6682 ms]
+i=29360128
+curSet.size()/131072=2900
+curSet.size()/1000000=380
+Timer mid: [takes 6699 ms]
+i=29491200
+curSet.size()/131072=2909
+curSet.size()/1000000=381
+Timer mid: [takes 6694 ms]
+i=29622272
+curSet.size()/131072=2917
+curSet.size()/1000000=382
+Timer mid: [takes 6725 ms]
+i=29753344
+curSet.size()/131072=2926
+curSet.size()/1000000=383
+Timer mid: [takes 6703 ms]
+i=29884416
+curSet.size()/131072=2935
+curSet.size()/1000000=384
+Timer mid: [takes 6671 ms]
+i=30015488
+curSet.size()/131072=2943
+curSet.size()/1000000=385
+Timer mid: [takes 6689 ms]
+i=30146560
+curSet.size()/131072=2952
+curSet.size()/1000000=386
+Timer mid: [takes 6734 ms]
+i=30277632
+curSet.size()/131072=2960
+curSet.size()/1000000=388
+Timer mid: [takes 6751 ms]
+i=30408704
+curSet.size()/131072=2969
+curSet.size()/1000000=389
+Timer mid: [takes 6729 ms]
+i=30539776
+curSet.size()/131072=2977
+curSet.size()/1000000=390
+Timer mid: [takes 6736 ms]
+i=30670848
+curSet.size()/131072=2986
+curSet.size()/1000000=391
+Timer mid: [takes 6756 ms]
+i=30801920
+curSet.size()/131072=2994
+curSet.size()/1000000=392
+Timer mid: [takes 6696 ms]
+i=30932992
+curSet.size()/131072=3002
+curSet.size()/1000000=393
+Timer mid: [takes 6660 ms]
+i=31064064
+curSet.size()/131072=3011
+curSet.size()/1000000=394
+Timer mid: [takes 6651 ms]
+i=31195136
+curSet.size()/131072=3019
+curSet.size()/1000000=395
+Timer mid: [takes 6530 ms]
+i=31326208
+curSet.size()/131072=3027
+curSet.size()/1000000=396
+Timer mid: [takes 6479 ms]
+i=31457280
+curSet.size()/131072=3035
+curSet.size()/1000000=397
+Timer mid: [takes 6470 ms]
+i=31588352
+curSet.size()/131072=3044
+curSet.size()/1000000=398
+Timer mid: [takes 6462 ms]
+i=31719424
+curSet.size()/131072=3052
+curSet.size()/1000000=400
+Timer mid: [takes 6472 ms]
+i=31850496
+curSet.size()/131072=3060
+curSet.size()/1000000=401
+Timer mid: [takes 6482 ms]
+i=31981568
+curSet.size()/131072=3068
+curSet.size()/1000000=402
+Timer mid: [takes 6439 ms]
+i=32112640
+curSet.size()/131072=3076
+curSet.size()/1000000=403
+Timer mid: [takes 6456 ms]
+i=32243712
+curSet.size()/131072=3084
+curSet.size()/1000000=404
+Timer mid: [takes 6447 ms]
+i=32374784
+curSet.size()/131072=3092
+curSet.size()/1000000=405
+Timer mid: [takes 6465 ms]
+i=32505856
+curSet.size()/131072=3100
+curSet.size()/1000000=406
+Timer mid: [takes 6463 ms]
+i=32636928
+curSet.size()/131072=3108
+curSet.size()/1000000=407
+Timer mid: [takes 6452 ms]
+i=32768000
+curSet.size()/131072=3115
+curSet.size()/1000000=408
+Timer mid: [takes 6476 ms]
+i=32899072
+curSet.size()/131072=3123
+curSet.size()/1000000=409
+Timer mid: [takes 6510 ms]
+i=33030144
+curSet.size()/131072=3131
+curSet.size()/1000000=410
+Timer mid: [takes 6512 ms]
+i=33161216
+curSet.size()/131072=3139
+curSet.size()/1000000=411
+Timer mid: [takes 6500 ms]
+i=33292288
+curSet.size()/131072=3146
+curSet.size()/1000000=412
+Timer mid: [takes 6490 ms]
+i=33423360
+curSet.size()/131072=3154
+curSet.size()/1000000=413
+Timer mid: [takes 6464 ms]
+i=33554432
+curSet.size()/131072=3162
+curSet.size()/1000000=414
+Timer mid: [takes 6461 ms]
+i=33685504
+curSet.size()/131072=3169
+curSet.size()/1000000=415
+Timer mid: [takes 6452 ms]
+i=33816576
+curSet.size()/131072=3177
+curSet.size()/1000000=416
+Timer mid: [takes 6441 ms]
+i=33947648
+curSet.size()/131072=3184
+curSet.size()/1000000=417
+Timer mid: [takes 6420 ms]
+i=34078720
+curSet.size()/131072=3192
+curSet.size()/1000000=418
+Timer mid: [takes 6432 ms]
+i=34209792
+curSet.size()/131072=3199
+curSet.size()/1000000=419
+Timer mid: [takes 6431 ms]
+i=34340864
+curSet.size()/131072=3207
+curSet.size()/1000000=420
+Timer mid: [takes 6419 ms]
+i=34471936
+curSet.size()/131072=3214
+curSet.size()/1000000=421
+Timer mid: [takes 6432 ms]
+i=34603008
+curSet.size()/131072=3221
+curSet.size()/1000000=422
+Timer mid: [takes 6455 ms]
+i=34734080
+curSet.size()/131072=3229
+curSet.size()/1000000=423
+Timer mid: [takes 6463 ms]
+i=34865152
+curSet.size()/131072=3236
+curSet.size()/1000000=424
+Timer mid: [takes 6456 ms]
+i=34996224
+curSet.size()/131072=3243
+curSet.size()/1000000=425
+Timer mid: [takes 6423 ms]
+i=35127296
+curSet.size()/131072=3250
+curSet.size()/1000000=426
+Timer mid: [takes 6447 ms]
+i=35258368
+curSet.size()/131072=3257
+curSet.size()/1000000=427
+Timer mid: [takes 6443 ms]
+i=35389440
+curSet.size()/131072=3265
+curSet.size()/1000000=427
+Timer mid: [takes 6462 ms]
+i=35520512
+curSet.size()/131072=3272
+curSet.size()/1000000=428
+Timer mid: [takes 6461 ms]
+i=35651584
+curSet.size()/131072=3279
+curSet.size()/1000000=429
+Timer mid: [takes 6457 ms]
+i=35782656
+curSet.size()/131072=3286
+curSet.size()/1000000=430
+Timer mid: [takes 6457 ms]
+i=35913728
+curSet.size()/131072=3293
+curSet.size()/1000000=431
+Timer mid: [takes 6453 ms]
+i=36044800
+curSet.size()/131072=3300
+curSet.size()/1000000=432
+Timer mid: [takes 6433 ms]
+i=36175872
+curSet.size()/131072=3307
+curSet.size()/1000000=433
+Timer mid: [takes 6395 ms]
+i=36306944
+curSet.size()/131072=3314
+curSet.size()/1000000=434
+Timer mid: [takes 6382 ms]
+i=36438016
+curSet.size()/131072=3321
+curSet.size()/1000000=435
+Timer mid: [takes 6460 ms]
+i=36569088
+curSet.size()/131072=3327
+curSet.size()/1000000=436
+Timer mid: [takes 6646 ms]
+i=36700160
+curSet.size()/131072=3334
+curSet.size()/1000000=437
+Timer mid: [takes 6638 ms]
+i=36831232
+curSet.size()/131072=3341
+curSet.size()/1000000=437
+Timer mid: [takes 6656 ms]
+i=36962304
+curSet.size()/131072=3348
+curSet.size()/1000000=438
+Timer mid: [takes 6661 ms]
+i=37093376
+curSet.size()/131072=3354
+curSet.size()/1000000=439
+Timer mid: [takes 6641 ms]
+i=37224448
+curSet.size()/131072=3361
+curSet.size()/1000000=440
+Timer mid: [takes 6623 ms]
+i=37355520
+curSet.size()/131072=3368
+curSet.size()/1000000=441
+Timer mid: [takes 6621 ms]
+i=37486592
+curSet.size()/131072=3374
+curSet.size()/1000000=442
+Timer mid: [takes 6632 ms]
+i=37617664
+curSet.size()/131072=3381
+curSet.size()/1000000=443
+Timer mid: [takes 6694 ms]
+i=37748736
+curSet.size()/131072=3388
+curSet.size()/1000000=444
+Timer mid: [takes 6788 ms]
+i=37879808
+curSet.size()/131072=3394
+curSet.size()/1000000=444
+Timer mid: [takes 6821 ms]
+i=38010880
+curSet.size()/131072=3401
+curSet.size()/1000000=445
+Timer mid: [takes 6829 ms]
+i=38141952
+curSet.size()/131072=3407
+curSet.size()/1000000=446
+Timer mid: [takes 6805 ms]
+i=38273024
+curSet.size()/131072=3414
+curSet.size()/1000000=447
+Timer mid: [takes 6755 ms]
+i=38404096
+curSet.size()/131072=3420
+curSet.size()/1000000=448
+Timer mid: [takes 6739 ms]
+i=38535168
+curSet.size()/131072=3426
+curSet.size()/1000000=449
+Timer mid: [takes 6769 ms]
+i=38666240
+curSet.size()/131072=3433
+curSet.size()/1000000=450
+Timer mid: [takes 6772 ms]
+i=38797312
+curSet.size()/131072=3439
+curSet.size()/1000000=450
+Timer mid: [takes 6775 ms]
+i=38928384
+curSet.size()/131072=3445
+curSet.size()/1000000=451
+Timer mid: [takes 6774 ms]
+i=39059456
+curSet.size()/131072=3452
+curSet.size()/1000000=452
+Timer mid: [takes 6806 ms]
+i=39190528
+curSet.size()/131072=3458
+curSet.size()/1000000=453
+Timer mid: [takes 6808 ms]
+i=39321600
+curSet.size()/131072=3464
+curSet.size()/1000000=454
+Timer mid: [takes 6813 ms]
+i=39452672
+curSet.size()/131072=3470
+curSet.size()/1000000=454
+Timer mid: [takes 6807 ms]
+i=39583744
+curSet.size()/131072=3476
+curSet.size()/1000000=455
+Timer mid: [takes 6798 ms]
+i=39714816
+curSet.size()/131072=3483
+curSet.size()/1000000=456
+Timer mid: [takes 6753 ms]
+i=39845888
+curSet.size()/131072=3489
+curSet.size()/1000000=457
+Timer mid: [takes 6753 ms]
+i=39976960
+curSet.size()/131072=3495
+curSet.size()/1000000=458
+Timer mid: [takes 6744 ms]
+i=40108032
+curSet.size()/131072=3501
+curSet.size()/1000000=458
+Timer mid: [takes 6759 ms]
+i=40239104
+curSet.size()/131072=3507
+curSet.size()/1000000=459
+Timer mid: [takes 6773 ms]
+i=40370176
+curSet.size()/131072=3513
+curSet.size()/1000000=460
+Timer mid: [takes 6599 ms]
+i=40501248
+curSet.size()/131072=3519
+curSet.size()/1000000=461
+Timer mid: [takes 6596 ms]
+i=40632320
+curSet.size()/131072=3525
+curSet.size()/1000000=462
+Timer mid: [takes 6600 ms]
+i=40763392
+curSet.size()/131072=3531
+curSet.size()/1000000=462
+Timer mid: [takes 6590 ms]
+i=40894464
+curSet.size()/131072=3536
+curSet.size()/1000000=463
+Timer mid: [takes 6576 ms]
+i=41025536
+curSet.size()/131072=3542
+curSet.size()/1000000=464
+Timer mid: [takes 6581 ms]
+i=41156608
+curSet.size()/131072=3548
+curSet.size()/1000000=465
+Timer mid: [takes 6621 ms]
+i=41287680
+curSet.size()/131072=3554
+curSet.size()/1000000=465
+Timer mid: [takes 6607 ms]
+i=41418752
+curSet.size()/131072=3560
+curSet.size()/1000000=466
+Timer mid: [takes 6596 ms]
+i=41549824
+curSet.size()/131072=3565
+curSet.size()/1000000=467
+Timer mid: [takes 6584 ms]
+i=41680896
+curSet.size()/131072=3571
+curSet.size()/1000000=468
+Timer mid: [takes 6607 ms]
+i=41811968
+curSet.size()/131072=3577
+curSet.size()/1000000=468
+Timer mid: [takes 6602 ms]
+i=41943040
+curSet.size()/131072=3582
+curSet.size()/1000000=469
+Timer mid: [takes 6598 ms]
+i=42074112
+curSet.size()/131072=3588
+curSet.size()/1000000=470
+Timer mid: [takes 6606 ms]
+i=42205184
+curSet.size()/131072=3594
+curSet.size()/1000000=471
+Timer mid: [takes 6606 ms]
+i=42336256
+curSet.size()/131072=3599
+curSet.size()/1000000=471
+Timer mid: [takes 6586 ms]
+i=42467328
+curSet.size()/131072=3605
+curSet.size()/1000000=472
+Timer mid: [takes 6598 ms]
+i=42598400
+curSet.size()/131072=3610
+curSet.size()/1000000=473
+Timer mid: [takes 6584 ms]
+i=42729472
+curSet.size()/131072=3616
+curSet.size()/1000000=473
+Timer mid: [takes 6596 ms]
+i=42860544
+curSet.size()/131072=3621
+curSet.size()/1000000=474
+Timer mid: [takes 6586 ms]
+i=42991616
+curSet.size()/131072=3627
+curSet.size()/1000000=475
+Timer mid: [takes 6594 ms]
+i=43122688
+curSet.size()/131072=3632
+curSet.size()/1000000=476
+Timer mid: [takes 6602 ms]
+i=43253760
+curSet.size()/131072=3638
+curSet.size()/1000000=476
+Timer mid: [takes 6598 ms]
+i=43384832
+curSet.size()/131072=3643
+curSet.size()/1000000=477
+Timer mid: [takes 6591 ms]
+i=43515904
+curSet.size()/131072=3648
+curSet.size()/1000000=478
+Timer mid: [takes 6658 ms]
+i=43646976
+curSet.size()/131072=3654
+curSet.size()/1000000=478
+Timer mid: [takes 6740 ms]
+i=43778048
+curSet.size()/131072=3659
+curSet.size()/1000000=479
+Timer mid: [takes 6729 ms]
+i=43909120
+curSet.size()/131072=3664
+curSet.size()/1000000=480
+Timer mid: [takes 6738 ms]
+i=44040192
+curSet.size()/131072=3669
+curSet.size()/1000000=481
+Timer mid: [takes 6762 ms]
+i=44171264
+curSet.size()/131072=3675
+curSet.size()/1000000=481
+Timer mid: [takes 6776 ms]
+i=44302336
+curSet.size()/131072=3680
+curSet.size()/1000000=482
+Timer mid: [takes 6753 ms]
+i=44433408
+curSet.size()/131072=3685
+curSet.size()/1000000=483
+Timer mid: [takes 6601 ms]
+i=44564480
+curSet.size()/131072=3690
+curSet.size()/1000000=483
+Timer mid: [takes 6570 ms]
+i=44695552
+curSet.size()/131072=3695
+curSet.size()/1000000=484
+Timer mid: [takes 6555 ms]
+i=44826624
+curSet.size()/131072=3700
+curSet.size()/1000000=485
+Timer mid: [takes 6617 ms]
+i=44957696
+curSet.size()/131072=3705
+curSet.size()/1000000=485
+Timer mid: [takes 6736 ms]
+i=45088768
+curSet.size()/131072=3711
+curSet.size()/1000000=486
+Timer mid: [takes 6763 ms]
+i=45219840
+curSet.size()/131072=3716
+curSet.size()/1000000=487
+Timer mid: [takes 6776 ms]
+i=45350912
+curSet.size()/131072=3721
+curSet.size()/1000000=487
+Timer mid: [takes 6820 ms]
+i=45481984
+curSet.size()/131072=3726
+curSet.size()/1000000=488
+Timer mid: [takes 6704 ms]
+i=45613056
+curSet.size()/131072=3731
+curSet.size()/1000000=489
+Timer mid: [takes 6623 ms]
+i=45744128
+curSet.size()/131072=3735
+curSet.size()/1000000=489
+Timer mid: [takes 6649 ms]
+i=45875200
+curSet.size()/131072=3740
+curSet.size()/1000000=490
+Timer mid: [takes 6702 ms]
+i=46006272
+curSet.size()/131072=3745
+curSet.size()/1000000=490
+Timer mid: [takes 6684 ms]
+i=46137344
+curSet.size()/131072=3750
+curSet.size()/1000000=491
+Timer mid: [takes 6669 ms]
+i=46268416
+curSet.size()/131072=3755
+curSet.size()/1000000=492
+Timer mid: [takes 6604 ms]
+i=46399488
+curSet.size()/131072=3760
+curSet.size()/1000000=492
+Timer mid: [takes 6586 ms]
+i=46530560
+curSet.size()/131072=3765
+curSet.size()/1000000=493
+Timer mid: [takes 6643 ms]
+i=46661632
+curSet.size()/131072=3769
+curSet.size()/1000000=494
+Timer mid: [takes 6625 ms]
+i=46792704
+curSet.size()/131072=3774
+curSet.size()/1000000=494
+Timer mid: [takes 6646 ms]
+i=46923776
+curSet.size()/131072=3779
+curSet.size()/1000000=495
+Timer mid: [takes 6685 ms]
+i=47054848
+curSet.size()/131072=3784
+curSet.size()/1000000=495
+Timer mid: [takes 6706 ms]
+i=47185920
+curSet.size()/131072=3788
+curSet.size()/1000000=496
+Timer mid: [takes 6689 ms]
+i=47316992
+curSet.size()/131072=3793
+curSet.size()/1000000=497
+Timer mid: [takes 6718 ms]
+i=47448064
+curSet.size()/131072=3798
+curSet.size()/1000000=497
+Timer mid: [takes 6706 ms]
+i=47579136
+curSet.size()/131072=3802
+curSet.size()/1000000=498
+Timer mid: [takes 6696 ms]
+i=47710208
+curSet.size()/131072=3807
+curSet.size()/1000000=499
+Timer mid: [takes 6697 ms]
+i=47841280
+curSet.size()/131072=3811
+curSet.size()/1000000=499
+Timer mid: [takes 6712 ms]
+i=47972352
+curSet.size()/131072=3816
+curSet.size()/1000000=500
+Timer mid: [takes 6697 ms]
+i=48103424
+curSet.size()/131072=3820
+curSet.size()/1000000=500
+Timer mid: [takes 6669 ms]
+i=48234496
+curSet.size()/131072=3825
+curSet.size()/1000000=501
+Timer mid: [takes 6682 ms]
+i=48365568
+curSet.size()/131072=3829
+curSet.size()/1000000=501
+Timer mid: [takes 6694 ms]
+i=48496640
+curSet.size()/131072=3834
+curSet.size()/1000000=502
+Timer mid: [takes 6683 ms]
+i=48627712
+curSet.size()/131072=3838
+curSet.size()/1000000=503
+Timer mid: [takes 6684 ms]
+i=48758784
+curSet.size()/131072=3843
+curSet.size()/1000000=503
+Timer mid: [takes 6678 ms]
+i=48889856
+curSet.size()/131072=3847
+curSet.size()/1000000=504
+Timer mid: [takes 6694 ms]
+i=49020928
+curSet.size()/131072=3851
+curSet.size()/1000000=504
+Timer mid: [takes 6692 ms]
+i=49152000
+curSet.size()/131072=3856
+curSet.size()/1000000=505
+Timer mid: [takes 6689 ms]
+i=49283072
+curSet.size()/131072=3860
+curSet.size()/1000000=506
+Timer mid: [takes 6683 ms]
+i=49414144
+curSet.size()/131072=3865
+curSet.size()/1000000=506
+Timer mid: [takes 6676 ms]
+i=49545216
+curSet.size()/131072=3869
+curSet.size()/1000000=507
+Timer mid: [takes 6684 ms]
+i=49676288
+curSet.size()/131072=3873
+curSet.size()/1000000=507
+Timer mid: [takes 6693 ms]
+i=49807360
+curSet.size()/131072=3877
+curSet.size()/1000000=508
+Timer mid: [takes 6679 ms]
+i=49938432
+curSet.size()/131072=3882
+curSet.size()/1000000=508
+Timer mid: [takes 6684 ms]
+i=50069504
+curSet.size()/131072=3886
+curSet.size()/1000000=509
+Timer mid: [takes 6698 ms]
+i=50200576
+curSet.size()/131072=3890
+curSet.size()/1000000=509
+Timer mid: [takes 6670 ms]
+i=50331648
+curSet.size()/131072=3894
+curSet.size()/1000000=510
+Timer mid: [takes 6680 ms]
+i=50462720
+curSet.size()/131072=3898
+curSet.size()/1000000=511
+Timer mid: [takes 6660 ms]
+i=50593792
+curSet.size()/131072=3903
+curSet.size()/1000000=511
+Timer mid: [takes 6677 ms]
+i=50724864
+curSet.size()/131072=3907
+curSet.size()/1000000=512
+Timer mid: [takes 6667 ms]
+i=50855936
+curSet.size()/131072=3911
+curSet.size()/1000000=512
+Timer mid: [takes 6688 ms]
+i=50987008
+curSet.size()/131072=3915
+curSet.size()/1000000=513
+Timer mid: [takes 6664 ms]
+i=51118080
+curSet.size()/131072=3919
+curSet.size()/1000000=513
+Timer mid: [takes 6685 ms]
+i=51249152
+curSet.size()/131072=3923
+curSet.size()/1000000=514
+Timer mid: [takes 6673 ms]
+i=51380224
+curSet.size()/131072=3927
+curSet.size()/1000000=514
+Timer mid: [takes 6677 ms]
+i=51511296
+curSet.size()/131072=3931
+curSet.size()/1000000=515
+Timer mid: [takes 6664 ms]
+i=51642368
+curSet.size()/131072=3935
+curSet.size()/1000000=515
+Timer mid: [takes 6671 ms]
+i=51773440
+curSet.size()/131072=3939
+curSet.size()/1000000=516
+Timer mid: [takes 6674 ms]
+i=51904512
+curSet.size()/131072=3943
+curSet.size()/1000000=516
+Timer mid: [takes 6681 ms]
+i=52035584
+curSet.size()/131072=3947
+curSet.size()/1000000=517
+Timer mid: [takes 6660 ms]
+i=52166656
+curSet.size()/131072=3951
+curSet.size()/1000000=517
+Timer mid: [takes 6656 ms]
+i=52297728
+curSet.size()/131072=3955
+curSet.size()/1000000=518
+Timer mid: [takes 6670 ms]
+i=52428800
+curSet.size()/131072=3958
+curSet.size()/1000000=518
+Timer mid: [takes 6677 ms]
+i=52559872
+curSet.size()/131072=3962
+curSet.size()/1000000=519
+Timer mid: [takes 6658 ms]
+i=52690944
+curSet.size()/131072=3966
+curSet.size()/1000000=519
+Timer mid: [takes 6677 ms]
+i=52822016
+curSet.size()/131072=3970
+curSet.size()/1000000=520
+Timer mid: [takes 6661 ms]
+i=52953088
+curSet.size()/131072=3974
+curSet.size()/1000000=520
+Timer mid: [takes 6668 ms]
+i=53084160
+curSet.size()/131072=3978
+curSet.size()/1000000=521
+Timer mid: [takes 6649 ms]
+i=53215232
+curSet.size()/131072=3981
+curSet.size()/1000000=521
+Timer mid: [takes 6674 ms]
+i=53346304
+curSet.size()/131072=3985
+curSet.size()/1000000=522
+Timer mid: [takes 6662 ms]
+i=53477376
+curSet.size()/131072=3989
+curSet.size()/1000000=522
+Timer mid: [takes 6654 ms]
+i=53608448
+curSet.size()/131072=3992
+curSet.size()/1000000=523
+Timer mid: [takes 6662 ms]
+i=53739520
+curSet.size()/131072=3996
+curSet.size()/1000000=523
+Timer mid: [takes 6663 ms]
+i=53870592
+curSet.size()/131072=4000
+curSet.size()/1000000=524
+Timer mid: [takes 6675 ms]
+i=54001664
+curSet.size()/131072=4003
+curSet.size()/1000000=524
+Timer mid: [takes 6650 ms]
+i=54132736
+curSet.size()/131072=4007
+curSet.size()/1000000=525
+Timer mid: [takes 6682 ms]
+i=54263808
+curSet.size()/131072=4011
+curSet.size()/1000000=525
+Timer mid: [takes 6665 ms]
+i=54394880
+curSet.size()/131072=4014
+curSet.size()/1000000=526
+Timer mid: [takes 6668 ms]
+i=54525952
+curSet.size()/131072=4018
+curSet.size()/1000000=526
+Timer mid: [takes 6649 ms]
+i=54657024
+curSet.size()/131072=4022
+curSet.size()/1000000=527
+Timer mid: [takes 6663 ms]
+i=54788096
+curSet.size()/131072=4025
+curSet.size()/1000000=527
+Timer mid: [takes 6659 ms]
+i=54919168
+curSet.size()/131072=4029
+curSet.size()/1000000=528
+Timer mid: [takes 6644 ms]
+i=55050240
+curSet.size()/131072=4032
+curSet.size()/1000000=528
+Timer mid: [takes 6673 ms]
+i=55181312
+curSet.size()/131072=4036
+curSet.size()/1000000=529
+Timer mid: [takes 6659 ms]
+i=55312384
+curSet.size()/131072=4039
+curSet.size()/1000000=529
+Timer mid: [takes 6657 ms]
+i=55443456
+curSet.size()/131072=4043
+curSet.size()/1000000=529
+Timer mid: [takes 6657 ms]
+i=55574528
+curSet.size()/131072=4046
+curSet.size()/1000000=530
+Timer mid: [takes 6643 ms]
+i=55705600
+curSet.size()/131072=4049
+curSet.size()/1000000=530
+Timer mid: [takes 6639 ms]
+i=55836672
+curSet.size()/131072=4053
+curSet.size()/1000000=531
+Timer mid: [takes 6657 ms]
+i=55967744
+curSet.size()/131072=4056
+curSet.size()/1000000=531
+Timer mid: [takes 6673 ms]
+i=56098816
+curSet.size()/131072=4060
+curSet.size()/1000000=532
+Timer mid: [takes 6655 ms]
+i=56229888
+curSet.size()/131072=4063
+curSet.size()/1000000=532
+Timer mid: [takes 6656 ms]
+i=56360960
+curSet.size()/131072=4066
+curSet.size()/1000000=533
+Timer mid: [takes 6680 ms]
+i=56492032
+curSet.size()/131072=4070
+curSet.size()/1000000=533
+Timer mid: [takes 6658 ms]
+i=56623104
+curSet.size()/131072=4073
+curSet.size()/1000000=533
+Timer mid: [takes 6645 ms]
+i=56754176
+curSet.size()/131072=4076
+curSet.size()/1000000=534
+Timer mid: [takes 6673 ms]
+i=56885248
+curSet.size()/131072=4080
+curSet.size()/1000000=534
+Timer mid: [takes 6628 ms]
+i=57016320
+curSet.size()/131072=4083
+curSet.size()/1000000=535
+Timer mid: [takes 6681 ms]
+i=57147392
+curSet.size()/131072=4086
+curSet.size()/1000000=535
+Timer mid: [takes 6669 ms]
+i=57278464
+curSet.size()/131072=4089
+curSet.size()/1000000=536
+Timer mid: [takes 6678 ms]
+i=57409536
+curSet.size()/131072=4093
+curSet.size()/1000000=536
+Timer mid: [takes 6674 ms]
+i=57540608
+curSet.size()/131072=4096
+curSet.size()/1000000=536
+Timer mid: [takes 6649 ms]
+i=57671680
+curSet.size()/131072=4099
+curSet.size()/1000000=537
+Timer mid: [takes 6639 ms]
+i=57802752
+curSet.size()/131072=4102
+curSet.size()/1000000=537
+Timer mid: [takes 6646 ms]
+i=57933824
+curSet.size()/131072=4105
+curSet.size()/1000000=538
+Timer mid: [takes 6693 ms]
+i=58064896
+curSet.size()/131072=4108
+curSet.size()/1000000=538
+Timer mid: [takes 6712 ms]
+i=58195968
+curSet.size()/131072=4112
+curSet.size()/1000000=538
+Timer mid: [takes 6870 ms]
+i=58327040
+curSet.size()/131072=4115
+curSet.size()/1000000=539
+Timer mid: [takes 6713 ms]
+i=58458112
+curSet.size()/131072=4118
+curSet.size()/1000000=539
+Timer mid: [takes 6712 ms]
+i=58589184
+curSet.size()/131072=4121
+curSet.size()/1000000=540
+Timer mid: [takes 6725 ms]
+i=58720256
+curSet.size()/131072=4124
+curSet.size()/1000000=540
+Timer mid: [takes 6735 ms]
+i=58851328
+curSet.size()/131072=4127
+curSet.size()/1000000=540
+Timer mid: [takes 6786 ms]
+i=58982400
+curSet.size()/131072=4130
+curSet.size()/1000000=541
+Timer mid: [takes 6806 ms]
+i=59113472
+curSet.size()/131072=4133
+curSet.size()/1000000=541
+Timer mid: [takes 6763 ms]
+i=59244544
+curSet.size()/131072=4136
+curSet.size()/1000000=542
+Timer mid: [takes 6735 ms]
+i=59375616
+curSet.size()/131072=4139
+curSet.size()/1000000=542
+Timer mid: [takes 6746 ms]
+i=59506688
+curSet.size()/131072=4142
+curSet.size()/1000000=542
+Timer mid: [takes 6980 ms]
+i=59637760
+curSet.size()/131072=4145
+curSet.size()/1000000=543
+Timer mid: [takes 6593 ms]
+i=59768832
+curSet.size()/131072=4148
+curSet.size()/1000000=543
+Timer mid: [takes 6605 ms]
+i=59899904
+curSet.size()/131072=4151
+curSet.size()/1000000=544
+Timer mid: [takes 6601 ms]
+i=60030976
+curSet.size()/131072=4154
+curSet.size()/1000000=544
+Timer mid: [takes 6606 ms]
+i=60162048
+curSet.size()/131072=4157
+curSet.size()/1000000=544
+Timer mid: [takes 6581 ms]
+i=60293120
+curSet.size()/131072=4160
+curSet.size()/1000000=545
+Timer mid: [takes 6532 ms]
+i=60424192
+curSet.size()/131072=4163
+curSet.size()/1000000=545
+Timer mid: [takes 6785 ms]
+i=60555264
+curSet.size()/131072=4165
+curSet.size()/1000000=546
+Timer mid: [takes 6744 ms]
+i=60686336
+curSet.size()/131072=4168
+curSet.size()/1000000=546
+Timer mid: [takes 6785 ms]
+i=60817408
+curSet.size()/131072=4171
+curSet.size()/1000000=546
+Timer mid: [takes 6817 ms]
+i=60948480
+curSet.size()/131072=4174
+curSet.size()/1000000=547
+Timer mid: [takes 6850 ms]
+i=61079552
+curSet.size()/131072=4177
+curSet.size()/1000000=547
+Timer mid: [takes 6859 ms]
+i=61210624
+curSet.size()/131072=4180
+curSet.size()/1000000=547
+Timer mid: [takes 6839 ms]
+i=61341696
+curSet.size()/131072=4182
+curSet.size()/1000000=548
+Timer mid: [takes 6832 ms]
+i=61472768
+curSet.size()/131072=4185
+curSet.size()/1000000=548
+Timer mid: [takes 6750 ms]
+i=61603840
+curSet.size()/131072=4188
+curSet.size()/1000000=548
+Timer mid: [takes 6740 ms]
+i=61734912
+curSet.size()/131072=4191
+curSet.size()/1000000=549
+Timer mid: [takes 6707 ms]
+i=61865984
+curSet.size()/131072=4193
+curSet.size()/1000000=549
+Timer mid: [takes 6694 ms]
+i=61997056
+curSet.size()/131072=4196
+curSet.size()/1000000=550
+Timer mid: [takes 6703 ms]
+i=62128128
+curSet.size()/131072=4199
+curSet.size()/1000000=550
+Timer mid: [takes 6700 ms]
+i=62259200
+curSet.size()/131072=4201
+curSet.size()/1000000=550
+Timer mid: [takes 6707 ms]
+i=62390272
+curSet.size()/131072=4204
+curSet.size()/1000000=551
+Timer mid: [takes 6755 ms]
+i=62521344
+curSet.size()/131072=4207
+curSet.size()/1000000=551
+Timer mid: [takes 6783 ms]
+i=62652416
+curSet.size()/131072=4209
+curSet.size()/1000000=551
+Timer mid: [takes 6770 ms]
+i=62783488
+curSet.size()/131072=4212
+curSet.size()/1000000=552
+Timer mid: [takes 6759 ms]
+i=62914560
+curSet.size()/131072=4215
+curSet.size()/1000000=552
+Timer mid: [takes 6771 ms]
+i=63045632
+curSet.size()/131072=4217
+curSet.size()/1000000=552
+Timer mid: [takes 6769 ms]
+i=63176704
+curSet.size()/131072=4220
+curSet.size()/1000000=553
+Timer mid: [takes 6750 ms]
+i=63307776
+curSet.size()/131072=4222
+curSet.size()/1000000=553
+Timer mid: [takes 6787 ms]
+i=63438848
+curSet.size()/131072=4225
+curSet.size()/1000000=553
+Timer mid: [takes 6784 ms]
+i=63569920
+curSet.size()/131072=4228
+curSet.size()/1000000=554
+Timer mid: [takes 6773 ms]
+i=63700992
+curSet.size()/131072=4230
+curSet.size()/1000000=554
+Timer mid: [takes 6793 ms]
+i=63832064
+curSet.size()/131072=4233
+curSet.size()/1000000=554
+Timer mid: [takes 6782 ms]
+i=63963136
+curSet.size()/131072=4235
+curSet.size()/1000000=555
+Timer mid: [takes 6812 ms]
+i=64094208
+curSet.size()/131072=4238
+curSet.size()/1000000=555
+Timer mid: [takes 6825 ms]
+i=64225280
+curSet.size()/131072=4240
+curSet.size()/1000000=555
+Timer mid: [takes 6832 ms]
+i=64356352
+curSet.size()/131072=4243
+curSet.size()/1000000=556
+Timer mid: [takes 6812 ms]
+i=64487424
+curSet.size()/131072=4245
+curSet.size()/1000000=556
+Timer mid: [takes 6819 ms]
+i=64618496
+curSet.size()/131072=4248
+curSet.size()/1000000=556
+Timer mid: [takes 6815 ms]
+i=64749568
+curSet.size()/131072=4250
+curSet.size()/1000000=557
+Timer mid: [takes 6816 ms]
+i=64880640
+curSet.size()/131072=4252
+curSet.size()/1000000=557
+Timer mid: [takes 6800 ms]
+i=65011712
+curSet.size()/131072=4255
+curSet.size()/1000000=557
+Timer mid: [takes 6842 ms]
+i=65142784
+curSet.size()/131072=4257
+curSet.size()/1000000=558
+Timer mid: [takes 6889 ms]
+i=65273856
+curSet.size()/131072=4260
+curSet.size()/1000000=558
+Timer mid: [takes 6835 ms]
+i=65404928
+curSet.size()/131072=4262
+curSet.size()/1000000=558
+Timer mid: [takes 6833 ms]
+i=65536000
+curSet.size()/131072=4264
+curSet.size()/1000000=559
+Timer mid: [takes 6837 ms]
+i=65667072
+curSet.size()/131072=4267
+curSet.size()/1000000=559
+Timer mid: [takes 6842 ms]
+i=65798144
+curSet.size()/131072=4269
+curSet.size()/1000000=559
+Timer mid: [takes 6854 ms]
+i=65929216
+curSet.size()/131072=4272
+curSet.size()/1000000=559
+Timer mid: [takes 6859 ms]
+i=66060288
+curSet.size()/131072=4274
+curSet.size()/1000000=560
+Timer mid: [takes 6842 ms]
+i=66191360
+curSet.size()/131072=4276
+curSet.size()/1000000=560
+Timer mid: [takes 6866 ms]
+i=66322432
+curSet.size()/131072=4278
+curSet.size()/1000000=560
+Timer mid: [takes 6868 ms]
+i=66453504
+curSet.size()/131072=4281
+curSet.size()/1000000=561
+Timer mid: [takes 6864 ms]
+i=66584576
+curSet.size()/131072=4283
+curSet.size()/1000000=561
+Timer mid: [takes 6859 ms]
+i=66715648
+curSet.size()/131072=4285
+curSet.size()/1000000=561
+Timer mid: [takes 6848 ms]
+i=66846720
+curSet.size()/131072=4288
+curSet.size()/1000000=562
+Timer mid: [takes 6859 ms]
+i=66977792
+curSet.size()/131072=4290
+curSet.size()/1000000=562
+Timer mid: [takes 6876 ms]
+i=67108864
+curSet.size()/131072=4292
+curSet.size()/1000000=562
+Timer mid: [takes 6901 ms]
+i=67239936
+curSet.size()/131072=4294
+curSet.size()/1000000=562
+Timer mid: [takes 6843 ms]
+i=67371008
+curSet.size()/131072=4296
+curSet.size()/1000000=563
+Timer mid: [takes 6869 ms]
+i=67502080
+curSet.size()/131072=4299
+curSet.size()/1000000=563
+Timer mid: [takes 6912 ms]
+i=67633152
+curSet.size()/131072=4301
+curSet.size()/1000000=563
+Timer mid: [takes 6858 ms]
+i=67764224
+curSet.size()/131072=4303
+curSet.size()/1000000=564
+Timer mid: [takes 6857 ms]
+i=67895296
+curSet.size()/131072=4305
+curSet.size()/1000000=564
+Timer mid: [takes 6853 ms]
+i=68026368
+curSet.size()/131072=4307
+curSet.size()/1000000=564
+Timer mid: [takes 6880 ms]
+i=68157440
+curSet.size()/131072=4310
+curSet.size()/1000000=564
+Timer mid: [takes 6888 ms]
+i=68288512
+curSet.size()/131072=4312
+curSet.size()/1000000=565
+Timer mid: [takes 6879 ms]
+i=68419584
+curSet.size()/131072=4314
+curSet.size()/1000000=565
+Timer mid: [takes 6873 ms]
+i=68550656
+curSet.size()/131072=4316
+curSet.size()/1000000=565
+Timer mid: [takes 6876 ms]
+i=68681728
+curSet.size()/131072=4318
+curSet.size()/1000000=566
+Timer mid: [takes 6864 ms]
+i=68812800
+curSet.size()/131072=4320
+curSet.size()/1000000=566
+Timer mid: [takes 6872 ms]
+i=68943872
+curSet.size()/131072=4322
+curSet.size()/1000000=566
+Timer mid: [takes 6878 ms]
+i=69074944
+curSet.size()/131072=4324
+curSet.size()/1000000=566
+Timer mid: [takes 6900 ms]
+i=69206016
+curSet.size()/131072=4326
+curSet.size()/1000000=567
+Timer mid: [takes 6601 ms]
+i=69337088
+curSet.size()/131072=4328
+curSet.size()/1000000=567
+Timer mid: [takes 6598 ms]
+i=69468160
+curSet.size()/131072=4330
+curSet.size()/1000000=567
+Timer mid: [takes 6619 ms]
+i=69599232
+curSet.size()/131072=4332
+curSet.size()/1000000=567
+Timer mid: [takes 6627 ms]
+i=69730304
+curSet.size()/131072=4335
+curSet.size()/1000000=568
+Timer mid: [takes 6624 ms]
+i=69861376
+curSet.size()/131072=4337
+curSet.size()/1000000=568
+Timer mid: [takes 6617 ms]
+i=69992448
+curSet.size()/131072=4339
+curSet.size()/1000000=568
+Timer mid: [takes 6629 ms]
+i=70123520
+curSet.size()/131072=4341
+curSet.size()/1000000=568
+Timer mid: [takes 6618 ms]
+i=70254592
+curSet.size()/131072=4343
+curSet.size()/1000000=569
+Timer mid: [takes 6618 ms]
+i=70385664
+curSet.size()/131072=4345
+curSet.size()/1000000=569
+Timer mid: [takes 6616 ms]
+i=70516736
+curSet.size()/131072=4346
+curSet.size()/1000000=569
+Timer mid: [takes 6605 ms]
+i=70647808
+curSet.size()/131072=4348
+curSet.size()/1000000=570
+Timer mid: [takes 6606 ms]
+i=70778880
+curSet.size()/131072=4350
+curSet.size()/1000000=570
+Timer mid: [takes 6599 ms]
+i=70909952
+curSet.size()/131072=4352
+curSet.size()/1000000=570
+Timer mid: [takes 6617 ms]
+i=71041024
+curSet.size()/131072=4354
+curSet.size()/1000000=570
+Timer mid: [takes 6618 ms]
+i=71172096
+curSet.size()/131072=4356
+curSet.size()/1000000=571
+Timer mid: [takes 6627 ms]
+i=71303168
+curSet.size()/131072=4358
+curSet.size()/1000000=571
+Timer mid: [takes 6628 ms]
+i=71434240
+curSet.size()/131072=4360
+curSet.size()/1000000=571
+Timer mid: [takes 6595 ms]
+i=71565312
+curSet.size()/131072=4362
+curSet.size()/1000000=571
+Timer mid: [takes 6595 ms]
+i=71696384
+curSet.size()/131072=4364
+curSet.size()/1000000=572
+Timer mid: [takes 6593 ms]
+i=71827456
+curSet.size()/131072=4366
+curSet.size()/1000000=572
+Timer mid: [takes 6597 ms]
+i=71958528
+curSet.size()/131072=4367
+curSet.size()/1000000=572
+Timer mid: [takes 6593 ms]
+i=72089600
+curSet.size()/131072=4369
+curSet.size()/1000000=572
+Timer mid: [takes 6607 ms]
+i=72220672
+curSet.size()/131072=4371
+curSet.size()/1000000=572
+Timer mid: [takes 6819 ms]
+i=72351744
+curSet.size()/131072=4373
+curSet.size()/1000000=573
+Timer mid: [takes 6882 ms]
+i=72482816
+curSet.size()/131072=4375
+curSet.size()/1000000=573
+Timer mid: [takes 6841 ms]
+i=72613888
+curSet.size()/131072=4377
+curSet.size()/1000000=573
+Timer mid: [takes 6878 ms]
+i=72744960
+curSet.size()/131072=4378
+curSet.size()/1000000=573
+Timer mid: [takes 6875 ms]
+i=72876032
+curSet.size()/131072=4380
+curSet.size()/1000000=574
+Timer mid: [takes 6860 ms]
+i=73007104
+curSet.size()/131072=4382
+curSet.size()/1000000=574
+Timer mid: [takes 6872 ms]
+i=73138176
+curSet.size()/131072=4384
+curSet.size()/1000000=574
+Timer mid: [takes 6917 ms]
+i=73269248
+curSet.size()/131072=4385
+curSet.size()/1000000=574
+Timer mid: [takes 6549 ms]
+i=73400320
+curSet.size()/131072=4387
+curSet.size()/1000000=575
+Timer mid: [takes 6583 ms]
+i=73531392
+curSet.size()/131072=4389
+curSet.size()/1000000=575
+Timer mid: [takes 6580 ms]
+i=73662464
+curSet.size()/131072=4391
+curSet.size()/1000000=575
+Timer mid: [takes 6587 ms]
+i=73793536
+curSet.size()/131072=4392
+curSet.size()/1000000=575
+Timer mid: [takes 6596 ms]
+i=73924608
+curSet.size()/131072=4394
+curSet.size()/1000000=576
+Timer mid: [takes 6579 ms]
+i=74055680
+curSet.size()/131072=4396
+curSet.size()/1000000=576
+Timer mid: [takes 6622 ms]
+i=74186752
+curSet.size()/131072=4398
+curSet.size()/1000000=576
+Timer mid: [takes 6578 ms]
+i=74317824
+curSet.size()/131072=4399
+curSet.size()/1000000=576
+Timer mid: [takes 6563 ms]
+i=74448896
+curSet.size()/131072=4401
+curSet.size()/1000000=576
+Timer mid: [takes 6579 ms]
+i=74579968
+curSet.size()/131072=4403
+curSet.size()/1000000=577
+Timer mid: [takes 6569 ms]
+i=74711040
+curSet.size()/131072=4404
+curSet.size()/1000000=577
+Timer mid: [takes 6602 ms]
+i=74842112
+curSet.size()/131072=4406
+curSet.size()/1000000=577
+Timer mid: [takes 6559 ms]
+i=74973184
+curSet.size()/131072=4408
+curSet.size()/1000000=577
+Timer mid: [takes 6569 ms]
+i=75104256
+curSet.size()/131072=4409
+curSet.size()/1000000=577
+Timer mid: [takes 6582 ms]
+i=75235328
+curSet.size()/131072=4411
+curSet.size()/1000000=578
+Timer mid: [takes 6579 ms]
+i=75366400
+curSet.size()/131072=4413
+curSet.size()/1000000=578
+Timer mid: [takes 6581 ms]
+i=75497472
+curSet.size()/131072=4414
+curSet.size()/1000000=578
+Timer mid: [takes 6589 ms]
+i=75628544
+curSet.size()/131072=4416
+curSet.size()/1000000=578
+Timer mid: [takes 6567 ms]
+i=75759616
+curSet.size()/131072=4417
+curSet.size()/1000000=579
+Timer mid: [takes 6590 ms]
+i=75890688
+curSet.size()/131072=4419
+curSet.size()/1000000=579
+Timer mid: [takes 6815 ms]
+i=76021760
+curSet.size()/131072=4421
+curSet.size()/1000000=579
+Timer mid: [takes 6789 ms]
+i=76152832
+curSet.size()/131072=4422
+curSet.size()/1000000=579
+Timer mid: [takes 6786 ms]
+i=76283904
+curSet.size()/131072=4424
+curSet.size()/1000000=579
+Timer mid: [takes 6759 ms]
+i=76414976
+curSet.size()/131072=4425
+curSet.size()/1000000=580
+Timer mid: [takes 6777 ms]
+i=76546048
+curSet.size()/131072=4427
+curSet.size()/1000000=580
+Timer mid: [takes 6771 ms]
+i=76677120
+curSet.size()/131072=4428
+curSet.size()/1000000=580
+Timer mid: [takes 6807 ms]
+i=76808192
+curSet.size()/131072=4430
+curSet.size()/1000000=580
+Timer mid: [takes 6782 ms]
+i=76939264
+curSet.size()/131072=4431
+curSet.size()/1000000=580
+Timer mid: [takes 6818 ms]
+i=77070336
+curSet.size()/131072=4433
+curSet.size()/1000000=581
+Timer mid: [takes 6785 ms]
+i=77201408
+curSet.size()/131072=4434
+curSet.size()/1000000=581
+Timer mid: [takes 6794 ms]
+i=77332480
+curSet.size()/131072=4436
+curSet.size()/1000000=581
+Timer mid: [takes 6759 ms]
+i=77463552
+curSet.size()/131072=4437
+curSet.size()/1000000=581
+Timer mid: [takes 6774 ms]
+i=77594624
+curSet.size()/131072=4439
+curSet.size()/1000000=581
+Timer mid: [takes 6781 ms]
+i=77725696
+curSet.size()/131072=4440
+curSet.size()/1000000=582
+Timer mid: [takes 6775 ms]
+i=77856768
+curSet.size()/131072=4442
+curSet.size()/1000000=582
+Timer mid: [takes 6767 ms]
+i=77987840
+curSet.size()/131072=4443
+curSet.size()/1000000=582
+Timer mid: [takes 6802 ms]
+i=78118912
+curSet.size()/131072=4445
+curSet.size()/1000000=582
+Timer mid: [takes 7004 ms]
+i=78249984
+curSet.size()/131072=4446
+curSet.size()/1000000=582
+Timer mid: [takes 6775 ms]
+i=78381056
+curSet.size()/131072=4448
+curSet.size()/1000000=583
+Timer mid: [takes 6783 ms]
+i=78512128
+curSet.size()/131072=4449
+curSet.size()/1000000=583
+Timer mid: [takes 6783 ms]
+i=78643200
+curSet.size()/131072=4451
+curSet.size()/1000000=583
+Timer mid: [takes 6821 ms]
+i=78774272
+curSet.size()/131072=4452
+curSet.size()/1000000=583
+Timer mid: [takes 6818 ms]
+i=78905344
+curSet.size()/131072=4453
+curSet.size()/1000000=583
+Timer mid: [takes 6806 ms]
+i=79036416
+curSet.size()/131072=4455
+curSet.size()/1000000=583
+Timer mid: [takes 6800 ms]
+i=79167488
+curSet.size()/131072=4456
+curSet.size()/1000000=584
+Timer mid: [takes 6786 ms]
+i=79298560
+curSet.size()/131072=4458
+curSet.size()/1000000=584
+Timer mid: [takes 6799 ms]
+i=79429632
+curSet.size()/131072=4459
+curSet.size()/1000000=584
+Timer mid: [takes 6803 ms]
+i=79560704
+curSet.size()/131072=4460
+curSet.size()/1000000=584
+Timer mid: [takes 6806 ms]
+i=79691776
+curSet.size()/131072=4462
+curSet.size()/1000000=584
+Timer mid: [takes 6772 ms]
+i=79822848
+curSet.size()/131072=4463
+curSet.size()/1000000=585
+Timer mid: [takes 6820 ms]
+i=79953920
+curSet.size()/131072=4464
+curSet.size()/1000000=585
+Timer mid: [takes 6779 ms]
+i=80084992
+curSet.size()/131072=4466
+curSet.size()/1000000=585
+Timer mid: [takes 6810 ms]
+i=80216064
+curSet.size()/131072=4467
+curSet.size()/1000000=585
+Timer mid: [takes 6823 ms]
+i=80347136
+curSet.size()/131072=4469
+curSet.size()/1000000=585
+Timer mid: [takes 6787 ms]
+i=80478208
+curSet.size()/131072=4470
+curSet.size()/1000000=585
+Timer mid: [takes 6785 ms]
+i=80609280
+curSet.size()/131072=4471
+curSet.size()/1000000=586
+Timer mid: [takes 6784 ms]
+i=80740352
+curSet.size()/131072=4472
+curSet.size()/1000000=586
+Timer mid: [takes 6780 ms]
+i=80871424
+curSet.size()/131072=4474
+curSet.size()/1000000=586
+Timer mid: [takes 6787 ms]
+i=81002496
+curSet.size()/131072=4475
+curSet.size()/1000000=586
+Timer mid: [takes 6795 ms]
+i=81133568
+curSet.size()/131072=4476
+curSet.size()/1000000=586
+Timer mid: [takes 6784 ms]
+i=81264640
+curSet.size()/131072=4478
+curSet.size()/1000000=586
+Timer mid: [takes 6787 ms]
+i=81395712
+curSet.size()/131072=4479
+curSet.size()/1000000=587
+Timer mid: [takes 6795 ms]
+i=81526784
+curSet.size()/131072=4480
+curSet.size()/1000000=587
+Timer mid: [takes 6802 ms]
+i=81657856
+curSet.size()/131072=4481
+curSet.size()/1000000=587
+Timer mid: [takes 6802 ms]
+i=81788928
+curSet.size()/131072=4483
+curSet.size()/1000000=587
+Timer mid: [takes 6783 ms]
+i=81920000
+curSet.size()/131072=4484
+curSet.size()/1000000=587
+Timer mid: [takes 6781 ms]
+i=82051072
+curSet.size()/131072=4485
+curSet.size()/1000000=587
+Timer mid: [takes 6763 ms]
+i=82182144
+curSet.size()/131072=4486
+curSet.size()/1000000=588
+Timer mid: [takes 6769 ms]
+i=82313216
+curSet.size()/131072=4488
+curSet.size()/1000000=588
+Timer mid: [takes 6784 ms]
+i=82444288
+curSet.size()/131072=4489
+curSet.size()/1000000=588
+Timer mid: [takes 6773 ms]
+i=82575360
+curSet.size()/131072=4490
+curSet.size()/1000000=588
+Timer mid: [takes 6778 ms]
+i=82706432
+curSet.size()/131072=4491
+curSet.size()/1000000=588
+Timer mid: [takes 6768 ms]
+i=82837504
+curSet.size()/131072=4493
+curSet.size()/1000000=588
+Timer mid: [takes 6791 ms]
+i=82968576
+curSet.size()/131072=4494
+curSet.size()/1000000=589
+Timer mid: [takes 6778 ms]
+i=83099648
+curSet.size()/131072=4495
+curSet.size()/1000000=589
+Timer mid: [takes 6768 ms]
+i=83230720
+curSet.size()/131072=4496
+curSet.size()/1000000=589
+Timer mid: [takes 6751 ms]
+i=83361792
+curSet.size()/131072=4497
+curSet.size()/1000000=589
+Timer mid: [takes 6782 ms]
+i=83492864
+curSet.size()/131072=4499
+curSet.size()/1000000=589
+Timer mid: [takes 6819 ms]
+i=83623936
+curSet.size()/131072=4500
+curSet.size()/1000000=589
+Timer mid: [takes 6814 ms]
+i=83755008
+curSet.size()/131072=4501
+curSet.size()/1000000=590
+Timer mid: [takes 6745 ms]
+i=83886080
+curSet.size()/131072=4502
+curSet.size()/1000000=590
+Timer mid: [takes 6789 ms]
+i=84017152
+curSet.size()/131072=4503
+curSet.size()/1000000=590
+Timer mid: [takes 6804 ms]
+i=84148224
+curSet.size()/131072=4504
+curSet.size()/1000000=590
+Timer mid: [takes 6800 ms]
+i=84279296
+curSet.size()/131072=4505
+curSet.size()/1000000=590
+Timer mid: [takes 6748 ms]
+i=84410368
+curSet.size()/131072=4507
+curSet.size()/1000000=590
+Timer mid: [takes 6770 ms]
+i=84541440
+curSet.size()/131072=4508
+curSet.size()/1000000=590
+Timer mid: [takes 6784 ms]
+i=84672512
+curSet.size()/131072=4509
+curSet.size()/1000000=591
+Timer mid: [takes 6781 ms]
+i=84803584
+curSet.size()/131072=4510
+curSet.size()/1000000=591
+Timer mid: [takes 6751 ms]
+i=84934656
+curSet.size()/131072=4511
+curSet.size()/1000000=591
+Timer mid: [takes 6758 ms]
+i=85065728
+curSet.size()/131072=4512
+curSet.size()/1000000=591
+Timer mid: [takes 6781 ms]
+i=85196800
+curSet.size()/131072=4513
+curSet.size()/1000000=591
+Timer mid: [takes 6785 ms]
+i=85327872
+curSet.size()/131072=4514
+curSet.size()/1000000=591
+Timer mid: [takes 6790 ms]
+i=85458944
+curSet.size()/131072=4515
+curSet.size()/1000000=591
+Timer mid: [takes 6804 ms]
+i=85590016
+curSet.size()/131072=4517
+curSet.size()/1000000=592
+Timer mid: [takes 6808 ms]
+i=85721088
+curSet.size()/131072=4518
+curSet.size()/1000000=592
+Timer mid: [takes 6758 ms]
+i=85852160
+curSet.size()/131072=4519
+curSet.size()/1000000=592
+Timer mid: [takes 6781 ms]
+i=85983232
+curSet.size()/131072=4520
+curSet.size()/1000000=592
+Timer mid: [takes 6769 ms]
+i=86114304
+curSet.size()/131072=4521
+curSet.size()/1000000=592
+Timer mid: [takes 6764 ms]
+i=86245376
+curSet.size()/131072=4522
+curSet.size()/1000000=592
+Timer mid: [takes 6742 ms]
+i=86376448
+curSet.size()/131072=4523
+curSet.size()/1000000=592
+Timer mid: [takes 6776 ms]
+i=86507520
+curSet.size()/131072=4524
+curSet.size()/1000000=593
+Timer mid: [takes 6764 ms]
+i=86638592
+curSet.size()/131072=4525
+curSet.size()/1000000=593
+Timer mid: [takes 6769 ms]
+i=86769664
+curSet.size()/131072=4526
+curSet.size()/1000000=593
+Timer mid: [takes 6774 ms]
+i=86900736
+curSet.size()/131072=4527
+curSet.size()/1000000=593
+Timer mid: [takes 6747 ms]
+i=87031808
+curSet.size()/131072=4528
+curSet.size()/1000000=593
+Timer mid: [takes 6764 ms]
+i=87162880
+curSet.size()/131072=4529
+curSet.size()/1000000=593
+Timer mid: [takes 6759 ms]
+i=87293952
+curSet.size()/131072=4530
+curSet.size()/1000000=593
+Timer mid: [takes 6763 ms]
+i=87425024
+curSet.size()/131072=4531
+curSet.size()/1000000=593
+Timer mid: [takes 6755 ms]
+i=87556096
+curSet.size()/131072=4532
+curSet.size()/1000000=594
+Timer mid: [takes 6772 ms]
+i=87687168
+curSet.size()/131072=4533
+curSet.size()/1000000=594
+Timer mid: [takes 6767 ms]
+i=87818240
+curSet.size()/131072=4534
+curSet.size()/1000000=594
+Timer mid: [takes 6744 ms]
+i=87949312
+curSet.size()/131072=4535
+curSet.size()/1000000=594
+Timer mid: [takes 6781 ms]
+i=88080384
+curSet.size()/131072=4536
+curSet.size()/1000000=594
+Timer mid: [takes 6766 ms]
+i=88211456
+curSet.size()/131072=4537
+curSet.size()/1000000=594
+Timer mid: [takes 6771 ms]
+i=88342528
+curSet.size()/131072=4538
+curSet.size()/1000000=594
+Timer mid: [takes 6790 ms]
+i=88473600
+curSet.size()/131072=4539
+curSet.size()/1000000=595
+Timer mid: [takes 6778 ms]
+i=88604672
+curSet.size()/131072=4540
+curSet.size()/1000000=595
+Timer mid: [takes 6770 ms]
+i=88735744
+curSet.size()/131072=4541
+curSet.size()/1000000=595
+Timer mid: [takes 6739 ms]
+i=88866816
+curSet.size()/131072=4542
+curSet.size()/1000000=595
+Timer mid: [takes 6761 ms]
+i=88997888
+curSet.size()/131072=4543
+curSet.size()/1000000=595
+Timer mid: [takes 6761 ms]
+i=89128960
+curSet.size()/131072=4544
+curSet.size()/1000000=595
+Timer mid: [takes 6758 ms]
+i=89260032
+curSet.size()/131072=4545
+curSet.size()/1000000=595
+Timer mid: [takes 6763 ms]
+i=89391104
+curSet.size()/131072=4546
+curSet.size()/1000000=595
+Timer mid: [takes 6762 ms]
+i=89522176
+curSet.size()/131072=4547
+curSet.size()/1000000=595
+Timer mid: [takes 6737 ms]
+i=89653248
+curSet.size()/131072=4547
+curSet.size()/1000000=596
+Timer mid: [takes 6763 ms]
+i=89784320
+curSet.size()/131072=4548
+curSet.size()/1000000=596
+Timer mid: [takes 6736 ms]
+i=89915392
+curSet.size()/131072=4549
+curSet.size()/1000000=596
+Timer mid: [takes 6741 ms]
+i=90046464
+curSet.size()/131072=4550
+curSet.size()/1000000=596
+Timer mid: [takes 6744 ms]
+i=90177536
+curSet.size()/131072=4551
+curSet.size()/1000000=596
+Timer mid: [takes 6744 ms]
+i=90308608
+curSet.size()/131072=4552
+curSet.size()/1000000=596
+Timer mid: [takes 6759 ms]
+i=90439680
+curSet.size()/131072=4553
+curSet.size()/1000000=596
+Timer mid: [takes 6748 ms]
+i=90570752
+curSet.size()/131072=4554
+curSet.size()/1000000=596
+Timer mid: [takes 6747 ms]
+i=90701824
+curSet.size()/131072=4555
+curSet.size()/1000000=597
+Timer mid: [takes 6755 ms]
+i=90832896
+curSet.size()/131072=4556
+curSet.size()/1000000=597
+Timer mid: [takes 6761 ms]
+i=90963968
+curSet.size()/131072=4556
+curSet.size()/1000000=597
+Timer mid: [takes 6736 ms]
+i=91095040
+curSet.size()/131072=4557
+curSet.size()/1000000=597
+Timer mid: [takes 6733 ms]
+i=91226112
+curSet.size()/131072=4558
+curSet.size()/1000000=597
+Timer mid: [takes 6745 ms]
+i=91357184
+curSet.size()/131072=4559
+curSet.size()/1000000=597
+Timer mid: [takes 6751 ms]
+i=91488256
+curSet.size()/131072=4560
+curSet.size()/1000000=597
+Timer mid: [takes 6787 ms]
+i=91619328
+curSet.size()/131072=4561
+curSet.size()/1000000=597
+Timer mid: [takes 6728 ms]
+i=91750400
+curSet.size()/131072=4562
+curSet.size()/1000000=597
+Timer mid: [takes 6732 ms]
+i=91881472
+curSet.size()/131072=4562
+curSet.size()/1000000=598
+Timer mid: [takes 6784 ms]
+i=92012544
+curSet.size()/131072=4563
+curSet.size()/1000000=598
+Timer mid: [takes 6731 ms]
+i=92143616
+curSet.size()/131072=4564
+curSet.size()/1000000=598
+Timer mid: [takes 6777 ms]
+i=92274688
+curSet.size()/131072=4565
+curSet.size()/1000000=598
+Timer mid: [takes 6551 ms]
+i=92405760
+curSet.size()/131072=4566
+curSet.size()/1000000=598
+Timer mid: [takes 6543 ms]
+i=92536832
+curSet.size()/131072=4566
+curSet.size()/1000000=598
+Timer mid: [takes 6515 ms]
+i=92667904
+curSet.size()/131072=4567
+curSet.size()/1000000=598
+Timer mid: [takes 6536 ms]
+i=92798976
+curSet.size()/131072=4568
+curSet.size()/1000000=598
+Timer mid: [takes 6507 ms]
+i=92930048
+curSet.size()/131072=4569
+curSet.size()/1000000=598
+Timer mid: [takes 6489 ms]
+i=93061120
+curSet.size()/131072=4570
+curSet.size()/1000000=599
+Timer mid: [takes 6519 ms]
+i=93192192
+curSet.size()/131072=4570
+curSet.size()/1000000=599
+Timer mid: [takes 6519 ms]
+i=93323264
+curSet.size()/131072=4571
+curSet.size()/1000000=599
+Timer mid: [takes 6487 ms]
+i=93454336
+curSet.size()/131072=4572
+curSet.size()/1000000=599
+Timer mid: [takes 6493 ms]
+i=93585408
+curSet.size()/131072=4573
+curSet.size()/1000000=599
+Timer mid: [takes 6514 ms]
+i=93716480
+curSet.size()/131072=4574
+curSet.size()/1000000=599
+Timer mid: [takes 6527 ms]
+i=93847552
+curSet.size()/131072=4574
+curSet.size()/1000000=599
+Timer mid: [takes 6515 ms]
+i=93978624
+curSet.size()/131072=4575
+curSet.size()/1000000=599
+Timer mid: [takes 6531 ms]
+i=94109696
+curSet.size()/131072=4576
+curSet.size()/1000000=599
+Timer mid: [takes 6528 ms]
+i=94240768
+curSet.size()/131072=4577
+curSet.size()/1000000=599
+Timer mid: [takes 6516 ms]
+i=94371840
+curSet.size()/131072=4577
+curSet.size()/1000000=600
+Timer mid: [takes 6506 ms]
+i=94502912
+curSet.size()/131072=4578
+curSet.size()/1000000=600
+Timer mid: [takes 6512 ms]
+i=94633984
+curSet.size()/131072=4579
+curSet.size()/1000000=600
+Timer mid: [takes 6492 ms]
+i=94765056
+curSet.size()/131072=4580
+curSet.size()/1000000=600
+Timer mid: [takes 6513 ms]
+i=94896128
+curSet.size()/131072=4580
+curSet.size()/1000000=600
+Timer mid: [takes 6524 ms]
+i=95027200
+curSet.size()/131072=4581
+curSet.size()/1000000=600
+Timer mid: [takes 6499 ms]
+i=95158272
+curSet.size()/131072=4582
+curSet.size()/1000000=600
+Timer mid: [takes 6518 ms]
+i=95289344
+curSet.size()/131072=4583
+curSet.size()/1000000=600
+Timer mid: [takes 6509 ms]
+i=95420416
+curSet.size()/131072=4583
+curSet.size()/1000000=600
+Timer mid: [takes 6512 ms]
+i=95551488
+curSet.size()/131072=4584
+curSet.size()/1000000=600
+Timer mid: [takes 6535 ms]
+i=95682560
+curSet.size()/131072=4585
+curSet.size()/1000000=601
+Timer mid: [takes 6486 ms]
+i=95813632
+curSet.size()/131072=4585
+curSet.size()/1000000=601
+Timer mid: [takes 6509 ms]
+i=95944704
+curSet.size()/131072=4586
+curSet.size()/1000000=601
+Timer mid: [takes 6504 ms]
+i=96075776
+curSet.size()/131072=4587
+curSet.size()/1000000=601
+Timer mid: [takes 6484 ms]
+i=96206848
+curSet.size()/131072=4588
+curSet.size()/1000000=601
+Timer mid: [takes 6522 ms]
+i=96337920
+curSet.size()/131072=4588
+curSet.size()/1000000=601
+Timer mid: [takes 6496 ms]
+i=96468992
+curSet.size()/131072=4589
+curSet.size()/1000000=601
+Timer mid: [takes 6500 ms]
+i=96600064
+curSet.size()/131072=4590
+curSet.size()/1000000=601
+Timer mid: [takes 6522 ms]
+i=96731136
+curSet.size()/131072=4590
+curSet.size()/1000000=601
+Timer mid: [takes 6525 ms]
+i=96862208
+curSet.size()/131072=4591
+curSet.size()/1000000=601
+Timer mid: [takes 6499 ms]
+i=96993280
+curSet.size()/131072=4592
+curSet.size()/1000000=601
+Timer mid: [takes 6492 ms]
+i=97124352
+curSet.size()/131072=4592
+curSet.size()/1000000=601
+Timer mid: [takes 6498 ms]
+i=97255424
+curSet.size()/131072=4593
+curSet.size()/1000000=602
+Timer mid: [takes 6500 ms]
+i=97386496
+curSet.size()/131072=4594
+curSet.size()/1000000=602
+Timer mid: [takes 6488 ms]
+i=97517568
+curSet.size()/131072=4594
+curSet.size()/1000000=602
+Timer mid: [takes 6513 ms]
+i=97648640
+curSet.size()/131072=4595
+curSet.size()/1000000=602
+Timer mid: [takes 6511 ms]
+i=97779712
+curSet.size()/131072=4596
+curSet.size()/1000000=602
+Timer mid: [takes 6510 ms]
+i=97910784
+curSet.size()/131072=4596
+curSet.size()/1000000=602
+Timer mid: [takes 6501 ms]
+i=98041856
+curSet.size()/131072=4597
+curSet.size()/1000000=602
+Timer mid: [takes 6517 ms]
+i=98172928
+curSet.size()/131072=4598
+curSet.size()/1000000=602
+Timer mid: [takes 6530 ms]
+i=98304000
+curSet.size()/131072=4598
+curSet.size()/1000000=602
+Timer mid: [takes 6499 ms]
+i=98435072
+curSet.size()/131072=4599
+curSet.size()/1000000=602
+Timer mid: [takes 6497 ms]
+i=98566144
+curSet.size()/131072=4600
+curSet.size()/1000000=602
+Timer mid: [takes 6488 ms]
+i=98697216
+curSet.size()/131072=4600
+curSet.size()/1000000=603
+Timer mid: [takes 6519 ms]
+i=98828288
+curSet.size()/131072=4601
+curSet.size()/1000000=603
+Timer mid: [takes 6521 ms]
+i=98959360
+curSet.size()/131072=4601
+curSet.size()/1000000=603
+Timer mid: [takes 6485 ms]
+i=99090432
+curSet.size()/131072=4602
+curSet.size()/1000000=603
+Timer mid: [takes 6496 ms]
+i=99221504
+curSet.size()/131072=4603
+curSet.size()/1000000=603
+Timer mid: [takes 6503 ms]
+i=99352576
+curSet.size()/131072=4603
+curSet.size()/1000000=603
+Timer mid: [takes 6487 ms]
+i=99483648
+curSet.size()/131072=4604
+curSet.size()/1000000=603
+Timer mid: [takes 6528 ms]
+i=99614720
+curSet.size()/131072=4605
+curSet.size()/1000000=603
+Timer mid: [takes 6482 ms]
+i=99745792
+curSet.size()/131072=4605
+curSet.size()/1000000=603
+Timer mid: [takes 6527 ms]
+i=99876864
+curSet.size()/131072=4606
+curSet.size()/1000000=603
+Timer mid: [takes 6486 ms]
+i=100007936
+curSet.size()/131072=4606
+curSet.size()/1000000=603
+Timer mid: [takes 6511 ms]
+i=100139008
+curSet.size()/131072=4607
+curSet.size()/1000000=603
+Timer mid: [takes 6520 ms]
+i=100270080
+curSet.size()/131072=4607
+curSet.size()/1000000=603
+Timer mid: [takes 6486 ms]
+i=100401152
+curSet.size()/131072=4608
+curSet.size()/1000000=604
+Timer mid: [takes 6519 ms]
+i=100532224
+curSet.size()/131072=4609
+curSet.size()/1000000=604
+Timer mid: [takes 6501 ms]
+i=100663296
+curSet.size()/131072=4609
+curSet.size()/1000000=604
+Timer mid: [takes 6480 ms]
+i=100794368
+curSet.size()/131072=4610
+curSet.size()/1000000=604
+Timer mid: [takes 6502 ms]
+i=100925440
+curSet.size()/131072=4610
+curSet.size()/1000000=604
+Timer mid: [takes 6523 ms]
+i=101056512
+curSet.size()/131072=4611
+curSet.size()/1000000=604
+Timer mid: [takes 6490 ms]
+i=101187584
+curSet.size()/131072=4612
+curSet.size()/1000000=604
+Timer mid: [takes 6490 ms]
+i=101318656
+curSet.size()/131072=4612
+curSet.size()/1000000=604
+Timer mid: [takes 6489 ms]
+i=101449728
+curSet.size()/131072=4613
+curSet.size()/1000000=604
+Timer mid: [takes 6504 ms]
+i=101580800
+curSet.size()/131072=4613
+curSet.size()/1000000=604
+Timer mid: [takes 6502 ms]
+i=101711872
+curSet.size()/131072=4614
+curSet.size()/1000000=604
+Timer mid: [takes 6503 ms]
+i=101842944
+curSet.size()/131072=4614
+curSet.size()/1000000=604
+Timer mid: [takes 6498 ms]
+i=101974016
+curSet.size()/131072=4615
+curSet.size()/1000000=604
+Timer mid: [takes 6461 ms]
+i=102105088
+curSet.size()/131072=4615
+curSet.size()/1000000=605
+Timer mid: [takes 6496 ms]
+i=102236160
+curSet.size()/131072=4616
+curSet.size()/1000000=605
+Timer mid: [takes 6673 ms]
+i=102367232
+curSet.size()/131072=4617
+curSet.size()/1000000=605
+Timer mid: [takes 6449 ms]
+i=102498304
+curSet.size()/131072=4617
+curSet.size()/1000000=605
+Timer mid: [takes 6449 ms]
+i=102629376
+curSet.size()/131072=4618
+curSet.size()/1000000=605
+Timer mid: [takes 6436 ms]
+i=102760448
+curSet.size()/131072=4618
+curSet.size()/1000000=605
+Timer mid: [takes 6459 ms]
+i=102891520
+curSet.size()/131072=4619
+curSet.size()/1000000=605
+Timer mid: [takes 6446 ms]
+i=103022592
+curSet.size()/131072=4619
+curSet.size()/1000000=605
+Timer mid: [takes 6438 ms]
+i=103153664
+curSet.size()/131072=4620
+curSet.size()/1000000=605
+Timer mid: [takes 6455 ms]
+i=103284736
+curSet.size()/131072=4620
+curSet.size()/1000000=605
+Timer mid: [takes 6460 ms]
+i=103415808
+curSet.size()/131072=4621
+curSet.size()/1000000=605
+Timer mid: [takes 6521 ms]
+i=103546880
+curSet.size()/131072=4621
+curSet.size()/1000000=605
+Timer mid: [takes 6463 ms]
+i=103677952
+curSet.size()/131072=4622
+curSet.size()/1000000=605
+Timer mid: [takes 6481 ms]
+i=103809024
+curSet.size()/131072=4622
+curSet.size()/1000000=605
+Timer mid: [takes 6443 ms]
+i=103940096
+curSet.size()/131072=4623
+curSet.size()/1000000=605
+Timer mid: [takes 6478 ms]
+i=104071168
+curSet.size()/131072=4623
+curSet.size()/1000000=606
+Timer mid: [takes 6470 ms]
+i=104202240
+curSet.size()/131072=4624
+curSet.size()/1000000=606
+Timer mid: [takes 6454 ms]
+i=104333312
+curSet.size()/131072=4624
+curSet.size()/1000000=606
+Timer mid: [takes 6494 ms]
+i=104464384
+curSet.size()/131072=4625
+curSet.size()/1000000=606
+Timer mid: [takes 6461 ms]
+i=104595456
+curSet.size()/131072=4625
+curSet.size()/1000000=606
+Timer mid: [takes 6462 ms]
+i=104726528
+curSet.size()/131072=4626
+curSet.size()/1000000=606
+Timer mid: [takes 6479 ms]
+i=104857600
+curSet.size()/131072=4626
+curSet.size()/1000000=606
+Timer mid: [takes 6484 ms]
+i=104988672
+curSet.size()/131072=4627
+curSet.size()/1000000=606
+Timer mid: [takes 6470 ms]
+i=105119744
+curSet.size()/131072=4627
+curSet.size()/1000000=606
+Timer mid: [takes 6448 ms]
+i=105250816
+curSet.size()/131072=4628
+curSet.size()/1000000=606
+Timer mid: [takes 6460 ms]
+i=105381888
+curSet.size()/131072=4628
+curSet.size()/1000000=606
+Timer mid: [takes 6443 ms]
+i=105512960
+curSet.size()/131072=4629
+curSet.size()/1000000=606
+Timer mid: [takes 6467 ms]
+i=105644032
+curSet.size()/131072=4629
+curSet.size()/1000000=606
+Timer mid: [takes 6464 ms]
+i=105775104
+curSet.size()/131072=4630
+curSet.size()/1000000=606
+Timer mid: [takes 6470 ms]
+i=105906176
+curSet.size()/131072=4630
+curSet.size()/1000000=606
+Timer mid: [takes 6435 ms]
+i=106037248
+curSet.size()/131072=4631
+curSet.size()/1000000=606
+Timer mid: [takes 6441 ms]
+i=106168320
+curSet.size()/131072=4631
+curSet.size()/1000000=607
+Timer mid: [takes 6440 ms]
+i=106299392
+curSet.size()/131072=4631
+curSet.size()/1000000=607
+Timer mid: [takes 6470 ms]
+i=106430464
+curSet.size()/131072=4632
+curSet.size()/1000000=607
+Timer mid: [takes 6495 ms]
+i=106561536
+curSet.size()/131072=4632
+curSet.size()/1000000=607
+Timer mid: [takes 6467 ms]
+i=106692608
+curSet.size()/131072=4633
+curSet.size()/1000000=607
+Timer mid: [takes 6459 ms]
+i=106823680
+curSet.size()/131072=4633
+curSet.size()/1000000=607
+Timer mid: [takes 6474 ms]
+i=106954752
+curSet.size()/131072=4634
+curSet.size()/1000000=607
+Timer mid: [takes 6463 ms]
+i=107085824
+curSet.size()/131072=4634
+curSet.size()/1000000=607
+Timer mid: [takes 6467 ms]
+i=107216896
+curSet.size()/131072=4635
+curSet.size()/1000000=607
+Timer mid: [takes 6843 ms]
+i=107347968
+curSet.size()/131072=4635
+curSet.size()/1000000=607
+Timer mid: [takes 6861 ms]
+i=107479040
+curSet.size()/131072=4635
+curSet.size()/1000000=607
+Timer mid: [takes 6850 ms]
+i=107610112
+curSet.size()/131072=4636
+curSet.size()/1000000=607
+Timer mid: [takes 6873 ms]
+i=107741184
+curSet.size()/131072=4636
+curSet.size()/1000000=607
+Timer mid: [takes 6883 ms]
+i=107872256
+curSet.size()/131072=4637
+curSet.size()/1000000=607
+Timer mid: [takes 6842 ms]
+i=108003328
+curSet.size()/131072=4637
+curSet.size()/1000000=607
+Timer mid: [takes 6814 ms]
+i=108134400
+curSet.size()/131072=4638
+curSet.size()/1000000=607
+Timer mid: [takes 6850 ms]
+i=108265472
+curSet.size()/131072=4638
+curSet.size()/1000000=607
+Timer mid: [takes 6835 ms]
+i=108396544
+curSet.size()/131072=4638
+curSet.size()/1000000=608
+Timer mid: [takes 6882 ms]
+i=108527616
+curSet.size()/131072=4639
+curSet.size()/1000000=608
+Timer mid: [takes 6854 ms]
+i=108658688
+curSet.size()/131072=4639
+curSet.size()/1000000=608
+Timer mid: [takes 6817 ms]
+i=108789760
+curSet.size()/131072=4640
+curSet.size()/1000000=608
+Timer mid: [takes 6866 ms]
+i=108920832
+curSet.size()/131072=4640
+curSet.size()/1000000=608
+Timer mid: [takes 6850 ms]
+i=109051904
+curSet.size()/131072=4640
+curSet.size()/1000000=608
+Timer mid: [takes 6883 ms]
+i=109182976
+curSet.size()/131072=4641
+curSet.size()/1000000=608
+Timer mid: [takes 6823 ms]
+i=109314048
+curSet.size()/131072=4641
+curSet.size()/1000000=608
+Timer mid: [takes 6819 ms]
+i=109445120
+curSet.size()/131072=4642
+curSet.size()/1000000=608
+Timer mid: [takes 6871 ms]
+i=109576192
+curSet.size()/131072=4642
+curSet.size()/1000000=608
+Timer mid: [takes 6824 ms]
+i=109707264
+curSet.size()/131072=4642
+curSet.size()/1000000=608
+Timer mid: [takes 6845 ms]
+i=109838336
+curSet.size()/131072=4643
+curSet.size()/1000000=608
+Timer mid: [takes 6844 ms]
+i=109969408
+curSet.size()/131072=4643
+curSet.size()/1000000=608
+Timer mid: [takes 6821 ms]
+i=110100480
+curSet.size()/131072=4644
+curSet.size()/1000000=608
+Timer mid: [takes 6875 ms]
+i=110231552
+curSet.size()/131072=4644
+curSet.size()/1000000=608
+Timer mid: [takes 6823 ms]
+i=110362624
+curSet.size()/131072=4644
+curSet.size()/1000000=608
+Timer mid: [takes 6844 ms]
+i=110493696
+curSet.size()/131072=4645
+curSet.size()/1000000=608
+Timer mid: [takes 6855 ms]
+i=110624768
+curSet.size()/131072=4645
+curSet.size()/1000000=608
+Timer mid: [takes 6816 ms]
+i=110755840
+curSet.size()/131072=4646
+curSet.size()/1000000=608
+Timer mid: [takes 6865 ms]
+i=110886912
+curSet.size()/131072=4646
+curSet.size()/1000000=609
+Timer mid: [takes 6804 ms]
+i=111017984
+curSet.size()/131072=4646
+curSet.size()/1000000=609
+Timer mid: [takes 6870 ms]
+i=111149056
+curSet.size()/131072=4647
+curSet.size()/1000000=609
+Timer mid: [takes 6831 ms]
+i=111280128
+curSet.size()/131072=4647
+curSet.size()/1000000=609
+Timer mid: [takes 6797 ms]
+i=111411200
+curSet.size()/131072=4647
+curSet.size()/1000000=609
+Timer mid: [takes 6871 ms]
+i=111542272
+curSet.size()/131072=4648
+curSet.size()/1000000=609
+Timer mid: [takes 6835 ms]
+i=111673344
+curSet.size()/131072=4648
+curSet.size()/1000000=609
+Timer mid: [takes 6809 ms]
+i=111804416
+curSet.size()/131072=4649
+curSet.size()/1000000=609
+Timer mid: [takes 6849 ms]
+i=111935488
+curSet.size()/131072=4649
+curSet.size()/1000000=609
+Timer mid: [takes 6842 ms]
+i=112066560
+curSet.size()/131072=4649
+curSet.size()/1000000=609
+Timer mid: [takes 6810 ms]
+i=112197632
+curSet.size()/131072=4650
+curSet.size()/1000000=609
+Timer mid: [takes 6814 ms]
+i=112328704
+curSet.size()/131072=4650
+curSet.size()/1000000=609
+Timer mid: [takes 6880 ms]
+i=112459776
+curSet.size()/131072=4650
+curSet.size()/1000000=609
+Timer mid: [takes 6844 ms]
+i=112590848
+curSet.size()/131072=4651
+curSet.size()/1000000=609
+Timer mid: [takes 6860 ms]
+i=112721920
+curSet.size()/131072=4651
+curSet.size()/1000000=609
+Timer mid: [takes 6832 ms]
+i=112852992
+curSet.size()/131072=4651
+curSet.size()/1000000=609
+Timer mid: [takes 6819 ms]
+i=112984064
+curSet.size()/131072=4652
+curSet.size()/1000000=609
+Timer mid: [takes 6838 ms]
+i=113115136
+curSet.size()/131072=4652
+curSet.size()/1000000=609
+Timer mid: [takes 6849 ms]
+i=113246208
+curSet.size()/131072=4652
+curSet.size()/1000000=609
+Timer mid: [takes 6826 ms]
+i=113377280
+curSet.size()/131072=4653
+curSet.size()/1000000=609
+Timer mid: [takes 6850 ms]
+i=113508352
+curSet.size()/131072=4653
+curSet.size()/1000000=609
+Timer mid: [takes 6822 ms]
+i=113639424
+curSet.size()/131072=4653
+curSet.size()/1000000=609
+Timer mid: [takes 6816 ms]
+i=113770496
+curSet.size()/131072=4654
+curSet.size()/1000000=610
+Timer mid: [takes 6813 ms]
+i=113901568
+curSet.size()/131072=4654
+curSet.size()/1000000=610
+Timer mid: [takes 6823 ms]
+i=114032640
+curSet.size()/131072=4654
+curSet.size()/1000000=610
+Timer mid: [takes 6874 ms]
+i=114163712
+curSet.size()/131072=4655
+curSet.size()/1000000=610
+Timer mid: [takes 6865 ms]
+i=114294784
+curSet.size()/131072=4655
+curSet.size()/1000000=610
+Timer mid: [takes 6823 ms]
+i=114425856
+curSet.size()/131072=4655
+curSet.size()/1000000=610
+Timer mid: [takes 6846 ms]
+i=114556928
+curSet.size()/131072=4656
+curSet.size()/1000000=610
+Timer mid: [takes 6836 ms]
+i=114688000
+curSet.size()/131072=4656
+curSet.size()/1000000=610
+Timer mid: [takes 6811 ms]
+i=114819072
+curSet.size()/131072=4656
+curSet.size()/1000000=610
+Timer mid: [takes 6828 ms]
+i=114950144
+curSet.size()/131072=4657
+curSet.size()/1000000=610
+Timer mid: [takes 6808 ms]
+i=115081216
+curSet.size()/131072=4657
+curSet.size()/1000000=610
+Timer mid: [takes 6817 ms]
+i=115212288
+curSet.size()/131072=4657
+curSet.size()/1000000=610
+Timer mid: [takes 6821 ms]
+i=115343360
+curSet.size()/131072=4657
+curSet.size()/1000000=610
+Timer mid: [takes 6859 ms]
+i=115474432
+curSet.size()/131072=4658
+curSet.size()/1000000=610
+Timer mid: [takes 6802 ms]
+i=115605504
+curSet.size()/131072=4658
+curSet.size()/1000000=610
+Timer mid: [takes 6815 ms]
+i=115736576
+curSet.size()/131072=4658
+curSet.size()/1000000=610
+Timer mid: [takes 6814 ms]
+i=115867648
+curSet.size()/131072=4659
+curSet.size()/1000000=610
+Timer mid: [takes 6861 ms]
+i=115998720
+curSet.size()/131072=4659
+curSet.size()/1000000=610
+Timer mid: [takes 6856 ms]
+i=116129792
+curSet.size()/131072=4659
+curSet.size()/1000000=610
+Timer mid: [takes 6672 ms]
+i=116260864
+curSet.size()/131072=4660
+curSet.size()/1000000=610
+Timer mid: [takes 6723 ms]
+i=116391936
+curSet.size()/131072=4660
+curSet.size()/1000000=610
+Timer mid: [takes 6719 ms]
+i=116523008
+curSet.size()/131072=4660
+curSet.size()/1000000=610
+Timer mid: [takes 6681 ms]
+i=116654080
+curSet.size()/131072=4660
+curSet.size()/1000000=610
+Timer mid: [takes 6753 ms]
+i=116785152
+curSet.size()/131072=4661
+curSet.size()/1000000=610
+Timer mid: [takes 6699 ms]
+i=116916224
+curSet.size()/131072=4661
+curSet.size()/1000000=610
+Timer mid: [takes 6705 ms]
+i=117047296
+curSet.size()/131072=4661
+curSet.size()/1000000=611
+Timer mid: [takes 6722 ms]
+i=117178368
+curSet.size()/131072=4662
+curSet.size()/1000000=611
+Timer mid: [takes 6667 ms]
+i=117309440
+curSet.size()/131072=4662
+curSet.size()/1000000=611
+Timer mid: [takes 6755 ms]
+i=117440512
+curSet.size()/131072=4662
+curSet.size()/1000000=611
+Timer mid: [takes 6660 ms]
+i=117571584
+curSet.size()/131072=4662
+curSet.size()/1000000=611
+Timer mid: [takes 6718 ms]
+i=117702656
+curSet.size()/131072=4663
+curSet.size()/1000000=611
+Timer mid: [takes 6663 ms]
+i=117833728
+curSet.size()/131072=4663
+curSet.size()/1000000=611
+Timer mid: [takes 6693 ms]
+i=117964800
+curSet.size()/131072=4663
+curSet.size()/1000000=611
+Timer mid: [takes 6675 ms]
+i=118095872
+curSet.size()/131072=4664
+curSet.size()/1000000=611
+Timer mid: [takes 6700 ms]
+i=118226944
+curSet.size()/131072=4664
+curSet.size()/1000000=611
+Timer mid: [takes 6642 ms]
+i=118358016
+curSet.size()/131072=4664
+curSet.size()/1000000=611
+Timer mid: [takes 6699 ms]
+i=118489088
+curSet.size()/131072=4664
+curSet.size()/1000000=611
+Timer mid: [takes 6651 ms]
+i=118620160
+curSet.size()/131072=4665
+curSet.size()/1000000=611
+Timer mid: [takes 6751 ms]
+i=118751232
+curSet.size()/131072=4665
+curSet.size()/1000000=611
+Timer mid: [takes 6664 ms]
+i=118882304
+curSet.size()/131072=4665
+curSet.size()/1000000=611
+Timer mid: [takes 6682 ms]
+i=119013376
+curSet.size()/131072=4665
+curSet.size()/1000000=611
+Timer mid: [takes 6730 ms]
+i=119144448
+curSet.size()/131072=4666
+curSet.size()/1000000=611
+Timer mid: [takes 6649 ms]
+i=119275520
+curSet.size()/131072=4666
+curSet.size()/1000000=611
+Timer mid: [takes 6702 ms]
+i=119406592
+curSet.size()/131072=4666
+curSet.size()/1000000=611
+Timer mid: [takes 6693 ms]
+i=119537664
+curSet.size()/131072=4666
+curSet.size()/1000000=611
+Timer mid: [takes 6610 ms]
+i=119668736
+curSet.size()/131072=4667
+curSet.size()/1000000=611
+Timer mid: [takes 6666 ms]
+i=119799808
+curSet.size()/131072=4667
+curSet.size()/1000000=611
+Timer mid: [takes 6679 ms]
+i=119930880
+curSet.size()/131072=4667
+curSet.size()/1000000=611
+Timer mid: [takes 6606 ms]
+i=120061952
+curSet.size()/131072=4667
+curSet.size()/1000000=611
+Timer mid: [takes 6627 ms]
+i=120193024
+curSet.size()/131072=4668
+curSet.size()/1000000=611
+Timer mid: [takes 6669 ms]
+i=120324096
+curSet.size()/131072=4668
+curSet.size()/1000000=611
+Timer mid: [takes 6652 ms]
+i=120455168
+curSet.size()/131072=4668
+curSet.size()/1000000=611
+Timer mid: [takes 6651 ms]
+i=120586240
+curSet.size()/131072=4668
+curSet.size()/1000000=611
+Timer mid: [takes 6634 ms]
+i=120717312
+curSet.size()/131072=4669
+curSet.size()/1000000=611
+Timer mid: [takes 6629 ms]
+i=120848384
+curSet.size()/131072=4669
+curSet.size()/1000000=612
+Timer mid: [takes 6687 ms]
+i=120979456
+curSet.size()/131072=4669
+curSet.size()/1000000=612
+Timer mid: [takes 6655 ms]
+i=121110528
+curSet.size()/131072=4669
+curSet.size()/1000000=612
+Timer mid: [takes 6707 ms]
+i=121241600
+curSet.size()/131072=4670
+curSet.size()/1000000=612
+Timer mid: [takes 6619 ms]
+i=121372672
+curSet.size()/131072=4670
+curSet.size()/1000000=612
+Timer mid: [takes 6623 ms]
+i=121503744
+curSet.size()/131072=4670
+curSet.size()/1000000=612
+Timer mid: [takes 6656 ms]
+i=121634816
+curSet.size()/131072=4670
+curSet.size()/1000000=612
+Timer mid: [takes 6663 ms]
+i=121765888
+curSet.size()/131072=4671
+curSet.size()/1000000=612
+Timer mid: [takes 6655 ms]
+i=121896960
+curSet.size()/131072=4671
+curSet.size()/1000000=612
+Timer mid: [takes 6667 ms]
+i=122028032
+curSet.size()/131072=4671
+curSet.size()/1000000=612
+Timer mid: [takes 6657 ms]
+i=122159104
+curSet.size()/131072=4671
+curSet.size()/1000000=612
+Timer mid: [takes 6651 ms]
+i=122290176
+curSet.size()/131072=4671
+curSet.size()/1000000=612
+Timer mid: [takes 6629 ms]
+i=122421248
+curSet.size()/131072=4672
+curSet.size()/1000000=612
+Timer mid: [takes 6666 ms]
+i=122552320
+curSet.size()/131072=4672
+curSet.size()/1000000=612
+Timer mid: [takes 6651 ms]
+i=122683392
+curSet.size()/131072=4672
+curSet.size()/1000000=612
+Timer mid: [takes 6643 ms]
+i=122814464
+curSet.size()/131072=4672
+curSet.size()/1000000=612
+Timer mid: [takes 6640 ms]
+i=122945536
+curSet.size()/131072=4673
+curSet.size()/1000000=612
+Timer mid: [takes 6640 ms]
+i=123076608
+curSet.size()/131072=4673
+curSet.size()/1000000=612
+Timer mid: [takes 6665 ms]
+i=123207680
+curSet.size()/131072=4673
+curSet.size()/1000000=612
+Timer mid: [takes 6629 ms]
+i=123338752
+curSet.size()/131072=4673
+curSet.size()/1000000=612
+Timer mid: [takes 6627 ms]
+i=123469824
+curSet.size()/131072=4673
+curSet.size()/1000000=612
+Timer mid: [takes 6616 ms]
+i=123600896
+curSet.size()/131072=4674
+curSet.size()/1000000=612
+Timer mid: [takes 6618 ms]
+i=123731968
+curSet.size()/131072=4674
+curSet.size()/1000000=612
+Timer mid: [takes 6629 ms]
+i=123863040
+curSet.size()/131072=4674
+curSet.size()/1000000=612
+Timer mid: [takes 6620 ms]
+i=123994112
+curSet.size()/131072=4674
+curSet.size()/1000000=612
+Timer mid: [takes 6627 ms]
+i=124125184
+curSet.size()/131072=4674
+curSet.size()/1000000=612
+Timer mid: [takes 6644 ms]
+i=124256256
+curSet.size()/131072=4675
+curSet.size()/1000000=612
+Timer mid: [takes 6670 ms]
+i=124387328
+curSet.size()/131072=4675
+curSet.size()/1000000=612
+Timer mid: [takes 6661 ms]
+i=124518400
+curSet.size()/131072=4675
+curSet.size()/1000000=612
+Timer mid: [takes 6671 ms]
+i=124649472
+curSet.size()/131072=4675
+curSet.size()/1000000=612
+Timer mid: [takes 6606 ms]
+i=124780544
+curSet.size()/131072=4676
+curSet.size()/1000000=612
+Timer mid: [takes 6619 ms]
+i=124911616
+curSet.size()/131072=4676
+curSet.size()/1000000=612
+Timer mid: [takes 6645 ms]
+i=125042688
+curSet.size()/131072=4676
+curSet.size()/1000000=612
+Timer mid: [takes 6660 ms]
+i=125173760
+curSet.size()/131072=4676
+curSet.size()/1000000=612
+Timer mid: [takes 6666 ms]
+i=125304832
+curSet.size()/131072=4676
+curSet.size()/1000000=612
+Timer mid: [takes 6619 ms]
+i=125435904
+curSet.size()/131072=4676
+curSet.size()/1000000=613
+Timer mid: [takes 6622 ms]
+i=125566976
+curSet.size()/131072=4677
+curSet.size()/1000000=613
+Timer mid: [takes 6642 ms]
+i=125698048
+curSet.size()/131072=4677
+curSet.size()/1000000=613
+Timer mid: [takes 6683 ms]
+i=125829120
+curSet.size()/131072=4677
+curSet.size()/1000000=613
+Timer mid: [takes 6655 ms]
+i=125960192
+curSet.size()/131072=4677
+curSet.size()/1000000=613
+Timer mid: [takes 6606 ms]
+i=126091264
+curSet.size()/131072=4677
+curSet.size()/1000000=613
+Timer mid: [takes 6666 ms]
+i=126222336
+curSet.size()/131072=4678
+curSet.size()/1000000=613
+Timer mid: [takes 6686 ms]
+i=126353408
+curSet.size()/131072=4678
+curSet.size()/1000000=613
+Timer mid: [takes 6610 ms]
+i=126484480
+curSet.size()/131072=4678
+curSet.size()/1000000=613
+Timer mid: [takes 6575 ms]
+i=126615552
+curSet.size()/131072=4678
+curSet.size()/1000000=613
+Timer mid: [takes 6712 ms]
+i=126746624
+curSet.size()/131072=4678
+curSet.size()/1000000=613
+Timer mid: [takes 6613 ms]
+i=126877696
+curSet.size()/131072=4679
+curSet.size()/1000000=613
+Timer mid: [takes 6597 ms]
+i=127008768
+curSet.size()/131072=4679
+curSet.size()/1000000=613
+Timer mid: [takes 6699 ms]
+i=127139840
+curSet.size()/131072=4679
+curSet.size()/1000000=613
+Timer mid: [takes 6606 ms]
+i=127270912
+curSet.size()/131072=4679
+curSet.size()/1000000=613
+Timer mid: [takes 6623 ms]
+i=127401984
+curSet.size()/131072=4679
+curSet.size()/1000000=613
+Timer mid: [takes 6687 ms]
+i=127533056
+curSet.size()/131072=4679
+curSet.size()/1000000=613
+Timer mid: [takes 6583 ms]
+i=127664128
+curSet.size()/131072=4680
+curSet.size()/1000000=613
+Timer mid: [takes 6703 ms]
+i=127795200
+curSet.size()/131072=4680
+curSet.size()/1000000=613
+Timer mid: [takes 6630 ms]
+i=127926272
+curSet.size()/131072=4680
+curSet.size()/1000000=613
+Timer mid: [takes 6646 ms]
+i=128057344
+curSet.size()/131072=4680
+curSet.size()/1000000=613
+Timer mid: [takes 6675 ms]
+i=128188416
+curSet.size()/131072=4680
+curSet.size()/1000000=613
+Timer mid: [takes 6607 ms]
+i=128319488
+curSet.size()/131072=4681
+curSet.size()/1000000=613
+Timer mid: [takes 6699 ms]
+i=128450560
+curSet.size()/131072=4681
+curSet.size()/1000000=613
+Timer mid: [takes 6573 ms]
+i=128581632
+curSet.size()/131072=4681
+curSet.size()/1000000=613
+Timer mid: [takes 6697 ms]
+i=128712704
+curSet.size()/131072=4681
+curSet.size()/1000000=613
+Timer mid: [takes 6560 ms]
+i=128843776
+curSet.size()/131072=4681
+curSet.size()/1000000=613
+Timer mid: [takes 6706 ms]
+i=128974848
+curSet.size()/131072=4681
+curSet.size()/1000000=613
+Timer mid: [takes 6586 ms]
+i=129105920
+curSet.size()/131072=4682
+curSet.size()/1000000=613
+Timer mid: [takes 6695 ms]
+i=129236992
+curSet.size()/131072=4682
+curSet.size()/1000000=613
+Timer mid: [takes 6578 ms]
+i=129368064
+curSet.size()/131072=4682
+curSet.size()/1000000=613
+Timer mid: [takes 6693 ms]
+i=129499136
+curSet.size()/131072=4682
+curSet.size()/1000000=613
+Timer mid: [takes 6561 ms]
+i=129630208
+curSet.size()/131072=4682
+curSet.size()/1000000=613
+Timer mid: [takes 6684 ms]
+i=129761280
+curSet.size()/131072=4682
+curSet.size()/1000000=613
+Timer mid: [takes 6576 ms]
+i=129892352
+curSet.size()/131072=4682
+curSet.size()/1000000=613
+Timer mid: [takes 6701 ms]
+i=130023424
+curSet.size()/131072=4683
+curSet.size()/1000000=613
+Timer mid: [takes 6627 ms]
+i=130154496
+curSet.size()/131072=4683
+curSet.size()/1000000=613
+Timer mid: [takes 6646 ms]
+i=130285568
+curSet.size()/131072=4683
+curSet.size()/1000000=613
+Timer mid: [takes 6669 ms]
+i=130416640
+curSet.size()/131072=4683
+curSet.size()/1000000=613
+Timer mid: [takes 6589 ms]
+i=130547712
+curSet.size()/131072=4683
+curSet.size()/1000000=613
+Timer mid: [takes 6729 ms]
+i=130678784
+curSet.size()/131072=4683
+curSet.size()/1000000=613
+Timer mid: [takes 6601 ms]
+i=130809856
+curSet.size()/131072=4684
+curSet.size()/1000000=613
+Timer mid: [takes 6645 ms]
+i=130940928
+curSet.size()/131072=4684
+curSet.size()/1000000=613
+Timer mid: [takes 6689 ms]
+i=131072000
+curSet.size()/131072=4684
+curSet.size()/1000000=613
+Timer mid: [takes 6576 ms]
+i=131203072
+curSet.size()/131072=4684
+curSet.size()/1000000=614
+Timer mid: [takes 6724 ms]
+i=131334144
+curSet.size()/131072=4684
+curSet.size()/1000000=614
+Timer mid: [takes 6665 ms]
+i=131465216
+curSet.size()/131072=4684
+curSet.size()/1000000=614
+Timer mid: [takes 6581 ms]
+i=131596288
+curSet.size()/131072=4684
+curSet.size()/1000000=614
+Timer mid: [takes 6655 ms]
+i=131727360
+curSet.size()/131072=4685
+curSet.size()/1000000=614
+Timer mid: [takes 6693 ms]
+i=131858432
+curSet.size()/131072=4685
+curSet.size()/1000000=614
+Timer mid: [takes 6589 ms]
+i=131989504
+curSet.size()/131072=4685
+curSet.size()/1000000=614
+Timer mid: [takes 6683 ms]
+i=132120576
+curSet.size()/131072=4685
+curSet.size()/1000000=614
+Timer mid: [takes 6698 ms]
+i=132251648
+curSet.size()/131072=4685
+curSet.size()/1000000=614
+Timer mid: [takes 6601 ms]
+i=132382720
+curSet.size()/131072=4685
+curSet.size()/1000000=614
+Timer mid: [takes 6656 ms]
+i=132513792
+curSet.size()/131072=4685
+curSet.size()/1000000=614
+Timer mid: [takes 6730 ms]
+i=132644864
+curSet.size()/131072=4686
+curSet.size()/1000000=614
+Timer mid: [takes 6622 ms]
+i=132775936
+curSet.size()/131072=4686
+curSet.size()/1000000=614
+Timer mid: [takes 6582 ms]
+i=132907008
+curSet.size()/131072=4686
+curSet.size()/1000000=614
+Timer mid: [takes 6682 ms]
+i=133038080
+curSet.size()/131072=4686
+curSet.size()/1000000=614
+Timer mid: [takes 6699 ms]
+i=133169152
+curSet.size()/131072=4686
+curSet.size()/1000000=614
+Timer mid: [takes 6634 ms]
+i=133300224
+curSet.size()/131072=4686
+curSet.size()/1000000=614
+Timer mid: [takes 6614 ms]
+i=133431296
+curSet.size()/131072=4686
+curSet.size()/1000000=614
+Timer mid: [takes 6672 ms]
+i=133562368
+curSet.size()/131072=4687
+curSet.size()/1000000=614
+Timer mid: [takes 6701 ms]
+i=133693440
+curSet.size()/131072=4687
+curSet.size()/1000000=614
+Timer mid: [takes 6667 ms]
+i=133824512
+curSet.size()/131072=4687
+curSet.size()/1000000=614
+Timer mid: [takes 6617 ms]
+i=133955584
+curSet.size()/131072=4687
+curSet.size()/1000000=614
+Timer mid: [takes 6773 ms]
+i=134086656
+curSet.size()/131072=4687
+curSet.size()/1000000=614
+Timer mid: [takes 6851 ms]
+i=134217728
+curSet.size()/131072=4687
+curSet.size()/1000000=614
+Timer mid: [takes 6835 ms]
+i=134348800
+curSet.size()/131072=4687
+curSet.size()/1000000=614
+Timer mid: [takes 6813 ms]
+i=134479872
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6776 ms]
+i=134610944
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6800 ms]
+i=134742016
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6775 ms]
+i=134873088
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6836 ms]
+i=135004160
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6837 ms]
+i=135135232
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6825 ms]
+i=135266304
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6824 ms]
+i=135397376
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6795 ms]
+i=135528448
+curSet.size()/131072=4688
+curSet.size()/1000000=614
+Timer mid: [takes 6799 ms]
+i=135659520
+curSet.size()/131072=4689
+curSet.size()/1000000=614
+Timer mid: [takes 6779 ms]
+i=135790592
+curSet.size()/131072=4689
+curSet.size()/1000000=614
+Timer mid: [takes 6782 ms]
+i=135921664
+curSet.size()/131072=4689
+curSet.size()/1000000=614
+Timer mid: [takes 6811 ms]
+i=136052736
+curSet.size()/131072=4689
+curSet.size()/1000000=614
+Timer mid: [takes 6771 ms]
+i=136183808
+curSet.size()/131072=4689
+curSet.size()/1000000=614
+Timer mid: [takes 6795 ms]
+i=136314880
+curSet.size()/131072=4689
+curSet.size()/1000000=614
+Timer mid: [takes 6867 ms]
+i=136445952
+curSet.size()/131072=4689
+curSet.size()/1000000=614
+Timer mid: [takes 6856 ms]
+i=136577024
+curSet.size()/131072=4689
+curSet.size()/1000000=614
+Timer mid: [takes 6837 ms]
+i=136708096
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6819 ms]
+i=136839168
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6817 ms]
+i=136970240
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6835 ms]
+i=137101312
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6828 ms]
+i=137232384
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6807 ms]
+i=137363456
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6799 ms]
+i=137494528
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6801 ms]
+i=137625600
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6824 ms]
+i=137756672
+curSet.size()/131072=4690
+curSet.size()/1000000=614
+Timer mid: [takes 6802 ms]
+i=137887744
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6827 ms]
+i=138018816
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6807 ms]
+i=138149888
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6799 ms]
+i=138280960
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6809 ms]
+i=138412032
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6796 ms]
+i=138543104
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6855 ms]
+i=138674176
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6803 ms]
+i=138805248
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6773 ms]
+i=138936320
+curSet.size()/131072=4691
+curSet.size()/1000000=614
+Timer mid: [takes 6812 ms]
+i=139067392
+curSet.size()/131072=4692
+curSet.size()/1000000=614
+Timer mid: [takes 6833 ms]
+i=139198464
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6815 ms]
+i=139329536
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6850 ms]
+i=139460608
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6846 ms]
+i=139591680
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6862 ms]
+i=139722752
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6806 ms]
+i=139853824
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6785 ms]
+i=139984896
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6399 ms]
+i=140115968
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6385 ms]
+i=140247040
+curSet.size()/131072=4692
+curSet.size()/1000000=615
+Timer mid: [takes 6387 ms]
+i=140378112
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6397 ms]
+i=140509184
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6403 ms]
+i=140640256
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6420 ms]
+i=140771328
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6421 ms]
+i=140902400
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6393 ms]
+i=141033472
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6391 ms]
+i=141164544
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6394 ms]
+i=141295616
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6391 ms]
+i=141426688
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6400 ms]
+i=141557760
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6452 ms]
+i=141688832
+curSet.size()/131072=4693
+curSet.size()/1000000=615
+Timer mid: [takes 6424 ms]
+i=141819904
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6391 ms]
+i=141950976
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6366 ms]
+i=142082048
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6384 ms]
+i=142213120
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6432 ms]
+i=142344192
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6416 ms]
+i=142475264
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6399 ms]
+i=142606336
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6366 ms]
+i=142737408
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6393 ms]
+i=142868480
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6432 ms]
+i=142999552
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6428 ms]
+i=143130624
+curSet.size()/131072=4694
+curSet.size()/1000000=615
+Timer mid: [takes 6367 ms]
+i=143261696
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6372 ms]
+i=143392768
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6417 ms]
+i=143523840
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6445 ms]
+i=143654912
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6384 ms]
+i=143785984
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6340 ms]
+i=143917056
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6428 ms]
+i=144048128
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6439 ms]
+i=144179200
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6351 ms]
+i=144310272
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6333 ms]
+i=144441344
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6460 ms]
+i=144572416
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6398 ms]
+i=144703488
+curSet.size()/131072=4695
+curSet.size()/1000000=615
+Timer mid: [takes 6367 ms]
+i=144834560
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6393 ms]
+i=144965632
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6457 ms]
+i=145096704
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6361 ms]
+i=145227776
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6355 ms]
+i=145358848
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6461 ms]
+i=145489920
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6414 ms]
+i=145620992
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6338 ms]
+i=145752064
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6724 ms]
+i=145883136
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6765 ms]
+i=146014208
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6578 ms]
+i=146145280
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6777 ms]
+i=146276352
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6720 ms]
+i=146407424
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6618 ms]
+i=146538496
+curSet.size()/131072=4696
+curSet.size()/1000000=615
+Timer mid: [takes 6815 ms]
+i=146669568
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6716 ms]
+i=146800640
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6582 ms]
+i=146931712
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6833 ms]
+i=147062784
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6675 ms]
+i=147193856
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6687 ms]
+i=147324928
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6841 ms]
+i=147456000
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6603 ms]
+i=147587072
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6740 ms]
+i=147718144
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6828 ms]
+i=147849216
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6589 ms]
+i=147980288
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6807 ms]
+i=148111360
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6703 ms]
+i=148242432
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6642 ms]
+i=148373504
+curSet.size()/131072=4697
+curSet.size()/1000000=615
+Timer mid: [takes 6972 ms]
+i=148504576
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6665 ms]
+i=148635648
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6770 ms]
+i=148766720
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6764 ms]
+i=148897792
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6648 ms]
+i=149028864
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6866 ms]
+i=149159936
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6580 ms]
+i=149291008
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 7027 ms]
+i=149422080
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6745 ms]
+i=149553152
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6707 ms]
+i=149684224
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6827 ms]
+i=149815296
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6645 ms]
+i=149946368
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6945 ms]
+i=150077440
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6610 ms]
+i=150208512
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6916 ms]
+i=150339584
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6631 ms]
+i=150470656
+curSet.size()/131072=4698
+curSet.size()/1000000=615
+Timer mid: [takes 6812 ms]
+i=150601728
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6706 ms]
+i=150732800
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6775 ms]
+i=150863872
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6679 ms]
+i=150994944
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6508 ms]
+i=151126016
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6593 ms]
+i=151257088
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6392 ms]
+i=151388160
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6544 ms]
+i=151519232
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6694 ms]
+i=151650304
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6470 ms]
+i=151781376
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6796 ms]
+i=151912448
+curSet.size()/131072=4699
+curSet.size()/1000000=615
+Timer mid: [takes 6536 ms]
+i=152043520
+curSet.size()/131072=4699
+curSet.size()/1000000=616
+Timer mid: [takes 6578 ms]
+i=152174592
+curSet.size()/131072=4699
+curSet.size()/1000000=616
+Timer mid: [takes 6723 ms]
+i=152305664
+curSet.size()/131072=4699
+curSet.size()/1000000=616
+Timer mid: [takes 6451 ms]
+i=152436736
+curSet.size()/131072=4699
+curSet.size()/1000000=616
+Timer mid: [takes 6753 ms]
+i=152567808
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6589 ms]
+i=152698880
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6576 ms]
+i=152829952
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6724 ms]
+i=152961024
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6395 ms]
+i=153092096
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6794 ms]
+i=153223168
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6405 ms]
+i=153354240
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6473 ms]
+i=153485312
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6394 ms]
+i=153616384
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6349 ms]
+i=153747456
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6472 ms]
+i=153878528
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6328 ms]
+i=154009600
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6528 ms]
+i=154140672
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6249 ms]
+i=154271744
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6487 ms]
+i=154402816
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6295 ms]
+i=154533888
+curSet.size()/131072=4700
+curSet.size()/1000000=616
+Timer mid: [takes 6487 ms]
+i=154664960
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6340 ms]
+i=154796032
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6444 ms]
+i=154927104
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6373 ms]
+i=155058176
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6406 ms]
+i=155189248
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6398 ms]
+i=155320320
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6458 ms]
+i=155451392
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6437 ms]
+i=155582464
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6422 ms]
+i=155713536
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6416 ms]
+i=155844608
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6395 ms]
+i=155975680
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6412 ms]
+i=156106752
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6449 ms]
+i=156237824
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6423 ms]
+i=156368896
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6434 ms]
+i=156499968
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6378 ms]
+i=156631040
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6453 ms]
+i=156762112
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6361 ms]
+i=156893184
+curSet.size()/131072=4701
+curSet.size()/1000000=616
+Timer mid: [takes 6809 ms]
+i=157024256
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6453 ms]
+i=157155328
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6881 ms]
+i=157286400
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6446 ms]
+i=157417472
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6813 ms]
+i=157548544
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6580 ms]
+i=157679616
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6707 ms]
+i=157810688
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6637 ms]
+i=157941760
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6342 ms]
+i=158072832
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6588 ms]
+i=158203904
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6234 ms]
+i=158334976
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6874 ms]
+i=158466048
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6280 ms]
+i=158597120
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6643 ms]
+i=158728192
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6357 ms]
+i=158859264
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6486 ms]
+i=158990336
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6539 ms]
+i=159121408
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6277 ms]
+i=159252480
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6683 ms]
+i=159383552
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6219 ms]
+i=159514624
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6534 ms]
+i=159645696
+curSet.size()/131072=4702
+curSet.size()/1000000=616
+Timer mid: [takes 6488 ms]
+i=159776768
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6289 ms]
+i=159907840
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6715 ms]
+i=160038912
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6240 ms]
+i=160169984
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6573 ms]
+i=160301056
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6515 ms]
+i=160432128
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6289 ms]
+i=160563200
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6680 ms]
+i=160694272
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6291 ms]
+i=160825344
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6467 ms]
+i=160956416
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6641 ms]
+i=161087488
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6182 ms]
+i=161218560
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6578 ms]
+i=161349632
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6597 ms]
+i=161480704
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6199 ms]
+i=161611776
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6689 ms]
+i=161742848
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6437 ms]
+i=161873920
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6303 ms]
+i=162004992
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6704 ms]
+i=162136064
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6368 ms]
+i=162267136
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6296 ms]
+i=162398208
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6732 ms]
+i=162529280
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6329 ms]
+i=162660352
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6310 ms]
+i=162791424
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6699 ms]
+i=162922496
+curSet.size()/131072=4703
+curSet.size()/1000000=616
+Timer mid: [takes 6358 ms]
+i=163053568
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6277 ms]
+i=163184640
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6712 ms]
+i=163315712
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6356 ms]
+i=163446784
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6275 ms]
+i=163577856
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6700 ms]
+i=163708928
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6394 ms]
+i=163840000
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6240 ms]
+i=163971072
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6695 ms]
+i=164102144
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6475 ms]
+i=164233216
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6196 ms]
+i=164364288
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6637 ms]
+i=164495360
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6671 ms]
+i=164626432
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6192 ms]
+i=164757504
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6485 ms]
+i=164888576
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6701 ms]
+i=165019648
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6244 ms]
+i=165150720
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6303 ms]
+i=165281792
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6728 ms]
+i=165412864
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6417 ms]
+i=165543936
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6173 ms]
+i=165675008
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6589 ms]
+i=165806080
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6709 ms]
+i=165937152
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6257 ms]
+i=166068224
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6206 ms]
+i=166199296
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6703 ms]
+i=166330368
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6599 ms]
+i=166461440
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6181 ms]
+i=166592512
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6386 ms]
+i=166723584
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6740 ms]
+i=166854656
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6564 ms]
+i=166985728
+curSet.size()/131072=4704
+curSet.size()/1000000=616
+Timer mid: [takes 6175 ms]
+i=167116800
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6431 ms]
+i=167247872
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6734 ms]
+i=167378944
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6519 ms]
+i=167510016
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6195 ms]
+i=167641088
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6422 ms]
+i=167772160
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6697 ms]
+i=167903232
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6542 ms]
+i=168034304
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6196 ms]
+i=168165376
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6335 ms]
+i=168296448
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6716 ms]
+i=168427520
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6651 ms]
+i=168558592
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6195 ms]
+i=168689664
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6240 ms]
+i=168820736
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6725 ms]
+i=168951808
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6743 ms]
+i=169082880
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6201 ms]
+i=169213952
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6194 ms]
+i=169345024
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6513 ms]
+i=169476096
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6639 ms]
+i=169607168
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6510 ms]
+i=169738240
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6189 ms]
+i=169869312
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6214 ms]
+i=170000384
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6740 ms]
+i=170131456
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6705 ms]
+i=170262528
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6387 ms]
+i=170393600
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6206 ms]
+i=170524672
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6353 ms]
+i=170655744
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6683 ms]
+i=170786816
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 7014 ms]
+i=170917888
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6474 ms]
+i=171048960
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6565 ms]
+i=171180032
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6403 ms]
+i=171311104
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6693 ms]
+i=171442176
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6681 ms]
+i=171573248
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6352 ms]
+i=171704320
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6192 ms]
+i=171835392
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6311 ms]
+i=171966464
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6711 ms]
+i=172097536
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6681 ms]
+i=172228608
+curSet.size()/131072=4705
+curSet.size()/1000000=616
+Timer mid: [takes 6395 ms]
+i=172359680
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6232 ms]
+i=172490752
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6223 ms]
+i=172621824
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6707 ms]
+i=172752896
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6737 ms]
+i=172883968
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6618 ms]
+i=173015040
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6216 ms]
+i=173146112
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6220 ms]
+i=173277184
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6455 ms]
+i=173408256
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6712 ms]
+i=173539328
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6733 ms]
+i=173670400
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6426 ms]
+i=173801472
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6203 ms]
+i=173932544
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6196 ms]
+i=174063616
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6490 ms]
+i=174194688
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6709 ms]
+i=174325760
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6736 ms]
+i=174456832
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6440 ms]
+i=174587904
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6213 ms]
+i=174718976
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6201 ms]
+i=174850048
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6448 ms]
+i=174981120
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6706 ms]
+i=175112192
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6741 ms]
+i=175243264
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6483 ms]
+i=175374336
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6196 ms]
+i=175505408
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6196 ms]
+i=175636480
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6251 ms]
+i=175767552
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6728 ms]
+i=175898624
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6630 ms]
+i=176029696
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6696 ms]
+i=176160768
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6306 ms]
+i=176291840
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6217 ms]
+i=176422912
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6207 ms]
+i=176553984
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6480 ms]
+i=176685056
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6714 ms]
+i=176816128
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6724 ms]
+i=176947200
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6749 ms]
+i=177078272
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6195 ms]
+i=177209344
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6353 ms]
+i=177340416
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 5970 ms]
+i=177471488
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6831 ms]
+i=177602560
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6933 ms]
+i=177733632
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6978 ms]
+i=177864704
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6946 ms]
+i=177995776
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6685 ms]
+i=178126848
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6530 ms]
+i=178257920
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6561 ms]
+i=178388992
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6518 ms]
+i=178520064
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6847 ms]
+i=178651136
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6997 ms]
+i=178782208
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6957 ms]
+i=178913280
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 7010 ms]
+i=179044352
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6930 ms]
+i=179175424
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6534 ms]
+i=179306496
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6547 ms]
+i=179437568
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6521 ms]
+i=179568640
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6516 ms]
+i=179699712
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6860 ms]
+i=179830784
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6977 ms]
+i=179961856
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6925 ms]
+i=180092928
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6951 ms]
+i=180224000
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6961 ms]
+i=180355072
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6530 ms]
+i=180486144
+curSet.size()/131072=4706
+curSet.size()/1000000=616
+Timer mid: [takes 6530 ms]
+i=180617216
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6531 ms]
+i=180748288
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6553 ms]
+i=180879360
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6874 ms]
+i=181010432
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6947 ms]
+i=181141504
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6952 ms]
+i=181272576
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 7011 ms]
+i=181403648
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6945 ms]
+i=181534720
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6608 ms]
+i=181665792
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6529 ms]
+i=181796864
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6522 ms]
+i=181927936
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6523 ms]
+i=182059008
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6503 ms]
+i=182190080
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6910 ms]
+i=182321152
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6972 ms]
+i=182452224
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 7020 ms]
+i=182583296
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 7028 ms]
+i=182714368
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6975 ms]
+i=182845440
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6989 ms]
+i=182976512
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6563 ms]
+i=183107584
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6514 ms]
+i=183238656
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6529 ms]
+i=183369728
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6519 ms]
+i=183500800
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6532 ms]
+i=183631872
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6670 ms]
+i=183762944
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6920 ms]
+i=183894016
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6999 ms]
+i=184025088
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6955 ms]
+i=184156160
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6945 ms]
+i=184287232
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6981 ms]
+i=184418304
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6887 ms]
+i=184549376
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6521 ms]
+i=184680448
+curSet.size()/131072=4707
+curSet.size()/1000000=616
+Timer mid: [takes 6503 ms]
+i=184811520
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6497 ms]
+i=184942592
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6528 ms]
+i=185073664
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6503 ms]
+i=185204736
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6709 ms]
+i=185335808
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6998 ms]
+i=185466880
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6999 ms]
+i=185597952
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6904 ms]
+i=185729024
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6983 ms]
+i=185860096
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 7037 ms]
+i=185991168
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6954 ms]
+i=186122240
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6917 ms]
+i=186253312
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6529 ms]
+i=186384384
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6538 ms]
+i=186515456
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6440 ms]
+i=186646528
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6156 ms]
+i=186777600
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6175 ms]
+i=186908672
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6152 ms]
+i=187039744
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6395 ms]
+i=187170816
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6665 ms]
+i=187301888
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6680 ms]
+i=187432960
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6739 ms]
+i=187564032
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6680 ms]
+i=187695104
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6688 ms]
+i=187826176
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6700 ms]
+i=187957248
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6733 ms]
+i=188088320
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6172 ms]
+i=188219392
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6152 ms]
+i=188350464
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6155 ms]
+i=188481536
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6152 ms]
+i=188612608
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6161 ms]
+i=188743680
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6160 ms]
+i=188874752
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6158 ms]
+i=189005824
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6393 ms]
+i=189136896
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6739 ms]
+i=189267968
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6752 ms]
+i=189399040
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6689 ms]
+i=189530112
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6758 ms]
+i=189661184
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6689 ms]
+i=189792256
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6648 ms]
+i=189923328
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6589 ms]
+i=190054400
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6650 ms]
+i=190185472
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6538 ms]
+i=190316544
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6162 ms]
+i=190447616
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6164 ms]
+i=190578688
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6168 ms]
+i=190709760
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6169 ms]
+i=190840832
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6159 ms]
+i=190971904
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6167 ms]
+i=191102976
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6153 ms]
+i=191234048
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6167 ms]
+i=191365120
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6165 ms]
+i=191496192
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6488 ms]
+i=191627264
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6758 ms]
+i=191758336
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6698 ms]
+i=191889408
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6657 ms]
+i=192020480
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6686 ms]
+i=192151552
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6655 ms]
+i=192282624
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6723 ms]
+i=192413696
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6748 ms]
+i=192544768
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6733 ms]
+i=192675840
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6683 ms]
+i=192806912
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6769 ms]
+i=192937984
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6612 ms]
+i=193069056
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6249 ms]
+i=193200128
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6152 ms]
+i=193331200
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6152 ms]
+i=193462272
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6142 ms]
+i=193593344
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6169 ms]
+i=193724416
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6147 ms]
+i=193855488
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6148 ms]
+i=193986560
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6169 ms]
+i=194117632
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6178 ms]
+i=194248704
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6164 ms]
+i=194379776
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6161 ms]
+i=194510848
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6154 ms]
+i=194641920
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6156 ms]
+i=194772992
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6604 ms]
+i=194904064
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6640 ms]
+i=195035136
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6620 ms]
+i=195166208
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6683 ms]
+i=195297280
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6746 ms]
+i=195428352
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6639 ms]
+i=195559424
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6743 ms]
+i=195690496
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6569 ms]
+i=195821568
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6627 ms]
+i=195952640
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6692 ms]
+i=196083712
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6748 ms]
+i=196214784
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6723 ms]
+i=196345856
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6720 ms]
+i=196476928
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6656 ms]
+i=196608000
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6674 ms]
+i=196739072
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6160 ms]
+i=196870144
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6135 ms]
+i=197001216
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6165 ms]
+i=197132288
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6171 ms]
+i=197263360
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6173 ms]
+i=197394432
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6170 ms]
+i=197525504
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6154 ms]
+i=197656576
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6163 ms]
+i=197787648
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6157 ms]
+i=197918720
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6179 ms]
+i=198049792
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6167 ms]
+i=198180864
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6168 ms]
+i=198311936
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6154 ms]
+i=198443008
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6147 ms]
+i=198574080
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6144 ms]
+i=198705152
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6150 ms]
+i=198836224
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6324 ms]
+i=198967296
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6687 ms]
+i=199098368
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6658 ms]
+i=199229440
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6713 ms]
+i=199360512
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6698 ms]
+i=199491584
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6807 ms]
+i=199622656
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6782 ms]
+i=199753728
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6638 ms]
+i=199884800
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6696 ms]
+i=200015872
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6684 ms]
+i=200146944
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6679 ms]
+i=200278016
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6622 ms]
+i=200409088
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6738 ms]
+i=200540160
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6755 ms]
+i=200671232
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6713 ms]
+i=200802304
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6706 ms]
+i=200933376
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6675 ms]
+i=201064448
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6686 ms]
+i=201195520
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6664 ms]
+i=201326592
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6678 ms]
+i=201457664
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6589 ms]
+i=201588736
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6699 ms]
+i=201719808
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6758 ms]
+i=201850880
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6789 ms]
+i=201981952
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6720 ms]
+i=202113024
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6152 ms]
+i=202244096
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6172 ms]
+i=202375168
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6510 ms]
+i=202506240
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6445 ms]
+i=202637312
+curSet.size()/131072=4707
+curSet.size()/1000000=617
+Timer mid: [takes 6460 ms]
+i=202768384
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6659 ms]
+i=202899456
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6447 ms]
+i=203030528
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6424 ms]
+i=203161600
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6426 ms]
+i=203292672
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6434 ms]
+i=203423744
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6421 ms]
+i=203554816
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6437 ms]
+i=203685888
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6465 ms]
+i=203816960
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6476 ms]
+i=203948032
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6453 ms]
+i=204079104
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6436 ms]
+i=204210176
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6440 ms]
+i=204341248
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6437 ms]
+i=204472320
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6449 ms]
+i=204603392
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6433 ms]
+i=204734464
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6460 ms]
+i=204865536
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6458 ms]
+i=204996608
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6475 ms]
+i=205127680
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6451 ms]
+i=205258752
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6456 ms]
+i=205389824
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6428 ms]
+i=205520896
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6428 ms]
+i=205651968
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6451 ms]
+i=205783040
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6452 ms]
+i=205914112
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6460 ms]
+i=206045184
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6672 ms]
+i=206176256
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6956 ms]
+i=206307328
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6807 ms]
+i=206438400
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6998 ms]
+i=206569472
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6873 ms]
+i=206700544
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6895 ms]
+i=206831616
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6939 ms]
+i=206962688
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6934 ms]
+i=207093760
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6887 ms]
+i=207224832
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6918 ms]
+i=207355904
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6921 ms]
+i=207486976
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6831 ms]
+i=207618048
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6875 ms]
+i=207749120
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6957 ms]
+i=207880192
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6816 ms]
+i=208011264
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6895 ms]
+i=208142336
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6900 ms]
+i=208273408
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6909 ms]
+i=208404480
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6646 ms]
+i=208535552
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 7022 ms]
+i=208666624
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6880 ms]
+i=208797696
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6904 ms]
+i=208928768
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6966 ms]
+i=209059840
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6980 ms]
+i=209190912
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6867 ms]
+i=209321984
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6989 ms]
+i=209453056
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6784 ms]
+i=209584128
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6823 ms]
+i=209715200
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6945 ms]
+i=209846272
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6834 ms]
+i=209977344
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6821 ms]
+i=210108416
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6962 ms]
+i=210239488
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6956 ms]
+i=210370560
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6976 ms]
+i=210501632
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6899 ms]
+i=210632704
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6923 ms]
+i=210763776
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6952 ms]
+i=210894848
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6896 ms]
+i=211025920
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6641 ms]
+i=211156992
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6903 ms]
+i=211288064
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6964 ms]
+i=211419136
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6975 ms]
+i=211550208
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6971 ms]
+i=211681280
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6948 ms]
+i=211812352
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6857 ms]
+i=211943424
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6799 ms]
+i=212074496
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6904 ms]
+i=212205568
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6906 ms]
+i=212336640
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6768 ms]
+i=212467712
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6826 ms]
+i=212598784
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6967 ms]
+i=212729856
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6792 ms]
+i=212860928
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6955 ms]
+i=212992000
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6361 ms]
+i=213123072
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6329 ms]
+i=213254144
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6317 ms]
+i=213385216
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6306 ms]
+i=213516288
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6330 ms]
+i=213647360
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6316 ms]
+i=213778432
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6311 ms]
+i=213909504
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6317 ms]
+i=214040576
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6323 ms]
+i=214171648
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6335 ms]
+i=214302720
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6316 ms]
+i=214433792
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6316 ms]
+i=214564864
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6336 ms]
+i=214695936
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6330 ms]
+i=214827008
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6320 ms]
+i=214958080
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6323 ms]
+i=215089152
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6316 ms]
+i=215220224
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6296 ms]
+i=215351296
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6325 ms]
+i=215482368
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6313 ms]
+i=215613440
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6328 ms]
+i=215744512
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6310 ms]
+i=215875584
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6315 ms]
+i=216006656
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6307 ms]
+i=216137728
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6324 ms]
+i=216268800
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6330 ms]
+i=216399872
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6310 ms]
+i=216530944
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6316 ms]
+i=216662016
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6331 ms]
+i=216793088
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6344 ms]
+i=216924160
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6305 ms]
+i=217055232
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6298 ms]
+i=217186304
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6327 ms]
+i=217317376
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6329 ms]
+i=217448448
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6305 ms]
+i=217579520
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6302 ms]
+i=217710592
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6309 ms]
+i=217841664
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6303 ms]
+i=217972736
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6314 ms]
+i=218103808
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6316 ms]
+i=218234880
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6313 ms]
+i=218365952
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6301 ms]
+i=218497024
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6297 ms]
+i=218628096
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6297 ms]
+i=218759168
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6315 ms]
+i=218890240
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6319 ms]
+i=219021312
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6317 ms]
+i=219152384
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6313 ms]
+i=219283456
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6310 ms]
+i=219414528
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6512 ms]
+i=219545600
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6511 ms]
+i=219676672
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6642 ms]
+i=219807744
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6372 ms]
+i=219938816
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6388 ms]
+i=220069888
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6382 ms]
+i=220200960
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6385 ms]
+i=220332032
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6364 ms]
+i=220463104
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6373 ms]
+i=220594176
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6369 ms]
+i=220725248
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6379 ms]
+i=220856320
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6378 ms]
+i=220987392
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6372 ms]
+i=221118464
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6367 ms]
+i=221249536
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6358 ms]
+i=221380608
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6370 ms]
+i=221511680
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6371 ms]
+i=221642752
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6369 ms]
+i=221773824
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6366 ms]
+i=221904896
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6345 ms]
+i=222035968
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6364 ms]
+i=222167040
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6371 ms]
+i=222298112
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6379 ms]
+i=222429184
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6379 ms]
+i=222560256
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6366 ms]
+i=222691328
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6370 ms]
+i=222822400
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6352 ms]
+i=222953472
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6358 ms]
+i=223084544
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6369 ms]
+i=223215616
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6380 ms]
+i=223346688
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6380 ms]
+i=223477760
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6352 ms]
+i=223608832
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6358 ms]
+i=223739904
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6375 ms]
+i=223870976
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6373 ms]
+i=224002048
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6373 ms]
+i=224133120
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6361 ms]
+i=224264192
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6377 ms]
+i=224395264
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6367 ms]
+i=224526336
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6375 ms]
+i=224657408
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6359 ms]
+i=224788480
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6364 ms]
+i=224919552
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6359 ms]
+i=225050624
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6366 ms]
+i=225181696
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6388 ms]
+i=225312768
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6381 ms]
+i=225443840
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6344 ms]
+i=225574912
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6372 ms]
+i=225705984
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6374 ms]
+i=225837056
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6350 ms]
+i=225968128
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6351 ms]
+i=226099200
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6359 ms]
+i=226230272
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6365 ms]
+i=226361344
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6368 ms]
+i=226492416
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6374 ms]
+i=226623488
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6364 ms]
+i=226754560
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6361 ms]
+i=226885632
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6375 ms]
+i=227016704
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6368 ms]
+i=227147776
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6363 ms]
+i=227278848
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6385 ms]
+i=227409920
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6388 ms]
+i=227540992
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6385 ms]
+i=227672064
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6379 ms]
+i=227803136
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6355 ms]
+i=227934208
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6372 ms]
+i=228065280
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6380 ms]
+i=228196352
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6394 ms]
+i=228327424
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6378 ms]
+i=228458496
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6403 ms]
+i=228589568
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6379 ms]
+i=228720640
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6598 ms]
+i=228851712
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6296 ms]
+i=228982784
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6280 ms]
+i=229113856
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6272 ms]
+i=229244928
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6286 ms]
+i=229376000
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6270 ms]
+i=229507072
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6288 ms]
+i=229638144
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6285 ms]
+i=229769216
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6290 ms]
+i=229900288
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6305 ms]
+i=230031360
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6294 ms]
+i=230162432
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6288 ms]
+i=230293504
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6293 ms]
+i=230424576
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6300 ms]
+i=230555648
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6271 ms]
+i=230686720
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6292 ms]
+i=230817792
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6253 ms]
+i=230948864
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6288 ms]
+i=231079936
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6293 ms]
+i=231211008
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6302 ms]
+i=231342080
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6302 ms]
+i=231473152
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6277 ms]
+i=231604224
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6342 ms]
+i=231735296
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6337 ms]
+i=231866368
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6336 ms]
+i=231997440
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6346 ms]
+i=232128512
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6340 ms]
+i=232259584
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6348 ms]
+i=232390656
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6339 ms]
+i=232521728
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6351 ms]
+i=232652800
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6350 ms]
+i=232783872
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6348 ms]
+i=232914944
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6373 ms]
+i=233046016
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6339 ms]
+i=233177088
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6351 ms]
+i=233308160
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6331 ms]
+i=233439232
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6348 ms]
+i=233570304
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6345 ms]
+i=233701376
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6346 ms]
+i=233832448
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6350 ms]
+i=233963520
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6353 ms]
+i=234094592
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6371 ms]
+i=234225664
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6350 ms]
+i=234356736
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6351 ms]
+i=234487808
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6376 ms]
+i=234618880
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6360 ms]
+i=234749952
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6364 ms]
+i=234881024
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6365 ms]
+i=235012096
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6367 ms]
+i=235143168
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6372 ms]
+i=235274240
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6346 ms]
+i=235405312
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6347 ms]
+i=235536384
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6349 ms]
+i=235667456
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6349 ms]
+i=235798528
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6330 ms]
+i=235929600
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6306 ms]
+i=236060672
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6317 ms]
+i=236191744
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6317 ms]
+i=236322816
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6318 ms]
+i=236453888
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6317 ms]
+i=236584960
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6331 ms]
+i=236716032
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6326 ms]
+i=236847104
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6309 ms]
+i=236978176
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6328 ms]
+i=237109248
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6325 ms]
+i=237240320
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6315 ms]
+i=237371392
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6310 ms]
+i=237502464
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6317 ms]
+i=237633536
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6400 ms]
+i=237764608
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6381 ms]
+i=237895680
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6400 ms]
+i=238026752
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6388 ms]
+i=238157824
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6400 ms]
+i=238288896
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6398 ms]
+i=238419968
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6411 ms]
+i=238551040
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6416 ms]
+i=238682112
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6399 ms]
+i=238813184
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6404 ms]
+i=238944256
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6405 ms]
+i=239075328
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6423 ms]
+i=239206400
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6399 ms]
+i=239337472
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6411 ms]
+i=239468544
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6394 ms]
+i=239599616
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6433 ms]
+i=239730688
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6419 ms]
+i=239861760
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6414 ms]
+i=239992832
+curSet.size()/131072=4708
+curSet.size()/1000000=617
+Timer mid: [takes 6412 ms]
+i=240123904
+decrease pool_size=65536
+Timer mid: [takes 0 ms]
+i=240123904
+curSet.size()/65536=9416
+curSet.size()/1000000=617
+Timer mid: [takes 3202 ms]
+i=240189440
+decrease pool_size=32768
+Timer mid: [takes 0 ms]
+i=240189440
+decrease pool_size=16384
+Timer mid: [takes 0 ms]
+i=240189440
+curSet.size()/16384=37665
+curSet.size()/1000000=617
+Timer mid: [takes 802 ms]
+i=240205824
+decrease pool_size=8192
+Timer mid: [takes 0 ms]
+i=240205824
+curSet.size()/8192=75330
+curSet.size()/1000000=617
+Timer mid: [takes 396 ms]
+i=240214016
+decrease pool_size=4096
+Timer mid: [takes 0 ms]
+i=240214016
+decrease pool_size=2048
+Timer mid: [takes 0 ms]
+i=240214016
+decrease pool_size=1024
+Timer mid: [takes 0 ms]
+i=240214016
+curSet.size()/1024=602642
+curSet.size()/1000000=617
+Timer mid: [takes 51 ms]
+i=240215040
+decrease pool_size=512
+Timer mid: [takes 0 ms]
+i=240215040
+curSet.size()/512=1205284
+curSet.size()/1000000=617
+Timer mid: [takes 25 ms]
+i=240215552
+decrease pool_size=256
+Timer mid: [takes 0 ms]
+i=240215552
+decrease pool_size=128
+Timer mid: [takes 0 ms]
+i=240215552
+curSet.size()/128=4821137
+curSet.size()/1000000=617
+Timer mid: [takes 6 ms]
+i=240215680
+decrease pool_size=64
+Timer mid: [takes 0 ms]
+i=240215680
+curSet.size()/64=9642275
+curSet.size()/1000000=617
+Timer mid: [takes 3 ms]
+i=240215744
+decrease pool_size=32
+Timer mid: [takes 0 ms]
+i=240215744
+curSet.size()/32=19284550
+curSet.size()/1000000=617
+Timer mid: [takes 1 ms]
+i=240215776
+decrease pool_size=16
+Timer mid: [takes 0 ms]
+i=240215776
+curSet.size()/16=38569100
+curSet.size()/1000000=617
+Timer mid: [takes 0 ms]
+i=240215792
+decrease pool_size=8
+Timer mid: [takes 0 ms]
+i=240215792
+curSet.size()/8=77138201
+curSet.size()/1000000=617
+Timer mid: [takes 0 ms]
+i=240215800
+decrease pool_size=4
+Timer mid: [takes 0 ms]
+i=240215800
+curSet.size()/4=154276403
+curSet.size()/1000000=617
+Timer mid: [takes 0 ms]
+i=240215801
+curSet.size()/4=154276403
+curSet.size()/1000000=617
+Timer mid: [takes 0 ms]
+i=240215802
+curSet.size()/4=154276403
+curSet.size()/1000000=617
+Timer mid: [takes 0 ms]
+generation done.
+c-28: 617105614
+Timer end: [takes 12144836 ms]
+xgd@k2004:~/source/COCR/cpp/alkane-kubuntu$ 
+ 

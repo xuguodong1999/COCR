@@ -14,8 +14,10 @@
 #include <map>
 #include <stack>
 #include <algorithm>
+#include <boost/unordered_set.hpp>
+
 class Timer {
-    decltype(std::chrono::system_clock::now()) start_stamp, end_stamp;
+    decltype(std::chrono::system_clock::now()) start_stamp, end_stamp,last_stamp;
 public:
     void start();
 
@@ -29,14 +31,45 @@ enum NodeColor {
 };
 using hash_type = unsigned long long;
 using count_type = unsigned long long;
-
+class mm_set{
+public:
+    std::vector<std::vector<hash_type>> mData;
+    size_t mSize;
+    mm_set():mSize(0){
+        mData.resize(
+            268435493,
+            std::vector<hash_type>());
+    }
+    size_t hash(const hash_type&_a){
+        return _a%268435493ULL;//268435493 ok
+    }
+    
+    size_t size(){
+        return mSize;
+    }
+    void insert(const hash_type&_a){
+        size_t index=_a%268435493ULL;
+        mData[index].resize(mData[index].size()+1,_a);
+        mData[index].shrink_to_fit();
+        ++mSize;
+    }
+    bool exist(const hash_type&_a)const{
+        size_t index=_a%268435493ULL;
+        for(auto&i:mData[index]){
+            if(i==_a){
+                return true;
+            }
+        }
+        return false;
+    }
+};
 /**
  * 无向图
  * @tparam T 节点类型：支持算术操作符的基本数据类型
  */
 template<typename T>
 class AlkaneGraph {
-    static std::vector<NodeColor> state;
+    std::vector<NodeColor> state;
     std::vector<std::vector<T>> content;
     using traverse = std::function<void(const T &, const T &)>;
     using idle = std::function<void(void)>;
@@ -183,7 +216,10 @@ public:
         func();
         pop_back(a, b);
     }
-
+    void add_do(T a, T b, idle func) {
+        push_back(a, b);
+        func();
+    }
 
     unsigned long long hash() {
         return std::stoull(toString(), 0, 2);
@@ -255,7 +291,8 @@ public:
 class IsomerCounter {
     int n;
     using node_type = unsigned char;
-    std::unordered_set<hash_type> curSet;                // 新增部分的smiles
+    std::unordered_set<hash_type> curSet; 
+    //boost::unordered_set<hash_type> curSet; 
     std::vector<hash_type> lastVec;
     using graph = AlkaneGraph<node_type>;
     std::vector<count_type> counter;                 // C1-n alkanetopo 数量计数器
