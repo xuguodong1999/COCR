@@ -126,11 +126,14 @@ void IsomerCounter::calculate_i_from_imm(const char *_cache_dir, const int &_i) 
     hash_type len, tmp,  count=0;
     std::vector<hash_type>tmp1(cache_size);
     ifsm.read(reinterpret_cast<char *>(&len), sizeof(len));
+    std::cout << "len=" << len << std::endl;
     std::vector<hash_type>().swap(lastVec);
     graph current;
     Timer timer;
     timer.start();
     hash_type i = 0;
+    Timer timer2;
+    timer2.start();
     while (i < len) {
         if (i + cache_size < len) {
             for (int k = 0; k < cache_size; k++) {
@@ -147,8 +150,10 @@ void IsomerCounter::calculate_i_from_imm(const char *_cache_dir, const int &_i) 
                         auto hash_value = current.hash();
                         if (curSet.insert(hash_value).second) {
                             count++;
-                            if (count % 100000 == 0) {
-                                std::cout << "count/1000=" << count / 1000 << std::endl;
+                            if (count % 1000000 == 0) {
+                                std::cout << "count/1000000=" << count / 1000000 << std::endl;
+				timer2.stop(true);
+				timer2.start();
                             }
                         }
                     };
@@ -169,8 +174,8 @@ void IsomerCounter::calculate_i_from_imm(const char *_cache_dir, const int &_i) 
                     auto hash_value = current.hash();
                     if (curSet.insert(hash_value).second) {
                         count++;
-                        if (count % 100000 == 0) {
-                            std::cout << "count/1000=" << count / 1000 << std::endl;
+                        if (count % 1000000 == 0) {
+                            std::cout << "count/1000000=" << count / 1000000 << std::endl;
                         }
                     }
                 };
