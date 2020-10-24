@@ -123,11 +123,11 @@ void Shape::resizeTo(float w, float h, bool keepRatio) {
  * @param ry 椭圆竖直半径
  */
 void Shape::castToCircle(const Point &center, float rx, float ry) {
-    v<Point> from(4), to = {// just a square box
+    vector<Point> from(4), to = {// just a square box
             Point(0, 0), Point(0, 100),
             Point(100, 100), Point(100, 0)
     };
-    v<Point> input;
+    vector<Point> input;
     for (auto &stroke:mData) {
         std::copy(stroke.begin(), stroke.end(),
                   std::inserter(input, input.end()));
@@ -154,8 +154,8 @@ void Shape::castToLine(const Point &pp1, const Point &pp2, const float lThresh) 
     p2.x += lenPP * (rand() % 10) / 100 - 0.05;
     p1.y += lenPP * (rand() % 10) / 100 - 0.05;
     p2.y += lenPP * (rand() % 10) / 100 - 0.05;
-    v<Point> from(4), to;
-    v<Point> input;
+    vector<Point> from(4), to;
+    vector<Point> input;
     for (auto &stroke:mData) {
         std::copy(stroke.begin(), stroke.end(),
                   std::inserter(input, input.end()));
@@ -197,7 +197,7 @@ void Shape::castToLine(const Point &pp1, const Point &pp2, const float lThresh) 
  * @param from 三角形1
  * @param to 三角形2
  */
-void Shape::castBy(const v<Point> &from, const v<Point> &to) {
+void Shape::castBy(const vector<Point> &from, const vector<Point> &to) {
     // 2x3 仿射变换矩阵
     auto affine = cv::getAffineTransform(from.data(), to.data());
     for (auto &stroke:mData) {

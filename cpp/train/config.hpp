@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include <list>
+#include <chrono>
 #include <functional>
 #include <iostream>
 #include <memory>
@@ -15,18 +15,18 @@
 
 
 template<typename T>
-using v = std::vector<T>;
+using vector = std::vector<T>;
 
 template<typename T>
-using l = std::list<T>;
+using function = std::function<T>;
 
 template<typename T>
-using f = std::function<T>;
+using shared_ptr = std::shared_ptr<T>;
 
-template<typename T>
-using p = std::shared_ptr<T>;
+using string = std::string;
 
-using s = std::string;
+using hash_type = uint64_t;
+using node_type = unsigned char;
 
 template<typename T>
 inline T lcm(const T &x, const T &y) {
@@ -36,5 +36,18 @@ inline T lcm(const T &x, const T &y) {
 const char *get_couch_data_path();
 
 const char *get_coordinates_json_path(int id = 0);
+
+class Timer {
+    decltype(std::chrono::system_clock::now())
+            start_stamp, end_stamp, last_stamp;
+public:
+    void start();
+
+    void display_duration();
+
+    void stop(bool _display_duration = true);
+};
+
+std::string trim(const string &str);
 
 #endif//_CONFIG_HPP_

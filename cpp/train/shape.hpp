@@ -11,8 +11,8 @@ const cv::Scalar cvBlue = cv::Scalar(255, 0, 0);
 const cv::Scalar cvRed = cv::Scalar(0, 0, 255);
 
 using Point = cv::Point2f;
-using Stroke = v<Point>;
-using Script = v<Stroke>;
+using Stroke = vector<Point>;
+using Script = vector<Stroke>;
 
 class ShapeInterface {
 public:
@@ -123,7 +123,7 @@ public:
      * @param from 三角形1
      * @param to 三角形2
      */
-    void castBy(const v<Point> &from, const v<Point> &to);
+    void castBy(const vector<Point> &from, const vector<Point> &to);
 
     void mulK(float kx, float ky);
 

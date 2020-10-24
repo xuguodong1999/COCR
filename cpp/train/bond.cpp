@@ -3,7 +3,7 @@
 #include "statistic.hpp"
 #include <opencv2/opencv.hpp>
 
-Bond::Bond(const s &_bondType)
+Bond::Bond(const string &_bondType)
         : mUseHWChar(true), isLatest(false) {
     isRotateAllowed = true;
     name = _bondType;
@@ -20,8 +20,8 @@ void Bond::setUseHandWrittenWChar(bool useHandWrittenChar) {
     mUseHWChar = useHandWrittenChar;
 }
 
-p<Bond> Bond::GetBond(const s &_bondType) {
-    p<Bond> bond;
+shared_ptr<Bond> Bond::GetBond(const string &_bondType) {
+    shared_ptr<Bond> bond;
     if (_bondType == "Single") {
         bond = std::make_shared<SingleBond>(_bondType);
     } else if (_bondType == "Double") {
@@ -44,7 +44,7 @@ p<Bond> Bond::GetBond(const s &_bondType) {
     return bond;
 }
 
-CircleBond::CircleBond(const s &_bondType) : Bond(_bondType) {
+CircleBond::CircleBond(const string &_bondType) : Bond(_bondType) {
 }
 
 void CircleBond::mulK(float kx, float ky) {
@@ -98,7 +98,7 @@ void CircleBond::rotateBy(float angle, const Point &cent) {
     isLatest = false;
 }
 
-void CircleBond::setVertices(const v<Point> &pts) {
+void CircleBond::setVertices(const vector<Point> &pts) {
     if (pts.size() < 2) {
         std::cerr << "圆键的pts约定为多边形顶点,but "
                   << pts.size() << " pts got." << std::endl;
@@ -150,7 +150,7 @@ void CircleBond::updateShapes() {
     }
 }
 
-SingleBond::SingleBond(const s &_bondType) : Bond(_bondType) {
+SingleBond::SingleBond(const string &_bondType) : Bond(_bondType) {
 }
 
 const cv::Rect2f SingleBond::getBoundingBox() const {
@@ -254,7 +254,7 @@ void SingleBond::rotateBy(float angle, const Point &cent) {
     isLatest = false;
 }
 
-void SingleBond::setVertices(const v<Point> &pts) {
+void SingleBond::setVertices(const vector<Point> &pts) {
     if (pts.size() != 2) {
         std::cerr << "单双三楔波浪线的pts约定为起点和终点,but "
                   << pts.size() << " pts got." << std::endl;
@@ -296,7 +296,7 @@ void DoubleBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-DoubleBond::DoubleBond(const s &_bondType) : SingleBond(_bondType) {
+DoubleBond::DoubleBond(const string &_bondType) : SingleBond(_bondType) {
 }
 
 void DoubleBond::updateShapes() {
@@ -355,7 +355,7 @@ void TripleBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-TripleBond::TripleBond(const s &_bondType) : SingleBond(_bondType) {
+TripleBond::TripleBond(const string &_bondType) : SingleBond(_bondType) {
 }
 
 void TripleBond::updateShapes() {
@@ -401,14 +401,14 @@ void SolidWedgeBond::paintTo(cv::Mat &canvas) {
             vecT /= cv::norm(vecT);
         }
         auto offset = vecT * length * intervalK;
-        v<cv::Point> polygon = {from, to + offset / 2, to - offset / 2};
+        vector<cv::Point> polygon = {from, to + offset / 2, to - offset / 2};
         cv::fillConvexPoly(canvas, polygon, RC::get_shape_color(),
                            RC::get_shape_lineType(),
                            RC::get_shape_shift());
     }
 }
 
-SolidWedgeBond::SolidWedgeBond(const s &_bondType) : SingleBond(_bondType) {
+SolidWedgeBond::SolidWedgeBond(const string &_bondType) : SingleBond(_bondType) {
 }
 
 void SolidWedgeBond::updateShapes() {
@@ -487,7 +487,7 @@ void DashWedgeBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-DashWedgeBond::DashWedgeBond(const s &_bondType) : SingleBond(_bondType) {
+DashWedgeBond::DashWedgeBond(const string &_bondType) : SingleBond(_bondType) {
 }
 
 void DashWedgeBond::updateShapes() {
@@ -538,7 +538,7 @@ void WaveBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-WaveBond::WaveBond(const s &_bondType) : SingleBond(_bondType) {
+WaveBond::WaveBond(const string &_bondType) : SingleBond(_bondType) {
 }
 
 void WaveBond::updateShapes() {

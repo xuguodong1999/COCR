@@ -34,3 +34,36 @@ const char *get_coordinates_json_path(int id) {
     }
 }
 
+
+void Timer::start() {
+    start_stamp = last_stamp = std::chrono::system_clock::now();
+}
+
+void Timer::display_duration() {
+    end_stamp = std::chrono::system_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+            end_stamp - last_stamp);
+    std::cout << "Timer mid: [takes "
+              << duration.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den
+              << " ms]" << std::endl;
+    last_stamp = end_stamp;
+}
+
+void Timer::stop(bool _display_duration) {
+    end_stamp = last_stamp = std::chrono::system_clock::now();
+    if (_display_duration) {
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+                end_stamp - start_stamp);
+        std::cout << "Timer end: [takes "
+                  << duration.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den
+                  << " ms]" << std::endl;
+    }
+}
+
+std::string trim(const string &str) {
+    static std::string blanks("\f\v\r\t\n ");
+    std::string ret = str;
+    ret.erase(0, str.find_first_not_of(blanks));
+    ret.erase(str.find_last_not_of(blanks) + 1);
+    return std::move(ret);
+}

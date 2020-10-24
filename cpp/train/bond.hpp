@@ -12,7 +12,7 @@
  */
 class Bond : public ShapeGroup {
 protected:
-    Bond(const s &_bondType);
+    Bond(const string &_bondType);
 
     bool mUseHWChar;
     bool isLatest;
@@ -23,9 +23,9 @@ public:
 
     void setUseHandWrittenWChar(bool useHandWrittenChar);
 
-    static p<Bond> GetBond(const s &_bondType = "Single");
+    static shared_ptr<Bond> GetBond(const string &_bondType = "Single");
 
-    virtual void setVertices(const v<Point> &pts) = 0;
+    virtual void setVertices(const vector<Point> &pts) = 0;
 };
 
 class CircleBond : public Bond {
@@ -35,7 +35,7 @@ class CircleBond : public Bond {
     void updateShapes() override;
 
 public:
-    CircleBond(const s &_bondType);
+    CircleBond(const string &_bondType);
 
     const cv::Rect2f getBoundingBox() const override;
 
@@ -55,7 +55,7 @@ public:
 
     void paintTo(cv::Mat &canvas) override;
 
-    void setVertices(const v<Point> &pts) override;
+    void setVertices(const vector<Point> &pts) override;
 };
 
 class SingleBond : public Bond {
@@ -66,7 +66,7 @@ protected:
 public:
     const cv::Rect2f getBoundingBox() const override;
 
-    SingleBond(const s &_bondType);
+    SingleBond(const string &_bondType);
 
     void mulK(float kx, float ky);
 
@@ -84,14 +84,14 @@ public:
 
     virtual void paintTo(cv::Mat &canvas) override;
 
-    void setVertices(const v<Point> &pts) override;
+    void setVertices(const vector<Point> &pts) override;
 };
 
 class DoubleBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    DoubleBond(const s &_bondType);
+    DoubleBond(const string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };
@@ -100,7 +100,7 @@ class TripleBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    TripleBond(const s &_bondType);
+    TripleBond(const string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };
@@ -109,7 +109,7 @@ class SolidWedgeBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    SolidWedgeBond(const s &_bondType);
+    SolidWedgeBond(const string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };
@@ -118,7 +118,7 @@ class DashWedgeBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    DashWedgeBond(const s &_bondType);
+    DashWedgeBond(const string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };
@@ -127,7 +127,7 @@ class WaveBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    WaveBond(const s &_bondType);
+    WaveBond(const string &_bondType);
 
     void paintTo(cv::Mat &canvas) override;
 };

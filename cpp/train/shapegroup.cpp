@@ -31,8 +31,8 @@ void ShapeGroup::setSAngleK(float sAngleK) {
     RC::sAngleK = sAngleK;
 }
 
-p<ShapeGroup> ShapeGroup::GetShapeGroup(const s &_textType) {
-    p<ShapeGroup> text;
+shared_ptr<ShapeGroup> ShapeGroup::GetShapeGroup(const string &_textType) {
+    shared_ptr<ShapeGroup> text;
     if (_textType == "positive") {
         auto sym = HandWritting::GetByStrLabel("⊕");
         text = std::make_shared<ShapeGroup>();

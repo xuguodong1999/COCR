@@ -13,28 +13,28 @@ enum StringNote {
     UpRand,
     DownRand
 };
-using NChar = std::pair<StringNote, s>;
-using NString = v<NChar>;
+using NChar = std::pair<StringNote, string>;
+using NString = vector<NChar>;
 
-inline NString makeNotedStringByChar(const s &text, StringNote note = Normal) {
+inline NString makeNotedStringByChar(const string &text, StringNote note = Normal) {
     NString ns;
     for (auto c:text) {
-        ns.push_back(std::make_pair(note, s(1, c)));
+        ns.push_back(std::make_pair(note, string(1, c)));
     }
     return ns;
 }
 
 inline NString makeNotedString(
-        const s &text, const v<StringNote> &note) {
+        const string &text, const vector<StringNote> &note) {
     NString ns;
-    v<StringNote> _note = note;
+    vector<StringNote> _note = note;
     if (_note.size() == 0) {
         _note.resize(text.size(), Normal);
     } else {
         _note.resize(text.size(), _note.back());
     }
     for (size_t i = 0; i < text.size(); i++) {
-        ns.push_back(std::make_pair(_note[i], s(1, text[i])));
+        ns.push_back(std::make_pair(_note[i], string(1, text[i])));
     }
     return ns;
 }
@@ -48,10 +48,10 @@ inline NString makeNotedString(
  */
 class ShapeGroup : public ShapeInterface {
 public:
-    v<Shape> shapes;
-    s name;
+    vector<Shape> shapes;
+    string name;
 public:
-    static p<ShapeGroup> GetShapeGroup(const s &_textType = "");
+    static shared_ptr<ShapeGroup> GetShapeGroup(const string &_textType = "");
 
     ShapeGroup() : name("ShapeGroup") { isRotateAllowed = false; }
 

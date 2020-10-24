@@ -128,8 +128,8 @@ void demoBond() {
 }
 
 void makeIcon() {
-    const s dir = "C:\\Users\\xgd\\source\\COCR\\android\\app\\src\\main\\res\\drawable\\";
-    v<s> sym = {
+    const string dir = "C:\\Users\\xgd\\source\\COCR\\android\\app\\src\\main\\res\\drawable\\";
+    vector<string> sym = {
             "positive", "negative"};
 //    for (auto &s:sym) {
 //        cv::Mat img = cv::Mat(256, 256, CV_8UC3, WHITE);
@@ -161,7 +161,7 @@ void demo_opencv() {
 
 #define RET_EMPTY_STRING_IF_NOT(condition) if(!(condition))return ""
 
-s demo_openbabel(const char *smi) {
+string demo_openbabel(const char *smi) {
     using namespace OpenBabel;
     using namespace std;
     OBConversion conv;

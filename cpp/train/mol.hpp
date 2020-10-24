@@ -15,10 +15,10 @@
 #include <map>
 
 class Mol : public ShapeInterface {
-    v<p<ShapeGroup>> symbols;
+    vector<shared_ptr<ShapeGroup>> symbols;
     OpenBabel::OBMol obMol;
     std::map<int, OpenBabel::OBAtom *> aidMap;
-    s inSmiles;
+    string inSmiles;
 
     void testRing();
 
@@ -34,17 +34,17 @@ public:
     void paintTo(cv::Mat &canvas) override;
 
     void addAtom(int id, float x, float y,
-                 const s &element, int charge);
+                 const string &element, int charge);
 
     void addBond(int from, int to,
-                 const s &type = "Single",
-                 const s &stereo = "None");
+                 const string &type = "Single",
+                 const string &stereo = "None");
 
-    void run(const s &taskName = "log");
+    void run(const string &taskName = "log");
 
-    s getStandardSMILES();
+    string getStandardSMILES();
 
-    static void LoopOn(const char *filename, const s &taskName);
+    static void LoopOn(const char *filename, const string &taskName);
 
     /**
      * 获取平行于二维坐标轴的最小边框

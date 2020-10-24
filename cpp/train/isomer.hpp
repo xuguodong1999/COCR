@@ -1,94 +1,27 @@
+// 所有异构体的结构生成
+// const char* alkane_dir = "C:/Users/xgd/source/COCR/data/alkane";
+// auto &IC = IsomerCounter::GetInstance();
+// 1-27碳，总时间 ~ 4h，
+// IC.calculate(27, alkane_dir);
+// 多线程方案：28碳，小新pro13，i7，kubuntu，4h，恰好占满15G内存
+// IC.calculate_i_from_i_1( alkane_dir, 28);
+
 #ifndef _ISOMER_HPP_
 #define _ISOMER_HPP_
 
-#include <vector>
-#include <string>
-#include <chrono>
-#include <iostream>
+#include "config.hpp"
+
 #include <stack>
 #include <sstream>
-#include <functional>
 #include <iomanip>
 #include <map>
 #include <algorithm>
 #include <fstream>
+#include <filesystem>
 
-class Timer {
-    decltype(std::chrono::system_clock::now()) start_stamp, end_stamp, last_stamp;
-public:
-    void start();
-
-    void display_duration();
-
-    void stop(bool _display_duration = true);
-};
 
 enum NodeColor {
     WHITE, GRAY, BLACK
-};
-using hash_type = uint64_t;
-using node_type = unsigned char;
-
-class quick_set {
-public:
-    std::vector<std::vector<hash_type>> mData;
-    size_t mSize;
-    const size_t max_size = 268435493ULL / 4;
-
-    quick_set() : mSize(0) {
-        mData.resize(max_size);
-    }
-
-    void clear() {
-        mSize = 0;
-        mData.clear();
-        mData.resize(max_size, std::vector<hash_type>());
-        mData.shrink_to_fit();
-    }
-
-    size_t hash(const hash_type &_a) const {
-        return _a % max_size;
-    }
-
-    size_t size() const {
-        return mSize;
-    }
-
-    void insert(const hash_type &_a) {
-        size_t index = hash(_a);
-        mData[index].push_back(_a);
-        mData[index].shrink_to_fit();
-        ++mSize;
-    }
-
-    bool exist(const hash_type &_a) const {
-        size_t index = hash(_a);
-        for (auto &i:mData[index]) {
-            if (i == _a) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void dump(const char *save_dir, const int &carbonNum) const {
-        std::ofstream ofsm(save_dir + ("/" + std::to_string(carbonNum)) + ".dat",
-                           std::ios::out | std::ios::binary);
-        if (!ofsm.is_open()) {
-            std::cerr << "fail to open "
-                      << save_dir + ("/" + std::to_string(carbonNum)) + ".dat"
-                      << std::endl;
-            exit(-1);
-        }
-        hash_type full_size = mSize;
-        ofsm.write(reinterpret_cast<const char *>( &full_size ), sizeof(hash_type));
-        for (auto &i:mData) {
-            for (auto &j:i) {
-                ofsm.write(reinterpret_cast<const char *>( &j ), sizeof(hash_type));
-            }
-        }
-        ofsm.close();
-    }
 };
 
 /**
@@ -210,6 +143,26 @@ public:
         content = _ag.content;
     }
 
+    std::string toSMILES(const hash_type &hash_value) {
+        AlkaneGraph<T> alkane;
+        alkane.fromHash(hash_value);
+        auto s_1_0 = alkane.toString();
+        std::string smiles;
+        for (auto &c:s_1_0) {
+            if (c == prefix) {
+                smiles.append("(C");
+            } else {
+                smiles.push_back(')');
+            }
+        }
+        if (smiles.size() > 2) {
+            if (smiles.front() == '(' && smiles.back() == ')') {
+                smiles = smiles.substr(1, smiles.size() - 2);
+            }
+        }
+        return std::move(smiles);
+    };
+
     void operator=(const AlkaneGraph &_ag) {
         content = _ag.content;
     }
@@ -311,9 +264,6 @@ public:
 
 
 class IsomerCounter {
-    int n;
-    quick_set curSet;
-    std::vector<hash_type> lastSet;
     using graph = AlkaneGraph<node_type>;
     const int thread_num = 11;
 public:
@@ -339,6 +289,70 @@ private:
      */
     void recover(const char *save_dir, const int &carbonNum);
 
+    int n;
+    std::vector<hash_type> lastSet;
+
+    class quick_set {
+    public:
+        std::vector<std::vector<hash_type>> mData;
+        size_t mSize;
+        const size_t max_size = 268435493ULL / 4;
+
+        quick_set() : mSize(0) {
+            mData.resize(max_size);
+        }
+
+        void clear() {
+            mSize = 0;
+            mData.clear();
+            mData.resize(max_size, std::vector<hash_type>());
+            mData.shrink_to_fit();
+        }
+
+        size_t hash(const hash_type &_a) const {
+            return _a % max_size;
+        }
+
+        size_t size() const {
+            return mSize;
+        }
+
+        void insert(const hash_type &_a) {
+            size_t index = hash(_a);
+            mData[index].push_back(_a);
+            mData[index].shrink_to_fit();
+            ++mSize;
+        }
+
+        bool exist(const hash_type &_a) const {
+            size_t index = hash(_a);
+            for (auto &i:mData[index]) {
+                if (i == _a) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void dump(const char *save_dir, const int &carbonNum) const {
+            std::ofstream ofsm(save_dir + ("/" + std::to_string(carbonNum)) + ".dat",
+                               std::ios::out | std::ios::binary);
+            if (!ofsm.is_open()) {
+                std::cerr << "fail to open "
+                          << save_dir + ("/" + std::to_string(carbonNum)) + ".dat"
+                          << std::endl;
+                exit(-1);
+            }
+            hash_type full_size = mSize;
+            ofsm.write(reinterpret_cast<const char *>( &full_size ), sizeof(hash_type));
+            for (auto &i:mData) {
+                for (auto &j:i) {
+                    ofsm.write(reinterpret_cast<const char *>( &j ), sizeof(hash_type));
+                }
+            }
+            ofsm.close();
+        }
+    } curSet;
 };
 
 #endif //_ISOMER_HPP_

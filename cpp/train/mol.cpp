@@ -14,7 +14,7 @@ Mol::Mol() {
 Mol::~Mol() {
 }
 
-s Mol::getStandardSMILES() {
+string Mol::getStandardSMILES() {
     OpenBabel::OBConversion obConversion;
     obConversion.SetOutFormat("can");
     std::stringstream ism;
@@ -50,7 +50,7 @@ void Mol::testRing() {
     }
 }
 
-void Mol::run(const s &taskName) {
+void Mol::run(const string &taskName) {
     if (taskName == "testDraw") {
         testDraw();
         return;
@@ -82,10 +82,10 @@ void Mol::rotateBy(float angle, const cv::Point2f &cent) {
     }
 }
 
-void Mol::LoopOn(const char *filename, const s &taskName) {
+void Mol::LoopOn(const char *filename, const string &taskName) {
     std::ifstream ifsm(filename);
     rapidjson::Document doc;
-    s buffer;
+    string buffer;
     if (!ifsm.is_open()) {
         std::cerr << "fail to open " << filename << std::endl;
         exit(-1);
@@ -129,7 +129,7 @@ void Mol::LoopOn(const char *filename, const s &taskName) {
     }
 }
 
-void Mol::addAtom(int id, float x, float y, const s &element, int charge) {
+void Mol::addAtom(int id, float x, float y, const string &element, int charge) {
     OpenBabel::OBAtom obatom;
     auto it = std::find(RC::sElementData.begin(), RC::sElementData.end(), element);
     obatom.SetId(id);
@@ -142,7 +142,7 @@ void Mol::addAtom(int id, float x, float y, const s &element, int charge) {
     aidMap[id] = obMol.GetAtomById(id);
 }
 
-void Mol::addBond(int from, int to, const s &type, const s &stereo) {
+void Mol::addBond(int from, int to, const string &type, const string &stereo) {
     OpenBabel::OBBond obbond;
     obbond.SetBegin(aidMap[from]);
     obbond.SetEnd(aidMap[to]);
@@ -232,7 +232,7 @@ void Mol::testDraw() {
     }
     for (auto it = obMol.BeginBonds(); it != obMol.EndBonds(); it++) {
         // bond.atom.idx 根据 atom.idx
-        p < Bond > sym;
+        shared_ptr<Bond> sym;
         if ((*it)->GetBondOrder() == 1) {
             if ((*it)->IsWedge()) {
                 sym = Bond::GetBond("SolidWedge");

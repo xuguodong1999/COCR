@@ -29,7 +29,7 @@ void makeIcon();
 
 void demoMol();
 
-void loop(f<void(void)> demoFunc) {
+void loop(function<void(void)> demoFunc) {
     srand(918);
     while (true) { demoFunc(); }
 }
@@ -46,8 +46,7 @@ inline void put_env() {
 #endif
 }
 
-#include "isomer.hpp"
-#include "polya.hpp"
+#include "generator.hpp"
 
 int main(int argc, char **argv) {
     put_env();
@@ -59,16 +58,13 @@ int main(int argc, char **argv) {
 
 //    trainSimpleClassifier();
 
-    // 所有异构体的结构生成
-    //auto &IC = IsomerCounter::GetInstance();
-    // 单线程方案：1-27碳，总时间 < 4h
-    //IC.calculate(27, "D:/alkane");
-    // 多线程方案：28碳，小新pro13，i7，kubuntu，4h
-    //IC.calculate_i_from_i_1( "D:/alkane", 28);
 
-    // 波利亚计数法 毫秒内拿到数量
-    auto &pic = PolyaIsomerCounter::GetInstance();
-    pic.count(128);
+    // 读取烷烃异构体并生成SMILES串、添加杂原子和基团修饰
+    const char *alkane_dir = "C:/Users/xgd/source/COCR/data/alkane";
+    auto &sg = SMILESGenerator::GetInstance();
+    for (int i = 19; i <= 26; i++) {
+        sg.HashToRichSMILES(alkane_dir, i);
+    }
     return 0;
 
 }

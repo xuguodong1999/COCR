@@ -20,8 +20,8 @@ public:
     static float sSubOffsetKx;  // (-1,1)*50
     static float sSubOffsetKy;  // (-1,1)*50
     static float sAngleK;       // [0,1)*30
-    static v<s> sElementData;
-    static std::set<s> bsSet, aeSet, btSet;
+    static vector<string> sElementData;
+    static std::set<string> bsSet, aeSet, btSet;
     static std::set<int> acSet;
 
 

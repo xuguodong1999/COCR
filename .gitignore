@@ -1,3 +1,6 @@
+alkane/
+obj/
+bin/
 *.txt.user
 tmp/
 bak/

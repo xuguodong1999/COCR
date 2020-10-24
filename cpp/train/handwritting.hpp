@@ -7,10 +7,10 @@
 
 class HandWritting {
 private:
-    static v<v<Script>> sData;
-    static v<int> sLabelCharLikeLine;
-    static v<int> sLabelCharLikeCircle;
-    static std::map<s, int> sStr2IntMap;
+    static vector<vector<Script>> sData;
+    static vector<int> sLabelCharLikeLine;
+    static vector<int> sLabelCharLikeCircle;
+    static std::map<string, int> sStr2IntMap;
     static bool sIsLoaded;
 
     static void LoadDataSet(const char *filename, bool clearBefore = true);
@@ -18,9 +18,9 @@ private:
 public:
     static Shape GetByIntLabel(int label);
 
-    static Shape GetByStrLabel(const s &label);
+    static Shape GetByStrLabel(const string &label);
 
-    static Shape GetShape(const s &shape);
+    static Shape GetShape(const string &shape);
 };
 
 #endif//_HANDWRITTING_HPP_
