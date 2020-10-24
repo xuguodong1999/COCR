@@ -47,7 +47,6 @@ inline void put_env() {
 }
 
 #include "isomer.hpp"
-#include <sstream>
 #include "polya.hpp"
 
 int main(int argc, char **argv) {
@@ -60,14 +59,16 @@ int main(int argc, char **argv) {
 
 //    trainSimpleClassifier();
 
-    // 结构生成
+    // 所有异构体的结构生成
     //auto &IC = IsomerCounter::GetInstance();
+    // 单线程方案：1-27碳，总时间 < 4h
     //IC.calculate(27, "D:/alkane");
+    // 多线程方案：28碳，小新pro13，i7，kubuntu，4h
     //IC.calculate_i_from_i_1( "D:/alkane", 28);
 
-    // 波利亚计数法
-    auto &ic = PolyaIsomerCounter::GetInstance();
-    ic.count(32);
+    // 波利亚计数法 毫秒内拿到数量
+    auto &pic = PolyaIsomerCounter::GetInstance();
+    pic.count(128);
     return 0;
 
 }

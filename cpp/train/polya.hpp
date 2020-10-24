@@ -1,10 +1,14 @@
+/**
+ * https://github.com/snljty/CountAlkylIsomer
+ */
 #include "bignumber.hpp"
 #include <iostream>
 #include <vector>
 
 class PolyaIsomerCounter {
-    using count_type = BigNumber;
+    using count_type = UnsignedInteger;
     std::vector<count_type> A, P, Q, C;
+    const count_type two = 2, three = 3, six = 6, eight = 8, twenty_four = 24;
 
     void A_m(const size_t &m);
 
@@ -40,9 +44,9 @@ public:
             Q_m(i);
             C_m(i);
             // 饱和烷烃自由基
-            std::cout << "-c" << i << " : " << A[i] << std::endl;
+            std::cout << "radical-c" << i << " : " << A[i] << std::endl;
             // 饱和烷烃
-            std::cout << " c" << i << " : " << C[i] << std::endl;
+            std::cout << "alkane--c" << i << " : " << C[i] << std::endl;
         }
     }
 

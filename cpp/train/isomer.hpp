@@ -33,16 +33,16 @@ class quick_set {
 public:
     std::vector<std::vector<hash_type>> mData;
     size_t mSize;
-    const size_t max_size = 268435493ULL/10;
+    const size_t max_size = 268435493ULL / 4;
 
     quick_set() : mSize(0) {
         mData.resize(max_size);
     }
 
     void clear() {
-        mSize=0;
+        mSize = 0;
         mData.clear();
-        mData.resize(max_size,std::vector<hash_type>());
+        mData.resize(max_size, std::vector<hash_type>());
         mData.shrink_to_fit();
     }
 
@@ -306,13 +306,6 @@ public:
                 }
             }
         }
-//        for (size_t i=0;i<content.size();i++) {
-//            std::cout << (size_t) i<<":";
-//            for (auto &j:content[i]) {
-//                std::cout << (size_t) j << ",";
-//            }
-//            std::cout << std::endl;
-//        }
     }
 };
 
@@ -338,6 +331,7 @@ private:
     IsomerCounter(const IsomerCounter &) = delete;
 
     const IsomerCounter &operator=(const IsomerCounter &) = delete;
+
     /**
      * load save_dir/carbonNum.dat into lastSet
      * @param save_dir

@@ -209,5 +209,5 @@ void IsomerCounter::calculate_i_from_i_1(const char *save_dir, const int &carbon
     hash_type len2 = curSet.size();
     std::cout << "c-" << carbonNum << ": " << len2 << std::endl;
     timer.stop(true);
-    curSet.dump(save_dir,carbonNum);
+    curSet.dump(save_dir, carbonNum);
 }
