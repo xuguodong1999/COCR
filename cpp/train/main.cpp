@@ -59,23 +59,8 @@ int main(int argc, char **argv) {
 //    demoMol();
 
 //    trainSimpleClassifier();
-//    auto ag=AlkaneGraph<unsigned char>::GetInstance();
-//    ag.push_back(0,1);
-//    ag.push_back(1,2);
-//    ag.push_back(2,3);
-//    //212
-//    //10001010
-//    //100010011
-//    //11010100
-//    //( () () () )
-//    std::cout<<"hash by string="<<ag.toString()<<std::endl;
-//    std::cout<<"hash by uint_64="<<ag.hash()<<std::endl;
-//    ag.fromHash(ag.hash(),4);
-//    // 100
-//    // 001 000 000
-//    exit(-1);
 
-
+    // 结构生成
     //auto &IC = IsomerCounter::GetInstance();
     //IC.calculate(27, "D:/alkane");
     //IC.calculate_i_from_i_1( "D:/alkane", 28);
