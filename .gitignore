@@ -1,3 +1,4 @@
+*.txt.user
 tmp/
 bak/
 *.h5
