@@ -48,6 +48,7 @@ inline void put_env() {
 
 #include "isomer.hpp"
 #include <sstream>
+#include "polya.hpp"
 
 int main(int argc, char **argv) {
     put_env();
@@ -73,12 +74,15 @@ int main(int argc, char **argv) {
 //    // 100
 //    // 001 000 000
 //    exit(-1);
-    auto &IC = IsomerCounter::GetInstance();
-    //IC.calculate(18, "D:/alkane");
-    IC.calculate_i_from_imm(
-//            "C:/Users/xgd/Downloads/alkane", 28
-            "D:/", 22
-    );
+
+
+    //auto &IC = IsomerCounter::GetInstance();
+    //IC.calculate(27, "D:/alkane");
+    //IC.calculate_i_from_i_1( "D:/alkane", 28);
+
+    // 波利亚计数法
+    auto &ic = PolyaIsomerCounter::GetInstance();
+    ic.count(32);
     return 0;
 
 }

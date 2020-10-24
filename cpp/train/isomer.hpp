@@ -1,21 +1,20 @@
 #ifndef _ISOMER_HPP_
 #define _ISOMER_HPP_
 
-//#include "graph.hpp"
 #include <vector>
 #include <string>
 #include <chrono>
-#include <unordered_set>
 #include <iostream>
-#include <queue>
+#include <stack>
 #include <sstream>
 #include <functional>
 #include <iomanip>
 #include <map>
-#include <stack>
 #include <algorithm>
+#include <fstream>
+
 class Timer {
-    decltype(std::chrono::system_clock::now()) start_stamp, end_stamp,last_stamp;
+    decltype(std::chrono::system_clock::now()) start_stamp, end_stamp, last_stamp;
 public:
     void start();
 
@@ -27,8 +26,70 @@ public:
 enum NodeColor {
     WHITE, GRAY, BLACK
 };
-using hash_type = unsigned long long;
-using count_type = unsigned long long;
+using hash_type = uint64_t;
+using node_type = unsigned char;
+
+class quick_set {
+public:
+    std::vector<std::vector<hash_type>> mData;
+    size_t mSize;
+    const size_t max_size = 268435493ULL/10;
+
+    quick_set() : mSize(0) {
+        mData.resize(max_size);
+    }
+
+    void clear() {
+        mSize=0;
+        mData.clear();
+        mData.resize(max_size,std::vector<hash_type>());
+        mData.shrink_to_fit();
+    }
+
+    size_t hash(const hash_type &_a) const {
+        return _a % max_size;
+    }
+
+    size_t size() const {
+        return mSize;
+    }
+
+    void insert(const hash_type &_a) {
+        size_t index = hash(_a);
+        mData[index].push_back(_a);
+        mData[index].shrink_to_fit();
+        ++mSize;
+    }
+
+    bool exist(const hash_type &_a) const {
+        size_t index = hash(_a);
+        for (auto &i:mData[index]) {
+            if (i == _a) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void dump(const char *save_dir, const int &carbonNum) const {
+        std::ofstream ofsm(save_dir + ("/" + std::to_string(carbonNum)) + ".dat",
+                           std::ios::out | std::ios::binary);
+        if (!ofsm.is_open()) {
+            std::cerr << "fail to open "
+                      << save_dir + ("/" + std::to_string(carbonNum)) + ".dat"
+                      << std::endl;
+            exit(-1);
+        }
+        hash_type full_size = mSize;
+        ofsm.write(reinterpret_cast<const char *>( &full_size ), sizeof(hash_type));
+        for (auto &i:mData) {
+            for (auto &j:i) {
+                ofsm.write(reinterpret_cast<const char *>( &j ), sizeof(hash_type));
+            }
+        }
+        ofsm.close();
+    }
+};
 
 /**
  * 无向图
@@ -183,6 +244,7 @@ public:
         func();
         pop_back(a, b);
     }
+
     void add_do(T a, T b, idle func) {
         push_back(a, b);
         func();
@@ -257,16 +319,17 @@ public:
 
 class IsomerCounter {
     int n;
-    using node_type = unsigned char;
-    std::unordered_set<hash_type> curSet;                // 新增部分的smiles
-    std::vector<hash_type> lastVec;
+    quick_set curSet;
+    std::vector<hash_type> lastSet;
     using graph = AlkaneGraph<node_type>;
-    std::vector<count_type> counter;                 // C1-n alkanetopo 数量计数器
+    const int thread_num = 11;
 public:
     static IsomerCounter &GetInstance();
 
     bool calculate(const int &numOfCarbon, const char *cache_dir = nullptr);
-    void calculate_i_from_imm(const char *_cache_dir,const int&_i);
+
+    void calculate_i_from_i_1(const char *save_dir, const int &carbonNum);
+
 private:
     IsomerCounter();
 
@@ -275,10 +338,13 @@ private:
     IsomerCounter(const IsomerCounter &) = delete;
 
     const IsomerCounter &operator=(const IsomerCounter &) = delete;
-
-    void dump(const char *save_dir, const int &carbonNum);
-
+    /**
+     * load save_dir/carbonNum.dat into lastSet
+     * @param save_dir
+     * @param carbonNum
+     */
     void recover(const char *save_dir, const int &carbonNum);
+
 };
 
 #endif //_ISOMER_HPP_

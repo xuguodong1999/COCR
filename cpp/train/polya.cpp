@@ -1,48 +1,8 @@
-#include <cstdio>
-
-#define MAX_CARBON 1024000
-#define CALC_CARBON 32
-unsigned long long A[MAX_CARBON + 1] = {0};
-unsigned long long P[MAX_CARBON + 1] = {0}, Q[MAX_CARBON + 1] = {0};
-unsigned long long C[MAX_CARBON + 1] = {0};
-
-void Calc_A_m(unsigned long long m);
-
-void Calc_P_m(unsigned long long m);
-
-void Calc_Q_m(unsigned long long m);
-
-void Calc_C_m(unsigned long long m);
-
-#include <iostream>
-
-int _main() {
-    std::cout << std::numeric_limits<unsigned long long>::max() << std::endl;
-    unsigned long long num = 0;
-
-    Calc_A_m(0);
-    for (num = 1; num <= CALC_CARBON; num++) {
-        Calc_A_m(num);
-        Calc_P_m(num);
-        Calc_Q_m(num);
-        Calc_C_m(num);
-    }
-    printf("CH%u-: %u\n", 2 * 1 + 1, A[1]);
-    for (num = 2; num <= CALC_CARBON; num++)
-        printf("C%uH%u-: %u\n", num, 2 * num + 1, A[num]);
-    puts("");
-    printf("CH%u: %u\n", 2 * 1 + 2, A[1]);
-    for (num = 2; num <= CALC_CARBON; num++)
-        printf("C%uH%u: %u\n", num, 2 * num + 2, C[num]);
-
-    return 0;
-}
-
-
-void Calc_A_m(unsigned long long m) {
+#include "polya.hpp"
+void PolyaIsomerCounter::A_m(const size_t& m) {
     /*  m >= 0 for A[m]  */
-    unsigned long long t = 0, ans = 0;
-    unsigned long long i = 0, j = 0;
+    count_type t = 0, ans = 0;
+    size_t i = 0, j = 0;
 
     /*  A[0] = 1  */
     if (!m) {
@@ -68,14 +28,12 @@ void Calc_A_m(unsigned long long m) {
     /*  divided by 6  */
     ans /= 6;
     A[m] = ans;
-    return;
 }
 
-
-void Calc_P_m(unsigned long long m) {
+void PolyaIsomerCounter::P_m(const size_t& m) {
     /*  m >= 1 for P[m]  */
-    unsigned long long t = 0, ans = 0;
-    unsigned long long i = 0, j = 0, k = 0;
+    count_type t = 0, ans = 0;
+    size_t i = 0, j = 0, k = 0;
 
     /*  term 1: x * A(x)^4  */
     t = 0;
@@ -109,17 +67,15 @@ void Calc_P_m(unsigned long long m) {
     /*  divided by 24  */
     ans /= 24;
     P[m] = ans;
-    return;
 }
 
-
-void Calc_Q_m(unsigned long long m) {
+void PolyaIsomerCounter::Q_m(const size_t& m) {
     /*  m >= 1 for Q[m]  */
-    unsigned long long t = 0, ans = 0;
-    unsigned long long i = 0;
+    count_type t = 0, ans = 0;
+    size_t i = 0;
 
     if (m == 1) {
-        Q[m] == 0;
+        Q[m] = 0;
         return;
     }
     /*  term 1: A(x)^2  */
@@ -137,17 +93,14 @@ void Calc_Q_m(unsigned long long m) {
     /*  term 3: - A(x)  */
     ans -= A[m];
     Q[m] = ans;
-    return;
 }
 
-
-void Calc_C_m(unsigned long long m) {
+void PolyaIsomerCounter::C_m(const size_t& m) {
     /*  m >= 1 for C[m]  */
-    unsigned long long ans = 0;
+    count_type ans = 0;
     if (!(m % 2))
         ans = P[m] - Q[m] + A[m / 2];
     else
         ans = P[m] - Q[m];
     C[m] = ans;
-    return;
 }
