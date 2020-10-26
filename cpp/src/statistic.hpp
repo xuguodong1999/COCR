@@ -2,7 +2,7 @@
 #define _STATISTIC_HPP_
 
 #include "config.hpp"
-#include "shape.hpp"
+#include "shapeitem.hpp"
 #include <opencv2/core/types.hpp>
 
 #include <set>

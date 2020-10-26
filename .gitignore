@@ -14,3 +14,4 @@ build/
 .vs/
 .build/
 .vscode/
+cache/

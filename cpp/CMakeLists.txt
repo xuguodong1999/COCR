@@ -20,8 +20,8 @@ include_directories(${SRC_DIR})
 
 set(CMAKE_DEBUG_POSTFIX d)
 
-#add_subdirectory(app)
-add_subdirectory(exp)
-#add_subdirectory(train)
+add_subdirectory(app)
+add_subdirectory(lab)
+add_subdirectory(train)
 add_subdirectory(alkane)
-#add_subdirectory(data)
+add_subdirectory(data)

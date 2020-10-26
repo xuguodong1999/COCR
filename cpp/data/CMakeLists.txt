@@ -52,7 +52,18 @@ include_directories(${coordgen_DIR}/../../include)
 include_directories(${rdkit_DIR}/../../../include)
 include_directories(${rdkit_DIR}/../../../include/rdkit)
 
-set(SRC_FILES ${SRC_DIR}/data.cpp)
+set(SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+        ${SRC_DIR}/atom.cpp
+        ${SRC_DIR}/bond.cpp
+        ${SRC_DIR}/mol.cpp
+        ${SRC_DIR}/3rdutil.cpp
+        ${SRC_DIR}/config.cpp
+        ${SRC_DIR}/bonditem.cpp
+        ${SRC_DIR}/couch.cpp
+        ${SRC_DIR}/molitem.cpp
+        ${SRC_DIR}/shapeitem.cpp
+        ${SRC_DIR}/statistic.cpp
+        ${SRC_DIR}/shapegroup.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 

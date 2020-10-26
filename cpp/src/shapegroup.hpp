@@ -2,7 +2,7 @@
 #define _TEXT_HPP_
 
 #include "config.hpp"
-#include "shape.hpp"
+#include "shapeitem.hpp"
 
 enum StringNote {
     Normal,
@@ -48,7 +48,7 @@ inline NString makeNotedString(
  */
 class ShapeGroup : public ShapeInterface {
 public:
-    vector<Shape> shapes;
+    vector<ShapeItem> shapes;
     string name;
 public:
     static shared_ptr<ShapeGroup> GetShapeGroup(const string &_textType = "");
