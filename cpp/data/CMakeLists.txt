@@ -1,27 +1,16 @@
-project(cocr-train)
+project(cocr-data)
 
 if (MSVC)
-    set(Eigen3_DIR ${HEADERS_DIR}/eigen3/cmake)
-    set(RapidJSON_DIR ${HEADERS_DIR}/rapidjson/cmake)
-    set(OpenCV_DIR ${SHARED_LIBS_DIR}/opencv/x64/vc16/lib)
     set(Boost_DIR ${SHARED_LIBS_DIR}/boost/lib/cmake/Boost-1.74.0)
-    set(Torch_DIR ${SHARED_LIBS_DIR}/libtorch/share/cmake/Torch)
+    set(Eigen3_DIR ${HEADERS_DIR}/eigen3/cmake)
+    set(OpenCV_DIR ${SHARED_LIBS_DIR}/opencv/x64/vc16/lib)
     set(maeparser_DIR ${SHARED_LIBS_DIR}/maeparser/lib/cmake)
     set(coordgen_DIR ${SHARED_LIBS_DIR}/coordgenlibs/lib/cmake)
     set(rdkit_DIR ${SHARED_LIBS_DIR}/rdkit/lib/cmake/rdkit)
 endif (MSVC)
 
-# begin openmp
-find_package(OpenMP)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-# end openmp
-# begin torch
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(Torch REQUIRED)
-# end torch
 # begin boost
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
@@ -56,24 +45,19 @@ set(RDKIT_LIBRARIES RDKit::Abbreviations RDKit::MolCatalog RDKit::Alignment
         RDKit::SubstructMatch RDKit::MMPA RDKit::TautomerQuery RDKit::MolAlign
         RDKit::Trajectory)
 # end rdkit
-find_package(RapidJSON REQUIRED)
 
 include_directories(${EIGEN3_INCLUDE_DIR})
-include_directories(${Boost_INCLUDE_DIR})
 include_directories(${maeparser_DIR}/../../include)
 include_directories(${coordgen_DIR}/../../include)
 include_directories(${rdkit_DIR}/../../../include)
 include_directories(${rdkit_DIR}/../../../include/rdkit)
-include_directories(${RAPIDJSON_INCLUDE_DIRS})
 
-set(SRC_FILES ${SRC_DIR}/train.cpp)
+set(SRC_FILES ${SRC_DIR}/data.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${OpenCV_LIBS}
-        ${Boost_LIBRARIES}
-        ${TORCH_LIBRARIES}
         coordgen
         maeparser
         ${RDKIT_LIBRARIES}

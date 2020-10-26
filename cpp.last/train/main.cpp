@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
     // 读取烷烃异构体并生成SMILES串、添加杂原子和基团修饰
     const char *alkane_dir = "C:/Users/xgd/source/COCR/data/alkane";
     auto &sg = SMILESGenerator::GetInstance();
-    for (int i = 19; i <= 26; i++) {
+    for (int i = 12; i <= 12; i++) {
         sg.HashToRichSMILES(alkane_dir, i);
     }
     return 0;

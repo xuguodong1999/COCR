@@ -89,7 +89,7 @@ SMILESGenerator &SMILESGenerator::GetInstance() {
     static SMILESGenerator e;
     return e;
 }
-
+#include <openbabel/stereo/tetrahedral.h>
 void SMILESGenerator::HashToRichSMILES(const char *alkane_dir, const size_t &carbonNum) {
     using namespace OpenBabel;
     OBConversion conv;
@@ -104,11 +104,15 @@ void SMILESGenerator::HashToRichSMILES(const char *alkane_dir, const size_t &car
     auto test_func = [&](const hash_type &hash_value) -> void {
         AlkaneGraph<unsigned char> alkane;
         auto smiles = alkane.toSMILES(hash_value);
+        smiles="CNC(CC(CSC([C@@](CC)(C)CC(C)C#CC(C)C1=CNC=C1)CC)C(C)C)C";
         std::stringstream ism(smiles);
         OBMol mol;
         conv.Read(&mol, &ism);
-        mol.DeleteNonPolarHydrogens();
-        mol.DeletePolarHydrogens();
+        OBStereoFacade stereoFacade(&mol);
+        auto tStereo=stereoFacade.GetAllTetrahedralStereo();
+        for(auto&ts:tStereo){
+            std::cout<<ts->GetConfig().center<<std::endl;
+        }
         //////////////////////////////
         // 第一类：饱和烷烃碳链
         // 第二类：添加=#的烷烃碳链
@@ -116,27 +120,31 @@ void SMILESGenerator::HashToRichSMILES(const char *alkane_dir, const size_t &car
         // 1、环插入 C-> [c4 c5 c6 C3 C4 C5 C6 C7 C8 萘 蒽 菲]
         // 2、化学键替换 --> [/\=#]
         // 3、杂原子or官能团替换 C-> [C H O N P S F Cl Br I B OH CHO COOH]
+        for (auto it = mol.BeginBonds(); it != mol.EndBonds(); it++) {
+            //(*it)->SetHash(true);
+            //(*it)->SetWedge(false);
+
+        }
+
         for (auto it = mol.BeginAtoms(); it != mol.EndAtoms(); it++) {
             size_t valence = 0;
             for (auto it2 = (*it)->BeginBonds(); it2 != (*it)->EndBonds(); it2++) {
                 valence += (*it2)->GetBondOrder();
             }
+            std::cout<<(*it)->IsChiral();
             if (valence == 1) {
 //                (*it)->SetAtomicNum(9);
             } else if (valence == 2) {
-                (*it)->CountBondsOfOrder(1);
+//                (*it)->CountBondsOfOrder(1);
             } else if (valence == 2) {
 
             } else if (valence == 4) {
 
             }
         }
-        for (auto it = mol.BeginBonds(); it != mol.EndBonds(); it++) {
 
-        }
-
-        mol.AddPolarHydrogens();
-        mol.AddNonPolarHydrogens();
+//        mol.AddPolarHydrogens();
+//        mol.AddNonPolarHydrogens();
         //////////////////////////////
         std::stringstream osm;
         conv.Write(&mol, &osm);
