@@ -13,10 +13,10 @@ vector<int>CouchItem::sLabelCharLikeCircle = {9, 21, 47};
 
 ShapeItem CouchItem::GetByIntLabel(int label) {
     if (!sIsLoaded) {
-        LoadDataSet(get_couch_data_path());
+        LoadDataSet(getCouchFilePath());
         if (!sIsLoaded) {
             std::cerr << "fail to load data from "
-                      << get_couch_data_path() << std::endl;
+                      << getCouchFilePath() << std::endl;
             exit(-1);
         }
     }

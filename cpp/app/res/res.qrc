@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file compress="9" compress-algo="best" alias="part.simhei.ttf">part.simhei.ttf</file>
+        <file compress="9" compress-algo="best">simfang.subset.ttf</file>
     </qresource>
 </RCC>

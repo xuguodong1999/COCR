@@ -2,22 +2,11 @@
 #include "isomer.hpp"
 #include "3rdutil.hpp"
 
-class JAtom {
-    size_t id;
-    unsigned char element_type;// 周期表序号
-    std::vector<size_t> bond_ids;
-};
 
-class JBond {
-    size_t id;
-    unsigned char order_stereo;// 键级 /\- = #
-    std::vector<size_t> atom_ids;
-};
 
-class JMol {
-    std::vector<std::shared_ptr<JBond>> bonds;
-    std::vector<std::shared_ptr<JAtom>> atoms;
-};
+
+
+
 
 
 void SMILESGenerator::traverse(const char *alkane_dir, const size_t &carbonNum,
@@ -73,8 +62,8 @@ void SMILESGenerator::HashToRichSMILES(const char *alkane_dir, const size_t &car
     auto test_func = [&](const hash_type &hash_value) -> void {
         AlkaneGraph<unsigned char> alkane;
         auto smiles = alkane.toSMILES(hash_value);
-        smiles = "CNC(CC(CSC([C@@](CC)(C)CC(C)C#CC(C)C1=CNC=C1)CC)C(C)C)C";
-        std::stringstream ism(smiles);
+        //smiles = "CNC(CC(CSC([C@@](CC)(C)CC(C)C#CC(C)C1=CNC=C1)CC)C(C)C)C";
+        //std::stringstream ism(smiles);
 
         //////////////////////////////
         // 第一类：饱和烷烃碳链
@@ -87,7 +76,8 @@ void SMILESGenerator::HashToRichSMILES(const char *alkane_dir, const size_t &car
 
         //////////////////////////////
         auto can = getStandardSMILES(smiles);
-        std::cout << trim(can) << std::endl;
+        std::cout << "in :"<<smiles << std::endl;
+        std::cout << "out:"<<trim(can) << std::endl;
         //ofsm << trim(can) << "\n";
         system("pause");
     };

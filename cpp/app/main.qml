@@ -86,8 +86,8 @@ Window {
             id: btn1
             x: 10
             y: 10
-            width: 50
-            height: 50
+            width: 70
+            height: 70
             text: "绘制"
             checkable: true
             checked: true
@@ -104,9 +104,9 @@ Window {
         Button {
             id: btn2
             x: 10
-            y: 70
-            width: 50
-            height: 50
+            y: 90
+            width: 70
+            height: 70
             checkable: true
             checked: false
             background: Rectangle {

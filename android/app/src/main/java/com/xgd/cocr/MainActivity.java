@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 
 public class MainActivity extends AppCompatActivity {
 

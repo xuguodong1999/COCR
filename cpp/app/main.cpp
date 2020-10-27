@@ -5,8 +5,13 @@
 #include <QQmlApplicationEngine>
 
 inline void addFontData() {
-    QFontDatabase::addApplicationFont(":/part.simhei.ttf");
-    qApp->setFont(QFont("simhei"));
+    QFontDatabase database;
+    int id = QFontDatabase::addApplicationFont(":/simfang.subset.ttf");
+    try {
+        qApp->setFont(QFont(database.applicationFontFamilies(id).at(0)));
+    } catch (std::exception e) {
+        qWarning() << e.what();
+    }
 }
 
 inline void addTranslator() {

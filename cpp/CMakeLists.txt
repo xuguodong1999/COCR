@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 
 project(cocr-cpp)
 
@@ -20,8 +20,11 @@ include_directories(${SRC_DIR})
 
 set(CMAKE_DEBUG_POSTFIX d)
 
+if(MSVC)
 add_subdirectory(app)
 add_subdirectory(lab)
-add_subdirectory(train)
 add_subdirectory(alkane)
 add_subdirectory(data)
+endif (MSVC)
+
+add_subdirectory(train)

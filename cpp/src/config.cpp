@@ -1,39 +1,9 @@
 #include "config.hpp"
 
-const char *get_couch_data_path() {
-#ifdef WIN32
-    return "C:\\Users\\xgd\\source\\COCR\\data\\couch.dat";
-#elif defined(unix)
-    return "/media/xgd/Windows-SSD/Users/xgd/source/COCR/data/couch.dat";
-#endif
+const std::string &getCouchFilePath() {
+    static const std::string data_path = getDataDir() + "/couch/couch.dat";
+    return data_path;
 }
-
-const char *get_coordinates_json_path(int id) {
-    switch (id) {
-        case 2: {
-#ifdef WIN32
-            return "C:\\Users\\xgd\\source\\COCR\\data\\drugbank.json";
-#elif defined(unix)
-            return "/media/xgd/Windows-SSD/Users/xgd/source/COCR/data/drugbank.json";
-#endif
-        }
-        case 3: {
-#ifdef WIN32
-            return "C:\\Users\\xgd\\source\\COCR\\data\\drugbank_h.json";
-#elif defined(unix)
-            return "/media/xgd/Windows-SSD/Users/xgd/source/COCR/data/drugbank_h.json";
-#endif
-        }
-        default: {
-#ifdef WIN32
-            return "C:\\Users\\xgd\\source\\COCR\\data\\fake_chonps12345.json";
-#elif defined(unix)
-            return "/media/xgd/Windows-SSD/Users/xgd/source/COCR/data/fake_chonps12345.json";
-#endif
-        }
-    }
-}
-
 
 void Timer::start() {
     start_stamp = last_stamp = std::chrono::system_clock::now();
@@ -67,3 +37,27 @@ std::string trim(const string &str) {
     ret.erase(str.find_last_not_of(blanks) + 1);
     return std::move(ret);
 }
+
+const std::string &getDrugBankFilePath() {
+    static const std::string data_path= getDataDir() + "/drugbank/full database.xml";
+    return data_path;
+}
+
+const std::string &getAlkaneCacheDir() {
+    static const std::string data_path= getDataDir() + "/alkane";
+    return data_path;
+}
+
+const std::vector<string> ElementsData = {
+        "None", "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne",
+        "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca",
+        "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn",
+        "Ga", "Ge", "As", "Se", "Br", "Kr",
+        "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd",
+        "In", "Sn", "Sb", "Te", "I", "Xe",
+        "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy",
+        "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt",
+        "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th",
+        "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No",
+        "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn"
+};

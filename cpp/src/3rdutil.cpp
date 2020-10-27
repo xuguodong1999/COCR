@@ -11,7 +11,7 @@ RDLogger rdErrorLog;
 std::string getStandardSMILES(const string &smiles, bool add_hydrogen, bool do_kekule) {
     std::string stdSMILES;
     try {
-        std::shared_ptr<RDKit::ROMol> mol1(RDKit::SmilesToMol(stdSMILES));
+        std::shared_ptr<RDKit::ROMol> mol1(RDKit::SmilesToMol(smiles));
         stdSMILES = RDKit::MolToSmiles(
                 *mol1, true, do_kekule, -1, true, false, add_hydrogen, false);
     } catch (std::exception e) {
