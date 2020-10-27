@@ -1,7 +1,7 @@
 project(cocr-app)
 
 if (MSVC)
-    set(Qt5_DIR C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5)
+    set(Qt5_DIR C:/Qt/5.15.1/msvc2019_64/lib/cmake/Qt5)
 endif (MSVC)
 
 find_package(Qt5 COMPONENTS
@@ -46,13 +46,13 @@ qt5_add_resources(RES_FILES
 qt5_add_big_resources(BIG_RES_FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/big_res.qrc)
 
 set(SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-${SRC_DIR}/sketchitem.cpp)
+        ${SRC_DIR}/sketchitem.cpp)
 
-add_custom_target(translations ALL DEPENDS ${QM_FILES})
+add_custom_target(app_translations ALL DEPENDS ${QM_FILES})
 
-add_custom_target(resources ALL DEPENDS ${RES_FILES})
+add_custom_target(app_resources ALL DEPENDS ${RES_FILES})
 
-add_dependencies(resources translations)
+add_dependencies(app_resources app_translations)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${RES_FILES} ${BIG_RES_FILES})
 

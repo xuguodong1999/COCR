@@ -1,14 +1,5 @@
 project(cocr-data)
 
-if (MSVC)
-    set(Boost_DIR ${SHARED_LIBS_DIR}/boost/lib/cmake/Boost-1.74.0)
-    set(Eigen3_DIR ${HEADERS_DIR}/eigen3/cmake)
-    set(OpenCV_DIR ${SHARED_LIBS_DIR}/opencv/x64/vc16/lib)
-    set(maeparser_DIR ${SHARED_LIBS_DIR}/maeparser/lib/cmake)
-    set(coordgen_DIR ${SHARED_LIBS_DIR}/coordgenlibs/lib/cmake)
-    set(rdkit_DIR ${SHARED_LIBS_DIR}/rdkit/lib/cmake/rdkit)
-endif (MSVC)
-
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 # begin boost

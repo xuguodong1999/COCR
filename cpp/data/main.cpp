@@ -96,7 +96,7 @@ void demoSpecialShapeGroup() {
 }
 
 void demoMol() {
-    MolItem::LoopOn(get_coordinates_json_path(0), "testDraw");
+//    MolItem::LoopOn(get_coordinates_json_path(0), "testDraw");
 }
 
 void demoBond() {

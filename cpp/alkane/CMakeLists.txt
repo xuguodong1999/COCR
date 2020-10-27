@@ -1,12 +1,5 @@
 project(cocr-alkane)
 
-if (MSVC)
-    set(Boost_DIR ${SHARED_LIBS_DIR}/boost/lib/cmake/Boost-1.74.0)
-    set(maeparser_DIR ${SHARED_LIBS_DIR}/maeparser/lib/cmake)
-    set(coordgen_DIR ${SHARED_LIBS_DIR}/coordgenlibs/lib/cmake)
-    set(rdkit_DIR ${SHARED_LIBS_DIR}/rdkit/lib/cmake/rdkit)
-endif (MSVC)
-
 # begin openmp
 find_package(OpenMP)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
