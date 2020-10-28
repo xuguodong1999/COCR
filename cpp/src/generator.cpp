@@ -3,12 +3,6 @@
 #include "3rdutil.hpp"
 
 
-
-
-
-
-
-
 void SMILESGenerator::traverse(const char *alkane_dir, const size_t &carbonNum,
                                std::function<void(const hash_type &)> func) {
     std::ifstream ifsm(alkane_dir + ("/" + std::to_string(carbonNum)) + ".dat",
@@ -76,8 +70,8 @@ void SMILESGenerator::HashToRichSMILES(const char *alkane_dir, const size_t &car
 
         //////////////////////////////
         auto can = getStandardSMILES(smiles);
-        std::cout << "in :"<<smiles << std::endl;
-        std::cout << "out:"<<trim(can) << std::endl;
+        std::cout << "in :" << smiles << std::endl;
+        std::cout << "out:" << trim(can) << std::endl;
         //ofsm << trim(can) << "\n";
         system("pause");
     };

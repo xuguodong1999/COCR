@@ -13,14 +13,7 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
     set(HEADERS_DIR C:/include)
     set(SHARED_LIBS_DIR C:/shared)
-endif (MSVC)
 
-set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-include_directories(${SRC_DIR})
-
-set(CMAKE_DEBUG_POSTFIX d)
-
-if (MSVC)
     set(doctest_DIR ${HEADERS_DIR}/doctest/lib/cmake/doctest)
     set(Eigen3_DIR ${HEADERS_DIR}/eigen3/cmake)
     set(nlohmann_json_DIR ${HEADERS_DIR}/nlohmann_json/lib/cmake/nlohmann_json)
@@ -36,13 +29,35 @@ if (MSVC)
     set(maeparser_DIR ${SHARED_LIBS_DIR}/maeparser/lib/cmake)
     set(coordgen_DIR ${SHARED_LIBS_DIR}/coordgenlibs/lib/cmake)
     set(rdkit_DIR ${SHARED_LIBS_DIR}/rdkit/lib/cmake/rdkit)
+
+    include_directories(${EIGEN3_INCLUDE_DIR})
+    include_directories(${Boost_INCLUDE_DIR})
+    include_directories(${maeparser_DIR}/../../include)
+    include_directories(${coordgen_DIR}/../../include)
+    include_directories(${rdkit_DIR}/../../../include)
+    include_directories(${rdkit_DIR}/../../../include/rdkit)
+    include_directories(${RAPIDJSON_INCLUDE_DIRS})
+    include_directories(${doctest_DIR}/../../../include)
+    include_directories(${nlohmann_json_DIR}/../../../include)
+    include_directories(${FunctionalPlus_DIR}/../../../include)
+    include_directories(${frugally-deep_DIR}/../../../include)
+    include_directories(${Taskflow_INCLUDE_DIR})
+elseif (APPLE)
+elseif (UNIX)
 endif (MSVC)
 
-if(MSVC)
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${SRC_DIR})
+
+set(CMAKE_DEBUG_POSTFIX d)
+
+if (UNIX)
+    set(UNIX_LIBRARIES -lRDKitAlignment -lRDKitAlignment -lRDKitAlignment -lRDKitCatalogs -lRDKitCatalogs -lRDKitCatalogs -lRDKitChemReactions -lRDKitChemReactions -lRDKitChemReactions -lRDKitChemTransforms -lRDKitChemTransforms -lRDKitChemTransforms -lRDKitChemicalFeatures -lRDKitChemicalFeatures -lRDKitChemicalFeatures -lRDKitDataStructs -lRDKitDataStructs -lRDKitDataStructs -lRDKitDepictor -lRDKitDepictor -lRDKitDepictor -lRDKitDescriptors -lRDKitDescriptors -lRDKitDescriptors -lRDKitDistGeomHelpers -lRDKitDistGeomHelpers -lRDKitDistGeomHelpers -lRDKitDistGeometry -lRDKitDistGeometry -lRDKitDistGeometry -lRDKitEigenSolvers -lRDKitEigenSolvers -lRDKitEigenSolvers -lRDKitFMCS -lRDKitFMCS -lRDKitFMCS -lRDKitFileParsers -lRDKitFileParsers -lRDKitFileParsers -lRDKitFilterCatalog -lRDKitFilterCatalog -lRDKitFilterCatalog -lRDKitFingerprints -lRDKitFingerprints -lRDKitFingerprints -lRDKitForceField -lRDKitForceField -lRDKitForceField -lRDKitForceFieldHelpers -lRDKitForceFieldHelpers -lRDKitForceFieldHelpers -lRDKitFragCatalog -lRDKitFragCatalog -lRDKitFragCatalog -lRDKitGraphMol -lRDKitGraphMol -lRDKitGraphMol -lRDKitInfoTheory -lRDKitInfoTheory -lRDKitInfoTheory -lRDKitMMPA -lRDKitMMPA -lRDKitMMPA -lRDKitMolAlign -lRDKitMolAlign -lRDKitMolAlign -lRDKitMolCatalog -lRDKitMolCatalog -lRDKitMolCatalog -lRDKitMolChemicalFeatures -lRDKitMolChemicalFeatures -lRDKitMolChemicalFeatures -lRDKitMolDraw2D -lRDKitMolDraw2D -lRDKitMolDraw2D -lRDKitMolHash -lRDKitMolHash -lRDKitMolHash -lRDKitMolInterchange -lRDKitMolInterchange -lRDKitMolInterchange -lRDKitMolStandardize -lRDKitMolStandardize -lRDKitMolStandardize -lRDKitMolTransforms -lRDKitMolTransforms -lRDKitMolTransforms -lRDKitOptimizer -lRDKitOptimizer -lRDKitOptimizer -lRDKitPartialCharges -lRDKitPartialCharges -lRDKitPartialCharges -lRDKitRDBoost -lRDKitRDBoost -lRDKitRDBoost -lRDKitRDGeneral -lRDKitRDGeneral -lRDKitRDGeneral -lRDKitRDGeometryLib -lRDKitRDGeometryLib -lRDKitRDGeometryLib -lRDKitRDStreams -lRDKitRDStreams -lRDKitRDStreams -lRDKitRGroupDecomposition -lRDKitRGroupDecomposition -lRDKitRGroupDecomposition -lRDKitReducedGraphs -lRDKitReducedGraphs -lRDKitReducedGraphs -lRDKitSLNParse -lRDKitSLNParse -lRDKitSLNParse -lRDKitShapeHelpers -lRDKitShapeHelpers -lRDKitShapeHelpers -lRDKitSimDivPickers -lRDKitSimDivPickers -lRDKitSimDivPickers -lRDKitSmilesParse -lRDKitSmilesParse -lRDKitSmilesParse -lRDKitStructChecker -lRDKitStructChecker -lRDKitStructChecker -lRDKitSubgraphs -lRDKitSubgraphs -lRDKitSubgraphs -lRDKitSubstructLibrary -lRDKitSubstructLibrary -lRDKitSubstructLibrary -lRDKitSubstructMatch -lRDKitSubstructMatch -lRDKitSubstructMatch -lRDKitTrajectory -lRDKitTrajectory -lRDKitTrajectory -lRDKithc -lRDKithc -lRDKithc -lcoordgen -lmaeparser)
+endif (UNIX)
+
 add_subdirectory(app)
 add_subdirectory(lab)
 add_subdirectory(alkane)
 add_subdirectory(data)
-endif (MSVC)
-
 add_subdirectory(train)
+

@@ -69,8 +69,11 @@ class IdInterface {
     inline static size_t currentMaxId = 0;
 protected:
     int id;
+
     IdInterface();
+
     ~IdInterface();
+
 public:
     static size_t Get_new_id();
 

@@ -264,10 +264,10 @@ void MolItem::mulK(float kx, float ky) {
 
 void MolItem::reloadSymbols() {
     // >= c++17
-    for(auto&[id,atom]:atomsMap){
+    for (auto&[id, atom]:atomsMap) {
 
     }
-    for(auto&[id,bond]:bondsMap){
+    for (auto&[id, bond]:bondsMap) {
 
     }
 }

@@ -23,7 +23,7 @@ enum class AtomStereo {
     None
 };
 
-class JAtom:public IdInterface {
+class JAtom : public IdInterface {
     ElementType elementType;
 
 private:
@@ -32,15 +32,17 @@ public:
     ElementType getElementType() const {
         return elementType;
     }
-    JAtom(const size_t &_atomicNumber = static_cast<size_t>(ElementType::C)): elementType(static_cast<ElementType>(_atomicNumber)) {
+
+    JAtom(const size_t &_atomicNumber = static_cast<size_t>(ElementType::C)) : elementType(
+            static_cast<ElementType>(_atomicNumber)) {
     }
 
     JAtom(const ElementType &_elementType = ElementType::C)
-            :  elementType(_elementType) {
+            : elementType(_elementType) {
 
     }
 
-    ~JAtom(){
+    ~JAtom() {
 
     }
 

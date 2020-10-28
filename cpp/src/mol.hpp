@@ -7,7 +7,7 @@
 #include <map>
 #include <opencv2/core/types.hpp>
 
-class JMol :public IdInterface{
+class JMol : public IdInterface {
 protected:
     std::map<size_t, std::shared_ptr<JBond>> bondsMap;
 public:
@@ -17,10 +17,12 @@ public:
 
 protected:
     std::map<size_t, std::shared_ptr<JAtom>> atomsMap;
-    std::map<size_t,cv::Point2f> atomsPosMap;
+    std::map<size_t, cv::Point2f> atomsPosMap;
 
 public:
     JMol(const std::string &_smiles);
+
+    JMol() {}
 
     void set(const std::string &_smiles);
 
@@ -31,7 +33,8 @@ public:
     std::shared_ptr<JBond>
     addBond(const size_t &_atomFromId, const size_t &_atomToId);
 
-    std::shared_ptr<JBond> JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId, const JBondType &_bondType);
+    std::shared_ptr<JBond>
+    JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId, const JBondType &_bondType);
 
     void update2DCoordinates();
 

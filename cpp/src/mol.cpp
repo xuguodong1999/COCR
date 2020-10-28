@@ -40,7 +40,7 @@ void JMol::set(const string &_smiles) {
     clear();
     std::map<unsigned int, size_t> R2JAtomIdxMap;
     // FIXME: memory leak
-    auto rwMol=RDKit::SmilesToMol(_smiles);
+    auto rwMol = RDKit::SmilesToMol(_smiles);
     std::shared_ptr<RDKit::ROMol> roMol(rwMol);
     for (unsigned int i = 0; i < roMol->getNumAtoms(); i++) {
         const RDKit::Atom *rAtom = roMol->getAtomWithIdx(i);

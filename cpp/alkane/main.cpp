@@ -19,12 +19,12 @@ int main(int argc, char **argv) {
 //    }
     // 测试类型转换
     std::string testSample;
-    while(std::cin>>testSample){
+    while (std::cin >> testSample) {
         try {
             JMol jMol(testSample);
             jMol.update2DCoordinates();
         } catch (std::exception e) {
-            std::cerr<<e.what()<<std::endl;
+            std::cerr << e.what() << std::endl;
         }
     }
     return 0;

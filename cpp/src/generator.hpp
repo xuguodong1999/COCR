@@ -3,6 +3,7 @@
 
 #include "config.hpp"
 #include "3rdutil.hpp"
+
 class SMILESGenerator {
 public:
     static SMILESGenerator &GetInstance();

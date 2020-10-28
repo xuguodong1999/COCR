@@ -5,9 +5,9 @@
 #include <set>
 
 enum class JBondType {
-    SingleBond=1,
-    DoubleBond=2,
-    TripleBond=3,
+    SingleBond = 1,
+    DoubleBond = 2,
+    TripleBond = 3,
 
     SolidWedgeBond,
     DashWedgeBond,
@@ -15,7 +15,7 @@ enum class JBondType {
 
     DelocalizedBond,
 };
-enum class JStereoType{
+enum class JStereoType {
     // 朝向
     Wedge,
     Hash,
@@ -25,7 +25,8 @@ enum class JStereoType{
     Cis,
     Normal
 };
-class JBond : public IdInterface{
+
+class JBond : public IdInterface {
     JBondType bondType;
     size_t atomFrom, atomTo;
 public:
@@ -42,7 +43,8 @@ public:
     friend bool operator==(const JBond &_b1, const JBond &_b2) {
         return _b1.atomTo == _b2.atomTo && _b2.atomFrom == _b2.atomFrom;
     }
-    void setType(const JBondType&_bondType=JBondType::SingleBond);
+
+    void setType(const JBondType &_bondType = JBondType::SingleBond);
 };
 
 class JRing {
