@@ -1,10 +1,5 @@
 project(cocr-train)
 
-if (UNIX)
-    set(Torch_DIR /home/xgd/install/libtorch-latest/share/cmake/Torch)
-endif (UNIX)
-
-
 include(${CMAKE_SOURCE_DIR}/cmake/SetupOpenMP.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/SetupOpenCV.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/SetupTorch.cmake)

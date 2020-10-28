@@ -19,6 +19,7 @@ qt5_add_resources(RES_FILES
 qt5_add_big_resources(BIG_RES_FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/big_res.qrc)
 
 set(SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+        ${SRC_DIR}/config.cpp
         ${SRC_DIR}/sketchitem.cpp)
 
 add_custom_target(app_translations ALL DEPENDS ${QM_FILES})

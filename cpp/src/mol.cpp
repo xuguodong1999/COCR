@@ -5,10 +5,6 @@
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 #include <GraphMol/Depictor/RDDepictor.h>
 
-#ifndef _DEBUG
-RDLogger rdErrorLog;
-#endif
-
 /**
  * 没有转换光学异构信息
  * @param _jmol

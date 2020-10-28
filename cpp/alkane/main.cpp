@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
             JMol jMol(testSample);
             jMol.update2DCoordinates();
         } catch (std::exception e) {
-            std::cerr << e.what() << std::endl;
+            std::cerr << e.what() << std::endl << std::endl;
         }
     }
     return 0;

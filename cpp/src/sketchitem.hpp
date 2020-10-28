@@ -1,6 +1,8 @@
 #ifndef SKETCHITEM_H
 #define SKETCHITEM_H
 
+#include "config.hpp"
+
 #include <QList>
 #include <QPainter>
 #include <QPair>

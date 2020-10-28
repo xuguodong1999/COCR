@@ -34,7 +34,7 @@ public:
     addBond(const size_t &_atomFromId, const size_t &_atomToId);
 
     std::shared_ptr<JBond>
-    JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId, const JBondType &_bondType);
+    addBond(const size_t &_atomFromId, const size_t &_atomToId, const JBondType &_bondType);
 
     void update2DCoordinates();
 
