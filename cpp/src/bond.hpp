@@ -2,6 +2,7 @@
 #define _BOND_HPP_
 
 #include "config.hpp"
+#include <set>
 
 enum class JBondType {
     SingleBond,
@@ -14,19 +15,34 @@ enum class JBondType {
 
     DelocalizedBond,
 };
-
-class JBond {
-    size_t id;
+enum class JStereoType{
+    // 朝向
+    Wedge,
+    Hash,
+    Wave,
+    // 顺反
+    Trans,
+    Cis,
+    Normal
+};
+class JBond : public IdInterface{
     JBondType bondType;
-    size_t atomFrom,atomTo;
+    size_t atomFrom, atomTo;
 public:
-    JBond(const size_t&_atomFromId,const size_t&_atomToId);
+    JBond(const size_t &_atomFromId, const size_t &_atomToId);
+
+    friend bool operator==(const JBond &_b1, const JBond &_b2) {
+        return _b1.atomTo == _b2.atomTo && _b2.atomFrom == _b2.atomFrom;
+    }
+    void setType(const JBondType&_bondType=JBondType::SingleBond);
 };
 
-class JRing{
+class JRing {
     size_t id;
-    std::vector<size_t> atomIds;
+    std::set<size_t> atomIds;
+    std::vector<size_t> bondIds;
 public:
     JRing();
 };
+
 #endif//_BOND_HPP_

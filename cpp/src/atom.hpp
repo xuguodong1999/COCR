@@ -3,6 +3,7 @@
 
 #include "config.hpp"
 #include <set>
+
 enum class ElementType {
     None = 0, H = 1, He, Li, Be, B, C = 6, N = 7, O = 8, F = 9, Ne,
     Na, Mg, Al, Si, P, S = 16, Cl = 17, Ar, K, Ca = 20,
@@ -16,26 +17,32 @@ enum class ElementType {
     Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, No,
     Lr, Rf, Db, Sg, Bh, Hs, Mt, Ds, Rg, Cn
 };
+enum class AtomStereo {
+    R,
+    S,
+    None
+};
 
-class JAtom {
-    size_t id;
+class JAtom:public IdInterface {
     ElementType elementType;
-    std::set<size_t> atomIds;
+    std::set<size_t> atomIds;// 邻居原子
 public:
-    JAtom(const size_t &_atomicNumber = static_cast<size_t>(ElementType::C))
-            : elementType(static_cast<ElementType>(_atomicNumber)) {
+    JAtom(const size_t &_atomicNumber = static_cast<size_t>(ElementType::C)): elementType(static_cast<ElementType>(_atomicNumber)) {
     }
 
     JAtom(const ElementType &_elementType = ElementType::C)
-            : elementType(_elementType) {
+            :  elementType(_elementType) {
 
     }
 
-    const std::string&getElementName(){
+    ~JAtom(){
+
+    }
+
+    const std::string &getElementName() {
         return ElementsData[static_cast<size_t>(elementType)];
     }
 
-    const size_t &getId();
 };
 
 #endif//_ATOM_HPP_
