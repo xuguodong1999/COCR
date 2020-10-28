@@ -1,6 +1,3 @@
-// 波利亚计数法 拿到数量
-// auto &pic = PolyaIsomerCounter::GetInstance();
-// pic.count(128);
 /**
  * https://github.com/snljty/CountAlkylIsomer
  */

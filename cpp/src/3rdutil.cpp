@@ -4,9 +4,9 @@
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 #include <GraphMol/MolOps.h>
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 RDLogger rdErrorLog;
-#endif
+//#endif
 
 std::string getStandardSMILES(const string &smiles, bool add_hydrogen, bool do_kekule) {
     std::string stdSMILES;

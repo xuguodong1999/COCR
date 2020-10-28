@@ -2,7 +2,6 @@
 #define _GENERATOR_HPP_
 
 #include "config.hpp"
-#include "3rdutil.hpp"
 
 class SMILESGenerator {
 public:
