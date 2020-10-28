@@ -119,7 +119,7 @@ void MolItem::LoopOn(const char *filename, const string &taskName) {
 //    }
 }
 
-void MolItem::addAtom(int id, float x, float y, const string &element, int charge) {
+void MolItem::addAtomItem(int id, float x, float y, const string &element, int charge) {
 //    OpenBabel::OBAtom obatom;
 //    auto it = std::find(RC::sElementData.begin(), RC::sElementData.end(), element);
 //    obatom.SetId(id);
@@ -132,7 +132,7 @@ void MolItem::addAtom(int id, float x, float y, const string &element, int charg
 //    aidMap[id] = obMol.GetAtomById(id);
 }
 
-void MolItem::addBond(int from, int to, const string &type, const string &stereo) {
+void MolItem::addBondItem(int from, int to, const string &type, const string &stereo) {
 //    OpenBabel::OBBond obbond;
 //    obbond.SetBegin(aidMap[from]);
 //    obbond.SetEnd(aidMap[to]);
@@ -259,5 +259,15 @@ void MolItem::testDraw() {
 void MolItem::mulK(float kx, float ky) {
     for (auto &s:symbols) {
         s->mulK(kx, ky);
+    }
+}
+
+void MolItem::reloadSymbols() {
+    // >= c++17
+    for(auto&[id,atom]:atomsMap){
+
+    }
+    for(auto&[id,bond]:bondsMap){
+
     }
 }

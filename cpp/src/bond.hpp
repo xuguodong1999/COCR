@@ -5,13 +5,13 @@
 #include <set>
 
 enum class JBondType {
-    SingleBond,
+    SingleBond=1,
+    DoubleBond=2,
+    TripleBond=3,
+
     SolidWedgeBond,
     DashWedgeBond,
     WaveBond,
-
-    DoubleBond,
-    TripleBond,
 
     DelocalizedBond,
 };
@@ -28,6 +28,14 @@ enum class JStereoType{
 class JBond : public IdInterface{
     JBondType bondType;
     size_t atomFrom, atomTo;
+public:
+    JBondType getBondType() const;
+
+
+    size_t getAtomFrom() const;
+
+    size_t getAtomTo() const;
+
 public:
     JBond(const size_t &_atomFromId, const size_t &_atomToId);
 

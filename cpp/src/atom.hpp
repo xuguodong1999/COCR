@@ -25,8 +25,13 @@ enum class AtomStereo {
 
 class JAtom:public IdInterface {
     ElementType elementType;
+
+private:
     std::set<size_t> atomIds;// 邻居原子
 public:
+    ElementType getElementType() const {
+        return elementType;
+    }
     JAtom(const size_t &_atomicNumber = static_cast<size_t>(ElementType::C)): elementType(static_cast<ElementType>(_atomicNumber)) {
     }
 

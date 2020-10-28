@@ -7,3 +7,15 @@ JBond::JBond( const size_t &_atomFromId, const size_t &_atomToId)
 void JBond::setType(const JBondType &_bondType) {
     bondType = _bondType;
 }
+
+JBondType JBond::getBondType() const {
+    return bondType;
+}
+
+size_t JBond::getAtomFrom() const {
+    return atomFrom;
+}
+
+size_t JBond::getAtomTo() const {
+    return atomTo;
+}

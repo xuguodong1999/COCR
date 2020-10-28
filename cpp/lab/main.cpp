@@ -90,6 +90,6 @@ int main() {
     for (int i = 0; i < num; i++) {
         std::cout << a[i]->getCoordinates().y() << ",";
     }
-    std::cout << "],'K*');axis([-100,100,-100,100]);grid on;" << std::endl;
+    std::cout << "],'K*');\naxis([-5,5,-5,5]);\ngrid on;" << std::endl;
     exit(0);
 }
