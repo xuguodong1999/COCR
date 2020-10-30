@@ -82,4 +82,9 @@ public:
     const size_t getId();
 };
 
+std::string deleteSubStr(const string &_target, const string &_subStr);
+
+std::string replaceSubStr(const string &_target,
+                          const string &_subStr, const string &_newSubStr);
+
 #endif//_CONFIG_HPP_

@@ -85,3 +85,27 @@ IdInterface::IdInterface() : id(Get_new_id()) {
 IdInterface::~IdInterface() {
     Give_back_id(id);
 }
+
+std::string deleteSubStr(const string &_target, const string &_subStr) {
+    size_t nSize = _subStr.size();
+    size_t pos = 0;
+    std::string ret = _target;
+    while (true) {
+        pos = _target.find(_subStr);
+        if (pos == string::npos)
+            return std::move(ret);
+        ret.erase(pos, nSize);
+    }
+}
+
+std::string replaceSubStr(const string &_target,
+                          const string &_subStr, const string &_newSubStr) {
+    std::string ret = _target;
+    for (string::size_type pos = 0; pos != string::npos; pos += _newSubStr.length()) {
+        if ((pos = _target.find(_subStr, pos)) != string::npos)
+            ret.replace(pos, _subStr.length(), _newSubStr);
+        else
+            break;
+    }
+    return std::move(ret);
+}

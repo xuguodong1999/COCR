@@ -7,14 +7,16 @@
 class MemoryEfficientSwishFuncImpl : public torch::autograd::Function<MemoryEfficientSwishFuncImpl> {
 public:
     static torch::autograd::variable_list forward(
-            torch::autograd::AutogradContext *ctx, torch::Tensor &x) {
+            torch::autograd::AutogradContext *ctx,
+            torch::Tensor &x) {
         auto result = x * torch::sigmoid(x);
         ctx->save_for_backward({result});
         return {result};
     }
 
     static torch::autograd::variable_list backward(
-            torch::autograd::AutogradContext *ctx, torch::autograd::variable_list &gard_output) {
+            torch::autograd::AutogradContext *ctx,
+            torch::autograd::variable_list &gard_output) {
         auto i = ctx->saved_data[0].toTensor();
         auto sigmoid_i = torch::sigmoid(i);
         return {gard_output[0] * (sigmoid_i * (1 + i * (1 - sigmoid_i)))};
