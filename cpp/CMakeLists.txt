@@ -22,6 +22,7 @@ if (MSVC)
     add_subdirectory(alkane)
     add_subdirectory(data)
     add_subdirectory(train)
+    add_subdirectory(simple)
 endif (MSVC)
 
 add_subdirectory(unix)
