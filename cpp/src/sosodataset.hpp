@@ -11,15 +11,6 @@
 using YoloLabelType = std::vector<float>;
 using YoloDataType = std::pair<std::string, std::vector<YoloLabelType>>;
 
-/**
- *
- * @param _img
- * @param _newWidth
- * @param _newHeight
- * @return 图像，{比例、水平偏移、竖直偏移}
- */
-std::pair<cv::Mat, std::tuple<float, float, float>>
-padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight);
 
 // based on: https://github.com/pytorch/pytorch/blob/master/torch/csrc/api/include/torch/data/datasets/mnist.h.
 class SosoDataSet : public torch::data::datasets::Dataset<SosoDataSet> {
@@ -27,8 +18,8 @@ class SosoDataSet : public torch::data::datasets::Dataset<SosoDataSet> {
     inline static std::string LabelDir = "labels";
     inline static std::string ImageSuffix = ".jpg";
     inline static std::string LabelSuffix = ".txt";
-    inline static int trainWidth = 640;
-    inline static int trainHeight = 416;
+    inline static int batchWidth = 640;
+    inline static int batchHeight = 416;
     std::vector<YoloDataType> trainSet, testSet;
 
     std::vector<YoloDataType> readYoloData(const std::string &_list_txt);

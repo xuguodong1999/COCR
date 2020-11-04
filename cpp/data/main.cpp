@@ -13,7 +13,7 @@ const int www = 480, hhh = 320;
 
 void demoSingle() {
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-    auto tmp = CouchItem::GetByIntLabel(1 + rand() % 182);
+    auto tmp = CouchLoader::GetByIntLabel(1 + rand() % 182);
     tmp.resizeTo(200, 200);
     tmp.rotate(-10 + rand() % 20);
     tmp.moveCenterTo(cv::Point2f(www / 2, hhh / 2));
@@ -25,7 +25,7 @@ void demoSingle() {
 
 void demoLine() {
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-    auto line = CouchItem::GetShape("line");
+    auto line = CouchLoader::GetShape("line");
     line.castToLine(cv::Point2f(50, 50), cv::Point2f(50, 250));
     line.paintTo(img1);
     cv::imshow("1", img1);
@@ -34,7 +34,7 @@ void demoLine() {
 
 void demoCircle() {
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-    auto circle = CouchItem::GetShape("circle");
+    auto circle = CouchLoader::GetShape("circle");
     circle.castToCircle(cv::Point2f(400, 200), 100, 100);
     circle.paintTo(img1);
     cv::imshow("1", img1);

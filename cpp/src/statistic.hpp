@@ -31,7 +31,7 @@ public:
         int shift;
         cv::Scalar color;
 
-        ShapeAttr() : color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0) {}
+        ShapeAttr() : color(cvBlack), thickness(2), lineType(cv::LINE_AA), shift(0) {}
     };
 
     static void update_shape_attr() {

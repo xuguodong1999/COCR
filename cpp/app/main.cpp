@@ -22,12 +22,15 @@ inline void addTranslator() {
     }
 }
 
+#include <QDir>
+
 int main(int argc, char **argv) {
     qputenv("QML_DISABLE_DISK_CACHE", "1");
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
     addFontData();
     addTranslator();
+    qDebug() << QDir(":/qt-project.org").entryList();
     QQmlApplicationEngine engine;
     const char *si = "SketchItem";
     qmlRegisterType<SketchItem>(si, 1, 0, si);

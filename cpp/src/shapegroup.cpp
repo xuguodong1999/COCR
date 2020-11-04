@@ -34,14 +34,14 @@ void ShapeGroup::setSAngleK(float sAngleK) {
 shared_ptr<ShapeGroup> ShapeGroup::GetShapeGroup(const string &_textType) {
     shared_ptr<ShapeGroup> text;
     if (_textType == "positive") {
-        auto sym = CouchItem::GetByStrLabel("⊕");
+        auto sym = CouchLoader::GetByStrLabel("⊕");
         text = std::make_shared<ShapeGroup>();
         text->shapes.emplace_back(std::move(sym));
     } else if (_textType == "negative") {
-        auto sym1 = CouchItem::GetShape("circle");
+        auto sym1 = CouchLoader::GetShape("circle");
         sym1.resizeTo(100, 100);
         sym1.moveCenterTo(cv::Point2f(50, 50));
-        auto sym2 = CouchItem::GetByStrLabel("-");
+        auto sym2 = CouchLoader::GetByStrLabel("-");
         // TODO: 分离随机要素
         sym2.resizeTo(80, 80);
         sym2.moveCenterTo(cv::Point2f(50, 50));
@@ -55,7 +55,7 @@ shared_ptr<ShapeGroup> ShapeGroup::GetShapeGroup(const string &_textType) {
 }
 
 void ShapeGroup::append(const NChar &c) {
-    auto sym = CouchItem::GetByStrLabel(c.second);
+    auto sym = CouchLoader::GetByStrLabel(c.second);
     sym.rotate(30 * RC::sAngleK);
     float s = 100 * RC::sNormSizeK;
     float sx = 100 * RC::sNormOffsetKx;

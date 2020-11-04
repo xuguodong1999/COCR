@@ -1,25 +1,17 @@
 #include "couch.hpp"
 #include <fstream>
 #include <iostream>
+#include <random>
+#include <algorithm>
 
-bool CouchItem::sIsLoaded = false;
-vector<vector<Script>> CouchItem::sData;
-vector<int>CouchItem::sLabelCharLikeLine = {
+vector<int>CouchLoader::sLabelCharLikeLine = {
         8, 24, 53,
         130, 134, 141, 146, 158,
         172
 };
-vector<int>CouchItem::sLabelCharLikeCircle = {9, 21, 47};
+vector<int>CouchLoader::sLabelCharLikeCircle = {9, 21, 47};
 
-ShapeItem CouchItem::GetByIntLabel(int label) {
-    if (!sIsLoaded) {
-        LoadDataSet(getCouchFilePath().c_str());
-        if (!sIsLoaded) {
-            std::cerr << "fail to load data from "
-                      << getCouchFilePath() << std::endl;
-            exit(-1);
-        }
-    }
+ShapeItem CouchLoader::GetByIntLabel(int label) {
     if (label >= sData.size()) {
         std::cerr << "label " << label << "out of boundary: [0," <<
                   sData.size() << ")" << std::endl;
@@ -38,7 +30,7 @@ ShapeItem CouchItem::GetByIntLabel(int label) {
     return std::move(shape);
 }
 
-ShapeItem CouchItem::GetByStrLabel(const std::string &label) {
+ShapeItem CouchLoader::GetByStrLabel(const std::string &label) {
     auto resItr = sStr2IntMap.find(label);
     if (resItr == sStr2IntMap.end()) {
         std::cerr << "fail to find " << label
@@ -48,7 +40,7 @@ ShapeItem CouchItem::GetByStrLabel(const std::string &label) {
     return std::move(GetByIntLabel(resItr->second));
 }
 
-ShapeItem CouchItem::GetShape(const std::string &shape) {
+ShapeItem CouchLoader::GetShape(const std::string &shape) {
     if (shape == "line") {
         return std::move(GetByIntLabel(
                 sLabelCharLikeLine[rand() % sLabelCharLikeLine.size()]));
@@ -64,7 +56,7 @@ ShapeItem CouchItem::GetShape(const std::string &shape) {
     }
 }
 
-std::map<std::string, int> CouchItem::sStr2IntMap = {
+std::map<std::string, int> CouchLoader::sStr2IntMap = {
         {"!",  183},
         {"Ⅴ",  182},
         {"\"", 181},
@@ -250,17 +242,22 @@ std::map<std::string, int> CouchItem::sStr2IntMap = {
         {"9",  1}
 };
 
-void CouchItem::LoadDataSet(const char *filename, bool clearBefore) {
+void CouchLoader::LoadDataSet(const char *filename, bool clearBefore) {
     std::ifstream ifsm(filename, std::ios::in | std::ios::binary);
     if (!ifsm.is_open()) {
         std::cerr << "fail to open " << filename << std::endl;
         sIsLoaded = false;
         return;
     }
-    if (clearBefore) sData.clear();
-    int a, b, c, d, e;
+    if (clearBefore) {
+        sData.clear();
+    }
+    int a, b, c, d, e,iii=0;
     // 【标签索引】、【宽度】、【长度】、【笔画数目】
     while (ifsm.read(reinterpret_cast<char *>(&a), 4)) {
+        if(++iii%10000==0){
+            std::cout<<iii<<std::endl;
+        }
         ifsm.read(reinterpret_cast<char *>(&b), 4);
         ifsm.read(reinterpret_cast<char *>(&c), 4);
         ifsm.read(reinterpret_cast<char *>(&d), 4);
@@ -281,8 +278,32 @@ void CouchItem::LoadDataSet(const char *filename, bool clearBefore) {
         sData[a].push_back(std::move(script));
     }
     ifsm.close();
+    std::cout<<"here"<<std::endl;
     for (auto &dat:sData) {
         dat.resize(dat.size());
     }
+    std::cout<<"there"<<std::endl;
     sIsLoaded = true;
 }
+
+
+void CouchLoader::LoadCouchDataSet() {
+    if (!sIsLoaded) {
+        LoadDataSet(getCouchFilePath().c_str());
+        if (!sIsLoaded) {
+            std::cerr << "fail to load data from "
+                      << getCouchFilePath() << std::endl;
+            exit(-1);
+        }
+    }
+}
+
+ShapeItem CouchLoader::GetShapeItem(const size_t &_classIndex, size_t &_sampleIndex) {
+    auto &sample = sData[_classIndex][_sampleIndex];
+    ShapeItem shape;
+    shape.mLabel = _classIndex;
+    shape.mData = sample;// 深拷贝
+    return std::move(shape);
+}
+
+const vector<vector<Script>> &CouchLoader::GetData() { return sData; }

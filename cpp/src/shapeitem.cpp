@@ -166,7 +166,7 @@ void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThre
     while (s03 < std::numeric_limits<float>::epsilon()
            || s01 < std::numeric_limits<float>::epsilon()) {
         mData.clear();
-        mData = std::move(CouchItem::GetShape("line").mData);
+        mData = std::move(CouchLoader::GetShape("line").mData);
         goto L;// FIXME: i heard that goto considered harmful?
     }
     Point vec = p1 - p2;
@@ -178,7 +178,7 @@ void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThre
     float kk = s03 / s01;
     while (lThresh < kk && kk < 1 / lThresh) {
         mData.clear();
-        mData = std::move(CouchItem::GetShape("line").mData);
+        mData = std::move(CouchLoader::GetShape("line").mData);
 //        mData.emplace_back(Stroke({p1, p2}));
         goto L;
     }
