@@ -8,10 +8,14 @@
 std::vector<std::pair<int, int>> cfg = {
         {1, 64},
         {1, 64},
+        {1, 64},
+        {2, 64},
         {2, 64},
         {2, 64},
         {2, 64},
         {3, 64},
+        {3, 64},
+        {4, 64},
 };
 
 int train() {
@@ -20,11 +24,11 @@ int train() {
     std::cout << device << std::endl;
 
     // Hyper parameters
-    const int64_t batch_size = 200;
-    const size_t num_epochs = 100000;
-    const double learning_rate = 0.0005;
+    const int64_t batch_size = 16;
+    const size_t num_epochs = 10000;
+    const double learning_rate = 0.001;
     // number of epochs after which to decay the learning rate
-    const size_t learning_rate_decay_frequency = 100;
+    const size_t learning_rate_decay_frequency = 20;
     const double learning_rate_decay_factor = 0.999;
 
     // CIFAR10 custom dataset
@@ -45,7 +49,7 @@ int train() {
     // Model
     auto model = std::make_shared<Mv3Large>(num_classes);
     model->to(device);
-//    torch::load(model, "D:/mv3-epoch-4.pth");
+//    torch::load(model, "D:/mv3-epoch-1.pth");
     // Optimizer
     torch::optim::Adam optimizer(
             model->parameters(), torch::optim::AdamOptions(learning_rate));
@@ -64,12 +68,13 @@ int train() {
         CouchDataSet::shuffle();
         double running_loss = 0.0;
         size_t num_correct = 0;
-        int fuck = 0;
-        size_t cfg_index = rand() % cfg.size();
-        RC::shapeAttr.thickness = cfg[cfg_index].first;
-        CouchDataSet::setTrainSize(cfg[cfg_index].second, cfg[cfg_index].second);
+        int batch_num = 0;
+        // TODO: log each epoch
         for (auto &batch : *train_loader) {
-            if (++fuck == 10) {
+            size_t cfg_index = rand() % cfg.size();
+            RC::shapeAttr.thickness = cfg[cfg_index].first;
+            CouchDataSet::setTrainSize(cfg[cfg_index].second, cfg[cfg_index].second);
+            if (++batch_num == 1000) {
                 break;
             }
             // Transfer images and target labels to device
@@ -104,9 +109,9 @@ int train() {
             static_cast<torch::optim::AdamOptions &>(optimizer.param_groups().front()
                     .options()).lr(current_learning_rate);
         }
-        fuck *= batch_size;
-        auto sample_mean_loss = running_loss / fuck;//num_train_samples;
-        auto accuracy = static_cast<double>(num_correct) / fuck;//num_train_samples;
+        batch_num *= batch_size;
+        auto sample_mean_loss = running_loss / batch_num;//num_train_samples;
+        auto accuracy = static_cast<double>(num_correct) / batch_num;//num_train_samples;
 
         std::cout << "Epoch [" << (epoch + 1) << "/" << num_epochs << "], Trainset - Loss: "
                   << sample_mean_loss << ", Accuracy: " << accuracy << '\n';
@@ -195,13 +200,19 @@ void test_mv3_large() {
     auto cuda_available = torch::cuda::is_available();
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
     std::cout << device << std::endl;
-    auto model = std::make_shared<Mv3Large>(6946);
+    auto model = std::make_shared<Mv3Large>(62);
+    torch::load(model,"D:/mv3-epoch-6.pth");
     model->to(device);
-    torch::save(model, "D:/mv3-large-empty.pth");
     model->eval();
-    auto input = getOneSample().to(device);
-    auto output = model->forward(input);
-    output.print();
+    while (model.get()) {
+        Timer timer;
+        timer.start();
+        auto input = getOneSample().to(device);
+        auto output = model->forward(input);
+        timer.stop();
+        output.print();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
 }
 
 int main(int argc, char **argv) {
