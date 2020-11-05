@@ -6,7 +6,7 @@ if (MSVC)
             AccessibilitySupport Bluetooth Bodymovin Charts Concurrent
             DataVisualization DBus Designer DesignerComponents DeviceDiscoverySupport
             EdidSupport EglSupport EventDispatcherSupport
-            FbSupport FontDatabaseSupport Gamepad Gui Help LinguistTools Location
+            FbSupport FontDatabaseSupport Gamepad Gui Help Location
             Multimedia MultimediaQuick MultimediaWidgets
             Network NetworkAuth Nfc OpenGL OpenGLExtensions
             PacketProtocol PlatformCompositorSupport
@@ -21,7 +21,7 @@ if (MSVC)
             WindowsUIAutomationSupport Xml XmlPatterns Zlib)
 endif (MSVC)
 find_package(Qt5 COMPONENTS
-        Core Quick TextToSpeech Widgets)
+        Core Quick TextToSpeech Widgets LinguistTools)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)

@@ -1,5 +1,7 @@
 project(cocr-app)
-
+if (APPLE)
+    set(Qt5_DIR /Users/xgd/opt/Qt/5.15.0/clang_64/lib/cmake/Qt5)
+endif (APPLE)
 include(${CMAKE_SOURCE_DIR}/cmake/SetupQt5.cmake)
 
 set(TS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/trans_zh_CN.ts)

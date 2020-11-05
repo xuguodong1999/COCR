@@ -29,8 +29,8 @@ int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 //    qFatal("致命");
-    qCritical() << "2";
-    qWarning() << "1";
+//    qCritical() << "2";
+//    qWarning() << "1";
 
     addFontData();
     addTranslator();
@@ -38,12 +38,15 @@ int main(int argc, char **argv) {
     QQmlApplicationEngine engine;
     const char *si = "SketchItem";
     qmlRegisterType<SketchItem>(si, 1, 0, si);
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated, &app,
-                     [url](QObject *obj, const QUrl &objUrl) {
-                         if (!obj && url == objUrl)
-                             QCoreApplication::exit(-1);
-                     }, Qt::QueuedConnection);
-    engine.load(url);
+    QFile qmlFile(":/main.qml");
+    qmlFile.open(QIODevice::ReadOnly);
+//    const QUrl url(QStringLiteral());
+//    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated, &app,
+//                     [url](QObject *obj, const QUrl &objUrl) {
+//                         if (!obj && url == objUrl)
+//                             QCoreApplication::exit(-1);
+//                     }, Qt::QueuedConnection);
+    engine.loadData(qmlFile.readAll());
+    qmlFile.close();
     return app.exec();
 }
