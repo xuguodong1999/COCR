@@ -26,7 +26,7 @@ int train() {
     // Hyper parameters
     const int64_t batch_size = 240;
     const size_t num_epochs = 10000;
-    const double learning_rate = 0.0008;
+    const double learning_rate = 0.0001;
     // number of epochs after which to decay the learning rate
     const size_t learning_rate_decay_frequency = 40;
     const double learning_rate_decay_factor = 0.999;
@@ -49,7 +49,7 @@ int train() {
     // Model
     auto model = std::make_shared<Mv3Large>(num_classes);
     model->to(device);
-    torch::load(model, "D:/mv3-epoch-3.pth");
+    torch::load(model, "D:/mv3-epoch-6.pth");
     // Optimizer
     torch::optim::Adam optimizer(
             model->parameters(), torch::optim::AdamOptions(learning_rate));
@@ -156,6 +156,11 @@ int train() {
 #include <opencv2/opencv.hpp>
 
 extern std::map<int, std::wstring> gbTable;
+std::vector<std::string> test_img_path = {
+        "C:/Users/xgd/Pictures/yue.png",
+        "C:/Users/xgd/Pictures/workspace/liang.png",
+        "C:/Users/xgd/Pictures/workspace/xin.png"
+};
 
 torch::Tensor getOneSample(const std::string &_img_path = "C:/Users/xgd/Pictures/yue.png") {
     auto cvImg = cv::imread(_img_path);
@@ -176,7 +181,7 @@ void test() {
     std::cout << device << std::endl;
     auto model = std::make_shared<Mv3Small>(6946);
     model->to(device);
-    torch::load(model, "D:/mv3-epoch-4.pth");
+    torch::load(model, "D:/mv3-epoch-6.pth");
     model->eval();
     torch::NoGradGuard no_grad;
     auto imgTensor = getOneSample();
@@ -201,14 +206,22 @@ void test_mv3_large() {
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
     std::cout << device << std::endl;
     auto model = std::make_shared<Mv3Large>(62);
-    torch::load(model,"D:/mv3-epoch-6.pth");
+    torch::load(model, "D:/mv3-epoch-6.pth");
     model->to(device);
     model->eval();
     while (model.get()) {
         Timer timer;
         timer.start();
-        auto input = getOneSample().to(device);
+        auto input = getOneSample(test_img_path[rand() % test_img_path.size()]).to(device);
         auto output = model->forward(input);
+        int topk = 5;
+        auto prediction = output.topk(topk, 1);
+        std::cout << std::get<0>(prediction) << std::endl;
+        auto indices = std::get<1>(prediction).squeeze(0);
+        for (int i = 0; i < topk; i++) {
+            std::cout << indices[i].item().toInt() << std::endl;
+            std::wcout << gbTable[indices[i].item().toInt()] << std::endl;
+        }
         timer.stop();
         output.print();
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -216,12 +229,13 @@ void test_mv3_large() {
 }
 
 int main(int argc, char **argv) {
+    std::wcout.imbue(std::locale("chs"));
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     try {
-        train();
+//        train();
 //        test();
-//        test_mv3_large();
+        test_mv3_large();
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
