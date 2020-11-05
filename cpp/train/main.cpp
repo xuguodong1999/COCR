@@ -149,7 +149,19 @@ int train() {
 }
 
 #include <opencv2/opencv.hpp>
+
 extern std::map<int, std::wstring> gbTable;
+torch::Tensor getOneSample(const std::string&_img_path="C:/Users/xgd/Pictures/yue.png"){
+    auto cvImg = cv::imread(_img_path);
+    cvImg.convertTo(cvImg, CV_32F, 1.0 / 255);
+//    cv::imshow("",cvImg);
+//    cv::waitKey(0);
+    std::cout << cvImg.size << std::endl;
+    auto imgTensor = torch::from_blob(
+            cvImg.data, {cvImg.cols, cvImg.rows, 3}, torch::kFloat
+    ).permute({2, 0, 1}).contiguous().unsqueeze(0);
+    return std::move(imgTensor);
+}
 void test() {
 //    CouchDataSet();
     auto cuda_available = torch::cuda::is_available();
@@ -160,37 +172,45 @@ void test() {
     torch::load(model, "D:/mv3-epoch-4.pth");
     model->eval();
     torch::NoGradGuard no_grad;
-
-    auto cvImg = cv::imread("C:/Users/xgd/Pictures/yue.png");
-    cvImg.convertTo(cvImg, CV_32F, 1.0 / 255);
-//    cv::imshow("",cvImg);
-//    cv::waitKey(0);
-    std::cout<<cvImg.size<<std::endl;
-    auto imgTensor = torch::from_blob(
-            cvImg.data, {cvImg.cols, cvImg.rows, 3}, torch::kFloat
-    ).permute({2, 0, 1}).contiguous().unsqueeze(0);
+    auto imgTensor=getOneSample();
     imgTensor.print();
     auto data = imgTensor.to(device);
     auto output = model->forward(data);
 //    std::cout<<output<<std::endl;
-    int topk=5;
-    auto prediction = output.topk(topk,1);
-    std::cout<<std::get<0>(prediction)<<std::endl;
-    auto indices=std::get<1>(prediction).squeeze(0);
-    for(int i=0;i<topk;i++){
-        std::cout<<indices[i].item().toInt()<<std::endl;
-     std::wcout<<gbTable[indices[i].item().toInt()]<<std::endl;
+    int topk = 5;
+    auto prediction = output.topk(topk, 1);
+    std::cout << std::get<0>(prediction) << std::endl;
+    auto indices = std::get<1>(prediction).squeeze(0);
+    for (int i = 0; i < topk; i++) {
+        std::cout << indices[i].item().toInt() << std::endl;
+        std::wcout << gbTable[indices[i].item().toInt()] << std::endl;
     }
 }
 
 #include <QApplication>
+
+void test_mv3_large() {
+    auto cuda_available = torch::cuda::is_available();
+    torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
+//    torch::Device device(torch::kCPU);
+    std::cout << device << std::endl;
+
+    auto model = std::make_shared<Mv3Large>(6946);
+    model->to(device);
+    torch::save(model, "D:/mv3-large-empty.pth");
+    model->eval();
+    auto input=getOneSample().to(device);
+    auto output=model->forward(input);
+    output.print();
+}
 
 int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     try {
 //        train();
-        test();
+//        test();
+        test_mv3_large();
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

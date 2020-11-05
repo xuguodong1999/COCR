@@ -153,7 +153,7 @@ class Mv3Small : public torch::nn::Module {
     torch::nn::Conv2d conv_bneck_out;
     torch::nn::BatchNorm2d bn_in;
     torch::nn::BatchNorm2d bn_bneck_out;
-    torch::nn::BatchNorm2d bn_fc1;
+//    torch::nn::BatchNorm2d bn_fc1;
     torch::nn::Conv2d conv_fc1;
     torch::nn::Conv2d conv_fc2;
     HSwish act_in;
@@ -169,7 +169,7 @@ public:
 
 class Mv3Large : public torch::nn::Module {
     torch::nn::Sequential layerIn;
-    std::vector<torch::nn::Sequential> bnecks;
+    torch::nn::Sequential bneck;
     torch::nn::Sequential layerOut;
 public:
     Mv3Large(int numOfClass);

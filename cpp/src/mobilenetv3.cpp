@@ -80,6 +80,8 @@ BlockHSwishModuleImpl::BlockHSwishModuleImpl(
 }
 
 torch::Tensor BlockHSwishModuleImpl::forward(torch::Tensor x) {
+//    std::cout<<"BlockHSwishModuleImpl::forward"<<std::endl;
+//    x.print();
     auto y = nolinear1->forward(bn1->forward(conv1->forward(x)));
     y = nolinear2->forward(bn2->forward(conv2->forward(y)));
     y = bn3->forward(conv3->forward(y));
@@ -131,6 +133,8 @@ BlockHSwishNullModuleImpl::BlockHSwishNullModuleImpl(
 }
 
 torch::Tensor BlockHSwishNullModuleImpl::forward(torch::Tensor x) {
+//    std::cout<<"BlockHSwishNullModuleImpl::forward"<<std::endl;
+//    x.print();
     auto y = nolinear1->forward(bn1->forward(conv1->forward(x)));
     y = nolinear2->forward(bn2->forward(conv2->forward(y)));
     y = bn3->forward(conv3->forward(y));
@@ -185,6 +189,8 @@ BlockReLUModuleImpl::BlockReLUModuleImpl(
 }
 
 torch::Tensor BlockReLUModuleImpl::forward(torch::Tensor x) {
+//    std::cout<<"BlockReLUModuleImpl::forward"<<std::endl;
+//    x.print();
     auto y = nolinear1->forward(bn1->forward(conv1->forward(x)));
     y = nolinear2->forward(bn2->forward(conv2->forward(y)));
     y = bn3->forward(conv3->forward(y));
@@ -236,6 +242,8 @@ BlockReLUNullModuleImpl::BlockReLUNullModuleImpl(
 }
 
 torch::Tensor BlockReLUNullModuleImpl::forward(torch::Tensor x) {
+//    std::cout<<"BlockReLUNullModuleImpl::forward"<<std::endl;
+//    x.print();
     auto y = nolinear1->forward(bn1->forward(conv1->forward(x)));
     y = nolinear2->forward(bn2->forward(conv2->forward(y)));
     y = bn3->forward(conv3->forward(y));
@@ -316,7 +324,7 @@ Mv3Small::Mv3Small(int num_classes) :
         act_bneck_out(),
         conv_fc1(torch::nn::Conv2dOptions(
                 576, 1024, {1, 1}).bias(true)),
-        bn_fc1(1024),
+//        bn_fc1(1024),
         act_fc1(),
         conv_fc2(torch::nn::Conv2dOptions(
                 1024, num_classes, {1, 1}).bias(true)) {
@@ -324,7 +332,7 @@ Mv3Small::Mv3Small(int num_classes) :
     register_module("conv2", conv_bneck_out);
     register_module("bn1", bn_in);
     register_module("bn2", bn_bneck_out);
-    register_module("bn3", bn_fc1);
+//    register_module("bn3", bn_fc1);
     register_module("hs1", act_in);
     register_module("hs2", act_bneck_out);
     register_module("hs3", act_fc1);
@@ -338,7 +346,9 @@ torch::Tensor Mv3Small::forward(torch::Tensor x) {
     out = bneck->forward(out);
     out = act_bneck_out->forward(bn_bneck_out->forward(conv_bneck_out->forward(out)));
     out = torch::adaptive_avg_pool2d(out, {1, 1});
-    out = act_fc1->forward(bn_fc1->forward(conv_fc1->forward(out)));
+    // FIXME: NBN here
+//    out = act_fc1->forward(bn_fc1->forward(conv_fc1->forward(out)));
+    out = act_fc1->forward(conv_fc1->forward(out));
     out = conv_fc2->forward(out);
     out = out.view({out.size(0), -1});
     return torch::log_softmax(out, 1);

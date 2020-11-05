@@ -9,7 +9,7 @@ Mv3Large::Mv3Large(int numOfClass)
         torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(16)),
         HSwish()
 )),
-          bnecks({torch::nn::Sequential(
+          bneck(torch::nn::Sequential(
                   BlockReLUNullModule(
                           3, 16, 16, 16,
                           torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
@@ -28,35 +28,35 @@ Mv3Large::Mv3Large(int numOfClass)
                   BlockReLUModule(
                           5, 24, 72, 24,
                           torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          SeModule(16),
+                          SeModule(24),
                           2),
                   BlockReLUModule(
                           5, 24, 120, 40,
                           torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          SeModule(16),
+                          SeModule(40),
                           1),
                   BlockReLUModule(
                           5, 40, 120, 40,
                           torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          SeModule(16),
+                          SeModule(40),
                           1),
                   ////////////////////////////
                   // ②
                   ////////////////////////////
                   BlockHSwishNullModule(
-                          3,40,240,80,
+                          3, 40, 240, 80,
                           HSwish(),
                           2),
                   BlockHSwishNullModule(
-                          3,80,200,80,
+                          3, 80, 200, 80,
                           HSwish(),
                           1),
                   BlockHSwishNullModule(
-                          3,80,184,80,
+                          3, 80, 184, 80,
                           HSwish(),
                           1),
                   BlockHSwishNullModule(
-                          3,80,184,80,
+                          3, 80, 184, 80,
                           HSwish(),
                           1),
                   ////////////////////////////
@@ -68,7 +68,7 @@ Mv3Large::Mv3Large(int numOfClass)
                           SeModule(112),
                           2),
                   BlockHSwishModule(
-                          3, 112,762, 112,
+                          3, 112, 762, 112,
                           HSwish(),
                           SeModule(112),
                           1),
@@ -90,9 +90,7 @@ Mv3Large::Mv3Large(int numOfClass)
                           HSwish(),
                           SeModule(160),
                           1)
-          ), torch::nn::Sequential(
-
-          )}),
+          )),
           layerOut(torch::nn::Sequential(
                   // part1: fc1
                   torch::nn::Conv2d(torch::nn::Conv2dOptions(
@@ -100,19 +98,25 @@ Mv3Large::Mv3Large(int numOfClass)
                   torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(960)),
                   HSwish(),
                   // part2: apply avg pool
-                  // TODO: Implement it in forward
+                  torch::nn::AdaptiveAvgPool2d(torch::nn::AdaptiveAvgPool2dOptions({1, 1})),
                   // part3: fc2
                   torch::nn::Conv2d(torch::nn::Conv2dOptions(
                           960, 1280, {1, 1}).bias(true)),
-                  torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(1280)),
                   HSwish(),
-                  // part3: 到节点
+                  // part4: 到节点
                   torch::nn::Conv2d(torch::nn::Conv2dOptions(
-                          1280, , {1, 1}).bias(true)),
+                          1280, numOfClass, {1, 1}).bias(true))
           )) {
-
+    register_module("layerIn", layerIn);
+    register_module("bneck", bneck);
+    register_module("layerOut", layerOut);
 }
 
 torch::Tensor Mv3Large::forward(torch::Tensor x) {
-    return torch::Tensor();
+    x = layerIn->forward(x);
+    x = bneck->forward(x);
+    x = layerOut->forward(x);
+    x=x.squeeze(-1);
+    x=x.squeeze(-1);
+    return torch::log_softmax(x, 1);
 }
