@@ -181,7 +181,7 @@ void test() {
     std::cout << device << std::endl;
     auto model = std::make_shared<Mv3Small>(6946);
     model->to(device);
-    torch::load(model, "D:/mv3-epoch-6.pth");
+    torch::load(model, "C:/Users/xgd/source/COCR/mv3-epoch-6.pth");
     model->eval();
     torch::NoGradGuard no_grad;
     auto imgTensor = getOneSample();
@@ -206,7 +206,7 @@ void test_mv3_large() {
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
     std::cout << device << std::endl;
     auto model = std::make_shared<Mv3Large>(62);
-    torch::load(model, "D:/mv3-epoch-6.pth");
+    torch::load(model, "C:/Users/xgd/source/COCR/mv3-epoch-6.pth");
     model->to(device);
     model->eval();
     while (model.get()) {
