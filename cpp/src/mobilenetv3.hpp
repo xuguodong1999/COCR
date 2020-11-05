@@ -148,7 +148,7 @@ public:
     using torch::nn::ModuleHolder<BlockReLUNullModuleImpl>::ModuleHolder;
 };
 
-class MobileNetV3 : public torch::nn::Module {
+class Mv3Small : public torch::nn::Module {
     torch::nn::Conv2d conv_in;
     torch::nn::Conv2d conv_bneck_out;
     torch::nn::BatchNorm2d bn_in;
@@ -161,10 +161,20 @@ class MobileNetV3 : public torch::nn::Module {
     HSwish act_fc1;
     torch::nn::Sequential bneck;
 public:
-    MobileNetV3(int num_classes = 1000);
+    Mv3Small(int num_classes = 1000);
 
     torch::Tensor forward(torch::Tensor x);
 
+};
+
+class Mv3Large : public torch::nn::Module {
+    torch::nn::Sequential layerIn;
+    std::vector<torch::nn::Sequential> bnecks;
+    torch::nn::Sequential layerOut;
+public:
+    Mv3Large(int numOfClass);
+
+    torch::Tensor forward(torch::Tensor x) ;
 };
 
 #endif//_MOBILENETV3_HPP_

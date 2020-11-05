@@ -244,10 +244,13 @@ std::map<std::string, int> CouchLoader::sStr2IntMap = {
 
 void CouchLoader::LoadDataSet(const char *filename, bool clearBefore) {
     std::ifstream ifsm(filename, std::ios::in | std::ios::binary);
-    if (!ifsm.is_open()) {
-        std::cerr << "fail to open " << filename << std::endl;
-        sIsLoaded = false;
-        return;
+    while (!ifsm.is_open()) {
+        std::string file_path;
+        std::string location=__FILE__;
+        location+=" @line "+std::to_string(__LINE__)+" @func ";
+        location+=__func__ ;
+        ASK_FOR_INPUT_AGAIN(file_path,location.c_str());
+        ifsm.open(file_path,std::ios::in | std::ios::binary);
     }
     if (clearBefore) {
         sData.clear();

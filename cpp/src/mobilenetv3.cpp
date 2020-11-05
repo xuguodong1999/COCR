@@ -247,7 +247,7 @@ torch::Tensor BlockReLUNullModuleImpl::forward(torch::Tensor x) {
     return y;
 }
 
-MobileNetV3::MobileNetV3(int num_classes) :
+Mv3Small::Mv3Small(int num_classes) :
         conv_in(torch::nn::Conv2dOptions(3, 16, {3, 3})
                         .stride({2, 2})
                         .padding({1, 1})
@@ -315,11 +315,11 @@ MobileNetV3::MobileNetV3(int num_classes) :
 
         act_bneck_out(),
         conv_fc1(torch::nn::Conv2dOptions(
-                576, 1280, {1, 1}).bias(true)),
-        bn_fc1(1280),
+                576, 1024, {1, 1}).bias(true)),
+        bn_fc1(1024),
         act_fc1(),
         conv_fc2(torch::nn::Conv2dOptions(
-                1280, num_classes, {1, 1}).bias(true)) {
+                1024, num_classes, {1, 1}).bias(true)) {
     register_module("conv1", conv_in);
     register_module("conv2", conv_bneck_out);
     register_module("bn1", bn_in);
@@ -333,7 +333,7 @@ MobileNetV3::MobileNetV3(int num_classes) :
     register_module("bneck", bneck);
 }
 
-torch::Tensor MobileNetV3::forward(torch::Tensor x) {
+torch::Tensor Mv3Small::forward(torch::Tensor x) {
     auto out = act_in->forward(bn_in->forward(conv_in->forward(x)));
     out = bneck->forward(out);
     out = act_bneck_out->forward(bn_bneck_out->forward(conv_bneck_out->forward(out)));
@@ -343,3 +343,4 @@ torch::Tensor MobileNetV3::forward(torch::Tensor x) {
     out = out.view({out.size(0), -1});
     return torch::log_softmax(out, 1);
 }
+

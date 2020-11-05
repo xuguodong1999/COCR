@@ -4,26 +4,27 @@
 #include "statistic.hpp"
 #include <fstream>
 #include <chrono>
-std::vector<std::pair<int,int>>cfg={
-        {1,32},
-        {1,64},
-        {2,64},
-        {2,128},
-        {3,128},
-        {4,128},
-};
-int train() {
 
+std::vector<std::pair<int, int>> cfg = {
+        {1, 64},
+        {1, 64},
+        {2, 64},
+        {2, 64},
+        {2, 64},
+        {3, 64},
+};
+
+int train() {
     auto cuda_available = torch::cuda::is_available();
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
     std::cout << device << std::endl;
 
     // Hyper parameters
-    const int64_t batch_size = 128;
+    const int64_t batch_size = 384;
     const size_t num_epochs = 100000;
-    const double learning_rate = 0.0008;
+    const double learning_rate = 0.0005;
     // number of epochs after which to decay the learning rate
-    const size_t learning_rate_decay_frequency = 20;
+    const size_t learning_rate_decay_frequency = 100;
     const double learning_rate_decay_factor = 0.999;
 
     // CIFAR10 custom dataset
@@ -39,12 +40,12 @@ int train() {
     auto train_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
             std::move(train_dataset), batch_size);
 
-    auto& test_loader = train_loader;
+    auto &test_loader = train_loader;
 
     // Model
-    auto model = std::make_shared<MobileNetV3>(num_classes);
+    auto model = std::make_shared<Mv3Small>(num_classes);
     model->to(device);
-    torch::load(model,"D:/mv3.pth");
+    torch::load(model, "D:/mv3-epoch-4.pth");
     // Optimizer
     torch::optim::Adam optimizer(
             model->parameters(), torch::optim::AdamOptions(learning_rate));
@@ -58,16 +59,17 @@ int train() {
 
     // Train the model
     for (size_t epoch = 0; epoch != num_epochs; ++epoch) {
+        break;
         // Initialize running metrics
         CouchDataSet::shuffle();
         double running_loss = 0.0;
         size_t num_correct = 0;
-        int fuck=0;
-        size_t cfg_index=rand()%cfg.size();
-        RC::shapeAttr.thickness=cfg[cfg_index].first;
-        CouchDataSet::setTrainSize(cfg[cfg_index].second,cfg[cfg_index].second);
+        int fuck = 0;
+        size_t cfg_index = rand() % cfg.size();
+        RC::shapeAttr.thickness = cfg[cfg_index].first;
+        CouchDataSet::setTrainSize(cfg[cfg_index].second, cfg[cfg_index].second);
         for (auto &batch : *train_loader) {
-            if(++fuck==10){
+            if (++fuck == 10) {
                 break;
             }
             // Transfer images and target labels to device
@@ -102,13 +104,13 @@ int train() {
             static_cast<torch::optim::AdamOptions &>(optimizer.param_groups().front()
                     .options()).lr(current_learning_rate);
         }
-        fuck*=batch_size;
+        fuck *= batch_size;
         auto sample_mean_loss = running_loss / fuck;//num_train_samples;
         auto accuracy = static_cast<double>(num_correct) / fuck;//num_train_samples;
 
         std::cout << "Epoch [" << (epoch + 1) << "/" << num_epochs << "], Trainset - Loss: "
                   << sample_mean_loss << ", Accuracy: " << accuracy << '\n';
-        std::string model_save_path = "D:/mv3.pth";
+        std::string model_save_path = "D:/mv3-epoch-" + std::to_string(epoch % 10) + ".pth";
         torch::save(model, model_save_path);
     }
 
@@ -146,14 +148,55 @@ int train() {
     return 0;
 }
 
-int main() {
+#include <opencv2/opencv.hpp>
+extern std::map<int, std::wstring> gbTable;
+void test() {
+//    CouchDataSet();
+    auto cuda_available = torch::cuda::is_available();
+    torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
+    std::cout << device << std::endl;
+    auto model = std::make_shared<Mv3Small>(6946);
+    model->to(device);
+    torch::load(model, "D:/mv3-epoch-4.pth");
+    model->eval();
+    torch::NoGradGuard no_grad;
+
+    auto cvImg = cv::imread("C:/Users/xgd/Pictures/yue.png");
+    cvImg.convertTo(cvImg, CV_32F, 1.0 / 255);
+//    cv::imshow("",cvImg);
+//    cv::waitKey(0);
+    std::cout<<cvImg.size<<std::endl;
+    auto imgTensor = torch::from_blob(
+            cvImg.data, {cvImg.cols, cvImg.rows, 3}, torch::kFloat
+    ).permute({2, 0, 1}).contiguous().unsqueeze(0);
+    imgTensor.print();
+    auto data = imgTensor.to(device);
+    auto output = model->forward(data);
+//    std::cout<<output<<std::endl;
+    int topk=5;
+    auto prediction = output.topk(topk,1);
+    std::cout<<std::get<0>(prediction)<<std::endl;
+    auto indices=std::get<1>(prediction).squeeze(0);
+    for(int i=0;i<topk;i++){
+        std::cout<<indices[i].item().toInt()<<std::endl;
+     std::wcout<<gbTable[indices[i].item().toInt()]<<std::endl;
+    }
+}
+
+#include <QApplication>
+
+int main(int argc, char **argv) {
+    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication app(argc, argv);
     try {
-        train();
+//        train();
+        test();
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
     exit(0);
+    return app.exec();
 }
 
 void test_couch() {

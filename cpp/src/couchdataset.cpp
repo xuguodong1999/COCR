@@ -56,6 +56,10 @@ void CouchDataSet::initMap(const char *_main_cast_txt, const char *_target_class
     for(auto&index:numCountSet){
         sCastTable[index]=i++;
     }
+    for(auto&[a,b]:sTargetTable){
+        std::cout<<a<<","<<sCastTable[b]<<std::endl;
+    }
+    exit(-1);
     std::cout << "numOfClass=" << sNumOfClass << std::endl;
 }
 
