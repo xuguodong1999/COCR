@@ -24,11 +24,11 @@ int train() {
     std::cout << device << std::endl;
 
     // Hyper parameters
-    const int64_t batch_size = 16;
+    const int64_t batch_size = 240;
     const size_t num_epochs = 10000;
-    const double learning_rate = 0.001;
+    const double learning_rate = 0.0008;
     // number of epochs after which to decay the learning rate
-    const size_t learning_rate_decay_frequency = 20;
+    const size_t learning_rate_decay_frequency = 40;
     const double learning_rate_decay_factor = 0.999;
 
     // CIFAR10 custom dataset
@@ -49,7 +49,7 @@ int train() {
     // Model
     auto model = std::make_shared<Mv3Large>(num_classes);
     model->to(device);
-//    torch::load(model, "D:/mv3-epoch-1.pth");
+    torch::load(model, "D:/mv3-epoch-3.pth");
     // Optimizer
     torch::optim::Adam optimizer(
             model->parameters(), torch::optim::AdamOptions(learning_rate));
@@ -74,7 +74,7 @@ int train() {
             size_t cfg_index = rand() % cfg.size();
             RC::shapeAttr.thickness = cfg[cfg_index].first;
             CouchDataSet::setTrainSize(cfg[cfg_index].second, cfg[cfg_index].second);
-            if (++batch_num == 1000) {
+            if (++batch_num == 100) {
                 break;
             }
             // Transfer images and target labels to device

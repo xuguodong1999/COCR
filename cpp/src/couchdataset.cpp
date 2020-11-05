@@ -88,7 +88,15 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
     cv::Mat img = cv::Mat(batchHeight, batchWidth, CV_8UC3, cvWhite);
     item.rotate(15 - rand() % 30);
     item.moveCenterTo(cv::Point2f(batchWidth / 2, batchHeight / 2));
-    item.resizeTo(batchWidth * 0.8, batchHeight * 0.8, true);
+    float kx = 1.0 - (std::rand() % 30) / 100.0,
+            ky = 1.0 - (std::rand() % 30) / 100.0;
+    int offsetx = (1.0 - kx) / 2 * batchWidth, offsety = (1.0 - ky) / 2 * batchHeight;
+    if (offsetx != 0 && offsety != 0) {
+        offsetx = offsetx - rand() % (2 * offsetx);
+        offsety = offsety - rand() % (2 * offsety);
+        item.move(cv::Point2f(offsetx, offsety));
+    }
+    item.resizeTo(batchWidth * kx, batchHeight * ky, true);
     item.paintTo(img);
     img.convertTo(img, CV_32F, 1.0 / 255);
 //    cv::imshow("CouchDataSet::get",img);
