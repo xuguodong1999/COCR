@@ -87,6 +87,6 @@ std::string deleteSubStr(const string &_target, const string &_subStr);
 std::string replaceSubStr(const string &_target,
                           const string &_subStr, const string &_newSubStr);
 
-void ASK_FOR_INPUT_AGAIN(std::string&_file_path,const char*_what);
+void ASK_FOR_INPUT_AGAIN(std::string &_file_path, const char *_what);
 
 #endif//_CONFIG_HPP_

@@ -20,18 +20,21 @@
 class CouchDataSet : public torch::data::datasets::Dataset<CouchDataSet> {
 //    inline static std::map<std::string, int> sMainTable;
     inline static std::map<std::string, int> sTargetTable;
-    inline static std::vector<std::pair<size_t,size_t>> sGlobal2GridVec;
-    inline static std::map<int,int> sCastTable;
+    inline static std::vector<std::pair<size_t, size_t>> sGlobal2GridVec;
+    inline static std::map<int, int> sCastTable;
 
     static void initMap(const char *_main_cast_txt, const char *_target_class);
-    inline static bool isConfigLoaded=false;
+
+    inline static bool isConfigLoaded = false;
 
     inline static int batchWidth = 64;
     inline static int batchHeight = 64;
 
 public:
-    inline static size_t sNumOfClass=0;
+    inline static size_t sNumOfClass = 0;
+
     static void setTrainSize(int trainWidth, int trainHeight);
+
     static void shuffle();
 
     enum Mode {

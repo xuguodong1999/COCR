@@ -29,8 +29,8 @@ int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 //    qFatal("致命");
-    qCritical()<<"2";
-    qWarning()<<"1";
+    qCritical() << "2";
+    qWarning() << "1";
 
     addFontData();
     addTranslator();

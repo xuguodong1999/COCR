@@ -246,20 +246,20 @@ void CouchLoader::LoadDataSet(const char *filename, bool clearBefore) {
     std::ifstream ifsm(filename, std::ios::in | std::ios::binary);
     while (!ifsm.is_open()) {
         std::string file_path;
-        std::string location=__FILE__;
-        location+=" @line "+std::to_string(__LINE__)+" @func ";
-        location+=__func__ ;
-        ASK_FOR_INPUT_AGAIN(file_path,location.c_str());
-        ifsm.open(file_path,std::ios::in | std::ios::binary);
+        std::string location = __FILE__;
+        location += " @line " + std::to_string(__LINE__) + " @func ";
+        location += __func__;
+        ASK_FOR_INPUT_AGAIN(file_path, location.c_str());
+        ifsm.open(file_path, std::ios::in | std::ios::binary);
     }
     if (clearBefore) {
         sData.clear();
     }
-    int a, b, c, d, e,iii=0;
+    int a, b, c, d, e, iii = 0;
     // 【标签索引】、【宽度】、【长度】、【笔画数目】
     while (ifsm.read(reinterpret_cast<char *>(&a), 4)) {
-        if(++iii%10000==0){
-            std::cout<<iii<<std::endl;
+        if (++iii % 10000 == 0) {
+            std::cout << iii << std::endl;
         }
         ifsm.read(reinterpret_cast<char *>(&b), 4);
         ifsm.read(reinterpret_cast<char *>(&c), 4);
@@ -281,11 +281,11 @@ void CouchLoader::LoadDataSet(const char *filename, bool clearBefore) {
         sData[a].push_back(std::move(script));
     }
     ifsm.close();
-    std::cout<<"here"<<std::endl;
+    std::cout << "here" << std::endl;
     for (auto &dat:sData) {
         dat.resize(dat.size());
     }
-    std::cout<<"there"<<std::endl;
+    std::cout << "there" << std::endl;
     sIsLoaded = true;
 }
 

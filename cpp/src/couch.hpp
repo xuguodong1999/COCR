@@ -4,6 +4,7 @@
 #include "config.hpp"
 #include "shapeitem.hpp"
 #include <map>
+
 /**
  * You must call CouchLoader::LoadCouchDataSet()
  * before use any func below
@@ -18,6 +19,7 @@ private:
     // This map is used for test only. For common use, load config from filesystem.
     static std::map<string, int> sStr2IntMap;
     inline static bool sIsLoaded = false;
+
     static void LoadDataSet(const char *filename, bool clearBefore = true);
 
 public:
@@ -29,9 +31,9 @@ public:
 
     static void LoadCouchDataSet();
 
-    static const vector<vector<Script>>&GetData();
+    static const vector<vector<Script>> &GetData();
 
-    static ShapeItem GetShapeItem(const size_t& _classIndex,size_t&_sampleIndex);
+    static ShapeItem GetShapeItem(const size_t &_classIndex, size_t &_sampleIndex);
 };
 
 #endif//_COUCH_HPP_

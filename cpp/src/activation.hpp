@@ -33,7 +33,28 @@ public:
 
 TORCH_MODULE(MemoryEfficientSwish);
 
-//class MemoryEfficientSwish(nn.Module):
-//def forward(self, x):
-//return SwishImplementation.apply(x)
+class HSwishImpl : public torch::nn::Module {
+public:
+    HSwishImpl() = default;
+
+    torch::Tensor forward(torch::Tensor x);
+
+};
+
+class HSwish : public torch::nn::ModuleHolder<HSwishImpl> {
+public:
+    using torch::nn::ModuleHolder<HSwishImpl>::ModuleHolder;
+};
+// TORCH_MODULE(HSwish);
+
+class HSigmoidImpl : public torch::nn::Module {
+public:
+    HSigmoidImpl() = default;
+
+    torch::Tensor forward(torch::Tensor x);
+};
+
+
+TORCH_MODULE(HSigmoid);
+
 #endif//_ACTIVATION_HPP_

@@ -45,21 +45,21 @@ void CouchDataSet::initMap(const char *_main_cast_txt, const char *_target_class
     ifsm.close();
     sGlobal2GridVec.clear();
     for (auto&[content, index]:sTargetTable) {
-        auto& dat = CouchLoader::GetData();
+        auto &dat = CouchLoader::GetData();
         size_t sampleNum = dat[index].size();
         for (size_t i = 0; i < sampleNum; i++) {
             sGlobal2GridVec.push_back(std::make_pair(index, i));
         }
     }
     sNumOfClass = numCountSet.size();
-    size_t i=0;
-    for(auto&index:numCountSet){
-        sCastTable[index]=i++;
+    size_t i = 0;
+    for (auto &index:numCountSet) {
+        sCastTable[index] = i++;
     }
-    for(auto&[a,b]:sTargetTable){
-        std::cout<<a<<","<<sCastTable[b]<<std::endl;
-    }
-    exit(-1);
+//    for(auto&[a,b]:sTargetTable){
+//        std::cout<<a<<","<<sCastTable[b]<<std::endl;
+//    }
+//    exit(-1);
     std::cout << "numOfClass=" << sNumOfClass << std::endl;
 }
 
@@ -74,7 +74,7 @@ CouchDataSet::CouchDataSet() : mode(kTrain) {
 //        std::cerr<<"Config for Classifier has been loaded"<<std::endl;
 //        exit(-1);
     }
-    std::cout<<"done CouchDataSet::CouchDataSet()"<<std::endl;
+    std::cout << "done CouchDataSet::CouchDataSet()" << std::endl;
 }
 
 void CouchDataSet::setTrainSize(int trainWidth, int trainHeight) {
@@ -86,7 +86,7 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
     auto&[a, b]=sGlobal2GridVec[index];
     auto item = CouchLoader::GetShapeItem(a, b);
     cv::Mat img = cv::Mat(batchHeight, batchWidth, CV_8UC3, cvWhite);
-    item.rotate(15-rand()%30);
+    item.rotate(15 - rand() % 30);
     item.moveCenterTo(cv::Point2f(batchWidth / 2, batchHeight / 2));
     item.resizeTo(batchWidth * 0.8, batchHeight * 0.8, true);
     item.paintTo(img);
@@ -111,6 +111,6 @@ bool CouchDataSet::isTrain() const noexcept {
 }
 
 void CouchDataSet::shuffle() {
-    std::shuffle(sGlobal2GridVec.begin(),sGlobal2GridVec.end(),
+    std::shuffle(sGlobal2GridVec.begin(), sGlobal2GridVec.end(),
                  std::default_random_engine());
 }

@@ -1,4 +1,4 @@
-#include "mobilenetv3.hpp"
+#include "mv3.hpp"
 
 Mv3Large::Mv3Large(int numOfClass)
         : layerIn(torch::nn::Sequential(
@@ -116,7 +116,7 @@ torch::Tensor Mv3Large::forward(torch::Tensor x) {
     x = layerIn->forward(x);
     x = bneck->forward(x);
     x = layerOut->forward(x);
-    x=x.squeeze(-1);
-    x=x.squeeze(-1);
+    x = x.squeeze(-1);
+    x = x.squeeze(-1);
     return torch::log_softmax(x, 1);
 }
