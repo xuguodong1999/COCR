@@ -4,7 +4,7 @@
 #include "config.hpp"
 #include "couch.hpp"
 #include <torch/torch.h>
-#include <map>
+#include <unordered_map>
 
 
 // img-label
@@ -18,40 +18,42 @@
  *
  */
 class CouchDataSet : public torch::data::datasets::Dataset<CouchDataSet> {
-//    inline static std::map<std::string, int> sMainTable;
-    inline static std::map<std::string, int> sTargetTable;
     inline static std::vector<std::pair<size_t, size_t>> sGlobal2GridVec;
-    inline static std::map<int, int> sCastTable;
+    inline static std::unordered_map<int, int> sCastTable;
 
-    static void initMap(const char *_main_cast_txt, const char *_target_class);
+    static void InitMap(const std::string&_allClass, const std::string&_targetClass);
 
     inline static bool isConfigLoaded = false;
 
     inline static int batchWidth = 64;
     inline static int batchHeight = 64;
 
+    inline static float trainDivRatio=10.0/11;
+
 public:
-    inline static size_t sNumOfClass = 0;
 
-    static void setTrainSize(int trainWidth, int trainHeight);
+    static void setBatchImageSize(int trainWidth, int trainHeight);
 
-    static void shuffle();
+    static size_t GetNumOfClass();
+
+    void shuffle();
 
     enum Mode {
         kTrain, kTest
     };
 
-    CouchDataSet();
+    CouchDataSet(const std::string&_allClass, const std::string&_targetClass,
+                 const Mode&_mode=kTest);
 
     torch::data::Example<> get(size_t index) override;
 
     torch::optional<size_t> size() const override;
 
-    bool isTrain() const noexcept;
-
+    bool isTrainMode() const noexcept;
 
 private:
-    Mode mode;
+    std::vector<std::pair<size_t, size_t>> dataset;
+    const Mode mode;
 };
 
 #endif//_COUCH_DATASET_HPP_

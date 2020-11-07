@@ -26,7 +26,7 @@ public:
 
 class Mv3Large : public torch::nn::Module {
     torch::nn::Sequential layerIn;
-    torch::nn::Sequential bneck;
+    std::vector<torch::nn::Sequential> bnecks;
     torch::nn::Sequential layerOut;
 public:
     Mv3Large(int numOfClass);

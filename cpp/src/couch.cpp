@@ -281,11 +281,9 @@ void CouchLoader::LoadDataSet(const char *filename, bool clearBefore) {
         sData[a].push_back(std::move(script));
     }
     ifsm.close();
-    std::cout << "here" << std::endl;
     for (auto &dat:sData) {
         dat.resize(dat.size());
     }
-    std::cout << "there" << std::endl;
     sIsLoaded = true;
 }
 

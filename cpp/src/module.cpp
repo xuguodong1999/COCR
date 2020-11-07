@@ -3,26 +3,22 @@
 
 #include <torch/torch.h>
 
-SeModuleImpl::SeModuleImpl(int in_size, int reduction) : se(
+using Conv2d = torch::nn::Conv2d;
+using Conv2dOpt = torch::nn::Conv2dOptions;
+
+SeModuleImpl::SeModuleImpl(const int &_inputSize, const int &_reduction) : seLayer(
         torch::nn::AdaptiveAvgPool2d(torch::nn::AdaptiveAvgPool2dOptions({1, 1})),
-//        torch::nn::Linear(torch::nn::LinearOptions(in_size,in_size/reduction)),
-        torch::nn::Conv2d(torch::nn::Conv2dOptions(
-                in_size, in_size / reduction, {1, 1}
-        ).bias(false)),
-        torch::nn::BatchNorm2d(in_size / reduction),
+        Conv2d(Conv2dOpt(_inputSize, std::floor(_inputSize / _reduction),
+                         {1, 1}).bias(false)),
         torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-        torch::nn::Conv2d(torch::nn::Conv2dOptions(
-                in_size / reduction, in_size, {1, 1}
-        ).bias(false)),
-//        torch::nn::Linear(torch::nn::LinearOptions(in_size/reduction,in_size)),
-        torch::nn::BatchNorm2d(in_size),
+        Conv2d(Conv2dOpt(std::floor(_inputSize / _reduction), _inputSize,
+                         {1, 1}).bias(false)),
         HSigmoid()) {
-    register_module("se", se);
+    register_module("seLayer", seLayer);
 };
 
 torch::Tensor SeModuleImpl::forward(torch::Tensor x) {
-    auto y = se->forward(x);
-    return x * y;
+    return x * seLayer->forward(x);
 }
 
 BlockHSwishModuleImpl::BlockHSwishModuleImpl(
@@ -175,7 +171,7 @@ BlockReLUModuleImpl::BlockReLUModuleImpl(
 }
 
 torch::Tensor BlockReLUModuleImpl::forward(torch::Tensor x) {
-//    std::cout<<"BlockReLUModuleImpl::forward"<<std::endl;
+//    std::cout << "BlockReLUModuleImpl::forward" << std::endl;
 //    x.print();
     auto y = nolinear1->forward(bn1->forward(conv1->forward(x)));
     y = nolinear2->forward(bn2->forward(conv2->forward(y)));

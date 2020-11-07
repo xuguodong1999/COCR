@@ -7,90 +7,28 @@ Mv3Large::Mv3Large(int numOfClass)
                                   .padding({1, 1})
                                   .bias(false)),
         torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(16)),
-        HSwish()
-)),
-          bneck(torch::nn::Sequential(
-                  BlockReLUNullModule(
-                          3, 16, 16, 16,
-                          torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          1),
-                  BlockReLUNullModule(
-                          3, 16, 64, 24,
-                          torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          2),
-                  BlockReLUNullModule(
-                          3, 24, 72, 24,
-                          torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          1),
-                  ////////////////////////////
-                  // ①
-                  ////////////////////////////
-                  BlockReLUModule(
-                          5, 24, 72, 24,
-                          torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          SeModule(24),
-                          2),
-                  BlockReLUModule(
-                          5, 24, 120, 40,
-                          torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          SeModule(40),
-                          1),
-                  BlockReLUModule(
-                          5, 40, 120, 40,
-                          torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true)),
-                          SeModule(40),
-                          1),
-                  ////////////////////////////
-                  // ②
-                  ////////////////////////////
-                  BlockHSwishNullModule(
-                          3, 40, 240, 80,
-                          HSwish(),
-                          2),
-                  BlockHSwishNullModule(
-                          3, 80, 200, 80,
-                          HSwish(),
-                          1),
-                  BlockHSwishNullModule(
-                          3, 80, 184, 80,
-                          HSwish(),
-                          1),
-                  BlockHSwishNullModule(
-                          3, 80, 184, 80,
-                          HSwish(),
-                          1),
-                  ////////////////////////////
-                  // ③
-                  ////////////////////////////
-                  BlockHSwishModule(
-                          3, 80, 480, 112,
-                          HSwish(),
-                          SeModule(112),
-                          2),
-                  BlockHSwishModule(
-                          3, 112, 762, 112,
-                          HSwish(),
-                          SeModule(112),
-                          1),
-                  ////////////////////////////
-                  // ③-①
-                  ////////////////////////////
-                  BlockHSwishModule(
-                          5, 112, 672, 160,
-                          HSwish(),
-                          SeModule(160),
-                          1),
-                  BlockHSwishModule(
-                          5, 160, 960, 160,
-                          HSwish(),
-                          SeModule(160),
-                          1),
-                  BlockHSwishModule(
-                          5, 160, 960, 160,
-                          HSwish(),
-                          SeModule(160),
-                          1)
-          )),
+        HSwish())),
+          bnecks({torch::nn::Sequential(
+                  Mv3BneckModule(16, 16, 16, 3, 1,Mv3Activation::Relu, false),
+                  Mv3BneckModule(16, 64, 24, 3, 2,Mv3Activation::Relu, false)),
+                  torch::nn::Sequential(
+                          Mv3BneckModule(24, 72, 24, 3, 1,Mv3Activation::Relu, false),
+                          Mv3BneckModule(24, 72, 24, 5, 2,Mv3Activation::Relu, true)),
+                  torch::nn::Sequential(
+                          Mv3BneckModule(24, 120, 40, 5, 1,Mv3Activation::Relu, true),
+                          Mv3BneckModule(40, 120, 40, 5, 1,Mv3Activation::Relu, true),
+                          Mv3BneckModule(40, 240, 80, 3, 2,Mv3Activation::HSwish, false)),
+                  torch::nn::Sequential(
+                          Mv3BneckModule(80, 200, 80, 3, 1,Mv3Activation::HSwish, false),
+                          Mv3BneckModule(80, 184, 80, 3, 1,Mv3Activation::HSwish, false),
+                          Mv3BneckModule(80, 184, 80, 3, 1,Mv3Activation::HSwish, false),
+                          Mv3BneckModule(80, 480, 112, 3, 2,Mv3Activation::HSwish, true)),
+                  torch::nn::Sequential(
+                          Mv3BneckModule(112, 762, 112, 3, 1,Mv3Activation::HSwish, true),
+                          Mv3BneckModule(112, 672, 160, 5, 1, Mv3Activation::HSwish,true),
+                          Mv3BneckModule(160, 960, 160, 5, 1,Mv3Activation::HSwish, true),
+                          Mv3BneckModule(160, 960, 160, 5, 1,Mv3Activation::HSwish, true))}
+          ),
           layerOut(torch::nn::Sequential(
                   // part1: fc1
                   torch::nn::Conv2d(torch::nn::Conv2dOptions(
@@ -108,13 +46,17 @@ Mv3Large::Mv3Large(int numOfClass)
                           1280, numOfClass, {1, 1}).bias(true))
           )) {
     register_module("layerIn", layerIn);
-    register_module("bneck", bneck);
+    for (size_t i = 0; i < bnecks.size(); i++) {
+        register_module("bneck-" + std::to_string(i), bnecks[i]);
+    }
     register_module("layerOut", layerOut);
 }
 
 torch::Tensor Mv3Large::forward(torch::Tensor x) {
     x = layerIn->forward(x);
-    x = bneck->forward(x);
+    for (auto &bneck:bnecks) {
+        x = bneck->forward(x);
+    }
     x = layerOut->forward(x);
     x = x.squeeze(-1);
     x = x.squeeze(-1);

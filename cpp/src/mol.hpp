@@ -28,7 +28,8 @@ public:
 
     void clear();
 
-    std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber = static_cast<size_t>(ElementType::C));
+    std::shared_ptr<JAtom>
+    addAtom(const size_t &_atomicNumber = static_cast<size_t>(ElementType::C));
 
     std::shared_ptr<JBond>
     addBond(const size_t &_atomFromId, const size_t &_atomToId);

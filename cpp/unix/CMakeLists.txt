@@ -21,16 +21,23 @@ if (UNIX)
     include_directories(/usr/include/x86_64-linux-gnu/qt5/QtGui)
     include_directories(/usr/include/x86_64-linux-gnu/qt5/QtQuick)
 
-    aux_source_directory(${CMAKE_SOURCE_DIR}/src SRC_FILES)
+#     aux_source_directory(${CMAKE_SOURCE_DIR}/src SRC_FILES)
 
     add_executable(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/train/main.cpp
-            ${SRC_DIR}/config.cpp
-            ${SRC_DIR}/block.cpp
-            ${SRC_DIR}/activation.cpp
-            ${SRC_DIR}/module.cpp
-            ${SRC_DIR}/mobilenetv3.cpp
-            # ${SRC_FILES}
-            )
+        ${SRC_DIR}/activation.cpp
+        ${SRC_DIR}/sosodataset.cpp
+        ${SRC_DIR}/couch.cpp
+        ${SRC_DIR}/shapeitem.cpp
+        ${SRC_DIR}/statistic.cpp
+        ${SRC_DIR}/couchdataset.cpp
+        ${SRC_DIR}/opencvutil.cpp
+        ${SRC_DIR}/config.cpp
+        ${SRC_DIR}/block.cpp
+        ${SRC_DIR}/activation.cpp
+        ${SRC_DIR}/mv3_large.cpp
+        ${SRC_DIR}/mv3_small.cpp
+        ${SRC_DIR}/module.cpp
+        ${SRC_DIR}/data.cpp)
 
     target_link_libraries(${PROJECT_NAME} PRIVATE
             #            Qt5::Gui Qt5::Quick

@@ -1,218 +1,188 @@
 #include "mv3.hpp"
+
 //#include "sosodataset.hpp"
 #include "couchdataset.hpp"
 #include "statistic.hpp"
 #include <fstream>
 #include <chrono>
+#include <opencv2/imgcodecs.hpp>
 
-std::vector<std::pair<int, int>> cfg = {
-        {1, 64},
-        {1, 64},
-        {1, 64},
-        {2, 64},
-        {2, 64},
-        {2, 64},
-        {2, 64},
-        {3, 64},
-        {3, 64},
-        {4, 64},
-};
-
-int train() {
-    auto cuda_available = torch::cuda::is_available();
-    torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
-    std::cout << device << std::endl;
-
-    // Hyper parameters
-    const int64_t batch_size = 240;
-    const size_t num_epochs = 10000;
-    const double learning_rate = 0.0001;
-    // number of epochs after which to decay the learning rate
-    const size_t learning_rate_decay_frequency = 40;
-    const double learning_rate_decay_factor = 0.999;
-
-    // CIFAR10 custom dataset
-    auto train_dataset = CouchDataSet()
-            .map(torch::data::transforms::Stack<>());
-    int64_t num_classes = CouchDataSet::sNumOfClass;
-    // Number of samples in the training set
-    auto num_train_samples = train_dataset.size().value();
-    // Number of samples in the testset
-    auto num_test_samples = num_train_samples;//test_dataset.size().value();
-
-    // Data loader
-    auto train_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
-            std::move(train_dataset), batch_size);
-
-    auto &test_loader = train_loader;
-
-    // Model
-    auto model = std::make_shared<Mv3Large>(num_classes);
-    model->to(device);
-    torch::load(model, "D:/mv3-epoch-6.pth");
-    // Optimizer
-    torch::optim::Adam optimizer(
-            model->parameters(), torch::optim::AdamOptions(learning_rate));
-
-    // Set floating point output precision
-    std::cout << std::fixed << std::setprecision(4);
-
-    auto current_learning_rate = learning_rate;
-
-    std::cout << "Training...\n";
-
-    // Train the model
-    for (size_t epoch = 0; epoch != num_epochs; ++epoch) {
-//        break;
-        // Initialize running metrics
-        CouchDataSet::shuffle();
-        double running_loss = 0.0;
-        size_t num_correct = 0;
-        int batch_num = 0;
-        // TODO: log each epoch
-        for (auto &batch : *train_loader) {
-            size_t cfg_index = rand() % cfg.size();
-            RC::shapeAttr.thickness = cfg[cfg_index].first;
-            CouchDataSet::setTrainSize(cfg[cfg_index].second, cfg[cfg_index].second);
-            if (++batch_num == 100) {
-                break;
-            }
-            // Transfer images and target labels to device
-            auto data = batch.data.to(device);
-            auto target = batch.target.to(device);
-            // Forward pass
-            auto output = model->forward(data);
-//            std::cout << data.sizes() << std::endl;
-//            std::cout << target.sizes() << std::endl;
-//            std::cout << output.sizes() << std::endl;
-//            target.print();
-//            output.print();
-            // Calculate loss
-            auto loss = torch::nn::functional::cross_entropy(output, target);
-            // Update running loss
-            running_loss += loss.item<double>() * data.size(0);
-            // Calculate prediction
-            auto prediction = output.argmax(1);
-//            std::cout<<prediction.sizes()<<std::endl;
-            // Update number of correctly classified samples
-            num_correct += prediction.eq(target).sum().item<int64_t>();
-            // Backward pass and optimize
-            optimizer.zero_grad();
-            loss.backward();
-            optimizer.step();
-//            system("pause");
-        }
-
-        // Decay learning rate
-        if ((epoch + 1) % learning_rate_decay_frequency == 0) {
-            current_learning_rate *= learning_rate_decay_factor;
-            static_cast<torch::optim::AdamOptions &>(optimizer.param_groups().front()
-                    .options()).lr(current_learning_rate);
-        }
-        batch_num *= batch_size;
-        auto sample_mean_loss = running_loss / batch_num;//num_train_samples;
-        auto accuracy = static_cast<double>(num_correct) / batch_num;//num_train_samples;
-
-        std::cout << "Epoch [" << (epoch + 1) << "/" << num_epochs << "], Trainset - Loss: "
-                  << sample_mean_loss << ", Accuracy: " << accuracy << '\n';
-        std::string model_save_path = "D:/mv3-epoch-" + std::to_string(epoch % 10) + ".pth";
-        torch::save(model, model_save_path);
-    }
-
-    std::cout << "Training finished!\n\n";
-    std::cout << "Testing...\n";
-
-    // Test the model
-    model->eval();
-    torch::NoGradGuard no_grad;
-
-    double running_loss = 0.0;
-    size_t num_correct = 0;
-
-    for (const auto &batch : *test_loader) {
-        auto data = batch.data.to(device);
-        auto target = batch.target.to(device);
-
-        auto output = model->forward(data);
-
-        auto loss = torch::nn::functional::cross_entropy(output, target);
-        running_loss += loss.item<double>() * data.size(0);
-
-        auto prediction = output.argmax(1);
-        num_correct += prediction.eq(target).sum().item<int64_t>();
-    }
-
-    std::cout << "Testing finished!\n";
-
-    auto test_accuracy = static_cast<double>(num_correct) / num_test_samples;
-    auto test_sample_mean_loss = running_loss / num_test_samples;
-
-    std::cout << "Testset - Loss: " << test_sample_mean_loss << ", Accuracy: " << test_accuracy << '\n';
-
-
-    return 0;
-}
-
-#include <opencv2/opencv.hpp>
-
-extern std::map<int, std::wstring> gbTable;
-std::vector<std::string> test_img_path = {
+//extern std::unordered_map<int, std::wstring> gbTable;
+std::unordered_map<int, std::wstring> gbTable;
+std::vector<std::string> testImgPath = {
         "C:/Users/xgd/Pictures/yue.png",
         "C:/Users/xgd/Pictures/workspace/liang.png",
         "C:/Users/xgd/Pictures/workspace/xin.png"
 };
 
-torch::Tensor getOneSample(const std::string &_img_path = "C:/Users/xgd/Pictures/yue.png") {
+std::vector<std::pair<int, int>> sizeConfig = {
+        {1, 64},
+        {2, 64},
+        {2, 64},
+        {2, 64},
+        {2, 64},
+        {3, 64},
+        {3, 64},
+};
+
+inline torch::Tensor getOneSample(const std::string &_img_path) {
     auto cvImg = cv::imread(_img_path);
     cvImg.convertTo(cvImg, CV_32F, 1.0 / 255);
-//    cv::imshow("",cvImg);
-//    cv::waitKey(0);
-    std::cout << cvImg.size << std::endl;
+    std::cout << cvImg.cols << "x" << cvImg.rows << "x" << cvImg.channels() << std::endl;
     auto imgTensor = torch::from_blob(
             cvImg.data, {cvImg.cols, cvImg.rows, 3}, torch::kFloat
     ).permute({2, 0, 1}).contiguous().unsqueeze(0);
     return std::move(imgTensor);
 }
 
-void test() {
-//    CouchDataSet();
+void trainClassifier(const std::string &_allClass, const std::string &_targetClass,
+                     const std::string &_saveDir = "D:/", const std::string &_preloadPath = "") {
+    srand(918);
+    std::cout << std::fixed << std::setprecision(4);
     auto cuda_available = torch::cuda::is_available();
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
-    std::cout << device << std::endl;
-    auto model = std::make_shared<Mv3Small>(6946);
+    std::cout << "run on device:" << device << std::endl;
+    // 超参数
+    const int64_t batchSize = 240;
+    const size_t maxEpochs = 20, lrDecayEpoch = 1;
+    const double lr = 0.001, lrDecayRatio = 0.7;
+    double curLr = lr;
+    /**
+     * 控制高斯分布的方差、颜色反转的概率
+     */
+    RC::revertColorProb = 0.5;
+    RC::noiseParm.mean = 0;
+    RC::noiseParm.stddev = 0;
+    RC::shapeAttr.thickness = 2;
+    CouchDataSet::setBatchImageSize(64, 64);
+    const float maxGaussianVariance = 0.2;
+    float dv = 0.00005;
+    // 训练集
+    auto trainSet = CouchDataSet(
+            _allClass,
+            _targetClass,
+            CouchDataSet::kTrain).map(torch::data::transforms::Stack<>());
+    auto trainSetSize = trainSet.size().value();
+    auto trainSetLoader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
+            std::move(trainSet), batchSize);
+
+    // 测试集
+    auto testSet = CouchDataSet(
+            _allClass,
+            _targetClass,
+            CouchDataSet::kTest).map(torch::data::transforms::Stack<>());
+    auto testSetSize = testSet.size().value();
+    auto testSetLoader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
+            std::move(testSet), batchSize);
+
+    // 模型
+    auto model = std::make_shared<Mv3Large>(CouchDataSet::GetNumOfClass());
     model->to(device);
-    torch::load(model, "C:/Users/xgd/source/COCR/mv3-epoch-6.pth");
-    model->eval();
-    torch::NoGradGuard no_grad;
-    auto imgTensor = getOneSample();
-    imgTensor.print();
-    auto data = imgTensor.to(device);
-    auto output = model->forward(data);
-//    std::cout<<output<<std::endl;
-    int topk = 5;
-    auto prediction = output.topk(topk, 1);
-    std::cout << std::get<0>(prediction) << std::endl;
-    auto indices = std::get<1>(prediction).squeeze(0);
-    for (int i = 0; i < topk; i++) {
-        std::cout << indices[i].item().toInt() << std::endl;
-        std::wcout << gbTable[indices[i].item().toInt()] << std::endl;
+    if (!_preloadPath.empty()) {
+        torch::load(model, _preloadPath);
     }
+
+    auto test = [&]() {
+        std::cout << "Testing...\n";
+        float tmp = RC::noiseParm.stddev;
+        RC::revertColorProb = 0;
+        RC::noiseParm.mean = 0;
+        RC::noiseParm.stddev = 0;
+        RC::shapeAttr.thickness = 2;
+        // Test the model
+        model->eval();
+        torch::NoGradGuard no_grad;
+        double running_loss = 0.0;
+        size_t num_correct = 0;
+        for (const auto &batch : *testSetLoader) {
+            auto data = batch.data.to(device);
+            auto target = batch.target.to(device);
+            auto output = model->forward(data);
+            auto loss = torch::nn::functional::cross_entropy(output, target);
+            running_loss += loss.item<double>() * data.size(0);
+            auto prediction = output.argmax(1);
+            num_correct += prediction.eq(target).sum().item<int64_t>();
+        }
+        std::cout << "Testing finished!\n";
+        auto test_accuracy = static_cast<double>(num_correct) / testSetSize;
+        auto test_sample_mean_loss = running_loss / testSetSize;
+        std::cout << "Testset - Loss: " << test_sample_mean_loss
+                  << ", Accuracy: " << test_accuracy << std::endl;
+        RC::revertColorProb = 0.5;// 还原
+        RC::noiseParm.stddev = tmp;
+        model->train(true);
+    };
+    std::cout << "Training...\n";
+    torch::optim::Adam optimizer(
+            model->parameters(), torch::optim::AdamOptions(curLr));
+    for (size_t epoch = 0; epoch < maxEpochs; epoch++) {
+        // Initialize running metrics
+        double lossPerEpoch = 0.0;
+        size_t top1CorrectPerEpoch = 0;
+        size_t batchIndex = 0;
+        for (auto &batch : *trainSetLoader) {
+            // Transfer images and target labels to device
+            auto data = batch.data.to(device), target = batch.target.to(device);
+            // Forward pass
+            auto output = model->forward(data);
+            top1CorrectPerEpoch += output.argmax(1).eq(target).sum().item<int64_t>();
+            // Calculate loss
+            auto loss = torch::nn::functional::cross_entropy(output, target);
+            // Backward pass and optimize
+            optimizer.zero_grad();
+            loss.backward();
+            optimizer.step();
+            // 统计部分
+            // Update running loss
+//            lossPerEpoch += loss.item<double>() * data.size(0);
+            // Calculate prediction
+//            auto prediction = output.argmax(1);
+            // Update number of correctly classified samples
+            // CPU 操作
+            batchIndex++;
+            if (batchIndex % 100 == 0) {
+                size_t cfg_index = rand() % sizeConfig.size();
+                RC::shapeAttr.thickness = sizeConfig[cfg_index].first;
+                CouchDataSet::setBatchImageSize(sizeConfig[cfg_index].second, sizeConfig[cfg_index].second);
+                if (RC::noiseParm.stddev < maxGaussianVariance) {
+                    RC::noiseParm.stddev += dv;
+                }
+                float sampleSum = batchIndex * batchSize;
+                std::cout << "Epoch [" << (epoch + 1) << "/" << maxEpochs
+                          << "], Batch [" << batchIndex
+                          // << "], TrainLoss: " << lossPerEpoch / sampleSum
+                          << "], Acc: " << top1CorrectPerEpoch / sampleSum << "\n";
+                std::string model_save_path = _saveDir + "mv3-epoch-" + std::to_string(epoch % 10) + ".pth";
+                torch::save(model, model_save_path);
+            }
+        }
+        float sampleSum = batchIndex * batchSize;
+        if (top1CorrectPerEpoch / sampleSum > 0.9) {
+            test();
+        }
+        // Decay learning rate
+        if ((epoch + 1) % lrDecayEpoch == 0) {
+            curLr *= lrDecayRatio;
+            static_cast<torch::optim::AdamOptions &>(optimizer.param_groups().front()
+                    .options()).lr(curLr);
+        }
+    }
+    std::cout << "Training finished!\n\n";
 }
 
-#include <QApplication>
-
-void test_mv3_large() {
+void testClassifier(const std::string &_preloadPath) {
     auto cuda_available = torch::cuda::is_available();
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
     std::cout << device << std::endl;
-    auto model = std::make_shared<Mv3Large>(62);
-    torch::load(model, "C:/Users/xgd/source/COCR/mv3-epoch-6.pth");
+    auto model = std::make_shared<Mv3Large>(6946);
+    torch::load(model, _preloadPath);
     model->to(device);
     model->eval();
     while (model.get()) {
         Timer timer;
         timer.start();
-        auto input = getOneSample(test_img_path[rand() % test_img_path.size()]).to(device);
+        auto input = getOneSample(
+                testImgPath[rand() % testImgPath.size()]).to(device);
         auto output = model->forward(input);
         int topk = 5;
         auto prediction = output.topk(topk, 1);
@@ -230,30 +200,20 @@ void test_mv3_large() {
 
 int main(int argc, char **argv) {
     std::wcout.imbue(std::locale("chs"));
-    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
-    QApplication app(argc, argv);
     try {
-//        train();
-//        test();
-        test_mv3_large();
+        trainClassifier(
+                "C:/Users/xgd/source/COCR/data/couch/couch-gbk.txt",
+                "C:/Users/xgd/source/COCR/data/couch/couch-gbk-target.txt",
+                "D:/");
+//        testClassifier("C:/Users/xgd/source/COCR/cache/gb/mv3-epoch-6.pth");
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
     exit(0);
-    return app.exec();
 }
 
-void test_couch() {
-    CouchLoader::LoadCouchDataSet();
-    CouchDataSet couchDataSet;
-    couchDataSet.setTrainSize(216, 216);
-    for (size_t i = 0; i < couchDataSet.size(); i++) {
-        auto tmp = couchDataSet.get(i);
-        std::cout << tmp.data.sizes() << std::endl;
-        std::cout << tmp.target << std::endl;
-    }
-}
+
 
 //void test_soso(){
 //    SosoDataSet sosoDataSet("C:\\Users\\xgd\\.keras\\datasets\\SOSO-part-2020-01-26\\train.list",
