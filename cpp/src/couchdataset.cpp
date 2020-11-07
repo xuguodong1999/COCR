@@ -90,10 +90,10 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
     const int max_prob = GetNumOfClass();
     int prob = (rand() % max_prob);
     if (prob == 1) {
-        return {torch::ones({3,batchWidth, batchHeight}, torch::kFloat),
+        return {torch::ones({3, batchWidth, batchHeight}, torch::kFloat),
                 torch::tensor(sCastTable[-1]).to(torch::kInt64)};
     } else if (prob == 2) {
-        return {torch::zeros({3,batchWidth, batchHeight}, torch::kFloat),
+        return {torch::zeros({3, batchWidth, batchHeight}, torch::kFloat),
                 torch::tensor(sCastTable[-2]).to(torch::kInt64)};
     }
     auto&[a, b]=dataset.at(index);
@@ -108,8 +108,8 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
     cv::Mat img = cv::Mat(batchHeight, batchWidth, CV_8UC3, bgColor);
     item.rotate(15 - rand() % 30);
     item.moveCenterTo(cv::Point2f(batchWidth / 2, batchHeight / 2));
-    float kx = 1.0 - (std::rand() % 40) / 100.0,
-            ky = 1.0 - (std::rand() % 40) / 100.0;
+    float kx = 1.0 - (std::rand() % 30) / 100.0,
+            ky = 1.0 - (std::rand() % 30) / 100.0;
     int offsetx = (1.0 - kx) / 2 * batchWidth, offsety = (1.0 - ky) / 2 * batchHeight;
     if (offsetx != 0 && offsety != 0) {
         offsetx = offsetx - rand() % (2 * offsetx);
@@ -119,12 +119,14 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
     item.resizeTo(batchWidth * kx, batchHeight * ky, true);
     item.paintTo(img);
     img.convertTo(img, CV_32F, 1.0 / 255);
-    if (prob < max_prob / 2 && mode == kTrain) {
-        cv::Mat noise(img.size(), CV_32FC3);
-        cv::randn(noise, RC::getGaussianNoiseMean(), RC::getGaussianNoiseStddev());
-        img = img + noise;
-        cv::normalize(img, img, 0.0, 1.0, cv::NORM_MINMAX, CV_32F);
-    }
+
+//    if (prob < max_prob / 2 && mode == kTrain) {
+//        cv::Mat noise(img.size(), CV_32FC3);
+//        cv::randn(noise, RC::getGaussianNoiseMean(), RC::getGaussianNoiseStddev());
+//        img = img + noise;
+//        cv::normalize(img, img, 0.0, 1.0, cv::NORM_MINMAX, CV_32F);
+//    }
+
 //        std::cout<<"isTrainMode()="<<isTrainMode()<<std::endl;
 //        cv::imshow("CouchDataSet::get", img);
 //        cv::waitKey(0);

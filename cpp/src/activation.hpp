@@ -68,10 +68,11 @@ public:
 };
 
 TORCH_MODULE(HSwish);
+
 /**
  * torch::nn::ReLU(torch::nn::functional::ReLUFuncOptions(true))
  */
-class ReluImpl : public torch::nn::Cloneable<ReluImpl>{
+class ReluImpl : public torch::nn::Cloneable<ReluImpl> {
 public:
     torch::Tensor forward(const torch::Tensor &input);
 

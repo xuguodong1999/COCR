@@ -43,7 +43,7 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
     std::cout << "run on device:" << device << std::endl;
     // 超参数
-    const int64_t batchSize = 240;
+    const int64_t batchSize = 216;
     const size_t maxEpochs = 20, lrDecayEpoch = 1;
     const double lr = 0.001, lrDecayRatio = 0.7;
     double curLr = lr;
@@ -140,7 +140,7 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
             // Update number of correctly classified samples
             // CPU 操作
             batchIndex++;
-            if (batchIndex % 100 == 0) {
+            if (batchIndex % 10 == 0) {
                 size_t cfg_index = rand() % sizeConfig.size();
                 RC::shapeAttr.thickness = sizeConfig[cfg_index].first;
                 CouchDataSet::setBatchImageSize(sizeConfig[cfg_index].second, sizeConfig[cfg_index].second);

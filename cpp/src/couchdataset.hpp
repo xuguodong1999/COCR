@@ -21,14 +21,14 @@ class CouchDataSet : public torch::data::datasets::Dataset<CouchDataSet> {
     inline static std::vector<std::pair<size_t, size_t>> sGlobal2GridVec;
     inline static std::unordered_map<int, int> sCastTable;
 
-    static void InitMap(const std::string&_allClass, const std::string&_targetClass);
+    static void InitMap(const std::string &_allClass, const std::string &_targetClass);
 
     inline static bool isConfigLoaded = false;
 
     inline static int batchWidth = 64;
     inline static int batchHeight = 64;
 
-    inline static float trainDivRatio=10.0/11;
+    inline static float trainDivRatio = 10.0 / 11;
 
 public:
 
@@ -42,8 +42,8 @@ public:
         kTrain, kTest
     };
 
-    CouchDataSet(const std::string&_allClass, const std::string&_targetClass,
-                 const Mode&_mode=kTest);
+    CouchDataSet(const std::string &_allClass, const std::string &_targetClass,
+                 const Mode &_mode = kTest);
 
     torch::data::Example<> get(size_t index) override;
 
