@@ -20,9 +20,10 @@ if (UNIX)
     include_directories(/usr/include/x86_64-linux-gnu/qt5/QtCore)
     include_directories(/usr/include/x86_64-linux-gnu/qt5/QtGui)
     include_directories(/usr/include/x86_64-linux-gnu/qt5/QtQuick)
-
+    include_directories(/usr/include/x86_64-linux-gnu/qt5/QtWidgets)
     #     aux_source_directory(${CMAKE_SOURCE_DIR}/src SRC_FILES)
 
+    add_compile_options(-fPIC)
     add_executable(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/train/main.cpp
             ${SRC_DIR}/activation.cpp
             ${SRC_DIR}/sosodataset.cpp
@@ -32,6 +33,7 @@ if (UNIX)
             ${SRC_DIR}/couchdataset.cpp
             ${SRC_DIR}/opencvutil.cpp
             ${SRC_DIR}/config.cpp
+            ${SRC_DIR}/fontpixitem.cpp
             ${SRC_DIR}/activation.cpp
             ${SRC_DIR}/mv3_large.cpp
             ${SRC_DIR}/mv3_small.cpp
@@ -39,7 +41,7 @@ if (UNIX)
             ${SRC_DIR}/data.cpp)
 
     target_link_libraries(${PROJECT_NAME} PRIVATE
-            #            Qt5::Gui Qt5::Quick
+            Qt5::Widgets
             ${UNIX_LIB_ALL_IN_ONE}
             ${OpenCV_LIBS}
             ${TORCH_LIBRARIES})

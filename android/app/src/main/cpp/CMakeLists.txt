@@ -11,6 +11,26 @@ set(OPENBABEL_LIBDIR ${CPP_LIB_DIR}/openbabel/${ANDROID_ABI})
 set(OPENCV_LIBDIR ${CPP_LIB_DIR}/opencv/sdk/native/staticlibs/${ANDROID_ABI})
 set(OPENCV_3RDPARTY_LIBDIR ${CPP_LIB_DIR}/opencv/sdk/native/3rdparty/libs/${ANDROID_ABI})
 
+# Relative path of gradle build directory to CMakeLists.txt
+set(build_DIR ${CMAKE_SOURCE_DIR}/build)
+
+file(GLOB PYTORCH_INCLUDE_DIRS "${build_DIR}/pytorch_android*.aar/headers")
+file(GLOB PYTORCH_LINK_DIRS "${build_DIR}/pytorch_android*.aar/jni/${ANDROID_ABI}")
+
+set(BUILD_SUBDIR ${ANDROID_ABI})
+target_include_directories(${PROJECT_NAME} PRIVATE
+  ${PYTORCH_INCLUDE_DIRS}
+)
+
+find_library(PYTORCH_LIBRARY pytorch_jni
+  PATHS ${PYTORCH_LINK_DIRS}
+  NO_CMAKE_FIND_ROOT_PATH)
+
+find_library(FBJNI_LIBRARY fbjni
+  PATHS ${PYTORCH_LINK_DIRS}
+  NO_CMAKE_FIND_ROOT_PATH)
+
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -100,4 +120,5 @@ target_link_libraries( # Specifies the target library.
         ${android-lib}
         ${z-lib}
         ${jnigraphics-lib}
-        )
+        ${PYTORCH_LIBRARY})
+        ${FBJNI_LIBRARY})
