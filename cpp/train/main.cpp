@@ -7,23 +7,19 @@
 #include <chrono>
 #include <opencv2/imgcodecs.hpp>
 
-//extern std::unordered_map<int, std::wstring> gbTable;
-std::unordered_map<int, std::wstring> gbTable;
+extern std::unordered_map<int, std::wstring> gbTable;
+
+#ifdef WIN32
+const std::string COCR_DIR("C:/Users/xgd/source/COCR/");
+#else
+const std::string COCR_DIR("/mnt/c/Users/xgd/source/COCR/");
+#endif
 std::vector<std::string> testImgPath = {
-        "C:/Users/xgd/Pictures/yue.png",
-        "C:/Users/xgd/Pictures/workspace/liang.png",
-        "C:/Users/xgd/Pictures/workspace/xin.png"
+        COCR_DIR+ "cache/gb_test/yue.png",
+        COCR_DIR+"cache/gb_test/liang.png",
+        COCR_DIR+"cache/gb_test/xin.png"
 };
 
-std::vector<std::pair<int, int>> sizeConfig = {
-        {1, 64},
-        {2, 64},
-        {2, 64},
-        {2, 64},
-        {2, 64},
-        {3, 64},
-        {3, 64},
-};
 
 inline torch::Tensor getOneSample(const std::string &_img_path) {
     auto cvImg = cv::imread(_img_path);
@@ -45,7 +41,7 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
     // 超参数
     const int64_t batchSize = 216;
     const size_t maxEpochs = 20, lrDecayEpoch = 1;
-    const double lr = 0.001, lrDecayRatio = 0.7;
+    const double lr = 0.0001, lrDecayRatio = 0.9;
     double curLr = lr;
     /**
      * 控制高斯分布的方差、颜色反转的概率
@@ -81,8 +77,11 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
     if (!_preloadPath.empty()) {
         torch::load(model, _preloadPath);
     }
-
+    RC::thicknessVec = {
+            1, 1, 2, 2, 2, 2, 3, 3, 3
+    };
     auto test = [&]() {
+        RC::thicknessVec = {2};
         std::cout << "Testing...\n";
         float tmp = RC::noiseParm.stddev;
         RC::revertColorProb = 0;
@@ -110,6 +109,9 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
                   << ", Accuracy: " << test_accuracy << std::endl;
         RC::revertColorProb = 0.5;// 还原
         RC::noiseParm.stddev = tmp;
+        RC::thicknessVec = {
+                1, 1, 2, 2, 2, 2, 3, 3, 3
+        };
         model->train(true);
     };
     std::cout << "Training...\n";
@@ -140,13 +142,11 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
             // Update number of correctly classified samples
             // CPU 操作
             batchIndex++;
-            if (batchIndex % 10 == 0) {
-                size_t cfg_index = rand() % sizeConfig.size();
-                RC::shapeAttr.thickness = sizeConfig[cfg_index].first;
-                CouchDataSet::setBatchImageSize(sizeConfig[cfg_index].second, sizeConfig[cfg_index].second);
-                if (RC::noiseParm.stddev < maxGaussianVariance) {
-                    RC::noiseParm.stddev += dv;
-                }
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            if (batchIndex % 100 == 0) {
+//                if (RC::noiseParm.stddev < maxGaussianVariance) {
+//                    RC::noiseParm.stddev += dv;
+//                }
                 float sampleSum = batchIndex * batchSize;
                 std::cout << "Epoch [" << (epoch + 1) << "/" << maxEpochs
                           << "], Batch [" << batchIndex
@@ -201,11 +201,13 @@ void testClassifier(const std::string &_preloadPath) {
 int main(int argc, char **argv) {
     std::wcout.imbue(std::locale("chs"));
     try {
-        trainClassifier(
-                "C:/Users/xgd/source/COCR/data/couch/couch-gbk.txt",
-                "C:/Users/xgd/source/COCR/data/couch/couch-gbk-target.txt",
-                "D:/");
-//        testClassifier("C:/Users/xgd/source/COCR/cache/gb/mv3-epoch-6.pth");
+//        trainClassifier(
+//                COCR_DIR+"/data/couch/couch-gbk.txt",
+//                COCR_DIR+"/data/couch/couch-gbk-target.txt",
+//                "D:/",
+//                "D:/mv3-epoch-0.pth");
+        testClassifier(COCR_DIR+"cache/gb-clean/mv3-epoch-8.pth");
+
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

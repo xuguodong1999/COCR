@@ -2,13 +2,15 @@
 #include "activation.hpp"
 #include "module.hpp"
 
+using Conv2d = torch::nn::Conv2d;
+using Conv2dOpt = torch::nn::Conv2dOptions;
+
 Mv3Small::Mv3Small(int _numOfClass)
         : layerIn(torch::nn::Sequential(
-        torch::nn::Conv2d(
-                torch::nn::Conv2dOptions(3, 16, {3, 3})
-                        .stride({2, 2})
-                        .padding({1, 1})
-                        .bias(false)),
+        Conv2d(Conv2dOpt(3, 16, {3, 3})
+                       .stride({2, 2})
+                       .padding({1, 1})
+                       .bias(false)),
         torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(16)),
         HSwish())),
           bnecks({torch::nn::Sequential(
@@ -34,23 +36,19 @@ Mv3Small::Mv3Small(int _numOfClass)
           ),
           layerOut(torch::nn::Sequential(
                   // part1: fc1
-                  torch::nn::Conv2d(
-                          torch::nn::Conv2dOptions(
-                                  96, 576, {1, 1})
-                                  .bias(false)),
+                  Conv2d(Conv2dOpt(96, 576, {1, 1})
+                                 .bias(false)),
                   torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(576)),
                   HSwish(),
                   // part2: apply avg pool
                   torch::nn::AdaptiveAvgPool2d(torch::nn::AdaptiveAvgPool2dOptions({1, 1})),
                   // part3: fc2
-                  torch::nn::Conv2d(
-                          torch::nn::Conv2dOptions(
-                                  576, 1024, {1, 1})
-                                  .bias(true)),
+                  Conv2d(Conv2dOpt(576, 1024, {1, 1})
+                                 .bias(true)),
                   HSwish(),
                   // part4: 到节点
-                  torch::nn::Conv2d(torch::nn::Conv2dOptions(
-                          1024, _numOfClass, {1, 1}).bias(true))
+                  Conv2d(Conv2dOpt(1024, _numOfClass, {1, 1})
+                                 .bias(true))
           )) {
     register_module("conv2d-in", layerIn);
     for (size_t i = 0; i < bnecks.size(); i++) {

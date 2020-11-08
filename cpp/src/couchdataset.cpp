@@ -61,6 +61,17 @@ void CouchDataSet::InitMap(const std::string &_allClass, const std::string &_tar
     }
     sCastTable[-1] = gt++;// 全1
     sCastTable[-2] = gt++;// 全0
+//    for(auto&[oldIndex,newIndex]:sCastTable){
+//        std::cout<<newIndex<<",";
+//        if(oldIndex>=0){
+//            std::cout<<sTargetTable[oldIndex]<<"\n";
+//        }else if(oldIndex==-1){
+//            std::wcout<<"empty\n";
+//        }else{
+//            std::wcout<<"full\n";
+//        }
+//    }
+//    exit(-1);
 }
 
 CouchDataSet::CouchDataSet(const std::string &_allClass, const std::string &_targetClass,

@@ -61,8 +61,10 @@ public:
         return shapeAttr.shift;
     }
 
+    inline static std::vector<int> thicknessVec = {2};
+
     static const int get_shape_thickness() {
-        return shapeAttr.thickness;
+        return thicknessVec[rand() % thicknessVec.size()];
     }
 
     static const int get_shape_lineType() {

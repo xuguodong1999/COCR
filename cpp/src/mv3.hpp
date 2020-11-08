@@ -4,7 +4,6 @@
 #include "config.hpp"
 #include <torch/nn.h>
 
-
 class Mv3Small : public torch::nn::Module {
     torch::nn::Sequential layerIn;
     std::vector<torch::nn::Sequential> bnecks;
