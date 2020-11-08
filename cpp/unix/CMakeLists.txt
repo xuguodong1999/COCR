@@ -32,7 +32,6 @@ if (UNIX)
             ${SRC_DIR}/couchdataset.cpp
             ${SRC_DIR}/opencvutil.cpp
             ${SRC_DIR}/config.cpp
-            ${SRC_DIR}/block.cpp
             ${SRC_DIR}/activation.cpp
             ${SRC_DIR}/mv3_large.cpp
             ${SRC_DIR}/mv3_small.cpp

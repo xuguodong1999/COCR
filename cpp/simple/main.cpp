@@ -1,21 +1,40 @@
-#include <torch/torch.h>
-#include "config.hpp"
+//#include "config.hpp"
+#include <QImage>
+#include <QFont>
+#include <QPainter>
+#include <QDebug>
+#include <QApplication>
+#include <QFontDatabase>
+#include <opencv2/opencv.hpp>
+#include "fontpixitem.hpp"
 
 using namespace std;
 
-int main() {
-    auto cuda_available = torch::cuda::is_available();
-    torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
-
-    torch::Tensor scores = torch::rand({10, 2, 3});
-    scores.print();
-    std::tuple<torch::Tensor, torch::Tensor> sort_ret = torch::sort(scores.unsqueeze(1), 0, true);
-    torch::Tensor v = std::get<0>(sort_ret).squeeze(1).to(scores.device());
-    torch::Tensor idx = std::get<1>(sort_ret).squeeze(1).to(scores.device());
-    std::cout << scores << std::endl;
-    std::cout << v << std::endl;
-    std::cout << idx << std::endl;
 
 
-    return 0;
+extern std::unordered_map<int, std::wstring> gbTable;
+
+int main(int argc, char **argv) {
+    qputenv("QML_DISABLE_DISK_CACHE", "1");
+    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication app(argc, argv);
+    QFontDatabase database;
+    auto avalableFontFamilies=database.families();
+    avalableFontFamilies.removeOne("ZWAdobeF");
+    try {
+//        for(auto&ff:avalableFontFamilies){
+//            FontPixItem::GetFont("鞫",ff);
+//        }
+        for (auto&[_, text]:gbTable) {
+            FontPixItem::GetFont(
+                    QString::fromStdWString(text),
+                    "ZWAdobeF"
+//                    avalableFontFamilies[rand() % avalableFontFamilies.size()]
+            );
+        }
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+    exit(-1);
+    return app.exec();
 }

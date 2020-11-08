@@ -299,7 +299,7 @@ void CouchLoader::LoadCouchDataSet() {
     }
 }
 
-ShapeItem CouchLoader::GetShapeItem(const size_t &_classIndex, size_t &_sampleIndex) {
+ShapeItem CouchLoader::GetShapeItem(const size_t &_classIndex, const size_t &_sampleIndex) {
     auto &sample = sData[_classIndex][_sampleIndex];
     ShapeItem shape;
     shape.mLabel = _classIndex;

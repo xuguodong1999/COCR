@@ -33,7 +33,7 @@ public:
 
     static const vector<vector<Script>> &GetData();
 
-    static ShapeItem GetShapeItem(const size_t &_classIndex, size_t &_sampleIndex);
+    static ShapeItem GetShapeItem(const size_t &_classIndex, const size_t &_sampleIndex);
 };
 
 #endif//_COUCH_HPP_

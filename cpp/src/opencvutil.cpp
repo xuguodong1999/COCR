@@ -19,3 +19,51 @@ padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight) {
     return std::make_pair(std::move(ret), std::make_tuple(k, dw / 2.f, dh / 2.f));
 }
 
+std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar &_bgPixel) {
+    int xmin;
+    for (int x = 0; x < _uMat.cols; x++) {
+        for (int y = 0; y < _uMat.rows; y++) {
+            if (_bgPixel != _uMat.at<uchar>(y, x)) {
+                xmin = x;
+                goto L1;
+            }
+        }
+    }
+    return std::nullopt;
+    L1:;
+    int xmax;
+    for (int x = _uMat.cols - 1; x >= xmin; x--) {
+        for (int y = _uMat.rows - 1; y >= 0; y--) {
+            if (_bgPixel != _uMat.at<uchar>(y, x)) {
+                xmax = x;
+                goto L2;
+            }
+        }
+    }
+    xmax = xmin;
+    L2:;
+    int ymin;
+    for (int y = 0; y < _uMat.rows; y++) {
+        for (int x = xmin; x <= xmax; x++) {
+            if (_bgPixel != _uMat.at<uchar>(y, x)) {
+                ymin = y;
+                goto L3;
+            }
+        }
+    }
+    ymin = _uMat.rows - 1;
+    L3:;
+    int ymax;
+    for (int y = _uMat.rows - 1; y >= ymin; y--) {
+        for (int x = xmin; x <= xmax; x++) {
+            if (_bgPixel != _uMat.at<uchar>(y, x)) {
+                ymax = y;
+                goto L4;
+            }
+        }
+    }
+    ymax = ymin;
+    L4:;
+    return cv::Rect2i(xmin, ymin, xmax - xmin + 1, ymax - ymin + 1);
+}
+

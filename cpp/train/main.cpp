@@ -51,7 +51,7 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
     RC::noiseParm.stddev = 0;
     RC::shapeAttr.thickness = 2;
     CouchDataSet::setBatchImageSize(64, 64);
-    const float maxGaussianVariance = 0.2;
+    const float maxGaussianVariance = 0.1;
     float dv = 0.00005;
     // 训练集
     auto trainSet = CouchDataSet(
@@ -142,16 +142,16 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
             // Update number of correctly classified samples
             // CPU 操作
             batchIndex++;
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+//            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            if (RC::noiseParm.stddev < maxGaussianVariance) {
+                RC::noiseParm.stddev += dv;
+            }
             if (batchIndex % 100 == 0) {
-//                if (RC::noiseParm.stddev < maxGaussianVariance) {
-//                    RC::noiseParm.stddev += dv;
-//                }
                 float sampleSum = batchIndex * batchSize;
                 std::cout << "Epoch [" << (epoch + 1) << "/" << maxEpochs
                           << "], Batch [" << batchIndex
                           // << "], TrainLoss: " << lossPerEpoch / sampleSum
-                          << "], Acc: " << top1CorrectPerEpoch / sampleSum << "\n";
+                          << "], Acc: " << top1CorrectPerEpoch / sampleSum << std::endl;
                 std::string model_save_path = _saveDir + "mv3-epoch-" + std::to_string(epoch % 10) + ".pth";
                 torch::save(model, model_save_path);
             }
@@ -175,7 +175,7 @@ void testClassifier(const std::string &_preloadPath) {
     torch::Device device(cuda_available ? torch::kCUDA : torch::kCPU);
     std::cout << device << std::endl;
     auto model = std::make_shared<Mv3Large>(6946);
-    torch::load(model, _preloadPath);
+    torch::load(model, _preloadPath,device);
     model->to(device);
     model->eval();
     while (model.get()) {
@@ -186,7 +186,7 @@ void testClassifier(const std::string &_preloadPath) {
         auto output = model->forward(input);
         int topk = 5;
         auto prediction = output.topk(topk, 1);
-        std::cout << std::get<0>(prediction) << std::endl;
+//        std::cout << std::get<0>(prediction) << std::endl;
         auto indices = std::get<1>(prediction).squeeze(0);
         for (int i = 0; i < topk; i++) {
             std::cout << indices[i].item().toInt() << std::endl;
@@ -197,17 +197,19 @@ void testClassifier(const std::string &_preloadPath) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 }
-
+#include <QApplication>
 int main(int argc, char **argv) {
+    qputenv("QML_DISABLE_DISK_CACHE", "1");
+    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication app(argc, argv);
     std::wcout.imbue(std::locale("chs"));
     try {
-//        trainClassifier(
-//                COCR_DIR+"/data/couch/couch-gbk.txt",
-//                COCR_DIR+"/data/couch/couch-gbk-target.txt",
-//                "D:/",
-//                "D:/mv3-epoch-0.pth");
-        testClassifier(COCR_DIR+"cache/gb-clean/mv3-epoch-8.pth");
-
+        trainClassifier(
+                COCR_DIR+"/data/couch/couch-gbk.txt",
+                COCR_DIR+"/data/couch/couch-gbk-target.txt",
+                "D:/",
+                "D:/mv3-epoch-0.pth");
+//        testClassifier(COCR_DIR+"cache/gb-clean/mv3-epoch-8.pth");
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

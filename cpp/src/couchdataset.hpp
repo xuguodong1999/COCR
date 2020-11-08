@@ -52,6 +52,9 @@ public:
     bool isTrainMode() const noexcept;
 
 private:
+    /**
+     * <>
+     */
     std::vector<std::pair<size_t, size_t>> dataset;
     const Mode mode;
 };

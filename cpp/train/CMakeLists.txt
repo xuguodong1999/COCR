@@ -14,11 +14,11 @@ set(SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
         ${SRC_DIR}/couchdataset.cpp
         ${SRC_DIR}/opencvutil.cpp
         ${SRC_DIR}/config.cpp
-        ${SRC_DIR}/block.cpp
         ${SRC_DIR}/activation.cpp
         ${SRC_DIR}/mv3_large.cpp
         ${SRC_DIR}/mv3_small.cpp
         ${SRC_DIR}/module.cpp
+        ${SRC_DIR}/fontpixitem.cpp
         ${SRC_DIR}/data.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})

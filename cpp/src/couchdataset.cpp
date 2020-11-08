@@ -1,5 +1,7 @@
 #include "couchdataset.hpp"
 #include "statistic.hpp"
+#include "fontpixitem.hpp"
+#include "opencvutil.hpp"
 #include <fstream>
 #include <filesystem>
 #include <random>
@@ -97,6 +99,10 @@ void CouchDataSet::setBatchImageSize(int trainWidth, int trainHeight) {
     batchHeight = trainHeight;
 }
 
+#include <QFontDatabase>
+
+extern std::unordered_map<int, std::wstring> gbTable;
+
 torch::data::Example<> CouchDataSet::get(size_t index) {
     const int max_prob = GetNumOfClass();
     int prob = (rand() % max_prob);
@@ -107,44 +113,81 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
         return {torch::zeros({3, batchWidth, batchHeight}, torch::kFloat),
                 torch::tensor(sCastTable[-2]).to(torch::kInt64)};
     }
-    auto&[a, b]=dataset.at(index);
-    auto item = CouchLoader::GetShapeItem(a, b);
-    auto bgColor = cvWhite, strokeColor = cvBlack;
-    if (mode == kTrain) {
-        if ((prob % 100) / 100.0 < RC::revertColorProb) {// 反转颜色
-            std::swap(strokeColor, bgColor);
-        }
-    }
-    RC::shapeAttr.color = strokeColor;
-    cv::Mat img = cv::Mat(batchHeight, batchWidth, CV_8UC3, bgColor);
-    item.rotate(15 - rand() % 30);
-    item.moveCenterTo(cv::Point2f(batchWidth / 2, batchHeight / 2));
+    const auto&[classIndex, sampleIndex]=dataset[index];
+    cv::Mat img;
     float kx = 1.0 - (std::rand() % 30) / 100.0,
             ky = 1.0 - (std::rand() % 30) / 100.0;
     int offsetx = (1.0 - kx) / 2 * batchWidth, offsety = (1.0 - ky) / 2 * batchHeight;
-    if (offsetx != 0 && offsety != 0) {
-        offsetx = offsetx - rand() % (2 * offsetx);
-        offsety = offsety - rand() % (2 * offsety);
-        item.move(cv::Point2f(offsetx, offsety));
+
+    // 系统自带字体
+    if (isTrainMode() && prob < max_prob / 4) {
+        static QFontDatabase database;
+        static QStringList availableFontFamilies;
+        if (availableFontFamilies.empty()) {
+            availableFontFamilies = database.families();
+            QStringList fuck = {
+                    "Fixedsys", "Terminal", "Small Fonts",
+                    "MS Serif", "Script", "Roman", "System", "Modern",
+                    "ZWAdobeF" // bug size
+            };
+            for (auto &f:fuck) {
+                availableFontFamilies.removeOne(f);
+            }
+        }
+        cv::Mat c1(batchHeight, batchWidth, CV_8UC1, cvWhite);
+        auto c1_1 = FontPixItem::GetFont(
+                QString::fromStdWString(gbTable[sCastTable[classIndex]]),
+                availableFontFamilies[rand() % availableFontFamilies.size()]);
+        cv::resize(c1_1, c1_1, cv::Size(batchWidth * kx, batchHeight * ky));
+        if (offsetx != 0 && offsety != 0) {
+            offsetx = offsetx - rand() % (2 * offsetx);
+            offsety = offsety - rand() % (2 * offsety);
+        }
+        int startx = (batchWidth - c1_1.cols) / 2 + offsetx;
+        int starty = (batchHeight - c1_1.rows) / 2 + offsety;
+        cv::Rect roi(startx, starty, c1_1.cols, c1_1.rows);
+        c1_1.copyTo(c1(roi));
+        std::vector<cv::Mat> splitedMat({c1, c1, c1});
+        cv::merge(splitedMat.data(), 3, img);
+        if ((prob % 100) / 100.0 < RC::revertColorProb) {// 反转颜色
+            cv::bitwise_not(img, img);
+        }
+    } else {
+        auto item = CouchLoader::GetShapeItem(classIndex, sampleIndex);
+        auto bgColor = cvWhite, strokeColor = cvBlack;
+        if (isTrainMode()) {
+            if ((prob % 100) / 100.0 < RC::revertColorProb) {// 反转颜色
+                std::swap(strokeColor, bgColor);
+            }
+        }
+        RC::shapeAttr.color = strokeColor;
+        img = cv::Mat(batchHeight, batchWidth, CV_8UC3, bgColor);
+        item.rotate(15 - rand() % 30);
+        item.moveCenterTo(cv::Point2f(batchWidth / 2, batchHeight / 2));
+        if (offsetx != 0 && offsety != 0) {
+            offsetx = offsetx - rand() % (2 * offsetx);
+            offsety = offsety - rand() % (2 * offsety);
+            item.move(cv::Point2f(offsetx, offsety));
+        }
+        item.resizeTo(batchWidth * kx, batchHeight * ky, true);
+        item.paintTo(img);
     }
-    item.resizeTo(batchWidth * kx, batchHeight * ky, true);
-    item.paintTo(img);
     img.convertTo(img, CV_32F, 1.0 / 255);
 
-//    if (prob < max_prob / 2 && mode == kTrain) {
-//        cv::Mat noise(img.size(), CV_32FC3);
-//        cv::randn(noise, RC::getGaussianNoiseMean(), RC::getGaussianNoiseStddev());
-//        img = img + noise;
-//        cv::normalize(img, img, 0.0, 1.0, cv::NORM_MINMAX, CV_32F);
-//    }
-
-//        std::cout<<"isTrainMode()="<<isTrainMode()<<std::endl;
-//        cv::imshow("CouchDataSet::get", img);
-//        cv::waitKey(0);
+    if ((rand() % max_prob) < max_prob / 2 && isTrainMode()) {
+        cv::Mat noise(img.size(), CV_32FC3);
+        cv::randn(noise, RC::getGaussianNoiseMean(), RC::getGaussianNoiseStddev());
+        img = img + noise;
+        cv::normalize(img, img, 0.0, 1.0, cv::NORM_MINMAX, CV_32F);
+    }
+//
+//    std::cout << "isTrainMode()=" << isTrainMode() << std::endl;
+//    cv::imshow("CouchDataSet::get", img);
+//    cv::waitKey(0);
     auto imgTensor = torch::from_blob(
             img.data, {batchWidth, batchHeight, 3}, torch::kFloat
     ).permute({2, 0, 1}).contiguous();
-    auto target = torch::tensor(sCastTable[item.mLabel]).to(torch::kInt64);
+    auto target = torch::tensor(sCastTable[classIndex]).to(torch::kInt64);
     return {std::move(imgTensor), std::move(target)};
 }
 
