@@ -53,7 +53,7 @@ void Mv3Large::registerModule() {
     for (size_t i = 0; i < bnecks.size(); i++) {
         register_module("bneck-" + std::to_string(i), bnecks[i]);
     }
-    register_module("fc-layer", layerOut);
+    register_module("fc1-layer", layerOut);
 }
 
 Tensor Mv3Large::forward(Tensor x) {
@@ -62,7 +62,5 @@ Tensor Mv3Large::forward(Tensor x) {
         x = bneck->forward(x);
     }
     x = layerOut->forward(x);
-    x = x.squeeze(-1);
-    x = x.squeeze(-1);
-    return log_softmax(x, 1);
+    return log_softmax(x.squeeze(-1).squeeze(-1), 1);
 }

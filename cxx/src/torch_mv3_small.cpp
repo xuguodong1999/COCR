@@ -57,7 +57,5 @@ Tensor Mv3Small::forward(Tensor x) {
         x = bneck->forward(x);
     }
     x = layerOut->forward(x);
-    x = x.squeeze(-1);
-    x = x.squeeze(-1);
-    return log_softmax(x, 1);
+    return log_softmax(x.squeeze(-1).squeeze(-1), 1);
 }

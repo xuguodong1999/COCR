@@ -38,6 +38,14 @@ public:
                                 const std::string &_bneckPrefix = "bneck",
                                 const std::string &_outPrefix = "out");
 
+    /**
+     * 传入空值表示不加载，传入错误值直接退出
+     * @param _saveDir 权重所在目录
+     * @param _inPrefix 前置滤波器的文件名
+     * @param _bneckPrefix 下采样滤波器的文件名
+     * @param _outPrefix 全连接分类部分的文件名
+     * @param _device cpu or cuda
+     */
     virtual void loadClassifier(const std::string &_saveDir,
                                 const std::string &_inPrefix = "in",
                                 const std::string &_bneckPrefix = "bneck",

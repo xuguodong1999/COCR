@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/torch_mv3_large.cpp
         ${SRC_DIR}/torch_mv3_small.cpp
         ${SRC_DIR}/torch_classifier.cpp
+        ${SRC_DIR}/torch_cifar_dataset.cpp
 
         ${SRC_DIR}/qml_sketchitem.cpp
         )
