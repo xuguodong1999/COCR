@@ -53,7 +53,7 @@ void Mv3Large::registerModule() {
     for (size_t i = 0; i < bnecks.size(); i++) {
         register_module("bneck-" + std::to_string(i), bnecks[i]);
     }
-    register_module("fc1-layer", layerOut);
+    register_module("fc-layer", layerOut);
 }
 
 Tensor Mv3Large::forward(Tensor x) {

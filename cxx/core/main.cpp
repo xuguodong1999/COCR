@@ -10,23 +10,24 @@
 extern std::string WEIGHTS_DIR;
 
 void transferCouch2Cifar(torch::Device &device) {
-    auto model = std::make_shared<Mv3Large>(100);
+    auto model = std::make_shared<Mv3Large>(6946);
     model->setName("gb-6946");
     model->to(device);
     model->loadClassifier(
-            "D:/", "in", "bneck", "", device);
+            "C:/Users/xgd/source/COCR/cache/weights/gb_classification/mv3-epoch-0", "in", "bneck", "", device);
     model->setName("cifar-100");
+//    torch::load(model, "D:/cifar-100-epoch-2.pth", device);
     model->freezeInLayer(true);
     for (size_t i = 0; i < 5; i++) {
         model->freezeBneck(i, true);
     }
 
     // Hyper parameters
-    const int64_t batch_size = 256;
-    const size_t num_epochs = 400;
+    const int64_t batch_size = 512;
+    const size_t num_epochs = 100;
     const double learning_rate = 0.001;
-    const size_t learning_rate_decay_frequency = 10;
-    const double learning_rate_decay_factor = 0.98;
+    const size_t learning_rate_decay_frequency = 5;
+    const double learning_rate_decay_factor = 0.7;
 
     const std::string cifar100_root = "C:/Users/xgd/source/COCR/cache/data/cifar-100";
     const std::string cifar10_root = "C:/Users/xgd/source/COCR/cache/data/cifar-10";
@@ -38,17 +39,45 @@ void transferCouch2Cifar(torch::Device &device) {
 
     auto testSet = CifarDataSet(CifarType::CIFAR100, cifar100_root, CifarDataSet::kTest).map(
             torch::data::transforms::Stack<>());
+    std::cout << testSet.size().value() << std::endl;
     auto num_test_samples = testSet.size().value();
     auto test_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
             std::move(testSet), batch_size);
+    auto test = [&]() -> void {
+        std::cout << "Testing...\n";
+        // Test the model
+        model->eval();
 
+        double running_loss = 0.0;
+        size_t num_correct = 0;
+
+        for (const auto &batch : *test_loader) {
+            auto data = batch.data.to(device);
+            auto target = batch.target.to(device);
+
+            auto output = model->forward(data);
+
+            auto loss = torch::nn::functional::cross_entropy(output, target);
+            running_loss += loss.item<double>() * data.size(0);
+
+            auto prediction = output.argmax(1);
+            num_correct += prediction.eq(target).sum().item<int64_t>();
+        }
+
+        std::cout << "Testing " << num_test_samples << " finished!\n";
+
+        auto test_accuracy = static_cast<double>(num_correct) / num_test_samples;
+        auto test_sample_mean_loss = running_loss / num_test_samples;
+
+        std::cout << "Testset - Loss: " << test_sample_mean_loss << ", Accuracy: " << test_accuracy << '\n';
+        model->train(true);
+    };
     torch::optim::Adam optimizer(model->parameters(), torch::optim::AdamOptions(learning_rate));
 
     // Set floating point output precision
     std::cout << std::fixed << std::setprecision(4);
 
     auto current_learning_rate = learning_rate;
-
     std::cout << "Training...\n";
     bool isFrozen = true;
     // Train the model
@@ -88,46 +117,21 @@ void transferCouch2Cifar(torch::Device &device) {
         torch::save(model, model_save_path);
         std::cout << "Epoch [" << (epoch + 1) << "/" << num_epochs << "], Trainset - Loss: "
                   << sample_mean_loss << ", Accuracy: " << accuracy << '\n';
-        if (accuracy > 0.9 && isFrozen) {
-            isFrozen = false;
-            model->freezeInLayer(false);
-            for (size_t i = 0; i < 5; i++) {
-                model->freezeBneck(i, false);
-            }
-            static_cast<torch::optim::AdamOptions &>(optimizer.param_groups().front()
-                    .options()).lr(current_learning_rate);
+        if (accuracy > 0.95) {
+            test();
+//            if (isFrozen) {
+//                isFrozen = false;
+//                model->freezeInLayer(false);
+//                for (size_t i = 0; i < 5; i++) {
+//                    model->freezeBneck(i, false);
+//                }
+//                static_cast<torch::optim::AdamOptions &>(optimizer.param_groups().front()
+//                        .options()).lr(current_learning_rate);
+//            }
         }
     }
 
     std::cout << "Training finished!\n\n";
-    std::cout << "Testing...\n";
-
-    // Test the model
-    model->eval();
-    torch::NoGradGuard no_grad;
-
-    double running_loss = 0.0;
-    size_t num_correct = 0;
-
-    for (const auto &batch : *test_loader) {
-        auto data = batch.data.to(device);
-        auto target = batch.target.to(device);
-
-        auto output = model->forward(data);
-
-        auto loss = torch::nn::functional::cross_entropy(output, target);
-        running_loss += loss.item<double>() * data.size(0);
-
-        auto prediction = output.argmax(1);
-        num_correct += prediction.eq(target).sum().item<int64_t>();
-    }
-
-    std::cout << "Testing finished!\n";
-
-    auto test_accuracy = static_cast<double>(num_correct) / num_test_samples;
-    auto test_sample_mean_loss = running_loss / num_test_samples;
-
-    std::cout << "Testset - Loss: " << test_sample_mean_loss << ", Accuracy: " << test_accuracy << '\n';
 }
 
 int main() {

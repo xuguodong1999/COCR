@@ -22,9 +22,6 @@ public:
 
     bool isTrainMode() const noexcept;
 
-    const torch::Tensor& images() const;
-
-    const torch::Tensor& targets() const;
 
 private:
     torch::Tensor mImages;
