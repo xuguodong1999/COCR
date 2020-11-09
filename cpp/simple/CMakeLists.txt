@@ -9,7 +9,7 @@ set(SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/play_torch.cpp
         ${SRC_DIR}/opencvutil.cpp
         ${SRC_DIR}/fontpixitem.cpp
-        ${SRC_DIR}/data.cpp
+        ${SRC_DIR}/gb2312data.cpp
         ${SRC_DIR}/config.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})

@@ -3,19 +3,16 @@
 
 #include "config.hpp"
 #include "couch.hpp"
-#include <torch/torch.h>
+#include <torch/data/datasets.h>
 #include <unordered_map>
 
-
-// img-label
-// based on: https://github.com/pytorch/pytorch/blob/master/torch/csrc/api/include/torch/data/datasets/mnist.h.
 /**
- * 矢量转位图的加载器
+ * 加载 Couch 手写数据集的矢量数据、混叠系统标准字体
+ * 对于 train or test，要使用两个不同的实例
  * 配置文件定义如下：
  * ①字符映射表：xxx.txt，每一行格式：实际编码-整数编码
- * ②被分类字符：xxx.txt，每一行格式：实际编码
+ * ②被分类字符：xxx.txt，每一行格式：实际编码-（忽略）整数编码
  * meta data 加载进 CouchItem 的静态变量
- *
  */
 class CouchDataSet : public torch::data::datasets::Dataset<CouchDataSet> {
     inline static std::vector<std::pair<size_t, size_t>> sGlobal2GridVec;

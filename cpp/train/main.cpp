@@ -52,7 +52,7 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
     RC::shapeAttr.thickness = 2;
     CouchDataSet::setBatchImageSize(64, 64);
     const float maxGaussianVariance = 0.2;
-    float dv = 0.00005;
+    float dv = 0.0005;
     // 训练集
     auto trainSet = CouchDataSet(
             _allClass,
@@ -142,7 +142,7 @@ void trainClassifier(const std::string &_allClass, const std::string &_targetCla
             // Update number of correctly classified samples
             // CPU 操作
             batchIndex++;
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            std::this_thread::sleep_for(std::chrono::milliseconds(400));
             if (RC::noiseParm.stddev < maxGaussianVariance) {
                 RC::noiseParm.stddev += dv;
             }
@@ -186,7 +186,7 @@ void testClassifier(const std::string &_preloadPath) {
         auto output = model->forward(input);
         int topk = 5;
         auto prediction = output.topk(topk, 1);
-//        std::cout << std::get<0>(prediction) << std::endl;
+        std::cout << std::get<0>(prediction).squeeze() << std::endl;
         auto indices = std::get<1>(prediction).squeeze(0);
         for (int i = 0; i < topk; i++) {
             std::cout << indices[i].item().toInt() << std::endl;
@@ -204,12 +204,12 @@ int main(int argc, char **argv) {
     QApplication app(argc, argv);
     std::wcout.imbue(std::locale("chs"));
     try {
-        trainClassifier(
-                COCR_DIR+"/data/couch/couch-gbk.txt",
-                COCR_DIR+"/data/couch/couch-gbk-target.txt",
-                "D:/",
-                "D:/mv3-epoch-6.pth");
-//        testClassifier(COCR_DIR+"cache/gb-clean/mv3-epoch-8.pth");
+//        trainClassifier(
+//                COCR_DIR+"/data/couch/couch-gbk.txt",
+//                COCR_DIR+"/data/couch/couch-gbk-target.txt",
+//                "D:/",
+//                "D:/mv3-epoch-6.pth");
+        testClassifier(COCR_DIR+"cache/gb-clean/mv3-epoch-0.pth");
 //        testClassifier("/mnt/d/mv3-epoch-0.pth");
     }
     catch (std::exception &e) {
