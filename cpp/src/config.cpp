@@ -1,6 +1,18 @@
 #include "config.hpp"
 #include <map>
 
+/**
+ * 编码规范
+ * 除特别说明外，一律驼峰命名
+ * 常量、宏、枚举一律全部大写
+ * 1、类
+ * 成员变量 mXxx，静态成员变量 sXxx，
+ * 成员函数小写开头，静态成员函数大写开头
+ * 2、函数
+ * 参数下划线开头，临时变量小写开头
+ */
+
+
 const std::string &getCouchFilePath() {
     static const std::string data_path = getDataDir() + "/couch/couch.dat";
     return data_path;

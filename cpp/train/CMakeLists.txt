@@ -20,6 +20,7 @@ set(SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
         ${SRC_DIR}/mv3_small.cpp
         ${SRC_DIR}/module.cpp
         ${SRC_DIR}/fontpixitem.cpp
+        ${SRC_DIR}/classifier.cpp
         ${SRC_DIR}/gb2312data.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})

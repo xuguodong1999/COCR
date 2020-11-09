@@ -1,10 +1,11 @@
 #include "mv3.hpp"
 
 //#include "sosodataset.hpp"
-#include "couchdataset.hpp"
+
 #include "statistic.hpp"
 #include <fstream>
 #include <chrono>
+#include <torch/data.h>
 #include <opencv2/imgcodecs.hpp>
 
 extern std::unordered_map<int, std::wstring> gbTable;
