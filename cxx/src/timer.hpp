@@ -1,0 +1,17 @@
+#ifndef _TIMER_HPP_
+#define _TIMER_HPP_
+
+#include <chrono>
+
+class Timer {
+    decltype(std::chrono::system_clock::now())
+            start_stamp, end_stamp, last_stamp;
+public:
+    void start();
+
+    void display_duration();
+
+    void stop(bool _display_duration = true);
+};
+
+#endif//_TIMER_HPP_

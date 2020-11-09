@@ -9,10 +9,12 @@
 #include <random>
 
 
-torch::data::Example<> Cifar100DataSet::get(size_t index) {}
+torch::data::Example<> Cifar100DataSet::get(size_t index) {
+    return torch::data::Example<>();
+}
 
 torch::optional<size_t> Cifar100DataSet::size() const {
-
+    return 0;
 }
 
 bool Cifar100DataSet::isTrainMode() const noexcept {
@@ -20,7 +22,7 @@ bool Cifar100DataSet::isTrainMode() const noexcept {
 }
 
 size_t Cifar100DataSet::GetNumOfClass() {
-
+    return 100;
 }
 
 Cifar100DataSet::Cifar100DataSet(const Cifar100DataSet::Mode &_mode) {
