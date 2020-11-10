@@ -12,11 +12,18 @@ set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
 
+        ${SRC_DIR}/idmanager.cpp
+        ${SRC_DIR}/mol.cpp
+        ${SRC_DIR}/atom.cpp
+        ${SRC_DIR}/bond.cpp
+        ${SRC_DIR}/hw_mol.cpp
+
         ${SRC_DIR}/config.cpp
         ${SRC_DIR}/rdkit_util.cpp
         ${SRC_DIR}/std_util.cpp
         ${SRC_DIR}/opencv_util.cpp
         ${SRC_DIR}/torch_util.cpp
+        ${SRC_DIR}/qt_util.cpp
 
         ${SRC_DIR}/polya.cpp
         ${SRC_DIR}/bignumber.cpp
@@ -30,7 +37,13 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/torch_mv3_large.cpp
         ${SRC_DIR}/torch_mv3_small.cpp
         ${SRC_DIR}/torch_classifier.cpp
-        ${SRC_DIR}/torch_cifar_dataset.cpp
+        ${SRC_DIR}/torch_transform.cpp
+
+        ${SRC_DIR}/couch_data.cpp
+        ${SRC_DIR}/hw.cpp
+
+        ${SRC_DIR}/dataset_cifar.cpp
+        ${SRC_DIR}/dataset_couch.cpp
 
         ${SRC_DIR}/qml_sketchitem.cpp
         )

@@ -8,6 +8,8 @@ string DATA_DIR(WORKSPACE + "/data");
 
 string COUCH_DIR(DATA_DIR + "/couch");
 
+string COUCH_SYM_PATH(COUCH_DIR + "/couch-sym.dat");
+
 string WEIGHTS_DIR(WORKSPACE + "/weights");
 
 string ALKANE_DIR("C:/Users/xgd/source/COCR/data/alkane");

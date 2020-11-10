@@ -24,4 +24,16 @@ padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight);
  */
 std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar &_bgPixel = 255);
 
+inline bool byProb(const float &_prob) {
+    return rand() / static_cast<float>(RAND_MAX) < _prob;
+}
+
+inline float belowProb(const float &_prob) {
+    return rand() / static_cast<float>(RAND_MAX) * _prob;
+}
+
+inline float aboveProb(const float &_prob) {
+    return 1.0 - rand() / static_cast<float>(RAND_MAX) * _prob;
+}
+
 #endif//_OPENCV_UTIL_HPP_

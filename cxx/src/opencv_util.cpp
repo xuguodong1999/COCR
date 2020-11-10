@@ -14,7 +14,7 @@ padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight) {
     int dw = std::max(0, _newWidth - newWidth), dh = std::max(0, _newHeight - newHeight);
     cv::copyMakeBorder(ret, ret,
                        dh / 2, dh - dh / 2, dw / 2, dw - dw / 2,
-                       cv::BORDER_CONSTANT);
+                       cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
 //    std::cout<<dw<<","<<dh<<","<<ret.cols<<","<<ret.rows<<std::endl;
     return std::make_pair(std::move(ret), std::make_tuple(k, dw / 2.f, dh / 2.f));
 }

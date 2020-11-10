@@ -46,16 +46,16 @@ void BaseClassifier::loadClassifier(
         const torch::Device &_device) {
     const std::string prefix = _saveDir + "/" + name + "-";
     try {
-        if(!_inPrefix.empty()) {
+        if (!_inPrefix.empty()) {
             torch::load(layerIn, prefix + _inPrefix + ".pth", _device);
         }
-        if(!_bneckPrefix.empty()) {
+        if (!_bneckPrefix.empty()) {
             for (size_t i = 0; i < bnecks.size(); i++) {
                 torch::load(bnecks[i], prefix + _bneckPrefix + "-d" +
                                        std::to_string(i + 1) + "x.pth", _device);
             }
         }
-        if(!_outPrefix.empty()) {
+        if (!_outPrefix.empty()) {
             torch::load(layerOut, prefix + _outPrefix + ".pth", _device);
         }
     } catch (std::exception &e) {
