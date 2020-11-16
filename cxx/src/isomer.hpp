@@ -1,3 +1,7 @@
+/**
+ * This file is a part of COCR Project
+ * @author 徐国栋
+ */
 #ifndef _ISOMER_HPP_
 #define _ISOMER_HPP_
 
@@ -266,6 +270,8 @@ public:
 
     void calculate_i_from_i_1(const char *save_dir, const int &carbonNum);
 
+    std::vector<std::string> getIsomers(const std::vector<int> &_numsOfCarbon, const int &_maxCarbon = 20);
+
 private:
     IsomerCounter();
 
@@ -289,7 +295,8 @@ private:
     public:
         std::vector<std::vector<hash_type>> mData;
         size_t mSize;
-        const size_t max_size = 268435493ULL / 4;
+//        const size_t max_size = 268435493ULL / 4;
+        const size_t max_size = 268435493ULL / 1024;
 
         quick_set() : mSize(0) {
             mData.resize(max_size);

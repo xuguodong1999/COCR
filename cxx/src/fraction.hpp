@@ -1,5 +1,6 @@
 /**
- * author: xgd
+ * This file is a part of COCR Project
+ * @author 徐国栋
  */
 #ifndef _FRACTION_HPP_
 #define _FRACTION_HPP_
@@ -9,7 +10,18 @@
 #include <limits>
 
 template<typename T>
+inline T gcd(const T &x, const T &y) {
+    return x % y == 0 ? y : gcd(y, x % y);
+}
+
+template<typename T>
+inline T lcm(const T &x, const T &y) {
+    return x * y / gcd(x, y);
+}
+
+template<typename T>
 class Fraction {
+
     static_assert(std::is_same_v<T, short> || std::is_same_v<T, int>
                   || std::is_same_v<T, long> || std::is_same_v<T, long long>);
 

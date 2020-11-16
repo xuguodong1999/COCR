@@ -1,3 +1,7 @@
+/**
+ * This file is a part of COCR Project
+ * @author 徐国栋
+ */
 #include "isomer.hpp"
 #include "timer.hpp"
 #include <fstream>
@@ -73,12 +77,19 @@ bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
         }
         cout << "c-" << i << ": " << curSet.size() << endl;
         timer.stop(true);
-        curSet.dump(cache_dir, i);
-        curSet.clear();
-        recover(cache_dir, i);
+        if (nullptr != cache_dir) {
+            curSet.dump(cache_dir, i);
+            curSet.clear();
+            recover(cache_dir, i);
+        } else {
+            lastSet.clear();
+            for (auto &bucket:curSet.mData) {
+                for (auto &ele:bucket)
+                    lastSet.push_back(ele);
+            }
+            curSet.clear();
+        }
     }
-
-
     return true;
 }
 
@@ -197,4 +208,71 @@ void IsomerCounter::calculate_i_from_i_1(const char *save_dir, const int &carbon
     cout << "c-" << carbonNum << ": " << len2 << endl;
     timer.stop(true);
     curSet.dump(save_dir, carbonNum);
+}
+
+std::vector<std::string> IsomerCounter::getIsomers(
+        const vector<int> &_numsOfCarbon, const int &_maxCarbon) {
+    std::unordered_set<int> numsOfCarbon;
+    for (auto &num:_numsOfCarbon) {
+        if (1 <= num && num <= _maxCarbon) {
+            numsOfCarbon.insert(num);
+        }
+    }
+    std::vector<std::string> smilesVec;
+    if (numsOfCarbon.empty()) {
+        return smilesVec;
+    }
+    auto max_ele = *(std::max_element(numsOfCarbon.begin(), numsOfCarbon.end()));
+    if (max_ele < 1) {
+        return smilesVec;
+    } else if (max_ele == 1) {
+        smilesVec.push_back("C");
+        return smilesVec;
+    }
+    lastSet.clear();
+    lastSet.push_back(graph::GetInstance().hash());
+    for (int i = 2; i <= max_ele; i++) {
+        while (!lastSet.empty()) {
+            // 记录，对一个合法结构添加新碳
+            graph current = graph(lastSet.back());
+            lastSet.pop_back();
+            const auto size = current.size();
+            vector<hash_type> tmpSet(size, 0);
+#pragma omp parallel for num_threads(thread_num)
+            for (auto j = 0; j < size; j++) {
+                auto current2 = current;
+                auto &node = current2.at(j);
+                if (node.size() < 4) {
+                    auto check_and_record = [&]() -> void {
+                        auto hash_value = current2.hash();
+                        if (!curSet.exist(hash_value)) {
+                            tmpSet[j] = hash_value;
+                        }
+                    };
+                    current2.add_do(j, size, check_and_record);
+                }
+            }
+            unordered_set<hash_type> tmpSet2;
+            for (auto &mm:tmpSet) {
+                if (mm != 0) { tmpSet2.insert(mm); }
+            }
+            for (auto &mm:tmpSet2) {
+                curSet.insert(mm);
+            }
+        }
+        lastSet.clear();
+        for (auto &bucket:curSet.mData) {
+            for (auto &ele:bucket)
+                lastSet.push_back(ele);
+        }
+        if (numsOfCarbon.end() != numsOfCarbon.find(i)) {
+            for (auto &carbon_hash:lastSet) {
+                AlkaneGraph<unsigned char> alkane;
+                auto smiles = alkane.toSMILES(carbon_hash);
+                smilesVec.push_back(smiles);
+            }
+        }
+        curSet.clear();
+    }
+    return smilesVec;
 }

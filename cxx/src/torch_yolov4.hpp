@@ -1,0 +1,4 @@
+#ifndef _TORCH_YOLOV4_HPP_
+#define _TORCH_YOLOV4_HPP_
+
+#endif//_TORCH_YOLOV4_HPP_

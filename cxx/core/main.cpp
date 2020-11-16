@@ -57,7 +57,7 @@ void transferCouch2Cifar(torch::Device &device) {
             auto target = batch.target.to(device);
 
             auto output = model->forward(data);
-
+//            torch::nn::CTCLoss
             auto loss = torch::nn::functional::cross_entropy(output, target);
             running_loss += loss.item<double>() * data.size(0);
 
@@ -117,7 +117,7 @@ void transferCouch2Cifar(torch::Device &device) {
                                       + std::to_string(epoch % 10) + ".pth";
         torch::save(model, model_save_path);
         std::cout << "Epoch [" << (epoch + 1) << "/" << num_epochs
-//                  << "], Trainset - Loss: " << sample_mean_loss
+                  //                  << "], Trainset - Loss: " << sample_mean_loss
                   << "], Trainset - Accuracy: " << accuracy << '\n';
         if (accuracy > 0.8) {
             test();

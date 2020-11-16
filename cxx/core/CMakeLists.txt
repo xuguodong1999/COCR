@@ -35,6 +35,8 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/torch_activation.cpp
         ${SRC_DIR}/torch_module.cpp
         ${SRC_DIR}/torch_mv3_large.cpp
+        ${SRC_DIR}/torch_enet.cpp
+        ${SRC_DIR}/torch_yolov4.cpp
         ${SRC_DIR}/torch_mv3_small.cpp
         ${SRC_DIR}/torch_classifier.cpp
         ${SRC_DIR}/torch_transform.cpp

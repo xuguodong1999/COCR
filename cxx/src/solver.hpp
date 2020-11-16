@@ -1,3 +1,7 @@
+/**
+ * This file is a part of COCR Project
+ * @author 徐国栋
+ */
 #ifndef _SOLVER_HPP_
 #define  _SOLVER_HPP_
 
@@ -7,10 +11,6 @@
 #include <cassert>
 #include <algorithm>
 
-template<typename T>
-inline T lcm(const T &x, const T &y) {
-    return x * y / gcd(x, y);
-}
 
 /**
  * @param in 增广矩阵
@@ -24,10 +24,7 @@ inline std::vector<T> linearSolve(const std::vector<std::vector<T>> &in) {
     if (rowSize < 1) { return std::move(out); }
     size_t colSize = in.at(0).size();
     if (colSize < 2) { return std::move(out); }
-    std::vector<std::vector<T>> aMatrix(rowSize);
-    for (auto &rMatrix:aMatrix) {
-        rMatrix.resize(colSize);
-    }
+    std::vector<std::vector<T>> aMatrix(rowSize, std::vector<T>(colSize));
     for (size_t row = 0; row < rowSize; row++) {
         if (in[row].size() != colSize) { return std::move(out); }
         for (auto col = 0; col < colSize; col++) {
@@ -44,7 +41,7 @@ inline std::vector<T> linearSolve(const std::vector<std::vector<T>> &in) {
         }
         auto maxEleThisCol = aMatrix.at(index)[i];// 取对角线上的元素
         if (maxEleThisCol == 0) {
-            return false;
+            return std::move(out);
         }
         if (index != i) {// 做行交换，把最大的元素交换到当前对角线位置
             swap(aMatrix[index], aMatrix[i]);
