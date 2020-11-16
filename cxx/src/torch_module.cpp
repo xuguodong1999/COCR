@@ -78,3 +78,28 @@ Tensor Mv3BneckModuleImpl::forward(Tensor input) {
         }
     }
 }
+
+UpSampleModuleImpl::UpSampleModuleImpl(const int &_inputSize, const int &_outputSize) {
+
+}
+
+torch::Tensor UpSampleModuleImpl::forward(torch::Tensor input) {
+    return torch::Tensor();
+}
+
+ConvModuleImpl::ConvModuleImpl(const int &_inputSize, const int &_outputSize, const int &_kernelSize,
+                               const int &_stride, bool _withBN) {
+
+}
+
+torch::Tensor ConvModuleImpl::forward(torch::Tensor input) {
+    return torch::Tensor();
+}
+
+YoloHeaderImpl::YoloHeaderImpl(const int &_inputSize, const int &_outputSize) {
+
+}
+
+torch::Tensor YoloHeaderImpl::forward(torch::Tensor input) {
+    return torch::Tensor();
+}

@@ -5,7 +5,7 @@
 using namespace torch;
 using namespace torch::nn;
 
-Mv3Small::Mv3Small(int _numOfClass) : BaseClassifier(
+Mv3Small::Mv3Small(const int& _numOfClass) : BaseClassifier(
         Sequential(
                 Conv2d(Conv2dOptions(3, 16, {3, 3})
                                .stride({2, 2})
