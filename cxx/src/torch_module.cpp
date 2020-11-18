@@ -103,3 +103,25 @@ YoloHeaderImpl::YoloHeaderImpl(const int &_inputSize, const int &_outputSize) {
 torch::Tensor YoloHeaderImpl::forward(torch::Tensor input) {
     return torch::Tensor();
 }
+
+BidirectionalLSTMImpl::BidirectionalLSTMImpl(const int &_inputSize, const int &_hiddenSize, const int &_outputSize) :
+        rnnLayer(LSTMOptions(_inputSize, _hiddenSize).bidirectional(true)),
+        embeddingLayer(LinearOptions(2 * _hiddenSize, _outputSize)) {
+    register_module("rnnLayer", rnnLayer);
+    register_module("embeddingLayer", embeddingLayer);
+}
+
+torch::Tensor BidirectionalLSTMImpl::forward(torch::Tensor input) {
+    /**
+     *         recurrent, _ = self.rnn(input)
+        T, b, h = recurrent.size()
+        t_rec = recurrent.view(T * b, h)
+
+        output = self.embedding(t_rec)  # [T * b, nOut]
+        output = output.view(T, b, -1)
+     */
+    auto[rnnOut,_] = rnnLayer->forward(input);
+    rnnOut.print();
+    embeddingLayer->forward(rnnOut.view({1,1}));
+    return torch::Tensor();
+}

@@ -1,7 +1,7 @@
 #ifndef _TORCH_UTIL_HPP_
 #define _TORCH_UTIL_HPP_
 
-#include <torch/nn.h>
+#include <torch/nn/module.h>
 #include <string>
 
 /**

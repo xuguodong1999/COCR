@@ -56,4 +56,13 @@ public:
 
 TORCH_MODULE(YoloHeader);
 
+class BidirectionalLSTMImpl: public torch::nn::Module{
+    torch::nn::LSTM rnnLayer;
+    torch::nn::Linear embeddingLayer;
+public:
+    BidirectionalLSTMImpl(const int&_inputSize,const int&_hiddenSize,const int&_outputSize);
+    torch::Tensor forward(torch::Tensor input);
+};
+
+TORCH_MODULE(BidirectionalLSTM);
 #endif //_MODULE_HPP_

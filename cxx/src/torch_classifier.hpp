@@ -1,7 +1,7 @@
 #ifndef _TORCH_CLASSIFIER_HPP_
 #define _TORCH_CLASSIFIER_HPP_
 
-#include <torch/nn.h>
+#include <torch/nn/modules/container/sequential.h>
 #include <memory>
 #include <vector>
 #include <utility>

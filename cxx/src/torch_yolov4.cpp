@@ -54,5 +54,4 @@ Yolov4::Yolov4(const float &_mv3Scale) : BaseClassifier(
     auto &d16x = bnecks[3];
     auto &d8x = bnecks[2];
     // 定义两个2x上采样反卷积、两个2x下采样卷积、若干1x1，3x3卷积、三个检测头
-    
 }
