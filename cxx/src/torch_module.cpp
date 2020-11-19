@@ -79,29 +79,51 @@ Tensor Mv3BneckModuleImpl::forward(Tensor input) {
     }
 }
 
-UpSampleModuleImpl::UpSampleModuleImpl(const int &_inputSize, const int &_outputSize) {
-
+UpSampleModuleImpl::UpSampleModuleImpl(const int &_inputSize, const int &_outputSize) : layers(
+        ConvTranspose2d(ConvTranspose2dOptions(
+                _inputSize, _outputSize, {3, 3})
+                                .stride(2)
+                                .padding({1, 1})
+                                .output_padding(1)
+                                .bias(false)),
+        BatchNorm2d(BatchNorm2dOptions(_outputSize)),
+        LeakyReLU()) {
+    register_module("deconv2d", layers);
 }
 
 torch::Tensor UpSampleModuleImpl::forward(torch::Tensor input) {
-    return torch::Tensor();
+    return layers->forward(input);
 }
 
-ConvModuleImpl::ConvModuleImpl(const int &_inputSize, const int &_outputSize, const int &_kernelSize,
-                               const int &_stride, bool _withBN) {
-
+ConvModuleImpl::ConvModuleImpl(
+        const int &_inputSize, const int &_outputSize,
+        const int &_kernelSize, const int &_stride, bool _withBN) : layers(
+        Conv2d(Conv2dOptions(
+                _inputSize, _outputSize, {_kernelSize, _kernelSize})
+                       .padding({_kernelSize / 2, _kernelSize / 2})
+                       .stride(1)
+                       .bias(false)),
+        BatchNorm2d(BatchNorm2dOptions(_outputSize)),
+        LeakyReLU()) {
+    register_module("conv2d", layers);
 }
 
 torch::Tensor ConvModuleImpl::forward(torch::Tensor input) {
-    return torch::Tensor();
+    return layers->forward(input);
 }
 
-YoloHeaderImpl::YoloHeaderImpl(const int &_inputSize, const int &_outputSize) {
-
-}
 
 torch::Tensor YoloHeaderImpl::forward(torch::Tensor input) {
-    return torch::Tensor();
+    return layers->forward(input);
+}
+
+YoloHeaderImpl::YoloHeaderImpl(const int &_inputSize, const int &_anchorNum,
+                               const int &_numOfClass, const int &_locParmNum) : layers(
+        Conv2d(Conv2dOptions(_inputSize,
+                             _anchorNum * (1 + _locParmNum + _numOfClass),
+                             {1, 1})
+                       .stride({1, 1}))) {
+    register_module("yolo-head", layers);
 }
 
 BidirectionalLSTMImpl::BidirectionalLSTMImpl(const int &_inputSize, const int &_hiddenSize, const int &_outputSize) :
@@ -112,16 +134,9 @@ BidirectionalLSTMImpl::BidirectionalLSTMImpl(const int &_inputSize, const int &_
 }
 
 torch::Tensor BidirectionalLSTMImpl::forward(torch::Tensor input) {
-    /**
-     *         recurrent, _ = self.rnn(input)
-        T, b, h = recurrent.size()
-        t_rec = recurrent.view(T * b, h)
-
-        output = self.embedding(t_rec)  # [T * b, nOut]
-        output = output.view(T, b, -1)
-     */
-    auto[rnnOut,_] = rnnLayer->forward(input);
-    rnnOut.print();
-    embeddingLayer->forward(rnnOut.view({1,1}));
-    return torch::Tensor();
+    auto[rnnOut, _] = rnnLayer->forward(input);
+//    std::cout<<"rnnOut.size="<<rnnOut.sizes()<<std::endl;
+    return embeddingLayer->forward(rnnOut);
+//    std::cout<<"bLSTM.outSize="<<input.sizes()<<std::endl;
+//    return input;
 }

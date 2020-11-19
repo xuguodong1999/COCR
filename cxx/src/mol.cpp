@@ -37,17 +37,17 @@ JMol::JMol(const string &_smiles) {
 void JMol::set(const string &_smiles) {
     clear();
     std::map<unsigned int, size_t> R2JAtomIdxMap;
-    // FIXME: memory leak
-    auto rwMol = RDKit::SmilesToMol(_smiles);
-    std::shared_ptr<RDKit::ROMol> roMol(rwMol);
-    for (unsigned int i = 0; i < roMol->getNumAtoms(); i++) {
-        const RDKit::Atom *rAtom = roMol->getAtomWithIdx(i);
+    // the caller is responsible for freeing this.
+    auto rwMol = RDKit::SmilesToMol(_smiles,0,false);
+
+    for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
+        const RDKit::Atom *rAtom = rwMol->getAtomWithIdx(i);
         auto jAtom = addAtom(rAtom->getAtomicNum());
         R2JAtomIdxMap.insert(std::make_pair(rAtom->getIdx(), jAtom->getId()));
     }
     // FIXME: H can't be explicitly added here
-    for (unsigned int i = 0; i < roMol->getNumBonds(true); i++) {
-        const RDKit::Bond *rBond = roMol->getBondWithIdx(i);
+    for (unsigned int i = 0; i < rwMol->getNumBonds(true); i++) {
+        const RDKit::Bond *rBond = rwMol->getBondWithIdx(i);
         auto jBond = addBond(R2JAtomIdxMap[rBond->getBeginAtomIdx()],
                              R2JAtomIdxMap[rBond->getEndAtomIdx()]);
         switch (rBond->getBondType()) {
@@ -74,13 +74,17 @@ void JMol::set(const string &_smiles) {
             case RDKit::Bond::BondType::TRIPLE:
                 jBond->setType(JBondType::TripleBond);
                 break;
+//            case RDKit::Bond::BondType::AROMATIC:
+//
             default:
-                // FIXME: fx结构强制转kekule结构
+                // FIXME: aromatic 结构强转 kekule 结构
                 std::cerr << "unhandled type:" << rBond->getBondType() << std::endl;
                 exit(-1);
         }
     }
+    delete rwMol;
 }
+
 
 std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber) {
     auto atom = std::make_shared<JAtom>(_atomicNumber);
@@ -126,7 +130,7 @@ void JMol::update2DCoordinates() {
         std::cout << pos.y << ",";
     }
     std::cout << "],'K*');\naxis([-5,5,-5,5]);grid on;" << std::endl;
-    std::cin.get();
+//    std::cin.get();
 }
 
 const std::map<size_t, std::shared_ptr<JBond>> &JMol::getBondsMap() const {
@@ -135,4 +139,8 @@ const std::map<size_t, std::shared_ptr<JBond>> &JMol::getBondsMap() const {
 
 const std::map<size_t, std::shared_ptr<JAtom>> &JMol::getAtomsMap() const {
     return atomsMap;
+}
+
+void JMol::randomize() {
+
 }

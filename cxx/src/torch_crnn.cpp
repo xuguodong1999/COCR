@@ -27,9 +27,9 @@ CRNN::CRNN(const int &_numOfClass) : BaseClassifier(
                            Mv3BneckModule(112, 672, 160, 5, 2, Mv3Activation::HSwish, true)),
                 Sequential(Mv3BneckModule(160, 960, 160, 5, 1, Mv3Activation::HSwish, true),
                            Mv3BneckModule(160, 960, 160, 5, 1, Mv3Activation::HSwish, true))},
-        Sequential(BidirectionalLSTM(160,128,128),
+        Sequential(
+                BidirectionalLSTM(160,128,128),
                    BidirectionalLSTM(128,128,_numOfClass))) {
-
     registerModule();
 }
 
@@ -38,9 +38,11 @@ torch::Tensor CRNN::forward(torch::Tensor x) {
     for (auto &bneck:bnecks) {
         x = bneck->forward(x);
     }
-    x.print();
+//    std::cout<<"fSize="<<x.sizes()<<std::endl;
+     x=x.squeeze(-1);
+     x=x.permute({0,2,1});
+//    std::cout<<"fSize="<<x.sizes()<<std::endl;
     x = layerOut->forward(x);
-    x.print();
     return x;
 }
 

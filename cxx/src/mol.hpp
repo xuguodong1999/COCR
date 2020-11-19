@@ -26,6 +26,8 @@ public:
 
     void set(const std::string &_smiles);
 
+    void randomize();
+
     void clear();
 
     std::shared_ptr<JAtom>

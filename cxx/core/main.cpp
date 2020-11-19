@@ -1,24 +1,31 @@
-#include "torch_util.hpp"
-#include "torch_crnn.hpp"
+//#include "torch_util.hpp"
+//#include "torch_crnn.hpp"
 #include <iostream>
+#include "mol.hpp"
+#include "generator.hpp"
 
 using namespace std;
 
-int _main() {
+//void testCRNN() {
+//    auto imgTensor = loadImgTensor("C:/Users/xgd/Pictures/crnn_test.png");
+//    std::cout << "imgTensor.size=" << imgTensor.sizes() << std::endl;
+//    auto crnn = std::make_shared<CRNN>(6947);
+//    auto output = crnn->forward(imgTensor);
+//    std::cout << "outSize=" << output.sizes() << std::endl;
+//}
 
-    auto imgTensor = loadImgTensor("C:/Users/xgd/Pictures/crnn_test.png");
-    imgTensor.print();
-    auto crnn = std::make_shared<CRNN>(80);
-    auto output = crnn->forward(imgTensor);
-    output.print();
+int testJMol() {
+    JMol mol;
+    mol.set("C1=CC=CC=C1");
+    mol.update2DCoordinates();
     return 0;
 }
 
 int main() {
     try {
-        return _main();
+        return testJMol();
     } catch (std::exception &e) {
-        std::cerr<<e.what()<<std::endl;
+        std::cerr << e.what() << std::endl;
         return -1;
     }
 }

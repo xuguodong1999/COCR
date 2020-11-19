@@ -32,6 +32,7 @@ public:
 TORCH_MODULE(Mv3BneckModule);
 
 class UpSampleModuleImpl: public torch::nn::Module{
+    torch::nn::Sequential layers;
 public:
     UpSampleModuleImpl(const int&_inputSize,const int&_outputSize);
     torch::Tensor forward(torch::Tensor input);
@@ -40,6 +41,7 @@ public:
 TORCH_MODULE(UpSampleModule);
 
 class ConvModuleImpl: public torch::nn::Module{
+    torch::nn::Sequential layers;
 public:
     ConvModuleImpl(const int&_inputSize,const int&_outputSize,
                    const int &_kernelSize, const int &_stride,bool _withBN);
@@ -49,8 +51,10 @@ public:
 TORCH_MODULE(ConvModule);
 
 class YoloHeaderImpl: public torch::nn::Module{
+    torch::nn::Sequential layers;
 public:
-    YoloHeaderImpl(const int&_inputSize,const int&_outputSize);
+    YoloHeaderImpl(const int&_inputSize,const int&_anchorNum,
+                   const int&_numOfClass,const int&_locParmNum=4);
     torch::Tensor forward(torch::Tensor input);
 };
 
