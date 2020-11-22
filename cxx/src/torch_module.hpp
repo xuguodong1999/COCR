@@ -31,42 +31,47 @@ public:
 
 TORCH_MODULE(Mv3BneckModule);
 
-class UpSampleModuleImpl: public torch::nn::Module{
+class UpSampleModuleImpl : public torch::nn::Module {
     torch::nn::Sequential layers;
 public:
-    UpSampleModuleImpl(const int&_inputSize,const int&_outputSize);
+    UpSampleModuleImpl(const int &_inputSize, const int &_outputSize);
+
     torch::Tensor forward(torch::Tensor input);
 };
 
 TORCH_MODULE(UpSampleModule);
 
-class ConvModuleImpl: public torch::nn::Module{
+class ConvModuleImpl : public torch::nn::Module {
     torch::nn::Sequential layers;
 public:
-    ConvModuleImpl(const int&_inputSize,const int&_outputSize,
-                   const int &_kernelSize, const int &_stride,bool _withBN);
+    ConvModuleImpl(const int &_inputSize, const int &_outputSize,
+                   const int &_kernelSize, const int &_stride, bool _withBN);
+
     torch::Tensor forward(torch::Tensor input);
 };
 
 TORCH_MODULE(ConvModule);
 
-class YoloHeaderImpl: public torch::nn::Module{
+class YoloHeaderImpl : public torch::nn::Module {
     torch::nn::Sequential layers;
 public:
-    YoloHeaderImpl(const int&_inputSize,const int&_anchorNum,
-                   const int&_numOfClass,const int&_locParmNum=4);
+    YoloHeaderImpl(const int &_inputSize, const int &_anchorNum,
+                   const int &_numOfClass, const int &_locParmNum = 4);
+
     torch::Tensor forward(torch::Tensor input);
 };
 
 TORCH_MODULE(YoloHeader);
 
-class BidirectionalLSTMImpl: public torch::nn::Module{
+class BidirectionalLSTMImpl : public torch::nn::Module {
     torch::nn::LSTM rnnLayer;
     torch::nn::Linear embeddingLayer;
 public:
-    BidirectionalLSTMImpl(const int&_inputSize,const int&_hiddenSize,const int&_outputSize);
+    BidirectionalLSTMImpl(const int &_inputSize, const int &_hiddenSize, const int &_outputSize);
+
     torch::Tensor forward(torch::Tensor input);
 };
 
 TORCH_MODULE(BidirectionalLSTM);
+
 #endif //_MODULE_HPP_

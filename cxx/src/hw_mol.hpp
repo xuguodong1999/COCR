@@ -15,21 +15,14 @@ class MolItem : public ShapeInterface {
 
     void mulK(float kx, float ky) override;
 
-    void addAtomItem(int id, float x, float y,
-                     const std::string &element, int charge);
-
-    void addBondItem(int from, int to,
-                     const std::string &type = "Single",
-                     const std::string &stereo = "None");
-
     const JMol &mol;
-
 public:
     /**
      * 控制原子是否显示写出
      * 控制化学键的起点和终点
      */
-    void reloadHWData(const float&_showCProb=0.5);
+    void reloadHWData(const float &_showCProb = 0.5);
+
     /**
      * You must call JMol::update2DCoordinates before use MolItem
      * @param _jmol Construct a MolItem from JMol
@@ -37,6 +30,7 @@ public:
     MolItem(const JMol &_jmol);
 
     void paintTo(cv::Mat &canvas) override;
+
     /**
      * 获取平行于二维坐标轴的最小边框
      * @return
@@ -76,8 +70,6 @@ public:
      * @param keepRatio 是否保持比例，为 true 时撑满长边
      */
     void resizeTo(float w, float h, bool keepRatio = true) override;
-
 };
-
 
 #endif //_HW_MOL_HPP_

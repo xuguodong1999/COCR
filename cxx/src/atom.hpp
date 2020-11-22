@@ -1,9 +1,11 @@
 #ifndef _ATOM_HPP_
 #define _ATOM_HPP_
+
 #include "fraction.hpp"
 #include <string>
 #include <vector>
 #include <unordered_map>
+
 enum class ElementType {
     None = 0, H = 1, He, Li, Be, B, C = 6, N = 7, O = 8, F = 9, Ne,
     Na, Mg, Al, Si, P, S = 16, Cl = 17, Ar, K, Ca = 20,
@@ -25,7 +27,8 @@ enum class AtomStereo {
 };
 
 extern std::vector<std::string> ElementsData;
-extern std::unordered_map<ElementType,frac> ElementValenceData;
+extern std::unordered_map<ElementType, frac> ElementValenceData;
+
 class JAtom {
     ElementType elementType;
     size_t id;

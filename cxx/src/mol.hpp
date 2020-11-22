@@ -17,10 +17,11 @@ class JMol {
 
     std::shared_ptr<JBond> removeBond(const size_t &_bid);
 
-    void addHs(const size_t&_aid);
+    void addHs(const size_t &_aid);
 
-    bool addRing(const std::string&_ringName,const size_t& _bid,
-                 const int&_pos1,const int&_pos2);
+    bool addRing(const std::string &_ringName, const size_t &_bid,
+                 const int &_pos1, const int &_pos2);
+
 protected:
     std::unordered_map<size_t, std::shared_ptr<JBond>> bondsMap;
     std::unordered_map<size_t, std::shared_ptr<JAtom>> atomsMap;

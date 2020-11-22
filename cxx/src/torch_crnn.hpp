@@ -5,7 +5,7 @@
 
 class CRNN : public torch::nn::Module, public BaseClassifier {
 public:
-    CRNN(const int& _numOfClass);
+    CRNN(const int &_numOfClass);
 
     torch::Tensor forward(torch::Tensor x);
 

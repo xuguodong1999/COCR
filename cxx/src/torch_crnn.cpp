@@ -1,8 +1,10 @@
 #include "torch_crnn.hpp"
 #include "torch_activation.hpp"
 #include "torch_module.hpp"
+
 using namespace torch;
 using namespace torch::nn;
+
 CRNN::CRNN(const int &_numOfClass) : BaseClassifier(
         Sequential(
                 Conv2d(Conv2dOptions(3, 16, {3, 3})
@@ -28,8 +30,8 @@ CRNN::CRNN(const int &_numOfClass) : BaseClassifier(
                 Sequential(Mv3BneckModule(160, 960, 160, 5, 1, Mv3Activation::HSwish, true),
                            Mv3BneckModule(160, 960, 160, 5, 1, Mv3Activation::HSwish, true))},
         Sequential(
-                BidirectionalLSTM(160,128,128),
-                   BidirectionalLSTM(128,128,_numOfClass))) {
+                BidirectionalLSTM(160, 128, 128),
+                BidirectionalLSTM(128, 128, _numOfClass))) {
     registerModule();
 }
 
@@ -39,8 +41,8 @@ torch::Tensor CRNN::forward(torch::Tensor x) {
         x = bneck->forward(x);
     }
 //    std::cout<<"fSize="<<x.sizes()<<std::endl;
-     x=x.squeeze(-1);
-     x=x.permute({0,2,1});
+    x = x.squeeze(-1);
+    x = x.permute({0, 2, 1});
 //    std::cout<<"fSize="<<x.sizes()<<std::endl;
     x = layerOut->forward(x);
     return x;

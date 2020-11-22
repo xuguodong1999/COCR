@@ -6,7 +6,7 @@
 
 class Mv3Small : public torch::nn::Module, public BaseClassifier {
 public:
-    Mv3Small(const int& _numOfClass);
+    Mv3Small(const int &_numOfClass);
 
     torch::Tensor forward(torch::Tensor x);
 
@@ -15,7 +15,7 @@ public:
 
 class Mv3Large : public torch::nn::Module, public BaseClassifier {
 public:
-    Mv3Large(const int& _numOfClass);
+    Mv3Large(const int &_numOfClass);
 
     torch::Tensor forward(torch::Tensor x);
 

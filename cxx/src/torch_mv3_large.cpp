@@ -6,7 +6,7 @@
 using namespace torch;
 using namespace torch::nn;
 
-Mv3Large::Mv3Large(const int& _numOfClass) : BaseClassifier(
+Mv3Large::Mv3Large(const int &_numOfClass) : BaseClassifier(
         Sequential(
                 Conv2d(Conv2dOptions(3, 16, {3, 3})
                                .stride({2, 2})
