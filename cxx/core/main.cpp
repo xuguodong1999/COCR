@@ -1,8 +1,8 @@
 //#include "torch_util.hpp"
 //#include "torch_crnn.hpp"
+#include "isomer.hpp"
 #include <iostream>
 #include "mol.hpp"
-#include "generator.hpp"
 
 using namespace std;
 
@@ -15,9 +15,18 @@ using namespace std;
 //}
 
 int testJMol() {
-    JMol mol;
-    mol.set("C1=CC=CC=C1");
-    mol.update2DCoordinates();
+    // C1=CC=CC=C1
+    auto &isomer = IsomerCounter::GetInstance();
+    auto alkanes = isomer.getIsomers(
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+    for (auto &alkane:alkanes) {
+        std::cout << "alkane=" << alkane << std::endl;
+        JMol mol;
+        mol.set(alkane);
+        mol.randomize();
+        mol.update2DCoordinates();
+        system("pause");
+    }
     return 0;
 }
 

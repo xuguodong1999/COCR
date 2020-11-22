@@ -7,113 +7,149 @@
 
 using namespace std;
 
-/**
- * 没有转换光学异构信息
- * @param _jmol
- * @return
- */
-std::shared_ptr<RDKit::ROMol> convertJMolToROMol(const JMol &_jmol) {
-    std::map<size_t, unsigned int> J2RAtomMap;
-    auto rwMol = std::make_shared<RDKit::RWMol>();
-    for (auto&[id, atom]:_jmol.getAtomsMap()) {
-        auto a = std::make_shared<RDKit::Atom>(static_cast<int>(atom->getElementType()));
-        auto rid = rwMol->addAtom(a.get(), true, false);
-        J2RAtomMap.insert(std::make_pair(id, rid));
-    }
-
-    for (auto&[id, bond]:_jmol.getBondsMap()) {
-        rwMol->addBond(J2RAtomMap[bond->getAtomFrom()], J2RAtomMap[bond->getAtomTo()],
-                // FIXME: make sure enum types in rdkit and jmol are equal.
-                       static_cast<RDKit::Bond::BondType>(bond->getBondType()));
-
-    }
-    return std::move(rwMol);
+const std::unordered_map<size_t, std::shared_ptr<JBond>> &JMol::getBondsMap() const {
+    return bondsMap;
 }
 
-JMol::JMol(const string &_smiles) {
-    set(_smiles);
+const std::unordered_map<size_t, std::shared_ptr<JAtom>> &JMol::getAtomsMap() const {
+    return atomsMap;
 }
-
-void JMol::set(const string &_smiles) {
-    clear();
-    std::map<unsigned int, size_t> R2JAtomIdxMap;
-    // the caller is responsible for freeing this.
-    auto rwMol = RDKit::SmilesToMol(_smiles,0,false);
-
-    for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
-        const RDKit::Atom *rAtom = rwMol->getAtomWithIdx(i);
-        auto jAtom = addAtom(rAtom->getAtomicNum());
-        R2JAtomIdxMap.insert(std::make_pair(rAtom->getIdx(), jAtom->getId()));
-    }
-    // FIXME: H can't be explicitly added here
-    for (unsigned int i = 0; i < rwMol->getNumBonds(true); i++) {
-        const RDKit::Bond *rBond = rwMol->getBondWithIdx(i);
-        auto jBond = addBond(R2JAtomIdxMap[rBond->getBeginAtomIdx()],
-                             R2JAtomIdxMap[rBond->getEndAtomIdx()]);
-        switch (rBond->getBondType()) {
-            case RDKit::Bond::BondType::SINGLE: {
-                switch (rBond->getBondDir()) {
-                    case RDKit::Bond::BondDir::BEGINWEDGE:
-                        jBond->setType(JBondType::SolidWedgeBond);
-                        break;
-                    case RDKit::Bond::BondDir::BEGINDASH:
-                        jBond->setType(JBondType::DashWedgeBond);
-                        break;
-                    case RDKit::Bond::BondDir::NONE:
-                        jBond->setType(JBondType::SingleBond);
-                        break;
-                    default:
-                        std::cerr << "unhandled direction:" << rBond->getBondDir() << std::endl;
-                        exit(-1);
-                }
-                break;
-            }
-            case RDKit::Bond::BondType::DOUBLE:
-                jBond->setType(JBondType::DoubleBond);
-                break;
-            case RDKit::Bond::BondType::TRIPLE:
-                jBond->setType(JBondType::TripleBond);
-                break;
-//            case RDKit::Bond::BondType::AROMATIC:
-//
-            default:
-                // FIXME: aromatic 结构强转 kekule 结构
-                std::cerr << "unhandled type:" << rBond->getBondType() << std::endl;
-                exit(-1);
-        }
-    }
-    delete rwMol;
-}
-
 
 std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber) {
-    auto atom = std::make_shared<JAtom>(_atomicNumber);
-    atomsMap.insert(std::make_pair(atom->getId(), atom));
+    auto aid = mAids++;
+    auto atom = std::make_shared<JAtom>(aid, _atomicNumber);
+    atomsMap.insert({aid, atom});
     return std::move(atom);
 }
 
-std::shared_ptr<JBond> JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId) {
-    auto bond = std::make_shared<JBond>(_atomFromId, _atomToId);
-    bondsMap.insert(std::make_pair(bond->getId(), bond));
+std::shared_ptr<JBond> JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId,
+                                     const JBondType &_bondType) {
+    auto bid = mBids++;
+    auto bond = std::make_shared<JBond>(bid, _atomFromId, _atomToId, _bondType);
+    bondsMap.insert({bid, bond});
     return std::move(bond);
 }
 
-std::shared_ptr<JBond> JMol::addBond(
-        const size_t &_atomFromId, const size_t &_atomToId, const JBondType &_bondType) {
-    auto bond = addBond(_atomFromId, _atomToId);
-    bond->setType(_bondType);
-    return std::move(bond);
+JMol::JMol() {
+    mAids = mBids = std::numeric_limits<int>::lowest();
 }
 
 void JMol::clear() {
     bondsMap.clear();
     atomsMap.clear();
-    atomsPosMap.clear();
+    atomPosMap.clear();
+    mAids = mBids = std::numeric_limits<int>::lowest();
 }
 
+inline JBondType convertRDKitBondTypeToJBondType(
+        const RDKit::Bond::BondType &_stereo, const RDKit::Bond::BondDir &_dir) {
+    if (RDKit::Bond::BondType::SINGLE == _stereo) {
+        if (RDKit::Bond::BondDir::NONE == _dir) {
+            return JBondType::SingleBond;
+        } else if (RDKit::Bond::BondDir::BEGINWEDGE == _dir) {
+            return JBondType::SolidWedgeBond;
+        } else if (RDKit::Bond::BondDir::BEGINDASH == _dir) {
+            return JBondType::DashWedgeBond;
+        } else if (RDKit::Bond::BondDir::UNKNOWN == _dir) {
+            return JBondType::WaveBond;
+        } else {
+            std::cerr << "convert dir " << static_cast<int>(_dir)
+                      << " To JBondType failed " << std::endl;
+            exit(-1);
+        }
+    } else if (RDKit::Bond::BondType::DOUBLE == _stereo) {
+        return JBondType::DoubleBond;
+    } else if (RDKit::Bond::BondType::TRIPLE == _stereo) {
+        return JBondType::TripleBond;
+    } else if (RDKit::Bond::BondType::AROMATIC == _stereo) {
+        return JBondType::DelocalizedBond;
+    } else {
+        std::cerr << "convert stereo " << static_cast<int>(_stereo)
+                  << " To JBondType failed " << std::endl;
+        exit(-1);
+    }
+}
+
+inline std::pair<RDKit::Bond::BondType, RDKit::Bond::BondDir>
+convertJBondTyteToRDKitBondType(const JBondType &_bondType) {
+    RDKit::Bond::BondType bondType;
+    RDKit::Bond::BondDir bondDir = RDKit::Bond::BondDir::NONE;
+    switch (_bondType) {
+        case JBondType::SolidWedgeBond:
+            bondDir = RDKit::Bond::BondDir::BEGINWEDGE;
+        case JBondType::DashWedgeBond:
+            bondDir = RDKit::Bond::BondDir::BEGINDASH;
+        case JBondType::WaveBond:
+            bondDir = RDKit::Bond::BondDir::UNKNOWN;
+        case JBondType::SingleBond :
+            bondType = RDKit::Bond::BondType::SINGLE;
+            break;
+        case JBondType::DoubleBond:
+            bondType = RDKit::Bond::BondType::DOUBLE;
+            break;
+        case JBondType::TripleBond:
+            bondType = RDKit::Bond::BondType::TRIPLE;
+            break;
+        case JBondType::DelocalizedBond:
+            bondType = RDKit::Bond::BondType::AROMATIC;
+            break;
+        default: {
+            std::cerr << "convert " << static_cast<int>(_bondType)
+                      << " To RDKitBondType failed " << std::endl;
+            exit(-1);
+        }
+    }
+    return {bondType, bondDir};
+}
+
+std::shared_ptr<RDKit::RWMol> convertJMolToRWMol(const JMol &_jmol) {
+//    std::cout<<"enter convertJMolToRWMol"<<std::endl;
+    auto rwMol = std::make_shared<RDKit::RWMol>();
+    std::unordered_map<size_t, unsigned int> j2rAidMap;
+    for (auto&[jAid, jAtom]:_jmol.getAtomsMap()) {
+        auto atom = std::make_shared<RDKit::Atom>(jAtom->getAtomicNumber());
+        auto aid = rwMol->addAtom(atom.get(), true, false);
+        j2rAidMap.insert({jAid, aid});
+    }
+    for (auto&[jBid, jBond]:_jmol.getBondsMap()) {
+        auto[stereo, dir]=convertJBondTyteToRDKitBondType(jBond->getBondType());
+        rwMol->addBond(j2rAidMap[jBond->getAtomFrom()],
+                       j2rAidMap[jBond->getAtomTo()],
+                       stereo);
+        rwMol->getBondBetweenAtoms(j2rAidMap[jBond->getAtomFrom()],
+                                   j2rAidMap[jBond->getAtomTo()])->setBondDir(dir);
+    }
+//    std::cout<<"leave convertJMolToRWMol"<<std::endl;
+    return std::move(rwMol);
+}
+
+
+void JMol::set(const string &_smiles) {
+    clear();
+    // the caller is responsible for freeing this.
+    auto rwMol = RDKit::SmilesToMol(_smiles, 0, false);
+    std::map<unsigned int, size_t> r2jAidMap;
+    for (unsigned int i = 0; i < rwMol->getNumAtoms(true); i++) {
+        const auto rAtom = rwMol->getAtomWithIdx(i);
+        auto jAtom = addAtom(rAtom->getAtomicNum());
+        r2jAidMap.insert({rAtom->getIdx(), jAtom->getId()});
+    }
+    // FIXME: H can't be explicitly added here
+    for (unsigned int i = 0; i < rwMol->getNumBonds(true); i++) {
+        const auto rBond = rwMol->getBondWithIdx(i);
+        auto jBond = addBond(r2jAidMap[rBond->getBeginAtomIdx()],
+                             r2jAidMap[rBond->getEndAtomIdx()]);
+        jBond->setType(convertRDKitBondTypeToJBondType(
+                rBond->getBondType(), rBond->getBondDir()));
+    }
+    delete rwMol;
+    std::cout << "leave JMol::set" << std::endl;
+}
+
+
 void JMol::update2DCoordinates() {
-    atomsPosMap.clear();
-    auto rwMol = convertJMolToROMol(*this);
+    atomPosMap.clear();
+    auto rwMol = convertJMolToRWMol(*this);
     auto roMol = std::make_shared<RDKit::ROMol>(*(rwMol.get()));
     RDDepict::compute2DCoords(*(roMol.get()));
     auto conf = roMol->getConformer();
@@ -133,14 +169,51 @@ void JMol::update2DCoordinates() {
 //    std::cin.get();
 }
 
-const std::map<size_t, std::shared_ptr<JBond>> &JMol::getBondsMap() const {
-    return bondsMap;
-}
-
-const std::map<size_t, std::shared_ptr<JAtom>> &JMol::getAtomsMap() const {
-    return atomsMap;
-}
 
 void JMol::randomize() {
-
+    // 换原子类型
+    // 换化学键类型
+    // 添加杂环、官能团
+    // 添加氢原子、杂原子
+    // 添加不展开的字符串
 }
+
+std::shared_ptr<JAtom> JMol::removeAtom(const size_t &_aid) {
+    return std::shared_ptr<JAtom>();
+}
+
+std::shared_ptr<JBond> JMol::removeBond(const size_t &_bid) {
+    return std::shared_ptr<JBond>();
+}
+
+void JMol::addHs(const size_t &_aid) {
+    frac valence = 0;
+    for (auto&[id, bond]:bondsMap) {
+        if (bond->getAtomFrom() == _aid || bond->getAtomTo() == _aid) {
+            valence += bond->asValence();
+        }
+    }
+    const auto &atom = atomsMap[_aid];
+    frac numOfH = ElementValenceData[atom->getElementType()] - valence;
+    if (numOfH >= 1) {
+        int hsNum = std::round(numOfH.floatValue());
+        for (int i = 0; i < hsNum; i++) {
+            auto h = addAtom(1);
+            addBond(h->getId(), _aid, JBondType::SingleBond);
+        }
+    }
+}
+
+bool JMol::addRing(const string &_ringName, const size_t &_bid,
+                   const int &_pos1, const int &_pos2) {
+    return false;
+}
+
+const unordered_map<size_t, cv::Point2f> &JMol::getAtomPosMap() const {
+    return atomPosMap;
+}
+
+
+
+
+

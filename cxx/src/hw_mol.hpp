@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 
-class MolItem : public ShapeInterface, public JMol {
+class MolItem : public ShapeInterface {
     std::vector<std::shared_ptr<ShapeGroup>> symbols;
 //    OpenBabel::OBMol obMol;
 //    std::map<int, OpenBabel::OBAtom *> aidMap;
@@ -26,12 +26,21 @@ class MolItem : public ShapeInterface, public JMol {
                      const std::string &type = "Single",
                      const std::string &stereo = "None");
 
-    void reloadSymbols();
+    /**
+     * 控制原子是否显示写出
+     * 控制化学键的起点和终点
+     */
+    void reloadHWData();
+
+    const JMol &mol;
+    std::unordered_map<size_t, bool> mExplicitAtomMap;
 
 public:
-    MolItem();
-
-    ~MolItem();
+    /**
+     * You must call JMol::update2DCoordinates before use MolItem
+     * @param _jmol Construct a MolItem from JMol
+     */
+    MolItem(const JMol &_jmol);
 
     void paintTo(cv::Mat &canvas) override;
 

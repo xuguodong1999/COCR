@@ -7,11 +7,14 @@
 
 using namespace std;
 
-MolItem::MolItem() {
+MolItem::MolItem(const JMol &_jmol) : mol(_jmol) {
+    if (mol.getAtomPosMap().empty()) {
+        std::cerr << "You must call JMol::update2DCoordinates before use MolItem"
+                  << std::endl;
+        exit(-1);
+    }
 }
 
-MolItem::~MolItem() {
-}
 
 void MolItem::testRing() {
 //    for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
@@ -263,12 +266,11 @@ void MolItem::mulK(float kx, float ky) {
     }
 }
 
-void MolItem::reloadSymbols() {
-    // >= c++17
-    for (auto&[id, atom]:atomsMap) {
+void MolItem::reloadHWData() {
+    for (auto&[id, atom]:mol.getAtomsMap()) {
 
     }
-    for (auto&[id, bond]:bondsMap) {
+    for (auto&[id, bond]:mol.getBondsMap()) {
 
     }
 }

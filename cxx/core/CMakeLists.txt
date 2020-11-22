@@ -12,7 +12,7 @@ set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
 
-        ${SRC_DIR}/idmanager.cpp
+
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/bond.cpp
@@ -28,7 +28,6 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/polya.cpp
         ${SRC_DIR}/bignumber.cpp
         ${SRC_DIR}/isomer.cpp
-        ${SRC_DIR}/generator.cpp
         ${SRC_DIR}/cocr_types.cpp
         ${SRC_DIR}/timer.cpp
 

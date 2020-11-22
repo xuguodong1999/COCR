@@ -222,6 +222,9 @@ std::vector<std::string> IsomerCounter::getIsomers(
     if (numsOfCarbon.empty()) {
         return smilesVec;
     }
+    if (numsOfCarbon.end() != numsOfCarbon.find(1)) {
+        smilesVec.push_back("C");
+    }
     auto max_ele = *(std::max_element(numsOfCarbon.begin(), numsOfCarbon.end()));
     if (max_ele < 1) {
         return smilesVec;
