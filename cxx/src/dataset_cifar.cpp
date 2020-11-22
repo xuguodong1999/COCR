@@ -1,5 +1,6 @@
 #include "dataset_cifar.hpp"
 #include "opencv_util.hpp"
+#include "std_util.hpp"
 #include <opencv2/opencv.hpp>
 
 CifarDataSet::CifarDataSet(const CifarType &cifarType,

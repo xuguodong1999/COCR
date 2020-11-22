@@ -148,16 +148,17 @@ void ShapeItem::castToCircle(const Point &center, float rx, float ry) {
  * @param p2 终点
  */
 void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThresh) {
+    // FIXME: 分离随机因素
     L:;
-    float kLen1 = (rand() % 10) / 100 - 0.05;
-    float kLen2 = (rand() % 10) / 100 - 0.05;
+    float kLen1 = (rand() % 2) / 100 - 0.01;
+    float kLen2 = (rand() % 2) / 100 - 0.01;
     Point p1 = pp1 + (pp1 - pp2) * kLen1, p2 = pp2 + (pp2 - pp1) * kLen2;
 //    Point p1=pp1,p2=pp2;
     float lenPP = distance(p1, p2);
-    p1.x += lenPP * (rand() % 10) / 100 - 0.05;
-    p2.x += lenPP * (rand() % 10) / 100 - 0.05;
-    p1.y += lenPP * (rand() % 10) / 100 - 0.05;
-    p2.y += lenPP * (rand() % 10) / 100 - 0.05;
+    p1.x += lenPP * (rand() % 2) / 100 - 0.01;
+    p2.x += lenPP * (rand() % 2) / 100 - 0.01;
+    p1.y += lenPP * (rand() % 2) / 100 - 0.01;
+    p2.y += lenPP * (rand() % 2) / 100 - 0.01;
     vector<Point> from(4), to;
     vector<Point> input;
     for (auto &stroke:mData) {
@@ -782,6 +783,7 @@ DoubleBond::DoubleBond(const string &_bondType) : SingleBond(_bondType) {
 
 void DoubleBond::updateShapes() {
     BondItem::updateShapes();
+    //FIXME: 设置间隔，这里和MolItem::reloadHWData有冲突
     const float intervalK = 0.2;
     cv::Point2f vec = from - to;
     cv::Point2f vecT(0, 1);

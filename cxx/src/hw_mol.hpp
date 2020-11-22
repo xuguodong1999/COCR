@@ -13,10 +13,6 @@ class MolItem : public ShapeInterface {
 //    std::map<int, OpenBabel::OBAtom *> aidMap;
     std::string inSmiles;
 
-    void testRing();
-
-    void testDraw();
-
     void mulK(float kx, float ky) override;
 
     void addAtomItem(int id, float x, float y,
@@ -26,16 +22,14 @@ class MolItem : public ShapeInterface {
                      const std::string &type = "Single",
                      const std::string &stereo = "None");
 
+    const JMol &mol;
+
+public:
     /**
      * 控制原子是否显示写出
      * 控制化学键的起点和终点
      */
-    void reloadHWData();
-
-    const JMol &mol;
-    std::unordered_map<size_t, bool> mExplicitAtomMap;
-
-public:
+    void reloadHWData(const float&_showCProb=0.5);
     /**
      * You must call JMol::update2DCoordinates before use MolItem
      * @param _jmol Construct a MolItem from JMol
@@ -43,11 +37,6 @@ public:
     MolItem(const JMol &_jmol);
 
     void paintTo(cv::Mat &canvas) override;
-
-    void run(const std::string &taskName = "log");
-
-    static void LoopOn(const char *filename, const std::string &taskName);
-
     /**
      * 获取平行于二维坐标轴的最小边框
      * @return

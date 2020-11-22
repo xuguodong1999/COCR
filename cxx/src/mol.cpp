@@ -4,6 +4,7 @@
 #include <GraphMol/SmilesParse/SmilesParse.h>
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 #include <GraphMol/Depictor/RDDepictor.h>
+#include <GraphMol/AtomIterators.h>
 
 using namespace std;
 
@@ -102,8 +103,8 @@ convertJBondTyteToRDKitBondType(const JBondType &_bondType) {
     return {bondType, bondDir};
 }
 
-std::shared_ptr<RDKit::RWMol> convertJMolToRWMol(const JMol &_jmol) {
-//    std::cout<<"enter convertJMolToRWMol"<<std::endl;
+std::pair<std::shared_ptr<RDKit::RWMol>,std::unordered_map<size_t, unsigned int>>
+convertJMolToRWMol(const JMol &_jmol) {
     auto rwMol = std::make_shared<RDKit::RWMol>();
     std::unordered_map<size_t, unsigned int> j2rAidMap;
     for (auto&[jAid, jAtom]:_jmol.getAtomsMap()) {
@@ -119,8 +120,7 @@ std::shared_ptr<RDKit::RWMol> convertJMolToRWMol(const JMol &_jmol) {
         rwMol->getBondBetweenAtoms(j2rAidMap[jBond->getAtomFrom()],
                                    j2rAidMap[jBond->getAtomTo()])->setBondDir(dir);
     }
-//    std::cout<<"leave convertJMolToRWMol"<<std::endl;
-    return std::move(rwMol);
+    return {std::move(rwMol),std::move(j2rAidMap)};
 }
 
 
@@ -129,8 +129,8 @@ void JMol::set(const string &_smiles) {
     // the caller is responsible for freeing this.
     auto rwMol = RDKit::SmilesToMol(_smiles, 0, false);
     std::map<unsigned int, size_t> r2jAidMap;
-    for (unsigned int i = 0; i < rwMol->getNumAtoms(true); i++) {
-        const auto rAtom = rwMol->getAtomWithIdx(i);
+    for(auto it=rwMol->beginAtoms();it!=rwMol->endAtoms();it++){
+        const auto rAtom = (*it);
         auto jAtom = addAtom(rAtom->getAtomicNum());
         r2jAidMap.insert({rAtom->getIdx(), jAtom->getId()});
     }
@@ -143,30 +143,25 @@ void JMol::set(const string &_smiles) {
                 rBond->getBondType(), rBond->getBondDir()));
     }
     delete rwMol;
-    std::cout << "leave JMol::set" << std::endl;
 }
 
 
 void JMol::update2DCoordinates() {
     atomPosMap.clear();
-    auto rwMol = convertJMolToRWMol(*this);
+    auto[ rwMol,j2rAidMap] = convertJMolToRWMol(*this);
+    std::unordered_map<unsigned int,size_t> r2jAidMap;
+    for(auto&[jAid,rAid]:j2rAidMap){
+        r2jAidMap[rAid]=jAid;
+    }
+    j2rAidMap.clear();
     auto roMol = std::make_shared<RDKit::ROMol>(*(rwMol.get()));
     RDDepict::compute2DCoords(*(roMol.get()));
     auto conf = roMol->getConformer();
-    std::cout << "scatter([";
-    for (unsigned int i = 0; i < roMol->getNumAtoms(); i++) {
-        const RDKit::Atom *rAtom = roMol->getAtomWithIdx(i);
-        auto pos = conf.getAtomPos(rAtom->getIdx());
-        std::cout << pos.x << ",";
+    for(auto it=roMol->beginAtoms();it!=roMol->endAtoms();it++){
+        auto idx=(*it)->getIdx();
+        auto pos = conf.getAtomPos(idx);
+        atomPosMap[r2jAidMap[idx]]=cv::Point2f(pos.x,pos.y);
     }
-    std::cout << "],[";
-    for (unsigned int i = 0; i < roMol->getNumAtoms(); i++) {
-        const RDKit::Atom *rAtom = roMol->getAtomWithIdx(i);
-        auto pos = conf.getAtomPos(rAtom->getIdx());
-        std::cout << pos.y << ",";
-    }
-    std::cout << "],'K*');\naxis([-5,5,-5,5]);grid on;" << std::endl;
-//    std::cin.get();
 }
 
 

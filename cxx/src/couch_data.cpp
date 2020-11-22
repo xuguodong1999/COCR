@@ -19,7 +19,7 @@ vector<int>CouchLoader::sLabelCharLikeCircle = {9, 21, 47};
 
 ShapeItem CouchLoader::GetByIntLabel(int label) {
     if (label >= sData.size()) {
-        std::cerr << "label " << label << "out of boundary: [0," <<
+        std::cerr << "label " << label << " out of boundary: [0," <<
                   sData.size() << ")" << std::endl;
         exit(-1);
     }

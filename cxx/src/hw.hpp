@@ -7,6 +7,7 @@
 #define _USE_MATH_DEFINES
 #endif //_USE_MATH_DEFINES
 
+#include "std_util.hpp"
 #include "opencv_util.hpp"
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>

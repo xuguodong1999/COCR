@@ -2,7 +2,6 @@
 #include "hw.hpp"
 #include "rdkit_util.hpp"
 #include <opencv2/opencv.hpp>
-#include <boost/algorithm/string.hpp>
 #include <set>
 
 using namespace std;
@@ -16,7 +15,7 @@ MolItem::MolItem(const JMol &_jmol) : mol(_jmol) {
 }
 
 
-void MolItem::testRing() {
+//void MolItem::testRing() {
 //    for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
 //        std::cout << RC::sElementData[(*it)->GetAtomicNum()] << ","
 //                  << (*it)->GetId() << "," << (*it)->GetIdx() << ",("
@@ -42,24 +41,10 @@ void MolItem::testRing() {
 //        }
 //        std::cout << std::endl;
 //    }
-}
+//}
 
-void MolItem::run(const string &taskName) {
-    if (taskName == "testDraw") {
-        testDraw();
-        return;
-    } else if (taskName == "testRing") {
-        testRing();
-    } else if (taskName == "log") {
-        std::cout << "input=" << inSmiles << std::endl;
-        std::cout << "final=" << getStandardSMILES(inSmiles) << std::endl;
-    }
-#ifdef WIN32
-    system("pause");
-#else
-    std::cin.get();
-#endif
-}
+
+
 
 void MolItem::paintTo(cv::Mat &canvas) {
     for (auto &sym:symbols) {
@@ -76,7 +61,7 @@ void MolItem::rotateBy(float angle, const cv::Point2f &cent) {
     }
 }
 
-void MolItem::LoopOn(const char *filename, const string &taskName) {
+//void MolItem::LoopOn(const char *filename, const string &taskName) {
 //    std::ifstream ifsm(filename);
 //    rapidjson::Document doc;
 //    string buffer;
@@ -121,7 +106,7 @@ void MolItem::LoopOn(const char *filename, const string &taskName) {
 //        }
 //        mol.run(taskName);
 //    }
-}
+//}
 
 void MolItem::addAtomItem(int id, float x, float y, const string &element, int charge) {
 //    OpenBabel::OBAtom obatom;
@@ -215,7 +200,7 @@ void MolItem::resizeTo(float w, float h, bool keepRatio) {
     moveCenterTo(oldCenter);
 }
 
-void MolItem::testDraw() {
+//void MolItem::testDraw() {
 //    symbols.clear();
 //    for (auto it = obMol.BeginAtoms(); it != obMol.EndAtoms(); it++) {
 //        auto sym = ShapeGroup::GetShapeGroup(RC::sElementData[(*it)->GetAtomicNum()]);
@@ -258,7 +243,7 @@ void MolItem::testDraw() {
 //    }
 //    cv::imshow("testDraw", img1);
 //    cv::waitKey(0);
-}
+//}
 
 void MolItem::mulK(float kx, float ky) {
     for (auto &s:symbols) {
@@ -266,11 +251,80 @@ void MolItem::mulK(float kx, float ky) {
     }
 }
 
-void MolItem::reloadHWData() {
+void MolItem::reloadHWData(const float &_showCProb) {
+    symbols.clear();
+    // 记录显式写出的原子 id
+    std::unordered_map<size_t, bool> explicitAtomMap;
     for (auto&[id, atom]:mol.getAtomsMap()) {
-
+        auto sym = ShapeGroup::GetShapeGroup(atom->getElementName());
+        // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
+        sym->resizeTo(1, 1);// 这个比例和RDKit的绘图引擎关联
+        sym->moveCenterTo(mol.getAtomPosMap().at(id));
+        if (ElementType::C == atom->getElementType()) {
+            explicitAtomMap[id] = byProb(_showCProb);
+        }else{
+            explicitAtomMap[id] =true;
+        }
+        if(explicitAtomMap[id]) {
+            symbols.push_back(std::move(sym));
+        }
     }
     for (auto&[id, bond]:mol.getBondsMap()) {
-
+        shared_ptr<BondItem> sym;
+        switch (bond->getBondType()) {
+            case JBondType::SolidWedgeBond:
+                sym = BondItem::GetBond("SolidWedge");
+                break;
+            case JBondType::DashWedgeBond:
+                sym = BondItem::GetBond("DashWedge");
+                break;
+            case JBondType::WaveBond:
+                sym = BondItem::GetBond("Wave");
+                break;
+            case JBondType::SingleBond :
+                sym = BondItem::GetBond("Single");
+                break;
+            case JBondType::DoubleBond:
+                sym = BondItem::GetBond("Double");
+                break;
+            case JBondType::TripleBond:
+                sym = BondItem::GetBond("Triple");
+                break;
+            case JBondType::DelocalizedBond:
+                // FIXME ADD CIRCLE BOND
+                std::cerr << "Item for JBondType::DelocalizedBond not implemented" << std::endl;
+                exit(-1);
+                break;
+            default: {
+                std::cerr << "convert " << static_cast<int>(bond->getBondType())
+                          << " To RDKitBondType failed " << std::endl;
+                exit(-1);
+            }
+        }
+        sym->setUseHandWrittenWChar(true);
+        auto from_ = mol.getAtomPosMap().at(bond->getAtomFrom());
+        auto to_ = mol.getAtomPosMap().at(bond->getAtomTo());
+        cv::Point2f from=from_,to=to_;
+        const float k=0.3;
+        if(explicitAtomMap[bond->getAtomFrom()]){
+            from=(1-k)*(from_-to_)+to_;
+        }
+        if(explicitAtomMap[bond->getAtomTo()]){
+            to=(1-k)*(to_-from_)+from_;
+        }
+        sym->setVertices({from, to});
+        symbols.push_back(std::move(sym));
     }
+
+    const int www = 1256, hhh = 640;
+    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
+    this->rotate(rand() % 360);
+    this->resizeTo(www - 20, hhh - 20);
+    this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
+    this->paintTo(img1);
+    for (auto &ss:symbols) {
+        cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
+    }
+    cv::imshow("testDraw", img1);
+    cv::waitKey(0);
 }

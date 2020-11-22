@@ -2,8 +2,9 @@
 //#include "torch_crnn.hpp"
 #include "isomer.hpp"
 #include <iostream>
+#include <couch_data.hpp>
 #include "mol.hpp"
-
+#include "hw_mol.hpp"
 using namespace std;
 
 //void testCRNN() {
@@ -16,16 +17,19 @@ using namespace std;
 
 int testJMol() {
     // C1=CC=CC=C1
+    CouchLoader::LoadCouchDataSet();
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers(
-            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+            {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
     for (auto &alkane:alkanes) {
         std::cout << "alkane=" << alkane << std::endl;
         JMol mol;
         mol.set(alkane);
         mol.randomize();
         mol.update2DCoordinates();
-        system("pause");
+        MolItem molItem(mol);
+        molItem.reloadHWData(0.5);
+//        system("pause");
     }
     return 0;
 }

@@ -15,4 +15,16 @@ std::string deleteSubStr(const std::string &_target, const std::string &_subStr)
 std::string replaceSubStr(const std::string &_target,
                           const std::string &_subStr, const std::string &_newSubStr);
 
+inline bool byProb(const float &_prob) {
+    return rand() / static_cast<float>(RAND_MAX) < _prob;
+}
+
+inline float belowProb(const float &_prob) {
+    return rand() / static_cast<float>(RAND_MAX) * _prob;
+}
+
+inline float aboveProb(const float &_prob) {
+    return 1.0 - rand() / static_cast<float>(RAND_MAX) * _prob;
+}
+
 #endif//_STD_UTIL_HPP_
