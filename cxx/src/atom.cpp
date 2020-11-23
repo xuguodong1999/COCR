@@ -24,7 +24,7 @@ std::unordered_map<ElementType, frac> ElementValenceData = {
         {ElementType::N,  3},
         {ElementType::O,  2},
         {ElementType::F,  1},
-        {ElementType::Si,  4},
+        {ElementType::Si, 4},
         {ElementType::P,  3},
         {ElementType::S,  2},
         {ElementType::Cl, 1},
@@ -46,7 +46,7 @@ void JAtom::setElementType(const std::string &_elementName) {
         std::cerr << _elementName << "not found: In JAtom::setElementType" << std::endl;
         exit(-1);
     }
-    elementType = static_cast<ElementType>(std::distance(ElementsData.begin(),it));
+    elementType = static_cast<ElementType>(std::distance(ElementsData.begin(), it));
 }
 
 void JAtom::setElementType(const size_t &_atomicNumber) {

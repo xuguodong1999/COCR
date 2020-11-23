@@ -256,8 +256,15 @@ void JMol::randomize(const float &_addHydrogenProb) {
             replacedBonds.push_back(id);
         }
     }
+    // 避免一个原子挂上好几个环导致排版引擎崩溃
+    std::unordered_set<size_t> usedAids;
     for (auto &bid:replacedBonds) {
-        addAromaticRing(bid, atomValenceMap);
+        size_t from = bondsMap[bid]->getAtomFrom(), to = bondsMap[bid]->getAtomTo();
+        if (usedAids.end() == usedAids.find(from) && usedAids.end() == usedAids.find(to)) {
+            addAromaticRing(bid, atomValenceMap);
+        }
+        usedAids.insert(from);
+        usedAids.insert(to);
     }
     // 打补丁：删掉 P#C B#C
     for (auto&[id, bond]:bondsMap) {// c1ccccc1 c1cncc1
@@ -314,17 +321,11 @@ std::string JMol::toSMILES(bool _addRandomStereo) const {
         }
         auto stereos = RDKit::Chirality::findPotentialStereo((*rwMol.get()), false);
         for (auto &stereo:stereos) {
-//            std::cout << static_cast<int>(stereo.type) << std::endl;
-            if(stereo.centeredOn!=RDKit::Chirality::StereoInfo::NOATOM) {
+            if (stereo.centeredOn != RDKit::Chirality::StereoInfo::NOATOM) {
                 rwMol->getAtomWithIdx(stereo.centeredOn)->
                         setChiralTag(cand[rand() % cand.size()]);
             }
         }
-//        RDKit::
-//        for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
-//            if (rwMol->getAtomWithIdx(i))
-//                rwMol->getAtomWithIdx(i)->setChiralTag(cand[rand() % cand.size()]);
-//        }
     }
     auto roMol = std::make_shared<RDKit::ROMol>(*(rwMol.get()));
     return RDKit::MolToSmiles(

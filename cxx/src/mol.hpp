@@ -22,6 +22,12 @@ class JMol {
 
     void removeBond(const size_t &_bid, std::unordered_map<size_t, frac> &_atomValenceMap);
 
+    /**
+     * 把_bid两侧的基团挂到芳环上
+     * 涉及删除操作，会导致bondMap的迭代器失效
+     * @param _bid 化学键 id
+     * @param _atomValenceMap 化合价参照表
+     */
     void addAromaticRing(const size_t &_bid, std::unordered_map<size_t, frac> &_atomValenceMap);
 
     void addCommonRing(const size_t &_bid, std::unordered_map<size_t, frac> &_atomValenceMap);

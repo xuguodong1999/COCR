@@ -112,11 +112,11 @@ public:
         return *this == x || *this < x;
     }
 
-    bool operator>(const Fraction &x)const {
+    bool operator>(const Fraction &x) const {
         return floatValue() - x.floatValue() > 0;
     }
 
-    bool operator>=(const Fraction &x)const {
+    bool operator>=(const Fraction &x) const {
         return *this == x || *this > x;
     }
 

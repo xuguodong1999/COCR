@@ -114,7 +114,7 @@ void MolItem::reloadHWData(const float &_showCProb) {
         }
     }
     for (auto&[id, bond]:mol.getBondsMap()) {
-        shared_ptr<BondItem> sym;
+        shared_ptr < BondItem > sym;
         switch (bond->getBondType()) {
             case JBondType::SolidWedgeBond:
                 sym = BondItem::GetBond("SolidWedge");
