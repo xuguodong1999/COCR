@@ -20,12 +20,13 @@ int testJMol() {
     CouchLoader::LoadCouchDataSet();
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers(
-            {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+            { 7,8,9,10,14, 15, 16, 17});
     for (auto &alkane:alkanes) {
         std::cout << "alkane=" << alkane << std::endl;
         JMol mol;
-        mol.set("C1=CC=CC=C1C");//alkane);
+        mol.set(alkane);
         mol.randomize();
+        std::cout<<"randomize="<<mol.toSMILES()<<std::endl;
         mol.update2DCoordinates();
         MolItem molItem(mol);
         molItem.reloadHWData(0.5);

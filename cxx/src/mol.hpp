@@ -18,8 +18,13 @@ class JMol {
      * @param _aid 原子 id
      * @param _atomValenceMap 化合价表
      */
-    void addHs(const size_t &_aid,std::unordered_map<size_t,frac>& _atomValenceMap);
+    void addHs(const size_t &_aid, std::unordered_map<size_t, frac> &_atomValenceMap);
 
+    void removeBond(const size_t &_bid, std::unordered_map<size_t, frac> &_atomValenceMap);
+
+    void addAromaticRing(const size_t &_bid, std::unordered_map<size_t, frac> &_atomValenceMap);
+
+    void addCommonRing(const size_t &_bid, std::unordered_map<size_t, frac> &_atomValenceMap);
 
 protected:
     std::unordered_map<size_t, std::shared_ptr<JBond>> bondsMap;
@@ -28,7 +33,6 @@ protected:
 public:
     const std::unordered_map<size_t, cv::Point2f> &getAtomPosMap() const;
 
-public:
     const std::unordered_map<size_t, std::shared_ptr<JBond>> &getBondsMap() const;
 
     const std::unordered_map<size_t, std::shared_ptr<JAtom>> &getAtomsMap() const;
@@ -37,7 +41,9 @@ public:
 
     void set(const std::string &_smiles);
 
-    void randomize(const float&_addHydrogenProb=0.5);
+    std::string toSMILES(bool _addRandomStereo = true) const;
+
+    void randomize(const float &_addHydrogenProb = 0.1);
 
     void clear();
 
