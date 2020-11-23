@@ -1,3 +1,5 @@
 cache/
 build*/
 *.pth
+csharp/
+_csharp/
