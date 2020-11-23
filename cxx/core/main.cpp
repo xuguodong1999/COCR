@@ -24,7 +24,7 @@ int testJMol() {
     for (auto &alkane:alkanes) {
         std::cout << "alkane=" << alkane << std::endl;
         JMol mol;
-        mol.set(alkane);
+        mol.set("C1=CC=CC=C1C");//alkane);
         mol.randomize();
         mol.update2DCoordinates();
         MolItem molItem(mol);

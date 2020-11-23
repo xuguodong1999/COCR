@@ -43,7 +43,7 @@ void JAtom::setElementType(const std::string &_elementName) {
         std::cerr << _elementName << "not found: In JAtom::setElementType" << std::endl;
         exit(-1);
     }
-    elementType = static_cast<ElementType>(std::distance(it, ElementsData.begin()));
+    elementType = static_cast<ElementType>(std::distance(ElementsData.begin(),it));
 }
 
 void JAtom::setElementType(const size_t &_atomicNumber) {

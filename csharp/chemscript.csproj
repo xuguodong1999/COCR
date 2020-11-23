@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CambridgeSoft.ChemScript19, Version=19.0.0.0, Culture=neutral, PublicKeyToken=65bb58ea6feffb0a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\CambridgeSoft.ChemScript19.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

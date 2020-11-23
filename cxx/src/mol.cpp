@@ -1,4 +1,5 @@
 #include "mol.hpp"
+#include "std_util.hpp"
 
 #include <GraphMol/GraphMol.h>
 #include <GraphMol/SmilesParse/SmilesParse.h>
@@ -134,7 +135,6 @@ void JMol::set(const string &_smiles) {
         auto jAtom = addAtom(rAtom->getAtomicNum());
         r2jAidMap.insert({rAtom->getIdx(), jAtom->getId()});
     }
-    // FIXME: H can't be explicitly added here
     for (unsigned int i = 0; i < rwMol->getNumBonds(true); i++) {
         const auto rBond = rwMol->getBondWithIdx(i);
         auto jBond = addBond(r2jAidMap[rBond->getBeginAtomIdx()],
@@ -155,7 +155,8 @@ void JMol::update2DCoordinates() {
     }
     j2rAidMap.clear();
     auto roMol = std::make_shared<RDKit::ROMol>(*(rwMol.get()));
-    RDDepict::compute2DCoords(*(roMol.get()));
+//    RDDepict::compute2DCoords(*(roMol.get()));
+    RDDepict::compute2DCoordsMimicDistMat(*(roMol.get()));
     auto conf = roMol->getConformer();
     for (auto it = roMol->beginAtoms(); it != roMol->endAtoms(); it++) {
         auto idx = (*it)->getIdx();
@@ -164,49 +165,53 @@ void JMol::update2DCoordinates() {
     }
 }
 
+const unordered_map<size_t, cv::Point2f> &JMol::getAtomPosMap() const {
+    return atomPosMap;
+}
 
-void JMol::randomize() {
+void JMol::randomize(const float &_addHydrogenProb) {
     // 换原子类型
     // 换化学键类型
     // 添加杂环、官能团
-    // 添加氢原子、杂原子
+    // 添加杂原子
     // 添加不展开的字符串
-}
-
-std::shared_ptr<JAtom> JMol::removeAtom(const size_t &_aid) {
-    return std::shared_ptr<JAtom>();
-}
-
-std::shared_ptr<JBond> JMol::removeBond(const size_t &_bid) {
-    return std::shared_ptr<JBond>();
-}
-
-void JMol::addHs(const size_t &_aid) {
-    frac valence = 0;
+    std::unordered_map<size_t, frac> atomValenceMap;
+    auto addValence4Atom = [&](const size_t &_aid, const frac &_valence) {
+        if (atomValenceMap.end() == atomValenceMap.find(_aid)) {
+            atomValenceMap[_aid] = _valence;
+        } else {
+            atomValenceMap[_aid] += _valence;
+        }
+    };
     for (auto&[id, bond]:bondsMap) {
-        if (bond->getAtomFrom() == _aid || bond->getAtomTo() == _aid) {
-            valence += bond->asValence();
+        addValence4Atom(bond->getAtomFrom(), bond->asValence());
+        addValence4Atom(bond->getAtomTo(), bond->asValence());
+    }
+
+    // 最后，添加氢原子
+    for (auto&[id, atom]:atomsMap) {
+        if (byProb(_addHydrogenProb)) {
+            addHs(id, atomValenceMap);
         }
     }
+}
+
+void JMol::addHs(const size_t &_aid, std::unordered_map<size_t, frac> &_atomValenceMap) {
+    auto &valence = _atomValenceMap.at(_aid);
     const auto &atom = atomsMap[_aid];
     frac numOfH = ElementValenceData[atom->getElementType()] - valence;
     if (numOfH >= 1) {
         int hsNum = std::round(numOfH.floatValue());
         for (int i = 0; i < hsNum; i++) {
             auto h = addAtom(1);
-            addBond(h->getId(), _aid, JBondType::SingleBond);
+            const size_t &hid = h->getId();
+            addBond(hid, _aid, JBondType::SingleBond);
+            _atomValenceMap[hid] = 1;
         }
+        valence += numOfH;
     }
 }
 
-bool JMol::addRing(const string &_ringName, const size_t &_bid,
-                   const int &_pos1, const int &_pos2) {
-    return false;
-}
-
-const unordered_map<size_t, cv::Point2f> &JMol::getAtomPosMap() const {
-    return atomPosMap;
-}
 
 
 

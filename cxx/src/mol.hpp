@@ -13,14 +13,13 @@
 class JMol {
     size_t mAids, mBids;
 
-    std::shared_ptr<JAtom> removeAtom(const size_t &_aid);
+    /**
+     * 为当前原子补全氢原子，修改化合价表
+     * @param _aid 原子 id
+     * @param _atomValenceMap 化合价表
+     */
+    void addHs(const size_t &_aid,std::unordered_map<size_t,frac>& _atomValenceMap);
 
-    std::shared_ptr<JBond> removeBond(const size_t &_bid);
-
-    void addHs(const size_t &_aid);
-
-    bool addRing(const std::string &_ringName, const size_t &_bid,
-                 const int &_pos1, const int &_pos2);
 
 protected:
     std::unordered_map<size_t, std::shared_ptr<JBond>> bondsMap;
@@ -38,7 +37,7 @@ public:
 
     void set(const std::string &_smiles);
 
-    void randomize();
+    void randomize(const float&_addHydrogenProb=0.5);
 
     void clear();
 
