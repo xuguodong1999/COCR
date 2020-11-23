@@ -1,10 +1,12 @@
 //#include "torch_util.hpp"
 //#include "torch_crnn.hpp"
-#include "isomer.hpp"
-#include <iostream>
-#include <couch_data.hpp>
+
 #include "mol.hpp"
 #include "hw_mol.hpp"
+#include "isomer.hpp"
+#include "timer.hpp"
+#include <iostream>
+#include <couch_data.hpp>
 using namespace std;
 
 //void testCRNN() {
@@ -21,8 +23,10 @@ int testJMol() {
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers(
             { 14,13,12,11});
+    Timer timer;
     for (auto &alkane:alkanes) {
         std::cout << "alkane=" << alkane << std::endl;
+        timer.start();
         JMol mol;
         mol.set(alkane);
         mol.randomize();
@@ -30,6 +34,7 @@ int testJMol() {
         std::cout<<"randomize="<<mol.toSMILES()<<std::endl;
         mol.update2DCoordinates();
         MolItem molItem(mol);
+        timer.display_duration();
         molItem.reloadHWData(0.5);
 //        system("pause");
     }

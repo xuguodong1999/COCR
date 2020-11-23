@@ -1,6 +1,7 @@
 #include "hw_mol.hpp"
 #include "hw.hpp"
 #include "rdkit_util.hpp"
+#include "timer.hpp"
 #include <opencv2/opencv.hpp>
 #include <set>
 
@@ -96,6 +97,8 @@ void MolItem::mulK(float kx, float ky) {
 }
 
 void MolItem::reloadHWData(const float &_showCProb) {
+    Timer timer;
+    timer.start();
     symbols.clear();
     // 记录显式写出的原子 id
     std::unordered_map<size_t, bool> explicitAtomMap;
@@ -168,6 +171,7 @@ void MolItem::reloadHWData(const float &_showCProb) {
     for (auto &ss:symbols) {
         cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
     }
-    cv::imshow("testDraw", img1);
+    timer.stop();
+    cv::imshow("COCR-HW-Draw", img1);
     cv::waitKey(0);
 }
