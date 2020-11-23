@@ -2,6 +2,7 @@
  * FIXME: This file is shit. Dont base new codes on it.
  */
 #include "hw.hpp"
+#include "std_util.hpp"
 #include "couch_data.hpp"
 #include <opencv2/opencv.hpp>
 
@@ -148,17 +149,18 @@ void ShapeItem::castToCircle(const Point &center, float rx, float ry) {
  * @param p2 终点
  */
 void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThresh) {
+    const float slideOffset = 0.1;
     // FIXME: 分离随机因素
     L:;
-    float kLen1 = (rand() % 2) / 100 - 0.01;
-    float kLen2 = (rand() % 2) / 100 - 0.01;
+    float kLen1 = mmProb(slideOffset);
+    float kLen2 = mmProb(slideOffset);
     Point p1 = pp1 + (pp1 - pp2) * kLen1, p2 = pp2 + (pp2 - pp1) * kLen2;
 //    Point p1=pp1,p2=pp2;
     float lenPP = distance(p1, p2);
-    p1.x += lenPP * (rand() % 2) / 100 - 0.01;
-    p2.x += lenPP * (rand() % 2) / 100 - 0.01;
-    p1.y += lenPP * (rand() % 2) / 100 - 0.01;
-    p2.y += lenPP * (rand() % 2) / 100 - 0.01;
+    p1.x += lenPP * mmProb(slideOffset);
+    p2.x += lenPP * mmProb(slideOffset);
+    p1.y += lenPP * mmProb(slideOffset);
+    p2.y += lenPP * mmProb(slideOffset);
     vector<Point> from(4), to;
     vector<Point> input;
     for (auto &stroke:mData) {

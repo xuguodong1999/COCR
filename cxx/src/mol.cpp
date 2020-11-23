@@ -1,12 +1,22 @@
 #include "mol.hpp"
 #include "std_util.hpp"
 
+#define USE_COORDGEN2D
+
+#ifdef USE_COORDGEN2D
+
+#include <coordgen/sketcherMinimizer.h>
+
+#else
+#include <GraphMol/Depictor/RDDepictor.h>
+#endif
+
 #include <GraphMol/Chirality.h>
 #include <GraphMol/GraphMol.h>
 #include <GraphMol/SmilesParse/SmilesParse.h>
 #include <GraphMol/SmilesParse/SmilesWrite.h>
-#include <GraphMol/Depictor/RDDepictor.h>
 #include <GraphMol/AtomIterators.h>
+
 #include <random>
 
 using namespace std;
@@ -149,9 +159,48 @@ void JMol::set(const string &_smiles) {
     delete rwMol;
 }
 
+float JMol::getFontSize() const {
+#ifdef USE_COORDGEN2D
+    return 30;
+#else
+    return 1;
+#endif
+}
 
 void JMol::update2DCoordinates() {
     atomPosMap.clear();
+#ifdef USE_COORDGEN2D
+    sketcherMinimizer minimizer;
+    sketcherMinimizerMolecule sMol; // This lib is written by Schrodinger. Inc.
+    std::unordered_map<size_t, sketcherMinimizerAtom *> j2cAtomMap;
+    for (auto&[id, atom]:atomsMap) {
+        auto a = sMol.addNewAtom();
+        a->setAtomicNumber(atom->getAtomicNumber());
+        j2cAtomMap[id] = a;
+    }
+    std::vector<sketcherMinimizerBond *> cBondVec;
+    for (auto&[id, bond]:bondsMap) {
+        auto b = sMol.addNewBond(j2cAtomMap[bond->getAtomFrom()],
+                                 j2cAtomMap[bond->getAtomTo()]);
+        b->setBondOrder(std::round(bond->asValence().floatValue()));
+        cBondVec.push_back(b);
+    }
+    minimizer.initialize(&sMol);
+    minimizer.runGenerateCoordinates();
+    for (auto&[aid, cAtom]:j2cAtomMap) {
+        auto pos = cAtom->getCoordinates();
+        atomPosMap[aid] = cv::Point2f(pos.x(), pos.y());
+    }
+    minimizer.clear();
+    for (auto&[_, i]:j2cAtomMap) {
+        delete i;
+        i = nullptr;
+    }
+    for (auto &i:cBondVec) {
+        delete i;
+        i = nullptr;
+    }
+#else
     auto[rwMol, j2rAidMap] = convertJMolToRWMol(*this);
     std::unordered_map<unsigned int, size_t> r2jAidMap;
     for (auto&[jAid, rAid]:j2rAidMap) {
@@ -167,6 +216,7 @@ void JMol::update2DCoordinates() {
         auto pos = conf.getAtomPos(idx);
         atomPosMap[r2jAidMap[idx]] = cv::Point2f(pos.x, pos.y);
     }
+#endif
 }
 
 const unordered_map<size_t, cv::Point2f> &JMol::getAtomPosMap() const {
@@ -248,7 +298,9 @@ void JMol::randomize(const float &_addHydrogenProb) {
     }
     // 添加杂环、官能团
     for (auto&[id, atom]:atomsMap) {// COOH CHO
-
+        if (atomValenceMap[id] == 1 && ElementType::C == atom->getElementType()) {
+            addGroup(id, atomValenceMap);
+        }
     }
     std::vector<size_t> replacedBonds;
     for (auto&[id, bond]:bondsMap) {// c1ccccc1 c1cncc1
@@ -335,7 +387,6 @@ std::string JMol::toSMILES(bool _addRandomStereo) const {
 
 void JMol::addAromaticRing(const size_t &_bid,
                            std::unordered_map<size_t, frac> &_atomValenceMap) {
-    std::vector<size_t> atomicNumbers;
     std::vector<std::shared_ptr<JAtom>> newAtoms;
     std::vector<std::shared_ptr<JBond>> newBonds;
     auto from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
@@ -346,7 +397,7 @@ void JMol::addAromaticRing(const size_t &_bid,
         case 1:
         case 2:
         case 3: {// 呋喃系
-            atomicNumbers = {7, 8, 15, 16};
+            std::vector<size_t> atomicNumbers = {7, 8, 15, 16};
             newAtoms = {
                     addAtom(atomicNumbers[index]),
                     addAtom(6), addAtom(6),
@@ -372,7 +423,7 @@ void JMol::addAromaticRing(const size_t &_bid,
         }
         case 4:
         case 5: {// 苯环系
-            atomicNumbers = {6, 6, 6, 7};
+            std::vector<size_t> atomicNumbers = {6, 6, 6, 7};
             newAtoms = {
                     addAtom(6),
                     addAtom(6),
@@ -453,8 +504,49 @@ void JMol::removeBond(const size_t &_bid, unordered_map<size_t, frac> &_atomVale
     }
 }
 
-
-
-
-
+void JMol::addGroup(const size_t &_aid, unordered_map<size_t, frac> &_atomValenceMap) {
+    std::vector<std::shared_ptr<JAtom>> newAtoms;
+    std::vector<std::shared_ptr<JBond>> newBonds;
+    int index = rand() % 1;
+    switch (index) {
+        case 0: {// 羰基、酰基、醛基、羧基、巯基
+            std::vector<size_t> carbonyl = {8, 8, 8, 8, 16};
+            std::vector<size_t> acyl = {1, 8, 9, 16, 17, 53, 35};
+            newAtoms = {
+                    addAtom(carbonyl[rand() % carbonyl.size()]),
+                    addAtom(acyl[rand() % acyl.size()]),
+                    addAtom(6)
+            };
+            newBonds = {
+                    addBond(_aid, newAtoms[2]->getId(),
+                            JBondType::SingleBond),// 连羧基碳
+                    addBond(newAtoms[2]->getId(), newAtoms[1]->getId(),
+                            JBondType::SingleBond),// 连羧基氢
+                    addBond(newAtoms[2]->getId(), newAtoms[0]->getId(),
+                            JBondType::DoubleBond)// 连羧基氧
+            };
+            break;
+        }
+        case 1:
+        case 2: {
+            break;
+        }
+        case 3: {
+            break;
+        }
+        default:
+            break;
+    }
+    auto addValence4Atom = [&](const size_t &_aid, const frac &_valence) {
+        if (_atomValenceMap.end() == _atomValenceMap.find(_aid)) {
+            _atomValenceMap[_aid] = _valence;
+        } else {
+            _atomValenceMap[_aid] += _valence;
+        }
+    };
+    for (auto &bond:newBonds) {
+        addValence4Atom(bond->getAtomFrom(), bond->asValence());
+        addValence4Atom(bond->getAtomTo(), bond->asValence());
+    }
+}
 

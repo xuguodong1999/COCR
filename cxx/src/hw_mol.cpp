@@ -102,7 +102,7 @@ void MolItem::reloadHWData(const float &_showCProb) {
     for (auto&[id, atom]:mol.getAtomsMap()) {
         auto sym = ShapeGroup::GetShapeGroup(atom->getElementName());
         // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
-        sym->resizeTo(1, 1);// 这个比例和RDKit的绘图引擎关联
+        sym->resizeTo(mol.getFontSize(), mol.getFontSize());
         sym->moveCenterTo(mol.getAtomPosMap().at(id));
         if (ElementType::C == atom->getElementType()) {
             explicitAtomMap[id] = byProb(_showCProb);
@@ -114,7 +114,7 @@ void MolItem::reloadHWData(const float &_showCProb) {
         }
     }
     for (auto&[id, bond]:mol.getBondsMap()) {
-        shared_ptr < BondItem > sym;
+        shared_ptr<BondItem> sym;
         switch (bond->getBondType()) {
             case JBondType::SolidWedgeBond:
                 sym = BondItem::GetBond("SolidWedge");
@@ -161,7 +161,7 @@ void MolItem::reloadHWData(const float &_showCProb) {
     }
     const int www = 1256, hhh = 640;
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-    this->rotate(rand() % 360);
+//    this->rotate(rand() % 360);
     this->resizeTo(www - 20, hhh - 20);
     this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
     this->paintTo(img1);

@@ -20,12 +20,13 @@ int testJMol() {
     CouchLoader::LoadCouchDataSet();
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers(
-            { 7,8,9,10,14, 15, 16, 17});
+            { 14,13,12,11});
     for (auto &alkane:alkanes) {
         std::cout << "alkane=" << alkane << std::endl;
         JMol mol;
         mol.set(alkane);
         mol.randomize();
+//        mol.set("C#CC");  // RDKit 内置2d引擎画的三键有问题
         std::cout<<"randomize="<<mol.toSMILES()<<std::endl;
         mol.update2DCoordinates();
         MolItem molItem(mol);

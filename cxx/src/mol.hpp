@@ -32,6 +32,13 @@ class JMol {
 
     void addCommonRing(const size_t &_bid, std::unordered_map<size_t, frac> &_atomValenceMap);
 
+    /**
+     * 向原子_aid添加官能团，要求原子为碳且入度为1
+     * @param _aid
+     * @param _atomValenceMap
+     */
+    void addGroup(const size_t &_aid, std::unordered_map<size_t, frac> &_atomValenceMap);
+
 protected:
     std::unordered_map<size_t, std::shared_ptr<JBond>> bondsMap;
     std::unordered_map<size_t, std::shared_ptr<JAtom>> atomsMap;
@@ -46,6 +53,11 @@ public:
     JMol();
 
     void set(const std::string &_smiles);
+
+    /**
+     * @return 特定绘图引擎下理想字体的边长，一般为化学键长度的 1/2
+     */
+    float getFontSize() const;
 
     std::string toSMILES(bool _addRandomStereo = true) const;
 
