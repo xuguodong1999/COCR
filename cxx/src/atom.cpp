@@ -1,5 +1,6 @@
 #include "atom.hpp"
 #include <iostream>
+#include <algorithm>
 
 std::vector<std::string> ElementsData = {
         "None", "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne",

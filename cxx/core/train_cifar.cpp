@@ -58,7 +58,7 @@ void transferCouch2Cifar(torch::Device &device) {
 
             auto output = model->forward(data);
 //            torch::nn::CTCLoss
-            auto loss = torch::nn::functional::nll_loss(output,target);
+            auto loss = torch::nn::functional::nll_loss(output, target);
 //            auto loss = torch::nn::functional::cross_entropy(output, target);
             running_loss += loss.item<double>() * data.size(0);
 

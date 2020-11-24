@@ -4,14 +4,17 @@ include(${CMAKE_SOURCE_DIR}/cmake/SetupOpenMP.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/SetupQt5.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/SetupOpenCV.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/SetupTorch.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/SetupBoost.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/SetupRDKit.cmake)
 
+if (MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/SetupBoost.cmake)
+    include(${CMAKE_SOURCE_DIR}/cmake/SetupRDKit.cmake)
+elseif (UNIX)
+    include(${CMAKE_SOURCE_DIR}/cmake/SetupUnix.cmake)
+endif (MSVC)
 
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
-
 
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/atom.cpp
@@ -47,13 +50,14 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/dataset_cifar.cpp
         ${SRC_DIR}/dataset_couch.cpp
 
-        ${SRC_DIR}/qml_sketchitem.cpp
-        )
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-        Qt5::Widgets Qt5::Quick
-        ${OpenCV_LIBS}
-#        ${Boost_LIBRARIES}
-        ${TORCH_LIBRARIES}
-        ${RDKIT_LIBRARIES}
-        ${RDKit_THREAD_LIBS})
+        ${SRC_DIR}/qml_sketchitem.cpp)
+if (MSVC)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            Qt5::Widgets Qt5::Quick
+            #        ${Boost_LIBRARIES}
+            ${OpenCV_LIBS} ${TORCH_LIBRARIES} ${RDKIT_LIBRARIES} ${RDKit_THREAD_LIBS})
+elseif (UNIX)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            Qt5::Widgets Qt5::Quick
+            ${COCR_UNIX_LIB} ${OpenCV_LIBS} ${TORCH_LIBRARIES})
+endif (MSVC)

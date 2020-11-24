@@ -3,8 +3,9 @@
 #include <GraphMol/SmilesParse/SmilesParse.h>
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 
-RDLogger rdErrorLog;
-
+#ifdef WIN32
+//RDLogger rdErrorLog;
+#endif
 using namespace std;
 
 string getStandardSMILES(const string &smiles, bool add_hydrogen, bool do_kekule) {

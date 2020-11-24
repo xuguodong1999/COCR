@@ -24,7 +24,8 @@ private:
     static std::map<std::string, int> sStr2IntMap;
     inline static bool sIsLoaded = false;
 
-    static void LoadDataSet(const char *filename, bool clearBefore = true);
+    static void LoadDataSet(const char *filename, bool _fromQrc = false,
+                            bool clearBefore = true);
 
 public:
     static ShapeItem GetByIntLabel(int label);
@@ -33,7 +34,7 @@ public:
 
     static ShapeItem GetShape(const std::string &shape);
 
-    static void LoadCouchDataSet();
+    static void LoadCouchDataSet(bool _fromQrc = false);
 
     static const std::vector<std::vector<Script>> &GetData();
 

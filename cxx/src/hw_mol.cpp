@@ -1,9 +1,7 @@
 #include "hw_mol.hpp"
 #include "hw.hpp"
-#include "rdkit_util.hpp"
 #include "timer.hpp"
 #include <opencv2/opencv.hpp>
-#include <set>
 
 using namespace std;
 
@@ -168,6 +166,11 @@ void MolItem::reloadHWData(const float &_showCProb) {
         cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
     }
     timer.stop();
+#ifdef WIN32
     cv::imshow("COCR-HW-Draw", img1);
     cv::waitKey(0);
+#else
+    std::cout << "press Enter to continue..." << std::endl;
+    std::cin.get();
+#endif
 }

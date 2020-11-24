@@ -7,7 +7,9 @@
 #include <coordgen/sketcherMinimizer.h>
 
 #else
+
 #include <GraphMol/Depictor/RDDepictor.h>
+
 #endif
 
 #include <GraphMol/Chirality.h>
@@ -165,38 +167,36 @@ float JMol::getFontSize() const {
 #endif
 }
 
+#ifdef USE_COORDGEN2D
+//static sketcherMinimizer minimizer;
+#endif
+
 std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
     std::unordered_map<size_t, cv::Point2f> atomPosMap;
 #ifdef USE_COORDGEN2D
+    // 踩坑系列：sketcherMinimizer 析构的时候会 delete 所有关联的指针
+    // 这里 sketcherMinimizerMolecule 一定得 new 一个，用智能指针或值就会报 double free
+    // 就像我吃了一个苹果，圣诞老人看到苹果没了，回收了苹果的灵魂，顺路把我也删了
     sketcherMinimizer minimizer;
-    sketcherMinimizerMolecule sMol; // This lib is written by Schrodinger. Inc.
+    auto sMol = new sketcherMinimizerMolecule();
     std::unordered_map<size_t, sketcherMinimizerAtom *> j2cAtomMap;
     for (auto&[id, atom]:atomsMap) {
-        auto a = sMol.addNewAtom();
+        auto a = sMol->addNewAtom();
         a->setAtomicNumber(atom->getAtomicNumber());
         j2cAtomMap[id] = a;
     }
     std::vector<sketcherMinimizerBond *> cBondVec;
     for (auto&[id, bond]:bondsMap) {
-        auto b = sMol.addNewBond(j2cAtomMap[bond->getAtomFrom()],
-                                 j2cAtomMap[bond->getAtomTo()]);
+        auto b = sMol->addNewBond(j2cAtomMap[bond->getAtomFrom()],
+                                  j2cAtomMap[bond->getAtomTo()]);
         b->setBondOrder(std::lround(bond->asValence().floatValue()));
         cBondVec.push_back(b);
     }
-    minimizer.initialize(&sMol);
+    minimizer.initialize(sMol);
     minimizer.runGenerateCoordinates();
     for (auto&[aid, cAtom]:j2cAtomMap) {
         auto pos = cAtom->getCoordinates();
         atomPosMap[aid] = cv::Point2f(pos.x(), pos.y());
-    }
-    minimizer.clear();
-    for (auto&[_, i]:j2cAtomMap) {
-        delete i;
-        i = nullptr;
-    }
-    for (auto &i:cBondVec) {
-        delete i;
-        i = nullptr;
     }
 #else
     // FIXME: RDKit 内置2d引擎画的三键有问题
@@ -413,6 +413,7 @@ void JMol::addHs(const size_t &_aid) {
 
 std::string JMol::toSMILES(bool _addRandomStereo) const {
     auto[rwMol, _] = convertJMolToRWMol(*this);
+#ifdef WIN32
     if (_addRandomStereo) {
         static std::vector<RDKit::Atom::ChiralType> candidates = {
                 RDKit::Atom::ChiralType::CHI_TETRAHEDRAL_CW,
@@ -429,6 +430,7 @@ std::string JMol::toSMILES(bool _addRandomStereo) const {
             }
         }
     }
+#endif
     auto roMol = std::make_shared<RDKit::ROMol>(*(rwMol.get()));
     return RDKit::MolToSmiles(
             *(roMol.get()), true, false, -1,

@@ -1,4 +1,5 @@
 #include "qml_sketchitem.hpp"
+#include <cmath>
 
 using namespace std;
 
@@ -84,10 +85,10 @@ void SketchItem::putLineAt(const QPointF &_p1, const QPointF &_p2) {
     bufPainter->drawLine(_p1, _p2);
     qreal pad2x = pen.widthF() * 2;
     qreal pad4x = pad2x * 2;
-    int x = floor((min)(_p1.x(), _p2.x()) - pad2x);
-    int y = floor((min)(_p1.y(), _p2.y()) - pad2x);
-    int w = ceil(abs(_p1.x() - _p2.x()) + pad4x);
-    int h = ceil(abs(_p1.y() - _p2.y()) + pad4x);
+    int x = std::floor((min)(_p1.x(), _p2.x()) - pad2x);
+    int y = std::floor((min)(_p1.y(), _p2.y()) - pad2x);
+    int w = std::ceil(abs(_p1.x() - _p2.x()) + pad4x);
+    int h = std::ceil(abs(_p1.y() - _p2.y()) + pad4x);
     update(QRect(x, y, w, h));
 }
 
@@ -96,8 +97,8 @@ void SketchItem::putPointAt(const QPointF &_p) {
     qreal pad2x = pen.widthF() * 2;
     qreal pad4x = pad2x * 2;
     int x, y, w, h;
-    x = y = floor(_p.x() - pad2x);
-    w = h = ceil(pad4x);
+    x = y = std::floor(_p.x() - pad2x);
+    w = h = std::ceil(pad4x);
     update(QRect(x, y, w, h));
 }
 

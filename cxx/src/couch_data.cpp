@@ -3,6 +3,9 @@
  */
 #include "couch_data.hpp"
 
+#include <QFile>
+
+#include <sstream>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -248,37 +251,55 @@ std::map<std::string, int> CouchLoader::sStr2IntMap = {
         {"9",  1}
 };
 
-void CouchLoader::LoadDataSet(const char *filename, bool clearBefore) {
-    std::ifstream ifsm(filename, std::ios::in | std::ios::binary);
-    while (!ifsm.is_open()) {
-        std::string file_path;
-        std::string location = __FILE__;
-        location += " @line " + std::to_string(__LINE__) + " @func ";
-        location += __func__;
-        std::cerr << location << std::endl;
-        exit(-1);
+void CouchLoader::LoadDataSet(const char *filename, bool clearBefore, bool _fromQrc) {
+    std::shared_ptr<istream> ism;
+    if (_fromQrc) {
+        QFile loader(filename);
+        if (!loader.open(QIODevice::ReadOnly)) {
+            std::cerr << "fail to load " << filename << " with qrc" << std::endl;
+            exit(-1);
+        }
+        ism = std::make_shared<std::stringstream>(loader.readAll().toStdString());
+        loader.close();
+    } else {
+        auto fsm = std::make_shared<std::ifstream>(
+                filename, std::ios::in | std::ios::binary);
+        ism = fsm;
+        if (!fsm->is_open()) {
+            std::cerr << "fail to load " << filename << " with ifstream" << std::endl;
+            exit(-1);
+        }
     }
+//    std::ifstream ifsm(filename, std::ios::in | std::ios::binary);
+//    while (!ifsm.is_open()) {
+//        std::string file_path;
+//        std::string location = __FILE__;
+//        location += " @line " + std::to_string(__LINE__) + " @func ";
+//        location += __func__;
+//        std::cerr << location << std::endl;
+//        exit(-1);
+//    }
     if (clearBefore) {
         sData.clear();
     }
     int a, b, c, d, e, iii = 0;
     // 【标签索引】、【宽度】、【长度】、【笔画数目】
-    while (ifsm.read(reinterpret_cast<char *>(&a), 4)) {
+    while (ism->read(reinterpret_cast<char *>(&a), 4)) {
         if (++iii % 10000 == 0) {
             std::cout << iii << std::endl;
         }
-        ifsm.read(reinterpret_cast<char *>(&b), 4);
-        ifsm.read(reinterpret_cast<char *>(&c), 4);
-        ifsm.read(reinterpret_cast<char *>(&d), 4);
+        ism->read(reinterpret_cast<char *>(&b), 4);
+        ism->read(reinterpret_cast<char *>(&c), 4);
+        ism->read(reinterpret_cast<char *>(&d), 4);
         Script script;
         script.resize(d);
         for (int i = 0; i < d; i++) {
             // 【点数】
-            ifsm.read(reinterpret_cast<char *>(&e), 4);
+            ism->read(reinterpret_cast<char *>(&e), 4);
             script[i].resize(e);
             for (int j = 0; j < e; j++) {
-                ifsm.read(reinterpret_cast<char *>(&script[i][j].x), 4);
-                ifsm.read(reinterpret_cast<char *>(&script[i][j].y), 4);
+                ism->read(reinterpret_cast<char *>(&script[i][j].x), 4);
+                ism->read(reinterpret_cast<char *>(&script[i][j].y), 4);
             }
         }
         if (a >= sData.size()) {
@@ -286,7 +307,9 @@ void CouchLoader::LoadDataSet(const char *filename, bool clearBefore) {
         }
         sData[a].push_back(std::move(script));
     }
-    ifsm.close();
+    if (!_fromQrc) {
+        static_pointer_cast<std::ifstream>(ism)->close();
+    }
     for (auto &dat:sData) {
         dat.resize(dat.size());
     }
@@ -294,9 +317,13 @@ void CouchLoader::LoadDataSet(const char *filename, bool clearBefore) {
 }
 
 
-void CouchLoader::LoadCouchDataSet() {
+void CouchLoader::LoadCouchDataSet(bool _fromQrc) {
     if (!sIsLoaded) {
-        LoadDataSet(COUCH_SYM_PATH.c_str());
+        if (_fromQrc) {
+            LoadDataSet(":/couch-sym.dat", true, _fromQrc);
+        } else {
+            LoadDataSet(COUCH_SYM_PATH.c_str(), true, _fromQrc);
+        }
         if (!sIsLoaded) {
             std::cerr << "fail to load data from "
                       << COUCH_SYM_PATH << std::endl;
