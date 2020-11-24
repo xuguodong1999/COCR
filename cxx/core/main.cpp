@@ -22,7 +22,7 @@ int testJMol() {
     CouchLoader::LoadCouchDataSet();
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers(
-            { 14,13,12,11});
+            { 4,5,6,7,8,9,10});
     Timer timer;
     for (auto &alkane:alkanes) {
         std::cout << "alkane=" << alkane << std::endl;
@@ -35,7 +35,7 @@ int testJMol() {
         mol.update2DCoordinates();
         MolItem molItem(mol);
         timer.display_duration();
-        molItem.reloadHWData(0.5);
+        molItem.reloadHWData(0.2);
 //        system("pause");
     }
     return 0;

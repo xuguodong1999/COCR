@@ -149,18 +149,18 @@ void ShapeItem::castToCircle(const Point &center, float rx, float ry) {
  * @param p2 终点
  */
 void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThresh) {
-    const float slideOffset = 0.1;
+    const float slideOffset = 0.05;
     // FIXME: 分离随机因素
     L:;
-    float kLen1 = mmProb(slideOffset);
-    float kLen2 = mmProb(slideOffset);
+    float kLen1 = minMaxProb(slideOffset);
+    float kLen2 = minMaxProb(slideOffset);
     Point p1 = pp1 + (pp1 - pp2) * kLen1, p2 = pp2 + (pp2 - pp1) * kLen2;
 //    Point p1=pp1,p2=pp2;
     float lenPP = distance(p1, p2);
-    p1.x += lenPP * mmProb(slideOffset);
-    p2.x += lenPP * mmProb(slideOffset);
-    p1.y += lenPP * mmProb(slideOffset);
-    p2.y += lenPP * mmProb(slideOffset);
+    p1.x += lenPP * minMaxProb(slideOffset);
+    p2.x += lenPP * minMaxProb(slideOffset);
+    p1.y += lenPP * minMaxProb(slideOffset);
+    p2.y += lenPP * minMaxProb(slideOffset);
     vector<Point> from(4), to;
     vector<Point> input;
     for (auto &stroke:mData) {
@@ -753,7 +753,7 @@ void DoubleBond::paintTo(cv::Mat &canvas) {
     if (!isLatest) {
         updateShapes();
     }
-    const float intervalK = 0.1;
+    const float intervalK = 0.2;
     if (mUseHWChar) {
         for (auto &s:shapes) {
             s.paintTo(canvas);
@@ -809,7 +809,7 @@ void TripleBond::paintTo(cv::Mat &canvas) {
     if (!isLatest) {
         updateShapes();
     }
-    const float intervalK = 0.2;
+    const float intervalK = 0.4;
     if (mUseHWChar) {
         for (auto &s:shapes) {
             s.paintTo(canvas);
@@ -845,7 +845,7 @@ TripleBond::TripleBond(const string &_bondType) : SingleBond(_bondType) {
 
 void TripleBond::updateShapes() {
     BondItem::updateShapes();
-    const float intervalK = 0.3;
+    const float intervalK = 0.4;
     cv::Point2f vec = from - to;
     cv::Point2f vecT(0, 1);
     if (vec.y != 0) {

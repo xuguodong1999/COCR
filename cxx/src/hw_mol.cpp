@@ -162,9 +162,9 @@ void MolItem::reloadHWData(const float &_showCProb) {
         sym->setVertices({from, to});
         symbols.push_back(std::move(sym));
     }
-    const int www = 1256, hhh = 640;
+    const int www = 1080, hhh = 640;
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-//    this->rotate(rand() % 360);
+    this->rotate(rand() % 360);
     this->resizeTo(www - 20, hhh - 20);
     this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
     this->paintTo(img1);

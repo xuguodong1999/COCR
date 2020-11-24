@@ -6,7 +6,8 @@
 #define _STD_UTIL_HPP_
 
 #include <string>
-
+#include <vector>
+#include <iostream>
 
 std::string trim(const std::string &str);
 
@@ -43,8 +44,17 @@ inline float aboveProb(const float &_prob) {
  * @param _posProb 一个正浮点数
  * @return (-_posProb,_posProb)
  */
-inline float mmProb(const float &_posProb) {
+inline float minMaxProb(const float &_posProb) {
     return _posProb - 2 * belowProb(_posProb);
+}
+
+template<typename T>
+inline const T &randSelect(const std::vector<T> &_container) {
+    if (_container.empty()) {
+        std::cerr << "randSelect empty container" << std::endl;
+        exit(-1);
+    }
+    return _container[rand() % _container.size()];
 }
 
 #endif//_STD_UTIL_HPP_

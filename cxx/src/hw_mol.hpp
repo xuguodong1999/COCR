@@ -21,7 +21,7 @@ public:
      * 控制原子是否显示写出
      * 控制化学键的起点和终点
      */
-    void reloadHWData(const float &_showCProb = 0.5);
+    void reloadHWData(const float &_showCProb = 0.1);
 
     /**
      * You must call JMol::update2DCoordinates before use MolItem

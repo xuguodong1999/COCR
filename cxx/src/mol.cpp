@@ -2,7 +2,6 @@
 #include "std_util.hpp"
 
 #define USE_COORDGEN2D
-
 #ifdef USE_COORDGEN2D
 
 #include <coordgen/sketcherMinimizer.h>
@@ -16,46 +15,9 @@
 #include <GraphMol/SmilesParse/SmilesParse.h>
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 #include <GraphMol/AtomIterators.h>
-
 #include <random>
 
 using namespace std;
-
-// FIXME: RDKit::Atom::ChiralType 没有传递到 RDKit::Bond::BondDir
-
-const std::unordered_map<size_t, std::shared_ptr<JBond>> &JMol::getBondsMap() const {
-    return bondsMap;
-}
-
-const std::unordered_map<size_t, std::shared_ptr<JAtom>> &JMol::getAtomsMap() const {
-    return atomsMap;
-}
-
-std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber) {
-    auto aid = mAids++;
-    auto atom = std::make_shared<JAtom>(aid, _atomicNumber);
-    atomsMap.insert({aid, atom});
-    return std::move(atom);
-}
-
-std::shared_ptr<JBond> JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId,
-                                     const JBondType &_bondType) {
-    auto bid = mBids++;
-    auto bond = std::make_shared<JBond>(bid, _atomFromId, _atomToId, _bondType);
-    bondsMap.insert({bid, bond});
-    return std::move(bond);
-}
-
-JMol::JMol() {
-    mAids = mBids = std::numeric_limits<int>::lowest();
-}
-
-void JMol::clear() {
-    bondsMap.clear();
-    atomsMap.clear();
-    atomPosMap.clear();
-    mAids = mBids = std::numeric_limits<int>::lowest();
-}
 
 inline JBondType convertRDKitBondTypeToJBondType(
         const RDKit::Bond::BondType &_stereo, const RDKit::Bond::BondDir &_dir) {
@@ -138,6 +100,41 @@ convertJMolToRWMol(const JMol &_jmol) {
     return {std::move(rwMol), std::move(j2rAidMap)};
 }
 
+// FIXME: RDKit::Atom::ChiralType 没有传递到 RDKit::Bond::BondDir
+const std::unordered_map<size_t, std::shared_ptr<JBond>> &JMol::getBondsMap() const {
+    return bondsMap;
+}
+
+const std::unordered_map<size_t, std::shared_ptr<JAtom>> &JMol::getAtomsMap() const {
+    return atomsMap;
+}
+
+std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber) {
+    auto aid = mAids++;
+    auto atom = std::make_shared<JAtom>(aid, _atomicNumber);
+    atomsMap.insert({aid, atom});
+    return std::move(atom);
+}
+
+std::shared_ptr<JBond> JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId,
+                                     const JBondType &_bondType) {
+    auto bid = mBids++;
+    auto bond = std::make_shared<JBond>(bid, _atomFromId, _atomToId, _bondType);
+    bondsMap.insert({bid, bond});
+    return std::move(bond);
+}
+
+JMol::JMol() {
+    mAids = mBids = std::numeric_limits<int>::lowest();
+}
+
+void JMol::clear() {
+    bondsMap.clear();
+    atomsMap.clear();
+    atomPosMap.clear();
+    atomValenceMap.clear();
+    mAids = mBids = std::numeric_limits<int>::lowest();
+}
 
 void JMol::set(const string &_smiles) {
     clear();
@@ -224,23 +221,10 @@ const unordered_map<size_t, cv::Point2f> &JMol::getAtomPosMap() const {
 }
 
 void JMol::randomize(const float &_addHydrogenProb) {
-    // 维护化合价表
-    std::unordered_map<size_t, frac> atomValenceMap;
-    auto addValence4Atom = [&](const size_t &_aid, const frac &_valence) {
-        if (atomValenceMap.end() == atomValenceMap.find(_aid)) {
-            atomValenceMap[_aid] = _valence;
-        } else {
-            atomValenceMap[_aid] += _valence;
-        }
-    };
-    for (auto&[id, bond]:bondsMap) {
-        addValence4Atom(bond->getAtomFrom(), bond->asValence());
-        addValence4Atom(bond->getAtomTo(), bond->asValence());
-    }
+    updateAtomValenceMap();
     // 换化学键类型
-    static std::vector<JBondType> sBondCandidates = {
-            JBondType::SingleBond, JBondType::DoubleBond, JBondType::TripleBond};
-    for (auto&[id, bond]:bondsMap) {
+    auto replaceBondType = [&](const size_t &_bid) {
+        const auto &bond = bondsMap[_bid];
         const size_t &from = bond->getAtomFrom(), to = bond->getAtomTo();
         const auto &fromAtom = atomsMap[from];
         const auto &toAtom = atomsMap[to];
@@ -250,16 +234,17 @@ void JMol::randomize(const float &_addHydrogenProb) {
                              - atomValenceMap[to];
         if (deltaFrom >= 1 && deltaTo >= 1) {
             frac delta = std::min(deltaFrom, deltaTo);
-            size_t candidatesSize = sBondCandidates.size();
+            std::vector<JBondType> sBondCandidates;
             if (delta >= 2) {// 三键、双键
-                candidatesSize = candidatesSize;
+                sBondCandidates = {JBondType::SingleBond, JBondType::DoubleBond,
+                                   JBondType::TripleBond};
             } else {// 双键
-                candidatesSize -= 1;
+                sBondCandidates = {JBondType::SingleBond, JBondType::DoubleBond};
             }
             // 检查键端原子是不是已经有双键
             bool allowReplace = true;
             for (auto&[id2, bond2]:bondsMap) {
-                if (id == id2) {
+                if (_bid == id2) {
                     continue;
                 }
                 if (from == bond2->getAtomFrom() || from == bond2->getAtomTo()) {
@@ -277,12 +262,13 @@ void JMol::randomize(const float &_addHydrogenProb) {
             }
             if (allowReplace) {
                 const frac oldValence = bond->asValence();
-                bond->setType(sBondCandidates[rand() % candidatesSize]);
+                bond->setType(randSelect(sBondCandidates));
                 atomValenceMap[from] += (bond->asValence() - oldValence);
                 atomValenceMap[to] += (bond->asValence() - oldValence);
             }
         }
-    }
+    };
+    safeTraverseBonds(replaceBondType);
     // 换原子类型
     static std::vector<ElementType> sAtomCandidates = {
             ElementType::H, ElementType::C,
@@ -291,7 +277,7 @@ void JMol::randomize(const float &_addHydrogenProb) {
             ElementType::F, ElementType::Cl, ElementType::Br, ElementType::I
     };
     for (auto&[id, atom]:atomsMap) {
-        const auto &ele = sAtomCandidates[rand() % sAtomCandidates.size()];
+        const auto &ele = randSelect(sAtomCandidates);
         if (atomValenceMap[id] <= ElementValenceData[ele]) {
             atom->setElementType(ele);
         }
@@ -299,27 +285,26 @@ void JMol::randomize(const float &_addHydrogenProb) {
     // 添加杂环、官能团
     for (auto&[id, atom]:atomsMap) {// COOH CHO
         if (atomValenceMap[id] == 1 && ElementType::C == atom->getElementType()) {
-            addGroup(id, atomValenceMap);
+            addGroup(id);
         }
     }
-    std::vector<size_t> replacedBonds;
-    for (auto&[id, bond]:bondsMap) {// c1ccccc1 c1cncc1
-        if (byProb(0.5) && JBondType::SingleBond == bond->getBondType()) {
-            replacedBonds.push_back(id);
-        }
-    }
-    // 避免一个原子挂上好几个环导致排版引擎崩溃
     std::unordered_set<size_t> usedAids;
-    for (auto &bid:replacedBonds) {
-        size_t from = bondsMap[bid]->getAtomFrom(), to = bondsMap[bid]->getAtomTo();
-        if (usedAids.end() == usedAids.find(from) && usedAids.end() == usedAids.find(to)) {
-            addAromaticRing(bid, atomValenceMap);
+    auto replaceBondWithRing = [&](const size_t &_bid) {
+        const auto &bond = bondsMap[_bid];
+        if (byProb(0.5) && JBondType::SingleBond == bond->getBondType()) {
+            size_t from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
+            // 避免一个原子挂上好几个环导致排版引擎崩溃
+            if (usedAids.end() == usedAids.find(from) && usedAids.end() == usedAids.find(to)) {
+                addAromaticRing(_bid);
+            }
+            usedAids.insert(from);
+            usedAids.insert(to);
         }
-        usedAids.insert(from);
-        usedAids.insert(to);
-    }
+    };
+    safeTraverseBonds(replaceBondWithRing);
     // 打补丁：删掉 P#C B#C
-    for (auto&[id, bond]:bondsMap) {// c1ccccc1 c1cncc1
+    auto clearStrangeBond = [&](const size_t &_bid) {
+        const auto &bond = bondsMap[_bid];
         if (JBondType::TripleBond == bond->getBondType()) {
             auto ele = atomsMap[bond->getAtomFrom()]->getElementType();
             if (ElementType::C != ele && ElementType::N != ele) {
@@ -330,23 +315,24 @@ void JMol::randomize(const float &_addHydrogenProb) {
                 atomsMap[bond->getAtomTo()]->setElementType(ElementType::C);
             }
         }
-    }
+    };
+    safeTraverseBonds(clearStrangeBond);
     // 添加氢原子
     for (auto&[id, atom]:atomsMap) {
         if (ElementType::C != atom->getElementType()) {// 杂原子较大可能加氢
             if (byProb(1.0 - _addHydrogenProb)) {
-                addHs(id, atomValenceMap);
+                addHs(id);
             }
         } else if (byProb(_addHydrogenProb)) {// 碳原子按概率加氢
-            addHs(id, atomValenceMap);
+            addHs(id);
         }
     }
     // TODO: 添加表达方式（光学异构、凯库勒式）：楔形键、波浪线、环等
     // TODO: 添加不展开的字符串
 }
 
-void JMol::addHs(const size_t &_aid, std::unordered_map<size_t, frac> &_atomValenceMap) {
-    auto &valence = _atomValenceMap.at(_aid);
+void JMol::addHs(const size_t &_aid) {
+    auto &valence = atomValenceMap.at(_aid);
     const auto &atom = atomsMap[_aid];
     frac numOfH = ElementValenceData[atom->getElementType()] - valence;
     if (numOfH >= 1) {
@@ -355,7 +341,7 @@ void JMol::addHs(const size_t &_aid, std::unordered_map<size_t, frac> &_atomVale
             auto h = addAtom(1);
             const size_t &hid = h->getId();
             addBond(hid, _aid, JBondType::SingleBond);
-            _atomValenceMap[hid] = 1;
+            atomValenceMap[hid] = 1;
         }
         valence += numOfH;
     }
@@ -375,7 +361,7 @@ std::string JMol::toSMILES(bool _addRandomStereo) const {
         for (auto &stereo:stereos) {
             if (stereo.centeredOn != RDKit::Chirality::StereoInfo::NOATOM) {
                 rwMol->getAtomWithIdx(stereo.centeredOn)->
-                        setChiralTag(cand[rand() % cand.size()]);
+                        setChiralTag(randSelect(cand));
             }
         }
     }
@@ -385,12 +371,42 @@ std::string JMol::toSMILES(bool _addRandomStereo) const {
             true, false, false, false);
 }
 
-void JMol::addAromaticRing(const size_t &_bid,
-                           std::unordered_map<size_t, frac> &_atomValenceMap) {
+void JMol::updateAtomValenceMap() {
+    atomValenceMap.clear();
+    auto addValence4Atom = [&](const size_t &_aid, const frac &_valence) {
+        if (atomValenceMap.end() == atomValenceMap.find(_aid)) {
+            atomValenceMap[_aid] = _valence;
+        } else {
+            atomValenceMap[_aid] += _valence;
+        }
+    };
+    for (auto&[id, bond]:bondsMap) {
+        addValence4Atom(bond->getAtomFrom(), bond->asValence());
+        addValence4Atom(bond->getAtomTo(), bond->asValence());
+    }
+}
+
+void JMol::updateAtomValenceMap(const vector<size_t> &_bids) {
+    for (auto &bid:_bids) {
+        const auto &bond = bondsMap[bid];
+        addValence4Atom(bond->getAtomFrom(), bond->asValence());
+        addValence4Atom(bond->getAtomTo(), bond->asValence());
+    }
+}
+
+void JMol::addValence4Atom(const size_t &_aid, const frac &_valence) {
+    if (atomValenceMap.end() == atomValenceMap.find(_aid)) {
+        atomValenceMap[_aid] = _valence;
+    } else {
+        atomValenceMap[_aid] += _valence;
+    }
+}
+
+void JMol::addAromaticRing(const size_t &_bid) {
     std::vector<std::shared_ptr<JAtom>> newAtoms;
     std::vector<std::shared_ptr<JBond>> newBonds;
     auto from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
-    removeBond(_bid, _atomValenceMap);
+    removeBond(_bid);
     int index = rand() % 6;
     switch (index) {
         case 0:
@@ -427,10 +443,10 @@ void JMol::addAromaticRing(const size_t &_bid,
             newAtoms = {
                     addAtom(6),
                     addAtom(6),
-                    addAtom(atomicNumbers[rand() % atomicNumbers.size()]),
-                    addAtom(atomicNumbers[rand() % atomicNumbers.size()]),
-                    addAtom(atomicNumbers[rand() % atomicNumbers.size()]),
-                    addAtom(atomicNumbers[rand() % atomicNumbers.size()])
+                    addAtom(randSelect(atomicNumbers)),
+                    addAtom(randSelect(atomicNumbers)),
+                    addAtom(randSelect(atomicNumbers)),
+                    addAtom(randSelect(atomicNumbers))
             };
             size_t pos1 = newAtoms[0]->getId(), pos2 = newAtoms[1]->getId();
             std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
@@ -476,45 +492,40 @@ void JMol::addAromaticRing(const size_t &_bid,
         default:
             break;
     }
-    auto addValence4Atom = [&](const size_t &_aid, const frac &_valence) {
-        if (_atomValenceMap.end() == _atomValenceMap.find(_aid)) {
-            _atomValenceMap[_aid] = _valence;
-        } else {
-            _atomValenceMap[_aid] += _valence;
-        }
-    };
-    for (auto &bond:newBonds) {
+    updateAtomValenceMap(newBonds);
+}
+
+void JMol::addCommonRing(const size_t &_bid) {
+}
+
+void JMol::removeBond(const size_t &_bid) {
+    auto it = bondsMap.find(_bid);
+    if (bondsMap.end() != it) {
+        auto oldVal = it->second->asValence();
+        atomValenceMap[it->second->getAtomFrom()] -= oldVal;
+        atomValenceMap[it->second->getAtomTo()] -= oldVal;
+        bondsMap.erase(it);
+    }
+}
+
+void JMol::updateAtomValenceMap(const vector<std::shared_ptr<JBond>> &_bonds) {
+    for (auto &bond:_bonds) {
         addValence4Atom(bond->getAtomFrom(), bond->asValence());
         addValence4Atom(bond->getAtomTo(), bond->asValence());
     }
 }
 
-void JMol::addCommonRing(const size_t &_bid,
-                         std::unordered_map<size_t, frac> &_atomValenceMap) {
-
-}
-
-void JMol::removeBond(const size_t &_bid, unordered_map<size_t, frac> &_atomValenceMap) {
-    auto it = bondsMap.find(_bid);
-    if (bondsMap.end() != it) {
-        auto oldVal = it->second->asValence();
-        _atomValenceMap[it->second->getAtomFrom()] -= oldVal;
-        _atomValenceMap[it->second->getAtomTo()] -= oldVal;
-        bondsMap.erase(it);
-    }
-}
-
-void JMol::addGroup(const size_t &_aid, unordered_map<size_t, frac> &_atomValenceMap) {
+void JMol::addGroup(const size_t &_aid) {
     std::vector<std::shared_ptr<JAtom>> newAtoms;
     std::vector<std::shared_ptr<JBond>> newBonds;
     int index = rand() % 1;
     switch (index) {
         case 0: {// 羰基、酰基、醛基、羧基、巯基
-            std::vector<size_t> carbonyl = {8, 8, 8, 8, 16};
-            std::vector<size_t> acyl = {1, 8, 9, 16, 17, 53, 35};
+            static std::vector<size_t> carbonyl = {8, 8, 8, 8, 16};
+            static std::vector<size_t> acyl = {1, 8, 9, 16, 17, 53, 35};
             newAtoms = {
-                    addAtom(carbonyl[rand() % carbonyl.size()]),
-                    addAtom(acyl[rand() % acyl.size()]),
+                    addAtom(randSelect(carbonyl)),
+                    addAtom(randSelect(acyl)),
                     addAtom(6)
             };
             newBonds = {
@@ -537,16 +548,15 @@ void JMol::addGroup(const size_t &_aid, unordered_map<size_t, frac> &_atomValenc
         default:
             break;
     }
-    auto addValence4Atom = [&](const size_t &_aid, const frac &_valence) {
-        if (_atomValenceMap.end() == _atomValenceMap.find(_aid)) {
-            _atomValenceMap[_aid] = _valence;
-        } else {
-            _atomValenceMap[_aid] += _valence;
-        }
-    };
-    for (auto &bond:newBonds) {
-        addValence4Atom(bond->getAtomFrom(), bond->asValence());
-        addValence4Atom(bond->getAtomTo(), bond->asValence());
-    }
+    updateAtomValenceMap(newBonds);
 }
 
+void JMol::safeTraverseBonds(std::function<void(const size_t &)> func) {
+    std::vector<size_t> bids;
+    for (auto&[id, _]:bondsMap) {
+        bids.push_back(id);
+    }
+    for (auto &bid:bids) {
+        func(bid);
+    }
+}
