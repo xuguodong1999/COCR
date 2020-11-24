@@ -53,7 +53,7 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
 target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt5::Widgets Qt5::Quick
         ${OpenCV_LIBS}
-        ${Boost_LIBRARIES}
+#        ${Boost_LIBRARIES}
         ${TORCH_LIBRARIES}
         ${RDKIT_LIBRARIES}
         ${RDKit_THREAD_LIBS})

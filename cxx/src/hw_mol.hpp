@@ -24,7 +24,7 @@ public:
     void reloadHWData(const float &_showCProb = 0.1);
 
     /**
-     * You must call JMol::update2DCoordinates before use MolItem
+     * 用 JMol 构造一个几何分子类型
      * @param _jmol Construct a MolItem from JMol
      */
     MolItem(const JMol &_jmol);

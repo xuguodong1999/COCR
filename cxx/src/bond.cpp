@@ -64,6 +64,17 @@ frac JBond::asValence() const {
     }
 }
 
+bool JBond::setFrom(const size_t &_atomFrom) {
+    if (_atomFrom == atomFrom) {
+        return true;
+    } else if (_atomFrom == atomTo) {
+        std::swap(atomFrom, atomTo);
+        return true;
+    } else {
+        return false;
+    }
+}
+
 JRing::JRing() {
 
 }

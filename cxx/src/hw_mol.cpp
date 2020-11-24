@@ -8,11 +8,7 @@
 using namespace std;
 
 MolItem::MolItem(const JMol &_jmol) : mol(_jmol) {
-    if (mol.getAtomPosMap().empty()) {
-        std::cerr << "You must call JMol::update2DCoordinates before use MolItem"
-                  << std::endl;
-        exit(-1);
-    }
+
 }
 
 void MolItem::paintTo(cv::Mat &canvas) {
@@ -102,11 +98,12 @@ void MolItem::reloadHWData(const float &_showCProb) {
     symbols.clear();
     // 记录显式写出的原子 id
     std::unordered_map<size_t, bool> explicitAtomMap;
+    auto atomPosMap = mol.get2DCoordinates();
     for (auto&[id, atom]:mol.getAtomsMap()) {
         auto sym = ShapeGroup::GetShapeGroup(atom->getElementName());
         // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
         sym->resizeTo(mol.getFontSize(), mol.getFontSize());
-        sym->moveCenterTo(mol.getAtomPosMap().at(id));
+        sym->moveCenterTo(atomPosMap[id]);
         if (ElementType::C == atom->getElementType()) {
             explicitAtomMap[id] = byProb(_showCProb);
         } else {
@@ -149,8 +146,8 @@ void MolItem::reloadHWData(const float &_showCProb) {
             }
         }
         sym->setUseHandWrittenWChar(true);
-        auto from_ = mol.getAtomPosMap().at(bond->getAtomFrom());
-        auto to_ = mol.getAtomPosMap().at(bond->getAtomTo());
+        auto from_ = atomPosMap[bond->getAtomFrom()];
+        auto to_ = atomPosMap[bond->getAtomTo()];
         cv::Point2f from = from_, to = to_;
         const float k = 0.3;
         if (explicitAtomMap[bond->getAtomFrom()]) {
@@ -164,7 +161,7 @@ void MolItem::reloadHWData(const float &_showCProb) {
     }
     const int www = 1080, hhh = 640;
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-    this->rotate(rand() % 360);
+//    this->rotate(rand() % 360);
     this->resizeTo(www - 20, hhh - 20);
     this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
     this->paintTo(img1);

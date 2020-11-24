@@ -49,7 +49,7 @@ inline JBondType convertRDKitBondTypeToJBondType(
 }
 
 inline std::pair<RDKit::Bond::BondType, RDKit::Bond::BondDir>
-convertJBondTyteToRDKitBondType(const JBondType &_bondType) {
+convertJBondTypeToRDKitBondType(const JBondType &_bondType) {
     RDKit::Bond::BondType bondType;
     RDKit::Bond::BondDir bondDir = RDKit::Bond::BondDir::NONE;
     switch (_bondType) {
@@ -90,7 +90,7 @@ convertJMolToRWMol(const JMol &_jmol) {
         j2rAidMap.insert({jAid, aid});
     }
     for (auto&[jBid, jBond]:_jmol.getBondsMap()) {
-        auto[stereo, dir]=convertJBondTyteToRDKitBondType(jBond->getBondType());
+        auto[stereo, dir]=convertJBondTypeToRDKitBondType(jBond->getBondType());
         rwMol->addBond(j2rAidMap[jBond->getAtomFrom()],
                        j2rAidMap[jBond->getAtomTo()],
                        stereo);
@@ -131,8 +131,9 @@ JMol::JMol() {
 void JMol::clear() {
     bondsMap.clear();
     atomsMap.clear();
-    atomPosMap.clear();
     atomValenceMap.clear();
+    neighborAtomsMap.clear();
+    neighborBondsMap.clear();
     mAids = mBids = std::numeric_limits<int>::lowest();
 }
 
@@ -164,8 +165,8 @@ float JMol::getFontSize() const {
 #endif
 }
 
-void JMol::update2DCoordinates() {
-    atomPosMap.clear();
+std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
+    std::unordered_map<size_t, cv::Point2f> atomPosMap;
 #ifdef USE_COORDGEN2D
     sketcherMinimizer minimizer;
     sketcherMinimizerMolecule sMol; // This lib is written by Schrodinger. Inc.
@@ -179,7 +180,7 @@ void JMol::update2DCoordinates() {
     for (auto&[id, bond]:bondsMap) {
         auto b = sMol.addNewBond(j2cAtomMap[bond->getAtomFrom()],
                                  j2cAtomMap[bond->getAtomTo()]);
-        b->setBondOrder(std::round(bond->asValence().floatValue()));
+        b->setBondOrder(std::lround(bond->asValence().floatValue()));
         cBondVec.push_back(b);
     }
     minimizer.initialize(&sMol);
@@ -198,6 +199,7 @@ void JMol::update2DCoordinates() {
         i = nullptr;
     }
 #else
+    // FIXME: RDKit 内置2d引擎画的三键有问题
     auto[rwMol, j2rAidMap] = convertJMolToRWMol(*this);
     std::unordered_map<unsigned int, size_t> r2jAidMap;
     for (auto&[jAid, rAid]:j2rAidMap) {
@@ -214,13 +216,11 @@ void JMol::update2DCoordinates() {
         atomPosMap[r2jAidMap[idx]] = cv::Point2f(pos.x, pos.y);
     }
 #endif
+    return std::move(atomPosMap);
 }
 
-const unordered_map<size_t, cv::Point2f> &JMol::getAtomPosMap() const {
-    return atomPosMap;
-}
-
-void JMol::randomize(const float &_addHydrogenProb) {
+void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _replaceAtom,
+                     bool _addAromaticRing) {
     updateAtomValenceMap();
     // 换化学键类型
     auto replaceBondType = [&](const size_t &_bid) {
@@ -236,10 +236,13 @@ void JMol::randomize(const float &_addHydrogenProb) {
             frac delta = std::min(deltaFrom, deltaTo);
             std::vector<JBondType> sBondCandidates;
             if (delta >= 2) {// 三键、双键
-                sBondCandidates = {JBondType::SingleBond, JBondType::DoubleBond,
-                                   JBondType::TripleBond};
+                sBondCandidates = {JBondType::SingleBond, JBondType::SingleBond,
+                                   JBondType::SingleBond, JBondType::SingleBond,
+                                   JBondType::DoubleBond, JBondType::TripleBond};
             } else {// 双键
-                sBondCandidates = {JBondType::SingleBond, JBondType::DoubleBond};
+                sBondCandidates = {JBondType::SingleBond, JBondType::SingleBond,
+                                   JBondType::SingleBond, JBondType::SingleBond,
+                                   JBondType::DoubleBond};
             }
             // 检查键端原子是不是已经有双键
             bool allowReplace = true;
@@ -268,18 +271,21 @@ void JMol::randomize(const float &_addHydrogenProb) {
             }
         }
     };
-    safeTraverseBonds(replaceBondType);
+    if (_replaceBond)
+        safeTraverseBonds(replaceBondType);
     // 换原子类型
-    static std::vector<ElementType> sAtomCandidates = {
-            ElementType::H, ElementType::C,
-            ElementType::N, ElementType::P, ElementType::B,
-            ElementType::O, ElementType::S,
-            ElementType::F, ElementType::Cl, ElementType::Br, ElementType::I
-    };
-    for (auto&[id, atom]:atomsMap) {
-        const auto &ele = randSelect(sAtomCandidates);
-        if (atomValenceMap[id] <= ElementValenceData[ele]) {
-            atom->setElementType(ele);
+    if (_replaceAtom) {
+        static std::vector<ElementType> sAtomCandidates = {
+                ElementType::H, ElementType::C,
+                ElementType::N, ElementType::P, ElementType::B,
+                ElementType::O, ElementType::S,
+                ElementType::F, ElementType::Cl, ElementType::Br, ElementType::I
+        };
+        for (auto&[id, atom]:atomsMap) {
+            const auto &ele = randSelect(sAtomCandidates);
+            if (atomValenceMap[id] <= ElementValenceData[ele]) {
+                atom->setElementType(ele);
+            }
         }
     }
     // 添加杂环、官能团
@@ -301,7 +307,8 @@ void JMol::randomize(const float &_addHydrogenProb) {
             usedAids.insert(to);
         }
     };
-    safeTraverseBonds(replaceBondWithRing);
+    if (_addAromaticRing)
+        safeTraverseBonds(replaceBondWithRing);
     // 打补丁：删掉 P#C B#C
     auto clearStrangeBond = [&](const size_t &_bid) {
         const auto &bond = bondsMap[_bid];
@@ -320,14 +327,66 @@ void JMol::randomize(const float &_addHydrogenProb) {
     // 添加氢原子
     for (auto&[id, atom]:atomsMap) {
         if (ElementType::C != atom->getElementType()) {// 杂原子较大可能加氢
-            if (byProb(1.0 - _addHydrogenProb)) {
+            if (byProb(_addHydrogenProb + 0.5)) {
                 addHs(id);
             }
         } else if (byProb(_addHydrogenProb)) {// 碳原子按概率加氢
             addHs(id);
         }
     }
-    // TODO: 添加表达方式（光学异构、凯库勒式）：楔形键、波浪线、环等
+    // 楔形键
+    updateNeighborInfoMap();
+    std::unordered_map<size_t, bool> allowWedge;
+    for (auto&[id, _]:atomsMap) {
+        allowWedge[id] = true;
+    }
+    for (auto&[aid, atom]:atomsMap) {
+        bool allowThisWedge = true;
+        if (neighborAtomsMap[aid].size() == 4 && ElementType::C == atom->getElementType()) {
+            for (auto &nid:neighborAtomsMap[aid]) {
+                if (!allowWedge[nid]) {
+                    allowThisWedge = false;
+                    break;
+                }
+            }
+            if (allowThisWedge) {
+                allowWedge[aid] = false;
+                std::vector<std::shared_ptr<JBond>> bonds;
+                for (auto &bid:neighborBondsMap[aid]) {
+                    bonds.push_back(bondsMap[bid]);
+                }
+                // 优先为 C-H 键加构型
+                int okNeighbor = 0;
+                for (auto &bond:bonds) {
+                    if (okNeighbor == 2) {
+                        break;
+                    }
+                    if (ElementType::H == atomsMap[bond->getAtomFrom()]->getElementType() ||
+                        ElementType::H == atomsMap[bond->getAtomTo()]->getElementType()) {
+                        if (bond->setFrom(aid)) {
+                            if (okNeighbor == 0)
+                                bond->setType(JBondType::SolidWedgeBond);
+                            else
+                                bond->setType(JBondType::DashWedgeBond);
+                            okNeighbor += 1;
+                        }
+
+                    }
+                }
+                while (okNeighbor < 2) {
+                    auto &bond = randSelect(bonds);
+                    if (bond->setFrom(aid)) {
+                        if (okNeighbor == 0)
+                            bond->setType(JBondType::SolidWedgeBond);
+                        else
+                            bond->setType(JBondType::DashWedgeBond);
+                        okNeighbor += 1;
+                    }
+                }
+            }
+        }
+    }
+    // TODO: 波浪线、环
     // TODO: 添加不展开的字符串
 }
 
@@ -336,7 +395,7 @@ void JMol::addHs(const size_t &_aid) {
     const auto &atom = atomsMap[_aid];
     frac numOfH = ElementValenceData[atom->getElementType()] - valence;
     if (numOfH >= 1) {
-        int hsNum = std::round(numOfH.floatValue());
+        int hsNum = std::lround(numOfH.floatValue());
         for (int i = 0; i < hsNum; i++) {
             auto h = addAtom(1);
             const size_t &hid = h->getId();
@@ -350,7 +409,7 @@ void JMol::addHs(const size_t &_aid) {
 std::string JMol::toSMILES(bool _addRandomStereo) const {
     auto[rwMol, _] = convertJMolToRWMol(*this);
     if (_addRandomStereo) {
-        static std::vector<RDKit::Atom::ChiralType> cand = {
+        static std::vector<RDKit::Atom::ChiralType> candidates = {
                 RDKit::Atom::ChiralType::CHI_TETRAHEDRAL_CW,
                 RDKit::Atom::ChiralType::CHI_TETRAHEDRAL_CCW
         };
@@ -361,7 +420,7 @@ std::string JMol::toSMILES(bool _addRandomStereo) const {
         for (auto &stereo:stereos) {
             if (stereo.centeredOn != RDKit::Chirality::StereoInfo::NOATOM) {
                 rwMol->getAtomWithIdx(stereo.centeredOn)->
-                        setChiralTag(randSelect(cand));
+                        setChiralTag(randSelect(candidates));
             }
         }
     }
@@ -551,12 +610,24 @@ void JMol::addGroup(const size_t &_aid) {
     updateAtomValenceMap(newBonds);
 }
 
-void JMol::safeTraverseBonds(std::function<void(const size_t &)> func) {
+void JMol::safeTraverseBonds(const std::function<void(const size_t &)> &func) {
     std::vector<size_t> bids;
     for (auto&[id, _]:bondsMap) {
         bids.push_back(id);
     }
     for (auto &bid:bids) {
         func(bid);
+    }
+}
+
+void JMol::updateNeighborInfoMap() {
+    neighborAtomsMap.clear();
+    neighborBondsMap.clear();
+    for (auto&[bid, bond]:bondsMap) {
+        auto from = bond->getAtomFrom(), to = bond->getAtomTo();
+        neighborAtomsMap[from].insert(to);
+        neighborAtomsMap[to].insert(from);
+        neighborBondsMap[from].insert(bid);
+        neighborBondsMap[to].insert(bid);
     }
 }

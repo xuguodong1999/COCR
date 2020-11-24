@@ -44,6 +44,8 @@ public:
 
     void setFromTo(const size_t &_atomFrom, const size_t &_atomTo);
 
+    bool setFrom(const size_t &_atomFrom);
+
     void setId(const size_t &_id);
 };
 

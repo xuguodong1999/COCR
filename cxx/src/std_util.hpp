@@ -49,7 +49,7 @@ inline float minMaxProb(const float &_posProb) {
 }
 
 template<typename T>
-inline const T &randSelect(const std::vector<T> &_container) {
+inline T &randSelect(std::vector<T> &_container) {
     if (_container.empty()) {
         std::cerr << "randSelect empty container" << std::endl;
         exit(-1);
