@@ -101,7 +101,6 @@ void MolItem::reloadHWData(const float &_showCProb) {
     auto atomPosMap = mol.get2DCoordinates();
     for (auto&[id, atom]:mol.getAtomsMap()) {
         auto sym = ShapeGroup::GetShapeGroup(atom->getElementName());
-        // FIXME: 交换下面两句，字符坐标有偏差，这不符合 API 的行为约定
         sym->resizeTo(mol.getFontSize(), mol.getFontSize());
         sym->moveCenterTo(atomPosMap[id]);
         if (ElementType::C == atom->getElementType()) {

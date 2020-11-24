@@ -120,7 +120,8 @@ public:
     std::string toSMILES(bool _addRandomStereo = true) const;
 
     void randomize(const float &_addHydrogenProb = 0.1, bool _replaceBond = true,
-                   bool _replaceAtom = true, bool _addAromaticRing = true);
+                   bool _replaceAtom = true, bool _addAromaticRing = true,
+                   bool _addCommonRing=true);
 
     std::unordered_map<size_t, cv::Point2f> get2DCoordinates() const;
 

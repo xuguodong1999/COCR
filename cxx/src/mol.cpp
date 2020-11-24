@@ -220,7 +220,7 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
 }
 
 void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _replaceAtom,
-                     bool _addAromaticRing) {
+                     bool _addAromaticRing, bool _addCommonRing) {
     updateAtomValenceMap();
     // 换化学键类型
     auto replaceBondType = [&](const size_t &_bid) {
@@ -288,12 +288,13 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
             }
         }
     }
-    // 添加杂环、官能团
-    for (auto&[id, atom]:atomsMap) {// COOH CHO
+    // 添加官能团
+    for (auto&[id, atom]:atomsMap) {// COOH CHO etc
         if (atomValenceMap[id] == 1 && ElementType::C == atom->getElementType()) {
             addGroup(id);
         }
     }
+    // 添加杂环
     std::unordered_set<size_t> usedAids;
     auto replaceBondWithRing = [&](const size_t &_bid) {
         const auto &bond = bondsMap[_bid];
@@ -301,13 +302,17 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
             size_t from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
             // 避免一个原子挂上好几个环导致排版引擎崩溃
             if (usedAids.end() == usedAids.find(from) && usedAids.end() == usedAids.find(to)) {
-                addAromaticRing(_bid);
+                if (_addAromaticRing && byProb(0.5)) {
+                    addAromaticRing(_bid);
+                } else if (_addCommonRing) {
+                    addCommonRing(_bid);
+                }
             }
             usedAids.insert(from);
             usedAids.insert(to);
         }
     };
-    if (_addAromaticRing)
+    if (_addAromaticRing || _addCommonRing)
         safeTraverseBonds(replaceBondWithRing);
     // 打补丁：删掉 P#C B#C
     auto clearStrangeBond = [&](const size_t &_bid) {
@@ -555,6 +560,125 @@ void JMol::addAromaticRing(const size_t &_bid) {
 }
 
 void JMol::addCommonRing(const size_t &_bid) {
+    std::vector<std::shared_ptr<JAtom>> newAtoms;
+    std::vector<std::shared_ptr<JBond>> newBonds;
+    auto from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
+    removeBond(_bid);
+    int index = rand() % 5;
+    std::vector<size_t> atomicNumbers = {5, 6, 7, 8, 15, 16};
+    switch (index) {
+        case 0: {// 三元环
+            newAtoms = {
+                    addAtom(6), addAtom(6),
+                    addAtom(randSelect(atomicNumbers))
+            };
+            newBonds = {
+                    addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+                    addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
+                    addBond(newAtoms[2]->getId(), newAtoms[0]->getId()),
+                    addBond(from, newAtoms[rand() % 2]->getId()),
+                    addBond(to, newAtoms[rand() % 2]->getId())
+            };
+            break;
+        }
+        case 1: {// 四元环
+            newAtoms = {
+                    addAtom(6), addAtom(6),
+                    addAtom(6), addAtom(randSelect(atomicNumbers))
+            };
+            newBonds = {
+                    addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+                    addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
+                    addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
+                    addBond(newAtoms[3]->getId(), newAtoms[0]->getId()),
+                    addBond(from, newAtoms[rand() % 3]->getId()),
+                    addBond(to, newAtoms[rand() % 3]->getId())
+            };
+            break;
+        }
+        case 2: {// 五元环
+            newAtoms = {
+                    addAtom(6), addAtom(6),
+                    addAtom(6), addAtom(6),
+                    addAtom(randSelect(atomicNumbers))
+            };
+            newBonds = {
+                    addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+                    addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
+                    addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
+                    addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
+                    addBond(newAtoms[4]->getId(), newAtoms[0]->getId()),
+                    addBond(from, newAtoms[rand() % 4]->getId()),
+                    addBond(to, newAtoms[rand() % 4]->getId())
+            };
+            break;
+        }
+        case 3: {// 六元环
+            newAtoms = {
+                    addAtom(6), addAtom(6),
+                    addAtom(6), addAtom(6),
+                    addAtom(6), addAtom(randSelect(atomicNumbers))
+            };
+            newBonds = {
+                    addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+                    addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
+                    addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
+                    addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
+                    addBond(newAtoms[4]->getId(), newAtoms[5]->getId()),
+                    addBond(newAtoms[5]->getId(), newAtoms[0]->getId()),
+                    addBond(from, newAtoms[rand() % 5]->getId()),
+                    addBond(to, newAtoms[rand() % 5]->getId())
+            };
+            break;
+        }
+        case 4: {// 七元环
+            newAtoms = {
+                    addAtom(6), addAtom(6),
+                    addAtom(6), addAtom(6),
+                    addAtom(6), addAtom(6),
+                    addAtom(randSelect(atomicNumbers))
+            };
+            newBonds = {
+                    addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+                    addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
+                    addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
+                    addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
+                    addBond(newAtoms[4]->getId(), newAtoms[5]->getId()),
+                    addBond(newAtoms[5]->getId(), newAtoms[6]->getId()),
+                    addBond(newAtoms[6]->getId(), newAtoms[0]->getId()),
+                    addBond(from, newAtoms[rand() % 6]->getId()),
+                    addBond(to, newAtoms[rand() % 6]->getId())
+            };
+            break;
+        }
+        case 5: {
+            // FIXME: coodgen2d 的桥环渲染有问题
+            newAtoms = {
+                    addAtom(6), addAtom(6),
+                    addAtom(6), addAtom(6),
+                    addAtom(6), addAtom(6),
+                    addAtom(randSelect(atomicNumbers))
+            };
+            newBonds = {
+                    addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+                    addBond(newAtoms[1]->getId(), newAtoms[2]->getId(),
+                            JBondType::DoubleBond),
+                    addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
+                    addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
+                    addBond(newAtoms[4]->getId(), newAtoms[5]->getId(),
+                            JBondType::DoubleBond),
+                    addBond(newAtoms[5]->getId(), newAtoms[0]->getId()),
+                    addBond(from, newAtoms[0 + rand() % 3]->getId()),
+                    addBond(to, newAtoms[3 + rand() % 3]->getId()),
+                    addBond(newAtoms[0]->getId(), newAtoms[6]->getId()),
+                    addBond(newAtoms[3]->getId(), newAtoms[6]->getId())
+            };
+            break;
+        }
+        default:
+            break;
+    }
+    updateAtomValenceMap(newBonds);
 }
 
 void JMol::removeBond(const size_t &_bid) {
