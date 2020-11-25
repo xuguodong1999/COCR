@@ -602,7 +602,8 @@ void JMol::addAromaticRing(const size_t &_bid) {
                                            JBondType::DoubleBond));
             }
             // TODO: 写入数据
-            aromaticRingAids;aromaticRingBids;
+            aromaticRingAids;
+            aromaticRingBids;
             newBonds.push_back(addBond(from, poses[0]));
             newBonds.push_back(addBond(to, poses[1]));
             break;

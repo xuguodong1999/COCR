@@ -599,7 +599,7 @@ void CircleBond::setVertices(const vector<Point> &pts) {
     r /= pts.size();
     // TODO: 分离随即要素
     const float minLen = 0.2;
-    r *= (minLen + belowProb(std::sqrt(3) / 2 - minLen));
+    r *= (minLen + 0.5 * belowProb(std::sqrt(3) / 2 - minLen));
     isLatest = false;
 }
 
@@ -933,7 +933,7 @@ void DashWedgeBond::paintTo(cv::Mat &canvas) {
         updateShapes();
     }
     const float intervalK = 0.5;
-    const int numOfSplit = 6;
+    const int numOfSplit = 5;
     if (mUseHWChar) {
         for (auto &s:shapes) {
             s.paintTo(canvas);
@@ -981,7 +981,7 @@ DashWedgeBond::DashWedgeBond(const string &_bondType) : SingleBond(_bondType) {
 void DashWedgeBond::updateShapes() {
     BondItem::updateShapes();
     const float intervalK = 0.5;
-    const int numOfSplit = 6;
+    const int numOfSplit = 5;
     if (mUseHWChar) {
         cv::Point2f vec = from - to;
         auto length = distance(from, to);
