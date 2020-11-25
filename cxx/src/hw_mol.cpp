@@ -110,9 +110,26 @@ void MolItem::reloadHWData(const float &_showCProb) {
             symbols.push_back(std::move(sym));
         }
     }
+    auto&bondInRing=mol.getAromaticRings(false);
+    std::vector<std::unordered_set<size_t>> kekuleRings;// 记录画圈圈的化学键id
+    std::unordered_set<size_t> bondInKekuleRings;// 记录画圈圈的化学键id，用于快速查找
+    for(auto&aromaticStruct:bondInRing){
+        if(byProb(0.5)){
+            for(auto&ring:aromaticStruct){
+                kekuleRings.push_back(ring);// 深拷贝
+                for(auto&bid:ring){
+                    bondInKekuleRings.insert(bid);
+                }
+            }
+        }
+    }
     for (auto&[id, bond]:mol.getBondsMap()) {
+        JBondType bondType=bond->getBondType();
+        if(bondInKekuleRings.end()!=bondInKekuleRings.find(id)){
+            bondType=JBondType::DelocalizedBond;// 不能影响 JMol 里的数据
+        }
         shared_ptr<BondItem> sym;
-        switch (bond->getBondType()) {
+        switch (bondType) {
             case JBondType::SolidWedgeBond:
                 sym = BondItem::GetBond("SolidWedge");
                 break;
@@ -150,6 +167,20 @@ void MolItem::reloadHWData(const float &_showCProb) {
             to = (1 - k) * (to_ - from_) + from_;
         }
         sym->setVertices({from, to});
+        symbols.push_back(std::move(sym));
+    }
+    for(auto&ring:kekuleRings){
+        auto sym=BondItem::GetBond("Circle");
+        std::vector<cv::Point2f> pts;
+        std::unordered_set<size_t>aids;
+        for(auto&bid:ring){
+            aids.insert(mol.getBondsMap().find(bid)->second->getAtomFrom());
+            aids.insert(mol.getBondsMap().find(bid)->second->getAtomTo());
+        }
+        for(auto&aid:aids){
+            pts.push_back(atomPosMap[aid]);
+        }
+        sym->setVertices(pts);
         symbols.push_back(std::move(sym));
     }
     const int www = 1080, hhh = 640;

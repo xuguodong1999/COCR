@@ -597,6 +597,9 @@ void CircleBond::setVertices(const vector<Point> &pts) {
     for (auto &pt:pts)
         r += distance(center, pt);
     r /= pts.size();
+    // TODO: 分离随即要素
+    const float minLen = 0.2;
+    r *= (minLen + belowProb(std::sqrt(3) / 2 - minLen));
     isLatest = false;
 }
 

@@ -136,7 +136,7 @@ void JMol::clear() {
     atomValenceMap.clear();
     neighborAtomsMap.clear();
     neighborBondsMap.clear();
-    aromaticRings.clear();
+    aromaticRingAids.clear();
     mAids = mBids = std::numeric_limits<int>::lowest();
 }
 
@@ -486,11 +486,11 @@ void JMol::addAromaticRing(const size_t &_bid) {
                     addAtom(6), addAtom(6),
                     addAtom(6), addAtom(6)
             };
-            std::unordered_set<size_t>atomInRing;
-            for(auto&atom:newAtoms){
+            std::unordered_set<size_t> atomInRing,bondInRing;
+            for (auto &atom:newAtoms) {
                 atomInRing.insert(atom->getId());
             }
-            aromaticRings.push_back(std::move(atomInRing));
+            aromaticRingAids.push_back({std::move(atomInRing)});
             newBonds = {
                     addBond(newAtoms[0]->getId(), newAtoms[1]->getId(),
                             JBondType::SingleBond),
@@ -501,12 +501,16 @@ void JMol::addAromaticRing(const size_t &_bid) {
                     addBond(newAtoms[2]->getId(), newAtoms[3]->getId(),
                             JBondType::SingleBond),
                     addBond(newAtoms[3]->getId(), newAtoms[4]->getId(),
-                            JBondType::DoubleBond),
-                    addBond(from, newAtoms[1 + rand() % 2]->getId(),
-                            JBondType::SingleBond),
-                    addBond(to, newAtoms[3 + rand() % 2]->getId(),
-                            JBondType::SingleBond)
+                            JBondType::DoubleBond)
             };
+            for(auto&bond:newBonds){
+                bondInRing.insert(bond->getId());
+            }
+            aromaticRingBids.push_back({std::move(bondInRing)});
+            newBonds.push_back(addBond(from, newAtoms[1 + rand() % 2]->getId(),
+                                       JBondType::SingleBond));
+            newBonds.push_back(addBond(to, newAtoms[3 + rand() % 2]->getId(),
+                                       JBondType::SingleBond));
             break;
         }
         case 4:
@@ -520,11 +524,11 @@ void JMol::addAromaticRing(const size_t &_bid) {
                     addAtom(randSelect(atomicNumbers)),
                     addAtom(randSelect(atomicNumbers))
             };
-            std::unordered_set<size_t>atomInRing;
-            for(auto&atom:newAtoms){
+            std::unordered_set<size_t> atomInRing,bondInRing;
+            for (auto &atom:newAtoms) {
                 atomInRing.insert(atom->getId());
             }
-            aromaticRings.push_back(std::move(atomInRing));
+            aromaticRingAids.push_back({std::move(atomInRing)});
             size_t pos1 = newAtoms[0]->getId(), pos2 = newAtoms[1]->getId();
             std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
             newBonds = {
@@ -539,10 +543,14 @@ void JMol::addAromaticRing(const size_t &_bid) {
                     addBond(newAtoms[3]->getId(), newAtoms[4]->getId(),
                             JBondType::DoubleBond),
                     addBond(newAtoms[4]->getId(), newAtoms[5]->getId(),
-                            JBondType::SingleBond),
-                    addBond(from, pos1, JBondType::SingleBond),
-                    addBond(to, pos2, JBondType::SingleBond)
+                            JBondType::SingleBond)
             };
+            for(auto&bond:newBonds){
+                bondInRing.insert(bond->getId());
+            }
+            aromaticRingBids.push_back({std::move(bondInRing)});
+            newBonds.push_back(addBond(from, pos1, JBondType::SingleBond));
+            newBonds.push_back(addBond(to, pos2, JBondType::SingleBond));
             break;
         }
         case 6: {//萘
@@ -556,11 +564,6 @@ void JMol::addAromaticRing(const size_t &_bid) {
                     poses.push_back(atom->getId());
                 }
             }
-            std::unordered_set<size_t>atomInRing;
-            for(auto&atom:newAtoms){
-                atomInRing.insert(atom->getId());
-            }
-            aromaticRings.push_back(std::move(atomInRing));
             if (poses.size() < 2) {
                 size_t pos1 = rand() % (reactSiteNum / 2);
                 size_t pos2 = reactSiteNum / 2 + rand() % (reactSiteNum / 2);
@@ -598,6 +601,8 @@ void JMol::addAromaticRing(const size_t &_bid) {
                                            newAtoms[a2 - 1]->getId(),
                                            JBondType::DoubleBond));
             }
+            // TODO: 写入数据
+            aromaticRingAids;aromaticRingBids;
             newBonds.push_back(addBond(from, poses[0]));
             newBonds.push_back(addBond(to, poses[1]));
             break;
@@ -634,8 +639,8 @@ void JMol::addAromaticRing(const size_t &_bid) {
                     {5,  6},
                     {7,  8},
                     {14, 9},
-                    {11,12},
-                    {13,14}
+                    {11, 12},
+                    {13, 14}
             };
             std::vector<std::pair<size_t, size_t>> dBond = {
                     {1,  2},
@@ -739,8 +744,8 @@ void JMol::addCommonRing(const size_t &_bid) {
     std::vector<std::shared_ptr<JBond>> newBonds;
     auto from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
     removeBond(_bid);
-    std::vector<size_t> nodeNums={3,3,4,5,5,5,6,6,6,6,6,7,7};
-    size_t& nodeNum=randSelect(nodeNums);
+    std::vector<size_t> nodeNums = {3, 3, 4, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7};
+    size_t &nodeNum = randSelect(nodeNums);
     std::vector<size_t> atomicNumbers = {5, 6, 7, 8, 15, 16};
     switch (nodeNum) {
         case 3: {// 三元环
@@ -936,13 +941,13 @@ std::pair<std::vector<std::shared_ptr<JAtom>>, std::vector<std::shared_ptr<JBond
 JMol::makeCarbonRing(const size_t &_nodeNum,
                      const vector<std::pair<size_t, size_t>> &_singleLink,
                      const vector<std::pair<size_t, size_t>> &_doubleLink,
-                     const std::vector<size_t>&_mixAtomicNumbers) {
-    
-    std::vector<std::shared_ptr<JAtom>>newAtoms;
-    for(size_t i=0;i<_nodeNum;i++){
+                     const std::vector<size_t> &_mixAtomicNumbers) {
+
+    std::vector<std::shared_ptr<JAtom>> newAtoms;
+    for (size_t i = 0; i < _nodeNum; i++) {
         newAtoms.push_back(addAtom(6));
     }
-    std::vector<std::shared_ptr<JBond>>newBonds;
+    std::vector<std::shared_ptr<JBond>> newBonds;
     for (auto&[a1, a2]:_singleLink) {
         newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
                                    newAtoms[a2 - 1]->getId()));
@@ -952,14 +957,15 @@ JMol::makeCarbonRing(const size_t &_nodeNum,
                                    newAtoms[a2 - 1]->getId(),
                                    JBondType::DoubleBond));
     }
-    if(!_mixAtomicNumbers.empty()) {
+    if (!_mixAtomicNumbers.empty()) {
         for (auto &atom:newAtoms) {
             // TODO: 1：选杂原子 2：检查是否可以插入
         }
     }
-    return {std::move(newAtoms),std::move(newBonds)};
+    return {std::move(newAtoms), std::move(newBonds)};
 }
 
-const vector<std::unordered_set<size_t>> &JMol::getAromaticRings() const {
-    return aromaticRings;
+const vector<std::vector<std::unordered_set<size_t>>> &
+JMol::getAromaticRings(bool _retAid) const {
+    return _retAid ? aromaticRingAids : aromaticRingBids;
 }

@@ -27,10 +27,7 @@ class JMol {
     //<原子id，键们的id>
     std::unordered_map<size_t, std::unordered_set<size_t>> neighborBondsMap;
     //芳环
-    std::vector<std::unordered_set<size_t>>aromaticRings;
-private:
-
-
+    std::vector<std::vector<std::unordered_set<size_t>>>aromaticRingAids, aromaticRingBids;
     /**
      * 为当前原子补全氢原子，修改化合价表
      * @param _aid 原子 id
@@ -133,9 +130,11 @@ public:
     /**
      * 获取手动添加的芳环
      * FIXME: 目前没有实现 or 对接 LSSR 和 SSSR 算法，不具备事后找环的能力
+     * @param _retAid true: 返回原子索引，false: 返回键索引
      * @return 芳环列表，每一个元素是一些原子id的集合，表示一个最小环，比如菲占3个环
      */
-    const std::vector<std::unordered_set<size_t>> &getAromaticRings() const;
+    const std::vector<std::vector<std::unordered_set<size_t>>> &
+            getAromaticRings(bool _retAid) const;
 
     const std::unordered_map<size_t, std::shared_ptr<JBond>> &getBondsMap() const;
 
