@@ -145,6 +145,8 @@ public:
 
     void set(const std::string &_smiles);
 
+    void setAlkane(const std::string&_limSmiles);
+
     std::string toSMILES(bool _addRandomStereo = true) const;
 
     void randomize(const float &_addHydrogenProb = 0.1, bool _replaceBond = true,

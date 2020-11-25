@@ -270,8 +270,7 @@ std::vector<std::string> IsomerCounter::getIsomers(
         }
         if (numsOfCarbon.end() != numsOfCarbon.find(i)) {
             for (auto &carbon_hash:lastSet) {
-                AlkaneGraph<unsigned char> alkane;
-                auto smiles = alkane.toSMILES(carbon_hash);
+                auto smiles = convertAlkaneHashToSMILES<unsigned char>(carbon_hash);
                 smilesVec.push_back(smiles);
             }
         }

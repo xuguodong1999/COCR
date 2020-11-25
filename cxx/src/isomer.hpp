@@ -86,9 +86,8 @@ class AlkaneGraph {
         return std::move(maxSubTreeSize);
     }
 
-    const char prefix = '1';
-    const char suffix = '0';
 public:
+    const char prefix = '1',suffix = '0';
     std::string toString() {
         size_t nodeNum = content.size();
         std::string finalSeq;
@@ -101,10 +100,10 @@ public:
         //  最大子树的节点数最小
         auto minST = *min_element(maxSubTreeSize.begin(), maxSubTreeSize.end());
         std::vector<std::string> partSeq(nodeNum), allSeq(nodeNum);
-        auto before2 = [&](const T &current, const T &from) {
+        auto before = [&](const T &current, const T &from) {
             allSeq[current] = prefix;
         };
-        auto after2 = [&](const T &current, const T &from) {
+        auto after = [&](const T &current, const T &from) {
             int now = 0;
             for (auto &neighbor:content[current]) {
                 if (neighbor != from || from == std::numeric_limits<T>::max()) {
@@ -119,7 +118,7 @@ public:
         };
         for (auto i = 0; i < nodeNum; i++) { //  处理两个重心
             if (maxSubTreeSize[i] == minST) { //  等于最大子树的节点数
-                dfs_from(i, std::numeric_limits<T>::max(), before2, after2);
+                dfs_from(i, std::numeric_limits<T>::max(), before, after);
                 if (allSeq[i] > finalSeq) {
                     finalSeq = allSeq[i];
                 }
@@ -139,26 +138,6 @@ public:
     AlkaneGraph(const AlkaneGraph &_ag) {
         content = _ag.content;
     }
-
-    std::string toSMILES(const hash_type &hash_value) {
-        AlkaneGraph<T> alkane;
-        alkane.fromHash(hash_value);
-        auto s_1_0 = alkane.toString();
-        std::string smiles;
-        for (auto &c:s_1_0) {
-            if (c == prefix) {
-                smiles.append("(C");
-            } else {
-                smiles.push_back(')');
-            }
-        }
-        if (smiles.size() > 2) {
-            if (smiles.front() == '(' && smiles.back() == ')') {
-                smiles = smiles.substr(1, smiles.size() - 2);
-            }
-        }
-        return std::move(smiles);
-    };
 
     void operator=(const AlkaneGraph &_ag) {
         content = _ag.content;
@@ -258,8 +237,26 @@ public:
         }
     }
 };
-
-
+template<typename T>
+inline std::string convertAlkaneHashToSMILES(const hash_type &hash_value) {
+    AlkaneGraph<T> alkane;
+    alkane.fromHash(hash_value);
+    auto s_1_0 = alkane.toString();
+    std::string smiles;
+    for (auto &c:s_1_0) {
+        if (c == alkane.prefix) {
+            smiles.append("(C");
+        } else {
+            smiles.push_back(')');
+        }
+    }
+    if (smiles.size() > 2) {
+        if (smiles.front() == '(' && smiles.back() == ')') {
+            smiles = smiles.substr(1, smiles.size() - 2);
+        }
+    }
+    return std::move(smiles);
+};
 class IsomerCounter {
     using graph = AlkaneGraph<node_type>;
     const int thread_num = 11;
