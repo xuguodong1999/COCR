@@ -930,7 +930,7 @@ void DashWedgeBond::paintTo(cv::Mat &canvas) {
         updateShapes();
     }
     const float intervalK = 0.5;
-    const int numOfSplit = 10;
+    const int numOfSplit = 6;
     if (mUseHWChar) {
         for (auto &s:shapes) {
             s.paintTo(canvas);
@@ -978,7 +978,7 @@ DashWedgeBond::DashWedgeBond(const string &_bondType) : SingleBond(_bondType) {
 void DashWedgeBond::updateShapes() {
     BondItem::updateShapes();
     const float intervalK = 0.5;
-    const int numOfSplit = 10;
+    const int numOfSplit = 6;
     if (mUseHWChar) {
         cv::Point2f vec = from - to;
         auto length = distance(from, to);

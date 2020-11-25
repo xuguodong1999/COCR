@@ -26,6 +26,9 @@ class JMol {
     std::unordered_map<size_t, std::unordered_set<size_t>> neighborAtomsMap;
     //<原子id，键们的id>
     std::unordered_map<size_t, std::unordered_set<size_t>> neighborBondsMap;
+    //芳环
+    std::vector<std::unordered_set<size_t>>aromaticRings;
+private:
 
 
     /**
@@ -44,14 +47,32 @@ class JMol {
     /**
      * 把 _bid 两侧的基团挂到芳环上，删掉编号 _bid 的化学键
      * 涉及删除操作，会导致bondMap的迭代器失效
+     * 当前支持的图元：呋喃、苯、萘、蒽、菲，全部二取代
      * @param _bid 化学键 id
      * @param _atomValenceMap 化合价参照表
      */
     void addAromaticRing(const size_t &_bid);
 
+
+    /**
+     * 创建一个空环、向环中合理位置参入杂原子
+     * @param _nodeNum 节点数
+     * @param _singleLink 单键索引，从 1 开始连续增，建议遵循标准命名法
+     * @param _doubleLink 双键索引，从 1 开始连续增，建议遵循标准命名法
+     * @param _mixAtomicNumbers 参入哪些杂原子，通过重复某些元素控制杂原子比例分布
+     * @return 和原有结构不冲突的环
+     */
+    std::pair<std::vector<std::shared_ptr<JAtom>>, std::vector<std::shared_ptr<JBond>>>
+    makeCarbonRing(const size_t &_nodeNum,
+                   const std::vector<std::pair<size_t, size_t>> &_singleLink,
+                   const std::vector<std::pair<size_t, size_t>> &_doubleLink,
+                   const std::vector<size_t>&_mixAtomicNumbers);
+
+
     /**
      * 把 _bid 两侧的基团挂到饱和环上，删掉编号 _bid 的化学键
      * 涉及删除操作，会导致bondMap的迭代器失效
+     * 当前支持的图元：3-7 元环、六元单桥环
      * @param _bid 化学键 id
      * @param _atomValenceMap 化合价参照表
      */
@@ -109,6 +130,13 @@ class JMol {
                                    const JBondType &_bondType = JBondType::SingleBond);
 
 public:
+    /**
+     * 获取手动添加的芳环
+     * FIXME: 目前没有实现 or 对接 LSSR 和 SSSR 算法，不具备事后找环的能力
+     * @return 芳环列表，每一个元素是一些原子id的集合，表示一个最小环，比如菲占3个环
+     */
+    const std::vector<std::unordered_set<size_t>> &getAromaticRings() const;
+
     const std::unordered_map<size_t, std::shared_ptr<JBond>> &getBondsMap() const;
 
     const std::unordered_map<size_t, std::shared_ptr<JAtom>> &getAtomsMap() const;

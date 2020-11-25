@@ -123,6 +123,7 @@ void MolItem::reloadHWData(const float &_showCProb) {
                 sym = BondItem::GetBond("Wave");
                 break;
             case JBondType::SingleBond :
+            case JBondType::DelocalizedBond:// 离域键只画骨架，环另画
                 sym = BondItem::GetBond("Single");
                 break;
             case JBondType::DoubleBond:
@@ -130,11 +131,6 @@ void MolItem::reloadHWData(const float &_showCProb) {
                 break;
             case JBondType::TripleBond:
                 sym = BondItem::GetBond("Triple");
-                break;
-            case JBondType::DelocalizedBond:
-                // FIXME ADD CIRCLE BOND
-                std::cerr << "Item for JBondType::DelocalizedBond not implemented" << std::endl;
-                exit(-1);
                 break;
             default: {
                 std::cerr << "convert " << static_cast<int>(bond->getBondType())
@@ -158,17 +154,22 @@ void MolItem::reloadHWData(const float &_showCProb) {
     }
     const int www = 1080, hhh = 640;
     cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-//    this->rotate(rand() % 360);
-    this->resizeTo(www - 20, hhh - 20);
+    this->rotate(rand() % 360);
     this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
+    this->resizeTo(www - 20, hhh - 20);
     this->paintTo(img1);
+    auto img2 = img1.clone();
     for (auto &ss:symbols) {
         cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
     }
     timer.stop();
 #ifdef WIN32
+    cv::imshow("COCR-HW-Draw", img2);
+    cv::waitKey(0);
     cv::imshow("COCR-HW-Draw", img1);
     cv::waitKey(0);
+//    cv::imwrite("D:/draw.png",img1);
+//    system("pause");
 #else
     std::cout << "press Enter to continue..." << std::endl;
     std::cin.get();

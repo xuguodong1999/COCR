@@ -136,6 +136,7 @@ void JMol::clear() {
     atomValenceMap.clear();
     neighborAtomsMap.clear();
     neighborBondsMap.clear();
+    aromaticRings.clear();
     mAids = mBids = std::numeric_limits<int>::lowest();
 }
 
@@ -473,7 +474,7 @@ void JMol::addAromaticRing(const size_t &_bid) {
     std::vector<std::shared_ptr<JBond>> newBonds;
     auto from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
     removeBond(_bid);
-    int index = rand() % 6;
+    int index = rand() % 9;
     switch (index) {
         case 0:
         case 1:
@@ -485,6 +486,11 @@ void JMol::addAromaticRing(const size_t &_bid) {
                     addAtom(6), addAtom(6),
                     addAtom(6), addAtom(6)
             };
+            std::unordered_set<size_t>atomInRing;
+            for(auto&atom:newAtoms){
+                atomInRing.insert(atom->getId());
+            }
+            aromaticRings.push_back(std::move(atomInRing));
             newBonds = {
                     addBond(newAtoms[0]->getId(), newAtoms[1]->getId(),
                             JBondType::SingleBond),
@@ -514,6 +520,11 @@ void JMol::addAromaticRing(const size_t &_bid) {
                     addAtom(randSelect(atomicNumbers)),
                     addAtom(randSelect(atomicNumbers))
             };
+            std::unordered_set<size_t>atomInRing;
+            for(auto&atom:newAtoms){
+                atomInRing.insert(atom->getId());
+            }
+            aromaticRings.push_back(std::move(atomInRing));
             size_t pos1 = newAtoms[0]->getId(), pos2 = newAtoms[1]->getId();
             std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
             newBonds = {
@@ -534,13 +545,175 @@ void JMol::addAromaticRing(const size_t &_bid) {
             };
             break;
         }
-        case 6: {
+        case 6: {//萘
+            std::vector<size_t> atomicNumbers = {6, 6, 6, 7};
+            std::vector<size_t> poses;
+            const size_t reactSiteNum = 8;
+            for (int i = 0; i < reactSiteNum; i++) {
+                auto atom = addAtom(randSelect(atomicNumbers));
+                newAtoms.push_back(atom);
+                if (ElementType::C == atom->getElementType()) {
+                    poses.push_back(atom->getId());
+                }
+            }
+            std::unordered_set<size_t>atomInRing;
+            for(auto&atom:newAtoms){
+                atomInRing.insert(atom->getId());
+            }
+            aromaticRings.push_back(std::move(atomInRing));
+            if (poses.size() < 2) {
+                size_t pos1 = rand() % (reactSiteNum / 2);
+                size_t pos2 = reactSiteNum / 2 + rand() % (reactSiteNum / 2);
+                newAtoms[pos1]->setElementType(ElementType::C);
+                newAtoms[pos2]->setElementType(ElementType::C);
+                poses = {newAtoms[pos1]->getId(), newAtoms[pos2]->getId()};
+            } else {
+                std::shuffle(poses.begin(), poses.end(), std::default_random_engine());
+            }
+            // 非反应位点
+            for (int i = 0; i < 2; i++) {
+                newAtoms.push_back(addAtom(6));
+            }
+            std::vector<std::pair<size_t, size_t>> sBond = {
+                    {2, 3},
+                    {4, 10},
+                    {5, 6},
+                    {7, 8},
+                    {9, 10},
+                    {1, 9}
+            };
+            std::vector<std::pair<size_t, size_t>> dBond = {
+                    {1, 2},
+                    {3, 4},
+                    {5, 10},
+                    {6, 7},
+                    {8, 9}
+            };
+            for (auto&[a1, a2]:sBond) {
+                newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
+                                           newAtoms[a2 - 1]->getId()));
+            }
+            for (auto&[a1, a2]:dBond) {
+                newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
+                                           newAtoms[a2 - 1]->getId(),
+                                           JBondType::DoubleBond));
+            }
+            newBonds.push_back(addBond(from, poses[0]));
+            newBonds.push_back(addBond(to, poses[1]));
             break;
         }
-        case 7: {
+        case 7: {//蒽
+            std::vector<size_t> atomicNumbers = {6, 6, 6, 7};
+            std::vector<size_t> poses;
+            const size_t reactSiteNum = 10;
+            for (int i = 0; i < reactSiteNum; i++) {
+                auto atom = addAtom(randSelect(atomicNumbers));
+                newAtoms.push_back(atom);
+                if (ElementType::C == atom->getElementType()) {
+                    poses.push_back(atom->getId());
+                }
+            }
+            if (poses.size() < 2) {
+                size_t pos1 = rand() % (reactSiteNum / 2);
+                size_t pos2 = reactSiteNum / 2 + rand() % (reactSiteNum / 2);
+                newAtoms[pos1]->setElementType(ElementType::C);
+                newAtoms[pos2]->setElementType(ElementType::C);
+                poses = {newAtoms[pos1]->getId(), newAtoms[pos2]->getId()};
+            } else {
+                std::shuffle(poses.begin(), poses.end(), std::default_random_engine());
+            }
+            // 非反应位点
+            for (int i = 0; i < 4; i++) {
+                newAtoms.push_back(addAtom(6));
+            }
+            std::vector<std::pair<size_t, size_t>> sBond = {
+                    {11, 1},
+                    {2,  3},
+                    {4,  12},
+                    {10, 13},
+                    {5,  6},
+                    {7,  8},
+                    {14, 9},
+                    {11,12},
+                    {13,14}
+            };
+            std::vector<std::pair<size_t, size_t>> dBond = {
+                    {1,  2},
+                    {3,  4},
+                    {12, 10},
+                    {13, 5},
+                    {6,  7},
+                    {8,  14},
+                    {9,  11}
+            };
+            for (auto&[a1, a2]:sBond) {
+                newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
+                                           newAtoms[a2 - 1]->getId()));
+            }
+            for (auto&[a1, a2]:dBond) {
+                newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
+                                           newAtoms[a2 - 1]->getId(),
+                                           JBondType::DoubleBond));
+            }
+            newBonds.push_back(addBond(from, poses[0]));
+            newBonds.push_back(addBond(to, poses[1]));
             break;
         }
-        case 8: {
+        case 8: {//菲
+            std::vector<size_t> atomicNumbers = {6, 6, 6, 7};
+            std::vector<size_t> poses;
+            const size_t reactSiteNum = 10;
+            for (int i = 0; i < reactSiteNum; i++) {
+                auto atom = addAtom(randSelect(atomicNumbers));
+                newAtoms.push_back(atom);
+                if (ElementType::C == atom->getElementType()) {
+                    poses.push_back(atom->getId());
+                }
+            }
+            if (poses.size() < 2) {
+                size_t pos1 = rand() % (reactSiteNum / 2);
+                size_t pos2 = reactSiteNum / 2 + rand() % (reactSiteNum / 2);
+                newAtoms[pos1]->setElementType(ElementType::C);
+                newAtoms[pos2]->setElementType(ElementType::C);
+                poses = {newAtoms[pos1]->getId(), newAtoms[pos2]->getId()};
+            } else {
+                std::shuffle(poses.begin(), poses.end(), std::default_random_engine());
+            }
+            // 非反应位点
+            for (int i = 0; i < 4; i++) {
+                newAtoms.push_back(addAtom(6));
+            }
+            std::vector<std::pair<size_t, size_t>> sBond = {
+                    {11, 1},
+                    {2,  3},
+                    {4,  12},
+                    {12, 13},
+                    {13, 5},
+                    {6,  7},
+                    {8,  14},
+                    {14, 9},
+                    {10, 11}
+            };
+            std::vector<std::pair<size_t, size_t>> dBond = {
+                    {1,  2},
+                    {3,  4},
+                    {5,  6},
+                    {7,  8},
+                    {13, 14},
+                    {9,  10},
+                    {11, 12}
+            };
+            for (auto&[a1, a2]:sBond) {
+                newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
+                                           newAtoms[a2 - 1]->getId()));
+            }
+            for (auto&[a1, a2]:dBond) {
+                newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
+                                           newAtoms[a2 - 1]->getId(),
+                                           JBondType::DoubleBond));
+            }
+            newBonds.push_back(addBond(from, poses[0]));
+            newBonds.push_back(addBond(to, poses[1]));
             break;
         }
         case 9: {
@@ -566,10 +739,11 @@ void JMol::addCommonRing(const size_t &_bid) {
     std::vector<std::shared_ptr<JBond>> newBonds;
     auto from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
     removeBond(_bid);
-    int index = rand() % 5;
+    std::vector<size_t> nodeNums={3,3,4,5,5,5,6,6,6,6,6,7,7};
+    size_t& nodeNum=randSelect(nodeNums);
     std::vector<size_t> atomicNumbers = {5, 6, 7, 8, 15, 16};
-    switch (index) {
-        case 0: {// 三元环
+    switch (nodeNum) {
+        case 3: {// 三元环
             newAtoms = {
                     addAtom(6), addAtom(6),
                     addAtom(randSelect(atomicNumbers))
@@ -583,7 +757,7 @@ void JMol::addCommonRing(const size_t &_bid) {
             };
             break;
         }
-        case 1: {// 四元环
+        case 4: {// 四元环
             newAtoms = {
                     addAtom(6), addAtom(6),
                     addAtom(6), addAtom(randSelect(atomicNumbers))
@@ -598,7 +772,7 @@ void JMol::addCommonRing(const size_t &_bid) {
             };
             break;
         }
-        case 2: {// 五元环
+        case 5: {// 五元环
             newAtoms = {
                     addAtom(6), addAtom(6),
                     addAtom(6), addAtom(6),
@@ -615,7 +789,7 @@ void JMol::addCommonRing(const size_t &_bid) {
             };
             break;
         }
-        case 3: {// 六元环
+        case 6: {// 六元环
             newAtoms = {
                     addAtom(6), addAtom(6),
                     addAtom(6), addAtom(6),
@@ -633,7 +807,7 @@ void JMol::addCommonRing(const size_t &_bid) {
             };
             break;
         }
-        case 4: {// 七元环
+        case 7: {// 七元环
             newAtoms = {
                     addAtom(6), addAtom(6),
                     addAtom(6), addAtom(6),
@@ -653,7 +827,7 @@ void JMol::addCommonRing(const size_t &_bid) {
             };
             break;
         }
-        case 5: {
+        case 100: {
             // FIXME: coodgen2d 的桥环渲染有问题
             newAtoms = {
                     addAtom(6), addAtom(6),
@@ -756,4 +930,36 @@ void JMol::updateNeighborInfoMap() {
         neighborBondsMap[from].insert(bid);
         neighborBondsMap[to].insert(bid);
     }
+}
+
+std::pair<std::vector<std::shared_ptr<JAtom>>, std::vector<std::shared_ptr<JBond>>>
+JMol::makeCarbonRing(const size_t &_nodeNum,
+                     const vector<std::pair<size_t, size_t>> &_singleLink,
+                     const vector<std::pair<size_t, size_t>> &_doubleLink,
+                     const std::vector<size_t>&_mixAtomicNumbers) {
+    
+    std::vector<std::shared_ptr<JAtom>>newAtoms;
+    for(size_t i=0;i<_nodeNum;i++){
+        newAtoms.push_back(addAtom(6));
+    }
+    std::vector<std::shared_ptr<JBond>>newBonds;
+    for (auto&[a1, a2]:_singleLink) {
+        newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
+                                   newAtoms[a2 - 1]->getId()));
+    }
+    for (auto&[a1, a2]:_doubleLink) {
+        newBonds.push_back(addBond(newAtoms[a1 - 1]->getId(),
+                                   newAtoms[a2 - 1]->getId(),
+                                   JBondType::DoubleBond));
+    }
+    if(!_mixAtomicNumbers.empty()) {
+        for (auto &atom:newAtoms) {
+            // TODO: 1：选杂原子 2：检查是否可以插入
+        }
+    }
+    return {std::move(newAtoms),std::move(newBonds)};
+}
+
+const vector<std::unordered_set<size_t>> &JMol::getAromaticRings() const {
+    return aromaticRings;
 }
