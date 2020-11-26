@@ -21,3 +21,4 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${SRC_DIR})
 
 add_subdirectory(core)
+add_subdirectory(app)

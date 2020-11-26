@@ -8,6 +8,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/SetupTorch.cmake)
 if (MSVC)
     include(${CMAKE_SOURCE_DIR}/cmake/SetupBoost.cmake)
     include(${CMAKE_SOURCE_DIR}/cmake/SetupRDKit.cmake)
+    include(${CMAKE_SOURCE_DIR}/cmake/SetupCoordgen.cmake)
 elseif (UNIX)
     include(${CMAKE_SOURCE_DIR}/cmake/SetupUnix.cmake)
 endif (MSVC)
@@ -22,7 +23,7 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/hw_mol.cpp
 
         ${SRC_DIR}/config.cpp
-        #        ${SRC_DIR}/rdkit_util.cpp
+        # ${SRC_DIR}/rdkit_util.cpp
         ${SRC_DIR}/std_util.cpp
         ${SRC_DIR}/opencv_util.cpp
         ${SRC_DIR}/torch_util.cpp
@@ -56,7 +57,8 @@ if (MSVC)
             Qt5::Widgets Qt5::Quick
             #        ${Boost_LIBRARIES}
             #        ${RDKit_THREAD_LIBS}
-            ${OpenCV_LIBS} ${TORCH_LIBRARIES} ${RDKIT_LIBRARIES})
+            ${OpenCV_LIBS} ${TORCH_LIBRARIES} ${RDKIT_LIBRARIES}
+            coordgen)
 elseif (UNIX)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             Qt5::Widgets Qt5::Quick

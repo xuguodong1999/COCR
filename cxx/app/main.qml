@@ -15,10 +15,10 @@ Window {
     // （impossible）模式3：multitouch，支持十指书写
     Component.onCompleted: {
         console.log("Component.onCompleted")
-        sketch_panel.init(width, height)
-        sketch_panel.update()
-        sketch_panel.penWidth = 5
-        sketch_panel.penColor = "white"
+        sketch_item.init(width, height)
+        sketch_item.update()
+        sketch_item.penWidth = 5
+        sketch_item.penColor = "white"
     }
     // 一次滑动操作会生成id不同的点，无法利用这个api进行多点绘图
     //    MultiPointTouchArea {
@@ -46,7 +46,7 @@ Window {
         anchors.fill: parent
         anchors.margins: 10
         SketchItem {
-            id: sketch_panel
+            id: sketch_item
             enabled: true
             anchors.fill: parent
         }
@@ -59,26 +59,26 @@ Window {
                 mouse_area.enabled = enabled
             }
             onPinchStarted: {
-                sketch_panel.invokePinchStarted(pinch.angle, pinch.scale)
+                sketch_item.invokePinchStarted(pinch.angle, pinch.scale)
             }
             onPinchUpdated: {
-                sketch_panel.invokePinchUpdated(pinch.angle, pinch.scale)
+                sketch_item.invokePinchUpdated(pinch.angle, pinch.scale)
             }
             onPinchFinished: {
-                sketch_panel.invokePinchFinished(pinch.angle, pinch.scale)
+                sketch_item.invokePinchFinished(pinch.angle, pinch.scale)
             }
             MouseArea {
                 id: mouse_area
                 enabled: false
                 anchors.fill: parent
                 onPressed: {
-                    sketch_panel.invokePressed(mouse.x, mouse.y)
+                    sketch_item.invokePressed(mouse.x, mouse.y)
                 }
                 onPositionChanged: {
-                    sketch_panel.invokePositionChanged(mouse.x, mouse.y)
+                    sketch_item.invokePositionChanged(mouse.x, mouse.y)
                 }
                 onReleased: {
-                    sketch_panel.invokeReleased(mouse.x, mouse.y)
+                    sketch_item.invokeReleased(mouse.x, mouse.y)
                 }
             }
         }
@@ -93,7 +93,7 @@ Window {
             checked: true
             onClicked: {
                 pinch_area.enabled = false
-                sketch_panel.enabled = true
+                sketch_item.enabled = true
                 checked = true
                 btn2.checked = false
             }
@@ -116,7 +116,7 @@ Window {
             text: "编辑"
             onClicked: {
                 pinch_area.enabled = true
-                sketch_panel.enabled = false
+                sketch_item.enabled = false
                 checked = true
                 btn1.checked = false
             }

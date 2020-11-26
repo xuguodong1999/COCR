@@ -18,6 +18,9 @@ Q_OBJECT
     Q_PROPERTY(int penWidth READ getPenWidth WRITE setPenWidth)
     Q_PROPERTY(QColor penColor READ getPenColor WRITE setPenColor)
 public:
+    inline static const char *uri = "SketchItem";
+    inline static const char *qmlName = "SketchItem";
+
     SketchItem(QQuickItem *parent = nullptr);
 
     void setPenWidth(const int &_penWidth);

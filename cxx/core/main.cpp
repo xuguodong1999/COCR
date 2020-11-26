@@ -1,15 +1,8 @@
-//#include "torch_util.hpp"
-//#include "torch_crnn.hpp"
-
-#include "mol.hpp"
-#include "hw_mol.hpp"
-#include "isomer.hpp"
-#include "timer.hpp"
 #include <iostream>
-#include <couch_data.hpp>
 
 using namespace std;
-
+//#include "torch_util.hpp"
+//#include "torch_crnn.hpp"
 //void testCRNN() {
 //    auto imgTensor = loadImgTensor("C:/Users/xgd/Pictures/crnn_test.png");
 //    std::cout << "imgTensor.size=" << imgTensor.sizes() << std::endl;
@@ -18,31 +11,29 @@ using namespace std;
 //    std::cout << "outSize=" << output.sizes() << std::endl;
 //}
 
-int testJMol() {
-    // C1=CC=CC=C1
+#include "hw_mol.hpp"
+#include "isomer.hpp"
+#include "couch_data.hpp"
+int testHWDraw() {
     CouchLoader::LoadCouchDataSet(false);
     auto &isomer = IsomerCounter::GetInstance();
-    auto alkanes = isomer.getIsomers(
-            {3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15});
-    Timer timer;
+    auto alkanes = isomer.getIsomers({
+                                             3, 4, 5, 6, 7, 8,
+                                             10, 11, 12, 13, 14, 15
+                                     });
+    JMol mol;
     for (auto &alkane:alkanes) {
-        std::cout << "alkane=" << alkane << std::endl;
-        timer.start();
-        JMol mol;
         mol.setAlkane(alkane);
         mol.randomize();
-//        std::cout << "randomize=" << mol.toSMILES(false) << std::endl;
         MolItem molItem(mol);
-        timer.display_duration();
         molItem.reloadHWData(0.1);
-//        system("pause");
     }
     return 0;
 }
 
 int main() {
     try {
-        return testJMol();
+        return testHWDraw();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;

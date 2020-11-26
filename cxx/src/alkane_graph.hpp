@@ -256,7 +256,7 @@ public:
         if (!_smiles.empty() && 'C' == _smiles[0]) {
             hash_string = prefix + hash_string + suffix;
         }
-        std::cout << "hs=" << hash_string << std::endl;
+//        std::cout << "hs=" << hash_string << std::endl;
         std::reverse(hash_string.begin(), hash_string.end());
         content.clear();
         std::stack<T> nodeStack;
@@ -274,7 +274,7 @@ public:
                 }
             }
         }
-        std::cout << "ts=" << toString() << std::endl;
+//        std::cout << "ts=" << toString() << std::endl;
     }
 };
 

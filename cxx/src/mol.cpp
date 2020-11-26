@@ -149,6 +149,7 @@ void JMol::clear() {
     neighborAtomsMap.clear();
     neighborBondsMap.clear();
     aromaticRingAids.clear();
+    aromaticRingBids.clear();
     mAids = mBids = std::numeric_limits<int>::lowest();
 }
 
@@ -184,10 +185,6 @@ float JMol::getFontSize() const {
     return 1;
 #endif
 }
-
-#ifdef USE_COORDGEN2D
-//static sketcherMinimizer minimizer;
-#endif
 
 std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
     std::unordered_map<size_t, cv::Point2f> atomPosMap;
@@ -997,6 +994,7 @@ JMol::getAromaticRings(bool _retAid) const {
 }
 
 void JMol::setAlkane(const string &_alkaneSMILES) {
+    clear();
     AlkaneGraph<node_type> alkane;
     alkane.fromSMILES(_alkaneSMILES);
     std::unordered_map<node_type, size_t> a2jAidMap;

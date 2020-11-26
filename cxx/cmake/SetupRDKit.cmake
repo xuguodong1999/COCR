@@ -1,6 +1,6 @@
 #find_package(Threads)
 #find_package(maeparser REQUIRED)
-find_package(coordgen REQUIRED)
+#find_package(coordgen REQUIRED)
 find_package(rdkit REQUIRED)
 set(RDKIT_LIBRARIES
         # RDKit::Abbreviations RDKit::MolCatalog RDKit::Alignment
