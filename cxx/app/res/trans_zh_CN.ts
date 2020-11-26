@@ -6,7 +6,7 @@
     <message>
         <location filename="../main.qml" line="11"/>
         <source>Paint2D</source>
-        <translation type="unfinished"></translation>
+        <translation>2D画板</translation>
     </message>
 </context>
 </TS>
