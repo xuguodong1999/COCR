@@ -103,4 +103,16 @@ inline T &randSelect(std::vector<T> &_container, const std::vector<float> &_prob
     return _container[std::min(i, _container.size() - 1)];
 }
 
+struct pair_hash {
+    template<class T1, class T2>
+    std::size_t operator()(const std::pair<T1, T2> &pair) const {
+        return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
+    }
+};
+
+template<typename E, typename T>
+inline bool notExist(const T &_container, const E &_element) {
+    return _container.end() == _container.find(_element);
+}
+
 #endif//_STD_UTIL_HPP_

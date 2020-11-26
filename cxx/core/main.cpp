@@ -23,19 +23,18 @@ int testJMol() {
     CouchLoader::LoadCouchDataSet(false);
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers(
-            {8, 9, 10, 11, 12, 13, 14, 15});
+            {3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15});
     Timer timer;
     for (auto &alkane:alkanes) {
         std::cout << "alkane=" << alkane << std::endl;
         timer.start();
         JMol mol;
-        mol.set(alkane);
-        mol.randomize(0.5, true,
-                      true, true);
-        std::cout << "randomize=" << mol.toSMILES(false) << std::endl;
+        mol.setAlkane(alkane);
+        mol.randomize();
+//        std::cout << "randomize=" << mol.toSMILES(false) << std::endl;
         MolItem molItem(mol);
         timer.display_duration();
-        molItem.reloadHWData(0.2);
+        molItem.reloadHWData(0.1);
 //        system("pause");
     }
     return 0;

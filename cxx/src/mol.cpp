@@ -1,25 +1,35 @@
 #include "mol.hpp"
 #include "std_util.hpp"
+#include "alkane_graph.hpp"
 
 #define USE_COORDGEN2D
+//#define USE_RDKIT
+
 #ifdef USE_COORDGEN2D
 
 #include <coordgen/sketcherMinimizer.h>
 
-#else
+#elif defined(USE_RDKIT)
 
 #include <GraphMol/Depictor/RDDepictor.h>
 
 #endif
+
+#ifdef USE_RDKIT
 
 #include <GraphMol/Chirality.h>
 #include <GraphMol/GraphMol.h>
 #include <GraphMol/SmilesParse/SmilesParse.h>
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 #include <GraphMol/AtomIterators.h>
+
+#endif
+
 #include <random>
 
 using namespace std;
+
+#ifdef USE_RDKIT
 
 inline JBondType convertRDKitBondTypeToJBondType(
         const RDKit::Bond::BondType &_stereo, const RDKit::Bond::BondDir &_dir) {
@@ -102,6 +112,8 @@ convertJMolToRWMol(const JMol &_jmol) {
     return {std::move(rwMol), std::move(j2rAidMap)};
 }
 
+#endif
+
 // FIXME: RDKit::Atom::ChiralType 没有传递到 RDKit::Bond::BondDir
 const std::unordered_map<size_t, std::shared_ptr<JBond>> &JMol::getBondsMap() const {
     return bondsMap;
@@ -142,6 +154,7 @@ void JMol::clear() {
 
 void JMol::set(const string &_smiles) {
     clear();
+#ifdef USE_RDKIT
     // the caller is responsible for freeing this.
     auto rwMol = RDKit::SmilesToMol(_smiles, 0, false);
     std::map<unsigned int, size_t> r2jAidMap;
@@ -158,6 +171,10 @@ void JMol::set(const string &_smiles) {
                 rBond->getBondType(), rBond->getBondDir()));
     }
     delete rwMol;
+#else
+    std::cerr << "error: define \"USE_RDKIT\" in mol.cpp to enable JMol::set" << std::endl;
+    exit(-1);
+#endif
 }
 
 float JMol::getFontSize() const {
@@ -199,7 +216,7 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
         auto pos = cAtom->getCoordinates();
         atomPosMap[aid] = cv::Point2f(pos.x(), pos.y());
     }
-#else
+#elif defined(USE_RDKIT)
     // FIXME: RDKit 内置2d引擎画的三键有问题
     auto[rwMol, j2rAidMap] = convertJMolToRWMol(*this);
     std::unordered_map<unsigned int, size_t> r2jAidMap;
@@ -216,6 +233,9 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
         auto pos = conf.getAtomPos(idx);
         atomPosMap[r2jAidMap[idx]] = cv::Point2f(pos.x, pos.y);
     }
+#else
+    std::cerr<<"no coordinate engine available in mol.cpp"<<std::endl;
+    exit(-1);
 #endif
     return std::move(atomPosMap);
 }
@@ -302,7 +322,7 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
         if (byProb(0.5) && JBondType::SingleBond == bond->getBondType()) {
             size_t from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
             // 避免一个原子挂上好几个环导致排版引擎崩溃
-            if (usedAids.end() == usedAids.find(from) && usedAids.end() == usedAids.find(to)) {
+            if (notExist(usedAids, from) && notExist(usedAids, from)) {
                 if (_addAromaticRing && byProb(0.5)) {
                     addAromaticRing(_bid);
                 } else if (_addCommonRing) {
@@ -413,8 +433,8 @@ void JMol::addHs(const size_t &_aid) {
 }
 
 std::string JMol::toSMILES(bool _addRandomStereo) const {
+#ifdef USE_RDKIT
     auto[rwMol, _] = convertJMolToRWMol(*this);
-#ifdef WIN32
     if (_addRandomStereo) {
         static std::vector<RDKit::Atom::ChiralType> candidates = {
                 RDKit::Atom::ChiralType::CHI_TETRAHEDRAL_CW,
@@ -431,17 +451,22 @@ std::string JMol::toSMILES(bool _addRandomStereo) const {
             }
         }
     }
-#endif
     auto roMol = std::make_shared<RDKit::ROMol>(*(rwMol.get()));
     return RDKit::MolToSmiles(
             *(roMol.get()), true, false, -1,
             true, false, false, false);
+#else
+    std::cerr << "error: define \"USE_RDKIT\" in mol.cpp to enable SMILES function"
+              << std::endl;
+    return "";
+#endif
+
 }
 
 void JMol::updateAtomValenceMap() {
     atomValenceMap.clear();
     auto addValence4Atom = [&](const size_t &_aid, const frac &_valence) {
-        if (atomValenceMap.end() == atomValenceMap.find(_aid)) {
+        if (notExist(atomValenceMap, _aid)) {
             atomValenceMap[_aid] = _valence;
         } else {
             atomValenceMap[_aid] += _valence;
@@ -462,7 +487,7 @@ void JMol::updateAtomValenceMap(const vector<size_t> &_bids) {
 }
 
 void JMol::addValence4Atom(const size_t &_aid, const frac &_valence) {
-    if (atomValenceMap.end() == atomValenceMap.find(_aid)) {
+    if (notExist(atomValenceMap, _aid)) {
         atomValenceMap[_aid] = _valence;
     } else {
         atomValenceMap[_aid] += _valence;
@@ -970,3 +995,31 @@ const vector<std::vector<std::unordered_set<size_t>>> &
 JMol::getAromaticRings(bool _retAid) const {
     return _retAid ? aromaticRingAids : aromaticRingBids;
 }
+
+void JMol::setAlkane(const string &_alkaneSMILES) {
+    AlkaneGraph<node_type> alkane;
+    alkane.fromSMILES(_alkaneSMILES);
+    std::unordered_map<node_type, size_t> a2jAidMap;
+    std::unordered_set<std::pair<size_t, size_t>, pair_hash> bMap;
+    // FIXME: 消除 DFS 过程的冗余操作
+    auto before = [&](const node_type &current, const node_type &from) {
+        // 添加节点
+        if (notExist(a2jAidMap, current)) {
+            a2jAidMap[current] = addAtom(6)->getId();
+        }
+        if (from != alkane.EMPTY_NODE && notExist(a2jAidMap, from)) {
+            a2jAidMap[from] = addAtom(6)->getId();
+        }
+        // 添加边
+        if (from != alkane.EMPTY_NODE) {
+            size_t jFrom = a2jAidMap[from], jTo = a2jAidMap[current];
+            if (notExist(bMap, std::make_pair(jFrom, jTo))) {
+                addBond(jFrom, jTo);
+                bMap.insert({jFrom, jTo});
+                bMap.insert({jTo, jFrom});
+            }
+        }
+    };
+    alkane.dfsWrapper(before, before, before);
+}
+

@@ -145,7 +145,7 @@ public:
 
     void set(const std::string &_smiles);
 
-    void setAlkane(const std::string&_limSmiles);
+    void setAlkane(const std::string &_alkaneSMILES);
 
     std::string toSMILES(bool _addRandomStereo = true) const;
 
