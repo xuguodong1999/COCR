@@ -61,6 +61,8 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if (MSVC)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             Qt5::Widgets Qt5::Quick
+            Qt5::3DAnimation Qt5::3DCore Qt5::3DExtras
+            Qt5::3DInput Qt5::3DLogic Qt5::3DRender
             #        ${Boost_LIBRARIES}
             #        ${RDKit_THREAD_LIBS}
             ${OpenCV_LIBS}
@@ -68,6 +70,8 @@ if (MSVC)
 elseif (UNIX)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             Qt5::Widgets Qt5::Quick
+            Qt5::3DAnimation Qt5::3DCore Qt5::3DExtras
+            Qt5::3DInput Qt5::3DLogic Qt5::3DRender
             ${COCR_UNIX_LIB} ${OpenCV_LIBS} ${TORCH_LIBRARIES})
 endif (MSVC)
 
