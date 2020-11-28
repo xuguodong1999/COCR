@@ -183,7 +183,10 @@ void MolItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_lab
         this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         this->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
-        cv::imwrite(_imgPath + suffix + ".jpg", img);
+        std::vector<int> compression_params;
+        compression_params.push_back(cv::IMWRITE_JPEG_QUALITY);
+        compression_params.push_back(25);
+        cv::imwrite(_imgPath + suffix + ".jpg", img, compression_params);
         std::ofstream ofsm(_labelPath + suffix + ".txt");
         ofsm.precision(6);
         if (!ofsm.is_open()) {
@@ -199,7 +202,7 @@ void MolItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_lab
                 std::cout << name << " " << beginLabel - 1 << std::endl;
             }
             ofsm << labels[name] << " " << centX / minWidth << " " << centY / minHeight << " "
-                 << bBox.x / minWidth << "" << bBox.y / minHeight << "\n";
+                 << bBox.width / minWidth << " " << bBox.height / minHeight << "\n";
         }
         ofsm.close();
     }

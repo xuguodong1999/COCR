@@ -325,7 +325,7 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
     std::unordered_set<size_t> usedAids;
     auto replaceBondWithRing = [&](const size_t &_bid) {
         const auto &bond = bondsMap[_bid];
-        if (byProb(0.5) && JBondType::SingleBond == bond->getBondType()) {
+        if (byProb(0.2) && JBondType::SingleBond == bond->getBondType()) {
             size_t from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
             // 避免一个原子挂上好几个环导致排版引擎崩溃
             if (notExist(usedAids, from) && notExist(usedAids, from)) {

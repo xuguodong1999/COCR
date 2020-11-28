@@ -33,8 +33,8 @@ using namespace std;
 #include "darknet_data.hpp"
 int testDarknetDump(){
     DarknetDataGenerator ddg;
-    ddg.init("D:/fuck");
-    ddg.dump(20000/5,5);
+    ddg.init("G:/soso17_2");
+    ddg.dump(60000/3,3);
     return 0;
 }
 int main() {
