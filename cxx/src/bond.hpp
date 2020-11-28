@@ -2,21 +2,10 @@
 #define _BOND_HPP_
 
 #include "fraction.hpp"
+#include "bond_type.hpp"
 #include <vector>
 #include <string>
 #include <unordered_set>
-
-enum class JBondType {
-    SingleBond = 1,// 单键，常规
-    DoubleBond = 2,// 双键
-    TripleBond = 3,// 三键
-
-    SolidWedgeBond, // 单键，实楔形
-    DashWedgeBond,  // 单键，虚楔形
-    WaveBond,       // 单键，波浪线
-
-    DelocalizedBond,// 离域键
-};
 
 class JBond {
     JBondType bondType;

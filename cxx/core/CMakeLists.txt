@@ -46,6 +46,7 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/torch_transform.cpp
 
         ${SRC_DIR}/couch_data.cpp
+        ${SRC_DIR}/darknet_data.cpp
         ${SRC_DIR}/hw.cpp
 
         ${SRC_DIR}/dataset_cifar.cpp

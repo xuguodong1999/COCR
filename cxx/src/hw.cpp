@@ -487,10 +487,13 @@ void ShapeGroup::paintTo(cv::Mat &canvas) {
     }
 }
 
-BondItem::BondItem(const string &_bondType)
+const string &ShapeGroup::getName() const {
+    return name;
+}
+
+BondItem::BondItem()
         : mUseHWChar(true), isLatest(false) {
     isRotateAllowed = true;
-    name = _bondType;
 }
 
 void BondItem::updateShapes() {
@@ -504,31 +507,42 @@ void BondItem::setUseHandWrittenWChar(bool useHandWrittenChar) {
     mUseHWChar = useHandWrittenChar;
 }
 
-shared_ptr<BondItem> BondItem::GetBond(const string &_bondType) {
+shared_ptr<BondItem> BondItem::GetBond(const JBondType &_bondType) {
     shared_ptr<BondItem> bond;
-    if (_bondType == "Single") {
-        bond = std::make_shared<SingleBond>(_bondType);
-    } else if (_bondType == "Double") {
-        bond = std::make_shared<DoubleBond>(_bondType);
-    } else if (_bondType == "Triple") {
-        bond = std::make_shared<TripleBond>(_bondType);
-    } else if (_bondType == "Circle") {
-        bond = std::make_shared<CircleBond>(_bondType);
-    } else if (_bondType == "SolidWedge") {
-        bond = std::make_shared<SolidWedgeBond>(_bondType);
-    } else if (_bondType == "DashWedge") {
-        bond = std::make_shared<DashWedgeBond>(_bondType);
-    } else if (_bondType == "Wave") {
-        bond = std::make_shared<WaveBond>(_bondType);
-    } else {
-        std::cerr << "Bond::GetBond: unknown bond type "
-                  << _bondType << std::endl;
-        exit(-1);
+    switch (_bondType) {
+        case JBondType::SolidWedgeBond:
+            bond = std::make_shared<SolidWedgeBond>();
+            break;
+        case JBondType::DashWedgeBond:
+            bond = std::make_shared<DashWedgeBond>();
+            break;
+        case JBondType::WaveBond:
+            bond = std::make_shared<WaveBond>();
+            break;
+        case JBondType::SingleBond :
+        case JBondType::DelocalizedBond:// 离域键只画骨架，环另画
+            bond = std::make_shared<SingleBond>();
+            break;
+        case JBondType::DoubleBond:
+            bond = std::make_shared<DoubleBond>();
+            break;
+        case JBondType::TripleBond:
+            bond = std::make_shared<TripleBond>();
+            break;
+        case JBondType::CircleBond:
+            bond = std::make_shared<CircleBond>();
+            break;
+        default: {
+            std::cerr << "Bond::GetBond: unknown bond type "
+                      << static_cast<int>(_bondType) << std::endl;
+            exit(-1);
+        }
     }
     return bond;
 }
 
-CircleBond::CircleBond(const string &_bondType) : BondItem(_bondType) {
+CircleBond::CircleBond() {
+    name = "Circle";
 }
 
 void CircleBond::mulK(float kx, float ky) {
@@ -637,7 +651,8 @@ void CircleBond::updateShapes() {
     }
 }
 
-SingleBond::SingleBond(const string &_bondType) : BondItem(_bondType) {
+SingleBond::SingleBond() {
+    name = "Single";
 }
 
 const cv::Rect2f SingleBond::getBoundingBox() const {
@@ -788,7 +803,8 @@ void DoubleBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-DoubleBond::DoubleBond(const string &_bondType) : SingleBond(_bondType) {
+DoubleBond::DoubleBond() {
+    name = "Double";
 }
 
 void DoubleBond::updateShapes() {
@@ -848,7 +864,8 @@ void TripleBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-TripleBond::TripleBond(const string &_bondType) : SingleBond(_bondType) {
+TripleBond::TripleBond() {
+    name = "Triple";
 }
 
 void TripleBond::updateShapes() {
@@ -901,7 +918,8 @@ void SolidWedgeBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-SolidWedgeBond::SolidWedgeBond(const string &_bondType) : SingleBond(_bondType) {
+SolidWedgeBond::SolidWedgeBond() {
+    name = "Solid";
 }
 
 void SolidWedgeBond::updateShapes() {
@@ -980,7 +998,8 @@ void DashWedgeBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-DashWedgeBond::DashWedgeBond(const string &_bondType) : SingleBond(_bondType) {
+DashWedgeBond::DashWedgeBond() {
+    name = "Dash";
 }
 
 void DashWedgeBond::updateShapes() {
@@ -1031,7 +1050,8 @@ void WaveBond::paintTo(cv::Mat &canvas) {
     }
 }
 
-WaveBond::WaveBond(const string &_bondType) : SingleBond(_bondType) {
+WaveBond::WaveBond() {
+    name = "Wave";
 }
 
 void WaveBond::updateShapes() {

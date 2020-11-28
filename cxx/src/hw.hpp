@@ -7,11 +7,13 @@
 #define _USE_MATH_DEFINES
 #endif //_USE_MATH_DEFINES
 
+#include "bond_type.hpp"
 #include "std_util.hpp"
 #include "opencv_util.hpp"
+
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>
-#include <set>
+#include <unordered_set>
 #include <string>
 
 const cv::Scalar cvBlack = cv::Scalar(0, 0, 0);
@@ -160,8 +162,8 @@ public:
     inline static float sSubOffsetKx = 0.1;// (-1,1)*50
     inline static float sSubOffsetKy = 0.1;// (-1,1)*50
     inline static float sAngleK = 0.0;// [0,1)*30
-    inline static std::set<std::string> bsSet, aeSet, btSet;
-    inline static std::set<int> acSet;
+    inline static std::unordered_set<std::string> bsSet, aeSet, btSet;
+    inline static std::unordered_set<int> acSet;
 
     struct NoiseParm {
         float mean, stddev;//gaussian
@@ -256,13 +258,16 @@ inline NString makeNotedString(
  * CH3COOH,COOH,...,etc.
  */
 class ShapeGroup : public ShapeInterface {
-public:
+protected:
     std::vector<ShapeItem> shapes;
     std::string name;
 public:
+    const std::string &getName() const;
+
+public:
     static std::shared_ptr<ShapeGroup> GetShapeGroup(const std::string &_textType = "");
 
-    ShapeGroup() : name("ShapeGroup") { isRotateAllowed = false; }
+    ShapeGroup() : name("SG") { isRotateAllowed = false; }
 
     ShapeGroup(const NString &name) {
         isRotateAllowed = false;
@@ -320,7 +325,7 @@ public:
  */
 class BondItem : public ShapeGroup {
 protected:
-    BondItem(const std::string &_bondType);
+    BondItem();
 
     bool mUseHWChar;
     bool isLatest;
@@ -330,7 +335,8 @@ protected:
 public:
     void setUseHandWrittenWChar(bool useHandWrittenChar);
 
-    static std::shared_ptr<BondItem> GetBond(const std::string &_bondType = "Single");
+    static std::shared_ptr<BondItem> GetBond(
+            const JBondType &_bondType = JBondType::SingleBond);
 
     virtual void setVertices(const std::vector<Point> &pts) = 0;
 };
@@ -342,7 +348,7 @@ class CircleBond : public BondItem {
     void updateShapes() override;
 
 public:
-    CircleBond(const std::string &_bondType);
+    CircleBond();
 
     const cv::Rect2f getBoundingBox() const override;
 
@@ -373,7 +379,7 @@ protected:
 public:
     const cv::Rect2f getBoundingBox() const override;
 
-    SingleBond(const std::string &_bondType);
+    SingleBond();
 
     void mulK(float kx, float ky);
 
@@ -398,7 +404,7 @@ class DoubleBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    DoubleBond(const std::string &_bondType);
+    DoubleBond();
 
     void paintTo(cv::Mat &canvas) override;
 };
@@ -407,7 +413,7 @@ class TripleBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    TripleBond(const std::string &_bondType);
+    TripleBond();
 
     void paintTo(cv::Mat &canvas) override;
 };
@@ -416,7 +422,7 @@ class SolidWedgeBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    SolidWedgeBond(const std::string &_bondType);
+    SolidWedgeBond();
 
     void paintTo(cv::Mat &canvas) override;
 };
@@ -425,7 +431,7 @@ class DashWedgeBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    DashWedgeBond(const std::string &_bondType);
+    DashWedgeBond();
 
     void paintTo(cv::Mat &canvas) override;
 };
@@ -434,7 +440,7 @@ class WaveBond : public SingleBond {
     void updateShapes() override;
 
 public:
-    WaveBond(const std::string &_bondType);
+    WaveBond();
 
     void paintTo(cv::Mat &canvas) override;
 };

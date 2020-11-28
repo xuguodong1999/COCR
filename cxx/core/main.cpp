@@ -11,30 +11,36 @@ using namespace std;
 //    std::cout << "outSize=" << output.sizes() << std::endl;
 //}
 
-#include "hw_mol.hpp"
-#include "isomer.hpp"
-#include "couch_data.hpp"
-int testHWDraw() {
-    CouchLoader::LoadCouchDataSet(false);
-    auto &isomer = IsomerCounter::GetInstance();
-    auto alkanes = isomer.getIsomers({
-                                             3, 4, 5, 6, 7, 8,
-                                             10, 11, 12, 13, 14, 15
-                                     });
-    JMol mol;
-    for (auto &alkane:alkanes) {
-        mol.setAlkane(alkane);
-        mol.randomize();
-        MolItem molItem(mol);
+//#include "hw_mol.hpp"
+//#include "isomer.hpp"
+//#include "couch_data.hpp"
+//int testHWDraw() {
+//    CouchLoader::LoadCouchDataSet(false);
+//    auto &isomer = IsomerCounter::GetInstance();
+//    auto alkanes = isomer.getIsomers({
+//                                             3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15
+//                                     });
+//    JMol mol;
+//    for (auto &alkane:alkanes) {
+//        mol.setAlkane(alkane);
+//        mol.randomize();
+//        MolItem molItem(mol);
 //        molItem.reloadHWData(0.1);
-        molItem.dumpAsDarknet("",5);
-    }
+//    }
+//    return 0;
+//}
+
+#include "darknet_data.hpp"
+int testDarknetDump(){
+    DarknetDataGenerator ddg;
+    ddg.init("D:/fuck");
+    ddg.dump(20000/5,5);
     return 0;
 }
-
 int main() {
     try {
-        return testHWDraw();
+//        return testHWDraw();
+        return testDarknetDump();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;

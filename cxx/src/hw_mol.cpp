@@ -1,7 +1,9 @@
 #include "hw_mol.hpp"
-#include "hw.hpp"
 #include "timer.hpp"
 #include <opencv2/opencv.hpp>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -125,35 +127,9 @@ float MolItem::reloadHWData(const float &_showCProb) {
     for (auto&[id, bond]:mol.getBondsMap()) {
         JBondType bondType = bond->getBondType();
         if (bondInKekuleRings.end() != bondInKekuleRings.find(id)) {
-            bondType = JBondType::DelocalizedBond;// 不能影响 JMol 里的数据
+            bondType = JBondType::DelocalizedBond;  // 不能影响 JMol 里的数据
         }
-        shared_ptr<BondItem> sym;
-        switch (bondType) {
-            case JBondType::SolidWedgeBond:
-                sym = BondItem::GetBond("SolidWedge");
-                break;
-            case JBondType::DashWedgeBond:
-                sym = BondItem::GetBond("DashWedge");
-                break;
-            case JBondType::WaveBond:
-                sym = BondItem::GetBond("Wave");
-                break;
-            case JBondType::SingleBond :
-            case JBondType::DelocalizedBond:// 离域键只画骨架，环另画
-                sym = BondItem::GetBond("Single");
-                break;
-            case JBondType::DoubleBond:
-                sym = BondItem::GetBond("Double");
-                break;
-            case JBondType::TripleBond:
-                sym = BondItem::GetBond("Triple");
-                break;
-            default: {
-                std::cerr << "convert " << static_cast<int>(bond->getBondType())
-                          << " To RDKitBondType failed " << std::endl;
-                exit(-1);
-            }
-        }
+        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
         sym->setUseHandWrittenWChar(true);
         auto from_ = atomPosMap[bond->getAtomFrom()];
         auto to_ = atomPosMap[bond->getAtomTo()];
@@ -169,7 +145,7 @@ float MolItem::reloadHWData(const float &_showCProb) {
         symbols.push_back(std::move(sym));
     }
     for (auto &ring:kekuleRings) {
-        auto sym = BondItem::GetBond("Circle");
+        auto sym = BondItem::GetBond(JBondType::CircleBond);
         std::vector<cv::Point2f> pts;
         std::unordered_set<size_t> aids;
         for (auto &bid:ring) {
@@ -191,32 +167,40 @@ float MolItem::reloadHWData(const float &_showCProb) {
     return avgSize;
 }
 
-void MolItem::dumpAsDarknet(const char *_topDir, const size_t &_repeatTimes) {
+static std::unordered_map<std::string, int> labels;
+static int beginLabel = 0;
+
+void MolItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
+                            const size_t &_repeatTimes) {
     float avgSize = reloadHWData(0.1);
     float k = 50.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
     for (size_t i = 0; i < _repeatTimes; i++) {
         this->rotate(rand() % 360);
         auto bBox = this->getBoundingBox();
-        const int www = 8 + bBox.width, hhh = 8 + bBox.height;
-        cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-        this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
-        std::cout << "canvasSize=" << img1.size << std::endl;
-        std::cout << "itemSize=" << this->getBoundingBox() << std::endl;
-//    this->resizeTo(www - 20, hhh - 20);
-        this->paintTo(img1);
-        auto img2 = img1.clone();
-        for (auto &ss:symbols) {
-            cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
+        const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3, cvWhite);
+        this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
+        this->paintTo(img);
+        std::string suffix = "_" + std::to_string(i);
+        cv::imwrite(_imgPath + suffix + ".jpg", img);
+        std::ofstream ofsm(_labelPath + suffix + ".txt");
+        ofsm.precision(6);
+        if (!ofsm.is_open()) {
+            std::cerr << "fail to open " << _labelPath + suffix + ".txt" << std::endl;
+            exit(-1);
         }
-#ifdef WIN32
-        cv::imshow("COCR-HW-Draw", img2);
-        cv::waitKey(0);
-        cv::imshow("COCR-HW-Draw", img1);
-        cv::waitKey(0);
-#else
-        std::cout << "press Enter to continue..." << std::endl;
-        std::cin.get();
-#endif
+        for (auto &sym:symbols) {
+            auto &name = sym->getName();
+            auto bBox = sym->getBoundingBox();
+            float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
+            if (notExist(labels, name)) {
+                labels.insert({name, beginLabel++});
+                std::cout << name << " " << beginLabel - 1 << std::endl;
+            }
+            ofsm << labels[name] << " " << centX / minWidth << " " << centY / minHeight << " "
+                 << bBox.x / minWidth << "" << bBox.y / minHeight << "\n";
+        }
+        ofsm.close();
     }
 }

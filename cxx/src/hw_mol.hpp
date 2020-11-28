@@ -9,13 +9,11 @@
 
 class MolItem : public ShapeInterface {
     std::vector<std::shared_ptr<ShapeGroup>> symbols;
-//    OpenBabel::OBMol obMol;
-//    std::map<int, OpenBabel::OBAtom *> aidMap;
-    std::string inSmiles;
 
     void mulK(float kx, float ky) override;
 
     const JMol &mol;
+
 public:
     /**
      * @param _showCProb 控制碳原子是否显示写出
@@ -23,7 +21,14 @@ public:
      */
     float reloadHWData(const float &_showCProb = 0.1);
 
-    void dumpAsDarknet(const char *_topDir, const size_t &_repeatTimes = 1);
+    /**
+     *
+     * @param _imgPath C:/soso/JPEGImages/1a43, e.g. index will append as _i.jpg
+     * @param _labelPath C:/soso/labels/1a43, e.g. index will append as _i.txt
+     * @param _repeatTimes
+     */
+    void dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
+                       const size_t &_repeatTimes = 1);
 
     /**
      * 用 JMol 构造一个几何分子类型
