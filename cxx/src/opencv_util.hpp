@@ -24,5 +24,9 @@ padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight);
  */
 std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar &_bgPixel = 255);
 
+template<typename _Tp>
+inline _Tp getDistance(const cv::Point_<_Tp> &p1, const cv::Point_<_Tp> &p2) {
+    return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
+}
 
 #endif//_OPENCV_UTIL_HPP_

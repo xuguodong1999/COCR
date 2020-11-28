@@ -90,16 +90,15 @@ void MolItem::mulK(float kx, float ky) {
     }
 }
 
-void MolItem::reloadHWData(const float &_showCProb) {
-    Timer timer;
-    timer.start();
+float MolItem::reloadHWData(const float &_showCProb) {
     symbols.clear();
     // 记录显式写出的原子 id
     std::unordered_map<size_t, bool> explicitAtomMap;
     auto atomPosMap = mol.get2DCoordinates();
     for (auto&[id, atom]:mol.getAtomsMap()) {
         auto sym = ShapeGroup::GetShapeGroup(atom->getElementName());
-        sym->resizeTo(mol.getFontSize(), mol.getFontSize());
+        float fontSize = mol.getFontSize() * betweenProb(0.3, 0.7);
+        sym->resizeTo(fontSize, fontSize);
         sym->moveCenterTo(atomPosMap[id]);
         if (ElementType::C == atom->getElementType()) {
             explicitAtomMap[id] = byProb(_showCProb);
@@ -183,26 +182,41 @@ void MolItem::reloadHWData(const float &_showCProb) {
         sym->setVertices(pts);
         symbols.push_back(std::move(sym));
     }
-    const int www = 1080, hhh = 640;
-    cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
-    this->rotate(rand() % 360);
-    this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
-    this->resizeTo(www - 20, hhh - 20);
-    this->paintTo(img1);
-    auto img2 = img1.clone();
-    for (auto &ss:symbols) {
-        cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
+    float avgSize = 0;
+    for (auto &sym:symbols) {
+        auto bBox = sym->getBoundingBox();
+        avgSize += (bBox.width + bBox.height);
     }
-    timer.stop();
+    avgSize /= (2 * symbols.size());
+    return avgSize;
+}
+
+void MolItem::dumpAsDarknet(const char *_topDir, const size_t &_repeatTimes) {
+    float avgSize = reloadHWData(0.1);
+    float k = 50.0f / (std::max)(0.01f, avgSize);
+    this->mulK(k, k);
+    for (size_t i = 0; i < _repeatTimes; i++) {
+        this->rotate(rand() % 360);
+        auto bBox = this->getBoundingBox();
+        const int www = 8 + bBox.width, hhh = 8 + bBox.height;
+        cv::Mat img1 = cv::Mat(hhh, www, CV_8UC3, cvWhite);
+        this->moveCenterTo(cv::Point2f(www / 2, hhh / 2));
+        std::cout << "canvasSize=" << img1.size << std::endl;
+        std::cout << "itemSize=" << this->getBoundingBox() << std::endl;
+//    this->resizeTo(www - 20, hhh - 20);
+        this->paintTo(img1);
+        auto img2 = img1.clone();
+        for (auto &ss:symbols) {
+            cv::rectangle(img1, ss->getBoundingBox(), cvRed, 1);
+        }
 #ifdef WIN32
-    cv::imshow("COCR-HW-Draw", img2);
-    cv::waitKey(0);
-    cv::imshow("COCR-HW-Draw", img1);
-    cv::waitKey(0);
-//    cv::imwrite("D:/draw.png",img1);
-//    system("pause");
+        cv::imshow("COCR-HW-Draw", img2);
+        cv::waitKey(0);
+        cv::imshow("COCR-HW-Draw", img1);
+        cv::waitKey(0);
 #else
-    std::cout << "press Enter to continue..." << std::endl;
-    std::cin.get();
+        std::cout << "press Enter to continue..." << std::endl;
+        std::cin.get();
 #endif
+    }
 }

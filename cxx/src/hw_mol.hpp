@@ -18,10 +18,12 @@ class MolItem : public ShapeInterface {
     const JMol &mol;
 public:
     /**
-     * 控制原子是否显示写出
-     * 控制化学键的起点和终点
+     * @param _showCProb 控制碳原子是否显示写出
+     * @return 平均图元大小
      */
-    void reloadHWData(const float &_showCProb = 0.1);
+    float reloadHWData(const float &_showCProb = 0.1);
+
+    void dumpAsDarknet(const char *_topDir, const size_t &_repeatTimes = 1);
 
     /**
      * 用 JMol 构造一个几何分子类型

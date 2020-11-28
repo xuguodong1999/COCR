@@ -40,6 +40,10 @@ inline float aboveProb(const float &_prob) {
     return 1.0 - rand() / static_cast<float>(RAND_MAX) * _prob;
 }
 
+inline float betweenProb(const float &_minProb, const float &_maxProb) {
+    return _minProb + belowProb(_maxProb - _minProb);
+}
+
 /**
  * @param _posProb 一个正浮点数
  * @return (-_posProb,_posProb)

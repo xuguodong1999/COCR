@@ -156,7 +156,7 @@ void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThre
     float kLen2 = minMaxProb(slideOffset);
     Point p1 = pp1 + (pp1 - pp2) * kLen1, p2 = pp2 + (pp2 - pp1) * kLen2;
 //    Point p1=pp1,p2=pp2;
-    float lenPP = distance(p1, p2);
+    float lenPP = getDistance(p1, p2);
     p1.x += lenPP * minMaxProb(slideOffset);
     p2.x += lenPP * minMaxProb(slideOffset);
     p1.y += lenPP * minMaxProb(slideOffset);
@@ -168,8 +168,8 @@ void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThre
                   std::inserter(input, input.end()));
     }
     cv::minAreaRect(input).points(from.data());
-    auto s03 = distance(from[0], from[3]);
-    auto s01 = distance(from[0], from[1]);
+    auto s03 = getDistance(from[0], from[3]);
+    auto s01 = getDistance(from[0], from[1]);
     while (s03 < std::numeric_limits<float>::epsilon()
            || s01 < std::numeric_limits<float>::epsilon()) {
         mData.clear();
@@ -595,7 +595,7 @@ void CircleBond::setVertices(const vector<Point> &pts) {
     center.y /= pts.size();
     r = 0;
     for (auto &pt:pts)
-        r += distance(center, pt);
+        r += getDistance(center, pt);
     r /= pts.size();
     // TODO: 分离随即要素
     const float minLen = 0.2;
@@ -641,13 +641,18 @@ SingleBond::SingleBond(const string &_bondType) : BondItem(_bondType) {
 }
 
 const cv::Rect2f SingleBond::getBoundingBox() const {
-    if (isLatest) { return ShapeGroup::getBoundingBox(); }
-    float x, y, w, h;
-    x = std::min(from.x, to.x);
-    y = std::min(from.y, to.y);
-    w = std::max(from.x, to.x) - x;
-    h = std::max(from.y, to.y) - y;
-    return cv::Rect2f(x - 1, y - 1, w + 2, h + 2);
+    if (!isLatest) {
+        const_cast<SingleBond *>(this)->updateShapes();
+    }
+    return ShapeGroup::getBoundingBox();
+    // FIXME: 键图元的包围盒是用关键点算的，和加载手写数据以后的包围盒不一致
+//    if (isLatest) { return ShapeGroup::getBoundingBox(); }
+//    float x, y, w, h;
+//    x = std::min(from.x, to.x);
+//    y = std::min(from.y, to.y);
+//    w = std::max(from.x, to.x) - x;
+//    h = std::max(from.y, to.y) - y;
+//    return cv::Rect2f(x - 1, y - 1, w + 2, h + 2);
 }
 
 void SingleBond::updateShapes() {
@@ -763,7 +768,7 @@ void DoubleBond::paintTo(cv::Mat &canvas) {
         }
     } else {
         cv::Point2f vec = from - to;
-        auto length = distance(from, to);
+        auto length = getDistance(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -788,7 +793,7 @@ DoubleBond::DoubleBond(const string &_bondType) : SingleBond(_bondType) {
 
 void DoubleBond::updateShapes() {
     BondItem::updateShapes();
-    //FIXME: 设置间隔，这里和MolItem::reloadHWData有冲突
+    //FIXME: 设置间隔，这里和 MolItem::reloadHWData 有冲突
     const float intervalK = 0.2;
     cv::Point2f vec = from - to;
     cv::Point2f vecT(0, 1);
@@ -797,7 +802,7 @@ void DoubleBond::updateShapes() {
         vecT /= cv::norm(vecT);
     }
     if (mUseHWChar) {
-        auto length = distance(from, to);
+        auto length = getDistance(from, to);
         auto offset = vecT * length * intervalK;
         auto line1 = CouchLoader::GetShape("line");
         line1.castToLine(from + offset / 2, to + offset / 2);
@@ -819,7 +824,7 @@ void TripleBond::paintTo(cv::Mat &canvas) {
         }
     } else {
         cv::Point2f vec = from - to;
-        auto length = distance(from, to);
+        auto length = getDistance(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -856,7 +861,7 @@ void TripleBond::updateShapes() {
         vecT /= cv::norm(vecT);
     }
     if (mUseHWChar) {
-        auto length = distance(from, to);
+        auto length = getDistance(from, to);
         auto offset = vecT * length * intervalK;
         auto line1 = CouchLoader::GetShape("line");
         line1.castToLine(from + offset / 2, to + offset / 2);
@@ -882,7 +887,7 @@ void SolidWedgeBond::paintTo(cv::Mat &canvas) {
         }
     } else {
         cv::Point2f vec = from - to;
-        auto length = distance(from, to);
+        auto length = getDistance(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -905,7 +910,7 @@ void SolidWedgeBond::updateShapes() {
     const int numOfSplit = 10;
     if (mUseHWChar) {
         cv::Point2f vec = from - to;
-        auto length = distance(from, to);
+        auto length = getDistance(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -940,7 +945,7 @@ void DashWedgeBond::paintTo(cv::Mat &canvas) {
         }
     } else {
         cv::Point2f vec = from - to;
-        auto length = distance(from, to);
+        auto length = getDistance(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -984,7 +989,7 @@ void DashWedgeBond::updateShapes() {
     const int numOfSplit = 5;
     if (mUseHWChar) {
         cv::Point2f vec = from - to;
-        auto length = distance(from, to);
+        auto length = getDistance(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);

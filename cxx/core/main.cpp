@@ -26,7 +26,8 @@ int testHWDraw() {
         mol.setAlkane(alkane);
         mol.randomize();
         MolItem molItem(mol);
-        molItem.reloadHWData(0.1);
+//        molItem.reloadHWData(0.1);
+        molItem.dumpAsDarknet("",5);
     }
     return 0;
 }

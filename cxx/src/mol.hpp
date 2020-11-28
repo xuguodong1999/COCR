@@ -28,6 +28,7 @@ class JMol {
     std::unordered_map<size_t, std::unordered_set<size_t>> neighborBondsMap;
     //芳环
     std::vector<std::vector<std::unordered_set<size_t>>> aromaticRingAids, aromaticRingBids;
+    float fontSize;
 
     /**
      * 为当前原子补全氢原子，修改化合价表
@@ -158,7 +159,7 @@ public:
     /**
      * @return 特定绘图引擎下理想字体的边长，一般为化学键长度的 1/2
      */
-    float getFontSize() const;
+    const float &getFontSize() const;
 };
 
 #endif//_MOL_HPP_

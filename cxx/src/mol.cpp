@@ -1,5 +1,6 @@
 #include "mol.hpp"
 #include "std_util.hpp"
+#include "opencv_util.hpp"
 #include "alkane_graph.hpp"
 
 #define USE_COORDGEN2D
@@ -178,12 +179,8 @@ void JMol::set(const string &_smiles) {
 #endif
 }
 
-float JMol::getFontSize() const {
-#ifdef USE_COORDGEN2D
-    return 30;
-#else
-    return 1;
-#endif
+const float &JMol::getFontSize() const {
+    return fontSize;
 }
 
 std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
@@ -234,6 +231,18 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
     std::cerr<<"no coordinate engine available in mol.cpp"<<std::endl;
     exit(-1);
 #endif
+    // FIXME: 想一下怎么设计函数的 const
+    float &_fontSize = const_cast<float &>(fontSize);
+    _fontSize = 0;
+    for (auto&[_, bond]:bondsMap) {
+        _fontSize += getDistance(atomPosMap[bond->getAtomFrom()],
+                                 atomPosMap[bond->getAtomTo()]);
+    }
+    if (bondsMap.empty()) {
+        _fontSize = 30;
+    } else {
+        _fontSize /= bondsMap.size();
+    }
     return std::move(atomPosMap);
 }
 
