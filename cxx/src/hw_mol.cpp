@@ -167,8 +167,25 @@ float MolItem::reloadHWData(const float &_showCProb) {
     return avgSize;
 }
 
-static std::unordered_map<std::string, int> labels;
-static int beginLabel = 0;
+static std::unordered_map<std::string, int> labels = {
+        {"O",      1},
+        {"I",      2},
+        {"C",      6},
+        {"F",      12},
+        {"N",      5},
+        {"H",      4},
+        {"Dash",   9},
+        {"Single", 8},
+        {"Double", 11},
+        {"Triple", 13},
+        {"Circle", 16},
+        {"S",      3},
+        {"P",      15},
+        {"Br",     0},
+        {"B",      7},
+        {"Solid",  10},
+        {"Cl",     14}};
+//static int beginLabel = 0;
 
 void MolItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
                             const size_t &_repeatTimes) {
@@ -183,10 +200,11 @@ void MolItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_lab
         this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         this->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
-        std::vector<int> compression_params;
-        compression_params.push_back(cv::IMWRITE_JPEG_QUALITY);
-        compression_params.push_back(25);
-        cv::imwrite(_imgPath + suffix + ".jpg", img, compression_params);
+        if (byProb(RC::revertColorProb)) {// 反转颜色
+            cv::bitwise_not(img, img);
+        }
+        cv::imwrite(_imgPath + suffix + ".jpg", img,
+                    {cv::IMWRITE_JPEG_QUALITY, 100});
         std::ofstream ofsm(_labelPath + suffix + ".txt");
         ofsm.precision(6);
         if (!ofsm.is_open()) {
@@ -197,10 +215,10 @@ void MolItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_lab
             auto &name = sym->getName();
             auto bBox = sym->getBoundingBox();
             float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
-            if (notExist(labels, name)) {
-                labels.insert({name, beginLabel++});
-                std::cout << name << " " << beginLabel - 1 << std::endl;
-            }
+//            if (notExist(labels, name)) {
+//                labels.insert({name, beginLabel++});
+//                std::cout << name << " " << beginLabel - 1 << std::endl;
+//            }
             ofsm << labels[name] << " " << centX / minWidth << " " << centY / minHeight << " "
                  << bBox.width / minWidth << " " << bBox.height / minHeight << "\n";
         }

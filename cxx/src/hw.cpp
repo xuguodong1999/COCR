@@ -1005,7 +1005,7 @@ DashWedgeBond::DashWedgeBond() {
 void DashWedgeBond::updateShapes() {
     BondItem::updateShapes();
     const float intervalK = 0.5;
-    const int numOfSplit = 5;
+    const int numOfSplit = 4 + rand() % 3; // default: 5
     if (mUseHWChar) {
         cv::Point2f vec = from - to;
         auto length = getDistance(from, to);
@@ -1029,9 +1029,11 @@ void DashWedgeBond::updateShapes() {
         float x1, y1, x2, y2;
         x1 = x2 = from.x;
         y1 = y2 = from.y;
+        float angle = minMaxProb(60);
         for (float i = 0; i <= 1.0; i += 1.0 / numOfSplit) {
             auto line = CouchLoader::GetShape("line");
             line.castToLine(cv::Point2f(x1, y1), cv::Point2f(x2, y2));
+            line.rotate(angle);
             shapes.push_back(std::move(line));
             x1 += d[0];
             y1 += d[1];

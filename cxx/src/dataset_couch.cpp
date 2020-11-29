@@ -149,14 +149,14 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
         c1_1.copyTo(c1(roi));
         std::vector<cv::Mat> splitedMat({c1, c1, c1});
         cv::merge(splitedMat.data(), 3, img);
-        if ((prob % 100) / 100.0 < RC::revertColorProb) {// 反转颜色
+        if (byProb(RC::revertColorProb)) {// 反转颜色
             cv::bitwise_not(img, img);
         }
     } else {
         auto item = CouchLoader::GetShapeItem(classIndex, sampleIndex);
         auto bgColor = cvWhite, strokeColor = cvBlack;
         if (isTrainMode()) {
-            if ((prob % 100) / 100.0 < RC::revertColorProb) {// 反转颜色
+            if (byProb(RC::revertColorProb)) {// 反转颜色
                 std::swap(strokeColor, bgColor);
             }
         }
