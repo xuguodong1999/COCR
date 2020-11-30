@@ -42,6 +42,7 @@ add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
         ${SRC_DIR}/config.cpp
         ${SRC_DIR}/std_util.cpp
         ${SRC_DIR}/opencv_util.cpp
+        ${SRC_DIR}/opencv_yolo.cpp
         ${SRC_DIR}/qt_util.cpp
 
         ${SRC_DIR}/couch_data.cpp

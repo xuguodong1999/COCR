@@ -1,8 +1,14 @@
 #include "opencv_util.hpp"
 #include <opencv2/opencv.hpp>
 
+const cv::Scalar cvBlack = cv::Scalar(0, 0, 0);
+const cv::Scalar cvWhite = cv::Scalar(255, 255, 255);
+const cv::Scalar cvBlue = cv::Scalar(255, 0, 0);
+const cv::Scalar cvRed = cv::Scalar(0, 0, 255);
+
 std::pair<cv::Mat, std::tuple<float, float, float>>
-padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight) {
+padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
+           const cv::Scalar &_padColor) {
     int w = _img.cols;
     int h = _img.rows;
     float kw = (float) _newWidth / w, kh = (float) _newHeight / h;
@@ -10,13 +16,14 @@ padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight) {
     int newWidth = k * w, newHeight = k * h;
     cv::Mat ret;
 //    std::cout << w << "," << h << "," << k << "," << std::endl;
-    cv::resize(_img, ret, cv::Size(newWidth, newHeight));
+    cv::resize(_img, ret, cv::Size(newWidth, newHeight),
+               0, 0, cv::INTER_CUBIC);
     int dw = std::max(0, _newWidth - newWidth), dh = std::max(0, _newHeight - newHeight);
     cv::copyMakeBorder(ret, ret,
                        dh / 2, dh - dh / 2, dw / 2, dw - dw / 2,
-                       cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+                       cv::BORDER_CONSTANT, _padColor);
 //    std::cout<<dw<<","<<dh<<","<<ret.cols<<","<<ret.rows<<std::endl;
-    return std::make_pair(std::move(ret), std::make_tuple(k, dw / 2.f, dh / 2.f));
+    return {std::move(ret), {k, dw / 2.f, dh / 2.f}};
 }
 
 std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar &_bgPixel) {

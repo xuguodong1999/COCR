@@ -6,6 +6,8 @@
 #include <utility>
 #include <opencv2/core/mat.hpp>
 
+extern const cv::Scalar cvBlack, cvWhite, cvBlue, cvRed;
+
 /**
  *
  * @param _img
@@ -14,7 +16,8 @@
  * @return 图像，{比例、水平偏移、竖直偏移}
  */
 std::pair<cv::Mat, std::tuple<float, float, float>>
-padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight);
+padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
+           const cv::Scalar &_padColor = cv::Scalar(255., 255., 255.));
 
 /**
  * 在单通道黑白[0-255]位图上，寻找非 _bgPixel 像素的最小正包围盒

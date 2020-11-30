@@ -16,10 +16,6 @@
 #include <unordered_set>
 #include <string>
 
-const cv::Scalar cvBlack = cv::Scalar(0, 0, 0);
-const cv::Scalar cvWhite = cv::Scalar(255, 255, 255);
-const cv::Scalar cvBlue = cv::Scalar(255, 0, 0);
-const cv::Scalar cvRed = cv::Scalar(0, 0, 255);
 using Point = cv::Point2f;
 using Stroke = std::vector<Point>;
 using Script = std::vector<Stroke>;
@@ -182,13 +178,12 @@ public:
     }
 
     struct ShapeAttr {
-        //color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0)
         int thickness;
         int lineType;
         int shift;
         cv::Scalar color;
 
-        ShapeAttr() : color(cvBlack), thickness(2), lineType(cv::LINE_AA), shift(0) {}
+        ShapeAttr();
     };
 
     static void update_shape_attr() {
