@@ -3,6 +3,7 @@
 #include <QTranslator>
 #include <QApplication>
 #include <QQmlApplicationEngine>
+
 const char *fontUrl = ":/simfang.subset.ttf";
 const char *transUrl = ":/trans_zh_CN.qm";
 
@@ -67,7 +68,7 @@ int main(int argc, char **argv) {
     sphereMesh->setGenerateTangents(true);
     sphereMesh->setSlices(128);
 
-    auto *cylinderMesh=new Qt3DExtras::QCylinderMesh;
+    auto *cylinderMesh = new Qt3DExtras::QCylinderMesh;
     cylinderMesh->setLength(20);
     cylinderMesh->setRadius(5);
 
@@ -94,16 +95,16 @@ int main(int argc, char **argv) {
     auto *camera = view.camera();
 //    camera->lens()->setPerspectiveProjection(80.0f, 1.0f/1.0f, 0.01f, 1024000.0f);
     camera->setPosition(QVector3D(0, 0, 0));
-    camera->setUpVector(QVector3D(0,0,1));
-    auto locPos=QVector3D(50,50,0);
-    camera->setViewCenter(QVector3D(100,100,0));
+    camera->setUpVector(QVector3D(0, 0, 1));
+    auto locPos = QVector3D(50, 50, 0);
+    camera->setViewCenter(QVector3D(100, 100, 0));
     sphereTransform->setTranslation(locPos);
 
     // For camera controls
     auto camController = new Qt3DExtras::QOrbitCameraController(scene);
 //    auto camController = new Qt3DExtras::QFirstPersonCameraController(scene);
-    camController->setLinearSpeed( 50.0f );
-    camController->setLookSpeed( 180.0f );
+    camController->setLinearSpeed(50.0f);
+    camController->setLookSpeed(180.0f);
     camController->setCamera(camera);
 
     view.setRootEntity(scene);
