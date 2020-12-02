@@ -72,13 +72,13 @@ void OpenCVYolo::forward(const cv::Mat &_input, const int &_gridSize) {
         cv::Rect2d &box = boxes[indices[i]];
 //        ids[indices[i]];
 //        confidences[indices[i]];
-        std::cout << labels[ids[indices[i]]] << ",conf=" << confidences[indices[i]] << std::endl;
-        rectangle(
-                resizedImg, box.tl(), box.br(),
-                cvBlue,
-                2
-        );
+//        std::cout << labels[ids[indices[i]]] << ",conf=" << confidences[indices[i]] << std::endl;
+//        rectangle(
+//                resizedImg, box.tl(), box.br(),
+//                cvBlue,
+//                2
+//        );
     }
-    cv::imshow("resizedImg", resizedImg);
-    cv::waitKey(0);
+//    cv::imshow("resizedImg", resizedImg);
+//    cv::waitKey(0);
 }

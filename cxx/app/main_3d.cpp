@@ -3,7 +3,6 @@
 #include <QTranslator>
 #include <QApplication>
 #include <QQmlApplicationEngine>
-
 const char *fontUrl = ":/simfang.subset.ttf";
 const char *transUrl = ":/trans_zh_CN.qm";
 
@@ -36,6 +35,7 @@ inline void addTranslator() {
 
 #include <Qt3DInput/QInputAspect>
 
+#include <Qt3DExtras/QFirstPersonCameraController>
 #include <Qt3DExtras/QOrbitCameraController>
 #include <Qt3DExtras/QForwardRenderer>
 #include <Qt3DRender/QRenderAspect>
@@ -67,6 +67,10 @@ int main(int argc, char **argv) {
     sphereMesh->setGenerateTangents(true);
     sphereMesh->setSlices(128);
 
+    auto *cylinderMesh=new Qt3DExtras::QCylinderMesh;
+    cylinderMesh->setLength(20);
+    cylinderMesh->setRadius(5);
+
     auto *material = new Qt3DExtras::QPhongMaterial(scene);
 //    material->setSpecular(Qt::darkRed);
 
@@ -76,24 +80,28 @@ int main(int argc, char **argv) {
     material->setDiffuse(Qt::darkGray);
     material->setShininess(100);
 
-
-    Qt3DCore::QTransform *sphereTransform = new Qt3DCore::QTransform;
-    sphereTransform->setScale(0.3);
-    sphereTransform->setTranslation(QVector3D(-3,-3,0));
+    auto sphereTransform = new Qt3DCore::QTransform;
+    sphereTransform->setScale(1);
+//    sphereTransform->setTranslation(QVector3D(-3,-3,0));
 
     sphereEntity->addComponent(material);
-    sphereEntity->addComponent(sphereMesh);
+    sphereEntity->addComponent(cylinderMesh);
     sphereEntity->addComponent(sphereTransform);
 
     Qt3DExtras::Qt3DWindow view;
+
     // Camera
     auto *camera = view.camera();
-    camera->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.01f, 1024000.0f);
-    camera->setPosition(QVector3D(10, 0, 0));
-    camera->setViewCenter(QVector3D(0,0,0));
+//    camera->lens()->setPerspectiveProjection(80.0f, 1.0f/1.0f, 0.01f, 1024000.0f);
+    camera->setPosition(QVector3D(0, 0, 0));
+    camera->setUpVector(QVector3D(0,0,1));
+    auto locPos=QVector3D(50,50,0);
+    camera->setViewCenter(QVector3D(100,100,0));
+    sphereTransform->setTranslation(locPos);
 
     // For camera controls
     auto camController = new Qt3DExtras::QOrbitCameraController(scene);
+//    auto camController = new Qt3DExtras::QFirstPersonCameraController(scene);
     camController->setLinearSpeed( 50.0f );
     camController->setLookSpeed( 180.0f );
     camController->setCamera(camera);
