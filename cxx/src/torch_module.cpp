@@ -101,7 +101,7 @@ ConvModuleImpl::ConvModuleImpl(
         Conv2d(Conv2dOptions(
                 _inputSize, _outputSize, {_kernelSize, _kernelSize})
                        .padding({_kernelSize / 2, _kernelSize / 2})
-                       .stride(1)
+                       .stride(_stride)
                        .bias(false)),
         BatchNorm2d(BatchNorm2dOptions(_outputSize)),
         LeakyReLU()) {
