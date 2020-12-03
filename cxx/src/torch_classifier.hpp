@@ -5,6 +5,11 @@
 #include <memory>
 #include <vector>
 #include <utility>
+#include <cmath>
+
+#ifndef RESCALE
+#define RESCALE(a) static_cast<int>(std::lround((a)*_mv3Scale))
+#endif
 
 /**
  * 将分类器看作三个部分：输入-若干次下采样-分类

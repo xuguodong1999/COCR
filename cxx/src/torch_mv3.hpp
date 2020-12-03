@@ -15,7 +15,7 @@ public:
 
 class Mv3Large : public torch::nn::Module, public BaseClassifier {
 public:
-    Mv3Large(const int &_numOfClass);
+    Mv3Large(const int &_numOfClass, const float &_mv3Scale = 1.0);
 
     torch::Tensor forward(torch::Tensor x);
 

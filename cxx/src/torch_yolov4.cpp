@@ -9,8 +9,6 @@
 using namespace torch;
 using namespace torch::nn;
 
-#define RESCALE(a) std::lround((a)*_mv3Scale)
-
 Yolov4::Yolov4(const int &_numOfClass, const float &_mv3Scale) : BaseClassifier(
         Sequential(
                 Conv2d(Conv2dOptions(3, RESCALE(16), {3, 3})

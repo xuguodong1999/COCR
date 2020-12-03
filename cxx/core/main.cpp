@@ -9,8 +9,8 @@ using namespace std;
 #include "torch_util.hpp"
 
 int testYolov4() {
-//    torch::Device device(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU);
-    torch::Device device(torch::kCPU);
+    torch::Device device(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU);
+//    torch::Device device(torch::kCPU);
     auto imgTensor = loadImgTensor("C:/Users/xgd/Pictures/cocr_test_1.png");
     std::cout << "imgTensor.size=" << imgTensor.sizes() << std::endl;
     auto model = std::make_shared<Yolov4>(17, 1.5);
