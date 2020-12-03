@@ -70,6 +70,7 @@ cv::Mat convertQImageToMat(const QImage &_img) {
             exit(-1);
         }
     }
+    std::cout << mat.cols << "x" << mat.rows << std::endl;
     return std::move(mat);
 }
 

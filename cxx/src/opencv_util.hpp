@@ -6,14 +6,47 @@
 #include <utility>
 #include <opencv2/core/mat.hpp>
 
-extern const cv::Scalar cvBlack, cvWhite, cvBlue, cvRed;
+extern const cv::Scalar
+        cvBlack,
+        cvWhite,
+        cvBlue,
+        cvRed,
+        cvCyan4,
+        cvSeaGreen1,
+        cvMidnightBlue,
+        cvSlateBlue,
+        cvLightSlateBlue,
+        cvKhaki1,
+        cvLightGoldenrod4,
+        cvGold1,
+        cvGoldenrod2,
+        cvRosyBrown1,
+        cvRosyBrown3,
+        cvSienna1,
+        cvWheat1,
+        cvVioletRed,
+        cvPurple,
+        cvDeepPink1,
+        cvDarkMagenta;
 
 /**
- *
+ * 将图像填充到指定尺寸，先进行缩放
  * @param _img
  * @param _newWidth
  * @param _newHeight
  * @return 图像，{比例、水平偏移、竖直偏移}
+ */
+std::pair<cv::Mat, std::tuple<float, float, float>>
+resizeCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
+              const cv::Scalar &_padColor = cv::Scalar(255., 255., 255.));
+
+/**
+ * 将图像填充到更大尺寸，不进行缩放
+ * @param _img
+ * @param _newWidth
+ * @param _newHeight
+ * @param _padColor
+ * @return
  */
 std::pair<cv::Mat, std::tuple<float, float, float>>
 padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,

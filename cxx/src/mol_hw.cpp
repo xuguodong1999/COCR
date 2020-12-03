@@ -201,7 +201,7 @@ void MolHwItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_l
         this->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
         if (byProb(RC::revertColorProb)) {// 反转颜色
-            cv::bitwise_not(img, img);
+//            cv::bitwise_not(img, img);
         }
         cv::imwrite(_imgPath + suffix + ".jpg", img,
                     {cv::IMWRITE_JPEG_QUALITY, 100});
@@ -223,5 +223,21 @@ void MolHwItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_l
                  << bBox.width / minWidth << " " << bBox.height / minHeight << "\n";
         }
         ofsm.close();
+    }
+}
+
+void MolHwItem::showOnScreen(const size_t &_repeatTimes) {
+    float avgSize = reloadHWData(0.1);
+    float k = 50.0f / (std::max)(0.01f, avgSize);
+    this->mulK(k, k);
+    for (size_t i = 0; i < _repeatTimes; i++) {
+        this->rotate(rand() % 360);
+        auto bBox = this->getBoundingBox();
+        const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3, cvWhite);
+        this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
+        this->paintTo(img);
+        cv::imshow("MolHwItem::showOnScreen", img);
+        cv::waitKey(0);
     }
 }
