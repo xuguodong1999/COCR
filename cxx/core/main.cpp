@@ -12,6 +12,7 @@ int testYolov4() {
     torch::Device device(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU);
 //    torch::Device device(torch::kCPU);
     auto imgTensor = loadImgTensor("C:/Users/xgd/Pictures/cocr_test_1.png");
+    imgTensor = torch::zeros({1, 3, 32, 32});
     std::cout << "imgTensor.size=" << imgTensor.sizes() << std::endl;
     auto model = std::make_shared<Yolov4>(17, 1.5);
     model->to(device);
@@ -24,7 +25,6 @@ int testYolov4() {
         timer.display_duration();
     }
     torch::save(model, "D:/fuck.pth");
-//    std::cout << "outSize=" << output.sizes() << std::endl;
     return 0;
 }
 //#include "torch_util.hpp"
