@@ -122,7 +122,8 @@ YoloHeaderImpl::YoloHeaderImpl(const int &_inputSize, const int &_anchorNum,
         Conv2d(Conv2dOptions(_inputSize,
                              _anchorNum * (1 + _locParmNum + _numOfClass),
                              {1, 1})
-                       .stride({1, 1}))) {
+                       .stride({1, 1})
+                       .bias(true))) {
     register_module("yolo-head", layers);
 }
 
