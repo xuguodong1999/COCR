@@ -1,4 +1,4 @@
-#include "hw_mol.hpp"
+#include "mol_hw.hpp"
 #include "timer.hpp"
 #include <opencv2/opencv.hpp>
 #include <filesystem>
@@ -7,17 +7,17 @@
 
 using namespace std;
 
-MolItem::MolItem(const JMol &_jmol) : mol(_jmol) {
+MolHwItem::MolHwItem(const JMol &_jmol) : mol(_jmol) {
 
 }
 
-void MolItem::paintTo(cv::Mat &canvas) {
+void MolHwItem::paintTo(cv::Mat &canvas) {
     for (auto &sym:symbols) {
         sym->paintTo(canvas);
     }
 }
 
-void MolItem::rotateBy(float angle, const cv::Point2f &cent) {
+void MolHwItem::rotateBy(float angle, const cv::Point2f &cent) {
     for (auto &s:symbols) {
         s->rotateBy(angle, cent);
         if (!s->IsRotateAllowed()) {
@@ -26,7 +26,7 @@ void MolItem::rotateBy(float angle, const cv::Point2f &cent) {
     }
 }
 
-const cv::Rect2f MolItem::getBoundingBox() const {
+const cv::Rect2f MolHwItem::getBoundingBox() const {
     if (symbols.empty()) {
         return cv::Rect2f(0, 0, 1, 1);
     }
@@ -43,7 +43,7 @@ const cv::Rect2f MolItem::getBoundingBox() const {
     return cv::Rect2f(minx, miny, maxx - minx, maxy - miny);
 }
 
-void MolItem::rotate(float angle) {
+void MolHwItem::rotate(float angle) {
     // 旋转的逻辑，骨架直接旋转，字符只做平移
     auto cent = getCenter();
     for (auto &sym:symbols) {
@@ -54,25 +54,25 @@ void MolItem::rotate(float angle) {
     }
 }
 
-void MolItem::move(const cv::Point2f &offset) {
+void MolHwItem::move(const cv::Point2f &offset) {
     for (auto &sym:symbols) {
         sym->move(offset);
     }
 }
 
-void MolItem::moveCenterTo(const cv::Point2f &newCenter) {
+void MolHwItem::moveCenterTo(const cv::Point2f &newCenter) {
     auto oldCenter = getCenter();
     cv::Point2f offset = newCenter - oldCenter;
     move(offset);
 }
 
-void MolItem::moveLeftTopTo(const cv::Point2f &leftTop) {
+void MolHwItem::moveLeftTopTo(const cv::Point2f &leftTop) {
     cv::Rect2f bBox = getBoundingBox();
     cv::Point2f offset = bBox.tl() - leftTop;
     move(offset);
 }
 
-void MolItem::resizeTo(float w, float h, bool keepRatio) {
+void MolHwItem::resizeTo(float w, float h, bool keepRatio) {
     cv::Rect2f bBox = getBoundingBox();
     cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
     float oldW = bBox.width, oldH = bBox.height;
@@ -86,13 +86,13 @@ void MolItem::resizeTo(float w, float h, bool keepRatio) {
     moveCenterTo(oldCenter);
 }
 
-void MolItem::mulK(float kx, float ky) {
+void MolHwItem::mulK(float kx, float ky) {
     for (auto &s:symbols) {
         s->mulK(kx, ky);
     }
 }
 
-float MolItem::reloadHWData(const float &_showCProb) {
+float MolHwItem::reloadHWData(const float &_showCProb) {
     symbols.clear();
     // 记录显式写出的原子 id
     std::unordered_map<size_t, bool> explicitAtomMap;
@@ -187,8 +187,8 @@ static std::unordered_map<std::string, int> labels = {
         {"Cl",     14}};
 //static int beginLabel = 0;
 
-void MolItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
-                            const size_t &_repeatTimes) {
+void MolHwItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
+                              const size_t &_repeatTimes) {
     float avgSize = reloadHWData(0.1);
     float k = 50.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);

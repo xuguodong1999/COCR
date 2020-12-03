@@ -37,7 +37,8 @@ add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/bond.cpp
-        ${SRC_DIR}/hw_mol.cpp
+        ${SRC_DIR}/mol_hw.cpp
+        ${SRC_DIR}/mol3d.cpp
 
         ${SRC_DIR}/config.cpp
         ${SRC_DIR}/std_util.cpp

@@ -1,5 +1,5 @@
-#ifndef _HW_MOL_HPP_
-#define _HW_MOL_HPP_
+#ifndef _MOL_HW_HPP_
+#define _MOL_HW_HPP_
 
 #include "hw.hpp"
 #include "mol.hpp"
@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 
-class MolItem : public ShapeInterface {
+class MolHwItem : public ShapeInterface {
     std::vector<std::shared_ptr<ShapeGroup>> symbols;
 
     void mulK(float kx, float ky) override;
@@ -34,7 +34,7 @@ public:
      * 用 JMol 构造一个几何分子类型
      * @param _jmol Construct a MolItem from JMol
      */
-    MolItem(const JMol &_jmol);
+    MolHwItem(const JMol &_jmol);
 
     void paintTo(cv::Mat &canvas) override;
 
@@ -79,4 +79,4 @@ public:
     void resizeTo(float w, float h, bool keepRatio = true) override;
 };
 
-#endif //_HW_MOL_HPP_
+#endif //_MOL_HW_HPP_

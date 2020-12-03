@@ -1,6 +1,6 @@
 #include "darknet_data.hpp"
 
-#include "hw_mol.hpp"
+#include "mol_hw.hpp"
 #include "isomer.hpp"
 #include "couch_data.hpp"
 
@@ -54,7 +54,7 @@ void DarknetDataGenerator::dump(const size_t &_numOfSamples, const size_t &_repe
     do {
         mol.setAlkane(alkanes[loop % alkanes.size()]);
         mol.randomize();
-        MolItem molItem(mol);
+        MolHwItem molItem(mol);
         molItem.dumpAsDarknet(imgPath + std::to_string(loop),
                               labelPath + std::to_string(loop),
                               _repeatTimes);

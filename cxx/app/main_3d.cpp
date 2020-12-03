@@ -1,8 +1,18 @@
 #include "qml_sketchitem.hpp"
+#include "mol3d.hpp"
 #include <QFontDatabase>
 #include <QTranslator>
 #include <QApplication>
 #include <QQmlApplicationEngine>
+
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QCommandLinkButton>
+#include <QtGui/QScreen>
+
+#include <Qt3DRender/QPointLight>
 
 const char *fontUrl = ":/simfang.subset.ttf";
 const char *transUrl = ":/trans_zh_CN.qm";
@@ -39,20 +49,13 @@ inline void addTranslator() {
 #include <Qt3DExtras/QFirstPersonCameraController>
 #include <Qt3DExtras/QOrbitCameraController>
 #include <Qt3DExtras/QForwardRenderer>
-#include <Qt3DRender/QRenderAspect>
-#include <Qt3DExtras/QPhongMaterial>
-#include <Qt3DExtras/QDiffuseSpecularMaterial>
-#include <Qt3DExtras/QCylinderMesh>
-#include <Qt3DExtras/QSphereMesh>
-#include <Qt3DExtras/QTorusMesh>
 #include <Qt3DExtras/Qt3DWindow>
 
 int main(int argc, char **argv) {
     qputenv("QML_DISABLE_DISK_CACHE", "1");
-    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+//    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QApplication app(argc, argv);
-
     addFontData();
     addTranslator();
 
@@ -60,55 +63,110 @@ int main(int argc, char **argv) {
 //                                SketchItem::qmlName);
 //    QQmlApplicationEngine engine(QUrl("qrc:/main.qml"));
 
-    auto *scene = new Qt3DCore::QEntity;
+    Qt3DExtras::Qt3DWindow *view = new Qt3DExtras::Qt3DWindow();
+    view->defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
+    QWidget *container = QWidget::createWindowContainer(view);
+    QSize screenSize = view->screen()->size();
+    container->setMinimumSize(QSize(200, 100));
+    container->setMaximumSize(screenSize);
 
-    auto *sphereEntity = new Qt3DCore::QEntity(scene);
-    auto *sphereMesh = new Qt3DExtras::QSphereMesh;
-    sphereMesh->setRadius(3);
-    sphereMesh->setGenerateTangents(true);
-    sphereMesh->setSlices(128);
+    QWidget *widget = new QWidget;
+    QHBoxLayout *hLayout = new QHBoxLayout(widget);
+    QVBoxLayout *vLayout = new QVBoxLayout();
+    vLayout->setAlignment(Qt::AlignTop);
+    hLayout->addWidget(container, 1);
+    hLayout->addLayout(vLayout);
 
-    auto *cylinderMesh = new Qt3DExtras::QCylinderMesh;
-    cylinderMesh->setLength(20);
-    cylinderMesh->setRadius(5);
+    widget->setWindowTitle(QStringLiteral("Basic shapes"));
 
-    auto *material = new Qt3DExtras::QPhongMaterial(scene);
-//    material->setSpecular(Qt::darkRed);
-
-//    auto *material = new Qt3DExtras::QDiffuseSpecularMaterial(scene);
-
-    material->setAmbient(Qt::lightGray);
-    material->setDiffuse(Qt::darkGray);
-    material->setShininess(100);
-
-    auto sphereTransform = new Qt3DCore::QTransform;
-    sphereTransform->setScale(1);
-//    sphereTransform->setTranslation(QVector3D(-3,-3,0));
-
-    sphereEntity->addComponent(material);
-    sphereEntity->addComponent(cylinderMesh);
-    sphereEntity->addComponent(sphereTransform);
-
-    Qt3DExtras::Qt3DWindow view;
+    // Root entity
+    Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
 
     // Camera
-    auto *camera = view.camera();
-//    camera->lens()->setPerspectiveProjection(80.0f, 1.0f/1.0f, 0.01f, 1024000.0f);
-    camera->setPosition(QVector3D(0, 0, 0));
-    camera->setUpVector(QVector3D(0, 0, 1));
-    auto locPos = QVector3D(50, 50, 0);
-    camera->setViewCenter(QVector3D(100, 100, 0));
-    sphereTransform->setTranslation(locPos);
+    Qt3DRender::QCamera *cameraEntity = view->camera();
+
+    cameraEntity->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.001f, 1000.0f);
+    cameraEntity->setPosition(QVector3D(0, 0, 20.0f));
+    cameraEntity->setUpVector(QVector3D(0, 1, 0));
+    cameraEntity->setViewCenter(QVector3D(0, 0, 0));
+
+    Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+    Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
+    light->setColor("white");
+    light->setIntensity(1);
+    lightEntity->addComponent(light);
+    Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+    lightTransform->setTranslation(cameraEntity->position());
+    lightEntity->addComponent(lightTransform);
 
     // For camera controls
-    auto camController = new Qt3DExtras::QOrbitCameraController(scene);
-//    auto camController = new Qt3DExtras::QFirstPersonCameraController(scene);
-    camController->setLinearSpeed(50.0f);
-    camController->setLookSpeed(180.0f);
-    camController->setCamera(camera);
+    auto *camController = new Qt3DExtras::QFirstPersonCameraController(rootEntity);
+    camController->setLinearSpeed(-camController->linearSpeed());
+    camController->setLookSpeed(-camController->lookSpeed());
+    camController->setCamera(cameraEntity);
 
-    view.setRootEntity(scene);
-    view.showMaximized();
+    // Scenemodifier
+    Mol3D *modifier = new Mol3D(rootEntity);
+
+    // Set root object of the scene
+    view->setRootEntity(rootEntity);
+
+    // Create control widgets
+    QCommandLinkButton *info = new QCommandLinkButton();
+    info->setText(QStringLiteral("Qt3D ready-made meshes"));
+    info->setDescription(
+            "Qt3D provides several ready-made meshes, "
+            "like torus, cylinder, cone, "
+            "cube, plane and sphere.");
+    info->setIconSize(QSize(0, 0));
+
+    QCheckBox *torusCB = new QCheckBox(widget);
+    torusCB->setChecked(true);
+    torusCB->setText(QStringLiteral("Torus"));
+
+    QCheckBox *coneCB = new QCheckBox(widget);
+    coneCB->setChecked(true);
+    coneCB->setText(QStringLiteral("Cone"));
+
+    QCheckBox *cylinderCB = new QCheckBox(widget);
+    cylinderCB->setChecked(true);
+    cylinderCB->setText(QStringLiteral("Cylinder"));
+
+    QCheckBox *cuboidCB = new QCheckBox(widget);
+    cuboidCB->setChecked(true);
+    cuboidCB->setText(QStringLiteral("Cuboid"));
+
+    QCheckBox *planeCB = new QCheckBox(widget);
+    planeCB->setChecked(true);
+    planeCB->setText(QStringLiteral("Plane"));
+
+    QCheckBox *sphereCB = new QCheckBox(widget);
+    sphereCB->setChecked(true);
+    sphereCB->setText(QStringLiteral("Sphere"));
+
+    vLayout->addWidget(info);
+    vLayout->addWidget(torusCB);
+    vLayout->addWidget(coneCB);
+    vLayout->addWidget(cylinderCB);
+    vLayout->addWidget(cuboidCB);
+    vLayout->addWidget(planeCB);
+    vLayout->addWidget(sphereCB);
+
+    QObject::connect(cylinderCB, &QCheckBox::stateChanged,
+                     modifier, &Mol3D::enableCylinder);
+    QObject::connect(sphereCB, &QCheckBox::stateChanged,
+                     modifier, &Mol3D::enableSphere);
+
+    torusCB->setChecked(true);
+    coneCB->setChecked(true);
+    cylinderCB->setChecked(true);
+    cuboidCB->setChecked(true);
+    planeCB->setChecked(true);
+    sphereCB->setChecked(true);
+
+    // Show window
+    widget->show();
+    widget->resize(1200, 800);
 
     return app.exec();
 }
