@@ -12,11 +12,14 @@ set(RDKIT_LIBRARIES
         # RDKit::O3AAlign
         # RDKit::Deprotect RDKit::Optimizer RDKit::Descriptors
         # RDKit::PartialCharges RDKit::DistGeometry
-        # RDKit::DistGeomHelpers RDKit::RDGeometryLib RDKit::EigenSolvers
+        RDKit::DistGeomHelpers
+        # RDKit::RDGeometryLib RDKit::EigenSolvers
         # RDKit::ReducedGraphs RDKit::FileParsers RDKit::RGroupDecomposition
         # RDKit::FilterCatalog RDKit::RingDecomposerLib RDKit::Fingerprints
         # RDKit::ScaffoldNetwork RDKit::FMCS RDKit::ShapeHelpers
-        # RDKit::ForceField RDKit::SimDivPickers RDKit::ForceFieldHelpers
+        RDKit::ForceField
+        # RDKit::SimDivPickers
+        RDKit::ForceFieldHelpers
         # RDKit::SLNParse RDKit::FragCatalog
         # RDKit::Subgraphs RDKit::hc RDKit::SubstructLibrary RDKit::InfoTheory
         # RDKit::SubstructMatch RDKit::MMPA RDKit::TautomerQuery RDKit::MolAlign

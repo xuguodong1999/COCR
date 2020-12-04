@@ -4,15 +4,11 @@
 #include "alkane_graph.hpp"
 
 #define USE_COORDGEN2D
-//#define USE_RDKIT
+#define USE_RDKIT
 
 #ifdef USE_COORDGEN2D
 
 #include <coordgen/sketcherMinimizer.h>
-
-#elif defined(USE_RDKIT)
-
-#include <GraphMol/Depictor/RDDepictor.h>
 
 #endif
 
@@ -23,6 +19,12 @@
 #include <GraphMol/SmilesParse/SmilesParse.h>
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 #include <GraphMol/AtomIterators.h>
+#include <GraphMol/Depictor/RDDepictor.h>
+#include <GraphMol/MolAlign/AlignMolecules.h>
+#include <GraphMol/DistGeomHelpers/Embedder.h>
+#include <GraphMol/ForceFieldHelpers/UFF/UFF.h>
+#include <GraphMol/ForceFieldHelpers/MMFF/MMFF.h>
+#include <GraphMol/MolOps.h>
 
 #endif
 
@@ -418,7 +420,7 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
             }
         }
     }
-    // TODO: 波浪线、环
+    // TODO: 波浪线
     // TODO: 添加不展开的字符串
 }
 
@@ -441,6 +443,7 @@ void JMol::addHs(const size_t &_aid) {
 std::string JMol::toSMILES(bool _addRandomStereo) const {
 #ifdef USE_RDKIT
     auto[rwMol, _] = convertJMolToRWMol(*this);
+#ifdef WIN32
     if (_addRandomStereo) {
         static std::vector<RDKit::Atom::ChiralType> candidates = {
                 RDKit::Atom::ChiralType::CHI_TETRAHEDRAL_CW,
@@ -457,6 +460,7 @@ std::string JMol::toSMILES(bool _addRandomStereo) const {
             }
         }
     }
+#endif
     auto roMol = std::make_shared<RDKit::ROMol>(*(rwMol.get()));
     return RDKit::MolToSmiles(
             *(roMol.get()), true, false, -1,
@@ -1028,5 +1032,29 @@ void JMol::setAlkane(const string &_alkaneSMILES) {
         }
     };
     alkane.dfsWrapper(before, before, before);
+}
+
+std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates() const {
+    std::unordered_map<size_t, cv::Point3f> atomPosMap;
+#ifdef USE_RDKIT
+    auto[rwMol, j2rAidMap] = convertJMolToRWMol(*this);
+    std::unordered_map<unsigned int, size_t> r2jAidMap;
+    for (auto&[jAid, rAid]:j2rAidMap) {
+        r2jAidMap[rAid] = jAid;
+    }
+    j2rAidMap.clear();
+    // FIXME:getNumImplicitHs() called without preceding call to calcImplicitValence()
+//    RDKit::MolOps::addHs(*rwMol);
+    RDKit::DGeomHelpers::EmbedMolecule(*rwMol, 0, 1234);
+    RDKit::UFF::UFFOptimizeMolecule(*rwMol);
+//    RDKit::MMFF::MMFFOptimizeMolecule( *rwMol , 1000 , "MMFF94s" );
+    auto conf = rwMol->getConformer();
+    for (auto it = rwMol->beginAtoms(); it != rwMol->endAtoms(); it++) {
+        auto idx = (*it)->getIdx();
+        auto pos = conf.getAtomPos(idx);
+        atomPosMap[r2jAidMap[idx]] = cv::Point3f(pos.x, pos.y, pos.z);
+    }
+#endif //! USE_RDKIT
+    return std::move(atomPosMap);
 }
 

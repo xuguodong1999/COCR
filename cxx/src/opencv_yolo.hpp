@@ -1,18 +1,13 @@
 #ifndef _OPENCV_YOLO_HPP_
 #define _OPENCV_YOLO_HPP_
 
+#include "gt_box.hpp"
+
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
 
 #include <memory>
 #include <vector>
-
-struct gt_box {
-    cv::Rect2d bBox;
-    int label;
-
-    gt_box(const cv::Rect2d &_bBox, const int &_label) : bBox(_bBox), label(_label) {}
-};
 
 extern std::vector<std::string> CLASSES;
 extern std::vector<cv::Scalar> COLORS;

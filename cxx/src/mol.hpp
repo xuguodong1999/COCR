@@ -156,6 +156,8 @@ public:
 
     std::unordered_map<size_t, cv::Point2f> get2DCoordinates() const;
 
+    std::unordered_map<size_t, cv::Point3f> get3DCoordinates() const;
+
     /**
      * @return 特定绘图引擎下理想字体的边长，一般为化学键长度的 1/2
      */

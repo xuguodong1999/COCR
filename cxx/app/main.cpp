@@ -1,16 +1,17 @@
-#include <iostream>
-#include <exception>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
 #include "opencv_yolo.hpp"
 #include "qt_util.hpp"
-
-using namespace std;
+#include "box2graph.hpp"
+#include "mol_hw.hpp"
 
 #include <QFileDialog>
 #include <QApplication>
 #include <QDebug>
 #include <QToolButton>
+
+#include <iostream>
+#include <exception>
+
+using namespace std;
 
 int main(int argc, char **argv) {
     qputenv("QML_DISABLE_DISK_CACHE", "1");
@@ -45,9 +46,12 @@ int main(int argc, char **argv) {
             qDebug() << info.filePath();
             QImage image = QImage(info.absoluteFilePath()).convertToFormat(
                     QImage::Format_RGB888);
-            yolo.forward(convertQImageToMat(image.scaled(
+            auto[gtBox, img]=yolo.forward(convertQImageToMat(image.scaled(
                     image.size(), Qt::IgnoreAspectRatio,
                     Qt::SmoothTransformation)), false);
+            JMol mol;
+            BoxGraphConverter converter(mol);
+            converter.accept(gtBox, img);
         }
         return app.exec();
     } catch (std::exception &e) {

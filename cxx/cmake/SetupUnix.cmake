@@ -12,9 +12,11 @@ set(COCR_UNIX_LIB
         # -lRDKitAlignment -lRDKitCatalogs -lRDKitChemReactions -lRDKitChemTransforms
         # -lRDKitChemicalFeatures -lRDKitDataStructs
         # -lRDKitDescriptors
-        # -lRDKitDistGeomHelpers -lRDKitDistGeometry -lRDKitEigenSolvers -lRDKitFMCS
-        # -lRDKitFileParsers -lRDKitFilterCatalog -lRDKitFingerprints -lRDKitForceField
-        # -lRDKitForceFieldHelpers -lRDKitFragCatalog
+        -lRDKitDistGeomHelpers
+        # -lRDKitDistGeometry -lRDKitEigenSolvers -lRDKitFMCS
+        # -lRDKitFileParsers -lRDKitFilterCatalog -lRDKitFingerprints
+        -lRDKitForceField -lRDKitForceFieldHelpers
+        # -lRDKitFragCatalog
         # -lRDKitInfoTheory
         # -lRDKitMMPA -lRDKitMolAlign -lRDKitMolCatalog -lRDKitMolChemicalFeatures
         # -lRDKitMolDraw2D -lRDKitMolHash -lRDKitMolInterchange -lRDKitMolStandardize

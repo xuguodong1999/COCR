@@ -4,7 +4,7 @@
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 
 #ifdef WIN32
-//RDLogger rdErrorLog;
+RDLogger rdErrorLog;
 #endif
 using namespace std;
 
