@@ -26,7 +26,7 @@ qt5_add_resources(RES_FILES
 
 qt5_add_big_resources(BIG_RES_FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/big_res.qrc)
 
-set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main_3d.cpp)
 
 add_custom_target(app_translations ALL DEPENDS ${QM_FILES})
 
@@ -59,6 +59,7 @@ add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
         ${SRC_DIR}/cocr_types.cpp
         ${SRC_DIR}/timer.cpp
 
+        ${SRC_DIR}/mol3dwindow.cpp
         ${SRC_DIR}/qml_sketchitem.cpp)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

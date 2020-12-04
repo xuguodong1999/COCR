@@ -10,15 +10,12 @@ class Mol3D : public QObject {
 Q_OBJECT
 
 public:
-    explicit Mol3D(Qt3DCore::QEntity *rootEntity);
+    explicit Mol3D(Qt3DCore::QEntity *_rootEntity);
 
     ~Mol3D();
 
 public slots:
 
-    void enableCylinder(bool enabled);
-
-    void enableSphere(bool enabled);
 
 private:
     Qt3DCore::QEntity *getSphereEntity(const QVector3D &_center, const float &_radius,
@@ -31,8 +28,6 @@ private:
     std::unordered_map<size_t, Qt3DCore::QEntity *> mBondEntities;
 
     Qt3DCore::QEntity *mRootEntity;
-    Qt3DCore::QEntity *m_cylinderEntity;
-    Qt3DCore::QEntity *m_sphereEntity;
 };
 
 

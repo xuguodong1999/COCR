@@ -1,0 +1,38 @@
+#ifndef _MOL3D_WINDOW_HPP_
+#define _MOL3D_WINDOW_HPP_
+
+#include <Qt3DExtras/Qt3DWindow>
+#include <Qt3DCore/QTransform>
+
+class Mol3DWindow : public Qt3DExtras::Qt3DWindow {
+Q_OBJECT
+    QPoint lastPos;
+    bool isPressed;
+    float activatedRadius;
+    std::vector<Qt3DCore::QTransform *> lightsTrans;// 操纵光源的位置
+
+    Q_PROPERTY(float activatedRadius READ getActivatedRadius WRITE setActivatedRadius NOTIFY activatedRadiusChanged)
+Q_SIGNALS:
+
+    void activatedRadiusChanged(const float &);
+
+public:
+    float getActivatedRadius() const;
+
+    void setActivatedRadius(const float &_activatedRadius);
+
+    explicit Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen = nullptr);
+
+    ~Mol3DWindow() = default;
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+
+    void mouseReleaseEvent(QMouseEvent *event) override;
+
+    void mouseMoveEvent(QMouseEvent *event) override;
+
+    void focusOutEvent(QFocusEvent *event) override;
+};
+
+#endif//_MOL3D_WINDOW_HPP_

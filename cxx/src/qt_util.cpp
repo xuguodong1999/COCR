@@ -6,7 +6,7 @@
 #include <QFont>
 #include <QImage>
 #include <QPainter>
-#include <QFontMetrics>
+#include <QtGui/QVector3D>
 
 #include <iostream>
 
@@ -77,3 +77,16 @@ cv::Mat convertQImageToMat(const QImage &_img) {
 cv::Mat convertQPixmapToMat(const QPixmap &_img) {
     return convertQImageToMat(_img.toImage());
 }
+
+const QVector3D
+        axisX(1, 0, 0),
+        axisY(0, 1, 0),
+        axisZ(0, 0, 1),
+        zeroP(0, 0, 0);
+
+const std::vector<QVector3D> tetrahedral = {
+        QVector3D(0, 0, 0.75 * std::sqrt(2)),
+        QVector3D(0, -1, -0.25 * std::sqrt(2)),
+        QVector3D(std::sqrt(3) / 2, 0.5, -0.25 * std::sqrt(2)),
+        QVector3D(-std::sqrt(3) / 2, 0.5, -0.25 * std::sqrt(2))
+};

@@ -5,11 +5,16 @@
 #ifndef _STD_UTIL_HPP_
 #define _STD_UTIL_HPP_
 
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif //_USE_MATH_DEFINES
+
 #include <string>
 #include <vector>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 
 template<typename T>
 std::string to_string_with_precision(const T _fValue, const int n = 2) {

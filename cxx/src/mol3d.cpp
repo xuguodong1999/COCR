@@ -1,4 +1,5 @@
 #include "mol3d.hpp"
+#include "qt_util.hpp"
 
 #include <Qt3DCore/QTransform>
 
@@ -11,47 +12,22 @@
 
 #include <QDebug>
 
-Mol3D::Mol3D(Qt3DCore::QEntity *rootEntity)
-        : mRootEntity(rootEntity) {
-    // Cylinder shape data
-    Qt3DExtras::QCylinderMesh *cylinder = new Qt3DExtras::QCylinderMesh();
-    cylinder->setRadius(1);
-    cylinder->setLength(3);
-    cylinder->setRings(100);
-    cylinder->setSlices(20);
-
-    // CylinderMesh Transform
-    Qt3DCore::QTransform *cylinderTransform = new Qt3DCore::QTransform();
-    cylinderTransform->setScale(1.5f);
-    cylinderTransform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1.0f, 0.0f, 0.0f), 45.0f));
-    cylinderTransform->setTranslation(QVector3D(-5.0f, 4.0f, -1.5));
-
-    Qt3DExtras::QPhongMaterial *cylinderMaterial = new Qt3DExtras::QPhongMaterial();
-    cylinderMaterial->setDiffuse(QColor(QRgb(0x928327)));
-
-    // Cylinder
-    m_cylinderEntity = new Qt3DCore::QEntity(mRootEntity);
-    m_cylinderEntity->addComponent(cylinder);
-    m_cylinderEntity->addComponent(cylinderMaterial);
-    m_cylinderEntity->addComponent(cylinderTransform);
-
-
+Mol3D::Mol3D(Qt3DCore::QEntity *_rootEntity)
+        : mRootEntity(_rootEntity) {
     // Sphere
-    m_sphereEntity = getSphereEntity(
-            QVector3D(-5.0f, -4.0f, 0.0f), 2, QColor(QRgb(0xa69929)));
+    getSphereEntity(
+            QVector3D(0, 0, 0),
+            2, Qt::black);
+
+    QVector3D offset(-30, 30, 0);
+    getCylinderEntity(offset + zeroP, offset + axisX * 10, 1, Qt::blue);
+    getCylinderEntity(offset + zeroP, offset + axisY * 10, 1, Qt::red);
+    getCylinderEntity(offset + zeroP, offset + axisZ * 10, 1, Qt::green);
 }
 
 Mol3D::~Mol3D() {
 }
 
-
-void Mol3D::enableCylinder(bool enabled) {
-    m_cylinderEntity->setEnabled(enabled);
-}
-
-void Mol3D::enableSphere(bool enabled) {
-    m_sphereEntity->setEnabled(enabled);
-}
 
 Qt3DCore::QEntity *Mol3D::getSphereEntity(
         const QVector3D &_center, const float &_radius, const QColor &_color) {
@@ -74,8 +50,27 @@ Qt3DCore::QEntity *Mol3D::getSphereEntity(
     return sphereEntity;
 }
 
-Qt3DCore::QEntity *
-Mol3D::getCylinderEntity(const QVector3D &_from, const QVector3D &_to,
-                         const float &_radius, const QColor &_color) {
-    return nullptr;
+Qt3DCore::QEntity *Mol3D::getCylinderEntity(
+        const QVector3D &_from, const QVector3D &_to,
+        const float &_radius, const QColor &_color) {
+    Qt3DExtras::QCylinderMesh *cylinder = new Qt3DExtras::QCylinderMesh();
+    cylinder->setRadius(_radius);
+    cylinder->setLength(_from.distanceToPoint(_to));
+    cylinder->setRings(100);
+    cylinder->setSlices(20);
+
+    Qt3DCore::QTransform *cylinderTransform = new Qt3DCore::QTransform();
+    cylinderTransform->setScale(1.0f);
+    // 内置圆柱中轴线在y轴上，重心位于坐标原点
+    cylinderTransform->setRotation(QQuaternion::rotationTo(_from - _to, axisY));
+    cylinderTransform->setTranslation((_from + _to) / 2.0);
+
+    Qt3DExtras::QPhongMaterial *cylinderMaterial = new Qt3DExtras::QPhongMaterial();
+    cylinderMaterial->setDiffuse(_color);
+
+    auto cylinderEntity = new Qt3DCore::QEntity(mRootEntity);
+    cylinderEntity->addComponent(cylinder);
+    cylinderEntity->addComponent(cylinderMaterial);
+    cylinderEntity->addComponent(cylinderTransform);
+    return cylinderEntity;
 }
