@@ -12,17 +12,35 @@
 
 #include <QDebug>
 
-Mol3D::Mol3D(Qt3DCore::QEntity *_rootEntity)
-        : mRootEntity(_rootEntity) {
-    // Sphere
-    getSphereEntity(
-            QVector3D(0, 0, 0),
-            2, Qt::black);
-
+Mol3D::Mol3D(JMol &_mol, Qt3DCore::QEntity *_rootEntity)
+        : mol(_mol), mRootEntity(_rootEntity) {
+    // 坐标系
     QVector3D offset(-30, 30, 0);
     getCylinderEntity(offset + zeroP, offset + axisX * 10, 1, Qt::blue);
     getCylinderEntity(offset + zeroP, offset + axisY * 10, 1, Qt::red);
     getCylinderEntity(offset + zeroP, offset + axisZ * 10, 1, Qt::green);
+
+//    getSphereEntity(zeroP2, Qt::black);
+    auto pos3DMap = mol.get3DCoordinates(true);
+    std::cout << mol.toSMILES(false) << std::endl;
+//    std::cout<<mol.getAtomsMap().size()<<std::endl;
+//    std::cout<<mol.getBondsMap().size()<<std::endl;
+    auto convert = [](const cv::Point3f &cvPts) -> QVector3D {
+        return QVector3D(cvPts.x, cvPts.y, cvPts.z);
+    };
+    auto addAtomEntity = [&](const size_t &_aid) -> void {
+        cv::Point3f pos = 5 * pos3DMap[_aid];
+        qDebug() << convert(pos);
+        getSphereEntity(convert(pos), 3, Qt::darkYellow);
+    };
+    mol.safeTraverseAtoms(addAtomEntity);
+    auto addBondEntity = [&](const size_t &_bid) -> void {
+        auto &bond = mol.getBondsMap().at(_bid);
+        cv::Point3f from = 5 * pos3DMap[bond->getAtomFrom()];
+        cv::Point3f to = 5 * pos3DMap[bond->getAtomTo()];
+        getCylinderEntity(convert(from), convert(to), 0.5, Qt::darkRed);
+    };
+    mol.safeTraverseBonds(addBondEntity);
 }
 
 Mol3D::~Mol3D() {
@@ -62,7 +80,7 @@ Qt3DCore::QEntity *Mol3D::getCylinderEntity(
     Qt3DCore::QTransform *cylinderTransform = new Qt3DCore::QTransform();
     cylinderTransform->setScale(1.0f);
     // 内置圆柱中轴线在y轴上，重心位于坐标原点
-    cylinderTransform->setRotation(QQuaternion::rotationTo(_from - _to, axisY));
+    cylinderTransform->setRotation(QQuaternion::rotationTo(axisY, _from - _to));
     cylinderTransform->setTranslation((_from + _to) / 2.0);
 
     Qt3DExtras::QPhongMaterial *cylinderMaterial = new Qt3DExtras::QPhongMaterial();

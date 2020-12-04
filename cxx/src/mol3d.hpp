@@ -1,6 +1,8 @@
 #ifndef _MOL3D_HPP_
 #define _MOL3D_HPP_
 
+#include "mol.hpp"
+
 #include <Qt3DCore/QEntity>
 #include <Qt3DExtras/QTorusMesh>
 
@@ -9,15 +11,6 @@
 class Mol3D : public QObject {
 Q_OBJECT
 
-public:
-    explicit Mol3D(Qt3DCore::QEntity *_rootEntity);
-
-    ~Mol3D();
-
-public slots:
-
-
-private:
     Qt3DCore::QEntity *getSphereEntity(const QVector3D &_center, const float &_radius,
                                        const QColor &_color);
 
@@ -28,6 +21,15 @@ private:
     std::unordered_map<size_t, Qt3DCore::QEntity *> mBondEntities;
 
     Qt3DCore::QEntity *mRootEntity;
+    JMol &mol;
+public:
+    explicit Mol3D(JMol &_mol, Qt3DCore::QEntity *_rootEntity);
+
+    ~Mol3D();
+
+public slots:
+
+
 };
 
 

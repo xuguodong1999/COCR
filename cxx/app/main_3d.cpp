@@ -1,19 +1,16 @@
 #include "qml_sketchitem.hpp"
+#include "isomer.hpp"
 #include "mol3d.hpp"
 #include "mol3dwindow.hpp"
+
 #include <QFontDatabase>
 #include <QTranslator>
-#include <QApplication>
 #include <QQmlApplicationEngine>
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QCommandLinkButton>
 #include <QtGui/QScreen>
-
-#include <Qt3DRender/QPointLight>
 
 const char *fontUrl = ":/simfang.subset.ttf";
 const char *transUrl = ":/trans_zh_CN.qm";
@@ -71,7 +68,21 @@ int main(int argc, char **argv) {
     Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
 
     // Scenemodifier
-    Mol3D *modifier = new Mol3D(rootEntity);
+    auto &isomer = IsomerCounter::GetInstance();
+    auto alkanes = isomer.getIsomers({
+                                             3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15
+                                     });
+    JMol mol;
+//    mol.setAlkane(alkanes[43]);
+    mol.set("CCC(C(C(CCC(CC(C)C)CC(C)C)(C)C)C(CC)CC)CCCCC(C(C(CCC(CC(C)C)CC(C)C)(C)C)C(CC)CC)CC");
+
+    Mol3D *modifier;
+    try{
+        modifier= new Mol3D(mol,rootEntity);
+    } catch (std::exception&e) {
+        std::cout<<e.what()<<std::endl;
+        exit(-1);
+    }
 
     auto view = new Mol3DWindow(rootEntity);
     view->defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
@@ -89,56 +100,6 @@ int main(int argc, char **argv) {
     hLayout->addLayout(vLayout);
 
     widget->setWindowTitle(QStringLiteral("Basic shapes"));
-
-
-    // Create control widgets
-    QCommandLinkButton *info = new QCommandLinkButton();
-    info->setText(QStringLiteral("Qt3D ready-made meshes"));
-    info->setDescription(
-            "Qt3D provides several ready-made meshes, "
-            "like torus, cylinder, cone, "
-            "cube, plane and sphere.");
-    info->setIconSize(QSize(0, 0));
-
-    QCheckBox *torusCB = new QCheckBox(widget);
-    torusCB->setChecked(true);
-    torusCB->setText(QStringLiteral("Torus"));
-
-    QCheckBox *coneCB = new QCheckBox(widget);
-    coneCB->setChecked(true);
-    coneCB->setText(QStringLiteral("Cone"));
-
-    QCheckBox *cylinderCB = new QCheckBox(widget);
-    cylinderCB->setChecked(true);
-    cylinderCB->setText(QStringLiteral("Cylinder"));
-
-    QCheckBox *cuboidCB = new QCheckBox(widget);
-    cuboidCB->setChecked(true);
-    cuboidCB->setText(QStringLiteral("Cuboid"));
-
-    QCheckBox *planeCB = new QCheckBox(widget);
-    planeCB->setChecked(true);
-    planeCB->setText(QStringLiteral("Plane"));
-
-    QCheckBox *sphereCB = new QCheckBox(widget);
-    sphereCB->setChecked(true);
-    sphereCB->setText(QStringLiteral("Sphere"));
-
-    vLayout->addWidget(info);
-    vLayout->addWidget(torusCB);
-    vLayout->addWidget(coneCB);
-    vLayout->addWidget(cylinderCB);
-    vLayout->addWidget(cuboidCB);
-    vLayout->addWidget(planeCB);
-    vLayout->addWidget(sphereCB);
-
-
-    torusCB->setChecked(true);
-    coneCB->setChecked(true);
-    cylinderCB->setChecked(true);
-    cuboidCB->setChecked(true);
-    planeCB->setChecked(true);
-    sphereCB->setChecked(true);
 
     // Show window
     widget->showMaximized();

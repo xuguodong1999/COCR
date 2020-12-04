@@ -113,6 +113,14 @@ class JMol {
      */
     void updateNeighborInfoMap();
 
+    void clear();
+
+    std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber);
+
+    std::shared_ptr<JBond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
+                                   const JBondType &_bondType = JBondType::SingleBond);
+
+public:
     /**
      * "安全地"遍历当前所有化学键
      * 允许处理当前化学键时将其删除
@@ -128,14 +136,6 @@ class JMol {
      */
     void safeTraverseAtoms(const std::function<void(const size_t &)> &func);
 
-    void clear();
-
-    std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber);
-
-    std::shared_ptr<JBond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
-                                   const JBondType &_bondType = JBondType::SingleBond);
-
-public:
     /**
      * 获取手动添加的芳环
      * FIXME: 目前没有实现 or 对接 LSSR 和 SSSR 算法，不具备事后找环的能力

@@ -1,17 +1,12 @@
-#ifndef _USE_MATH_DEFINES
-#define _USE_MATH_DEFINES
-#endif //_USE_MATH_DEFINES
-
+#include "std_util.hpp"
 #include "mol3dwindow.hpp"
 #include "qt_util.hpp"
 
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QPointLight>
-//#include <Qt3DRender/QEnvironmentLight>
 #include <Qt3DRender/QRenderSettings>
 #include <Qt3DCore/QTransform>
 #include <QtGui/QMouseEvent>
-#include <cmath>
 
 Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
         : Qt3DWindow(_screen), isPressed(false) {

@@ -1058,13 +1058,16 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
     j2rAidMap.clear();
     for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
         rwMol->getAtomWithIdx(i)->calcImplicitValence(true);
+        rwMol->getAtomWithIdx(i)->calcExplicitValence(true);
     }
-    RDKit::DGeomHelpers::EmbedMolecule(*rwMol, 0, 1234);
-    auto conf = rwMol->getConformer();
-    auto[state, energy]=RDKit::UFF::UFFOptimizeMolecule(
-            *rwMol, 1000, 10.0, conf.getId());
-    std::cout << "state=" << state << ",energy=" << energy << std::endl;
-//    RDKit::MMFF::MMFFOptimizeMolecule( *rwMol , 1000 , "MMFF94s" );
+//    RDKit::MolOps::findSSSR(*rwMol, nullptr);
+    RDKit::MolOps::fastFindRings(*rwMol);
+    int confId = RDKit::DGeomHelpers::EmbedMolecule(*rwMol, 1000, 1234);
+//    auto[state, energy]=RDKit::UFF::UFFOptimizeMolecule(
+//            *rwMol, 1000, 10.0, confId,true);
+//    std::cout << "state=" << state << ",energy=" << energy << std::endl;
+    RDKit::MMFF::MMFFOptimizeMolecule(*rwMol, 10000, "MMFF94", 10.0, confId);
+    auto conf = rwMol->getConformer(confId);
     for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
         auto pos = conf.getAtomPos(i);
         atomPosMap[r2jAidMap[i]] = cv::Point3f(pos.x, pos.y, pos.z);
