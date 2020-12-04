@@ -10,6 +10,32 @@
 
 using namespace std;
 
+std::vector<std::string> OpenCVYolo::sClasses = {
+        "Br", "O", "I", "S", "H", "N", "C", "B", "-", "--",
+        "##", "=", "F", "#", "Cl", "P", "[o]"};
+
+std::vector<cv::Scalar> OpenCVYolo::sColors = {
+        cvRosyBrown3, cvSienna1, cvWheat1, cvCyan4, cvMidnightBlue, cvGoldenrod2,
+        cvSlateBlue, cvKhaki1, cvLightGoldenrod4, cvGold1,
+        cvRosyBrown1, cvSeaGreen1, cvLightSlateBlue,
+        cvVioletRed, cvPurple, cvDeepPink1, cvDarkMagenta};
+
+void OpenCVYolo::setSClasses(const vector<std::string> &sClasses) {
+    OpenCVYolo::sClasses = sClasses;
+}
+
+void OpenCVYolo::setSColors(const vector<cv::Scalar> &sColors) {
+    OpenCVYolo::sColors = sColors;
+}
+
+void OpenCVYolo::setConfThresh(double confThresh) {
+    OpenCVYolo::confThresh = confThresh;
+}
+
+void OpenCVYolo::setIouThresh(double iouThresh) {
+    OpenCVYolo::iouThresh = iouThresh;
+}
+
 void OpenCVYolo::init(const char *_cfgPath, const char *_weightsPath) {
     try {
         net = cv::dnn::readNetFromDarknet(_cfgPath, _weightsPath);
@@ -35,90 +61,69 @@ void OpenCVYolo::init(const char *_cfgPath, const char *_weightsPath) {
 }
 
 void OpenCVYolo::forward(const cv::Mat &_input, const int &_gridSize, bool _debug) {
-    int width = _input.cols, height = _input.rows;
-    if (_debug) {
-        width += _gridSize << 1;
-        height += _gridSize << 1;
-    }
-    if (width % _gridSize != 0)
-        width = width + _gridSize - width % _gridSize;
-    if (height % _gridSize != 0)
-        height = height + _gridSize - height % _gridSize;
-    auto[resizedImg, offset]=padCvMatTo(_input, width, height, cvWhite);
-    auto&[k, offsetX, offsetY]=offset;
+    int newWidth = _input.cols, newHeight = _input.rows;
+    auto roundToGridSize = [&](int &a) -> void {
+        if (a % _gridSize != 0) a += (_gridSize - a % _gridSize);
+        if (_debug) a += (_gridSize << 1);
+    };
+    roundToGridSize(newWidth);
+    roundToGridSize(newHeight);
+    cv::Rect2d outline(0, 0, newWidth, newHeight);
+
+    auto[resizedImg, transInfo] = padCvMatTo(_input, newWidth, newHeight, cvWhite);
     cv::Mat blob;
     cv::dnn::blobFromImage(resizedImg, blob, 1 / 255.0);
-    std::cout << blob.size << std::endl;
     net.setInput(blob);
-//    Timer timer;
-//    timer.start();
-    std::vector<cv::Mat> outs;
-    net.forward(outs, outBlobNames);
-    blob = cv::Mat();// release memory
-    vector<float> confidences;
+
+    std::vector<cv::Mat> outputBlobs;
+    net.forward(outputBlobs, outBlobNames);
+    blob.release();
+
+    vector<float> probs;
     vector<cv::Rect2d> boxes;
-    vector<int> ids;
-    double conf_max;
-    cv::Point pos_maxconf;
-    double conf_thresh = 0.1, iou_thresh = 0.6;
-    for (int h = 0; h < outs.size(); h++) {
-        const auto &vec = outs[h];
-        float *data = (float *) vec.data;
-        for (int i = 0; i < vec.rows; i++, data += vec.cols) {
-            const auto &posibilities = vec.row(i).colRange(5, vec.cols);
-            minMaxLoc(posibilities, 0, &conf_max, 0, &pos_maxconf);
-            if (conf_max < conf_thresh)
-                continue;
-            confidences.push_back(conf_max);
-            int _width(data[1 * 2] * resizedImg.cols);
-            int _height(data[1 * 3] * resizedImg.rows);
-            boxes.push_back(cv::Rect2d(data[0] * resizedImg.cols - _width / 2.,      // centx
-                                       data[1] * resizedImg.rows - _height / 2., // centy
-                                       _width, _height));
-            ids.push_back(pos_maxconf.x);
+    vector<int> labels;
+    for (size_t i = 0; i < outputBlobs.size(); i++) {
+        const auto &vec = outputBlobs[i];
+        for (int j = 0; j < vec.rows; j++) {
+            double maxProb;
+            cv::Point2i maxLoc;
+            minMaxLoc(vec.row(j).colRange(5, vec.cols),
+                      nullptr, &maxProb, nullptr, &maxLoc);
+            if (maxProb < confThresh) continue;
+            float cx = vec.at<float>(j, 0) * newWidth;
+            float cy = vec.at<float>(j, 1) * newHeight;
+            float bw = vec.at<float>(j, 2) * newWidth;
+            float bh = vec.at<float>(j, 3) * newHeight;
+            cv::Rect2d bBox(cx - bw / 2, cy - bh / 2, bw, bh);
+            if (!outline.contains(bBox.tl()) || !outline.contains(bBox.br())) continue;
+            boxes.push_back(bBox);
+            labels.push_back(maxLoc.x);
+            probs.push_back(maxProb);
         }
     }
-    vector<int> indices;
-    static std::vector<std::string> labels = {"Br", "O", "I", "S", "H", "N",
-                                              "C", "B", "-", "--", "##", "=",
-                                              "F", "#", "Cl", "P", "[o]"};
-    static std::vector<cv::Scalar> colors = {
-            cvRosyBrown3, cvSienna1, cvWheat1,
-            cvCyan4, cvMidnightBlue, cvGoldenrod2,
-            cvSlateBlue, cvKhaki1,
-            cvLightGoldenrod4, cvGold1,
-            cvRosyBrown1, cvSeaGreen1, cvLightSlateBlue,
-            cvVioletRed, cvPurple,
-            cvDeepPink1, cvDarkMagenta};
 
-    cv::dnn::NMSBoxes(boxes, confidences, conf_thresh, iou_thresh, indices);
+    std::vector<int> selectedBoxIndices;
+    cv::dnn::NMSBoxes(boxes, probs, confThresh, iouThresh, selectedBoxIndices);
     std::vector<cv::Mat> items;
 
-    for (int i = 0; i < indices.size(); i++) {
-//        ids[indices[i]];
-//        confidences[indices[i]];
-        cv::Rect2d &box = boxes[indices[i]];
-        if (box.width < 0 || box.height < 0 ||
-            box.x < 0 || box.y < 0 ||
-            box.x > resizedImg.cols || box.y > resizedImg.rows) {
-            continue;
-        }
+    for (const auto &i:selectedBoxIndices) {
+        cv::Rect2d &box = boxes[i];
         items.push_back(resizedImg(box));
-        std::cout << labels[ids[indices[i]]] << ",conf=" << confidences[indices[i]] << std::endl;
-        std::cout << box << std::endl;
-        if (_debug) {
-            auto text = labels[ids[indices[i]]] + "," +
-                        to_string_with_precision(confidences[indices[i]]);
+    }
+
+    if (_debug) {
+        for (const auto &i:selectedBoxIndices) {
+            cv::Rect2d &box = boxes[i];
+            auto text = sClasses[labels[i]] + "," +
+                        to_string_with_precision(probs[i], 2);
             cv::putText(resizedImg, text, box.tl(),
-                        1, 1.2, colors[ids[indices[i]]], 2,
+                        1, 1.2, sColors[labels[i]], 2,
                         cv::LINE_AA, false);
             cv::rectangle(resizedImg, box.tl(), box.br(),
-                          colors[ids[indices[i]]], 1);
+                          sColors[labels[i]], 1);
         }
-    }
-//    timer.stop();
-    if (_debug) {
         cv::imshow("resizedImg", resizedImg);
         cv::waitKey(0);
     }
 }
+
