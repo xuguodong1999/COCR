@@ -19,14 +19,16 @@ int main(int argc, char **argv) {
     QApplication app(argc, argv);
     try {
         OpenCVYolo yolo;
-        yolo.init("C:/Users/xgd/Downloads/soso17-2020-11-30/yolov4-tiny-3l.cfg",
-                  "C:/Users/xgd/Downloads/soso17-2020-12-01/yolov4-tiny-3l_92000.weights");
+        std::string path = "C:/Users/xgd/Downloads/soso17-2020-12-01/";
+        yolo.init((path + "yolov4-tiny-3l.cfg").c_str(),
+                  (path + "yolov4-tiny-3l_92000.weights").c_str());
         auto fileContentReady = [&](const QString &fileName, const QByteArray &fileContent) {
             if (fileName.isEmpty()) {
                 qDebug() << "Fail to find " << fileName;
             } else {
                 // Use fileName and fileContent
-                QImage image = QImage::fromData(fileContent).convertToFormat(QImage::Format_RGB888);
+                QImage image = QImage::fromData(
+                        fileContent).convertToFormat(QImage::Format_RGB888);
                 if (!image.isNull()) {
                     yolo.forward(convertQImageToMat(image));
                 } else {

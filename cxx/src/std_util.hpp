@@ -8,6 +8,15 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+
+template<typename T>
+std::string to_string_with_precision(const T _fValue, const int n = 2) {
+    std::ostringstream out;
+    out << std::setprecision(n) << _fValue;
+    return out.str();
+}
 
 std::string trim(const std::string &str);
 

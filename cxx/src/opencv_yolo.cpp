@@ -1,5 +1,6 @@
 #include "opencv_yolo.hpp"
 #include "timer.hpp"
+#include "std_util.hpp"
 #include "opencv_util.hpp"
 
 #include <opencv2/imgproc.hpp>
@@ -49,8 +50,8 @@ void OpenCVYolo::forward(const cv::Mat &_input, const int &_gridSize, bool _debu
     cv::dnn::blobFromImage(resizedImg, blob, 1 / 255.0);
     std::cout << blob.size << std::endl;
     net.setInput(blob);
-    Timer timer;
-    timer.start();
+//    Timer timer;
+//    timer.start();
     std::vector<cv::Mat> outs;
     net.forward(outs, outBlobNames);
     blob = cv::Mat();// release memory
@@ -106,14 +107,16 @@ void OpenCVYolo::forward(const cv::Mat &_input, const int &_gridSize, bool _debu
         std::cout << labels[ids[indices[i]]] << ",conf=" << confidences[indices[i]] << std::endl;
         std::cout << box << std::endl;
         if (_debug) {
-            cv::putText(resizedImg, labels[ids[indices[i]]], box.tl(),
-                        1, 2, colors[ids[indices[i]]], 2,
+            auto text = labels[ids[indices[i]]] + "," +
+                        to_string_with_precision(confidences[indices[i]]);
+            cv::putText(resizedImg, text, box.tl(),
+                        1, 1.2, colors[ids[indices[i]]], 2,
                         cv::LINE_AA, false);
             cv::rectangle(resizedImg, box.tl(), box.br(),
                           colors[ids[indices[i]]], 1);
         }
     }
-    timer.stop();
+//    timer.stop();
     if (_debug) {
         cv::imshow("resizedImg", resizedImg);
         cv::waitKey(0);
