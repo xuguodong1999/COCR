@@ -53,11 +53,11 @@ int testHWDraw() {
     JMol mol;
     for (auto &alkane:alkanes) {
         mol.setAlkane(alkane);
-        auto posMap = mol.get3DCoordinates();
+        mol.randomize();
+        auto posMap = mol.get3DCoordinates(true);
         for (auto&[id, pos]:posMap) {
             std::cout << id << ": " << pos << std::endl;
         }
-        mol.randomize();
         MolHwItem molItem(mol);
         molItem.showOnScreen(1);
     }

@@ -142,7 +142,7 @@ std::shared_ptr<JBond> JMol::addBond(const size_t &_atomFromId, const size_t &_a
 }
 
 JMol::JMol() {
-    mAids = mBids = std::numeric_limits<int>::lowest();
+    mAids = mBids = std::numeric_limits<size_t>::lowest();
 }
 
 void JMol::clear() {
@@ -153,7 +153,7 @@ void JMol::clear() {
     neighborBondsMap.clear();
     aromaticRingAids.clear();
     aromaticRingBids.clear();
-    mAids = mBids = std::numeric_limits<int>::lowest();
+    mAids = mBids = std::numeric_limits<size_t>::lowest();
 }
 
 void JMol::set(const string &_smiles) {
@@ -318,11 +318,13 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
         }
     }
     // 添加官能团
-    for (auto&[id, atom]:atomsMap) {// COOH CHO etc
-        if (atomValenceMap[id] == 1 && ElementType::C == atom->getElementType()) {
-            addGroup(id);
+    auto add_group = [&](const size_t &_aid) {// COOH CHO etc
+        const auto &atom = atomsMap[_aid];
+        if (atomValenceMap[_aid] == 1 && ElementType::C == atom->getElementType()) {
+            addGroup(_aid);
         }
-    }
+    };
+    safeTraverseAtoms(add_group);
     // 添加杂环
     std::unordered_set<size_t> usedAids;
     auto replaceBondWithRing = [&](const size_t &_bid) {
@@ -359,15 +361,17 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
     };
     safeTraverseBonds(clearStrangeBond);
     // 添加氢原子
-    for (auto&[id, atom]:atomsMap) {
+    auto add_hydrogen = [&](const size_t &_aid) {
+        const auto &atom = atomsMap[_aid];
         if (ElementType::C != atom->getElementType()) {// 杂原子较大可能加氢
             if (byProb(_addHydrogenProb + 0.5)) {
-                addHs(id);
+                addHs(_aid);
             }
         } else if (byProb(_addHydrogenProb)) {// 碳原子按概率加氢
-            addHs(id);
+            addHs(_aid);
         }
-    }
+    };
+    safeTraverseAtoms(add_hydrogen);
     // 楔形键
     updateNeighborInfoMap();
     std::unordered_map<size_t, bool> allowWedge;
@@ -1034,7 +1038,16 @@ void JMol::setAlkane(const string &_alkaneSMILES) {
     alkane.dfsWrapper(before, before, before);
 }
 
-std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates() const {
+std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
+    if (_addHs) {
+        if (atomValenceMap.empty()) {
+            updateAtomValenceMap();
+        }
+        auto add_all_hydrogen = [&](const size_t &_aid) {
+            addHs(_aid);
+        };
+        safeTraverseAtoms(add_all_hydrogen);
+    }
     std::unordered_map<size_t, cv::Point3f> atomPosMap;
 #ifdef USE_RDKIT
     auto[rwMol, j2rAidMap] = convertJMolToRWMol(*this);
@@ -1043,18 +1056,30 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates() const {
         r2jAidMap[rAid] = jAid;
     }
     j2rAidMap.clear();
-    // FIXME:getNumImplicitHs() called without preceding call to calcImplicitValence()
-//    RDKit::MolOps::addHs(*rwMol);
+    for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
+        rwMol->getAtomWithIdx(i)->calcImplicitValence(true);
+    }
     RDKit::DGeomHelpers::EmbedMolecule(*rwMol, 0, 1234);
-    RDKit::UFF::UFFOptimizeMolecule(*rwMol);
-//    RDKit::MMFF::MMFFOptimizeMolecule( *rwMol , 1000 , "MMFF94s" );
     auto conf = rwMol->getConformer();
-    for (auto it = rwMol->beginAtoms(); it != rwMol->endAtoms(); it++) {
-        auto idx = (*it)->getIdx();
-        auto pos = conf.getAtomPos(idx);
-        atomPosMap[r2jAidMap[idx]] = cv::Point3f(pos.x, pos.y, pos.z);
+    auto[state, energy]=RDKit::UFF::UFFOptimizeMolecule(
+            *rwMol, 1000, 10.0, conf.getId());
+    std::cout << "state=" << state << ",energy=" << energy << std::endl;
+//    RDKit::MMFF::MMFFOptimizeMolecule( *rwMol , 1000 , "MMFF94s" );
+    for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
+        auto pos = conf.getAtomPos(i);
+        atomPosMap[r2jAidMap[i]] = cv::Point3f(pos.x, pos.y, pos.z);
     }
 #endif //! USE_RDKIT
     return std::move(atomPosMap);
+}
+
+void JMol::safeTraverseAtoms(const function<void(const size_t &)> &func) {
+    std::vector<size_t> aids;
+    for (auto&[id, _]:atomsMap) {
+        aids.push_back(id);
+    }
+    for (auto &aid:aids) {
+        func(aid);
+    }
 }
 

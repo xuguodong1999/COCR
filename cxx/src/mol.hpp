@@ -121,6 +121,13 @@ class JMol {
      */
     void safeTraverseBonds(const std::function<void(const size_t &)> &func);
 
+    /**
+     * "安全地"遍历当前所有原子
+     * 允许对原子进行增删
+     * @param func 传入 aid，表示原子 id
+     */
+    void safeTraverseAtoms(const std::function<void(const size_t &)> &func);
+
     void clear();
 
     std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber);
@@ -156,7 +163,7 @@ public:
 
     std::unordered_map<size_t, cv::Point2f> get2DCoordinates() const;
 
-    std::unordered_map<size_t, cv::Point3f> get3DCoordinates() const;
+    std::unordered_map<size_t, cv::Point3f> get3DCoordinates(bool _addHs = false);
 
     /**
      * @return 特定绘图引擎下理想字体的边长，一般为化学键长度的 1/2
