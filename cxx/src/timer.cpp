@@ -8,9 +8,11 @@
 using namespace std;
 using namespace chrono;
 
-void Timer::start() {
+void Timer::start(bool _display) {
     start_stamp = last_stamp = system_clock::now();
-    cout << "Timer start" << std::endl;
+    if (_display) {
+        cout << "Timer start" << std::endl;
+    }
 }
 
 void Timer::display_duration() {

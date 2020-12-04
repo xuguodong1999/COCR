@@ -25,27 +25,30 @@ int main(int argc, char **argv) {
         auto fileContentReady = [&](const QString &fileName, const QByteArray &fileContent) {
             if (fileName.isEmpty()) {
                 qDebug() << "Fail to find " << fileName;
-            } else {
-                // Use fileName and fileContent
-                QImage image = QImage::fromData(
-                        fileContent).convertToFormat(QImage::Format_RGB888);
-                if (!image.isNull()) {
-                    yolo.forward(convertQImageToMat(image));
-                } else {
-                    qDebug() << "QFileDialog::getOpenFileContent: Fail to load " << fileName;
-                }
+                return;
             }
-
+            // Use fileName and fileContent
+            QImage image = QImage::fromData(fileContent).convertToFormat(
+                    QImage::Format_RGB888);
+            if (image.isNull()) {
+                qDebug() << "QFileDialog::getOpenFileContent: Fail to load " << fileName;
+                return;
+            }
+            yolo.forward(convertQImageToMat(image), true);
         };
-//        auto btn = new QToolButton();
-//        QObject::connect(btn,&QToolButton::clicked,[&](){
-        QFileDialog::getOpenFileContent(
-                QObject::tr("Image Files(*.jpg *.png *.bmp *.pgm *.pbm);;All(*.*)"),
-                fileContentReady
-        );
-//        });
-//        btn->resize(100,100);
-//        btn->show();
+//        QFileDialog::getOpenFileContent(QObject::tr(
+//                "Image Files(*.jpg *.png *.bmp *.pgm *.pbm);;All(*.*)"), fileContentReady
+//        );
+        QDir dir("D:/soso17/JPEGImages");
+        for (auto &info:dir.entryInfoList()) {
+            if ("jpg" != info.suffix()) continue;
+            qDebug() << info.filePath();
+            QImage image = QImage(info.absoluteFilePath()).convertToFormat(
+                    QImage::Format_RGB888);
+            yolo.forward(convertQImageToMat(image.scaled(
+                    image.size(), Qt::IgnoreAspectRatio,
+                    Qt::SmoothTransformation)), false);
+        }
         return app.exec();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

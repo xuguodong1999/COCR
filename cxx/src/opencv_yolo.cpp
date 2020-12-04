@@ -10,23 +10,15 @@
 
 using namespace std;
 
-std::vector<std::string> OpenCVYolo::sClasses = {
+std::vector<std::string> CLASSES = {
         "Br", "O", "I", "S", "H", "N", "C", "B", "-", "--",
-        "##", "=", "F", "#", "Cl", "P", "[o]"};
+        "-+", "=", "F", "#", "Cl", "P", "[o]"};
 
-std::vector<cv::Scalar> OpenCVYolo::sColors = {
+std::vector<cv::Scalar> COLORS = {
         cvRosyBrown3, cvSienna1, cvWheat1, cvCyan4, cvMidnightBlue, cvGoldenrod2,
         cvSlateBlue, cvKhaki1, cvLightGoldenrod4, cvGold1,
         cvRosyBrown1, cvSeaGreen1, cvLightSlateBlue,
         cvVioletRed, cvPurple, cvDeepPink1, cvDarkMagenta};
-
-void OpenCVYolo::setSClasses(const vector<std::string> &sClasses) {
-    OpenCVYolo::sClasses = sClasses;
-}
-
-void OpenCVYolo::setSColors(const vector<cv::Scalar> &sColors) {
-    OpenCVYolo::sColors = sColors;
-}
 
 void OpenCVYolo::setConfThresh(double confThresh) {
     OpenCVYolo::confThresh = confThresh;
@@ -60,7 +52,8 @@ void OpenCVYolo::init(const char *_cfgPath, const char *_weightsPath) {
     }
 }
 
-void OpenCVYolo::forward(const cv::Mat &_input, const int &_gridSize, bool _debug) {
+std::pair<std::vector<gt_box>, cv::Mat>
+OpenCVYolo::forward(const cv::Mat &_input, bool _debug, const int &_gridSize) {
     int newWidth = _input.cols, newHeight = _input.rows;
     auto roundToGridSize = [&](int &a) -> void {
         if (a % _gridSize != 0) a += (_gridSize - a % _gridSize);
@@ -76,7 +69,10 @@ void OpenCVYolo::forward(const cv::Mat &_input, const int &_gridSize, bool _debu
     net.setInput(blob);
 
     std::vector<cv::Mat> outputBlobs;
+    Timer timer;
+    timer.start();
     net.forward(outputBlobs, outBlobNames);
+    timer.stop(true);
     blob.release();
 
     vector<float> probs;
@@ -104,26 +100,22 @@ void OpenCVYolo::forward(const cv::Mat &_input, const int &_gridSize, bool _debu
 
     std::vector<int> selectedBoxIndices;
     cv::dnn::NMSBoxes(boxes, probs, confThresh, iouThresh, selectedBoxIndices);
-    std::vector<cv::Mat> items;
-
+    std::vector<gt_box> gtBoxes;
     for (const auto &i:selectedBoxIndices) {
-        cv::Rect2d &box = boxes[i];
-        items.push_back(resizedImg(box));
+        gtBoxes.emplace_back(boxes[i], labels[i]);
     }
-
     if (_debug) {
+        cv::Mat displayImg = resizedImg.clone();
         for (const auto &i:selectedBoxIndices) {
-            cv::Rect2d &box = boxes[i];
-            auto text = sClasses[labels[i]] + "," +
-                        to_string_with_precision(probs[i], 2);
-            cv::putText(resizedImg, text, box.tl(),
-                        1, 1.2, sColors[labels[i]], 2,
+            cv::putText(displayImg,
+                        CLASSES[labels[i]] + "," + to_string_with_precision(probs[i], 2),
+                        boxes[i].tl(), 1, 1.2, COLORS[labels[i]], 2,
                         cv::LINE_AA, false);
-            cv::rectangle(resizedImg, box.tl(), box.br(),
-                          sColors[labels[i]], 1);
+            cv::rectangle(displayImg,
+                          boxes[i].tl(), boxes[i].br(), COLORS[labels[i]], 1);
         }
-        cv::imshow("resizedImg", resizedImg);
+        cv::imshow("displayImg", displayImg);
         cv::waitKey(0);
     }
+    return {std::move(gtBoxes), std::move(resizedImg)};
 }
-
