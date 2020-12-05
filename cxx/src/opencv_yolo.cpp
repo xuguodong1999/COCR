@@ -115,8 +115,11 @@ OpenCVYolo::forward(const cv::Mat &_input, bool _debug, const int &_gridSize) {
             cv::rectangle(displayImg, boxes[i].tl(), boxes[i].br(),
                           getScalar(colorIdx(labels[i])), 1);
         }
+        cv::resize(displayImg, displayImg, cv::Size(displayImg.cols, displayImg.rows) * 2);
         cv::imshow("displayImg", displayImg);
+#ifndef Q_OS_WIN // 带qt支持的opencv展示窗体不会消失，如果加了waitKey，则必须用案件使窗体消失
         cv::waitKey(0);
+#endif
     }
     return {std::move(gtBoxes), std::move(resizedImg)};
 }
