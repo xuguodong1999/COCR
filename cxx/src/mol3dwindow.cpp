@@ -8,6 +8,8 @@
 #include <Qt3DExtras/QForwardRenderer>
 #include <Qt3DCore/QTransform>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QWheelEvent>
+#include <QtGui/QKeyEvent>
 
 Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
         : Qt3DWindow(_screen), isPressed(false) {
@@ -71,4 +73,18 @@ void Mol3DWindow::setActivatedRadius(const float &_activatedRadius) {
     cam->setViewCenter(zeroP);
     lightTrans->setTranslation(cam->position());
     emit activatedRadiusChanged(activatedRadius);
+}
+
+void Mol3DWindow::keyReleaseEvent(QKeyEvent *event) {
+    switch (event->key()) {
+        case Qt::Key_Enter:
+        case Qt::Key_Space:
+            emit spaceOrEnterPressed(event->key() == Qt::Key_Space);
+            break;
+        default:
+            Qt3DExtras::Qt3DWindow::keyReleaseEvent(event);
+    }
+}
+
+void Mol3DWindow::wheelEvent(QWheelEvent *) {
 }

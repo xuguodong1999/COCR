@@ -18,17 +18,22 @@ Q_OBJECT
                                          const float &_radius, const QColor &_color);
 
     std::unordered_map<size_t, Qt3DCore::QEntity *> mAtomEntities;
-    std::unordered_map<size_t, Qt3DCore::QEntity *> mBondEntities;
+    std::unordered_multimap<size_t, Qt3DCore::QEntity *> mBondEntities;
 
     Qt3DCore::QEntity *mRootEntity;
-    JMol &mol;
+    std::shared_ptr<JMol> mol;
+
+    void clear();
+
+
 public:
-    explicit Mol3D(JMol &_mol, Qt3DCore::QEntity *_rootEntity);
+    explicit Mol3D(Qt3DCore::QEntity *_rootEntity);
 
     ~Mol3D();
 
-public slots:
+    void resetMol(std::shared_ptr<JMol> _mol);
 
+public slots:
 
 };
 

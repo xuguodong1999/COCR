@@ -13,6 +13,7 @@ Q_OBJECT
 
     Q_PROPERTY(float activatedRadius READ getActivatedRadius WRITE setActivatedRadius NOTIFY activatedRadiusChanged)
 Q_SIGNALS:
+    void spaceOrEnterPressed(bool isSpace);
 
     void activatedRadiusChanged(const float &);
 
@@ -33,6 +34,10 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 
     void focusOutEvent(QFocusEvent *event) override;
+
+    void keyReleaseEvent(QKeyEvent *event) override;
+
+    void wheelEvent(QWheelEvent *) override;
 };
 
 #endif//_MOL3D_WINDOW_HPP_

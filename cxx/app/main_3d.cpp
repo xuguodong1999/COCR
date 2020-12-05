@@ -66,25 +66,22 @@ int main(int argc, char **argv) {
 
     // Root entity
     Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
+    Mol3D *sceneBuilder = new Mol3D(rootEntity);
 
-    // Scenemodifier
-//    auto &isomer = IsomerCounter::GetInstance();
-//    auto alkanes = isomer.getIsomers({
-//                                             3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15
-//                                     });
-    JMol mol;
-//    mol.setAlkane(alkanes.back());
-//    mol.randomize();
-    mol.set("C");
-    Mol3D *modifier;
-    try{
-        modifier= new Mol3D(mol,rootEntity);
-    } catch (std::exception&e) {
-        std::cout<<e.what()<<std::endl;
-        exit(-1);
-    }
-
+    auto &isomer = IsomerCounter::GetInstance();
+    auto alkanes = isomer.getIsomers({
+                                             3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15
+                                     });
+    size_t index = alkanes.size() / 2;
     auto view = new Mol3DWindow(rootEntity);
+
+    QObject::connect(view, &Mol3DWindow::spaceOrEnterPressed, [&]() {
+        auto mol = std::make_shared<JMol>();
+        mol->set(alkanes[index]);
+        mol->randomize();
+        sceneBuilder->resetMol(mol);
+        index = (index + 1) & alkanes.size();
+    });
 
     QWidget *container = QWidget::createWindowContainer(view);
 
