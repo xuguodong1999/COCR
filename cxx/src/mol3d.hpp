@@ -17,6 +17,14 @@ Q_OBJECT
     Qt3DCore::QEntity *getCylinderEntity(const QVector3D &_from, const QVector3D &_to,
                                          const float &_radius, const QColor &_color);
 
+    std::pair<Qt3DCore::QEntity *, Qt3DCore::QEntity *>
+    getDoubleCylinderEntity(const QVector3D &_from, const QVector3D &_to,
+                            const float &_radius, const QColor &_color);
+
+    std::tuple<Qt3DCore::QEntity *, Qt3DCore::QEntity *, Qt3DCore::QEntity *>
+    getTripleCylinderEntity(const QVector3D &_from, const QVector3D &_to,
+                            const float &_radius, const QColor &_color);
+
     std::unordered_map<size_t, Qt3DCore::QEntity *> mAtomEntities;
     std::unordered_multimap<size_t, Qt3DCore::QEntity *> mBondEntities;
 

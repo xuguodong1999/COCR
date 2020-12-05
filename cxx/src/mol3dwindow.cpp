@@ -10,6 +10,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
 #include <QtGui/QKeyEvent>
+#include <QtGui/QGuiApplication>
 
 Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
         : Qt3DWindow(_screen), isPressed(false) {
@@ -78,13 +79,42 @@ void Mol3DWindow::setActivatedRadius(const float &_activatedRadius) {
 void Mol3DWindow::keyReleaseEvent(QKeyEvent *event) {
     switch (event->key()) {
         case Qt::Key_Enter:
+        case Qt::Key_Return:
+            emit spaceOrEnterPressed(false);
+            break;
         case Qt::Key_Space:
-            emit spaceOrEnterPressed(event->key() == Qt::Key_Space);
+            emit spaceOrEnterPressed(true);
+            break;
+        case Qt::Key_S:
+        case Qt::Key_D:
+        case Qt::Key_Down:
+        case Qt::Key_Left:
+            emit forwardOrBackwardPressed(false);
+            break;
+        case Qt::Key_W:
+        case Qt::Key_A:
+        case Qt::Key_Up:
+        case Qt::Key_Right:
+            emit forwardOrBackwardPressed(true);
             break;
         default:
             Qt3DExtras::Qt3DWindow::keyReleaseEvent(event);
     }
 }
 
-void Mol3DWindow::wheelEvent(QWheelEvent *) {
+void Mol3DWindow::wheelEvent(QWheelEvent *event) {
+    float k = 0.05;
+    if (qApp->keyboardModifiers() == Qt::ControlModifier) {
+        k = 0.2;
+    }
+    if (event->angleDelta().y() > 0) {
+        auto cam = camera();
+        cam->setPosition(cam->position() + k * (cam->viewCenter() - cam->position()));
+        lightTrans->setTranslation(cam->position());
+    } else {
+        auto cam = camera();
+        cam->setPosition(cam->position() - k * (cam->viewCenter() - cam->position()));
+        lightTrans->setTranslation(cam->position());
+    }
 }
+

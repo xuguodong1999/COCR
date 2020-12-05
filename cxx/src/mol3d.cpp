@@ -145,10 +145,10 @@ void Mol3D::resetMol(std::shared_ptr<JMol> _mol) {
     for (auto&[_, p]:pos3DMap) {
         minx = (std::min)(minx, p.x);
         miny = (std::min)(miny, p.y);
-        minz = (std::min)(minz, p.x);
+        minz = (std::min)(minz, p.z);
         maxx = (std::max)(maxx, p.x);
         maxy = (std::max)(maxy, p.y);
-        maxz = (std::max)(maxz, p.x);
+        maxz = (std::max)(maxz, p.z);
     }
     cv::Point3f centOffset((minx + maxx) / 2, (miny + maxy) / 2, (minz + maxz) / 2);
     float k = baseSize /
@@ -168,7 +168,8 @@ void Mol3D::resetMol(std::shared_ptr<JMol> _mol) {
             avgBondLength += getDistance3D(from, to);
         };
         mol->safeTraverseBonds(getAvgBondLength);
-        avgBondLength /= (std::max)(1ull, mol->getBondsMap().size());
+        avgBondLength /= (std::max)((decltype(mol->getBondsMap().size())) (1),
+                                    mol->getBondsMap().size());
         avgBondLength = (std::min)(avgBondLength, baseSize);
     }
     auto convert = [](const cv::Point3f &cvPts) -> QVector3D {
@@ -198,15 +199,20 @@ void Mol3D::resetMol(std::shared_ptr<JMol> _mol) {
                 break;
             }
             case JBondType::DoubleBond: {
-                mBondEntities.insert({_bid, getCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 24,
-                        getQColor(ColorName::rgbLightSkyBlue))});
+                auto[c1, c2]=getDoubleCylinderEntity(
+                        convert(from), convert(to), avgBondLength / 36,
+                        getQColor(ColorName::rgbLightSkyBlue));
+                mBondEntities.insert({_bid, c1});
+                mBondEntities.insert({_bid, c2});
                 break;
             }
             case JBondType::TripleBond: {
-                mBondEntities.insert({_bid, getCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 28,
-                        getQColor(ColorName::rgbLightSkyBlue))});
+                auto[c1, c2, c3]=getTripleCylinderEntity(
+                        convert(from), convert(to), avgBondLength / 36,
+                        getQColor(ColorName::rgbLightSkyBlue));
+                mBondEntities.insert({_bid, c1});
+                mBondEntities.insert({_bid, c2});
+                mBondEntities.insert({_bid, c3});
                 break;
             }
             default: {
@@ -229,5 +235,127 @@ void Mol3D::clear() {
     }
     mAtomEntities.clear();
     mBondEntities.clear();
+}
+
+std::pair<Qt3DCore::QEntity *, Qt3DCore::QEntity *>
+Mol3D::getDoubleCylinderEntity(
+        const QVector3D &_from, const QVector3D &_to,
+        const float &_radius, const QColor &_color) {
+    float length = _from.distanceToPoint(_to);
+    float k = 0.1;
+    Qt3DExtras::QCylinderMesh *cylinder = new Qt3DExtras::QCylinderMesh();
+    cylinder->setRadius(_radius);
+    cylinder->setLength(_from.distanceToPoint(_to));
+    cylinder->setRings(100);
+    cylinder->setSlices(20);
+
+    Qt3DCore::QTransform *cylinderTransform = new Qt3DCore::QTransform();
+    cylinderTransform->setScale(1.0f);
+    // 内置圆柱中轴线在y轴上，重心位于坐标原点
+    cylinderTransform->setRotation(QQuaternion::rotationTo(axisY, _from - _to));
+    cylinderTransform->setTranslation(axisZ * (length * k) + (_from + _to) / 2.0);
+
+    Qt3DExtras::QPhongMaterial *cylinderMaterial = new Qt3DExtras::QPhongMaterial();
+    cylinderMaterial->setDiffuse(_color);
+
+    auto cylinderEntity1 = new Qt3DCore::QEntity(mRootEntity);
+    cylinderEntity1->addComponent(cylinder);
+    cylinderEntity1->addComponent(cylinderMaterial);
+    cylinderEntity1->addComponent(cylinderTransform);
+
+    ////////////////
+    cylinder = new Qt3DExtras::QCylinderMesh();
+    cylinder->setRadius(_radius);
+    cylinder->setLength(_from.distanceToPoint(_to));
+    cylinder->setRings(100);
+    cylinder->setSlices(20);
+
+    cylinderTransform = new Qt3DCore::QTransform();
+    cylinderTransform->setScale(1.0f);
+    // 内置圆柱中轴线在y轴上，重心位于坐标原点
+    cylinderTransform->setRotation(QQuaternion::rotationTo(axisY, _from - _to));
+    cylinderTransform->setTranslation(axisZ * (-k * length) + (_from + _to) / 2.0);
+
+    cylinderMaterial = new Qt3DExtras::QPhongMaterial();
+    cylinderMaterial->setDiffuse(_color);
+
+    auto cylinderEntity2 = new Qt3DCore::QEntity(mRootEntity);
+    cylinderEntity2->addComponent(cylinder);
+    cylinderEntity2->addComponent(cylinderMaterial);
+    cylinderEntity2->addComponent(cylinderTransform);
+    ////////////////////////
+    return {cylinderEntity1, cylinderEntity2};
+}
+
+std::tuple<Qt3DCore::QEntity *, Qt3DCore::QEntity *, Qt3DCore::QEntity *>
+Mol3D::getTripleCylinderEntity(
+        const QVector3D &_from, const QVector3D &_to,
+        const float &_radius, const QColor &_color) {
+    float length = _from.distanceToPoint(_to);
+    float k = 0.08;
+    Qt3DExtras::QCylinderMesh *cylinder = new Qt3DExtras::QCylinderMesh();
+    cylinder->setRadius(_radius);
+    cylinder->setLength(_from.distanceToPoint(_to));
+    cylinder->setRings(100);
+    cylinder->setSlices(20);
+
+    Qt3DCore::QTransform *cylinderTransform = new Qt3DCore::QTransform();
+    cylinderTransform->setScale(1.0f);
+    // 内置圆柱中轴线在y轴上，重心位于坐标原点
+    cylinderTransform->setRotation(QQuaternion::rotationTo(axisY, _from - _to));
+    cylinderTransform->setTranslation((_from + _to) / 2.0);
+
+    Qt3DExtras::QPhongMaterial *cylinderMaterial = new Qt3DExtras::QPhongMaterial();
+    cylinderMaterial->setDiffuse(_color);
+
+    auto cylinderEntity1 = new Qt3DCore::QEntity(mRootEntity);
+    cylinderEntity1->addComponent(cylinder);
+    cylinderEntity1->addComponent(cylinderMaterial);
+    cylinderEntity1->addComponent(cylinderTransform);
+
+    ////////////////
+    cylinder = new Qt3DExtras::QCylinderMesh();
+    cylinder->setRadius(_radius);
+    cylinder->setLength(_from.distanceToPoint(_to));
+    cylinder->setRings(100);
+    cylinder->setSlices(20);
+
+    cylinderTransform = new Qt3DCore::QTransform();
+    cylinderTransform->setScale(1.0f);
+    // 内置圆柱中轴线在y轴上，重心位于坐标原点
+    cylinderTransform->setRotation(QQuaternion::rotationTo(axisY, _from - _to));
+    cylinderTransform->setTranslation(axisZ * (k * length) + (_from + _to) / 2.0);
+
+    cylinderMaterial = new Qt3DExtras::QPhongMaterial();
+    cylinderMaterial->setDiffuse(_color);
+
+    auto cylinderEntity2 = new Qt3DCore::QEntity(mRootEntity);
+    cylinderEntity2->addComponent(cylinder);
+    cylinderEntity2->addComponent(cylinderMaterial);
+    cylinderEntity2->addComponent(cylinderTransform);
+    ////////////////////////
+
+    ////////////////
+    cylinder = new Qt3DExtras::QCylinderMesh();
+    cylinder->setRadius(_radius);
+    cylinder->setLength(_from.distanceToPoint(_to));
+    cylinder->setRings(100);
+    cylinder->setSlices(20);
+
+    cylinderTransform = new Qt3DCore::QTransform();
+    cylinderTransform->setScale(1.0f);
+    // 内置圆柱中轴线在y轴上，重心位于坐标原点
+    cylinderTransform->setRotation(QQuaternion::rotationTo(axisY, _from - _to));
+    cylinderTransform->setTranslation(axisZ * (-k * length) + (_from + _to) / 2.0);
+
+    cylinderMaterial = new Qt3DExtras::QPhongMaterial();
+    cylinderMaterial->setDiffuse(_color);
+
+    auto cylinderEntity3 = new Qt3DCore::QEntity(mRootEntity);
+    cylinderEntity3->addComponent(cylinder);
+    cylinderEntity3->addComponent(cylinderMaterial);
+    cylinderEntity3->addComponent(cylinderTransform);
+    ////////////////////////
+    return {cylinderEntity1, cylinderEntity2, cylinderEntity3};
 }
 

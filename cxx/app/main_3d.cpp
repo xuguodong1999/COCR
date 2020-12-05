@@ -1,6 +1,7 @@
 #include "qml_sketchitem.hpp"
 #include "isomer.hpp"
 #include "mol3d.hpp"
+#include "std_util.hpp"
 #include "mol3dwindow.hpp"
 
 #include <QFontDatabase>
@@ -9,8 +10,9 @@
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QHBoxLayout>
-#include <QtGui/QScreen>
+#include <deque>
 
 const char *fontUrl = ":/simfang.subset.ttf";
 const char *transUrl = ":/trans_zh_CN.qm";
@@ -35,20 +37,6 @@ inline void addTranslator() {
     }
 }
 
-#include <Qt3DRender/QCamera>
-#include <Qt3DRender/QCameraLens>
-
-#include <Qt3DCore/QEntity>
-#include <Qt3DCore/QTransform>
-#include <Qt3DCore/QAspectEngine>
-
-#include <Qt3DInput/QInputAspect>
-
-#include <Qt3DExtras/QFirstPersonCameraController>
-#include <Qt3DExtras/QOrbitCameraController>
-#include <Qt3DExtras/QForwardRenderer>
-#include <Qt3DExtras/Qt3DWindow>
-
 int main(int argc, char **argv) {
     qputenv("QML_DISABLE_DISK_CACHE", "1");
     // FIXME: qt3d high dpi error. disable HighDpiScaling before solving this bug
@@ -64,29 +52,52 @@ int main(int argc, char **argv) {
 //                                SketchItem::qmlName);
 //    QQmlApplicationEngine engine(QUrl("qrc:/main.qml"));
 
-    // Root entity
-    Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
-    Mol3D *sceneBuilder = new Mol3D(rootEntity);
+
+    auto rootEntity = new Qt3DCore::QEntity();
+    auto sceneBuilder = new Mol3D(rootEntity);
 
     auto &isomer = IsomerCounter::GetInstance();
-    auto alkanes = isomer.getIsomers({
-                                             3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15
-                                     });
-    size_t index = alkanes.size() / 2;
+    auto alkanes = isomer.getIsomers(
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
+    size_t index = 0;
+    std::unordered_map<size_t, std::shared_ptr<JMol>> molMap;
     auto view = new Mol3DWindow(rootEntity);
-
     QObject::connect(view, &Mol3DWindow::spaceOrEnterPressed, [&]() {
-        auto mol = std::make_shared<JMol>();
-        mol->set(alkanes[index]);
-        mol->randomize();
-        sceneBuilder->resetMol(mol);
-        index = (index + 1) & alkanes.size();
+        index = (index + 1) % alkanes.size();
+        if (notExist(molMap, index)) {
+            auto mol = std::make_shared<JMol>();
+            mol->set(alkanes[index]);
+            mol->randomize();
+            molMap.insert({index, mol});
+        }
+        sceneBuilder->resetMol(molMap[index]);
     });
 
-    QWidget *container = QWidget::createWindowContainer(view);
+    QObject::connect(view, &Mol3DWindow::forwardOrBackwardPressed, [&](bool isForward) {
+        if (isForward) {
+            index = (index + 1) % alkanes.size();
+        } else {
+            index = index != 0 ? index - 1 : alkanes.size() - 1;
+        }
+        if (notExist(molMap, index)) {
+            auto mol = std::make_shared<JMol>();
+            mol->set(alkanes[index]);
+            mol->randomize();
+            molMap.insert({index, mol});
+        }
+        sceneBuilder->resetMol(molMap[index]);
+    });
 
-    // Show window
-    container->showMaximized();
-
+    auto container = QWidget::createWindowContainer(view);
+    auto panel = new QWidget();
+    auto hLayout = new QHBoxLayout(panel);
+    hLayout->addWidget(container, 5);
+    auto hint = new QLabel("按动 ↑ ↓ ← →\nor\n按动 W S A D\nor\n按动 Space Enter\n"
+                           "以继续...\n\n"
+                           "滑动滚轮以缩放\n按下 Ctrl 后滑动滚轮以快速缩放\n点按并移动鼠标以旋转");
+    hLayout->addWidget(hint, 1);
+    panel->showMaximized();
+    container->setFocus();
+    view->forwardOrBackwardPressed(true);
     return app.exec();
 }
