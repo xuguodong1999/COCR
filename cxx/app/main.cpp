@@ -20,6 +20,7 @@ using namespace std;
 int main(int argc, char **argv) {
     qputenv("QML_DISABLE_DISK_CACHE", "1");
 //    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    qApp->setAttribute(Qt::AA_DisableHighDpiScaling);
 
     QApplication app(argc, argv);
     auto rootEntity = new Qt3DCore::QEntity();
@@ -32,9 +33,14 @@ int main(int argc, char **argv) {
 
     try {
         OpenCVYolo yolo;
+#ifdef Q_OS_LINUX
+        yolo.init("/home/xgd/datasets/soso17/yolov4-tiny-3l.cfg",
+                  "/home/xgd/datasets/soso17/weights/yolov4-tiny-3l_92000.weights");
+#else
         std::string path = "C:/Users/xgd/Downloads/soso17-2020-12-01/";
         yolo.init((path + "yolov4-tiny-3l.cfg").c_str(),
                   (path + "yolov4-tiny-3l_92000.weights").c_str());
+#endif
         auto fileContentReady = [&](const QString &fileName, const QByteArray &fileContent) {
             if (fileName.isEmpty()) {
                 qDebug() << "Fail to find " << fileName;
@@ -65,13 +71,13 @@ int main(int argc, char **argv) {
                     rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
             auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), true);
             auto mol = std::make_shared<JMol>();
-            std::vector<std::string>data({"CCC","CC","CCCC","C"});
+            std::vector<std::string> data({"CCC", "CC", "CCCC", "C"});
             mol->set(randSelect(data));
 //            BoxGraphConverter converter(*mol);
 //            converter.accept(gtBox, img);
             sceneBuilder->resetMol(mol);
         });
-        for (auto &info:QDir("D:/soso17/JPEGImages").entryInfoList()) {
+        for (auto &info:QDir("/tmp/soso17/JPEGImages").entryInfoList()) {
             if ("jpg" != info.suffix()) continue;
             imgNameList.push_back(info.absoluteFilePath());
         }

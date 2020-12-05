@@ -43,6 +43,7 @@ int main(int argc, char **argv) {
     // see Qt3DRender::QRenderSurfaceSelector
     // see https://codereview.qt-project.org/c/qt/qt3d/+/160557
 //    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    qApp->setAttribute(Qt::AA_DisableHighDpiScaling);
 
     QApplication app(argc, argv);
     addFontData();
