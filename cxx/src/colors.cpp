@@ -458,18 +458,15 @@ predefinedColors{
         {139, 0,   0},
         {144, 238, 144}
 };
-#include <iostream>
 QColor getQColor(const ColorName &_colorName) {
-    std::cout<<predefinedColors.size()<<std::endl;
-    std::cout<<static_cast<int>(ColorName::rgbLightGreen)<<std::endl;
-    exit(-1);
     auto&[r, g, b]=predefinedColors[static_cast<int>(_colorName)];
     return QColor(r, g, b);
 }
-
+//#include <iostream>
 cv::Scalar getScalar(const ColorName &_colorName) {
-//    std::cout<<predefinedColors.size()<<std::endl;
-//    std::cout<<static_cast<int>(ColorName::rgbLightGreen)<<std::endl;
+    // debug 遗址：注意静态变量初始化依赖问题 qwq
+//    std::cout << predefinedColors.size() << std::endl;
+//    std::cout << static_cast<int>(ColorName::rgbLightGreen) << std::endl;
 //    exit(-1);
     auto&[r, g, b]=predefinedColors[static_cast<int>(_colorName)];
     return cv::Scalar(r, g, b);

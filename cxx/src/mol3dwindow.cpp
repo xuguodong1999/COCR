@@ -20,7 +20,7 @@ Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
     lightEntity->addComponent(light);
     lightEntity->addComponent(lightTrans);
 
-    setActivatedRadius(180);
+    setActivatedRadius(250);
     setRootEntity(_rootEntity);
     defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
 }

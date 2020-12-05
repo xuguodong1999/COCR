@@ -68,14 +68,14 @@ int main(int argc, char **argv) {
     Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
 
     // Scenemodifier
-    auto &isomer = IsomerCounter::GetInstance();
-    auto alkanes = isomer.getIsomers({
-                                             3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15
-                                     });
+//    auto &isomer = IsomerCounter::GetInstance();
+//    auto alkanes = isomer.getIsomers({
+//                                             3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15
+//                                     });
     JMol mol;
-//    mol.setAlkane(alkanes[43]);
-    mol.set("CCC(C(C(C(C(C(C)C)(C)C)C(C(C(C)C)C)C(C)C)CC)C)CCCC(C(C(C(C(C(C)C)(C)C)C(C(C(C)C)C)C(C)C)CC)C)C");
-
+//    mol.setAlkane(alkanes.back());
+//    mol.randomize();
+    mol.set("C");
     Mol3D *modifier;
     try{
         modifier= new Mol3D(mol,rootEntity);
@@ -87,21 +87,9 @@ int main(int argc, char **argv) {
     auto view = new Mol3DWindow(rootEntity);
 
     QWidget *container = QWidget::createWindowContainer(view);
-    QSize screenSize = view->screen()->size();
-    container->setMinimumSize(QSize(200, 100));
-    container->setMaximumSize(screenSize);
-
-    QWidget *widget = new QWidget;
-    QHBoxLayout *hLayout = new QHBoxLayout(widget);
-    QVBoxLayout *vLayout = new QVBoxLayout();
-    vLayout->setAlignment(Qt::AlignTop);
-    hLayout->addWidget(container, 1);
-    hLayout->addLayout(vLayout);
-
-    widget->setWindowTitle(QStringLiteral("Basic shapes"));
 
     // Show window
-    widget->showMaximized();
+    container->showMaximized();
 
     return app.exec();
 }

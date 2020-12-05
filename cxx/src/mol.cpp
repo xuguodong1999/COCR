@@ -178,10 +178,11 @@ void JMol::set(const string &_smiles) {
     clear();
 #ifdef USE_RDKIT
     // the caller is responsible for freeing this.
-    auto rwMol = RDKit::SmilesToMol(_smiles, 0, false);
+    auto rwMol = RDKit::SmilesToMol(_smiles, 0, true);
     std::map<unsigned int, size_t> r2jAidMap;
-    for (auto it = rwMol->beginAtoms(); it != rwMol->endAtoms(); it++) {
-        const auto rAtom = (*it);
+//    for (auto it = rwMol->beginAtoms(); it != rwMol->endAtoms(); it++) {
+    for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
+        const auto rAtom = rwMol->getAtomWithIdx(i);
         auto jAtom = addAtom(rAtom->getAtomicNum());
         r2jAidMap.insert({rAtom->getIdx(), jAtom->getId()});
     }
@@ -242,10 +243,9 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
 //    RDDepict::compute2DCoords(*(roMol.get()));
     RDDepict::compute2DCoordsMimicDistMat(*(roMol.get()));
     auto conf = roMol->getConformer();
-    for (auto it = roMol->beginAtoms(); it != roMol->endAtoms(); it++) {
-        auto idx = (*it)->getIdx();
-        auto pos = conf.getAtomPos(idx);
-        atomPosMap[r2jAidMap[idx]] = cv::Point2f(pos.x, pos.y);
+    for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
+        auto pos = conf.getAtomPos(i);
+        atomPosMap[r2jAidMap[i]] = cv::Point2f(pos.x, pos.y);
     }
 #else
     std::cerr<<"no coordinate engine available in mol.cpp"<<std::endl;
@@ -507,6 +507,12 @@ void JMol::updateAtomValenceMap() {
     for (auto&[id, bond]:bondsMap) {
         addValence4Atom(bond->getAtomFrom(), bond->asValence());
         addValence4Atom(bond->getAtomTo(), bond->asValence());
+    }
+    // 处理没有化学键的情况，比如加氢之前的甲烷
+    for (auto&[id, atom]:atomsMap) {
+        if (notExist(atomValenceMap, id)) {
+            atomValenceMap[id] = 0;
+        }
     }
 }
 

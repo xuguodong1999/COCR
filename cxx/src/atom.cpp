@@ -20,6 +20,7 @@ std::vector<std::string> ElementsData = {
 // H B C N O F Si P S Cl Br I
 std::unordered_map<ElementType, frac> ElementValenceData = {
         {ElementType::H,  1},
+        {ElementType::He, 2},
         {ElementType::B,  3},
         {ElementType::C,  4},
         {ElementType::N,  3},
