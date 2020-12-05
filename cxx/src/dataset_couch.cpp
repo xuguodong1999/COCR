@@ -1,6 +1,7 @@
 #include "dataset_couch.hpp"
 #include "couch_data.hpp"
 #include "qt_util.hpp"
+#include "colors.hpp"
 #include <random>
 #include <unordered_map>
 
@@ -134,7 +135,8 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
                 availableFontFamilies.removeOne(f);
             }
         }
-        cv::Mat c1(batchHeight, batchWidth, CV_8UC1, cvWhite);
+        cv::Mat c1(batchHeight, batchWidth, CV_8UC1,
+                   getScalar(ColorName::rgbWhite));
         auto c1_1 = FontPixItem::GetFont(
                 QString::fromStdWString(gbTable[sCastTable[classIndex]]),
                 availableFontFamilies[rand() % availableFontFamilies.size()]);
@@ -154,7 +156,8 @@ torch::data::Example<> CouchDataSet::get(size_t index) {
         }
     } else {
         auto item = CouchLoader::GetShapeItem(classIndex, sampleIndex);
-        auto bgColor = cvWhite, strokeColor = cvBlack;
+        auto bgColor = getScalar(ColorName::rgbWhite),
+                strokeColor = getScalar(ColorName::rgbBlack);
         if (isTrainMode()) {
             if (byProb(RC::revertColorProb)) {// 反转颜色
                 std::swap(strokeColor, bgColor);

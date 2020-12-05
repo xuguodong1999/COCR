@@ -2,6 +2,7 @@
  * FIXME: This file is shit. Dont base new codes on it.
  */
 #include "hw.hpp"
+#include "colors.hpp"
 #include "opencv_util.hpp"
 #include "couch_data.hpp"
 #include <opencv2/opencv.hpp>
@@ -1072,5 +1073,6 @@ void WaveBond::updateShapes() {
     shapes.push_back(std::move(shape));
 }
 
-RC::ShapeAttr::ShapeAttr()
-        : color(cvBlack), thickness(2), lineType(cv::LINE_AA), shift(0) {}
+RC::ShapeAttr::ShapeAttr() : color(0, 0, 0),
+                             thickness(2), lineType(cv::LINE_AA), shift(0) {
+}

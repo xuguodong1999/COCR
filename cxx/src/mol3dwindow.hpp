@@ -9,7 +9,7 @@ Q_OBJECT
     QPoint lastPos;
     bool isPressed;
     float activatedRadius;
-    std::vector<Qt3DCore::QTransform *> lightsTrans;// 操纵光源的位置
+    Qt3DCore::QTransform *lightTrans;// 操纵光源的位置
 
     Q_PROPERTY(float activatedRadius READ getActivatedRadius WRITE setActivatedRadius NOTIFY activatedRadiusChanged)
 Q_SIGNALS:

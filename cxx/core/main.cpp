@@ -75,8 +75,8 @@ int testDarknetDump() {
 int main() {
     try {
 //        return testYolov4();
-        return testHWDraw();
-//        return testDarknetDump();
+//        return testHWDraw();
+        return testDarknetDump();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;

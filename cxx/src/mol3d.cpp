@@ -57,14 +57,14 @@ Mol3D::Mol3D(JMol &_mol, Qt3DCore::QEntity *_rootEntity)
     auto addAtomEntity = [&](const size_t &_aid) -> void {
         cv::Point3f pos = pos3DMap[_aid];
         qDebug() << convert(pos);
-        getSphereEntity(convert(pos), avgBondLength / 4, Qt::darkYellow);
+        getSphereEntity(convert(pos), avgBondLength / 3.5, Qt::darkYellow);
     };
     mol.safeTraverseAtoms(addAtomEntity);
     auto addBondEntity = [&](const size_t &_bid) -> void {
         auto &bond = mol.getBondsMap().at(_bid);
         cv::Point3f from = pos3DMap[bond->getAtomFrom()];
         cv::Point3f to = pos3DMap[bond->getAtomTo()];
-        getCylinderEntity(convert(from), convert(to), avgBondLength / 20, Qt::darkRed);
+        getCylinderEntity(convert(from), convert(to), avgBondLength / 17, Qt::darkRed);
     };
     mol.safeTraverseBonds(addBondEntity);
 }

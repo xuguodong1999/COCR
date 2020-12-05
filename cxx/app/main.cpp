@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
                     QImage::Format_RGB888);
             auto[gtBox, img]=yolo.forward(convertQImageToMat(image.scaled(
                     image.size(), Qt::IgnoreAspectRatio,
-                    Qt::SmoothTransformation)), false);
+                    Qt::SmoothTransformation)), true);
             JMol mol;
             BoxGraphConverter converter(mol);
             converter.accept(gtBox, img);

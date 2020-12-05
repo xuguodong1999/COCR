@@ -90,3 +90,4 @@ const std::vector<QVector3D> tetrahedral = {
         QVector3D(std::sqrt(3) / 2, 0.5, -0.25 * std::sqrt(2)),
         QVector3D(-std::sqrt(3) / 2, 0.5, -0.25 * std::sqrt(2))
 };
+

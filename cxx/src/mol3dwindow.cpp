@@ -11,21 +11,16 @@
 
 Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
         : Qt3DWindow(_screen), isPressed(false) {
-    auto add_light = [&](const float &_intensity) {
-        auto lightEntity = new Qt3DCore::QEntity(_rootEntity);
-        auto light = new Qt3DRender::QPointLight(lightEntity);
-        light->setColor("white");
-        light->setIntensity(_intensity);
+    auto lightEntity = new Qt3DCore::QEntity(_rootEntity);
+    auto light = new Qt3DRender::QPointLight(lightEntity);
+    light->setColor(Qt::white);
+    light->setIntensity(1);
 
-        auto lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightEntity->addComponent(light);
-        lightEntity->addComponent(lightTransform);
-        lightsTrans.push_back(lightTransform);
-    };
-    for (auto &vec:tetrahedral) {
-        add_light(0.75);
-    }
-    setActivatedRadius(200);
+    lightTrans = new Qt3DCore::QTransform(lightEntity);
+    lightEntity->addComponent(light);
+    lightEntity->addComponent(lightTrans);
+
+    setActivatedRadius(180);
     setRootEntity(_rootEntity);
     defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
 }
@@ -54,6 +49,7 @@ void Mol3DWindow::mouseMoveEvent(QMouseEvent *event) {
     // 用叉积拿到垂直于视线轴和头顶轴的向量
     cam->rotateAboutViewCenter(QQuaternion::fromAxisAndAngle(
             QVector3D::crossProduct(cam->viewVector(), cam->upVector()), -h));
+    lightTrans->setTranslation(cam->position());
 }
 
 void Mol3DWindow::focusOutEvent(QFocusEvent *event) {
@@ -73,10 +69,6 @@ void Mol3DWindow::setActivatedRadius(const float &_activatedRadius) {
     cam->setPosition(activatedRadius * (axisZ + axisY / 2));
     cam->setUpVector(axisY);
     cam->setViewCenter(zeroP);
-    for (size_t i = 0; i < std::min(tetrahedral.size(), lightsTrans.size()); i++) {
-        if (lightsTrans[i]) {
-            lightsTrans[i]->setTranslation(activatedRadius * tetrahedral[i]);
-        }
-    }
+    lightTrans->setTranslation(cam->position());
     emit activatedRadiusChanged(activatedRadius);
 }

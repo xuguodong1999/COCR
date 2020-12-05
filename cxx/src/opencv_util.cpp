@@ -1,28 +1,6 @@
 #include "opencv_util.hpp"
 #include <opencv2/opencv.hpp>
 
-const cv::Scalar
-        cvBlack(0, 0, 0),
-        cvWhite(255, 255, 255),
-        cvBlue(255, 0, 0),
-        cvRed(0, 0, 255),
-        cvCyan4(0, 139, 139),
-        cvSeaGreen1(84, 255, 159),
-        cvMidnightBlue(25, 25, 112),
-        cvSlateBlue(106, 90, 205),
-        cvLightSlateBlue(132, 112, 255),
-        cvKhaki1(255, 246, 143),
-        cvLightGoldenrod4(139, 129, 76),
-        cvGold1(255, 215, 0),
-        cvGoldenrod2(238, 180, 34),
-        cvRosyBrown1(255, 193, 193),
-        cvRosyBrown3(205, 155, 155),
-        cvSienna1(255, 130, 71),
-        cvWheat1(255, 231, 186),
-        cvVioletRed(208, 32, 144),
-        cvPurple(160, 32, 240),
-        cvDeepPink1(255, 20, 147),
-        cvDarkMagenta(139, 0, 139);
 
 std::pair<cv::Mat, std::tuple<float, float, float>>
 resizeCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,

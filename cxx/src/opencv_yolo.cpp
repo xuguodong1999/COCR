@@ -1,5 +1,6 @@
 #include "opencv_yolo.hpp"
 #include "timer.hpp"
+#include "colors.hpp"
 #include "std_util.hpp"
 #include "opencv_util.hpp"
 
@@ -14,11 +15,6 @@ std::vector<std::string> CLASSES = {
         "Br", "O", "I", "S", "H", "N", "C", "B", "-", "--",
         "-+", "=", "F", "#", "Cl", "P", "[o]"};
 
-std::vector<cv::Scalar> COLORS = {
-        cvRosyBrown3, cvSienna1, cvWheat1, cvCyan4, cvMidnightBlue, cvGoldenrod2,
-        cvSlateBlue, cvKhaki1, cvLightGoldenrod4, cvGold1,
-        cvRosyBrown1, cvSeaGreen1, cvLightSlateBlue,
-        cvVioletRed, cvPurple, cvDeepPink1, cvDarkMagenta};
 
 void OpenCVYolo::setConfThresh(double confThresh) {
     OpenCVYolo::confThresh = confThresh;
@@ -63,7 +59,8 @@ OpenCVYolo::forward(const cv::Mat &_input, bool _debug, const int &_gridSize) {
     roundToGridSize(newHeight);
     cv::Rect2d outline(0, 0, newWidth, newHeight);
 
-    auto[resizedImg, transInfo] = padCvMatTo(_input, newWidth, newHeight, cvWhite);
+    auto[resizedImg, transInfo] = padCvMatTo(_input, newWidth, newHeight,
+                                             getScalar(ColorName::rgbWhite));
     cv::Mat blob;
     cv::dnn::blobFromImage(resizedImg, blob, 1 / 255.0);
     net.setInput(blob);
@@ -106,13 +103,17 @@ OpenCVYolo::forward(const cv::Mat &_input, bool _debug, const int &_gridSize) {
     }
     if (_debug) {
         cv::Mat displayImg = resizedImg.clone();
+        auto colorIdx = [](const int &_a) -> ColorName {
+            return static_cast<const ColorName>((7 + _a) * 5123 % 455);
+        };
         for (const auto &i:selectedBoxIndices) {
             cv::putText(displayImg,
                         CLASSES[labels[i]] + "," + to_string_with_precision(probs[i], 2),
-                        boxes[i].tl(), 1, 1.2, COLORS[labels[i]], 2,
+                        boxes[i].tl(), 1, 1.2,
+                        getScalar(colorIdx(labels[i])), 2,
                         cv::LINE_AA, false);
-            cv::rectangle(displayImg,
-                          boxes[i].tl(), boxes[i].br(), COLORS[labels[i]], 1);
+            cv::rectangle(displayImg, boxes[i].tl(), boxes[i].br(),
+                          getScalar(colorIdx(labels[i])), 1);
         }
         cv::imshow("displayImg", displayImg);
         cv::waitKey(0);

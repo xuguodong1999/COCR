@@ -1,5 +1,6 @@
 #include "mol_hw.hpp"
 #include "timer.hpp"
+#include "colors.hpp"
 #include <opencv2/opencv.hpp>
 #include <filesystem>
 #include <fstream>
@@ -196,7 +197,8 @@ void MolHwItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_l
         this->rotate(rand() % 360);
         auto bBox = this->getBoundingBox();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
-        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3, cvWhite);
+        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
+                              getScalar(ColorName::rgbWhite));
         this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         this->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
@@ -234,7 +236,8 @@ void MolHwItem::showOnScreen(const size_t &_repeatTimes) {
         this->rotate(rand() % 360);
         auto bBox = this->getBoundingBox();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
-        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3, cvWhite);
+        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
+                              getScalar(ColorName::rgbWhite));
         this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         this->paintTo(img);
         cv::imshow("MolHwItem::showOnScreen", img);

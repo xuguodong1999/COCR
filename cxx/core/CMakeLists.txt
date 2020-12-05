@@ -18,6 +18,7 @@ set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
 
         ${SRC_DIR}/box2graph.cpp
+        ${SRC_DIR}/colors.cpp
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/bond.cpp

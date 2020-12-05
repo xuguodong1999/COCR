@@ -6,29 +6,6 @@
 #include <utility>
 #include <opencv2/core/mat.hpp>
 
-extern const cv::Scalar
-        cvBlack,
-        cvWhite,
-        cvBlue,
-        cvRed,
-        cvCyan4,
-        cvSeaGreen1,
-        cvMidnightBlue,
-        cvSlateBlue,
-        cvLightSlateBlue,
-        cvKhaki1,
-        cvLightGoldenrod4,
-        cvGold1,
-        cvGoldenrod2,
-        cvRosyBrown1,
-        cvRosyBrown3,
-        cvSienna1,
-        cvWheat1,
-        cvVioletRed,
-        cvPurple,
-        cvDeepPink1,
-        cvDarkMagenta;
-
 /**
  * 将图像填充到指定尺寸，先进行缩放
  * @param _img

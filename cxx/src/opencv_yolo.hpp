@@ -10,7 +10,6 @@
 #include <vector>
 
 extern std::vector<std::string> CLASSES;
-extern std::vector<cv::Scalar> COLORS;
 
 class OpenCVYolo {
     cv::dnn::Net net;

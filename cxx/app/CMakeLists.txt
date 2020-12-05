@@ -37,6 +37,7 @@ add_dependencies(app_resources app_translations)
 add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
 
         ${SRC_DIR}/box2graph.cpp
+        ${SRC_DIR}/colors.cpp
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/bond.cpp
