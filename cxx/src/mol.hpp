@@ -163,7 +163,12 @@ public:
 
     std::unordered_map<size_t, cv::Point2f> get2DCoordinates() const;
 
-    std::unordered_map<size_t, cv::Point3f> get3DCoordinates(bool _addHs = false);
+    /**
+     * 获取立体坐标，建议加氢，以后会改为强制加氢以兼容力场
+     * @param _addHs
+     * @return
+     */
+    std::unordered_map<size_t, cv::Point3f> get3DCoordinates(bool _addHs = true);
 
     /**
      * @return 特定绘图引擎下理想字体的边长，一般为化学键长度的 1/2

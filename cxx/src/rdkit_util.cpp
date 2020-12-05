@@ -11,7 +11,6 @@ using namespace std;
 string getStandardSMILES(const string &smiles, bool add_hydrogen, bool do_kekule) {
     string stdSMILES;
     try {
-        // FIXME: check memory leak here
         shared_ptr<RDKit::ROMol> mol1(RDKit::SmilesToMol(smiles));
         stdSMILES = RDKit::MolToSmiles(
                 *mol1, true, do_kekule, -1, true, false, add_hydrogen, false);

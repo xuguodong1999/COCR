@@ -1,10 +1,17 @@
+#ifdef __ANDROID__
+#define USE_OPENBABEL
+
+#elif (defined _WIN32) || (defined __linux__)
+// 生成2D坐标的优先级：coordgen2d > rdkit > openbabel
+// 生成3D坐标的优先级：rdkit > openbabel
+#define USE_COORDGEN2D
+#define USE_RDKIT
+#endif
+
 #include "mol.hpp"
 #include "std_util.hpp"
 #include "opencv_util.hpp"
 #include "alkane_graph.hpp"
-
-#define USE_COORDGEN2D
-#define USE_RDKIT
 
 #ifdef USE_COORDGEN2D
 
@@ -25,6 +32,17 @@
 #include <GraphMol/ForceFieldHelpers/UFF/UFF.h>
 #include <GraphMol/ForceFieldHelpers/MMFF/MMFF.h>
 #include <GraphMol/MolOps.h>
+
+#endif
+
+#ifdef USE_OPENBABEL
+
+#include <openbabel/mol.h>
+#include <openbabel/bond.h>
+#include <openbabel/obiter.h>
+#include <openbabel/builder.h>
+#include <openbabel/forcefield.h>
+#include <openbabel/obconversion.h>
 
 #endif
 
@@ -58,7 +76,7 @@ inline JBondType convertRDKitBondTypeToJBondType(
         return JBondType::DelocalizedBond;
     } else {
         std::cerr << "convert stereo " << static_cast<int>(_stereo)
-                  << " To JBondType failed " << std::endl;
+                << " To JBondType failed " << std::endl;
         exit(-1);
     }
 }
@@ -88,7 +106,7 @@ convertJBondTypeToRDKitBondType(const JBondType &_bondType) {
             break;
         default: {
             std::cerr << "convert " << static_cast<int>(_bondType)
-                      << " To RDKitBondType failed " << std::endl;
+                    << " To RDKitBondType failed " << std::endl;
             exit(-1);
         }
     }
@@ -237,8 +255,8 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
     float &_fontSize = const_cast<float &>(fontSize);
     _fontSize = 0;
     for (auto&[_, bond]:bondsMap) {
-        _fontSize += getDistance(atomPosMap[bond->getAtomFrom()],
-                                 atomPosMap[bond->getAtomTo()]);
+        _fontSize += getDistance2D(atomPosMap[bond->getAtomFrom()],
+                                   atomPosMap[bond->getAtomTo()]);
     }
     if (bondsMap.empty()) {
         _fontSize = 30;
@@ -400,7 +418,7 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
                         break;
                     }
                     if (ElementType::H == atomsMap[bond->getAtomFrom()]->getElementType() ||
-                        ElementType::H == atomsMap[bond->getAtomTo()]->getElementType()) {
+                            ElementType::H == atomsMap[bond->getAtomTo()]->getElementType()) {
                         if (bond->setFrom(aid)) {
                             if (okNeighbor == 0)
                                 bond->setType(JBondType::SolidWedgeBond);
@@ -640,9 +658,7 @@ void JMol::addAromaticRing(const size_t &_bid) {
                                            newAtoms[a2 - 1]->getId(),
                                            JBondType::DoubleBond));
             }
-            // TODO: 写入数据
-            aromaticRingAids;
-            aromaticRingBids;
+            // TODO: 把环信息写入 aromaticRingAids 和 aromaticRingBids
             newBonds.push_back(addBond(from, poses[0]));
             newBonds.push_back(addBond(to, poses[1]));
             break;
@@ -1039,6 +1055,7 @@ void JMol::setAlkane(const string &_alkaneSMILES) {
 }
 
 std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
+    // TODO: 要求更新3D坐标的时候必须加氢
     if (_addHs) {
         if (atomValenceMap.empty()) {
             updateAtomValenceMap();
@@ -1071,6 +1088,38 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
     for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
         auto pos = conf.getAtomPos(i);
         atomPosMap[r2jAidMap[i]] = cv::Point3f(pos.x, pos.y, pos.z);
+    }
+#elif defined(USE_OPENBABEL)
+    OpenBabel::OBMol obMol;
+    for(auto[id,atom]:atomsMap){
+        OpenBabel::OBAtom obAtom;
+        obAtom.SetAtomicNum(atom->getAtomicNumber());
+        obAtom.SetId(id);
+        obMol.AddAtom(atom,false);
+    }
+    for(auto[id,bond]:bondsMap){
+        obMol.AddBond(obMol.GetAtomById(bond->getAtomFrom())->GetIdx(),
+                      obMol.GetAtomById(bond->getAtomTo)->GetIdx(),
+                      std::lround(bond->asValence().floatValue()));
+    }
+    OpenBabel::OBBuilder builder;
+    builder.Build(obMol);
+    obMol.AddHydrogens(false, true);
+    OpenBabel::OBForceField *pFF = OpenBabel::OBForceField::FindForceField("UFF");
+    if (!pFF) {
+        std::cerr << "fail to find uff forcefield" << std::endl;
+        exit(-1);
+    }
+    if (!pFF->Setup(obMol)) {
+        std::cerr << "fail to setup uff forcefield for mol" << std::endl;
+        exit(-1);
+    }
+    pFF->SteepestDescent(1000, 1.0e-4);
+    pFF->WeightedRotorSearch(100, 10);
+    pFF->SteepestDescent(1000, 1.0e-6);
+    pFF->UpdateCoordinates(obMol);
+    FOR_ATOMS_OF_MOL(obAtom, obMol) {
+        atomPosMap[obAtom->GetId()]=cv::Point3f(atom->x(),atom->y(),atom->z());
     }
 #endif //! USE_RDKIT
     return std::move(atomPosMap);

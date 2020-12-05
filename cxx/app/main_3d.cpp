@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
                                      });
     JMol mol;
 //    mol.setAlkane(alkanes[43]);
-    mol.set("CCC(C(C(CCC(CC(C)C)CC(C)C)(C)C)C(CC)CC)CCCCC(C(C(CCC(CC(C)C)CC(C)C)(C)C)C(CC)CC)CC");
+    mol.set("CCC(C(C(C(C(C(C)C)(C)C)C(C(C(C)C)C)C(C)C)CC)C)CCCC(C(C(C(C(C(C)C)(C)C)C(C(C(C)C)C)C(C)C)CC)C)C");
 
     Mol3D *modifier;
     try{
@@ -85,7 +85,6 @@ int main(int argc, char **argv) {
     }
 
     auto view = new Mol3DWindow(rootEntity);
-    view->defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
 
     QWidget *container = QWidget::createWindowContainer(view);
     QSize screenSize = view->screen()->size();

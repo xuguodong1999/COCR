@@ -5,6 +5,7 @@
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QPointLight>
 #include <Qt3DRender/QRenderSettings>
+#include <Qt3DExtras/QForwardRenderer>
 #include <Qt3DCore/QTransform>
 #include <QtGui/QMouseEvent>
 
@@ -24,8 +25,9 @@ Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
     for (auto &vec:tetrahedral) {
         add_light(0.75);
     }
-    setActivatedRadius(100);
+    setActivatedRadius(200);
     setRootEntity(_rootEntity);
+    defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
 }
 
 void Mol3DWindow::mousePressEvent(QMouseEvent *event) {

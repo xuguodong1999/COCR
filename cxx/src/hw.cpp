@@ -156,7 +156,7 @@ void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThre
     float kLen2 = minMaxProb(slideOffset);
     Point p1 = pp1 + (pp1 - pp2) * kLen1, p2 = pp2 + (pp2 - pp1) * kLen2;
 //    Point p1=pp1,p2=pp2;
-    float lenPP = getDistance(p1, p2);
+    float lenPP = getDistance2D(p1, p2);
     p1.x += lenPP * minMaxProb(slideOffset);
     p2.x += lenPP * minMaxProb(slideOffset);
     p1.y += lenPP * minMaxProb(slideOffset);
@@ -168,8 +168,8 @@ void ShapeItem::castToLine(const Point &pp1, const Point &pp2, const float lThre
                   std::inserter(input, input.end()));
     }
     cv::minAreaRect(input).points(from.data());
-    auto s03 = getDistance(from[0], from[3]);
-    auto s01 = getDistance(from[0], from[1]);
+    auto s03 = getDistance2D(from[0], from[3]);
+    auto s01 = getDistance2D(from[0], from[1]);
     while (s03 < std::numeric_limits<float>::epsilon()
            || s01 < std::numeric_limits<float>::epsilon()) {
         mData.clear();
@@ -609,7 +609,7 @@ void CircleBond::setVertices(const vector<Point> &pts) {
     center.y /= pts.size();
     r = 0;
     for (auto &pt:pts)
-        r += getDistance(center, pt);
+        r += getDistance2D(center, pt);
     r /= pts.size();
     // TODO: 分离随即要素
     const float minLen = 0.2;
@@ -783,7 +783,7 @@ void DoubleBond::paintTo(cv::Mat &canvas) {
         }
     } else {
         cv::Point2f vec = from - to;
-        auto length = getDistance(from, to);
+        auto length = getDistance2D(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -818,7 +818,7 @@ void DoubleBond::updateShapes() {
         vecT /= cv::norm(vecT);
     }
     if (mUseHWChar) {
-        auto length = getDistance(from, to);
+        auto length = getDistance2D(from, to);
         auto offset = vecT * length * intervalK;
         auto line1 = CouchLoader::GetShape("line");
         line1.castToLine(from + offset / 2, to + offset / 2);
@@ -840,7 +840,7 @@ void TripleBond::paintTo(cv::Mat &canvas) {
         }
     } else {
         cv::Point2f vec = from - to;
-        auto length = getDistance(from, to);
+        auto length = getDistance2D(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -878,7 +878,7 @@ void TripleBond::updateShapes() {
         vecT /= cv::norm(vecT);
     }
     if (mUseHWChar) {
-        auto length = getDistance(from, to);
+        auto length = getDistance2D(from, to);
         auto offset = vecT * length * intervalK;
         auto line1 = CouchLoader::GetShape("line");
         line1.castToLine(from + offset / 2, to + offset / 2);
@@ -904,7 +904,7 @@ void SolidWedgeBond::paintTo(cv::Mat &canvas) {
         }
     } else {
         cv::Point2f vec = from - to;
-        auto length = getDistance(from, to);
+        auto length = getDistance2D(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -928,7 +928,7 @@ void SolidWedgeBond::updateShapes() {
     const int numOfSplit = 10;
     if (mUseHWChar) {
         cv::Point2f vec = from - to;
-        auto length = getDistance(from, to);
+        auto length = getDistance2D(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -963,7 +963,7 @@ void DashWedgeBond::paintTo(cv::Mat &canvas) {
         }
     } else {
         cv::Point2f vec = from - to;
-        auto length = getDistance(from, to);
+        auto length = getDistance2D(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
@@ -1008,7 +1008,7 @@ void DashWedgeBond::updateShapes() {
     const int numOfSplit = 4 + rand() % 3; // default: 5
     if (mUseHWChar) {
         cv::Point2f vec = from - to;
-        auto length = getDistance(from, to);
+        auto length = getDistance2D(from, to);
         cv::Point2f vecT(0, 1);
         if (vec.y != 0) {
             vecT = cv::Point2f(-1, vec.x / vec.y);
