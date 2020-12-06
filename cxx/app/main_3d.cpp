@@ -9,9 +9,10 @@
 #include <QQmlApplicationEngine>
 
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QLabel>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QVBoxLayout>
 #include <deque>
 
 const char *fontUrl = ":/simfang.subset.ttf";
@@ -43,7 +44,7 @@ int main(int argc, char **argv) {
     // see Qt3DRender::QRenderSurfaceSelector
     // see https://codereview.qt-project.org/c/qt/qt3d/+/160557
 //    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
-    qApp->setAttribute(Qt::AA_DisableHighDpiScaling);
+    qApp->setAttribute(Qt::AA_DisableHighDpiScaling);//
 
     QApplication app(argc, argv);
     addFontData();
@@ -91,11 +92,28 @@ int main(int argc, char **argv) {
 
     auto container = QWidget::createWindowContainer(view);
     auto panel = new QWidget();
-    auto hLayout = new QHBoxLayout(panel);
+    QBoxLayout*hLayout;
+    if(qApp->desktop()->width()>qApp->desktop()->height()) {
+        hLayout = new QHBoxLayout(panel);
+    }else{
+        hLayout = new QVBoxLayout(panel);
+    }
     hLayout->addWidget(container, 5);
-    auto hint = new QLabel("按动 ↑ ↓ ← →\nor\n按动 W S A D\nor\n按动 Space Enter\n"
-                           "以继续...\n\n"
-                           "滑动滚轮以缩放\n按下 Ctrl 后滑动滚轮以快速缩放\n点按并移动鼠标以旋转");
+    auto hint = new QToolButton();
+    hint->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    hint->setText("按动 ↑ ↓ ← →\nor\n按动 W S A D\nor\n按动 Space Enter\n"
+                  "以继续...\n\n"
+                  "滑动滚轮以缩放\n按下 Ctrl 后滑动滚轮以快速缩放\n点按并移动鼠标以旋转");
+    QObject::connect(hint, &QToolButton::clicked, [&]() {
+        index = (index + 1) % alkanes.size();
+        if (notExist(molMap, index)) {
+            auto mol = std::make_shared<JMol>();
+            mol->set(alkanes[index]);
+            mol->randomize();
+            molMap.insert({index, mol});
+        }
+        sceneBuilder->resetMol(molMap[index]);
+    });
     hLayout->addWidget(hint, 1);
     panel->showMaximized();
     container->setFocus();

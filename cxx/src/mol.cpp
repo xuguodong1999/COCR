@@ -1101,11 +1101,11 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
         OpenBabel::OBAtom obAtom;
         obAtom.SetAtomicNum(atom->getAtomicNumber());
         obAtom.SetId(id);
-        obMol.AddAtom(atom,false);
+        obMol.AddAtom(obAtom,false);
     }
     for(auto[id,bond]:bondsMap){
         obMol.AddBond(obMol.GetAtomById(bond->getAtomFrom())->GetIdx(),
-                      obMol.GetAtomById(bond->getAtomTo)->GetIdx(),
+                      obMol.GetAtomById(bond->getAtomTo())->GetIdx(),
                       std::lround(bond->asValence().floatValue()));
     }
     OpenBabel::OBBuilder builder;
@@ -1125,7 +1125,7 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
     pFF->SteepestDescent(1000, 1.0e-6);
     pFF->UpdateCoordinates(obMol);
     FOR_ATOMS_OF_MOL(obAtom, obMol) {
-        atomPosMap[obAtom->GetId()]=cv::Point3f(atom->x(),atom->y(),atom->z());
+        atomPosMap[obAtom->GetId()]=cv::Point3f(obAtom->x(),obAtom->y(),obAtom->z());
     }
 #endif //! USE_RDKIT
     return std::move(atomPosMap);
