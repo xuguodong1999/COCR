@@ -4,3 +4,4 @@ build*/
 csharp/
 _csharp/
 weights/
+.idea/
