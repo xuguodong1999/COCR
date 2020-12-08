@@ -3,6 +3,7 @@
 
 #include "gt_box.hpp"
 #include "mol.hpp"
+#include <utility>
 
 class BoxGraphConverter {
     /**
@@ -12,6 +13,15 @@ class BoxGraphConverter {
     void then();
 
     JMol &mol;
+    enum class ItemType{
+        ExplicitAtom,
+        LineBond,
+        CircleBond
+    };
+    ItemType getTypeFromLabelIdx(const int&_label);
+
+    std::pair<cv::Point2f,cv::Point2f> getFromTo4LineBond(
+            const cv::Rect2d&_rect,const cv::Mat &_img);
 public:
     /**
      * take charge of this JMol

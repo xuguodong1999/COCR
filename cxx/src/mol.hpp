@@ -28,6 +28,11 @@ class JMol {
     std::unordered_map<size_t, std::unordered_set<size_t>> neighborBondsMap;
     //芳环
     std::vector<std::vector<std::unordered_set<size_t>>> aromaticRingAids, aromaticRingBids;
+    //2D 原子坐标 <id,<isExplicit, position>>
+    std::unordered_map<size_t, std::pair<bool, cv::Point2f>> atomPosMap2D;
+    //3D 原子坐标
+    std::unordered_map<size_t, cv::Point3f> atomPosMap3D;
+
     float fontSize;
 
     /**
@@ -113,6 +118,9 @@ class JMol {
      */
     void updateNeighborInfoMap();
 
+public:
+    const std::unordered_map<size_t, std::pair<bool, cv::Point2f>> &getAtomPosMap2D() const;
+    void insertAtomPos2D(const size_t&_aid,bool _isExplicit,const cv::Point2f&_pos);
     void clear();
 
     std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber);
@@ -120,7 +128,6 @@ class JMol {
     std::shared_ptr<JBond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
                                    const JBondType &_bondType = JBondType::SingleBond);
 
-public:
     /**
      * "安全地"遍历当前所有化学键
      * 允许处理当前化学键时将其删除

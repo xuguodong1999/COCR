@@ -9,8 +9,6 @@
 #include <memory>
 #include <vector>
 
-extern std::vector<std::string> CLASSES;
-
 class OpenCVYolo {
     cv::dnn::Net net;
     std::vector<cv::String> outBlobNames;

@@ -13,10 +13,7 @@
 
 using namespace std;
 
-std::vector<std::string> CLASSES = {
-        "Br", "O", "I", "S", "H", "N", "C", "B", "-", "--",
-        "-+", "=", "F", "#", "Cl", "P", "[o]"};
-
+extern std::vector<std::string> CLASSES;
 
 void OpenCVYolo::setConfThresh(double confThresh) {
     OpenCVYolo::confThresh = confThresh;

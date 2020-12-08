@@ -174,6 +174,8 @@ void JMol::clear() {
     neighborBondsMap.clear();
     aromaticRingAids.clear();
     aromaticRingBids.clear();
+    atomPosMap2D.clear();
+    atomPosMap3D.clear();
     mAids = mBids = std::numeric_limits<size_t>::lowest();
 }
 
@@ -208,11 +210,11 @@ const float &JMol::getFontSize() const {
 }
 
 std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
-    std::unordered_map<size_t, cv::Point2f> atomPosMap;
+    std::unordered_map<size_t, cv::Point2f> depAtomPosMap;
 #ifdef USE_COORDGEN2D
     // 踩坑系列：sketcherMinimizer 析构的时候会 delete 所有关联的指针
     // 这里 sketcherMinimizerMolecule 一定得 new 一个，用智能指针或值就会报 double free
-    // 就像我吃了一个苹果，圣诞老人看到苹果没了，回收了苹果的灵魂，顺路把我也删了
+    // 我吃了一个苹果，苹果没了，我也没了
     sketcherMinimizer minimizer;
     auto sMol = new sketcherMinimizerMolecule();
     std::unordered_map<size_t, sketcherMinimizerAtom *> j2cAtomMap;
@@ -232,7 +234,7 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
     minimizer.runGenerateCoordinates();
     for (auto&[aid, cAtom]:j2cAtomMap) {
         auto pos = cAtom->getCoordinates();
-        atomPosMap[aid] = cv::Point2f(pos.x(), pos.y());
+        depAtomPosMap[aid] = cv::Point2f(pos.x(), pos.y());
     }
 #elif defined(USE_RDKIT)
     // FIXME: RDKit 内置2d引擎画的三键有问题
@@ -248,7 +250,7 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
     auto conf = roMol->getConformer();
     for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
         auto pos = conf.getAtomPos(i);
-        atomPosMap[r2jAidMap[i]] = cv::Point2f(pos.x, pos.y);
+        depAtomPosMap[r2jAidMap[i]] = cv::Point2f(pos.x, pos.y);
     }
 #else
     std::cerr << "no coordinate engine available in mol.cpp" << std::endl;
@@ -258,15 +260,15 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
     float &_fontSize = const_cast<float &>(fontSize);
     _fontSize = 0;
     for (auto&[_, bond]:bondsMap) {
-        _fontSize += getDistance2D(atomPosMap[bond->getAtomFrom()],
-                                   atomPosMap[bond->getAtomTo()]);
+        _fontSize += getDistance2D(depAtomPosMap[bond->getAtomFrom()],
+                                   depAtomPosMap[bond->getAtomTo()]);
     }
     if (bondsMap.empty()) {
         _fontSize = 30;
     } else {
         _fontSize /= bondsMap.size();
     }
-    return std::move(atomPosMap);
+    return std::move(depAtomPosMap);
 }
 
 void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _replaceAtom,
@@ -1074,7 +1076,7 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
         };
         safeTraverseAtoms(add_all_hydrogen);
     }
-    std::unordered_map<size_t, cv::Point3f> atomPosMap;
+    std::unordered_map<size_t, cv::Point3f> depAtomPosMap;
 #ifdef USE_OPENBABEL
     OpenBabel::OBMol obMol;
     obMol.BeginModify();
@@ -1112,7 +1114,7 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
     pFF->SteepestDescent(500, 1.0e-6);
     pFF->UpdateCoordinates(obMol);
     FOR_ATOMS_OF_MOL(obAtom, obMol) {
-        atomPosMap[obAtom->GetId()] = cv::Point3f(obAtom->x(), obAtom->y(), obAtom->z());
+        depAtomPosMap[obAtom->GetId()] = cv::Point3f(obAtom->x(), obAtom->y(), obAtom->z());
     }
 #elif defined(USE_RDKIT)
     auto[rwMol, j2rAidMap] = convertJMolToRWMol(*this);
@@ -1135,10 +1137,10 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
     auto conf = rwMol->getConformer(confId);
     for (unsigned int i = 0; i < rwMol->getNumAtoms(); i++) {
         auto pos = conf.getAtomPos(i);
-        atomPosMap[r2jAidMap[i]] = cv::Point3f(pos.x, pos.y, pos.z);
+        depAtomPosMap[r2jAidMap[i]] = cv::Point3f(pos.x, pos.y, pos.z);
     }
 #endif //! USE_OPENBABEL
-    return std::move(atomPosMap);
+    return std::move(depAtomPosMap);
 }
 
 void JMol::safeTraverseAtoms(const function<void(const size_t &)> &func) {
@@ -1149,5 +1151,13 @@ void JMol::safeTraverseAtoms(const function<void(const size_t &)> &func) {
     for (auto &aid:aids) {
         func(aid);
     }
+}
+
+const unordered_map<size_t, std::pair<bool, cv::Point2f>> &JMol::getAtomPosMap2D() const {
+    return atomPosMap2D;
+}
+
+void JMol::insertAtomPos2D(const size_t &_aid, bool _isExplicit, const cv::Point2f &_pos) {
+    atomPosMap2D[_aid] = {_isExplicit, _pos};
 }
 
