@@ -10,7 +10,6 @@
 #include <QFileDialog>
 #include <QApplication>
 #include <QDebug>
-#include <QToolButton>
 
 #include <iostream>
 #include <exception>
@@ -19,8 +18,8 @@ using namespace std;
 
 int main(int argc, char **argv) {
     qputenv("QML_DISABLE_DISK_CACHE", "1");
-//    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
-    qApp->setAttribute(Qt::AA_DisableHighDpiScaling);
+    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+//    qApp->setAttribute(Qt::AA_DisableHighDpiScaling);
 
     QApplication app(argc, argv);
     auto rootEntity = new Qt3DCore::QEntity();
@@ -37,7 +36,7 @@ int main(int argc, char **argv) {
         yolo.init("/home/xgd/source/COCR/weights/yolov4-tiny-3l.cfg",
                   "/home/xgd/source/COCR/weights/yolov4-tiny-3l_92000.weights");
 #else
-        std::string path = "C:/Users/xgd/Downloads/soso17-2020-12-01/";
+        std::string path = "C:/Users/xgd/source/COCR/weights/";
         yolo.init((path + "yolov4-tiny-3l.cfg").c_str(),
                   (path + "yolov4-tiny-3l_92000.weights").c_str());
 #endif
@@ -71,12 +70,13 @@ int main(int argc, char **argv) {
                     rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
             auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), true);
             auto mol = std::make_shared<JMol>();
-            std::vector<std::string> data({"CCC", "CC", "CCCC", "C"});
-            mol->set(randSelect(data));
-//            BoxGraphConverter converter(*mol);
-//            converter.accept(gtBox, img);
-            sceneBuilder->resetMol(mol);       });
-        for (auto &info:QDir("/home/xgd/datasets/soso17_v0/JPEGImages").entryInfoList()) {
+//            std::vector<std::string> data({"CCC", "CC", "CCCC", "C"});
+//            mol->set(randSelect(data));
+            BoxGraphConverter converter(*mol);
+            converter.accept(gtBox, img);
+            sceneBuilder->resetMol(mol);
+        });
+        for (auto &info:QDir("C:/Users/xgd/Documents/有机结构式自动构建系统/结题材料/soso17_v0/JPEGImages").entryInfoList()) {
             if ("jpg" != info.suffix()) continue;
             imgNameList.push_back(info.absoluteFilePath());
         }
