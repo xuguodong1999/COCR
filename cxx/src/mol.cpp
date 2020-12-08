@@ -1,9 +1,12 @@
 #ifdef __ANDROID__
 #define USE_OPENBABEL
+#elif defined(__linux__)
+#define USE_COORDGEN2D
+#define USE_OPENBABEL
+#define USE_RDKIT
+#endif
 
-#elif (defined _WIN32) || (defined __linux__)
-// 生成2D坐标的优先级：coordgen2d > rdkit > openbabel
-// 生成3D坐标的优先级：rdkit > openbabel
+#ifdef _WIN32
 #define USE_COORDGEN2D
 #define USE_RDKIT
 #endif
@@ -76,7 +79,7 @@ inline JBondType convertRDKitBondTypeToJBondType(
         return JBondType::DelocalizedBond;
     } else {
         std::cerr << "convert stereo " << static_cast<int>(_stereo)
-                << " To JBondType failed " << std::endl;
+                  << " To JBondType failed " << std::endl;
         exit(-1);
     }
 }
@@ -106,7 +109,7 @@ convertJBondTypeToRDKitBondType(const JBondType &_bondType) {
             break;
         default: {
             std::cerr << "convert " << static_cast<int>(_bondType)
-                    << " To RDKitBondType failed " << std::endl;
+                      << " To RDKitBondType failed " << std::endl;
             exit(-1);
         }
     }
@@ -248,7 +251,7 @@ std::unordered_map<size_t, cv::Point2f> JMol::get2DCoordinates() const {
         atomPosMap[r2jAidMap[i]] = cv::Point2f(pos.x, pos.y);
     }
 #else
-    std::cerr<<"no coordinate engine available in mol.cpp"<<std::endl;
+    std::cerr << "no coordinate engine available in mol.cpp" << std::endl;
     exit(-1);
 #endif
     // FIXME: 想一下怎么设计函数的 const
@@ -418,7 +421,7 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
                         break;
                     }
                     if (ElementType::H == atomsMap[bond->getAtomFrom()]->getElementType() ||
-                            ElementType::H == atomsMap[bond->getAtomTo()]->getElementType()) {
+                        ElementType::H == atomsMap[bond->getAtomTo()]->getElementType()) {
                         if (bond->setFrom(aid)) {
                             if (okNeighbor == 0)
                                 bond->setType(JBondType::SolidWedgeBond);
@@ -1072,7 +1075,46 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
         safeTraverseAtoms(add_all_hydrogen);
     }
     std::unordered_map<size_t, cv::Point3f> atomPosMap;
-#ifdef USE_RDKIT
+#ifdef USE_OPENBABEL
+    OpenBabel::OBMol obMol;
+    obMol.BeginModify();
+    for(auto[id,atom]:atomsMap){
+        auto obAtom = obMol.NewAtom(id);
+        int atomicNumber = atom->getAtomicNumber();
+        // bug occurs if add H here. add F instead。 REM to fix it later.
+        if (atomicNumber == 1)atomicNumber = 9;
+        obAtom->SetAtomicNum(atomicNumber);
+    }
+    for(auto[id,bond]:bondsMap){
+        auto obBond = obMol.NewBond();
+        obBond->SetBondOrder(std::lround(bond->asValence().floatValue()));
+        obBond->SetBegin(obMol.GetAtomById(bond->getAtomFrom()));
+        obBond->SetEnd(obMol.GetAtomById(bond->getAtomTo()));
+    }
+    obMol.EndModify();
+    OpenBabel::OBBuilder builder;
+    builder.Build(obMol);
+    obMol.AddHydrogens(false, true);
+    OpenBabel::OBForceField *pFF = OpenBabel::OBForceField::FindForceField("MMFF94s");
+    if (!pFF) {
+        std::cerr << "fail to find uff forcefield" << std::endl;
+        exit(-1);
+    }
+    obMol.AddHydrogens(false, true);
+    // this func return f
+    pFF->Setup(obMol);
+//    if (!pFF->Setup(obMol)) {
+//        std::cerr << "fail to setup uff forcefield for mol" << std::endl;
+//        exit(-1);
+//    }
+    pFF->SteepestDescent(250, 1.0e-4);
+    pFF->WeightedRotorSearch(50, 25);
+    pFF->SteepestDescent(500, 1.0e-6);
+    pFF->UpdateCoordinates(obMol);
+    FOR_ATOMS_OF_MOL(obAtom, obMol) {
+        atomPosMap[obAtom->GetId()] = cv::Point3f(obAtom->x(), obAtom->y(), obAtom->z());
+    }
+#elif defined(USE_RDKIT)
     auto[rwMol, j2rAidMap] = convertJMolToRWMol(*this);
     std::unordered_map<unsigned int, size_t> r2jAidMap;
     for (auto&[jAid, rAid]:j2rAidMap) {
@@ -1095,39 +1137,7 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
         auto pos = conf.getAtomPos(i);
         atomPosMap[r2jAidMap[i]] = cv::Point3f(pos.x, pos.y, pos.z);
     }
-#elif defined(USE_OPENBABEL)
-    OpenBabel::OBMol obMol;
-    for(auto[id,atom]:atomsMap){
-        OpenBabel::OBAtom obAtom;
-        obAtom.SetAtomicNum(atom->getAtomicNumber());
-        obAtom.SetId(id);
-        obMol.AddAtom(obAtom,false);
-    }
-    for(auto[id,bond]:bondsMap){
-        obMol.AddBond(obMol.GetAtomById(bond->getAtomFrom())->GetIdx(),
-                      obMol.GetAtomById(bond->getAtomTo())->GetIdx(),
-                      std::lround(bond->asValence().floatValue()));
-    }
-    OpenBabel::OBBuilder builder;
-    builder.Build(obMol);
-    obMol.AddHydrogens(false, true);
-    OpenBabel::OBForceField *pFF = OpenBabel::OBForceField::FindForceField("UFF");
-    if (!pFF) {
-        std::cerr << "fail to find uff forcefield" << std::endl;
-        exit(-1);
-    }
-    if (!pFF->Setup(obMol)) {
-        std::cerr << "fail to setup uff forcefield for mol" << std::endl;
-        exit(-1);
-    }
-    pFF->SteepestDescent(1000, 1.0e-4);
-    pFF->WeightedRotorSearch(100, 10);
-    pFF->SteepestDescent(1000, 1.0e-6);
-    pFF->UpdateCoordinates(obMol);
-    FOR_ATOMS_OF_MOL(obAtom, obMol) {
-        atomPosMap[obAtom->GetId()]=cv::Point3f(obAtom->x(),obAtom->y(),obAtom->z());
-    }
-#endif //! USE_RDKIT
+#endif //! USE_OPENBABEL
     return std::move(atomPosMap);
 }
 

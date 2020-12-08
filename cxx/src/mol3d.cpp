@@ -141,7 +141,6 @@ void Mol3D::resetMol(std::shared_ptr<JMol> _mol) {
 //    getCylinderEntity(offset + zeroP, offset + axisX * 10, 0.2, Qt::blue);
 //    getCylinderEntity(offset + zeroP, offset + axisY * 10, 0.2, Qt::red);
 //    getCylinderEntity(offset + zeroP, offset + axisZ * 10, 0.2, Qt::green);
-
     auto pos3DMap = mol->get3DCoordinates(true);
     float minx, miny, minz, maxx, maxy, maxz;
     minx = miny = minz = std::numeric_limits<float>::max();
@@ -204,7 +203,7 @@ void Mol3D::resetMol(std::shared_ptr<JMol> _mol) {
             }
             case JBondType::DoubleBond: {
                 auto[c1, c2]=getDoubleCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 56,
+                        convert(from), convert(to), avgBondLength / 30,
                         getQColor(ColorName::rgbLightSkyBlue));
                 mBondEntities.insert({_bid, c1});
                 mBondEntities.insert({_bid, c2});
@@ -212,7 +211,7 @@ void Mol3D::resetMol(std::shared_ptr<JMol> _mol) {
             }
             case JBondType::TripleBond: {
                 auto[c1, c2, c3]=getTripleCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 64,
+                        convert(from), convert(to), avgBondLength / 40,
                         getQColor(ColorName::rgbLightSkyBlue));
                 mBondEntities.insert({_bid, c1});
                 mBondEntities.insert({_bid, c2});
@@ -246,7 +245,7 @@ Mol3D::getDoubleCylinderEntity(
         const QVector3D &_from, const QVector3D &_to,
         const float &_radius, const QColor &_color) {
     float length = _from.distanceToPoint(_to);
-    float distance = _radius * 2;
+    float distance = _radius * 3;
     Qt3DExtras::QCylinderMesh *cylinder = new Qt3DExtras::QCylinderMesh();
     cylinder->setRadius(_radius);
     cylinder->setLength(length);
@@ -296,7 +295,7 @@ Mol3D::getTripleCylinderEntity(
         const QVector3D &_from, const QVector3D &_to,
         const float &_radius, const QColor &_color) {
     float length = _from.distanceToPoint(_to);
-    float distance = _radius * 2;
+    float distance = _radius * 4;
     Qt3DExtras::QCylinderMesh *cylinder = new Qt3DExtras::QCylinderMesh();
     cylinder->setRadius(_radius);
     cylinder->setLength(length);

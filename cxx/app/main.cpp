@@ -75,8 +75,7 @@ int main(int argc, char **argv) {
             mol->set(randSelect(data));
 //            BoxGraphConverter converter(*mol);
 //            converter.accept(gtBox, img);
-            sceneBuilder->resetMol(mol);
-        });
+            sceneBuilder->resetMol(mol);       });
         for (auto &info:QDir("/home/xgd/datasets/soso17_v0/JPEGImages").entryInfoList()) {
             if ("jpg" != info.suffix()) continue;
             imgNameList.push_back(info.absoluteFilePath());

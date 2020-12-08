@@ -1,3 +1,4 @@
+include_directories(/usr/include/openbabel3)
 include_directories(/usr/include/rdkit)
 include_directories(/usr/include)
 set(QT_INCLUDE_DIR ${Qt5_DIR}/../../../include)
@@ -12,6 +13,7 @@ set(COCR_UNIX_LIB
         # -lRDKitChemicalFeatures -lRDKitDataStructs
         # -lRDKitDescriptors
         -lRDKitDistGeomHelpers
+        -lopenbabel
         # -lRDKitDistGeometry -lRDKitEigenSolvers -lRDKitFMCS
         # -lRDKitFileParsers -lRDKitFilterCatalog -lRDKitFingerprints
         -lRDKitForceField -lRDKitForceFieldHelpers

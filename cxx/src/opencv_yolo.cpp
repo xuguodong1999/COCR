@@ -115,7 +115,7 @@ OpenCVYolo::forward(const cv::Mat &_input, bool _debug, const int &_gridSize) {
             cv::rectangle(displayImg, boxes[i].tl(), boxes[i].br(),
                           getScalar(colorIdx(labels[i])), 1);
         }
-        cv::resize(displayImg, displayImg, cv::Size(displayImg.cols, displayImg.rows) * 2);
+//        cv::resize(displayImg, displayImg, cv::Size(displayImg.cols, displayImg.rows) * 2);
         cv::imshow("displayImg", displayImg);
 //        cv::waitKey(0);
     }
