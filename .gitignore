@@ -3,3 +3,4 @@ build*/
 *.pth
 csharp/
 _csharp/
+weights/

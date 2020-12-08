@@ -5,7 +5,7 @@ using namespace std;
 #ifdef WIN32
 string WORKSPACE("C:/Users/xgd/source/COCR/cache");
 #else
-string WORKSPACE("/mnt/c/Users/xgd/source/COCR/cache");
+string WORKSPACE("/home/xgd/source/COCR/cache");
 #endif
 string DATA_DIR(WORKSPACE + "/data");
 

@@ -34,8 +34,8 @@ int main(int argc, char **argv) {
     try {
         OpenCVYolo yolo;
 #ifdef Q_OS_LINUX
-        yolo.init("/home/xgd/datasets/soso17/yolov4-tiny-3l.cfg",
-                  "/home/xgd/datasets/soso17/weights/yolov4-tiny-3l_92000.weights");
+        yolo.init("/home/xgd/source/COCR/weights/yolov4-tiny-3l.cfg",
+                  "/home/xgd/source/COCR/weights/yolov4-tiny-3l_92000.weights");
 #else
         std::string path = "C:/Users/xgd/Downloads/soso17-2020-12-01/";
         yolo.init((path + "yolov4-tiny-3l.cfg").c_str(),
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 //            converter.accept(gtBox, img);
             sceneBuilder->resetMol(mol);
         });
-        for (auto &info:QDir("/tmp/soso17/JPEGImages").entryInfoList()) {
+        for (auto &info:QDir("/home/xgd/datasets/soso17_v0/JPEGImages").entryInfoList()) {
             if ("jpg" != info.suffix()) continue;
             imgNameList.push_back(info.absoluteFilePath());
         }

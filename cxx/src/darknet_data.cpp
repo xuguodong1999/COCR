@@ -47,7 +47,7 @@ void DarknetDataGenerator::dump(const size_t &_numOfSamples, const size_t &_repe
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
                                              3, 4, 5, 6, 7,
-//                                             8, 9, 10, 11, 12, 13
+                                             8, 9, 10, 11, 12, 13
 //                                             10, 11, 12, 13, 14, 15
                                      });
     JMol mol;

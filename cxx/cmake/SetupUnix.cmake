@@ -1,5 +1,4 @@
 include_directories(/usr/include/rdkit)
-#include_directories(/usr/include/opencv4)
 include_directories(/usr/include)
 set(QT_INCLUDE_DIR ${Qt5_DIR}/../../../include)
 include_directories(${QT_INCLUDE_DIR})
