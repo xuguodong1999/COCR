@@ -8,65 +8,76 @@
 #include <unordered_map>
 
 std::vector<std::string> CLASSES = {
-        "Br",
-        "O",
-        "I",
-        "S",
-        "H",
-        "N",
-        "C",
-        "B",
-        "-",
-        "--",
-        "-+",
-        "=",
-        "F",
-        "#",
-        "Cl",
-        "P",
-        "[o]"};
+        "Br", "O", "I", "S", "H", "N", "C", "B",
+        "-", "--", "-+", "=", "F", "#", "Cl", "P", "[o]"};
 
-void BoxGraphConverter::then() {
+std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     // analysis features here
     // modify mol here
     // <box_id,[<box_id,feature=(cur_dis/min_dis,cur_dis/avg(min_dis)),>,...]>
-
+    // 低阶距离特征：atom-bond,bond-bond,bond-circle,atom-circle
+    // std::vector<float_index_type> abDisGrid, bbDisGrid, bcDisGrid, acDisGrid;
+    std::vector<JMol> mols(1);
+    JMol &mol(mols[0]);
 }
 
-BoxGraphConverter::BoxGraphConverter(JMol &_mol) : mol(_mol) {
+BoxGraphConverter::BoxGraphConverter(bool _debug) {
+    debug = _debug;
 }
 
-void BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img) {
+std::vector<std::shared_ptr<JMol>>
+BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img) {
     // construct features here
     const size_t box_num = _boxes.size();
     if (box_num == 0) {
-        mol.clear();
-        return;
-    } else if (box_num == 1) {
-        int label = _boxes[0].label;
-        switch (getTypeFromLabelIdx(label)) {
-            case ItemType::CircleBond:
-                mol.addAtom(6);// 误分类氧原子为苯环里的圈
-                break;
-            case ItemType::ExplicitAtom:
-                mol.addAtom(0)->setElementType(CLASSES[label]);
-                break;
-            case ItemType::LineBond:
-                auto a1 = mol.addAtom(6);
-                auto a2 = mol.addAtom(6);
-                mol.addBond(a1->getId(), a2->getId());// FIXME: 写到这里
-        }
-        return;
+        return {};
     }
     // extract bondDir as <id, <from,to>> first
     std::unordered_map<size_t, std::pair<cv::Point2f, cv::Point2f>> bondDir;
     for (size_t i = 0; i < box_num; i++) {
         if (getTypeFromLabelIdx(_boxes[i].label) != ItemType::LineBond)continue;
-        bondDir[i] = getFromTo4LineBond(_boxes[i], _img);// TODO: Impl box extractor
+        bondDir[i] = getFromTo4LineBond(_boxes[i], _img);
     }
-    // 填充低阶距离特征
+    if (box_num == 1) {
+        auto mol = std::make_shared<JMol>();
+        int label = _boxes[0].label;
+        switch (getTypeFromLabelIdx(label)) {
+            case ItemType::CircleBond: {
+                auto atomOxygen = mol->addAtom(6);// 误分类氧原子为苯环里的圈
+                mol->insertAtomPos2D(atomOxygen->getId(), true,
+                                     getRectCenter2D(_boxes[0].bBox));
+                break;
+            }
+            case ItemType::ExplicitAtom: {
+                auto atom = mol->addAtom(0);
+                atom->setElementType(CLASSES[label]);
+                mol->insertAtomPos2D(atom->getId(), true,
+                                     getRectCenter2D(_boxes[0].bBox));
+                break;
+            }
+            case ItemType::LineBond: {
+                auto atomFrom = mol->addAtom(6);
+                auto atomTo = mol->addAtom(6);
+                mol->addBond(atomFrom->getId(), atomTo->getId(),
+                             getBondTypeFromLabelIdx(label));
+                auto&[from, to]=bondDir[0];
+                mol->insertAtomPos2D(atomFrom->getId(), false, from);
+                mol->insertAtomPos2D(atomTo->getId(), false, to);
+                break;
+            }
+            default:
+                break;
+        }
+        return {std::move(mol)};
+    }
+    // 填充低阶特征
+    iouGrid.resize(box_num, std::vector<float>(box_num, 0));
     for (size_t i = 0; i < box_num; i++) {
+        labels[i] = _boxes[i].label;
         for (size_t j = i + 1; j < box_num; j++) {
+            // 填充相交面积
+            iouGrid[i][j] = iouGrid[j][i] = (_boxes[i].bBox & _boxes[j].bBox).area();
+            // 填充关键距离
             ItemType itI = getTypeFromLabelIdx(_boxes[i].label);
             ItemType itJ = getTypeFromLabelIdx(_boxes[j].label);
             switch (itI | itJ) {
@@ -88,38 +99,31 @@ void BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat 
                     auto &[fromJ, toJ]=bondDir[j];
                     bbDisGrid.emplace_back(i, j, (std::min)(
                             (std::min)(
-                                    getDistance2D(fromI, fromJ),
-                                    getDistance2D(toI, toJ)
+                                    getDistance2D(fromI, fromJ), getDistance2D(toI, toJ)
                             ), (std::min)(
-                                    getDistance2D(toI, fromJ),
-                                    getDistance2D(fromI, toJ)
+                                    getDistance2D(toI, fromJ), getDistance2D(fromI, toJ)
                             )));
                     break;
                 }
                 case ItemType::LineBond | ItemType::CircleBond: {
                     // 中心对中心 TODO: 加入中心对端点的距离校验
                     bcDisGrid.emplace_back(i, j, getDistance2D(
-                            getRectCenter2D(_boxes[i].bBox),
-                            getRectCenter2D(_boxes[j].bBox)
-                    ));
+                            getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
                     break;
                 }
                 case ItemType::ExplicitAtom | ItemType::CircleBond: {
                     // 中心对中心
                     acDisGrid.emplace_back(i, j, getDistance2D(
-                            getRectCenter2D(_boxes[i].bBox),
-                            getRectCenter2D(_boxes[j].bBox)
-                    ));
+                            getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
                     break;
                 }
                 default: {
                     break;
                 }
-
             }
         }
     }
-    then();
+    return std::move(then());
 }
 
 BoxGraphConverter::ItemType BoxGraphConverter::getTypeFromLabelIdx(const int &_label) {
@@ -167,17 +171,22 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     const auto &rect = _gtBox.bBox;
     // 是否扁平
     float k = rect.width / rect.height;
+    if (debug) {
+        std::cout << rect << std::endl;
+        std::cout << "k=" << k << std::endl;
+    }
     const float kThresh = 2;
+    const int paddingSize = 2;
     bool isVertical = k < 1.0 / kThresh;
     bool isHorizontal = k > kThresh;
     bool isLineLike = isVertical || isHorizontal;
     // RIO box
     cv::Rect2i rect2i = rect;
     // 越界处理
-    rect2i.x = (std::max)(0, rect2i.x - 2);
-    rect2i.y = (std::max)(0, rect2i.y - 2);
-    rect2i.width = (std::min)(rect2i.x + _img.rows - 1, rect2i.width + 4);
-    rect2i.height = (std::min)(rect2i.y + _img.cols - 1, rect2i.height + 4);
+    rect2i.x = (std::max)(0, rect2i.x - paddingSize);
+    rect2i.y = (std::max)(0, rect2i.y - paddingSize);
+    rect2i.width = (std::min)(rect2i.x + _img.rows - 1, rect2i.width + 2 * paddingSize);
+    rect2i.height = (std::min)(rect2i.y + _img.cols - 1, rect2i.height + 2 * paddingSize);
     // 扁平且方向无关
     if (isLineLike) {
         cv::Point2f from, to;// 返回短边中点
@@ -203,24 +212,26 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
                                              rect2i.width, rect2i.height / 2));
                 auto mask2 = _img(cv::Rect2i(rect2i.x, rect2i.y + rect2i.height / 2,
                                              rect2i.width, rect2i.height / 2));
-                scalar1 = cv::mean(mask1);
-                scalar2 = cv::mean(mask2);
+                scalar1 = cv::mean(std::move(mask1));
+                scalar2 = cv::mean(std::move(mask2));
             } else {
                 // 左右分割
                 auto mask1 = _img(cv::Rect2i(rect2i.x, rect2i.y,
                                              rect2i.width / 2, rect2i.height));
                 auto mask2 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2, rect2i.y,
                                              rect2i.width / 2, rect2i.height));
-                scalar1 = cv::mean(mask1);
-                scalar2 = cv::mean(mask2);
+                scalar1 = cv::mean(std::move(mask1));
+                scalar2 = cv::mean(std::move(mask2));
             }
+            if (debug) {
+                std::cout << getScalarSum(scalar1) << ", " << getScalarSum(scalar2) << std::endl;
+                std::cout << "----------------\n";
+            }
+            // 白色像素多 -> sum 大 && 设为 from
             isSwapNeeded = getScalarSum(scalar1) < getScalarSum(scalar2);
             if (isSwapNeeded) {
                 std::swap(from, to);
             }
-            std::cout<<"----------------\n";
-            std::cout<<scalar1<<", "<<scalar2<<std::endl;
-            std::cout<<"----------------\n";
         }
         return {from, to};
     }
@@ -234,15 +245,21 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     auto mask4 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2,
                                  rect2i.y + rect2i.height / 2,
                                  rect2i.width / 2, rect2i.height / 2));
-    auto scalar1 = cv::mean(std::move(mask1));
-    auto scalar2 = cv::mean(std::move(mask2));
-    auto scalar3 = cv::mean(std::move(mask3));
-    auto scalar4 = cv::mean(std::move(mask4));
-    std::cout<<"----------------\n";
-    std::cout<<scalar1<<", "<<scalar2<<std::endl;
-    std::cout<<scalar3<<", "<<scalar4<<std::endl;
-    std::cout<<"----------------\n";
-    return std::pair<cv::Point2f, cv::Point2f>();
+    auto sum1 = getScalarSum(cv::mean(std::move(mask1)));
+    auto sum2 = getScalarSum(cv::mean(std::move(mask2)));
+    auto sum3 = getScalarSum(cv::mean(std::move(mask3)));
+    auto sum4 = getScalarSum(cv::mean(std::move(mask4)));
+    if (debug) {
+        std::cout << sum1 << ", " << sum2 << std::endl;
+        std::cout << sum3 << ", " << sum4 << std::endl;
+        std::cout << "----------------\n";
+    }
+    if (sum1 + sum3 > sum2 + sum4) {
+        return {cv::Point2f(rect.tl()), cv::Point2f(rect.br())};
+    } else {
+        return {cv::Point2f(rect.x, rect.y + rect.height),
+                cv::Point2f(rect.x + rect.width, rect.y)};
+    }
 }
 
 void BoxGraphConverter::featureTraverse(const callback_type &_func) {

@@ -7,11 +7,15 @@
 #include <utility>
 
 class BoxGraphConverter {
+    inline static bool debug = false;
     // <idx1,idx2,feature>
     using float_index_type = std::tuple<size_t, size_t, float>;
     // 低阶距离特征：atom-bond,bond-bond,bond-circle,atom-circle
     std::vector<float_index_type> abDisGrid, bbDisGrid, bcDisGrid, acDisGrid;
-    using callback_type=std::function<void(const size_t &, const size_t &, const float &)>;
+    std::vector<std::vector<float>> iouGrid;
+    std::unordered_map<size_t, int> labels;
+    using callback_type = std::function<void(const size_t &, const size_t &, const float &)>;
+
     /**
      * 遍历低阶距离特征
      * @param _func 回调函数，处理索引坐标、特征为 {size_t,size_t,float} 的关系
@@ -22,9 +26,8 @@ class BoxGraphConverter {
      * analysis features and construct a jmol
      * call by BoxGraphConverter::accept
      */
-    void then();
+    std::vector<std::shared_ptr<JMol>> then();
 
-    JMol &mol;
     enum ItemType {
         ExplicitAtom = 0x100,
         LineBond = 0x010,
@@ -33,7 +36,7 @@ class BoxGraphConverter {
 
     ItemType getTypeFromLabelIdx(const int &_label);
 
-    JBondType getBondTypeFromLabelIdx(const int&_label);
+    JBondType getBondTypeFromLabelIdx(const int &_label);
 
     std::pair<cv::Point2f, cv::Point2f> getFromTo4LineBond(
             const gt_box&_gtBox, const cv::Mat &_img);
@@ -43,7 +46,7 @@ public:
      * take charge of this JMol
      * @param _mol
      */
-    BoxGraphConverter(JMol &_mol);
+    BoxGraphConverter(bool _debug = true);
 
     /**
      * extract features from boxes and img
@@ -51,7 +54,8 @@ public:
      * @param _boxes
      * @param _img
      */
-    void accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img);
+    std::vector<std::shared_ptr<JMol>>
+    accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img);
 };
 
 #endif //_BOX_2_GRAPH_HPP_

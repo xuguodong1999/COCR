@@ -69,10 +69,10 @@ int main(int argc, char **argv) {
             QImage inputImg = rawImg.convertToFormat(QImage::Format_RGB888).scaled(
                     rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
             auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), true);
-            auto mol = std::make_shared<JMol>();
-            BoxGraphConverter converter(*mol);
-            converter.accept(gtBox, img);
+            BoxGraphConverter converter(true);
+            auto mols = converter.accept(gtBox, img);
             std::vector<std::string> data({"CCC", "CC", "CCCC", "C"});
+            auto mol = std::make_shared<JMol>();
             mol->set(randSelect(data));
             sceneBuilder->resetMol(mol);
         });
