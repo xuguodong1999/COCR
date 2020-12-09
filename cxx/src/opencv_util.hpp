@@ -54,7 +54,7 @@ inline cv::Point_<_Tp> getRectCenter2D(const cv::Rect_<_Tp> &_rect) {
 
 template<typename _Tp>
 inline _Tp getScalarSum(const cv::Scalar_<_Tp> &_scalar) {
-    _Tp *val = _scalar.val;
+    const auto val = _scalar.val;
     _Tp sum = 0;
     for (size_t i = 0; i < 4; i++) {
         sum += val[i];

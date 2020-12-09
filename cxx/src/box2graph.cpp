@@ -167,7 +167,7 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     const auto &rect = _gtBox.bBox;
     // 是否扁平
     float k = rect.width / rect.height;
-    const float kThresh = 10;
+    const float kThresh = 2;
     bool isVertical = k < 1.0 / kThresh;
     bool isHorizontal = k > kThresh;
     bool isLineLike = isVertical || isHorizontal;
@@ -191,6 +191,7 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
             from.y = to.y = rect.y + rect.height / 2;
         }
         // 在输入图片边长是32的倍数的前提下，此时rect2i必然是一个边长至少为4且在图像内的框
+        isDirNeeded=true;
         if (isDirNeeded) {
             // 判断是否需要交换(from,to)
             // 策略：区域二分，计算像素均值
@@ -217,6 +218,9 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
             if (isSwapNeeded) {
                 std::swap(from, to);
             }
+            std::cout<<"----------------\n";
+            std::cout<<scalar1<<", "<<scalar2<<std::endl;
+            std::cout<<"----------------\n";
         }
         return {from, to};
     }
@@ -234,6 +238,10 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     auto scalar2 = cv::mean(std::move(mask2));
     auto scalar3 = cv::mean(std::move(mask3));
     auto scalar4 = cv::mean(std::move(mask4));
+    std::cout<<"----------------\n";
+    std::cout<<scalar1<<", "<<scalar2<<std::endl;
+    std::cout<<scalar3<<", "<<scalar4<<std::endl;
+    std::cout<<"----------------\n";
     return std::pair<cv::Point2f, cv::Point2f>();
 }
 
