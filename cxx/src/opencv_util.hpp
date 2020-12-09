@@ -51,4 +51,15 @@ template<typename _Tp>
 inline cv::Point_<_Tp> getRectCenter2D(const cv::Rect_<_Tp> &_rect) {
     return cv::Point_<_Tp>(_rect.x + _rect.width / 2, _rect.y + _rect.height / 2);
 }
+
+template<typename _Tp>
+inline _Tp getScalarSum(const cv::Scalar_<_Tp> &_scalar) {
+    _Tp *val = _scalar.val;
+    _Tp sum = 0;
+    for (size_t i = 0; i < 4; i++) {
+        sum += val[i];
+    }
+    return sum;
+}
+
 #endif//_OPENCV_UTIL_HPP_
