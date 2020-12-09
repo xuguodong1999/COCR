@@ -12,7 +12,7 @@ class BoxGraphConverter {
     using float_index_type = std::tuple<size_t, size_t, float>;
     // 低阶距离特征：atom-bond,bond-bond,bond-circle,atom-circle
     std::vector<float_index_type> abDisGrid, bbDisGrid, bcDisGrid, acDisGrid;
-    std::vector<std::vector<float>> iouGrid;
+    std::vector<std::vector<float>> iAreaGrid;
     std::unordered_map<size_t, int> labels;
     using callback_type = std::function<void(const size_t &, const size_t &, const float &)>;
 

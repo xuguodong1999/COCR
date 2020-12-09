@@ -469,5 +469,5 @@ cv::Scalar getScalar(const ColorName &_colorName) {
 //    std::cout << static_cast<int>(ColorName::rgbLightGreen) << std::endl;
 //    exit(-1);
     auto&[r, g, b]=predefinedColors[static_cast<int>(_colorName)];
-    return cv::Scalar(r, g, b);
+    return cv::Scalar(b, g, r);
 }

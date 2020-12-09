@@ -1,8 +1,11 @@
 #include "box2graph.hpp"
 #include "opencv_util.hpp"
+#include "std_util.hpp"
+#include "colors.hpp"
 
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 
 #include <vector>
 #include <unordered_map>
@@ -17,8 +20,19 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     // <box_id,[<box_id,feature=(cur_dis/min_dis,cur_dis/avg(min_dis)),>,...]>
     // 低阶距离特征：atom-bond,bond-bond,bond-circle,atom-circle
     // std::vector<float_index_type> abDisGrid, bbDisGrid, bcDisGrid, acDisGrid;
-    std::vector<JMol> mols(1);
-    JMol &mol(mols[0]);
+    std::vector<std::shared_ptr<JMol>> mols;
+    // 先支持所有图元属于一个分子骨架的情况
+    auto mol = std::make_shared<JMol>();
+    mols.push_back(mol);
+    std::unordered_map<size_t, size_t> idCaster;
+    for (auto&[aid, bid, feature]:abDisGrid) {
+        if (notExist(idCaster, aid)) {
+            auto atom = mol->addAtom(0);
+            atom->setElementType(CLASSES[labels[aid]]);
+            idCaster[aid] = atom->getId();
+        }
+    }
+    return std::move(mols);
 }
 
 BoxGraphConverter::BoxGraphConverter(bool _debug) {
@@ -71,12 +85,12 @@ BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img
         return {std::move(mol)};
     }
     // 填充低阶特征
-    iouGrid.resize(box_num, std::vector<float>(box_num, 0));
+    iAreaGrid.resize(box_num, std::vector<float>(box_num, 0));
     for (size_t i = 0; i < box_num; i++) {
         labels[i] = _boxes[i].label;
         for (size_t j = i + 1; j < box_num; j++) {
             // 填充相交面积
-            iouGrid[i][j] = iouGrid[j][i] = (_boxes[i].bBox & _boxes[j].bBox).area();
+            iAreaGrid[i][j] = iAreaGrid[j][i] = (_boxes[i].bBox & _boxes[j].bBox).area();
             // 填充关键距离
             ItemType itI = getTypeFromLabelIdx(_boxes[i].label);
             ItemType itJ = getTypeFromLabelIdx(_boxes[j].label);
@@ -87,7 +101,7 @@ BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img
                     size_t aIndex = itI == ItemType::ExplicitAtom ? i : j;
                     auto &[from, to]=bondDir[bIndex];
                     auto &rect = _boxes[aIndex].bBox;
-                    abDisGrid.emplace_back(i, j, (std::min)(
+                    abDisGrid.emplace_back(aIndex, bIndex, (std::min)(
                             getDistance2D(from, cv::Point2f(getRectCenter2D(rect))),
                             getDistance2D(to, cv::Point2f(getRectCenter2D(rect)))
                     ));
@@ -107,13 +121,17 @@ BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img
                 }
                 case ItemType::LineBond | ItemType::CircleBond: {
                     // 中心对中心 TODO: 加入中心对端点的距离校验
-                    bcDisGrid.emplace_back(i, j, getDistance2D(
+                    size_t bIndex = itI == ItemType::LineBond ? i : j;
+                    size_t cIndex = itI == ItemType::CircleBond ? i : j;
+                    bcDisGrid.emplace_back(bIndex, cIndex, getDistance2D(
                             getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
                     break;
                 }
                 case ItemType::ExplicitAtom | ItemType::CircleBond: {
                     // 中心对中心
-                    acDisGrid.emplace_back(i, j, getDistance2D(
+                    size_t cIndex = itI == ItemType::CircleBond ? i : j;
+                    size_t aIndex = itI == ItemType::ExplicitAtom ? i : j;
+                    acDisGrid.emplace_back(aIndex, cIndex, getDistance2D(
                             getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
                     break;
                 }
@@ -171,10 +189,10 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     const auto &rect = _gtBox.bBox;
     // 是否扁平
     float k = rect.width / rect.height;
-    if (debug) {
-        std::cout << rect << std::endl;
-        std::cout << "k=" << k << std::endl;
-    }
+//    if (debug) {
+//        std::cout << rect << std::endl;
+//        std::cout << "k=" << k << std::endl;
+//    }
     const float kThresh = 2;
     const int paddingSize = 2;
     bool isVertical = k < 1.0 / kThresh;
@@ -200,11 +218,9 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
             from.y = to.y = rect.y + rect.height / 2;
         }
         // 在输入图片边长是32的倍数的前提下，此时rect2i必然是一个边长至少为4且在图像内的框
-        isDirNeeded=true;
         if (isDirNeeded) {
             // 判断是否需要交换(from,to)
             // 策略：区域二分，计算像素均值
-            bool isSwapNeeded = false;// 左上为from
             cv::Scalar scalar1, scalar2;
             if (isVertical) {
                 // 上下分割
@@ -223,12 +239,12 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
                 scalar1 = cv::mean(std::move(mask1));
                 scalar2 = cv::mean(std::move(mask2));
             }
-            if (debug) {
-                std::cout << getScalarSum(scalar1) << ", " << getScalarSum(scalar2) << std::endl;
-                std::cout << "----------------\n";
-            }
+//            if (debug) {
+//                std::cout << getScalarSum(scalar1) << ", " << getScalarSum(scalar2) << std::endl;
+//                std::cout << "----------------\n";
+//            }
             // 白色像素多 -> sum 大 && 设为 from
-            isSwapNeeded = getScalarSum(scalar1) < getScalarSum(scalar2);
+            bool isSwapNeeded = getScalarSum(scalar1) < getScalarSum(scalar2);
             if (isSwapNeeded) {
                 std::swap(from, to);
             }
@@ -240,7 +256,7 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
                                  rect2i.width / 2, rect2i.height / 2));
     auto mask2 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2, rect2i.y,
                                  rect2i.width / 2, rect2i.height / 2));
-    auto mask3 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2, rect2i.y,
+    auto mask3 = _img(cv::Rect2i(rect2i.x, rect2i.y + rect.height / 2,
                                  rect2i.width / 2, rect2i.height / 2));
     auto mask4 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2,
                                  rect2i.y + rect2i.height / 2,
@@ -249,17 +265,115 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     auto sum2 = getScalarSum(cv::mean(std::move(mask2)));
     auto sum3 = getScalarSum(cv::mean(std::move(mask3)));
     auto sum4 = getScalarSum(cv::mean(std::move(mask4)));
-    if (debug) {
+//    if (debug) {
+//        std::cout << sum1 << ", " << sum2 << std::endl;
+//        std::cout << sum3 << ", " << sum4 << std::endl;
+//        std::cout << "----------------\n";
+//    }
+    cv::Point2f from, to;
+    bool isSwapNeeded;
+    const float extraW = 0;//0.3;
+    if (sum1 + sum4 < sum2 + sum3) {
+        from = rect.tl();
+        to = rect.br();
+        if (isHorizontal) {
+            isSwapNeeded = sum1 + sum3 * extraW < sum4 + sum2 * extraW;
+        } else {
+            isSwapNeeded = sum1 + sum2 * extraW < sum4 + sum3 * extraW;
+        }
+    } else {
+        from.x = rect.x;
+        from.y = rect.y + rect.height;
+        to.x = rect.x + rect.width;
+        to.y = rect.y;
+        if (isHorizontal) {
+            isSwapNeeded = sum2 + sum4 * extraW < sum3 + sum1 * extraW;
+        } else {
+            isSwapNeeded = sum2 + sum1 * extraW < sum3 + sum4 * extraW;
+        }
+    }
+    if (isSwapNeeded)std::swap(from, to);
+    // TODO: 预定义模板去匹配区域
+    auto get_template = [&](const int &_w, const int &_h, const int &_direction) -> cv::Mat {
+//        cv::Mat tmpMat;
+        cv::Mat tmpMat(_h, _w, CV_8UC1,
+                       getScalar(ColorName::rgbWhite));
+        std::vector<cv::Point2i> pts(3);
+        switch (_direction) {
+            case 1:
+                pts[0] = {0, 0};
+                pts[1] = {_w - 1, _h * 2 / 3};
+                pts[2] = {_w * 2 / 3, _h - 1};
+                break;
+            case 2:
+                pts[0] = {_w - 1, 0};
+                pts[1] = {0, _h * 2 / 3};
+                pts[2] = {_w * 1 / 3, _h - 1};
+                break;
+            case 3:
+                pts[0] = {0, _h - 1};
+                pts[1] = {_w - 1, _h * 1 / 3};
+                pts[2] = {_w * 2 / 3, 0};
+                break;
+            case 4:
+                pts[0] = {_w - 1, _h - 1};
+                pts[1] = {0, _h * 1 / 3};
+                pts[2] = {_w * 1 / 3, 0};
+                break;
+        }
+        cv::fillPoly(tmpMat, pts, getScalar(ColorName::rgbBlack), cv::LINE_AA);
+//        cv::imshow("fuck",tmpMat);
+//        cv::waitKey(0);
+        return std::move(tmpMat);
+    };
+    auto mask = _img(rect2i);
+    cv::cvtColor(mask, mask, cv::COLOR_BGR2GRAY);
+    auto getFuckCount = [&](const cv::Mat &_m1, const cv::Mat &_m2) -> double {
+        double fuck = 0;
+        for (int i = 0; i < _m1.rows; i++) {
+            for (int j = 0; j < _m1.cols; j++) {
+                if (_m1.at<uchar>(i, j) == 0) {
+                    if (_m2.at<uchar>(i, j) == 0) {
+                        fuck += 1;
+                    } else {
+                        fuck -= 1;
+                    }
+                }
+            }
+        }
+        return fuck;
+    };
+
+    double d1 = getFuckCount(mask, get_template(
+            rect2i.width, rect2i.height, 1));
+    double d2 = getFuckCount(mask, get_template(
+            rect2i.width, rect2i.height, 2));
+    double d3 = getFuckCount(mask, get_template(
+            rect2i.width, rect2i.height, 3));
+    double d4 = getFuckCount(mask, get_template(
+            rect2i.width, rect2i.height, 4));
+
+//    cv::matchTemplate(_img(rect2i),get_template(rect2i.width,rect2i.height,1),)
+    if (debug && isDirNeeded) {
+//        cv::imshow("fuck", mask);
+//        cv::waitKey(0);
         std::cout << sum1 << ", " << sum2 << std::endl;
         std::cout << sum3 << ", " << sum4 << std::endl;
         std::cout << "----------------\n";
+        std::cout << d1 << ", " << d2 << std::endl;
+        std::cout << d3 << ", " << d4 << std::endl;
+        std::cout << "----------------\n";
+        auto tmpMat = _img.clone();
+        cv::putText(tmpMat, "[0]", from, 1, 1.2,
+                    getScalar(ColorName::rgbOrangeRed), 2,
+                    cv::LINE_AA, false);
+        cv::putText(tmpMat, "[1]", to, 1, 1.2,
+                    getScalar(ColorName::rgbDarkRed), 2,
+                    cv::LINE_AA, false);
+        cv::imshow("BoxGraphConverter-getFromTo4LineBond", tmpMat);
+        cv::waitKey(0);
     }
-    if (sum1 + sum3 > sum2 + sum4) {
-        return {cv::Point2f(rect.tl()), cv::Point2f(rect.br())};
-    } else {
-        return {cv::Point2f(rect.x, rect.y + rect.height),
-                cv::Point2f(rect.x + rect.width, rect.y)};
-    }
+    return {from, to};
 }
 
 void BoxGraphConverter::featureTraverse(const callback_type &_func) {
