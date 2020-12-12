@@ -14,7 +14,8 @@ if (MSVC)
             Quick3DRuntimeRender Quick3DUtils QuickCompiler QuickControls2 QuickParticles
             QuickShapes QuickTemplates2 QuickTest QuickWidgets RemoteObjects RepParser
             Script ScriptTools Scxml Sensors SerialBus SerialPort Sql Svg
-            Test ThemeSupport UiPlugin UiTools VirtualKeyboard VulkanSupport
+            Test ThemeSupport UiPlugin UiTools VirtualKeyboard
+#            VulkanSupport
             WebChannel WebEngine WebEngineCore WebEngineWidgets WebSockets WebView
             WindowsUIAutomationSupport Xml XmlPatterns Zlib)
 endif (MSVC)

@@ -203,7 +203,7 @@ void MolHwItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_l
         this->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
         if (byProb(RC::revertColorProb)) {// 反转颜色
-//            cv::bitwise_not(img, img);
+            cv::bitwise_not(img, img);
         }
         cv::imwrite(_imgPath + suffix + ".jpg", img,
                     {cv::IMWRITE_JPEG_QUALITY, 100});

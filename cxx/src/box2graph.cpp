@@ -22,16 +22,17 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     // std::vector<float_index_type> abDisGrid, bbDisGrid, bcDisGrid, acDisGrid;
     std::vector<std::shared_ptr<JMol>> mols;
     // 先支持所有图元属于一个分子骨架的情况
-    auto mol = std::make_shared<JMol>();
-    mols.push_back(mol);
-    std::unordered_map<size_t, size_t> idCaster;
-    for (auto&[aid, bid, feature]:abDisGrid) {
-        if (notExist(idCaster, aid)) {
-            auto atom = mol->addAtom(0);
-            atom->setElementType(CLASSES[labels[aid]]);
-            idCaster[aid] = atom->getId();
-        }
-    }
+//    auto mol = std::make_shared<JMol>();
+//    mols.push_back(mol);
+//    std::unordered_map<size_t, size_t> idCaster;
+//    for (auto&[aid, bid, feature]:abDisGrid) {
+//        if (notExist(idCaster, aid)) {
+//            auto atom = mol->addAtom(0);
+//            atom->setElementType(CLASSES[labels[aid]]);
+//            idCaster[aid] = atom->getId();
+//        }
+//    }
+    // eAtomBoxes bondBoxes circleBoxes
     return std::move(mols);
 }
 
@@ -47,100 +48,120 @@ BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img
         return {};
     }
     // extract bondDir as <id, <from,to>> first
-    std::unordered_map<size_t, std::pair<cv::Point2f, cv::Point2f>> bondDir;
-    for (size_t i = 0; i < box_num; i++) {
-        if (getTypeFromLabelIdx(_boxes[i].label) != ItemType::LineBond)continue;
-        bondDir[i] = getFromTo4LineBond(_boxes[i], _img);
-    }
-    if (box_num == 1) {
-        auto mol = std::make_shared<JMol>();
-        int label = _boxes[0].label;
-        switch (getTypeFromLabelIdx(label)) {
-            case ItemType::CircleBond: {
-                auto atomOxygen = mol->addAtom(6);// 误分类氧原子为苯环里的圈
-                mol->insertAtomPos2D(atomOxygen->getId(), true,
-                                     getRectCenter2D(_boxes[0].bBox));
+//    std::unordered_map<size_t, std::pair<cv::Point2f, cv::Point2f>> bondDir;
+//    for (size_t i = 0; i < box_num; i++) {
+//        if (getTypeFromLabelIdx(_boxes[i].label) != ItemType::LineBond)continue;
+//        bondDir[i] = getFromTo4LineBond(_boxes[i], _img);
+//    }
+//    if (box_num == 1) {
+//        auto mol = std::make_shared<JMol>();
+//        int label = _boxes[0].label;
+//        switch (getTypeFromLabelIdx(label)) {
+//            case ItemType::CircleBond: {
+//                auto atomOxygen = mol->addAtom(6);// 误分类氧原子为苯环里的圈
+//                mol->insertAtomPos2D(atomOxygen->getId(), true,
+//                                     getRectCenter2D(_boxes[0].bBox));
+//                break;
+//            }
+//            case ItemType::ExplicitAtom: {
+//                auto atom = mol->addAtom(0);
+//                atom->setElementType(CLASSES[label]);
+//                mol->insertAtomPos2D(atom->getId(), true,
+//                                     getRectCenter2D(_boxes[0].bBox));
+//                break;
+//            }
+//            case ItemType::LineBond: {
+//                auto atomFrom = mol->addAtom(6);
+//                auto atomTo = mol->addAtom(6);
+//                mol->addBond(atomFrom->getId(), atomTo->getId(),
+//                             getBondTypeFromLabelIdx(label));
+//                auto&[from, to]=bondDir[0];
+//                mol->insertAtomPos2D(atomFrom->getId(), false, from);
+//                mol->insertAtomPos2D(atomTo->getId(), false, to);
+//                break;
+//            }
+//            default:
+//                break;
+//        }
+//        return {std::move(mol)};
+//    }
+    // 转换数据格式
+    for (auto &box:_boxes) {
+        ItemType itemTypeype = getTypeFromLabelIdx(box.label);
+        switch (itemTypeype) {
+            case ItemType::ExplicitAtom:
+                eAtomBoxes.emplace_back(box.label, getRectCenter2D(box.bBox),
+                                        box.bBox.width, box.bBox.height);
                 break;
-            }
-            case ItemType::ExplicitAtom: {
-                auto atom = mol->addAtom(0);
-                atom->setElementType(CLASSES[label]);
-                mol->insertAtomPos2D(atom->getId(), true,
-                                     getRectCenter2D(_boxes[0].bBox));
+            case ItemType::LineBond:
+                bondBoxes.emplace_back(box.label, getFromTo4LineBond(box, _img));
                 break;
-            }
-            case ItemType::LineBond: {
-                auto atomFrom = mol->addAtom(6);
-                auto atomTo = mol->addAtom(6);
-                mol->addBond(atomFrom->getId(), atomTo->getId(),
-                             getBondTypeFromLabelIdx(label));
-                auto&[from, to]=bondDir[0];
-                mol->insertAtomPos2D(atomFrom->getId(), false, from);
-                mol->insertAtomPos2D(atomTo->getId(), false, to);
+            case ItemType::CircleBond:
+                circleBoxes.emplace_back(getRectCenter2D(box.bBox),
+                                         (box.bBox.height + box.bBox.height) / 4.0);
                 break;
-            }
             default:
-                break;
-        }
-        return {std::move(mol)};
-    }
-    // 填充低阶特征
-    iAreaGrid.resize(box_num, std::vector<float>(box_num, 0));
-    for (size_t i = 0; i < box_num; i++) {
-        labels[i] = _boxes[i].label;
-        for (size_t j = i + 1; j < box_num; j++) {
-            // 填充相交面积
-            iAreaGrid[i][j] = iAreaGrid[j][i] = (_boxes[i].bBox & _boxes[j].bBox).area();
-            // 填充关键距离
-            ItemType itI = getTypeFromLabelIdx(_boxes[i].label);
-            ItemType itJ = getTypeFromLabelIdx(_boxes[j].label);
-            switch (itI | itJ) {
-                case ItemType::ExplicitAtom | ItemType::LineBond: {
-                    // 中心对端点二选一
-                    size_t bIndex = itI == ItemType::LineBond ? i : j;
-                    size_t aIndex = itI == ItemType::ExplicitAtom ? i : j;
-                    auto &[from, to]=bondDir[bIndex];
-                    auto &rect = _boxes[aIndex].bBox;
-                    abDisGrid.emplace_back(aIndex, bIndex, (std::min)(
-                            getDistance2D(from, cv::Point2f(getRectCenter2D(rect))),
-                            getDistance2D(to, cv::Point2f(getRectCenter2D(rect)))
-                    ));
-                    break;
-                }
-                case ItemType::LineBond | ItemType::LineBond: {
-                    // 端点对端点四选一
-                    auto &[fromI, toI]=bondDir[i];
-                    auto &[fromJ, toJ]=bondDir[j];
-                    bbDisGrid.emplace_back(i, j, (std::min)(
-                            (std::min)(
-                                    getDistance2D(fromI, fromJ), getDistance2D(toI, toJ)
-                            ), (std::min)(
-                                    getDistance2D(toI, fromJ), getDistance2D(fromI, toJ)
-                            )));
-                    break;
-                }
-                case ItemType::LineBond | ItemType::CircleBond: {
-                    // 中心对中心 TODO: 加入中心对端点的距离校验
-                    size_t bIndex = itI == ItemType::LineBond ? i : j;
-                    size_t cIndex = itI == ItemType::CircleBond ? i : j;
-                    bcDisGrid.emplace_back(bIndex, cIndex, getDistance2D(
-                            getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
-                    break;
-                }
-                case ItemType::ExplicitAtom | ItemType::CircleBond: {
-                    // 中心对中心
-                    size_t cIndex = itI == ItemType::CircleBond ? i : j;
-                    size_t aIndex = itI == ItemType::ExplicitAtom ? i : j;
-                    acDisGrid.emplace_back(aIndex, cIndex, getDistance2D(
-                            getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
+                std::cerr << "unhandled type in BoxGraphConverter::accept" << std::endl;
+                exit(-1);
         }
     }
+
+//    iAreaGrid.resize(box_num, std::vector<float>(box_num, 0));
+//    for (size_t i = 0; i < box_num; i++) {
+//        labels[i] = _boxes[i].label;
+//        for (size_t j = i + 1; j < box_num; j++) {
+//            // 填充相交面积
+//            iAreaGrid[i][j] = iAreaGrid[j][i] = (_boxes[i].bBox & _boxes[j].bBox).area();
+//            // 填充关键距离
+//            ItemType itI = getTypeFromLabelIdx(_boxes[i].label);
+//            ItemType itJ = getTypeFromLabelIdx(_boxes[j].label);
+//            switch (itI | itJ) {
+//                case ItemType::ExplicitAtom | ItemType::LineBond: {
+//                    // 中心对端点二选一
+//                    size_t bIndex = itI == ItemType::LineBond ? i : j;
+//                    size_t aIndex = itI == ItemType::ExplicitAtom ? i : j;
+//                    auto &[from, to]=bondDir[bIndex];
+//                    auto &rect = _boxes[aIndex].bBox;
+//                    abDisGrid.emplace_back(aIndex, bIndex, (std::min)(
+//                            getDistance2D(from, cv::Point2f(getRectCenter2D(rect))),
+//                            getDistance2D(to, cv::Point2f(getRectCenter2D(rect)))
+//                    ));
+//                    break;
+//                }
+//                case ItemType::LineBond | ItemType::LineBond: {
+//                    // 端点对端点四选一
+//                    auto &[fromI, toI]=bondDir[i];
+//                    auto &[fromJ, toJ]=bondDir[j];
+//                    bbDisGrid.emplace_back(i, j, (std::min)(
+//                            (std::min)(
+//                                    getDistance2D(fromI, fromJ), getDistance2D(toI, toJ)
+//                            ), (std::min)(
+//                                    getDistance2D(toI, fromJ), getDistance2D(fromI, toJ)
+//                            )));
+//                    break;
+//                }
+//                case ItemType::LineBond | ItemType::CircleBond: {
+//                    // 中心对中心 TODO: 加入中心对端点的距离校验
+//                    size_t bIndex = itI == ItemType::LineBond ? i : j;
+//                    size_t cIndex = itI == ItemType::CircleBond ? i : j;
+//                    bcDisGrid.emplace_back(bIndex, cIndex, getDistance2D(
+//                            getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
+//                    break;
+//                }
+//                case ItemType::ExplicitAtom | ItemType::CircleBond: {
+//                    // 中心对中心
+//                    size_t cIndex = itI == ItemType::CircleBond ? i : j;
+//                    size_t aIndex = itI == ItemType::ExplicitAtom ? i : j;
+//                    acDisGrid.emplace_back(aIndex, cIndex, getDistance2D(
+//                            getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
+//                    break;
+//                }
+//                default: {
+//                    break;
+//                }
+//            }
+//        }
+//    }
     return std::move(then());
 }
 
@@ -189,11 +210,11 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     const auto &rect = _gtBox.bBox;
     // 是否扁平
     float k = rect.width / rect.height;
-//    if (debug) {
-//        std::cout << rect << std::endl;
-//        std::cout << "k=" << k << std::endl;
-//    }
-    const float kThresh = 2;
+    if (debug) {
+        std::cout << rect << std::endl;
+        std::cout << "width/height=" << k << std::endl;
+    }
+    const float kThresh = 3;
     const int paddingSize = 2;
     bool isVertical = k < 1.0 / kThresh;
     bool isHorizontal = k > kThresh;
@@ -206,14 +227,15 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     rect2i.width = (std::min)(rect2i.x + _img.rows - 1, rect2i.width + 2 * paddingSize);
     rect2i.height = (std::min)(rect2i.y + _img.cols - 1, rect2i.height + 2 * paddingSize);
     // 扁平且方向无关
+    cv::Point2f from, to;
     if (isLineLike) {
-        cv::Point2f from, to;// 返回短边中点
+        // 返回短边中点
         if (isVertical) {
             from.x = to.x = rect.x + rect.width / 2;
             from.y = rect.y;
             to.y = rect.y + rect.height;
         } else {
-            from.x = to.x;
+            from.x = rect.x;
             to.x = rect.x + rect.width;
             from.y = to.y = rect.y + rect.height / 2;
         }
@@ -249,120 +271,123 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
                 std::swap(from, to);
             }
         }
-        return {from, to};
-    }
-    // 非扁平矩形，区域四分(1234左上右上左下右下)，统计交叉网格的特征像素计数
-    auto mask1 = _img(cv::Rect2i(rect2i.x, rect2i.y,
-                                 rect2i.width / 2, rect2i.height / 2));
-    auto mask2 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2, rect2i.y,
-                                 rect2i.width / 2, rect2i.height / 2));
-    auto mask3 = _img(cv::Rect2i(rect2i.x, rect2i.y + rect.height / 2,
-                                 rect2i.width / 2, rect2i.height / 2));
-    auto mask4 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2,
-                                 rect2i.y + rect2i.height / 2,
-                                 rect2i.width / 2, rect2i.height / 2));
-    auto sum1 = getScalarSum(cv::mean(std::move(mask1)));
-    auto sum2 = getScalarSum(cv::mean(std::move(mask2)));
-    auto sum3 = getScalarSum(cv::mean(std::move(mask3)));
-    auto sum4 = getScalarSum(cv::mean(std::move(mask4)));
-//    if (debug) {
-//        std::cout << sum1 << ", " << sum2 << std::endl;
-//        std::cout << sum3 << ", " << sum4 << std::endl;
-//        std::cout << "----------------\n";
-//    }
-    cv::Point2f from, to;
-    bool isSwapNeeded;
-    const float extraW = 0;//0.3;
-    if (sum1 + sum4 < sum2 + sum3) {
-        from = rect.tl();
-        to = rect.br();
-        if (isHorizontal) {
-            isSwapNeeded = sum1 + sum3 * extraW < sum4 + sum2 * extraW;
-        } else {
-            isSwapNeeded = sum1 + sum2 * extraW < sum4 + sum3 * extraW;
-        }
-    } else {
-        from.x = rect.x;
-        from.y = rect.y + rect.height;
-        to.x = rect.x + rect.width;
-        to.y = rect.y;
-        if (isHorizontal) {
-            isSwapNeeded = sum2 + sum4 * extraW < sum3 + sum1 * extraW;
-        } else {
-            isSwapNeeded = sum2 + sum1 * extraW < sum3 + sum4 * extraW;
-        }
-    }
-    if (isSwapNeeded)std::swap(from, to);
-    // TODO: 预定义模板去匹配区域
-    auto get_template = [&](const int &_w, const int &_h, const int &_direction) -> cv::Mat {
-//        cv::Mat tmpMat;
-        cv::Mat tmpMat(_h, _w, CV_8UC1,
-                       getScalar(ColorName::rgbWhite));
-        std::vector<cv::Point2i> pts(3);
-        switch (_direction) {
-            case 1:
-                pts[0] = {0, 0};
-                pts[1] = {_w - 1, _h * 2 / 3};
-                pts[2] = {_w * 2 / 3, _h - 1};
-                break;
-            case 2:
-                pts[0] = {_w - 1, 0};
-                pts[1] = {0, _h * 2 / 3};
-                pts[2] = {_w * 1 / 3, _h - 1};
-                break;
-            case 3:
-                pts[0] = {0, _h - 1};
-                pts[1] = {_w - 1, _h * 1 / 3};
-                pts[2] = {_w * 2 / 3, 0};
-                break;
-            case 4:
-                pts[0] = {_w - 1, _h - 1};
-                pts[1] = {0, _h * 1 / 3};
-                pts[2] = {_w * 1 / 3, 0};
-                break;
-        }
-        cv::fillPoly(tmpMat, pts, getScalar(ColorName::rgbBlack), cv::LINE_AA);
+    } else if (isDirNeeded) {
+        auto mask = _img(rect2i);
+        cv::cvtColor(mask, mask, cv::COLOR_BGR2GRAY);
+        auto getWedgeTemplate = [&](
+                const int &_w, const int &_h, const int &_direction, const float &_k = 2) {
+            cv::Mat tmpMat(_h, _w, CV_8UC1,
+                           getScalar(ColorName::rgbWhite));
+            std::vector<cv::Point2i> pts(3);
+            const float up = _k / (_k + 1);
+            const float down = 1 - up;
+            switch (_direction) {
+                case 0:
+                    pts[0] = {0, 0};
+                    pts[1] = {_w - 1, (int) (_h * up)};
+                    pts[2] = {(int) (_w * up), _h - 1};
+                    break;
+                case 1:
+                    pts[0] = {_w - 1, 0};
+                    pts[1] = {0, (int) (_h * up)};
+                    pts[2] = {(int) (_w * down), _h - 1};
+                    break;
+                case 2:
+                    pts[0] = {0, _h - 1};
+                    pts[1] = {_w - 1, (int) (_h * down)};
+                    pts[2] = {(int) (_w * up), 0};
+                    break;
+                case 3:
+                    pts[0] = {_w - 1, _h - 1};
+                    pts[1] = {0, (int) (_h * down)};
+                    pts[2] = {(int) (_w * down), 0};
+                    break;
+            }
+            cv::fillPoly(tmpMat, pts, getScalar(ColorName::rgbBlack), cv::LINE_AA);
 //        cv::imshow("fuck",tmpMat);
 //        cv::waitKey(0);
-        return std::move(tmpMat);
-    };
-    auto mask = _img(rect2i);
-    cv::cvtColor(mask, mask, cv::COLOR_BGR2GRAY);
-    auto getFuckCount = [&](const cv::Mat &_m1, const cv::Mat &_m2) -> double {
-        double fuck = 0;
-        for (int i = 0; i < _m1.rows; i++) {
-            for (int j = 0; j < _m1.cols; j++) {
-                if (_m1.at<uchar>(i, j) == 0) {
-                    if (_m2.at<uchar>(i, j) == 0) {
-                        fuck += 1;
-                    } else {
-                        fuck -= 1;
+            return std::move(tmpMat);
+        };
+        auto getFuckCount = [&](const cv::Mat &_m1,
+                                const cv::Mat &_m2) -> double {
+            double fuck = 0;
+            for (int i = 0; i < _m1.rows; i++) {
+                for (int j = 0; j < _m1.cols; j++) {
+                    if (_m2.at<uchar>(i, j) == 0) { // 黑
+                        if (_m1.at<uchar>(i, j) == 0) {
+                            fuck += 1;
+                        } else {
+                            fuck -= 1;
+                        }
                     }
                 }
             }
+            return fuck;
+        };
+        double d0 = getFuckCount(mask, getWedgeTemplate(
+                rect2i.width, rect2i.height, 0));
+        double d1 = getFuckCount(mask, getWedgeTemplate(
+                rect2i.width, rect2i.height, 1));
+        double d2 = getFuckCount(mask, getWedgeTemplate(
+                rect2i.width, rect2i.height, 2));
+        double d3 = getFuckCount(mask, getWedgeTemplate(
+                rect2i.width, rect2i.height, 3));
+        cv::Point maxLoc;
+        cv::minMaxLoc(std::vector<double>({d0, d1, d2, d3}),
+                      nullptr, nullptr, nullptr, &maxLoc);
+        from = to = rect.tl();
+        switch (maxLoc.x) {
+            case 0:
+                to = rect.br();
+                break;
+            case 1:
+                from.x += rect.width;
+                to.y += rect.height;
+                break;
+            case 2:
+                from.y += rect.height;
+                to.x += rect.width;
+                break;
+            case 3:
+                from = rect.br();
+                break;
         }
-        return fuck;
-    };
-
-    double d1 = getFuckCount(mask, get_template(
-            rect2i.width, rect2i.height, 1));
-    double d2 = getFuckCount(mask, get_template(
-            rect2i.width, rect2i.height, 2));
-    double d3 = getFuckCount(mask, get_template(
-            rect2i.width, rect2i.height, 3));
-    double d4 = getFuckCount(mask, get_template(
-            rect2i.width, rect2i.height, 4));
-
-//    cv::matchTemplate(_img(rect2i),get_template(rect2i.width,rect2i.height,1),)
-    if (debug && isDirNeeded) {
-//        cv::imshow("fuck", mask);
-//        cv::waitKey(0);
-        std::cout << sum1 << ", " << sum2 << std::endl;
-        std::cout << sum3 << ", " << sum4 << std::endl;
-        std::cout << "----------------\n";
-        std::cout << d1 << ", " << d2 << std::endl;
-        std::cout << d3 << ", " << d4 << std::endl;
-        std::cout << "----------------\n";
+        if (debug) {
+            std::cout << d0 << ", " << d1 << std::endl;
+            std::cout << d2 << ", " << d3 << std::endl;
+            std::cout << "----------------\n";
+        }
+    } else {
+        // 非扁平矩形，区域四分(1234左上右上左下右下)，统计交叉网格的特征像素计数
+        auto mask0 = _img(cv::Rect2i(rect2i.x, rect2i.y,
+                                     rect2i.width / 2, rect2i.height / 2));
+        auto mask1 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2, rect2i.y,
+                                     rect2i.width / 2, rect2i.height / 2));
+        auto mask2 = _img(cv::Rect2i(rect2i.x, rect2i.y + rect.height / 2,
+                                     rect2i.width / 2, rect2i.height / 2));
+        auto mask3 = _img(cv::Rect2i(rect2i.x + rect2i.width / 2,
+                                     rect2i.y + rect2i.height / 2,
+                                     rect2i.width / 2, rect2i.height / 2));
+        auto sum0 = getScalarSum(cv::mean(std::move(mask0)));
+        auto sum1 = getScalarSum(cv::mean(std::move(mask1)));
+        auto sum2 = getScalarSum(cv::mean(std::move(mask2)));
+        auto sum3 = getScalarSum(cv::mean(std::move(mask3)));
+        if (sum0 + sum3 < sum1 + sum2) {
+            from = rect.tl();
+            to = rect.br();
+        } else {
+            from.x = rect.x;
+            from.y = rect.y + rect.height;
+            to.x = rect.x + rect.width;
+            to.y = rect.y;
+        }
+        if (debug) {
+            std::cout << sum0 << ", " << sum1 << std::endl;
+            std::cout << sum2 << ", " << sum3 << std::endl;
+            std::cout << "----------------\n";
+        }
+    }
+    if (debug) {
         auto tmpMat = _img.clone();
         cv::putText(tmpMat, "[0]", from, 1, 1.2,
                     getScalar(ColorName::rgbOrangeRed), 2,
@@ -376,20 +401,20 @@ BoxGraphConverter::getFromTo4LineBond(const gt_box &_gtBox, const cv::Mat &_img)
     return {from, to};
 }
 
-void BoxGraphConverter::featureTraverse(const callback_type &_func) {
-    for (const auto&[idx1, idx2, feature]:abDisGrid) {
-        _func(idx1, idx2, feature);
-    }
-    for (const auto&[idx1, idx2, feature]:bbDisGrid) {
-        _func(idx1, idx2, feature);
-    }
-    for (const auto&[idx1, idx2, feature]:bcDisGrid) {
-        _func(idx1, idx2, feature);
-    }
-    for (const auto&[idx1, idx2, feature]:acDisGrid) {
-        _func(idx1, idx2, feature);
-    }
-}
+//void BoxGraphConverter::featureTraverse(const callback_type &_func) {
+//    for (const auto&[idx1, idx2, feature]:abDisGrid) {
+//        _func(idx1, idx2, feature);
+//    }
+//    for (const auto&[idx1, idx2, feature]:bbDisGrid) {
+//        _func(idx1, idx2, feature);
+//    }
+//    for (const auto&[idx1, idx2, feature]:bcDisGrid) {
+//        _func(idx1, idx2, feature);
+//    }
+//    for (const auto&[idx1, idx2, feature]:acDisGrid) {
+//        _func(idx1, idx2, feature);
+//    }
+//}
 
 JBondType BoxGraphConverter::getBondTypeFromLabelIdx(const int &_label) {
     switch (_label) {

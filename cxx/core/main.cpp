@@ -67,8 +67,8 @@ int testHWDraw() {
 
 int testDarknetDump() {
     DarknetDataGenerator ddg;
-    ddg.init("/home/xgd/datasets/soso17_v0");
-    ddg.dump(1000 / 4, 4);
+    ddg.init("T:/soso17_v1");
+    ddg.dump(60000/3, 3);
     return 0;
 }
 
