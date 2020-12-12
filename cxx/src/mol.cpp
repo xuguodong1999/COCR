@@ -1161,3 +1161,42 @@ void JMol::insertAtomPos2D(const size_t &_aid, bool _isExplicit, const cv::Point
     atomPosMap2D[_aid] = {_isExplicit, _pos};
 }
 
+std::vector<std::shared_ptr<JMol>> JMol::split() const {
+    AlkaneGraph<size_t> graph;
+    std::unordered_map<size_t, size_t> j2gAidMap, g2jMap;
+    std::vector<std::shared_ptr<JMol>> result;
+    size_t gAidIdx = 0;
+    for (auto&[aid, atom]:atomsMap) {
+        j2gAidMap[aid] = gAidIdx++;
+    }
+//    for(auto&[jAid,gAid]:j2gAidMap){
+//        graph.push_node(gAid);
+//    }
+//    graph.push_node(gAidIdx - 1);
+    for (auto&[bid, bond]:bondsMap) {
+        graph.push_back(j2gAidMap[bond->getAtomFrom()], j2gAidMap[bond->getAtomTo()]);
+    }
+    for (auto&[jAid, gAid]:j2gAidMap) {
+        g2jMap[gAid] = jAid;
+    }
+    // 保证一个连通片不和其它连通片共享边 or 节点
+    std::vector<std::unordered_set<size_t>> groups = graph.dfsTraceGroup();
+    for (auto &group:groups) {
+        auto mol = std::make_shared<JMol>();
+        std::unordered_map<size_t, size_t> aidMap;//<old,new>
+        for (auto &gid:group) {
+            size_t oldAid = g2jMap[gid];
+            auto &atom = atomsMap.find(oldAid)->second;
+            auto newAtom = mol->addAtom(atom->getAtomicNumber());
+            aidMap[oldAid] = newAtom->getId();
+        }
+        for (auto&[bid, bond]:bondsMap) {
+            if (notExist(group, bond->getAtomFrom()))continue;
+            mol->addBond(aidMap[bond->getAtomFrom()], aidMap[bond->getAtomTo()],
+                         bond->getBondType());
+        }
+        result.push_back(std::move(mol));
+    }
+    return result;
+}
+

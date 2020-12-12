@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QApplication>
 #include <QDebug>
+#include <QHBoxLayout>
 
 #include <iostream>
 #include <exception>
@@ -22,10 +23,6 @@ int main(int argc, char **argv) {
 //    qApp->setAttribute(Qt::AA_DisableHighDpiScaling);
 
     QApplication app(argc, argv);
-    auto rootEntity = new Qt3DCore::QEntity();
-    auto sceneBuilder = new Mol3D(rootEntity);
-    auto view = new Mol3DWindow(rootEntity);
-    auto container = QWidget::createWindowContainer(view);
 
 //    container->showMaximized();
 //    container->setFocus();
@@ -59,47 +56,58 @@ int main(int argc, char **argv) {
 //        );
         std::vector<QString> imgNameList;
         size_t index = 0;
-        QObject::connect(view, &Mol3DWindow::forwardOrBackwardPressed, [&](bool isForward) {
-            if (isForward) {
-                index = (index + 1) % imgNameList.size();
-            } else {
-                index = index != 0 ? index - 1 : imgNameList.size() - 1;
-            }
-            QImage rawImg(imgNameList[index]);
-            QImage inputImg = rawImg.convertToFormat(QImage::Format_RGB888).scaled(
-                    rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), false);
-            BoxGraphConverter converter(true);
-            auto mols = converter.accept(gtBox, img);
-            std::vector<std::string> data({"CCC", "CC", "CCCC", "C"});
-            auto mol = std::make_shared<JMol>();
-            mol->set(randSelect(data));
-            sceneBuilder->resetMol(mol);
-        });
+//        QObject::connect(view, &Mol3DWindow::forwardOrBackwardPressed, [&](bool isForward) {
+//            if (isForward) {
+//                index = (index + 1) % imgNameList.size();
+//            } else {
+//                index = index != 0 ? index - 1 : imgNameList.size() - 1;
+//            }
+//            QImage rawImg(imgNameList[index]);
+//            QImage inputImg = rawImg.convertToFormat(QImage::Format_RGB888).scaled(
+//                    rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+//            auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), false);
+//            BoxGraphConverter converter(true);
+//            auto mols = converter.accept(gtBox, img);
+//            std::vector<std::string> data({"CCC", "CC", "CCCC", "C"});
+//            auto mol = std::make_shared<JMol>();
+//            mol->set(randSelect(data));
+//            sceneBuilder->resetMol(mol);
+//        });
         QImage rawImg("C:/Users/xgd/Pictures/cocr_test.png");
         QImage inputImg = rawImg.convertToFormat(QImage::Format_RGB888).scaled(
                 rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), true);
         BoxGraphConverter converter(true);
         auto mols = converter.accept(gtBox, img);
-        sceneBuilder->resetMol(mols[0]);
-        container->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        container->showMaximized();
+        auto mainWidget = new QWidget();
+        auto layout = new QHBoxLayout(mainWidget);
+        for (auto &mol:mols) {
+            std::cout << mol->toSMILES(false) << std::endl;
+            auto rootEntity = new Qt3DCore::QEntity();
+            auto sceneBuilder = new Mol3D(rootEntity);
+            auto view = new Mol3DWindow(rootEntity);
+            auto container = QWidget::createWindowContainer(view);
+            sceneBuilder->resetMol(mol);
+            layout->addWidget(container, 1);
+//            container->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+//            container->showMaximized();
+        }
+        mainWidget->showMaximized();
         return app.exec();
 
-        for (auto &info:QDir("C:/Users/xgd/Documents/有机结构式自动构建系统/结题材料/soso17_v0/JPEGImages").entryInfoList()) {
-            if ("jpg" != info.suffix()) continue;
-            imgNameList.push_back(info.absoluteFilePath());
-            QImage rawImg(info.absoluteFilePath());
-            QImage inputImg = rawImg.convertToFormat(QImage::Format_RGB888).scaled(
-                    rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), false);
-            BoxGraphConverter converter(true);
-            auto mols = converter.accept(gtBox, img);
-        }
-        container->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        container->showMaximized();
-        return app.exec();
+//        for (auto &info:QDir("C:/Users/xgd/Documents/有机结构式自动构建系统/结题材料/soso17_v0/JPEGImages").entryInfoList()) {
+//            if ("jpg" != info.suffix()) continue;
+//            imgNameList.push_back(info.absoluteFilePath());
+//            QImage rawImg(info.absoluteFilePath());
+//            QImage inputImg = rawImg.convertToFormat(QImage::Format_RGB888).scaled(
+//                    rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+//            auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), false);
+//            BoxGraphConverter converter(true);
+//            auto mols = converter.accept(gtBox, img);
+//        }
+//        container->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+//        container->showMaximized();
+//        return app.exec();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;

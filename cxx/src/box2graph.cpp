@@ -14,6 +14,8 @@ std::vector<std::string> CLASSES = {
         "Br", "O", "I", "S", "H", "N", "C", "B",
         "-", "--", "-+", "=", "F", "#", "Cl", "P", "[o]"};
 
+// 问题：如何确定孤立的基团
+
 std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     // analysis features here
     // modify mol here
@@ -37,6 +39,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
         for (auto&[aLabel, center, width, height]:eAtomBoxes) {
             auto mol = std::make_shared<JMol>();
             auto atom = mol->addAtom(0);
+            mol->insertAtomPos2D(atom->getId(), true, center);
             atom->setElementType(getElementTyoeFromLabelIdx(aLabel));
             mols.push_back(std::move(mol));
         }
@@ -50,6 +53,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
         return std::move(mols);
     }
     const float bondSideConThresh = 0.3;
+    const float atomSideThresh = 0.6;
     //<bondIndex,atom> for fromSide and toSide
     auto mol = std::make_shared<JMol>();
     std::unordered_map<size_t, std::shared_ptr<JAtom>> aFrom, aTo;
@@ -76,8 +80,8 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
             // distance 优先
             auto&[i, j, isFrom, distance]=abDistances.back();
             abDistances.pop_back();
-            if (distance > (std::get<2>(bondBoxes[j]) + std::get<2>(eAtomBoxes[i]) +
-                            std::get<3>(eAtomBoxes[i])) * bondSideConThresh)
+            if (distance > atomSideThresh * (std::get<2>(bondBoxes[j]) + (std::max)(
+                    std::get<2>(eAtomBoxes[i]),std::get<3>(eAtomBoxes[i]))) )
                 continue;
             // whether need to add a new Atom
             std::shared_ptr<JAtom> atom = nullptr;
@@ -180,7 +184,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
         std::cout << mol->getAtomsMap().size() << std::endl;
         std::cout << mol->getBondsMap().size() << std::endl;
     }
-    return {mol};;
+    return mol->split();
 //    }
 //    return std::move(mols);
 }

@@ -10,6 +10,7 @@
 #include <functional>
 #include <iomanip>
 #include <unordered_map>
+#include <unordered_set>
 
 enum NodeColor {
     WHITE, GRAY, BLACK
@@ -149,6 +150,34 @@ public:
             }
         }
         state.clear();
+    }
+
+    std::vector<std::unordered_set<T>> dfsTraceGroup() {
+        std::vector<std::unordered_set<T>> result;
+        auto func = [&](const T &_a, const T &_b) {
+            if (_a != EMPTY_NODE) {
+                result.back().insert(_a);
+            }
+            if (_b != EMPTY_NODE) {
+                result.back().insert(_b);
+            }
+        };
+        state.clear();
+        state.resize(content.size(), WHITE);
+        for (auto i = 0; i < content.size(); i++) {
+            if (state[i] == WHITE) {    // 出发：设置父节点为空
+                result.push_back(std::unordered_set<T>());
+                dfs(i, EMPTY_NODE, func, func, func);
+            }
+        }
+        state.clear();
+        return std::move(result);
+    }
+
+    void push_node(T a) {
+        if (content.size() <= a) {
+            content.resize(maxAB + 1);
+        }
     }
 
     void push_back(T a, T b) {

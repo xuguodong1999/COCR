@@ -181,6 +181,12 @@ public:
      * @return 特定绘图引擎下理想字体的边长，一般为化学键长度的 1/2
      */
     const float &getFontSize() const;
+
+    /**
+     * 通过染色遍历寻找孤立的连通片，把孤立的连通片作为独立分子返回，不影响原有结构
+     * @return independent molecules
+     */
+    std::vector<std::shared_ptr<JMol>> split() const;
 };
 
 #endif//_MOL_HPP_
