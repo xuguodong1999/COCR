@@ -33,7 +33,156 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
 //        }
 //    }
     // eAtomBoxes bondBoxes circleBoxes
-    return std::move(mols);
+    if (bondBoxes.empty()) {
+        for (auto&[aLabel, center, width, height]:eAtomBoxes) {
+            auto mol = std::make_shared<JMol>();
+            auto atom = mol->addAtom(0);
+            atom->setElementType(getElementTyoeFromLabelIdx(aLabel));
+            mols.push_back(std::move(mol));
+        }
+        for (auto&[center, r]:circleBoxes) {
+            auto mol = std::make_shared<JMol>();
+            auto atom = mol->addAtom(0);
+            atom->setElementType(ElementType::O);
+            //FIXME: bug 转需求
+            mols.push_back(std::move(mol));
+        }
+        return std::move(mols);
+    }
+    const float bondSideConThresh = 0.3;
+    //<bondIndex,atom> for fromSide and toSide
+    auto mol = std::make_shared<JMol>();
+    std::unordered_map<size_t, std::shared_ptr<JAtom>> aFrom, aTo;
+    std::unordered_map<size_t, std::shared_ptr<JAtom>> aA;
+    for (size_t i = 0; i < eAtomBoxes.size(); i++) {
+        const auto&[aLabel, center, width, height]=eAtomBoxes[i];
+        std::vector<std::tuple<size_t, size_t, bool, float>> abDistances;
+//        for (auto&[bLabel, fromTo]:bondBoxes) {
+        for (size_t j = 0; j < bondBoxes.size(); j++) {
+            const auto&[bLabel, fromTo, bondLength]=bondBoxes[j];
+            const auto&[from, to]=fromTo;
+            float fromDis = getDistance2D(center, from);
+            float toDis = getDistance2D(center, to);
+            bool isFrom = fromDis < toDis;
+            abDistances.emplace_back(i, j, isFrom, (std::min)(fromDis, toDis));
+        }
+        std::sort(abDistances.begin(), abDistances.end(), [&](
+                const std::tuple<size_t, size_t, bool, float> &_a,
+                const std::tuple<size_t, size_t, bool, float> &_b
+        ) -> bool {
+            return std::get<3>(_a) > std::get<3>(_b);
+        });
+        while (!abDistances.empty()) {
+            // distance 优先
+            auto&[i, j, isFrom, distance]=abDistances.back();
+            abDistances.pop_back();
+            if (distance > (std::get<2>(bondBoxes[j]) + std::get<2>(eAtomBoxes[i]) +
+                            std::get<3>(eAtomBoxes[i])) * bondSideConThresh)
+                continue;
+            // whether need to add a new Atom
+            std::shared_ptr<JAtom> atom = nullptr;
+            if (notExist(aA, i)) {
+                atom = mol->addAtom(0);
+                atom->setElementType(getElementTyoeFromLabelIdx(
+                        std::get<0>(eAtomBoxes[i])));
+                aA[i] = atom;
+            } else {
+                atom = aA[i];
+            }
+            if (isFrom) {
+                aFrom[j] = atom;
+            } else {
+                aTo[j] = atom;
+            }
+        }
+    }
+
+//    if (eAtomBoxes.empty()) {
+    std::vector<std::tuple<size_t, bool, size_t, bool, float>> bbDistances;
+    for (size_t j1 = 0; j1 < bondBoxes.size(); j1++) {
+        const auto&[bLabel1, fromTo1, _]=bondBoxes[j1];
+        const auto&[from1, to1]=fromTo1;
+        for (size_t j2 = 0; j2 < bondBoxes.size(); j2++) {
+            const auto&[bLabel2, fromTo2, __]=bondBoxes[j2];
+            const auto&[from2, to2]=fromTo2;
+            if (j1 == j2)continue;
+            std::vector<std::tuple<size_t, bool, size_t, bool, float>> whoConnectsWho = {
+                    {j1, true,  j2, true,  getDistance2D(from1, from2)},
+                    {j1, true,  j2, false, getDistance2D(from1, to2)},
+                    {j1, false, j2, true,  getDistance2D(to1, from2)},
+                    {j1, false, j2, false, getDistance2D(to1, to2)}
+            };
+            std::sort(whoConnectsWho.begin(), whoConnectsWho.end(), [&](
+                    const std::tuple<size_t, bool, size_t, bool, float> &_a,
+                    const std::tuple<size_t, bool, size_t, bool, float> &_b
+            ) -> bool {
+                return std::get<4>(_a) < std::get<4>(_b);
+            });
+            // 这里只进一个值，保证distance里的一对键键关系只出现一次
+            bbDistances.push_back(whoConnectsWho.front());
+        }
+    }
+    // now, you have a lot of distances for bond-side relations
+    std::sort(bbDistances.begin(), bbDistances.end(), [&](
+            const std::tuple<size_t, bool, size_t, bool, float> &_a,
+            const std::tuple<size_t, bool, size_t, bool, float> &_b
+    ) -> bool {
+        return std::get<4>(_a) > std::get<4>(_b);
+    });
+    while (!bbDistances.empty()) {
+        // distance 优先
+        auto&[j1, isFrom1, j2, isFrom2, distance]=bbDistances.back();
+        bbDistances.pop_back();
+        if (distance > (std::get<2>(bondBoxes[j1]) +
+                        std::get<2>(bondBoxes[j2])) * bondSideConThresh / 2.0)
+            continue;
+        // whether need to add a new Atom
+        std::shared_ptr<JAtom> atom = nullptr;
+        if (isFrom1 && !notExist(aFrom, j1)) {
+            atom = aFrom[j1];
+        } else if (isFrom2 && !notExist(aFrom, j2)) {
+            atom = aFrom[j2];
+        } else if (!isFrom1 && !notExist(aTo, j1)) {
+            atom = aTo[j1];
+        } else if (!isFrom2 && !notExist(aTo, j2)) {
+            atom = aTo[j2];
+        }
+        if (atom == nullptr) {
+            atom = mol->addAtom(6);
+        }
+        if (isFrom1) {
+            aFrom[j1] = atom;
+        } else {
+            aTo[j1] = atom;
+        }
+        if (isFrom2) {
+            aFrom[j2] = atom;
+        } else {
+            aTo[j2] = atom;
+        }
+    }
+    // 保证键端都有碳原子
+    for (size_t j = 0; j < bondBoxes.size(); j++) {
+        if (notExist(aFrom, j)) {
+            aFrom[j] = mol->addAtom(6);
+        }
+        if (notExist(aTo, j)) {
+            aTo[j] = mol->addAtom(6);
+        }
+    }
+    // 加键
+    for (size_t j = 0; j < bondBoxes.size(); j++) {
+        mol->addBond(aFrom[j]->getId(), aTo[j]->getId(),
+                     getBondTypeFromLabelIdx(std::get<0>(bondBoxes[j])));
+    }
+    if (debug) {
+        std::cout << mol->toSMILES(false) << std::endl;
+        std::cout << mol->getAtomsMap().size() << std::endl;
+        std::cout << mol->getBondsMap().size() << std::endl;
+    }
+    return {mol};;
+//    }
+//    return std::move(mols);
 }
 
 BoxGraphConverter::BoxGraphConverter(bool _debug) {
@@ -87,15 +236,18 @@ BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img
 //    }
     // 转换数据格式
     for (auto &box:_boxes) {
-        ItemType itemTypeype = getTypeFromLabelIdx(box.label);
-        switch (itemTypeype) {
+        ItemType itemType = getTypeFromLabelIdx(box.label);
+        switch (itemType) {
             case ItemType::ExplicitAtom:
                 eAtomBoxes.emplace_back(box.label, getRectCenter2D(box.bBox),
                                         box.bBox.width, box.bBox.height);
                 break;
-            case ItemType::LineBond:
-                bondBoxes.emplace_back(box.label, getFromTo4LineBond(box, _img));
+            case ItemType::LineBond: {
+                auto[from, to]=getFromTo4LineBond(box, _img);
+                bondBoxes.emplace_back(box.label, std::make_pair(from, to),
+                                       getDistance2D(from, to));
                 break;
+            }
             case ItemType::CircleBond:
                 circleBoxes.emplace_back(getRectCenter2D(box.bBox),
                                          (box.bBox.height + box.bBox.height) / 4.0);
@@ -431,6 +583,40 @@ JBondType BoxGraphConverter::getBondTypeFromLabelIdx(const int &_label) {
         default: {
             std::cerr << "error label for bond in BoxGraphConverter::getBondTypeFromLabelIdx: "
                       << _label << std::endl;
+            exit(-1);
+        }
+    }
+}
+
+ElementType BoxGraphConverter::getElementTyoeFromLabelIdx(const int &_label) {
+    //        "Br", "O", "I", "S", "H", "N", "C", "B",
+    //        "-", "--", "-+", "=", "F", "#", "Cl", "P", "[o]"};
+    switch (_label) {
+        case 0:
+            return ElementType::Br;
+        case 1:
+            return ElementType::O;
+        case 2:
+            return ElementType::I;
+        case 3:
+            return ElementType::S;
+        case 4:
+            return ElementType::H;
+        case 5:
+            return ElementType::N;
+        case 6:
+            return ElementType::C;
+        case 7:
+            return ElementType::B;
+        case 12:
+            return ElementType::F;
+        case 14:
+            return ElementType::Cl;
+        case 15:
+            return ElementType::P;
+        default: {
+            std::cerr << "consider label " << _label
+                      << "as atom type" << std::endl;
             exit(-1);
         }
     }

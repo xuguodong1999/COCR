@@ -11,7 +11,7 @@ class BoxGraphConverter {
     //<id,center,width,height>
     std::vector<std::tuple<int, cv::Point2f, float, float>> eAtomBoxes;
     //<label,from,to>
-    std::vector<std::tuple<int, std::pair<cv::Point2f, cv::Point2f>>> bondBoxes;
+    std::vector<std::tuple<int, std::pair<cv::Point2f, cv::Point2f>, float>> bondBoxes;
     //<center,r>
     std::vector<std::pair<cv::Point2f, float>> circleBoxes;
     // <idx1,idx2,feature>
@@ -44,8 +44,10 @@ class BoxGraphConverter {
 
     JBondType getBondTypeFromLabelIdx(const int &_label);
 
+    ElementType getElementTyoeFromLabelIdx(const int &_label);
+
     std::pair<cv::Point2f, cv::Point2f> getFromTo4LineBond(
-            const gt_box&_gtBox, const cv::Mat &_img);
+            const gt_box &_gtBox, const cv::Mat &_img);
 
 public:
     /**

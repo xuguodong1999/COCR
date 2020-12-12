@@ -76,12 +76,17 @@ int main(int argc, char **argv) {
             mol->set(randSelect(data));
             sceneBuilder->resetMol(mol);
         });
-        QImage rawImg("C:/Users/xgd/Pictures/fpovmrtpomh.png");
+        QImage rawImg("C:/Users/xgd/Pictures/cocr_test.png");
         QImage inputImg = rawImg.convertToFormat(QImage::Format_RGB888).scaled(
                 rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), false);
+        auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), true);
         BoxGraphConverter converter(true);
         auto mols = converter.accept(gtBox, img);
+        sceneBuilder->resetMol(mols[0]);
+        container->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+        container->showMaximized();
+        return app.exec();
+
         for (auto &info:QDir("C:/Users/xgd/Documents/有机结构式自动构建系统/结题材料/soso17_v0/JPEGImages").entryInfoList()) {
             if ("jpg" != info.suffix()) continue;
             imgNameList.push_back(info.absoluteFilePath());
