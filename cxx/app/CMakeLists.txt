@@ -26,7 +26,7 @@ qt5_add_resources(RES_FILES
 
 qt5_add_big_resources(BIG_RES_FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/big_res.qrc)
 
-set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main_demo_2020_1213.cpp)
 
 add_custom_target(app_translations ALL DEPENDS ${QM_FILES})
 
@@ -43,6 +43,8 @@ add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
         ${SRC_DIR}/bond.cpp
         ${SRC_DIR}/mol_hw.cpp
         ${SRC_DIR}/mol3d.cpp
+
+        ${SRC_DIR}/demowidget_2020_1213.cpp
 
         ${SRC_DIR}/config.cpp
         ${SRC_DIR}/rdkit_util.cpp

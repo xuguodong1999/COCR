@@ -52,7 +52,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
         }
         return std::move(mols);
     }
-    const float bondSideConThresh = 0.3;
+    const float bondSideConThresh = 0.5;
     const float atomSideThresh = 0.6;
     //<bondIndex,atom> for fromSide and toSide
     auto mol = std::make_shared<JMol>();
@@ -106,7 +106,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     for (size_t j1 = 0; j1 < bondBoxes.size(); j1++) {
         const auto&[bLabel1, fromTo1, _]=bondBoxes[j1];
         const auto&[from1, to1]=fromTo1;
-        for (size_t j2 = 0; j2 < bondBoxes.size(); j2++) {
+        for (size_t j2 = j1+1; j2 < bondBoxes.size(); j2++) {
             const auto&[bLabel2, fromTo2, __]=bondBoxes[j2];
             const auto&[from2, to2]=fromTo2;
             if (j1 == j2)continue;

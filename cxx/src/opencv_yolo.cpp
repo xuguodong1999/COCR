@@ -47,6 +47,7 @@ void OpenCVYolo::init(const char *_cfgPath, const char *_weightsPath) {
     }
 }
 
+
 std::pair<std::vector<gt_box>, cv::Mat>
 OpenCVYolo::forward(const cv::Mat &_input, bool _debug, const int &_gridSize) {
     int newWidth = _input.cols, newHeight = _input.rows;

@@ -1,8 +1,8 @@
-QT += core gui quick
+QT += core gui quick 3danimation 3dcore 3dextras 3dinput 3dlogic 3drender
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17 # console
+CONFIG += c++17
 
 # disables all the APIs deprecated before Qt 6.0.0
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    
@@ -17,7 +17,6 @@ LIB_PREFIX = C:/static
 BOOST_PREFIX = $${LIB_PREFIX}/boost1.74.0
 OPENCV_PREFIX = $${LIB_PREFIX}/opencv4.5.0
 RDKIT_PREFIX = $${LIB_PREFIX}/rdkit2020.09.1
-TORCH_PREFIX = $${LIB_PREFIX}/libtorch1.7.0
 COORDGEN_PREFIX = $${LIB_PREFIX}/coordgen1.4.2
 
 INCLUDEPATH += $${LIB_PREFIX}/include\
@@ -25,9 +24,7 @@ INCLUDEPATH += $${LIB_PREFIX}/include\
                 $${BOOST_PREFIX}/include/boost-1_74 \
                 $${OPENCV_PREFIX}/include \
                 $${RDKIT_PREFIX}/include/rdkit \
-                $${RDKIT_PREFIX}/include \
-                $${TORCH_PREFIX}/include \
-                $${TORCH_PREFIX}/include/torch/csrc/api/include
+                $${RDKIT_PREFIX}/include 
 
 LIBS += \
         $${BOOST_PREFIX}/lib/libboost_atomic-vc142-mt-s-x64-1_74.lib \
@@ -69,16 +66,6 @@ LIBS += \
         $${BOOST_PREFIX}/lib/libboost_wave-vc142-mt-s-x64-1_74.lib \
         $${BOOST_PREFIX}/lib/libboost_wserialization-vc142-mt-s-x64-1_74.lib \
         $${BOOST_PREFIX}/lib/libboost_zlib-vc142-mt-s-x64-1_74.lib \
-        $${TORCH_PREFIX}/lib/torch.lib  \
-        $${TORCH_PREFIX}/lib/c10.lib  \  
-        $${TORCH_PREFIX}/lib/torch_cpu.lib  \ 
-        $${TORCH_PREFIX}/lib/clog.lib  \ 
-        $${TORCH_PREFIX}/lib/cpuinfo.lib  \ 
-        $${TORCH_PREFIX}/lib/dnnl.lib  \ 
-        $${TORCH_PREFIX}/lib/libprotobuf.lib  \ 
-        $${TORCH_PREFIX}/lib/libprotobuf-lite.lib  \ 
-        $${TORCH_PREFIX}/lib/libprotoc.lib  \ 
-        $${TORCH_PREFIX}/lib/mkldnn.lib  \ 
         $${RDKIT_PREFIX}/lib/Abbreviations.lib \
         $${RDKIT_PREFIX}/lib/Alignment.lib \
         $${RDKIT_PREFIX}/lib/Catalogs.lib \
@@ -145,72 +132,37 @@ LIBS += \
 
 INCLUDEPATH += C:/Users/xgd/source/COCR/cxx/src
 
-HEADERS += C:/Users/xgd/source/COCR/cxx/src/atom.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/isomer.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_classifier.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/bignumber.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/mol.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_crnn.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/bond.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/opencv_util.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_enet.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/cocr_types.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/polya.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_module.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/config.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/qml_sketchitem.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_mv3.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/couch_data.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/qt_util.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_transform.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/dataset_cifar.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/rdkit_util.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_util.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/dataset_couch.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/solver.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_yolov4.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/fraction.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/std_util.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/xxxxx.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/hw.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/timer.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/hw_mol.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_activation.hpp
+HEADERS += C:/Users/xgd/source/COCR/cxx/src/qml_sketchitem.hpp \
+        C:/Users/xgd/source/COCR/cxx/src/demowidget_2020_1213.h \
+        C:/Users/xgd/source/COCR/cxx/src/mol3dwindow.hpp \
+        C:/Users/xgd/source/COCR/cxx/src/mol3d.hpp
+        
+SOURCES +=  C:/Users/xgd/source/COCR/cxx/app/main_demo_2020_1213.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/box2graph.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/colors.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/mol.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/atom.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/bond.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/mol_hw.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/mol3d.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/config.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/demowidget_2020_1213.cpp \
+         # C:/Users/xgd/source/COCR/cxx/src/rdkit_util.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/std_util.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/opencv_util.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/opencv_yolo.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/qt_util.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/couch_data.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/hw.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/polya.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/bignumber.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/isomer.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/cocr_types.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/timer.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/mol3dwindow.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/qml_sketchitem.cpp
 
-SOURCES += C:/Users/xgd/source/COCR/cxx/src/atom.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/isomer.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_classifier.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/bignumber.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/mol.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_crnn.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/bond.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/opencv_util.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_enet.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/cocr_types.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/polya.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_module.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/config.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/qml_sketchitem.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_mv3_large.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/couch_data.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/qt_util.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_mv3_small.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/dataset_cifar.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/rdkit_util.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_transform.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/dataset_couch.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/std_util.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_util.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/hw.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/timer.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_yolov4.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/hw_mol.cpp \
-        C:/Users/xgd/source/COCR/cxx/src/torch_activation.cpp \
-        C:/Users/xgd/source/COCR/cxx/core/main.cpp
-
-RESOURCES += qml.qrc \
-            demo.qrc \
-            res/res.qrc
+RESOURCES += C:/Users/xgd/source/COCR/cxx/app/res/res.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
