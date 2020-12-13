@@ -71,12 +71,14 @@ int testDarknetDump() {
     ddg.dump(60000/3, 3);
     return 0;
 }
-
+#include "polya.hpp"
 int main() {
     try {
+        auto&pc=PolyaIsomerCounter::GetInstance();
+        pc.count(28);
 //        return testYolov4();
 //        return testHWDraw();
-        return testDarknetDump();
+//        return testDarknetDump();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;

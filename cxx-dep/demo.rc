@@ -65,14 +65,14 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "CompanyName", "JellyXu Inc."
-            VALUE "FileDescription", "msvc2019_64 静态编译示例"
-            VALUE "FileVersion", "0.0.0.0"
-            VALUE "InternalName", "demo.exe"
+            VALUE "CompanyName", "NJU"
+            VALUE "FileDescription", "COCR x86_64 内测版本1"
+            VALUE "FileVersion", "0.0.0.1"
+            VALUE "InternalName", "cocr_alpha.exe"
             VALUE "LegalCopyright", "Copyright (C) 2020 徐国栋 171860633@smail.nju.edu.cn"
-            VALUE "OriginalFilename", "示例.exe"
-            VALUE "ProductName", "静态编译示例"
-            VALUE "ProductVersion", "0.0.0.0"
+            VALUE "OriginalFilename", "cocr_alpha.exe"
+            VALUE "ProductName", "COCR x86_64 内测版本1"
+            VALUE "ProductVersion", "0.0.0.1"
         END
     END
     BLOCK "VarFileInfo"

@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
 //            mol->set(randSelect(data));
 //            sceneBuilder->resetMol(mol);
 //        });
-        QImage rawImg("C:/Users/xgd/Pictures/cocr_test.png");
+        QImage rawImg("C:/Users/xgd/Documents/有机结构式自动构建系统/结题材料/soso17_v0/JPEGImages/22_2.jpg");
         QImage inputImg = rawImg.convertToFormat(QImage::Format_RGB888).scaled(
                 rawImg.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         auto[gtBox, img] = yolo.forward(convertQImageToMat(inputImg), true);

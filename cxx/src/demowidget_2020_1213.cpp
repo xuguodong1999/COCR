@@ -13,6 +13,8 @@
 #include "colors.hpp"
 
 #include <QDebug>
+#include <QMessageBox>
+#include <QApplication>
 
 #include <exception>
 #include <iostream>
@@ -22,8 +24,9 @@ ShapeItem shapes;
 
 DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
     std::string path = "C:/Users/xgd/source/COCR/weights/";
-    yolo.init((path + "yolov4-tiny-3l.cfg").c_str(),
-              (path + "yolov4-tiny-3l_92000.weights").c_str());
+//    std::string path=qApp->applicationDirPath().toStdString();
+    yolo.init((path + "/yolov4-tiny-3l.cfg").c_str(),
+              (path + "/yolov4-tiny-3l_92000.weights").c_str());
 
     setMinimumSize(960, 640);
     panelWidget = new QWidget(this);
@@ -127,6 +130,7 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
         catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
 //            exit(-1);
+            QMessageBox::information(nullptr, "Hello, Bug", e.what());
             view3dContainer->show();
             return;
         }
@@ -141,6 +145,7 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
             } catch (std::exception&e) {
                 std::cerr<<e.what()<<std::endl;
                 rootEntity->deleteLater();
+                QMessageBox::information(nullptr, "Hello, Bug", e.what());
                 continue;
             }
             auto container = QWidget::createWindowContainer(view);

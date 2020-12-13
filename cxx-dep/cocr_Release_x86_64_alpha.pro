@@ -2,7 +2,7 @@ QT += core gui quick 3danimation 3dcore 3dextras 3dinput 3dlogic 3drender
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17
+CONFIG += c++17 big_resources console
 
 # disables all the APIs deprecated before Qt 6.0.0
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    

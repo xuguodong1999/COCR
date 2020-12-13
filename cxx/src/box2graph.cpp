@@ -14,8 +14,6 @@ std::vector<std::string> CLASSES = {
         "Br", "O", "I", "S", "H", "N", "C", "B",
         "-", "--", "-+", "=", "F", "#", "Cl", "P", "[o]"};
 
-// 问题：如何确定孤立的基团
-
 std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     // analysis features here
     // modify mol here
