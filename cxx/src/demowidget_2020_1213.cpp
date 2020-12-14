@@ -24,7 +24,7 @@ ShapeItem shapes;
 
 DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
     std::string path = "C:/Users/xgd/source/COCR/weights/";
-//    std::string path=qApp->applicationDirPath().toStdString();
+//    std::string path=qApp->applicationDirPath().toLocal8Bit().toStdString();
     yolo.init((path + "/yolov4-tiny-3l.cfg").c_str(),
               (path + "/yolov4-tiny-3l_92000.weights").c_str());
 
@@ -107,7 +107,7 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
             }
             avgBoxSize /= gtBox.size();
             float k = 60 / avgBoxSize;
-            std::cout<<"80 / avgBoxSize="<<k<<std::endl;
+            std::cout<<"60 / avgBoxSize="<<k<<std::endl;
             if ((0.2<k&&k<0.8)||(1.25<k&&k<5)) {
                 // 放缩重检
                 originMat = cv::Mat();

@@ -26,8 +26,8 @@ qt5_add_resources(RES_FILES
 
 qt5_add_big_resources(BIG_RES_FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/big_res.qrc)
 
-#set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main_demo_2020_1213.cpp)
-set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main_demo_2020_1213.cpp)
+#set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 add_custom_target(app_translations ALL DEPENDS ${QM_FILES})
 

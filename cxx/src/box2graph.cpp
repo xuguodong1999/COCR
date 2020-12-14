@@ -50,8 +50,8 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
         }
         return std::move(mols);
     }
-    const float bondSideConThresh = 0.5;
-    const float atomSideThresh = 0.6;
+    const float bondSideConThresh = 0.6;
+    const float atomSideThresh = 0.7;
     //<bondIndex,atom> for fromSide and toSide
     auto mol = std::make_shared<JMol>();
     std::unordered_map<size_t, std::shared_ptr<JAtom>> aFrom, aTo;
