@@ -176,7 +176,7 @@ public:
 
     void push_node(T a) {
         if (content.size() <= a) {
-            content.resize(maxAB + 1);
+            content.resize(a + 1);
         }
     }
 
