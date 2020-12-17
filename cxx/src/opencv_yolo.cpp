@@ -8,6 +8,7 @@
 #include <opencv2/highgui.hpp>
 
 #include <QApplication>
+#include <QFile>
 
 #include <iostream>
 
@@ -23,15 +24,29 @@ void OpenCVYolo::setIouThresh(double iouThresh) {
     OpenCVYolo::iouThresh = iouThresh;
 }
 
+
 void OpenCVYolo::init(const char *_cfgPath, const char *_weightsPath) {
     try {
-        net = cv::dnn::readNetFromDarknet(_cfgPath, _weightsPath);
+        QFile file(_cfgPath);
+        file.open(QIODevice::ReadOnly);
+        auto cfgBuffer = file.readAll();
+        file.close();
+        file.setFileName(_weightsPath);
+        file.open(QIODevice::ReadOnly);
+        auto weightsBuffer = file.readAll();
+        file.close();
+        net = cv::dnn::readNetFromDarknet(cfgBuffer.data(), cfgBuffer.length(),
+                                          weightsBuffer.data(), weightsBuffer.length());
+        // 峰值内存远低于forward时的
+        cfgBuffer.clear();
+        weightsBuffer.clear();
 //        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
 //        net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
         net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
         net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
         auto outLayers = net.getUnconnectedOutLayers();
         auto layersNames = net.getLayerNames();
+
         outBlobNames.resize(outLayers.size());
         for (size_t i = 0; i < outLayers.size(); i++) {
             outBlobNames[i] = layersNames[outLayers[i] - 1];
@@ -120,4 +135,8 @@ OpenCVYolo::forward(const cv::Mat &_input, bool _debug, const int &_gridSize) {
 //        cv::waitKey(0);
     }
     return {std::move(gtBoxes), std::move(resizedImg)};
+}
+
+bool OpenCVYolo::isWeightsLoaded() const {
+    return !net.empty();
 }

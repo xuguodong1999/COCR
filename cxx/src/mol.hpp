@@ -20,6 +20,7 @@ class JMol {
     std::unordered_map<size_t, std::shared_ptr<JAtom>> atomsMap;
     //<键id，键>
     std::unordered_map<size_t, std::shared_ptr<JBond>> bondsMap;
+
     //<原子id，化合价or当前键级>
     std::unordered_map<size_t, frac> atomValenceMap;
     //<原子id，邻居原子们的id>
@@ -185,6 +186,7 @@ public:
     /**
      * 通过染色遍历寻找孤立的连通片，把孤立的连通片作为独立分子返回，不影响原有结构
      * @return independent molecules
+     * TODO: 改造为原位dfs实现
      */
     std::vector<std::shared_ptr<JMol>> split() const;
 };

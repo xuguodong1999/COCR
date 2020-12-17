@@ -1,12 +1,12 @@
-#ifdef __ANDROID__
+#if defined(__ANDROID__) && !defined(__DISABLE_CPP_DEF__)
 #define USE_OPENBABEL
-#elif defined(__linux__)
+#elif defined(__linux__) && !defined(__DISABLE_CPP_DEF__)
 #define USE_COORDGEN2D
 #define USE_OPENBABEL
 #define USE_RDKIT
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__DISABLE_CPP_DEF__)
 #define USE_COORDGEN2D
 #define USE_RDKIT
 #endif

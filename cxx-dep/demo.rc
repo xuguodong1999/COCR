@@ -66,13 +66,13 @@ BEGIN
         BLOCK "080404b0"
         BEGIN
             VALUE "CompanyName", "NJU"
-            VALUE "FileDescription", "COCR x86_64 公测版本1"
-            VALUE "FileVersion", "0.0.0.1"
-            VALUE "InternalName", "cocr_beta1.exe"
+            VALUE "FileDescription", "COCR x86_64 公测版本2"
+            VALUE "FileVersion", "0.0.0.2"
+            VALUE "InternalName", "cocr_beta2.exe"
             VALUE "LegalCopyright", "Copyright (C) 2020 徐国栋 171860633@smail.nju.edu.cn"
-            VALUE "OriginalFilename", "cocr_beta1.exe"
-            VALUE "ProductName", "COCR x86_64 公测版本1"
-            VALUE "ProductVersion", "0.0.0.1"
+            VALUE "OriginalFilename", "cocr_beta2.exe"
+            VALUE "ProductName", "COCR x86_64 公测版本2"
+            VALUE "ProductVersion", "0.0.0.2"
         END
     END
     BLOCK "VarFileInfo"

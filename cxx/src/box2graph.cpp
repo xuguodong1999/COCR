@@ -14,25 +14,11 @@ std::vector<std::string> CLASSES = {
         "Br", "O", "I", "S", "H", "N", "C", "B",
         "-", "--", "-+", "=", "F", "#", "Cl", "P", "[o]"};
 
+// FIXME: add mol->insertAtomPos2D for all atoms
 std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     // analysis features here
     // modify mol here
-    // <box_id,[<box_id,feature=(cur_dis/min_dis,cur_dis/avg(min_dis)),>,...]>
-    // 低阶距离特征：atom-bond,bond-bond,bond-circle,atom-circle
-    // std::vector<float_index_type> abDisGrid, bbDisGrid, bcDisGrid, acDisGrid;
     std::vector<std::shared_ptr<JMol>> mols;
-    // 先支持所有图元属于一个分子骨架的情况
-//    auto mol = std::make_shared<JMol>();
-//    mols.push_back(mol);
-//    std::unordered_map<size_t, size_t> idCaster;
-//    for (auto&[aid, bid, feature]:abDisGrid) {
-//        if (notExist(idCaster, aid)) {
-//            auto atom = mol->addAtom(0);
-//            atom->setElementType(CLASSES[labels[aid]]);
-//            idCaster[aid] = atom->getId();
-//        }
-//    }
-    // eAtomBoxes bondBoxes circleBoxes
     if (bondBoxes.empty()) {
         for (auto&[aLabel, center, width, height]:eAtomBoxes) {
             auto mol = std::make_shared<JMol>();
@@ -51,55 +37,13 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
         return std::move(mols);
     }
     const float bondSideConThresh = 0.6;
-    const float atomSideThresh = 0.7;
+    const float atomSideThresh = 0.5;
     //<bondIndex,atom> for fromSide and toSide
     auto mol = std::make_shared<JMol>();
     std::unordered_map<size_t, std::shared_ptr<JAtom>> aFrom, aTo;
     std::unordered_map<size_t, std::shared_ptr<JAtom>> aA;
-    for (size_t i = 0; i < eAtomBoxes.size(); i++) {
-        const auto&[aLabel, center, width, height]=eAtomBoxes[i];
-        std::vector<std::tuple<size_t, size_t, bool, float>> abDistances;
-//        for (auto&[bLabel, fromTo]:bondBoxes) {
-        for (size_t j = 0; j < bondBoxes.size(); j++) {
-            const auto&[bLabel, fromTo, bondLength]=bondBoxes[j];
-            const auto&[from, to]=fromTo;
-            float fromDis = getDistance2D(center, from);
-            float toDis = getDistance2D(center, to);
-            bool isFrom = fromDis < toDis;
-            abDistances.emplace_back(i, j, isFrom, (std::min)(fromDis, toDis));
-        }
-        std::sort(abDistances.begin(), abDistances.end(), [&](
-                const std::tuple<size_t, size_t, bool, float> &_a,
-                const std::tuple<size_t, size_t, bool, float> &_b
-        ) -> bool {
-            return std::get<3>(_a) > std::get<3>(_b);
-        });
-        while (!abDistances.empty()) {
-            // distance 优先
-            auto&[i, j, isFrom, distance]=abDistances.back();
-            abDistances.pop_back();
-            if (distance > atomSideThresh * (std::get<2>(bondBoxes[j]) + (std::max)(
-                    std::get<2>(eAtomBoxes[i]),std::get<3>(eAtomBoxes[i]))) )
-                continue;
-            // whether need to add a new Atom
-            std::shared_ptr<JAtom> atom = nullptr;
-            if (notExist(aA, i)) {
-                atom = mol->addAtom(0);
-                atom->setElementType(getElementTyoeFromLabelIdx(
-                        std::get<0>(eAtomBoxes[i])));
-                aA[i] = atom;
-            } else {
-                atom = aA[i];
-            }
-            if (isFrom) {
-                aFrom[j] = atom;
-            } else {
-                aTo[j] = atom;
-            }
-        }
-    }
+    ///////////////// end data define
 
-//    if (eAtomBoxes.empty()) {
     std::vector<std::tuple<size_t, bool, size_t, bool, float>> bbDistances;
     for (size_t j1 = 0; j1 < bondBoxes.size(); j1++) {
         const auto&[bLabel1, fromTo1, _]=bondBoxes[j1];
@@ -163,6 +107,52 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
             aTo[j2] = atom;
         }
     }
+    /////////////// bond-bond end
+
+    for (size_t i = 0; i < eAtomBoxes.size(); i++) {
+        const auto&[aLabel, center, width, height]=eAtomBoxes[i];
+        std::vector<std::tuple<size_t, size_t, bool, float>> abDistances;
+//        for (auto&[bLabel, fromTo]:bondBoxes) {
+        for (size_t j = 0; j < bondBoxes.size(); j++) {
+            const auto&[bLabel, fromTo, bondLength]=bondBoxes[j];
+            const auto&[from, to]=fromTo;
+            float fromDis = getDistance2D(center, from);
+            float toDis = getDistance2D(center, to);
+            bool isFrom = fromDis < toDis;
+            abDistances.emplace_back(i, j, isFrom, (std::min)(fromDis, toDis));
+        }
+        std::sort(abDistances.begin(), abDistances.end(), [&](
+                const std::tuple<size_t, size_t, bool, float> &_a,
+                const std::tuple<size_t, size_t, bool, float> &_b
+        ) -> bool {
+            return std::get<3>(_a) > std::get<3>(_b);
+        });
+        while (!abDistances.empty()) {
+            // distance 优先
+            auto&[i, j, isFrom, distance]=abDistances.back();
+            abDistances.pop_back();
+            if (distance > atomSideThresh * (std::get<2>(bondBoxes[j]) + (std::max)(
+                    std::get<2>(eAtomBoxes[i]),std::get<3>(eAtomBoxes[i]))) )
+                continue;
+            // whether need to add a new Atom
+            std::shared_ptr<JAtom> atom = nullptr;
+            if (notExist(aA, i)) {
+                atom = mol->addAtom(0);
+                atom->setElementType(getElementTyoeFromLabelIdx(
+                        std::get<0>(eAtomBoxes[i])));
+                aA[i] = atom;
+            } else {
+                atom = aA[i];
+            }
+            if (isFrom) {
+                aFrom[j] = atom;
+            } else {
+                aTo[j] = atom;
+            }
+        }
+    }
+    ///////////////////// atom-bond end
+
     // 保证键端都有碳原子
     for (size_t j = 0; j < bondBoxes.size(); j++) {
         if (notExist(aFrom, j)) {
@@ -198,44 +188,7 @@ BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img
     if (box_num == 0) {
         return {};
     }
-    // extract bondDir as <id, <from,to>> first
-//    std::unordered_map<size_t, std::pair<cv::Point2f, cv::Point2f>> bondDir;
-//    for (size_t i = 0; i < box_num; i++) {
-//        if (getTypeFromLabelIdx(_boxes[i].label) != ItemType::LineBond)continue;
-//        bondDir[i] = getFromTo4LineBond(_boxes[i], _img);
-//    }
-//    if (box_num == 1) {
-//        auto mol = std::make_shared<JMol>();
-//        int label = _boxes[0].label;
-//        switch (getTypeFromLabelIdx(label)) {
-//            case ItemType::CircleBond: {
-//                auto atomOxygen = mol->addAtom(6);// 误分类氧原子为苯环里的圈
-//                mol->insertAtomPos2D(atomOxygen->getId(), true,
-//                                     getRectCenter2D(_boxes[0].bBox));
-//                break;
-//            }
-//            case ItemType::ExplicitAtom: {
-//                auto atom = mol->addAtom(0);
-//                atom->setElementType(CLASSES[label]);
-//                mol->insertAtomPos2D(atom->getId(), true,
-//                                     getRectCenter2D(_boxes[0].bBox));
-//                break;
-//            }
-//            case ItemType::LineBond: {
-//                auto atomFrom = mol->addAtom(6);
-//                auto atomTo = mol->addAtom(6);
-//                mol->addBond(atomFrom->getId(), atomTo->getId(),
-//                             getBondTypeFromLabelIdx(label));
-//                auto&[from, to]=bondDir[0];
-//                mol->insertAtomPos2D(atomFrom->getId(), false, from);
-//                mol->insertAtomPos2D(atomTo->getId(), false, to);
-//                break;
-//            }
-//            default:
-//                break;
-//        }
-//        return {std::move(mol)};
-//    }
+
     // 转换数据格式
     for (auto &box:_boxes) {
         ItemType itemType = getTypeFromLabelIdx(box.label);
@@ -260,62 +213,6 @@ BoxGraphConverter::accept(const std::vector<gt_box> &_boxes, const cv::Mat &_img
         }
     }
 
-//    iAreaGrid.resize(box_num, std::vector<float>(box_num, 0));
-//    for (size_t i = 0; i < box_num; i++) {
-//        labels[i] = _boxes[i].label;
-//        for (size_t j = i + 1; j < box_num; j++) {
-//            // 填充相交面积
-//            iAreaGrid[i][j] = iAreaGrid[j][i] = (_boxes[i].bBox & _boxes[j].bBox).area();
-//            // 填充关键距离
-//            ItemType itI = getTypeFromLabelIdx(_boxes[i].label);
-//            ItemType itJ = getTypeFromLabelIdx(_boxes[j].label);
-//            switch (itI | itJ) {
-//                case ItemType::ExplicitAtom | ItemType::LineBond: {
-//                    // 中心对端点二选一
-//                    size_t bIndex = itI == ItemType::LineBond ? i : j;
-//                    size_t aIndex = itI == ItemType::ExplicitAtom ? i : j;
-//                    auto &[from, to]=bondDir[bIndex];
-//                    auto &rect = _boxes[aIndex].bBox;
-//                    abDisGrid.emplace_back(aIndex, bIndex, (std::min)(
-//                            getDistance2D(from, cv::Point2f(getRectCenter2D(rect))),
-//                            getDistance2D(to, cv::Point2f(getRectCenter2D(rect)))
-//                    ));
-//                    break;
-//                }
-//                case ItemType::LineBond | ItemType::LineBond: {
-//                    // 端点对端点四选一
-//                    auto &[fromI, toI]=bondDir[i];
-//                    auto &[fromJ, toJ]=bondDir[j];
-//                    bbDisGrid.emplace_back(i, j, (std::min)(
-//                            (std::min)(
-//                                    getDistance2D(fromI, fromJ), getDistance2D(toI, toJ)
-//                            ), (std::min)(
-//                                    getDistance2D(toI, fromJ), getDistance2D(fromI, toJ)
-//                            )));
-//                    break;
-//                }
-//                case ItemType::LineBond | ItemType::CircleBond: {
-//                    // 中心对中心 TODO: 加入中心对端点的距离校验
-//                    size_t bIndex = itI == ItemType::LineBond ? i : j;
-//                    size_t cIndex = itI == ItemType::CircleBond ? i : j;
-//                    bcDisGrid.emplace_back(bIndex, cIndex, getDistance2D(
-//                            getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
-//                    break;
-//                }
-//                case ItemType::ExplicitAtom | ItemType::CircleBond: {
-//                    // 中心对中心
-//                    size_t cIndex = itI == ItemType::CircleBond ? i : j;
-//                    size_t aIndex = itI == ItemType::ExplicitAtom ? i : j;
-//                    acDisGrid.emplace_back(aIndex, cIndex, getDistance2D(
-//                            getRectCenter2D(_boxes[i].bBox), getRectCenter2D(_boxes[j].bBox)));
-//                    break;
-//                }
-//                default: {
-//                    break;
-//                }
-//            }
-//        }
-//    }
     return std::move(then());
 }
 

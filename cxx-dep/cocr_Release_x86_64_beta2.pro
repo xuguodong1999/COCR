@@ -135,7 +135,8 @@ INCLUDEPATH += C:/Users/xgd/source/COCR/cxx/src
 HEADERS += C:/Users/xgd/source/COCR/cxx/src/qml_sketchitem.hpp \
         C:/Users/xgd/source/COCR/cxx/src/demowidget_2020_1213.h \
         C:/Users/xgd/source/COCR/cxx/src/mol3dwindow.hpp \
-        C:/Users/xgd/source/COCR/cxx/src/mol3d.hpp
+        C:/Users/xgd/source/COCR/cxx/src/mol3d.hpp \
+        C:/Users/xgd/source/COCR/cxx/src/mol2d.hpp
         
 SOURCES +=  C:/Users/xgd/source/COCR/cxx/app/main_demo_2020_1213.cpp \
          C:/Users/xgd/source/COCR/cxx/src/box2graph.cpp \
@@ -145,6 +146,7 @@ SOURCES +=  C:/Users/xgd/source/COCR/cxx/app/main_demo_2020_1213.cpp \
          C:/Users/xgd/source/COCR/cxx/src/bond.cpp \
          C:/Users/xgd/source/COCR/cxx/src/mol_hw.cpp \
          C:/Users/xgd/source/COCR/cxx/src/mol3d.cpp \
+         C:/Users/xgd/source/COCR/cxx/src/mol2d.cpp \
          C:/Users/xgd/source/COCR/cxx/src/config.cpp \
          C:/Users/xgd/source/COCR/cxx/src/demowidget_2020_1213.cpp \
          # C:/Users/xgd/source/COCR/cxx/src/rdkit_util.cpp \

@@ -23,11 +23,6 @@ OpenCVYolo yolo;
 ShapeItem shapes;
 
 DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
-    std::string path = "C:/Users/xgd/source/COCR/weights/";
-//    std::string path=qApp->applicationDirPath().toLocal8Bit().toStdString();
-    yolo.init((path + "/yolov4-tiny-3l.cfg").c_str(),
-              (path + "/yolov4-tiny-3l_92000.weights").c_str());
-
     setMinimumSize(960, 640);
     panelWidget = new QWidget(this);
     panelLayout = new QHBoxLayout(panelWidget);
@@ -66,6 +61,12 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
 //        }
 //    });
     connect(view3dBtn, &QToolButton::clicked, this, [&]() {
+        if(!yolo.isWeightsLoaded()){
+            std::string path = "C:/Users/xgd/source/COCR/weights/";
+//    std::string path=qApp->applicationDirPath().toLocal8Bit().toStdString();
+            yolo.init(":/soso17-yolov4-tiny-3l.cfg",
+                      (path + "/yolov4-tiny-3l_92000.weights").c_str());
+        }
         scribbleArea->hide();
         viewMode = ViewMode::View3DMode;
         if (view3dContainer != nullptr) {
