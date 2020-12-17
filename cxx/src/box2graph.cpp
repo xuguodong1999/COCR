@@ -43,6 +43,8 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     std::unordered_map<size_t, std::shared_ptr<JAtom>> aFrom, aTo;
     std::unordered_map<size_t, std::shared_ptr<JAtom>> aA;
     ///////////////// end data define
+    // TODO: dd prob map for a and b together
+//    std::vector<std::tuple<>>
 
     std::vector<std::tuple<size_t, bool, size_t, bool, float>> bbDistances;
     for (size_t j1 = 0; j1 < bondBoxes.size(); j1++) {
