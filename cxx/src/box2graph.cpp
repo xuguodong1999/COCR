@@ -8,33 +8,43 @@
 #include <opencv2/highgui.hpp>
 
 #include <vector>
+#include <variant>
 #include <unordered_map>
 
 std::vector<std::string> CLASSES = {
         "Br", "O", "I", "S", "H", "N", "C", "B",
         "-", "--", "-+", "=", "F", "#", "Cl", "P", "[o]"};
 
+std::vector<std::shared_ptr<JMol>> BoxGraphConverter::handleNoBond() {
+    if (!bondBoxes.empty()) {
+        std::cerr << "you must confirm bonds empty before calling BoxGraphConverter::handleNoBond"
+                  << std::endl;
+        exit(-1);
+    }
+    std::vector<std::shared_ptr<JMol>> mols;
+    for (auto&[aLabel, center, width, height]:eAtomBoxes) {
+        auto mol = std::make_shared<JMol>();
+        auto atom = mol->addAtom(0);
+        mol->insertAtomPos2D(atom->getId(), true, center);
+        atom->setElementType(getElementTyoeFromLabelIdx(aLabel));
+        mols.push_back(std::move(mol));
+    }
+    for (auto&[center, r]:circleBoxes) {
+        auto mol = std::make_shared<JMol>();
+        auto atom = mol->addAtom(0);
+        atom->setElementType(ElementType::O);
+        //FIXME: circle bond considered as Oxygen here
+        mols.push_back(std::move(mol));
+    }
+    return std::move(mols);
+}
+
 // FIXME: add mol->insertAtomPos2D for all atoms
 std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     // analysis features here
     // modify mol here
-    std::vector<std::shared_ptr<JMol>> mols;
     if (bondBoxes.empty()) {
-        for (auto&[aLabel, center, width, height]:eAtomBoxes) {
-            auto mol = std::make_shared<JMol>();
-            auto atom = mol->addAtom(0);
-            mol->insertAtomPos2D(atom->getId(), true, center);
-            atom->setElementType(getElementTyoeFromLabelIdx(aLabel));
-            mols.push_back(std::move(mol));
-        }
-        for (auto&[center, r]:circleBoxes) {
-            auto mol = std::make_shared<JMol>();
-            auto atom = mol->addAtom(0);
-            atom->setElementType(ElementType::O);
-            //FIXME: bug 转需求
-            mols.push_back(std::move(mol));
-        }
-        return std::move(mols);
+        return handleNoBond();
     }
     const float bondSideConThresh = 0.6;
     const float atomSideThresh = 0.5;
@@ -43,40 +53,77 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     std::unordered_map<size_t, std::shared_ptr<JAtom>> aFrom, aTo;
     std::unordered_map<size_t, std::shared_ptr<JAtom>> aA;
     ///////////////// end data define
-    // TODO: dd prob map for a and b together
-//    std::vector<std::tuple<>>
+    // TODO: 将 a-b 和 b-b 关系放到一组概率图中进行对比
+    // a-b 关系需要的信息：<a索引、b索引、b键端、ab浮点特征>
+    // b-b 关系需要的信息：<b1索引、b1键端、b2索引、b2键端，bb浮点特征>
+    // 整合为：<类型(ab或者bb)标记、索引1、索引2、
+    using union_feature = std::tuple<
+            bool,                   // 类型标记：false: ab, true: bb
+            size_t,                 // 索引1
+            size_t,                 // 索引2
+            std::pair<bool, bool>,  // 键端1、键端2
+            float                   // 浮点特征
+    >;
+    auto get_feature = [&](const union_feature &_a) -> const float & {
+        return std::get<4>(_a);
+    };
+    auto sort_way = [&](const union_feature &_a, const union_feature &_b) -> bool {
+        return get_feature(_a) < get_feature(_b);
+    };
+    auto bb_feature = [&](const size_t &_idx1, const size_t &_idx2,
+                          bool _isFrom1, bool _isFrom2, const float &_feature) -> union_feature {
+        return {true, _idx1, _idx2, {_isFrom1, _isFrom1}, _feature};
+    };
+    auto ab_feature = [&](const size_t &_aid, const size_t &_bid,
+                          bool isFrom, const float &_feature) -> union_feature {
+        return {false, _aid, _bid, {isFrom, false}, _feature};
+    };
+    std::vector<union_feature> uDistances;
 
     std::vector<std::tuple<size_t, bool, size_t, bool, float>> bbDistances;
     for (size_t j1 = 0; j1 < bondBoxes.size(); j1++) {
         const auto&[bLabel1, fromTo1, _]=bondBoxes[j1];
         const auto&[from1, to1]=fromTo1;
-        for (size_t j2 = j1+1; j2 < bondBoxes.size(); j2++) {
+        for (size_t j2 = j1 + 1; j2 < bondBoxes.size(); j2++) {
             const auto&[bLabel2, fromTo2, __]=bondBoxes[j2];
             const auto&[from2, to2]=fromTo2;
-            if (j1 == j2)continue;
-            std::vector<std::tuple<size_t, bool, size_t, bool, float>> whoConnectsWho = {
-                    {j1, true,  j2, true,  getDistance2D(from1, from2)},
-                    {j1, true,  j2, false, getDistance2D(from1, to2)},
-                    {j1, false, j2, true,  getDistance2D(to1, from2)},
-                    {j1, false, j2, false, getDistance2D(to1, to2)}
+            std::vector<union_feature> whoConnectsWho = {
+                    bb_feature(j1, j2, true, true, getDistance2D(from1, from2)),
+                    bb_feature(j1, j2, true, false, getDistance2D(from1, to2)),
+                    bb_feature(j1, j2, false, true, getDistance2D(to1, from2)),
+                    bb_feature(j1, j2, false, false, getDistance2D(to1, to2))
             };
-            std::sort(whoConnectsWho.begin(), whoConnectsWho.end(), [&](
-                    const std::tuple<size_t, bool, size_t, bool, float> &_a,
-                    const std::tuple<size_t, bool, size_t, bool, float> &_b
-            ) -> bool {
-                return std::get<4>(_a) < std::get<4>(_b);
-            });
-            // 这里只进一个值，保证distance里的一对键键关系只出现一次
-            bbDistances.push_back(whoConnectsWho.front());
+            size_t minIdx = 0;
+            for (size_t iw = 1; iw < whoConnectsWho.size(); iw++) {
+                if (get_feature(whoConnectsWho[minIdx]) > get_feature(whoConnectsWho[iw]))
+                    minIdx = iw;
+            }
+            if (get_feature(whoConnectsWho[minIdx]) < bondSideConThresh * (
+                    std::get<2>(bondBoxes[j1]) + std::get<2>(bondBoxes[j2])))
+                uDistances.push_back(whoConnectsWho[minIdx]);
         }
     }
-    // now, you have a lot of distances for bond-side relations
-    std::sort(bbDistances.begin(), bbDistances.end(), [&](
-            const std::tuple<size_t, bool, size_t, bool, float> &_a,
-            const std::tuple<size_t, bool, size_t, bool, float> &_b
-    ) -> bool {
-        return std::get<4>(_a) > std::get<4>(_b);
-    });
+    for (size_t i = 0; i < eAtomBoxes.size(); i++) {
+        const auto&[aLabel, center, width, height]=eAtomBoxes[i];
+        std::vector<std::tuple<size_t, size_t, bool, float>> abDistances;
+        for (size_t j = 0; j < bondBoxes.size(); j++) {
+            const auto&[bLabel, fromTo, bondLength]=bondBoxes[j];
+            const auto&[from, to]=fromTo;
+            float fromDis = getDistance2D(center, from);
+            float toDis = getDistance2D(center, to);
+            bool isFrom = fromDis < toDis;
+            auto &minDis = (std::min)(fromDis, toDis);
+            if (minDis < atomSideThresh * (std::get<2>(bondBoxes[j]) + (std::max)(
+                    std::get<2>(eAtomBoxes[i]), std::get<3>(eAtomBoxes[i]))))
+                uDistances.push_back(ab_feature(i, j, isFrom, minDis));
+        }
+    }
+    std::sort(uDistances.begin(),uDistances.end(),sort_way);
+    // show debug info here
+
+
+
+
     while (!bbDistances.empty()) {
         // distance 优先
         auto&[j1, isFrom1, j2, isFrom2, distance]=bbDistances.back();
@@ -522,3 +569,5 @@ ElementType BoxGraphConverter::getElementTyoeFromLabelIdx(const int &_label) {
         }
     }
 }
+
+

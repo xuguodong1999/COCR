@@ -34,6 +34,8 @@ class BoxGraphConverter {
      */
     std::vector<std::shared_ptr<JMol>> then();
 
+    std::vector<std::shared_ptr<JMol>> handleNoBond();
+
     enum ItemType {
         ExplicitAtom = 0x100,
         LineBond = 0x010,
