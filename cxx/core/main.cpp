@@ -67,18 +67,18 @@ int testHWDraw() {
 
 int testDarknetDump() {
     DarknetDataGenerator ddg;
-    ddg.init("T:/soso17_v1");
-    ddg.dump(60000/3, 3);
+    ddg.init("T:/soso17_v2");
+    ddg.dump(200000/5, 5);
     return 0;
 }
 #include "polya.hpp"
 int main() {
     try {
-        auto&pc=PolyaIsomerCounter::GetInstance();
-        pc.count(28);
+//        auto&pc=PolyaIsomerCounter::GetInstance();
+//        pc.count(28);
 //        return testYolov4();
 //        return testHWDraw();
-//        return testDarknetDump();
+        return testDarknetDump();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;

@@ -492,6 +492,32 @@ const string &ShapeGroup::getName() const {
     return name;
 }
 
+void ShapeGroup::removePointIf(const std::function<bool(const cv::Point2f &)> &_cond) {
+    decltype(shapes) newShapes;
+    for (auto &shape:shapes) {
+        ShapeItem newShape;
+        for (auto &stroke:shape.mData) {
+            Stroke newStroke;
+            for (auto &pt:stroke) {
+                if (_cond(pt)) {
+                    newStroke.push_back(pt);
+                }
+            }
+            if (!newStroke.empty()) {
+                newShape.mData.push_back(std::move(newStroke));
+            }
+        }
+        if (!newShape.mData.empty()) {
+            newShapes.push_back(std::move(newShape));
+        }
+    }
+    shapes = std::move(newShapes);
+}
+
+void ShapeGroup::addShapeItem(ShapeItem &item) {
+    shapes.push_back(std::move(item));
+}
+
 BondItem::BondItem()
         : mUseHWChar(true), isLatest(false) {
     isRotateAllowed = true;

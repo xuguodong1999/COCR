@@ -257,9 +257,12 @@ protected:
     std::vector<ShapeItem> shapes;
     std::string name;
 public:
+    void addShapeItem(ShapeItem&item);
+
     const std::string &getName() const;
 
-public:
+    void removePointIf(const std::function<bool(const cv::Point2f &pt)> &_cond);
+
     static std::shared_ptr<ShapeGroup> GetShapeGroup(const std::string &_textType = "");
 
     ShapeGroup() : name("SG") { isRotateAllowed = false; }
