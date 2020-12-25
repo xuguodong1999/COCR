@@ -15,10 +15,10 @@ class MolHwItem : public ShapeInterface {
     const JMol &mol;
 
     /**
-     * @param _showCProb 控制碳原子是否显示写出
+     * @param _pt 控制碳原子是否显示写出
      * @return 平均图元大小
      */
-    float reloadHWData(const float &_showCProb = 0.1);
+    float reloadHWData(const float &_pt = 0.1);
 
 public:
 

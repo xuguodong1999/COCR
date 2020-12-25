@@ -492,17 +492,19 @@ const string &ShapeGroup::getName() const {
     return name;
 }
 
-void ShapeGroup::removePointIf(const std::function<bool(const cv::Point2f &)> &_cond) {
-    decltype(shapes) newShapes;
-    for (auto &shape:shapes) {
+void ShapeGroup::keepPtsIf(const std::function<bool(const cv::Point2f &)> &_cond) {
+    std::vector<ShapeItem> newShapes;
+    for (ShapeItem &shape:shapes) {
         ShapeItem newShape;
-        for (auto &stroke:shape.mData) {
+        for (Stroke &stroke:shape.mData) {
             Stroke newStroke;
             for (auto &pt:stroke) {
                 if (_cond(pt)) {
                     newStroke.push_back(pt);
                 }
             }
+            std::cout<<"new="<<newStroke.size()<<std::endl;
+            std::cout<<"old="<<stroke.size()<<std::endl;
             if (!newStroke.empty()) {
                 newShape.mData.push_back(std::move(newStroke));
             }
@@ -511,7 +513,11 @@ void ShapeGroup::removePointIf(const std::function<bool(const cv::Point2f &)> &_
             newShapes.push_back(std::move(newShape));
         }
     }
-    shapes = std::move(newShapes);
+    // FIXME: a deep bug hides here
+    // 这个bug史无前例，优先处理
+    shapes.swap(newShapes);
+//    *this=ShapeGroup();
+//    shapes = std::move(newShapes);
 }
 
 void ShapeGroup::addShapeItem(ShapeItem &item) {

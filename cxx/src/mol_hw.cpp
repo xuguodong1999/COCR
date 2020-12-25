@@ -97,27 +97,6 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
     symbols.clear();
     // 记录显式写出的原子 id
     std::unordered_map<size_t, bool> explicitAtomMap;
-    //<键id，键id>
-    std::unordered_map<size_t, size_t> lineBondMap;
-    //<图元下标，键id>
-    std::unordered_map<size_t, size_t> itemBondMap;
-    // <原子id,这个原子关联的键>
-    std::unordered_map<size_t, std::unordered_set<size_t>> atomBondMap;
-    for (auto&[id, bond]:mol.getBondsMap()) {
-        if (bond->getBondType() != JBondType::SingleBond)continue;
-        atomBondMap[bond->getAtomFrom()].insert(id);
-        atomBondMap[bond->getAtomTo()].insert(id);
-    }
-    for (auto&[aid, bidSet]:atomBondMap) {
-        if (bidSet.size() != 2)continue;
-        std::vector<size_t> tmp;
-        for (auto &bid:bidSet) {
-            tmp.push_back(bid);
-        }
-        lineBondMap.insert({tmp[0], tmp[1]});
-    }
-    atomBondMap.clear();
-    std::unordered_map<size_t, size_t> angleBondMap;
     auto atomPosMap = mol.get2DCoordinates();
     for (auto&[id, atom]:mol.getAtomsMap()) {
         auto sym = ShapeGroup::GetShapeGroup(atom->getElementName());
@@ -146,9 +125,35 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
             }
         }
     }
+    // 统计单折线
+    //<键id，键id>
+    std::unordered_map<size_t, size_t> lineBondMap;
+    //<键id,图元下标>
+    std::unordered_map<size_t, size_t> itemBondMap;
+    // <原子id,这个原子关联的键>
+    std::unordered_map<size_t, std::unordered_set<size_t>> atomBondMap;
     for (auto&[id, bond]:mol.getBondsMap()) {
+        atomBondMap[bond->getAtomFrom()].insert(id);
+        atomBondMap[bond->getAtomTo()].insert(id);
+    }
+    for (auto&[aid, bidSet]:atomBondMap) {
+        if (bidSet.size() != 2 || explicitAtomMap[aid])continue;
+        std::vector<size_t> tmp;
+        for (auto &bid:bidSet) {
+            tmp.push_back(bid);
+        }
+        if (mol.getBondsMap().find(tmp[0])->second->getBondType() != JBondType::SingleBond)
+            continue;
+        if (mol.getBondsMap().find(tmp[1])->second->getBondType() != JBondType::SingleBond)
+            continue;
+        if (tmp[0] < tmp[1])std::swap(tmp[0], tmp[1]);
+        lineBondMap.insert({tmp[0], tmp[1]});
+    }
+    atomBondMap.clear();
+    // 添加键坐标
+    for (auto&[bid, bond]:mol.getBondsMap()) {
         JBondType bondType = bond->getBondType();
-        if (bondInKekuleRings.end() != bondInKekuleRings.find(id)) {
+        if (bondInKekuleRings.end() != bondInKekuleRings.find(bid)) {
             bondType = JBondType::DelocalizedBond;  // 不能影响 JMol 里的数据
         }
         shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
@@ -165,10 +170,11 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
         }
         sym->setVertices({from, to});
         if (bondType == JBondType::SingleBond) {
-            itemBondMap.insert({symbols.size(), id});
+            itemBondMap[bid] = symbols.size();
         }
         symbols.push_back(std::move(sym));
     }
+    // 加环
     for (auto &ring:kekuleRings) {
         auto sym = BondItem::GetBond(JBondType::CircleBond);
         std::vector<cv::Point2f> pts;
@@ -190,46 +196,58 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
     }
     avgSize /= (2 * symbols.size());
     // 添加弧线转折
-    for(auto&[bid1,bid2]:lineBondMap){
-        auto&item1=symbols[itemBondMap[bid1]];
-        auto&item2=symbols[itemBondMap[bid2]];
+    std::cout << "lineBondMap.size()=" << lineBondMap.size() << std::endl;
+    std::cout << "avgSize=" << avgSize << std::endl;
+    for (auto&[bid1, bid2]:lineBondMap) {
+        auto &item1 = symbols[itemBondMap[bid1]];
+        auto &item2 = symbols[itemBondMap[bid2]];
         size_t aid;
-        std::unordered_set<size_t>tmp;
-        std::vector<size_t>aids={mol.getBondsMap().find(bid1)->second->getAtomFrom(),
-                                 mol.getBondsMap().find(bid1)->second->getAtomTo(),
-                                 mol.getBondsMap().find(bid2)->second->getAtomFrom(),
-                                 mol.getBondsMap().find(bid2)->second->getAtomTo()};
-        for(auto&id:aids){
-            if(notExist(tmp,id)){
+        std::unordered_set<size_t> tmp;
+        std::vector<size_t> aids = {mol.getBondsMap().find(bid1)->second->getAtomFrom(),
+                                    mol.getBondsMap().find(bid1)->second->getAtomTo(),
+                                    mol.getBondsMap().find(bid2)->second->getAtomFrom(),
+                                    mol.getBondsMap().find(bid2)->second->getAtomTo()};
+        for (auto &id:aids) {
+            if (notExist(tmp, id)) {
                 tmp.insert(id);
-            }else{
-                aid=id;
+            } else {
+                aid = id;
                 break;
             }
         }
         // aid is angle atom
         cv::Point2f anglePos = atomPosMap[aid];
-        const float threshDis=avgSize/3;
+        std::cout << "anglePos=" << anglePos << std::endl;
+        std::cout << "bbox1=" << item1->getBoundingBox() << std::endl;
+        std::cout << "bbox2=" << item2->getBoundingBox() << std::endl;
+        const float threshDis = avgSize / 3.0;
         // 1、排除影响范围里的所有点
-        cv::Point2f nearestPt,npt1,npt2;
-        float minDis=std::numeric_limits<float>::max();
-        auto removeIf=[&](const cv::Point2f&pt)->bool{
-            float curDis = getDistance2D(pt,anglePos);
-            bool res = curDis < threshDis;
-            if(!res && curDis < minDis){
-                minDis=curDis;nearestPt=pt;
+        cv::Point2f nearestPt, npt1, npt2;
+        float minDis;
+        auto cond = [&](const cv::Point2f &_pt) -> bool {
+            const float curDis = getDistance2D(_pt, anglePos);
+            bool res = (curDis > threshDis);
+            if (res && curDis < minDis) {
+                minDis = curDis;
+                nearestPt = _pt;
             }
             return res;
         };
-        item1->removePointIf(removeIf);
-        npt1=nearestPt;
-        minDis=std::numeric_limits<float>::max();
-        item2->removePointIf(removeIf);
-        npt2=nearestPt;
-        ShapeItem newItem1,newItem2;
+        minDis = std::numeric_limits<float>::max();
+        item1->keepPtsIf(cond);
+        npt1 = nearestPt;
+
+        minDis = std::numeric_limits<float>::max();
+        item2->keepPtsIf(cond);
+        npt2 = nearestPt;
+
+        ShapeItem newItem1, newItem2;
+//        item1=std::make_shared<ShapeGroup>();
+//        item2=std::make_shared<ShapeGroup>();
         // 2、添加圆弧: npt1-anglePos-npt2
-        item1->addShapeItem(newItem1);
-        item2->addShapeItem(newItem2);
+
+//        item1->addShapeItem(newItem1);
+//        item2->addShapeItem(newItem2);
     }
     return avgSize;
 }

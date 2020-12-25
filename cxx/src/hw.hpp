@@ -261,11 +261,11 @@ public:
 
     const std::string &getName() const;
 
-    void removePointIf(const std::function<bool(const cv::Point2f &pt)> &_cond);
+    void keepPtsIf(const std::function<bool(const cv::Point2f &pt)> &_cond);
 
     static std::shared_ptr<ShapeGroup> GetShapeGroup(const std::string &_textType = "");
 
-    ShapeGroup() : name("SG") { isRotateAllowed = false; }
+    ShapeGroup() : name("SG") { isRotateAllowed = false; shapes.clear();}
 
     ShapeGroup(const NString &name) {
         isRotateAllowed = false;

@@ -48,16 +48,17 @@ int testHWDraw() {
     CouchLoader::LoadCouchDataSet(false);
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
-                                             3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15
+                                             3, 4, 5, 6, 7, 8, 10, 11, 12,
+                                             //13, 14, 15
                                      });
     JMol mol;
     for (auto &alkane:alkanes) {
         mol.setAlkane(alkane);
         mol.randomize();
-        auto posMap = mol.get3DCoordinates(true);
-        for (auto&[id, pos]:posMap) {
-            std::cout << id << ": " << pos << std::endl;
-        }
+//        auto posMap = mol.get3DCoordinates(true);
+//        for (auto&[id, pos]:posMap) {
+//            std::cout << id << ": " << pos << std::endl;
+//        }
         MolHwItem molItem(mol);
         molItem.showOnScreen(1);
     }
@@ -77,8 +78,8 @@ int main() {
 //        auto&pc=PolyaIsomerCounter::GetInstance();
 //        pc.count(28);
 //        return testYolov4();
-//        return testHWDraw();
-        return testDarknetDump();
+        return testHWDraw();
+//        return testDarknetDump();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;
