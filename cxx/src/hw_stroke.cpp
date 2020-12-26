@@ -93,3 +93,8 @@ decltype(HwStroke::mData.begin()) HwStroke::begin() {
 decltype(HwStroke::mData.end()) HwStroke::end() {
     return mData.end();
 }
+
+void HwStroke::setData(std::vector<cv::Point2f> &_data) {
+    mData.swap(_data);
+    _data.clear();
+}

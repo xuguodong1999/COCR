@@ -36,6 +36,14 @@ add_custom_target(app_resources ALL DEPENDS ${RES_FILES})
 add_dependencies(app_resources app_translations)
 
 add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
+        ${SRC_DIR}/hw_base.cpp
+        ${SRC_DIR}/hw_bond.cpp
+        ${SRC_DIR}/hw_data.cpp
+        ${SRC_DIR}/hw_str.cpp
+        ${SRC_DIR}/hw_script.cpp
+        ${SRC_DIR}/hw_item.cpp
+        ${SRC_DIR}/hw_stroke.cpp
+        ${SRC_DIR}/hw_mol.cpp
 
         ${SRC_DIR}/box2graph.cpp
         ${SRC_DIR}/colors.cpp
@@ -56,8 +64,8 @@ add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
         ${SRC_DIR}/opencv_yolo.cpp
         ${SRC_DIR}/qt_util.cpp
 
-        ${SRC_DIR}/couch_data.cpp
-        ${SRC_DIR}/hw.cpp
+#        ${SRC_DIR}/couch_data.cpp
+#        ${SRC_DIR}/hw.cpp
 
         ${SRC_DIR}/polya.cpp
         ${SRC_DIR}/bignumber.cpp

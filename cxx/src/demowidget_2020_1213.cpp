@@ -3,13 +3,13 @@
 #include "opencv_yolo.hpp"
 #include "qt_util.hpp"
 #include "box2graph.hpp"
-#include "mol_hw.hpp"
+#include "hw_mol.hpp"
 
 #include "mol3d.hpp"
 #include "std_util.hpp"
 #include "mol3dwindow.hpp"
 
-#include "hw.hpp"
+//#include "hw.hpp"
 #include "colors.hpp"
 
 #include <QDebug>
@@ -20,7 +20,6 @@
 #include <iostream>
 
 OpenCVYolo yolo;
-ShapeItem shapes;
 
 DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
     if (!yolo.isWeightsLoaded()) {
@@ -86,22 +85,24 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
             view3dContainer->show();
             return;
         }
-        shapes.mData.clear();
+        HwScript hwScript;
         for (auto &stroke:script) {
-            shapes.mData.push_back(Stroke());
+            HwStroke hwStroke;
             for (auto &pt:stroke) {
-                shapes.mData.back().push_back(cv::Point2f(pt.x(), pt.y()));
+                hwStroke.push_back(cv::Point2f(pt.x(), pt.y()));
             }
+            hwScript.push_back(hwStroke);
         }
-        auto shapeBox = shapes.getBoundingBox();
-        shapes.moveLeftTopTo(cv::Point2f(4, 4));
+        auto shapeBox = hwScript.getBoundingBox();
+        if(!shapeBox)return;
+        hwScript.moveLeftTopTo(cv::Point2f(4, 4));
         std::vector<gt_box> gtBox;
         cv::Mat detMat;
         std::vector<std::shared_ptr<JMol>> mols;
         try {
-            cv::Mat originMat = cv::Mat(shapeBox.height + 8, shapeBox.width + 8, CV_8UC3,
+            cv::Mat originMat = cv::Mat(shapeBox->height + 8, shapeBox->width + 8, CV_8UC3,
                                         getScalar(ColorName::rgbWhite));
-            shapes.paintTo(originMat);
+            hwScript.paintTo(originMat);
             auto[tmpBox, tmpMat] = yolo.forward(originMat, false);
             gtBox = std::move(tmpBox);
             detMat = std::move(tmpMat);
@@ -116,13 +117,13 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
             if ((0.2 < k && k < 0.8) || (1.25 < k && k < 5)) {
                 // 放缩重检
                 originMat = cv::Mat();
-                shapes.mulK(k, k);
-                shapeBox = shapes.getBoundingBox();
-                shapes.moveLeftTopTo(cv::Point2f(4, 4));
-                originMat = cv::Mat(shapeBox.height + 8,
-                                    shapeBox.width + 8, CV_8UC3,
+                hwScript.mulK(k, k);
+                shapeBox = hwScript.getBoundingBox();
+                hwScript.moveLeftTopTo(cv::Point2f(4, 4));
+                originMat = cv::Mat(shapeBox->height + 8,
+                                    shapeBox->width + 8, CV_8UC3,
                                     getScalar(ColorName::rgbWhite));
-                shapes.paintTo(originMat);
+                hwScript.paintTo(originMat);
                 auto[tmpBox, tmpMat] = yolo.forward(originMat, false);
                 gtBox = std::move(tmpBox);
                 detMat = std::move(tmpMat);
