@@ -513,11 +513,7 @@ void ShapeGroup::keepPtsIf(const std::function<bool(const cv::Point2f &)> &_cond
             newShapes.push_back(std::move(newShape));
         }
     }
-    // FIXME: a deep bug hides here
-    // 这个bug史无前例，优先处理
-    shapes.swap(newShapes);
-//    *this=ShapeGroup();
-//    shapes = std::move(newShapes);
+    shapes = std::move(newShapes);
 }
 
 void ShapeGroup::addShapeItem(ShapeItem &item) {

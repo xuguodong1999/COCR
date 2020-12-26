@@ -199,8 +199,12 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
     std::cout << "lineBondMap.size()=" << lineBondMap.size() << std::endl;
     std::cout << "avgSize=" << avgSize << std::endl;
     for (auto&[bid1, bid2]:lineBondMap) {
-        auto &item1 = symbols[itemBondMap[bid1]];
-        auto &item2 = symbols[itemBondMap[bid2]];
+        auto item1 = std::static_pointer_cast<SingleBond>(symbols[itemBondMap[bid1]]);
+        item1->setUseHandWrittenWChar(true);
+        item1->updateShapes();
+        auto item2 = std::static_pointer_cast<SingleBond>(symbols[itemBondMap[bid2]]);
+        item2->setUseHandWrittenWChar(true);
+        item2->updateShapes();
         size_t aid;
         std::unordered_set<size_t> tmp;
         std::vector<size_t> aids = {mol.getBondsMap().find(bid1)->second->getAtomFrom(),
@@ -242,8 +246,6 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
         npt2 = nearestPt;
 
         ShapeItem newItem1, newItem2;
-//        item1=std::make_shared<ShapeGroup>();
-//        item2=std::make_shared<ShapeGroup>();
         // 2、添加圆弧: npt1-anglePos-npt2
 
 //        item1->addShapeItem(newItem1);

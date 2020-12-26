@@ -15,6 +15,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <math.h>
 
 template<typename T>
 std::string to_string_with_precision(const T _fValue, const int n = 2) {

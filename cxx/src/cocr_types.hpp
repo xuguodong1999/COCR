@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+
 using hash_type = uint64_t;
 using node_type = unsigned char;
 

@@ -93,6 +93,8 @@ class ShapeItem : public ShapeInterface {
 public:
     ShapeItem();
 
+    ShapeItem(ShapeItem&&_si):mData(std::move(_si.mData)),mLabel(_si.mLabel){};
+
     virtual void paintTo(cv::Mat &canvas);
 
     virtual const cv::Rect2f getBoundingBox() const override;
@@ -158,8 +160,7 @@ public:
     inline static float sSubOffsetKx = 0.1;// (-1,1)*50
     inline static float sSubOffsetKy = 0.1;// (-1,1)*50
     inline static float sAngleK = 0.0;// [0,1)*30
-    inline static std::unordered_set<std::string> bsSet, aeSet, btSet;
-    inline static std::unordered_set<int> acSet;
+
 
     struct NoiseParm {
         float mean, stddev;//gaussian
@@ -265,7 +266,9 @@ public:
 
     static std::shared_ptr<ShapeGroup> GetShapeGroup(const std::string &_textType = "");
 
-    ShapeGroup() : name("SG") { isRotateAllowed = false; shapes.clear();}
+    ShapeGroup() : name("SG") { isRotateAllowed = false;}
+
+    ShapeGroup(ShapeGroup&&_sg):name(std::move(_sg.name)),shapes(std::move(_sg.shapes)){}
 
     ShapeGroup(const NString &name) {
         isRotateAllowed = false;
@@ -327,10 +330,9 @@ protected:
 
     bool mUseHWChar;
     bool isLatest;
-
     virtual void updateShapes();
-
 public:
+
     void setUseHandWrittenWChar(bool useHandWrittenChar);
 
     static std::shared_ptr<BondItem> GetBond(
@@ -370,11 +372,12 @@ public:
 };
 
 class SingleBond : public BondItem {
-    virtual void updateShapes() override;
+//    virtual void updateShapes() override;
 
 protected:
     Point from, to;
 public:
+    void updateShapes() override;
     const cv::Rect2f getBoundingBox() const override;
 
     SingleBond();

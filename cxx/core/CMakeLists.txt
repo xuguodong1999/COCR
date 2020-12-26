@@ -16,13 +16,20 @@ endif (MSVC)
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
+        ${SRC_DIR}/hw_base.cpp
+        ${SRC_DIR}/hw_bond.cpp
+        ${SRC_DIR}/hw_data.cpp
+        ${SRC_DIR}/hw_str.cpp
+        ${SRC_DIR}/hw_script.cpp
+        ${SRC_DIR}/hw_item.cpp
+        ${SRC_DIR}/hw_stroke.cpp
+        ${SRC_DIR}/hw_mol.cpp
 
         ${SRC_DIR}/box2graph.cpp
         ${SRC_DIR}/colors.cpp
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/bond.cpp
-        ${SRC_DIR}/mol_hw.cpp
         ${SRC_DIR}/mol2d.cpp
         ${SRC_DIR}/mol_rand.cpp
         ${SRC_DIR}/mol_base.cpp
