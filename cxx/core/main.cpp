@@ -1,7 +1,7 @@
 #include "timer.hpp"
 #include "hw_mol.hpp"
 #include "isomer.hpp"
-#include "couch_data.hpp"
+//#include "couch_data.hpp"
 #include "darknet_data.hpp"
 //
 //#include "torch_yolov4.hpp"
@@ -45,7 +45,6 @@ using namespace std;
 //}
 
 int testHWDraw() {
-    CouchLoader::LoadCouchDataSet(false);
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
                                              3, 4, 5, 6, 7, 8, 10, 11, 12,

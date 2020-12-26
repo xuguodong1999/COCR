@@ -58,12 +58,12 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/torch_classifier.cpp
         ${SRC_DIR}/torch_transform.cpp
 
-        ${SRC_DIR}/couch_data.cpp
+#        ${SRC_DIR}/couch_data.cpp
         ${SRC_DIR}/darknet_data.cpp
-        ${SRC_DIR}/hw.cpp
+#        ${SRC_DIR}/hw.cpp
 
         ${SRC_DIR}/dataset_cifar.cpp
-        ${SRC_DIR}/dataset_couch.cpp
+#        ${SRC_DIR}/dataset_couch.cpp
 
         ${SRC_DIR}/qml_sketchitem.cpp)
 if (MSVC)

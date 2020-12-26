@@ -2,7 +2,7 @@
 
 #include "hw_mol.hpp"
 #include "isomer.hpp"
-#include "couch_data.hpp"
+//#include "couch_data.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -43,7 +43,6 @@ void DarknetDataGenerator::dump(const size_t &_numOfSamples, const size_t &_repe
         std::cerr << "you must call DarknetDataGenerator::init before dump data" << std::endl;
         exit(-1);
     }
-    CouchLoader::LoadCouchDataSet(false);
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
                                              3, 4, 5, 6, 7,
