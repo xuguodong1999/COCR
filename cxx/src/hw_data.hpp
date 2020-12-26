@@ -16,10 +16,11 @@ public:
 };
 
 extern std::string COUCH_SYM_PATH;
-enum class ShapeType{
+enum class ShapeType {
     Line,
     Circle
 };
+
 class HwDataLoader {
     std::vector<std::vector<HwDataSample>> mData;
 
@@ -42,7 +43,7 @@ public:
 
     HwScript GetByStrLabel(const std::string &label);
 
-    HwScript GetShape(const ShapeType&_shapeType);
+    HwScript GetShape(const ShapeType &_shapeType);
 
     HwScript GetHwScript(const size_t &_classIndex, const size_t &_sampleIndex);
 };

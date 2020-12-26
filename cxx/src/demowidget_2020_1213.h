@@ -33,8 +33,10 @@ public:
 
 private:
     void syncPtsVec();
+
 public:
     void clear();
+
     ScribbleArea(QWidget *parent = nullptr);
 
     void mousePressEvent(QMouseEvent *event) override;
@@ -52,15 +54,15 @@ class DemoWidget_2020_1213 : public QWidget {
 Q_OBJECT
     // 底部 panel
     QHBoxLayout *panelLayout;
-    QToolButton *drawBtn, *view2dBtn, *view3dBtn, *saveBtn,*clsBtn;
+    QToolButton *drawBtn, *view2dBtn, *view3dBtn, *saveBtn, *clsBtn;
     QWidget *panelWidget;
 
     // 画板
     ScribbleArea *scribbleArea;
     // 3D 窗口容器
-    QWidget*view3dContainer;
+    QWidget *view3dContainer;
     // 2D 窗口容器
-    QWidget*view2dContainer;
+    QWidget *view2dContainer;
     enum class ViewMode {
         ScribbleMode, View2DMode, View3DMode
     } viewMode;

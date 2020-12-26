@@ -121,7 +121,9 @@ class JMol {
 
 public:
     const std::unordered_map<size_t, std::pair<bool, cv::Point2f>> &getAtomPosMap2D() const;
-    void insertAtomPos2D(const size_t&_aid,bool _isExplicit,const cv::Point2f&_pos);
+
+    void insertAtomPos2D(const size_t &_aid, bool _isExplicit, const cv::Point2f &_pos);
+
     void clear();
 
     std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber);

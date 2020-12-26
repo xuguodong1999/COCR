@@ -93,7 +93,7 @@ class ShapeItem : public ShapeInterface {
 public:
     ShapeItem();
 
-    ShapeItem(ShapeItem&&_si):mData(std::move(_si.mData)),mLabel(_si.mLabel){};
+    ShapeItem(ShapeItem &&_si) : mData(std::move(_si.mData)), mLabel(_si.mLabel) {};
 
     virtual void paintTo(cv::Mat &canvas);
 
@@ -258,7 +258,7 @@ protected:
     std::vector<ShapeItem> shapes;
     std::string name;
 public:
-    void addShapeItem(ShapeItem&item);
+    void addShapeItem(ShapeItem &item);
 
     const std::string &getName() const;
 
@@ -266,9 +266,9 @@ public:
 
     static std::shared_ptr<ShapeGroup> GetShapeGroup(const std::string &_textType = "");
 
-    ShapeGroup() : name("SG") { isRotateAllowed = false;}
+    ShapeGroup() : name("SG") { isRotateAllowed = false; }
 
-    ShapeGroup(ShapeGroup&&_sg):name(std::move(_sg.name)),shapes(std::move(_sg.shapes)){}
+    ShapeGroup(ShapeGroup &&_sg) : name(std::move(_sg.name)), shapes(std::move(_sg.shapes)) {}
 
     ShapeGroup(const NString &name) {
         isRotateAllowed = false;
@@ -330,7 +330,9 @@ protected:
 
     bool mUseHWChar;
     bool isLatest;
+
     virtual void updateShapes();
+
 public:
 
     void setUseHandWrittenWChar(bool useHandWrittenChar);
@@ -378,6 +380,7 @@ protected:
     Point from, to;
 public:
     void updateShapes() override;
+
     const cv::Rect2f getBoundingBox() const override;
 
     SingleBond();

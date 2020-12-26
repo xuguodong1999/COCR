@@ -6,7 +6,8 @@
 
 class HwBond : public HwItem {
 protected:
-    virtual void loadHwData()=0;
+    virtual void loadHwData() = 0;
+
 public:
     static std::shared_ptr<HwBond> GetHwBond(
             const JBondType &_bondType = JBondType::SingleBond);
@@ -16,10 +17,12 @@ public:
 
 class HwCircleBond : public HwBond {
     cv::Point2f center;
-    float rx,ry;
-    void loadHwData()override;
+    float rx, ry;
+
+    void loadHwData() override;
+
 public:
-    HwCircleBond()=default;
+    HwCircleBond() = default;
 
     void setVertices(const std::vector<cv::Point2f> &_pts) override;
 
@@ -33,9 +36,11 @@ public:
 class HwSingleBond : public HwBond {
 protected:
     cv::Point2f from, to;
-    void loadHwData()override;
+
+    void loadHwData() override;
+
 public:
-    HwSingleBond()=default;
+    HwSingleBond() = default;
 
     void setVertices(const std::vector<cv::Point2f> &_pts) override;
 
@@ -47,33 +52,38 @@ public:
 };
 
 class HwDoubleBond : public HwSingleBond {
-    void loadHwData()override;
+    void loadHwData() override;
+
 public:
-    HwDoubleBond()=default;
+    HwDoubleBond() = default;
 };
 
 class HwTripleBond : public HwSingleBond {
-    void loadHwData()override;
+    void loadHwData() override;
+
 public:
-    HwTripleBond()=default;
+    HwTripleBond() = default;
 };
 
 class HwSolidWedgeBond : public HwSingleBond {
-    void loadHwData()override;
+    void loadHwData() override;
+
 public:
-    HwSolidWedgeBond()=default;
+    HwSolidWedgeBond() = default;
 };
 
 class HwDashWedgeBond : public HwSingleBond {
-    void loadHwData()override;
+    void loadHwData() override;
+
 public:
-    HwDashWedgeBond()=default;
+    HwDashWedgeBond() = default;
 };
 
 class HwWaveBond : public HwSingleBond {
-    void loadHwData()override;
+    void loadHwData() override;
+
 public:
-    HwWaveBond()=default;
+    HwWaveBond() = default;
 };
 
 #endif//_HW_BOND_HPP_

@@ -503,8 +503,8 @@ void ShapeGroup::keepPtsIf(const std::function<bool(const cv::Point2f &)> &_cond
                     newStroke.push_back(pt);
                 }
             }
-            std::cout<<"new="<<newStroke.size()<<std::endl;
-            std::cout<<"old="<<stroke.size()<<std::endl;
+            std::cout << "new=" << newStroke.size() << std::endl;
+            std::cout << "old=" << stroke.size() << std::endl;
             if (!newStroke.empty()) {
                 newShape.mData.push_back(std::move(newStroke));
             }

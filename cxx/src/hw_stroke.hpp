@@ -12,8 +12,10 @@ class HwStroke : public HwBase {
     std::vector<cv::Point2f> mData;
     HwController *hwController;
 public:
-    decltype(mData.begin())begin();
-    decltype(mData.end())end();
+    decltype(mData.begin()) begin();
+
+    decltype(mData.end()) end();
+
     void setHwController(HwController &_hwController) override;
 
     void push_back(const cv::Point2f &_pt);

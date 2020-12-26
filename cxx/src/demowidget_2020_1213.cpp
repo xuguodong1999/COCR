@@ -23,7 +23,7 @@ OpenCVYolo yolo;
 ShapeItem shapes;
 
 DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
-    if(!yolo.isWeightsLoaded()){
+    if (!yolo.isWeightsLoaded()) {
 #ifdef Q_OS_LINUX
         std::string path = "/home/xgd/source/COCR/weights/";
 #else
@@ -112,8 +112,8 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
             }
             avgBoxSize /= gtBox.size();
             float k = 60 / avgBoxSize;
-            std::cout<<"60 / avgBoxSize="<<k<<std::endl;
-            if ((0.2<k&&k<0.8)||(1.25<k&&k<5)) {
+            std::cout << "60 / avgBoxSize=" << k << std::endl;
+            if ((0.2 < k && k < 0.8) || (1.25 < k && k < 5)) {
                 // 放缩重检
                 originMat = cv::Mat();
                 shapes.mulK(k, k);
@@ -127,10 +127,10 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
                 gtBox = std::move(tmpBox);
                 detMat = std::move(tmpMat);
             }
-            std::cout<<"detection done"<<std::endl;
+            std::cout << "detection done" << std::endl;
             BoxGraphConverter converter(false);
             mols = converter.accept(gtBox, detMat);
-            std::cout<<"extract done"<<std::endl;
+            std::cout << "extract done" << std::endl;
         }
         catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
@@ -147,8 +147,8 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
             auto view = new Mol3DWindow(rootEntity);
             try {
                 sceneBuilder->resetMol(mol);
-            } catch (std::exception&e) {
-                std::cerr<<e.what()<<std::endl;
+            } catch (std::exception &e) {
+                std::cerr << e.what() << std::endl;
                 rootEntity->deleteLater();
                 QMessageBox::information(nullptr, "Hello, Bug", e.what());
                 continue;

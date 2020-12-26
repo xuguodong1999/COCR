@@ -23,6 +23,7 @@ public:
     std::pair<std::vector<gt_box>, cv::Mat>
     forward(const cv::Mat &_input, bool _debug = false, const int &_gridSize = 32);
 
-    bool isWeightsLoaded()const;
+    bool isWeightsLoaded() const;
 };
+
 #endif//_OPENCV_YOLO_HPP_

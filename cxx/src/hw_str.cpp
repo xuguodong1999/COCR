@@ -3,8 +3,8 @@
 #include <iostream>
 
 HwStr::HwStr(const std::string &_plainText) {
-    for (auto& character:_plainText) {
-        push_char(std::string(1,character));
+    for (auto &character:_plainText) {
+        push_char(std::string(1, character));
     }
 }
 

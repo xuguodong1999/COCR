@@ -223,19 +223,20 @@ HwScript HwDataLoader::GetByStrLabel(const std::string &label) {
     return std::move(GetByIntLabel(resItr->second));
 }
 
-HwScript HwDataLoader::GetShape(const ShapeType&_shapeType) {
-    switch(_shapeType){
-        case ShapeType::Line:{
+HwScript HwDataLoader::GetShape(const ShapeType &_shapeType) {
+    switch (_shapeType) {
+        case ShapeType::Line: {
             return std::move(GetByIntLabel(
                     sLabelCharLikeLine[rand() % sLabelCharLikeLine.size()]));
-        }case ShapeType::Circle:{
+        }
+        case ShapeType::Circle: {
             auto circle = GetByIntLabel(
                     sLabelCharLikeCircle[rand() % sLabelCharLikeCircle.size()]);
             circle.castToCircle(cv::Point2f(50, 50), 50, 50);
             return std::move(circle);
         }
-        default:{
-            std::cerr << (int)_shapeType<< " not supported! "
+        default: {
+            std::cerr << (int) _shapeType << " not supported! "
                       << "Only \"line\" and \"circle\" supported!" << std::endl;
             exit(-1);
         }
@@ -308,7 +309,7 @@ HwDataLoader &HwDataLoader::getInstance() {
     static HwDataLoader e;
     if (!e.isDataLoaded) {
         e.LoadCouchDataSet();
-        e.isDataLoaded=true;
+        e.isDataLoaded = true;
     }
     return e;
 }

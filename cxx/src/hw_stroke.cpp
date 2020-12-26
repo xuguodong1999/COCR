@@ -75,14 +75,14 @@ void HwStroke::push_back(const cv::Point2f &_pt) {
 void HwStroke::keepIf(const std::function<bool(const cv::Point2f &)> &_cond) {
     decltype(mData) newData;
     for (auto &pt:mData) {
-        if(_cond(pt)){
+        if (_cond(pt)) {
             newData.push_back(pt);
         }
     }
     mData.swap(newData);
 }
 
-void HwStroke::setHwController(HwController& _hwController) {
+void HwStroke::setHwController(HwController &_hwController) {
     HwStroke::hwController = &_hwController;
 }
 

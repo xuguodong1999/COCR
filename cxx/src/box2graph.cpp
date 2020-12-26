@@ -118,7 +118,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
                 uDistances.push_back(ab_feature(i, j, isFrom, minDis));
         }
     }
-    std::sort(uDistances.begin(),uDistances.end(),sort_way);
+    std::sort(uDistances.begin(), uDistances.end(), sort_way);
     // show debug info here
 
 
@@ -181,7 +181,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
             auto&[i, j, isFrom, distance]=abDistances.back();
             abDistances.pop_back();
             if (distance > atomSideThresh * (std::get<2>(bondBoxes[j]) + (std::max)(
-                    std::get<2>(eAtomBoxes[i]),std::get<3>(eAtomBoxes[i]))) )
+                    std::get<2>(eAtomBoxes[i]), std::get<3>(eAtomBoxes[i]))))
                 continue;
             // whether need to add a new Atom
             std::shared_ptr<JAtom> atom = nullptr;

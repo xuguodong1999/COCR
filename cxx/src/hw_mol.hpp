@@ -11,7 +11,7 @@
 
 class HwMol : public HwBase {
     std::vector<std::shared_ptr<HwBase>> mData;
-    HwController* hwController;
+    HwController *hwController;
 
     const JMol &mol;
 
@@ -23,7 +23,8 @@ class HwMol : public HwBase {
 
 public:
 
-    void setHwController(HwController &_hwController)override;
+    void setHwController(HwController &_hwController) override;
+
     void showOnScreen(const size_t &_repeatTimes = 1);
 
     /**
@@ -47,11 +48,11 @@ public:
 
     void rotate(float _angle) override;
 
-    void rotateBy(float _angle, const cv::Point2f &_cent)override;
+    void rotateBy(float _angle, const cv::Point2f &_cent) override;
 
-    void moveBy(const cv::Point2f &_offset)override;
+    void moveBy(const cv::Point2f &_offset) override;
 
-    void mulK(float _kx, float _ky)override;
+    void mulK(float _kx, float _ky) override;
 
 };
 

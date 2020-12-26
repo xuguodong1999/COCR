@@ -169,7 +169,7 @@ float HwMol::reloadHWData(const float &_showCProb) {
     float avgSize = 0;
     for (auto &sym:mData) {
         auto bBox = sym->getBoundingBox();
-        if(!bBox)continue;
+        if (!bBox)continue;
         avgSize += (bBox->width + bBox->height);
     }
     avgSize /= (2 * mData.size());
@@ -312,7 +312,7 @@ void HwMol::moveBy(const cv::Point2f &_offset) {
 }
 
 void HwMol::rotate(float _angle) {
-    auto center=getCenter();
-    if(!center)return;
-    rotateBy(_angle,center.value());
+    auto center = getCenter();
+    if (!center)return;
+    rotateBy(_angle, center.value());
 }

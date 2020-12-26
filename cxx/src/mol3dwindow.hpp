@@ -13,6 +13,7 @@ Q_OBJECT
 
     Q_PROPERTY(float activatedRadius READ getActivatedRadius WRITE setActivatedRadius NOTIFY activatedRadiusChanged)
 Q_SIGNALS:
+
     void spaceOrEnterPressed(bool isSpace);
 
     void forwardOrBackwardPressed(bool isForward);

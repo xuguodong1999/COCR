@@ -3,6 +3,7 @@
 #include "opencv_util.hpp"
 #include "hw_data.hpp"
 #include <opencv2/imgproc.hpp>
+
 void HwScript::push_back(HwStroke &_stroke) {
     mData.push_back(std::move(_stroke));
 }
@@ -80,7 +81,7 @@ void HwScript::castToLine(const cv::Point2f &_p1, const cv::Point2f &_p2, const 
     p2.x += lenPP * minMaxProb(slideOffset);
     p1.y += lenPP * minMaxProb(slideOffset);
     p2.y += lenPP * minMaxProb(slideOffset);
-    std::vector<cv::Point2f> from(4), to,input;
+    std::vector<cv::Point2f> from(4), to, input;
     for (auto &stroke:mData) {
         std::copy(stroke.begin(), stroke.end(),
                   std::inserter(input, input.end()));
@@ -90,18 +91,18 @@ void HwScript::castToLine(const cv::Point2f &_p1, const cv::Point2f &_p2, const 
     auto s01 = getDistance2D(from[0], from[1]);
     while (s03 < std::numeric_limits<float>::epsilon()
            || s01 < std::numeric_limits<float>::epsilon()) {
-        auto&dataLoader=HwDataLoader::getInstance();
+        auto &dataLoader = HwDataLoader::getInstance();
         mData = std::move(dataLoader.GetShape(ShapeType::Line).mData);
         goto L;
     }
-    cv::Point2f vec = p1 - p2,vecT(0, 1);
+    cv::Point2f vec = p1 - p2, vecT(0, 1);
     if (fabs(vec.y) > std::numeric_limits<float>::epsilon()) {
-        vecT = cv::Point2f (-1, vec.x / vec.y);
+        vecT = cv::Point2f(-1, vec.x / vec.y);
         vecT /= cv::norm(vecT);
     }
     float kk = s03 / s01;
     while (_lThresh < kk && kk < 1 / _lThresh) {
-        auto&dataLoader=HwDataLoader::getInstance();
+        auto &dataLoader = HwDataLoader::getInstance();
         mData = std::move(dataLoader.GetShape(ShapeType::Line).mData);
         goto L;
     }

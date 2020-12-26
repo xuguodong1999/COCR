@@ -1,7 +1,7 @@
 #include "colors.hpp"
 
 static const std::vector<std::tuple<unsigned char, unsigned char, unsigned char>>
-predefinedColors{
+        predefinedColors{
         {255, 250, 250},
         {248, 248, 255},
         {245, 245, 245},
@@ -459,11 +459,14 @@ predefinedColors{
         {144, 238, 144}
 };
 #ifdef QT_GUI_LIB
+
 QColor getQColor(const ColorName &_colorName) {
     auto&[r, g, b]=predefinedColors[static_cast<int>(_colorName)];
     return QColor(r, g, b);
 }
+
 #endif
+
 //#include <iostream>
 cv::Scalar getScalar(const ColorName &_colorName) {
     // debug 遗址：注意静态变量初始化依赖问题 qwq
