@@ -81,6 +81,10 @@ void HwCircleBond::loadHwData() {
     push_back(circle);
 }
 
+DetectorClasses HwCircleBond::getItemType() const {
+    return DetectorClasses::ItemCircleBond;
+}
+
 void HwSingleBond::loadHwData() {
     auto &dataLoader = HwDataLoader::getInstance();
     auto line = dataLoader.GetShape(ShapeType::Line);
@@ -127,6 +131,10 @@ void HwSingleBond::mulK(float _kx, float _ky) {
     to.y *= _ky;
 }
 
+DetectorClasses HwSingleBond::getItemType() const {
+    return DetectorClasses::ItemSingleBond;
+}
+
 void HwDoubleBond::loadHwData() {
     //FIXME: 设置间隔，这里和 MolItem::reloadHWData 有冲突
     const float intervalK = 0.2;
@@ -145,6 +153,10 @@ void HwDoubleBond::loadHwData() {
     line2.castToLine(from - offset / 2, to - offset / 2);
     push_back(line1);
     push_back(line2);
+}
+
+DetectorClasses HwDoubleBond::getItemType() const {
+    return DetectorClasses::ItemDoubleBond;
 }
 
 void HwTripleBond::loadHwData() {
@@ -168,6 +180,10 @@ void HwTripleBond::loadHwData() {
     push_back(line1);
     push_back(line2);
     push_back(line3);
+}
+
+DetectorClasses HwTripleBond::getItemType() const {
+    return DetectorClasses::ItemTripleBond;
 }
 
 void HwSolidWedgeBond::loadHwData() {
@@ -195,6 +211,10 @@ void HwSolidWedgeBond::loadHwData() {
         x += dx;
         y += dy;
     }
+}
+
+DetectorClasses HwSolidWedgeBond::getItemType() const {
+    return DetectorClasses::ItemSolidWedgeBond;
 }
 
 void HwDashWedgeBond::loadHwData() {
@@ -236,6 +256,10 @@ void HwDashWedgeBond::loadHwData() {
     }
 }
 
+DetectorClasses HwDashWedgeBond::getItemType() const {
+    return DetectorClasses::ItemDashWedgeBond;
+}
+
 void HwWaveBond::loadHwData() {
     float cyclesOfSin = belowProb(5) + 4;
     float end = M_PI * 2 * cyclesOfSin;
@@ -248,4 +272,8 @@ void HwWaveBond::loadHwData() {
     script.push_back(stroke);
     script.castToLine(from, to, 1);
     push_back(script);
+}
+
+DetectorClasses HwWaveBond::getItemType() const {
+    return DetectorClasses::ItemWaveBond;
 }

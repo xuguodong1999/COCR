@@ -6,6 +6,7 @@ HwStr::HwStr(const std::string &_plainText) {
     for (auto &character:_plainText) {
         push_char(std::string(1, character));
     }
+
 }
 
 void HwStr::push_char(const std::string &_charStr, const HwCharType &_hwCharType) {
@@ -133,4 +134,17 @@ std::shared_ptr<HwItem> HwStr::GetSpecText(const HwSpecText &_specText) {
         }
     }
     return specText;
+}
+
+DetectorClasses HwStr::getItemType() const {
+    return label;
+}
+
+HwStr::HwStr() : label(DetectorClasses::ItemHorizontalStr) {
+
+}
+
+HwStr::HwStr(const ElementType &_elementType)
+        : HwStr(convertElementTypeToString(_elementType)) {
+    label = convertElementTypeToDetectorClasses(_elementType);
 }

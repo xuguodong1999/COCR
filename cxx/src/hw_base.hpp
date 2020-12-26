@@ -1,6 +1,8 @@
 #ifndef _HW_BASE_HPP_
 #define _HW_BASE_HPP_
 
+#include "cocr_types.hpp"
+
 #include <opencv2/core/mat.hpp>
 #include <optional>
 
@@ -29,12 +31,27 @@ class HwBase {
 public:
     HwBase();
 
-    virtual std::string getName() const;
+    /**
+     * 在子类重写这个函数，使得子类获得一个标签
+     * @return
+     */
+    virtual DetectorClasses getItemType() const;
 
+    /**
+     * 在关键点旋转的时候，是否要保持现有点的方向
+     * @return
+     */
     virtual bool isDirectionKept() const;
 
+    /**
+     * 设置方向保持属性
+     * @param _keepDirection
+     */
     void setKeepDirection(bool _keepDirection = true);
 
+    /**
+     * 全局绘图属性控制器
+     */
     inline static HwController baseController;
 
     /**

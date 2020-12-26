@@ -21,12 +21,17 @@ enum class HwSpecText {
 
 class HwStr : public HwItem {
     std::vector<std::pair<std::string, HwCharType>> richText;
+    DetectorClasses label;
 public:
+    DetectorClasses getItemType() const override;
+
     static std::shared_ptr<HwItem> GetSpecText(const HwSpecText &_specText);
 
-    HwStr() = default;
+    HwStr();
 
     HwStr(const std::string &_plainText);
+
+    HwStr(const ElementType &_elementType);
 
     /**
      * 向后添加一个带属性标注的字符

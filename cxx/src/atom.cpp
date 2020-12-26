@@ -35,7 +35,7 @@ std::unordered_map<ElementType, frac> ElementValenceData = {
 };
 
 const std::string &JAtom::getElementName() const {
-    return ElementsData[static_cast<size_t>(elementType)];
+   return convertElementTypeToString(elementType);
 }
 
 void JAtom::setElementType(const ElementType &_elementType) {

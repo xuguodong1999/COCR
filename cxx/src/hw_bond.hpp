@@ -22,6 +22,8 @@ class HwCircleBond : public HwBond {
     void loadHwData() override;
 
 public:
+    DetectorClasses getItemType() const override;
+
     HwCircleBond() = default;
 
     void setVertices(const std::vector<cv::Point2f> &_pts) override;
@@ -40,6 +42,8 @@ protected:
     void loadHwData() override;
 
 public:
+    DetectorClasses getItemType() const override;
+
     HwSingleBond() = default;
 
     void setVertices(const std::vector<cv::Point2f> &_pts) override;
@@ -52,9 +56,12 @@ public:
 };
 
 class HwDoubleBond : public HwSingleBond {
+
     void loadHwData() override;
 
 public:
+    DetectorClasses getItemType() const override;
+
     HwDoubleBond() = default;
 };
 
@@ -62,6 +69,8 @@ class HwTripleBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    DetectorClasses getItemType() const override;
+
     HwTripleBond() = default;
 };
 
@@ -69,6 +78,8 @@ class HwSolidWedgeBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    DetectorClasses getItemType() const override;
+
     HwSolidWedgeBond() = default;
 };
 
@@ -76,6 +87,8 @@ class HwDashWedgeBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    DetectorClasses getItemType() const override;
+
     HwDashWedgeBond() = default;
 };
 
@@ -83,6 +96,8 @@ class HwWaveBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    DetectorClasses getItemType() const override;
+
     HwWaveBond() = default;
 };
 

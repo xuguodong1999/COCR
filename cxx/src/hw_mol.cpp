@@ -228,24 +228,24 @@ float HwMol::reloadHWData(const float &_showCProb) {
     return avgSize;
 }
 
-static std::unordered_map<std::string, int> labels = {
-        {"O",      1},
-        {"I",      2},
-        {"C",      6},
-        {"F",      12},
-        {"N",      5},
-        {"H",      4},
-        {"Dash",   9},
-        {"Single", 8},
-        {"Double", 11},
-        {"Triple", 13},
-        {"Circle", 16},
-        {"S",      3},
-        {"P",      15},
-        {"Br",     0},
-        {"B",      7},
-        {"Solid",  10},
-        {"Cl",     14}};
+static std::unordered_map<DetectorClasses, int> labels = {
+        {DetectorClasses::ItemO,              1},
+        {DetectorClasses::ItemI,              2},
+        {DetectorClasses::ItemC,              6},
+        {DetectorClasses::ItemF,              12},
+        {DetectorClasses::ItemN,              5},
+        {DetectorClasses::ItemH,              4},
+        {DetectorClasses::ItemDashWedgeBond,  9},
+        {DetectorClasses::ItemSingleBond,     8},
+        {DetectorClasses::ItemDoubleBond,     11},
+        {DetectorClasses::ItemTripleBond,     13},
+        {DetectorClasses::ItemCircleBond,     16},
+        {DetectorClasses::ItemS,              3},
+        {DetectorClasses::ItemP,              15},
+        {DetectorClasses::ItemBr,             0},
+        {DetectorClasses::ItemB,              7},
+        {DetectorClasses::ItemSolidWedgeBond, 10},
+        {DetectorClasses::ItemCl,             14}};
 //static int beginLabel = 0;
 
 void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
@@ -274,7 +274,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
             exit(-1);
         }
         for (auto &sym:mData) {
-            auto name = sym->getName();
+            auto name = sym->getItemType();
             auto bBox = sym->getBoundingBox().value();
             float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
 //            if (notExist(labels, name)) {

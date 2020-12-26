@@ -82,6 +82,7 @@ void HwBase::setKeepDirection(bool _keepDirection) {
     keepDirection = _keepDirection;
 }
 
-std::string HwBase::getName() const {
-    return "empty";
+DetectorClasses HwBase::getItemType() const {
+    return DetectorClasses::ItemEmpty;
 }
+
