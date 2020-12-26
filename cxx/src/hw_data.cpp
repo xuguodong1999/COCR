@@ -6,13 +6,13 @@
 #include <random>
 #include <algorithm>
 
-std::vector<int> sLabelCharLikeLine = {
+static std::vector<int> sLabelCharLikeLine = {
         8, 24, 53,
         130, 134, 141, 146, 158,
         172
 };
-std::vector<int> sLabelCharLikeCircle = {9, 21, 47};
-std::map<std::string, int> sStr2IntMap = {
+static std::vector<int> sLabelCharLikeCircle = {9, 21, 47};
+static std::map<std::string, int> sStr2IntMap = {
         {"!",  183},
         {"Ⅴ",  182},
         {"\"", 181},
@@ -217,7 +217,7 @@ HwScript HwDataLoader::GetByStrLabel(const std::string &label) {
     auto resItr = sStr2IntMap.find(label);
     if (resItr == sStr2IntMap.end()) {
         std::cerr << "fail to find " << label
-                  << "in HWChar::sStr2IntMap" << std::endl;
+                  << " in HWChar::sStr2IntMap" << std::endl;
         exit(-1);
     }
     return std::move(GetByIntLabel(resItr->second));
@@ -308,6 +308,7 @@ HwDataLoader &HwDataLoader::getInstance() {
     static HwDataLoader e;
     if (!e.isDataLoaded) {
         e.LoadCouchDataSet();
+        e.isDataLoaded=true;
     }
     return e;
 }

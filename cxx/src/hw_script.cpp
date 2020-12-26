@@ -91,7 +91,7 @@ void HwScript::castToLine(const cv::Point2f &_p1, const cv::Point2f &_p2, const 
     while (s03 < std::numeric_limits<float>::epsilon()
            || s01 < std::numeric_limits<float>::epsilon()) {
         auto&dataLoader=HwDataLoader::getInstance();
-        mData = std::move(dataLoader.GetShape("line").mData);
+        mData = std::move(dataLoader.GetShape(ShapeType::Line).mData);
         goto L;
     }
     cv::Point2f vec = p1 - p2,vecT(0, 1);
@@ -102,7 +102,7 @@ void HwScript::castToLine(const cv::Point2f &_p1, const cv::Point2f &_p2, const 
     float kk = s03 / s01;
     while (_lThresh < kk && kk < 1 / _lThresh) {
         auto&dataLoader=HwDataLoader::getInstance();
-        mData = std::move(dataLoader.GetShape("line").mData);
+        mData = std::move(dataLoader.GetShape(ShapeType::Line).mData);
         goto L;
     }
     if (s03 > s01) {    // 长边是03、12，给【短长】

@@ -1,16 +1,17 @@
 #ifndef _MOL_HW_HPP_
 #define _MOL_HW_HPP_
 
-#include "hw.hpp"
+//#include "hw.hpp"
+#include "hw_bond.hpp"
+#include "hw_str.hpp"
 #include "mol.hpp"
 #include <string>
 #include <vector>
 #include <map>
 
-class MolHwItem : public ShapeInterface {
-    std::vector<std::shared_ptr<ShapeGroup>> symbols;
-
-    void mulK(float kx, float ky) override;
+class HwMol : public HwBase {
+    std::vector<std::shared_ptr<HwBase>> mData;
+    HwController* hwController;
 
     const JMol &mol;
 
@@ -22,6 +23,7 @@ class MolHwItem : public ShapeInterface {
 
 public:
 
+    void setHwController(HwController &_hwController)override;
     void showOnScreen(const size_t &_repeatTimes = 1);
 
     /**
@@ -37,49 +39,20 @@ public:
      * 用 JMol 构造一个几何分子类型
      * @param _jmol Construct a MolItem from JMol
      */
-    MolHwItem(const JMol &_jmol);
+    HwMol(const JMol &_jmol);
 
-    void paintTo(cv::Mat &canvas) override;
+    void paintTo(cv::Mat &_canvas) const override;
 
-    /**
-     * 获取平行于二维坐标轴的最小边框
-     * @return
-     */
-    const cv::Rect2f getBoundingBox() const override;
+    std::optional<cv::Rect2f> getBoundingBox() const override;
 
-    /**
-     * 顺时针旋转，绕骨架中心
-     * @param angle 角度制
-     */
-    void rotate(float angle) override;
+    void rotate(float _angle) override;
 
-    void rotateBy(float angle, const cv::Point2f &cent) override;
+    void rotateBy(float _angle, const cv::Point2f &_cent)override;
 
-    /**
-     * 将数据点整体移动 offset
-     * @param offset
-     */
-    void move(const cv::Point2f &offset) override;
+    void moveBy(const cv::Point2f &_offset)override;
 
-    /**
-     * 将数据点的中心移动到 newCenter
-     * @param newCenter
-     */
-    void moveCenterTo(const cv::Point2f &newCenter) override;
+    void mulK(float _kx, float _ky)override;
 
-    /**
-     * 将数据点的边框左上角移动到 leftTop
-     * @param leftTop
-     */
-    void moveLeftTopTo(const cv::Point2f &leftTop) override;
-
-    /**
-     * 将数据点整体缩放到 (w,h)
-     * @param w 目标宽度
-     * @param h 目标长度
-     * @param keepRatio 是否保持比例，为 true 时撑满长边
-     */
-    void resizeTo(float w, float h, bool keepRatio = true) override;
 };
 
 #endif //_MOL_HW_HPP_

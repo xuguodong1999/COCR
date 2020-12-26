@@ -76,14 +76,14 @@ void HwCircleBond::mulK(float _kx, float _ky) {
 
 void HwCircleBond::loadHwData() {
     auto &dataLoader = HwDataLoader::getInstance();
-    auto circle = dataLoader.GetShape("circle");
+    auto circle = dataLoader.GetShape(ShapeType::Circle);
     circle.castToCircle(center, rx, ry);
     push_back(circle);
 }
 
 void HwSingleBond::loadHwData() {
     auto &dataLoader = HwDataLoader::getInstance();
-    auto line = dataLoader.GetShape("line");
+    auto line = dataLoader.GetShape(ShapeType::Line);
     line.castToLine(from, to);
     push_back(line);
 }
@@ -139,9 +139,9 @@ void HwDoubleBond::loadHwData() {
     auto length = getDistance2D(from, to);
     auto offset = vecT * length * intervalK;
     auto &dataLoader = HwDataLoader::getInstance();
-    auto line1 = dataLoader.GetShape("line");
+    auto line1 = dataLoader.GetShape(ShapeType::Line);
     line1.castToLine(from + offset / 2, to + offset / 2);
-    auto line2 = dataLoader.GetShape("line");
+    auto line2 = dataLoader.GetShape(ShapeType::Line);
     line2.castToLine(from - offset / 2, to - offset / 2);
     push_back(line1);
     push_back(line2);
@@ -159,11 +159,11 @@ void HwTripleBond::loadHwData() {
     auto length = getDistance2D(from, to);
     auto offset = vecT * length * intervalK;
     auto &dataLoader = HwDataLoader::getInstance();
-    auto line1 = dataLoader.GetShape("line");
+    auto line1 = dataLoader.GetShape(ShapeType::Line);
     line1.castToLine(from + offset / 2, to + offset / 2);
-    auto line2 = dataLoader.GetShape("line");
+    auto line2 = dataLoader.GetShape(ShapeType::Line);
     line2.castToLine(from, to);
-    auto line3 = dataLoader.GetShape("line");
+    auto line3 = dataLoader.GetShape(ShapeType::Line);
     line3.castToLine(from - offset / 2, to - offset / 2);
     push_back(line1);
     push_back(line2);
@@ -189,7 +189,7 @@ void HwSolidWedgeBond::loadHwData() {
     float x = to1.x, y = to1.y;
     auto &dataLoader = HwDataLoader::getInstance();
     for (float i = 0; i <= 1.0; i += 1.0 / numOfSplit) {
-        auto line = dataLoader.GetShape("line");
+        auto line = dataLoader.GetShape(ShapeType::Line);
         line.castToLine(from, cv::Point2f(x, y));
         push_back(line);
         x += dx;
@@ -225,7 +225,7 @@ void HwDashWedgeBond::loadHwData() {
     float angle = minMaxProb(60);
     auto &dataLoader = HwDataLoader::getInstance();
     for (float i = 0; i <= 1.0; i += 1.0 / numOfSplit) {
-        auto line = dataLoader.GetShape("line");
+        auto line = dataLoader.GetShape(ShapeType::Line);
         line.castToLine(cv::Point2f(x1, y1), cv::Point2f(x2, y2));
         line.rotate(angle);
         push_back(line);

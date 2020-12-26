@@ -1,5 +1,5 @@
 #include "timer.hpp"
-#include "mol_hw.hpp"
+#include "hw_mol.hpp"
 #include "isomer.hpp"
 #include "couch_data.hpp"
 #include "darknet_data.hpp"
@@ -59,7 +59,7 @@ int testHWDraw() {
 //        for (auto&[id, pos]:posMap) {
 //            std::cout << id << ": " << pos << std::endl;
 //        }
-        MolHwItem molItem(mol);
+        HwMol molItem(mol);
         molItem.showOnScreen(1);
     }
     return 0;

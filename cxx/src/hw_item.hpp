@@ -17,15 +17,15 @@ public:
 
     HwItem(HwController *_hwController = nullptr);
 
-    void paintTo(cv::Mat &_canvas) const;
+    void paintTo(cv::Mat &_canvas) const override;
 
-    std::optional<cv::Rect2f> getBoundingBox() const;
+    std::optional<cv::Rect2f> getBoundingBox() const override;
 
-    void rotateBy(float _angle, const cv::Point2f &_cent);
+    void rotateBy(float _angle, const cv::Point2f &_cent)override;
 
-    void moveBy(const cv::Point2f &_offset);
+    void moveBy(const cv::Point2f &_offset)override;
 
-    void mulK(float _kx, float _ky);
+    void mulK(float _kx, float _ky)override;
 };
 
 #endif//_HW_ITEM_HPP_

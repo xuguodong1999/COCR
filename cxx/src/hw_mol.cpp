@@ -1,105 +1,80 @@
-#include "mol_hw.hpp"
+#include "hw_mol.hpp"
+#include "hw_data.hpp"
+
 #include "timer.hpp"
 #include "colors.hpp"
+
+#include "opencv_util.hpp"
+#include "std_util.hpp"
+
 #include <opencv2/opencv.hpp>
+
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
 
 using namespace std;
 
-MolHwItem::MolHwItem(const JMol &_jmol) : mol(_jmol) {
-
+HwMol::HwMol(const JMol &_jmol) : mol(_jmol) {
+    hwController = &(HwBase::baseController);
 }
 
-void MolHwItem::paintTo(cv::Mat &canvas) {
-    for (auto &sym:symbols) {
+void HwMol::paintTo(cv::Mat &canvas) const {
+    for (auto &sym:mData) {
         sym->paintTo(canvas);
     }
 }
 
-void MolHwItem::rotateBy(float angle, const cv::Point2f &cent) {
-    for (auto &s:symbols) {
-        s->rotateBy(angle, cent);
-        if (!s->IsRotateAllowed()) {
-            s->rotate(-angle);
-        }
-    }
-}
-
-const cv::Rect2f MolHwItem::getBoundingBox() const {
-    if (symbols.empty()) {
-        return cv::Rect2f(0, 0, 1, 1);
-    }
-    float minx, miny, maxx, maxy;
-    minx = miny = std::numeric_limits<float>::max();
-    maxx = maxy = std::numeric_limits<float>::min();
-    for (auto &sym :symbols) {
-        auto rect = sym->getBoundingBox();
-        minx = std::min(minx, rect.x);
-        miny = std::min(miny, rect.y);
-        maxx = std::max(maxx, rect.x + rect.width);
-        maxy = std::max(maxy, rect.y + rect.height);
-    }
-    return cv::Rect2f(minx, miny, maxx - minx, maxy - miny);
-}
-
-void MolHwItem::rotate(float angle) {
-    // 旋转的逻辑，骨架直接旋转，字符只做平移
-    auto cent = getCenter();
-    for (auto &sym:symbols) {
+void HwMol::rotateBy(float angle, const cv::Point2f &cent) {
+    // 骨架直接旋转，字符只做平移
+    for (auto &sym:mData) {
         sym->rotateBy(angle, cent);
-        if (!sym->IsRotateAllowed()) {
+        if (sym->isDirectionKept()) {
             sym->rotate(-angle);
         }
     }
 }
 
-void MolHwItem::move(const cv::Point2f &offset) {
-    for (auto &sym:symbols) {
-        sym->move(offset);
-    }
-}
 
-void MolHwItem::moveCenterTo(const cv::Point2f &newCenter) {
-    auto oldCenter = getCenter();
-    cv::Point2f offset = newCenter - oldCenter;
-    move(offset);
-}
-
-void MolHwItem::moveLeftTopTo(const cv::Point2f &leftTop) {
-    cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f offset = bBox.tl() - leftTop;
-    move(offset);
-}
-
-void MolHwItem::resizeTo(float w, float h, bool keepRatio) {
-    cv::Rect2f bBox = getBoundingBox();
-    cv::Point2f oldCenter(bBox.x + bBox.width / 2, bBox.y + bBox.height / 2);
-    float oldW = bBox.width, oldH = bBox.height;
-    float kx = w / oldW;
-    float ky = h / oldH;
-    moveLeftTopTo(cv::Point2f(0, 0));
-    if (keepRatio) {
-        kx = ky = std::min(kx, ky);
-    }
-    mulK(kx, ky);
-    moveCenterTo(oldCenter);
-}
-
-void MolHwItem::mulK(float kx, float ky) {
-    for (auto &s:symbols) {
+void HwMol::mulK(float kx, float ky) {
+    for (auto &s:mData) {
         s->mulK(kx, ky);
     }
 }
 
-float MolHwItem::reloadHWData(const float &_showCProb) {
-    symbols.clear();
+void HwMol::setHwController(HwController &_hwController) {
+    hwController = &_hwController;
+    for (auto &sym:mData) {
+        sym->setHwController(_hwController);
+    }
+}
+
+std::optional<cv::Rect2f> HwMol::getBoundingBox() const {
+    if (mData.empty())return std::nullopt;
+    float minx, miny, maxx, maxy;
+    minx = miny = std::numeric_limits<float>::max();
+    maxx = maxy = std::numeric_limits<float>::lowest();
+    for (auto &stroke:mData) {
+        auto bbox = stroke->getBoundingBox();
+        if (!bbox)continue;
+        minx = std::min(minx, bbox->x);
+        miny = std::min(miny, bbox->y);
+        maxx = std::max(maxx, bbox->x + bbox->width);
+        maxy = std::max(maxy, bbox->y + bbox->height);
+    }
+    if (minx > maxx)return std::nullopt;
+    return cv::Rect2f(minx, miny, maxx - minx, maxy - miny);
+}
+
+float HwMol::reloadHWData(const float &_showCProb) {
+    mData.clear();
     // 记录显式写出的原子 id
     std::unordered_map<size_t, bool> explicitAtomMap;
     auto atomPosMap = mol.get2DCoordinates();
+    auto &dataLoader = HwDataLoader::getInstance();
     for (auto&[id, atom]:mol.getAtomsMap()) {
-        auto sym = ShapeGroup::GetShapeGroup(atom->getElementName());
+        auto sym = std::make_shared<HwStr>(atom->getElementName());
+        sym->setKeepDirection(true);
         float fontSize = mol.getFontSize() * betweenProb(0.3, 0.7);
         sym->resizeTo(fontSize, fontSize);
         sym->moveCenterTo(atomPosMap[id]);
@@ -109,7 +84,7 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
             explicitAtomMap[id] = true;
         }
         if (explicitAtomMap[id]) {
-            symbols.push_back(std::move(sym));
+            mData.push_back(std::move(sym));
         }
     }
     auto &bondInRing = mol.getAromaticRings(false);
@@ -156,8 +131,9 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
         if (bondInKekuleRings.end() != bondInKekuleRings.find(bid)) {
             bondType = JBondType::DelocalizedBond;  // 不能影响 JMol 里的数据
         }
-        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
-        sym->setUseHandWrittenWChar(true);
+        auto sym = HwBond::GetHwBond(bondType);
+//        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
+//        sym->setUseHandWrittenWChar(true);
         auto from_ = atomPosMap[bond->getAtomFrom()];
         auto to_ = atomPosMap[bond->getAtomTo()];
         cv::Point2f from = from_, to = to_;
@@ -170,13 +146,14 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
         }
         sym->setVertices({from, to});
         if (bondType == JBondType::SingleBond) {
-            itemBondMap[bid] = symbols.size();
+            itemBondMap[bid] = mData.size();
         }
-        symbols.push_back(std::move(sym));
+        mData.push_back(std::move(sym));
     }
     // 加环
     for (auto &ring:kekuleRings) {
-        auto sym = BondItem::GetBond(JBondType::CircleBond);
+        auto sym = HwBond::GetHwBond(JBondType::CircleBond);
+//        auto sym = BondItem::GetBond(JBondType::CircleBond);
         std::vector<cv::Point2f> pts;
         std::unordered_set<size_t> aids;
         for (auto &bid:ring) {
@@ -187,24 +164,21 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
             pts.push_back(atomPosMap[aid]);
         }
         sym->setVertices(pts);
-        symbols.push_back(std::move(sym));
+        mData.push_back(std::move(sym));
     }
     float avgSize = 0;
-    for (auto &sym:symbols) {
+    for (auto &sym:mData) {
         auto bBox = sym->getBoundingBox();
-        avgSize += (bBox.width + bBox.height);
+        if(!bBox)continue;
+        avgSize += (bBox->width + bBox->height);
     }
-    avgSize /= (2 * symbols.size());
+    avgSize /= (2 * mData.size());
     // 添加弧线转折
     std::cout << "lineBondMap.size()=" << lineBondMap.size() << std::endl;
     std::cout << "avgSize=" << avgSize << std::endl;
     for (auto&[bid1, bid2]:lineBondMap) {
-        auto item1 = std::static_pointer_cast<SingleBond>(symbols[itemBondMap[bid1]]);
-        item1->setUseHandWrittenWChar(true);
-        item1->updateShapes();
-        auto item2 = std::static_pointer_cast<SingleBond>(symbols[itemBondMap[bid2]]);
-        item2->setUseHandWrittenWChar(true);
-        item2->updateShapes();
+        auto item1 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid1]]);
+        auto item2 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid2]]);
         size_t aid;
         std::unordered_set<size_t> tmp;
         std::vector<size_t> aids = {mol.getBondsMap().find(bid1)->second->getAtomFrom(),
@@ -222,8 +196,8 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
         // aid is angle atom
         cv::Point2f anglePos = atomPosMap[aid];
         std::cout << "anglePos=" << anglePos << std::endl;
-        std::cout << "bbox1=" << item1->getBoundingBox() << std::endl;
-        std::cout << "bbox2=" << item2->getBoundingBox() << std::endl;
+//        std::cout << "bbox1=" << item1->getBoundingBox().value() << std::endl;
+//        std::cout << "bbox2=" << item2->getBoundingBox().value() << std::endl;
         const float threshDis = avgSize / 3.0;
         // 1、排除影响范围里的所有点
         cv::Point2f nearestPt, npt1, npt2;
@@ -238,14 +212,14 @@ float MolHwItem::reloadHWData(const float &_showCProb) {
             return res;
         };
         minDis = std::numeric_limits<float>::max();
-        item1->keepPtsIf(cond);
+        item1->keepIf(cond);
         npt1 = nearestPt;
 
         minDis = std::numeric_limits<float>::max();
-        item2->keepPtsIf(cond);
+        item2->keepIf(cond);
         npt2 = nearestPt;
 
-        ShapeItem newItem1, newItem2;
+//        ShapeItem newItem1, newItem2;
         // 2、添加圆弧: npt1-anglePos-npt2
 
 //        item1->addShapeItem(newItem1);
@@ -274,21 +248,21 @@ static std::unordered_map<std::string, int> labels = {
         {"Cl",     14}};
 //static int beginLabel = 0;
 
-void MolHwItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
-                              const size_t &_repeatTimes) {
+void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
+                          const size_t &_repeatTimes) {
     float avgSize = reloadHWData(0.1);
     float k = 50.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
     for (size_t i = 0; i < _repeatTimes; i++) {
         this->rotate(rand() % 360);
-        auto bBox = this->getBoundingBox();
+        auto bBox = this->getBoundingBox().value();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
         this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         this->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
-        if (byProb(RC::revertColorProb)) {// 反转颜色
+        if (byProb(hwController->getRevertColorProb())) {// 反转颜色
             cv::bitwise_not(img, img);
         }
         cv::imwrite(_imgPath + suffix + ".jpg", img,
@@ -299,9 +273,9 @@ void MolHwItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_l
             std::cerr << "fail to open " << _labelPath + suffix + ".txt" << std::endl;
             exit(-1);
         }
-        for (auto &sym:symbols) {
-            auto &name = sym->getName();
-            auto bBox = sym->getBoundingBox();
+        for (auto &sym:mData) {
+            auto name = sym->getName();
+            auto bBox = sym->getBoundingBox().value();
             float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
 //            if (notExist(labels, name)) {
 //                labels.insert({name, beginLabel++});
@@ -314,13 +288,13 @@ void MolHwItem::dumpAsDarknet(const std::string &_imgPath, const std::string &_l
     }
 }
 
-void MolHwItem::showOnScreen(const size_t &_repeatTimes) {
+void HwMol::showOnScreen(const size_t &_repeatTimes) {
     float avgSize = reloadHWData(0.1);
     float k = 50.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
     for (size_t i = 0; i < _repeatTimes; i++) {
         this->rotate(rand() % 360);
-        auto bBox = this->getBoundingBox();
+        auto bBox = this->getBoundingBox().value();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
@@ -329,4 +303,16 @@ void MolHwItem::showOnScreen(const size_t &_repeatTimes) {
         cv::imshow("MolHwItem::showOnScreen", img);
         cv::waitKey(0);
     }
+}
+
+void HwMol::moveBy(const cv::Point2f &_offset) {
+    for (auto &sym:mData) {
+        sym->moveBy(_offset);
+    }
+}
+
+void HwMol::rotate(float _angle) {
+    auto center=getCenter();
+    if(!center)return;
+    rotateBy(_angle,center.value());
 }
