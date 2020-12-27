@@ -7,7 +7,7 @@
  * 1、2D坐标标准化
  * 2、力场 or 3D坐标标准化
  * 3、SMILES IO（用于debug）
- * 4、LSSR 和 SSSR 算法
+ * 4、LSSR 和 SSSR 算法找环
  */
 /**
  * 改造策略：
@@ -29,8 +29,11 @@
  * 2、Mol3D里面附着空间坐标系和基本图元的法向量，标准法向量需要有计算（没有开源实现）
  */
 
-class Mol2D : public JMol {
-
+class Mol2D  {
+    std::shared_ptr<JMol> mol;
+public:
+    Mol2D(std::shared_ptr<JMol> _mol);
+    std::unordered_map<size_t, cv::Point2f> get2DCoordinates() const;
 };
 
 #endif//_MOL2D_HPP_

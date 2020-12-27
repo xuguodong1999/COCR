@@ -25,28 +25,30 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/hw_stroke.cpp
         ${SRC_DIR}/hw_mol.cpp
 
-        ${SRC_DIR}/box2graph.cpp
-        ${SRC_DIR}/colors.cpp
-        ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/bond.cpp
+        ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/mol2d.cpp
         ${SRC_DIR}/mol_rand.cpp
         ${SRC_DIR}/mol_base.cpp
         ${SRC_DIR}/mol_graph.cpp
 
+        ${SRC_DIR}/box2graph.cpp
+
         ${SRC_DIR}/config.cpp
+        ${SRC_DIR}/cocr_types.cpp
+
+        ${SRC_DIR}/colors.cpp
+        ${SRC_DIR}/timer.cpp
+        ${SRC_DIR}/bignumber.cpp
+        ${SRC_DIR}/polya.cpp
+        ${SRC_DIR}/isomer.cpp
+
         ${SRC_DIR}/rdkit_util.cpp
         ${SRC_DIR}/std_util.cpp
         ${SRC_DIR}/opencv_util.cpp
         ${SRC_DIR}/torch_util.cpp
         ${SRC_DIR}/qt_util.cpp
-
-        ${SRC_DIR}/polya.cpp
-        ${SRC_DIR}/bignumber.cpp
-        ${SRC_DIR}/isomer.cpp
-        ${SRC_DIR}/cocr_types.cpp
-        ${SRC_DIR}/timer.cpp
 
         ${SRC_DIR}/torch_activation.cpp
         ${SRC_DIR}/torch_module.cpp

@@ -42,4 +42,6 @@ public:
 
 };
 
+// 返回建议比例，以碳为基准
+float atomRadius(const ElementType &_element);
 #endif//_ATOM_HPP_

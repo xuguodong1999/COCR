@@ -1143,15 +1143,7 @@ std::unordered_map<size_t, cv::Point3f> JMol::get3DCoordinates(bool _addHs) {
     return std::move(depAtomPosMap);
 }
 
-void JMol::safeTraverseAtoms(const function<void(const size_t &)> &func) {
-    std::vector<size_t> aids;
-    for (auto&[id, _]:atomsMap) {
-        aids.push_back(id);
-    }
-    for (auto &aid:aids) {
-        func(aid);
-    }
-}
+
 
 const unordered_map<size_t, std::pair<bool, cv::Point2f>> &JMol::getAtomPosMap2D() const {
     return atomPosMap2D;

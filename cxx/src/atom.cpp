@@ -86,3 +86,32 @@ const AtomStereo &JAtom::getAtomStereo() const {
 void JAtom::setAtomStereo(const AtomStereo &_atomStereo) {
     atomStereo = _atomStereo;
 }
+
+float atomRadius(const ElementType &_element) {
+    switch (_element) {
+        case ElementType::B:
+            return 82. / 77.;
+        case ElementType::C:
+            return 77. / 77.;
+        case ElementType::H:
+            return 32. / 77.;
+        case ElementType::O:
+            return 73. / 77.;
+        case ElementType::N:
+            return 75. / 77.;
+        case ElementType::P:
+            return 106. / 77.;
+        case ElementType::S:
+            return 102. / 77.;
+        case ElementType::F:
+            return 72. / 77.;
+        case ElementType::Cl:
+            return 99. / 77.;
+        case ElementType::Br:
+            return 114. / 77.;
+        case ElementType::I:
+            return 133. / 77.;
+        default:
+            return 1.;
+    }
+}

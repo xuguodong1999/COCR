@@ -12,6 +12,7 @@
 
 /**
  * JMol 维护自己管理的原子和键的 id
+ * 辅助类一律采用持有 JMol 的智能指针的方式进行开发
  */
 class JMol {
     // 维护原子和键的自增 id
@@ -131,20 +132,8 @@ public:
     std::shared_ptr<JBond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
                                    const JBondType &_bondType = JBondType::SingleBond);
 
-    /**
-     * "安全地"遍历当前所有化学键
-     * 允许处理当前化学键时将其删除
-     * 允许添加新的化学键，但是不会遍历到新的化学键
-     * @param func 传入 bid，表示原子 id
-     */
-    void safeTraverseBonds(const std::function<void(const size_t &)> &func);
 
-    /**
-     * "安全地"遍历当前所有原子
-     * 允许对原子进行增删
-     * @param func 传入 aid，表示原子 id
-     */
-    void safeTraverseAtoms(const std::function<void(const size_t &)> &func);
+
 
     /**
      * 获取手动添加的芳环
@@ -155,9 +144,6 @@ public:
     const std::vector<std::vector<std::unordered_set<size_t>>> &
     getAromaticRings(bool _retAid) const;
 
-    const std::unordered_map<size_t, std::shared_ptr<JBond>> &getBondsMap() const;
-
-    const std::unordered_map<size_t, std::shared_ptr<JAtom>> &getAtomsMap() const;
 
     JMol();
 
@@ -171,7 +157,7 @@ public:
                    bool _replaceAtom = true, bool _addAromaticRing = true,
                    bool _addCommonRing = true);
 
-    std::unordered_map<size_t, cv::Point2f> get2DCoordinates() const;
+    
 
     /**
      * 获取立体坐标，建议加氢，以后会改为强制加氢以兼容力场
