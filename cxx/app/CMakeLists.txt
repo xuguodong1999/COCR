@@ -58,7 +58,7 @@ add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
         ${SRC_DIR}/demowidget_2020_1213.cpp
 
         ${SRC_DIR}/config.cpp
-        ${SRC_DIR}/rdkit_util.cpp
+        ${SRC_DIR}/openbabel_util.cpp
         ${SRC_DIR}/std_util.cpp
         ${SRC_DIR}/opencv_util.cpp
         ${SRC_DIR}/opencv_yolo.cpp

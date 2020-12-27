@@ -48,8 +48,8 @@ float Mol2D::calcAvgBondLength() const {
     mol->safeTraverseBonds([&](const size_t &bid) {
         auto bond = mol->getBondById(bid);
         avgBondLength += getDistance2D(
-                atomPosMap2D.find(bond->getAtomFrom())->second,
-                atomPosMap2D.find(bond->getAtomTo())->second]);
+                atomPosMap2D.find(bond->getAtomFrom())->second.second,
+                atomPosMap2D.find(bond->getAtomTo())->second.second);
     });
     return avgBondLength / mol->bondsNum();
 }

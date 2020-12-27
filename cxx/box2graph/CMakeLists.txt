@@ -22,7 +22,7 @@ add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
         ${SRC_DIR}/bond.cpp
         ${SRC_DIR}/mol3d.cpp
         ${SRC_DIR}/mol2d.cpp
-        ${SRC_DIR}/mol_rand.cpp
+        ${SRC_DIR}/mol_op.cpp
         ${SRC_DIR}/mol_base.cpp
         ${SRC_DIR}/mol_graph.cpp
 

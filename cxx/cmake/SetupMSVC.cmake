@@ -3,6 +3,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
 
 set(HEADERS_DIR C:/include)
 set(SHARED_LIBS_DIR C:/shared)
+set(OpenBabel_DIR ${SHARED_LIBS_DIR}/openbabel3.1.1/bin/cmake/openbabel3)
 
 # set(doctest_DIR ${HEADERS_DIR}/doctest/lib/cmake/doctest)
 set(Eigen3_DIR ${HEADERS_DIR}/eigen3/cmake)
