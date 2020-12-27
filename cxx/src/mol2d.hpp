@@ -2,6 +2,10 @@
 #define _MOL2D_HPP_
 
 #include "mol.hpp"
+
+#include <opencv2/core/types.hpp>
+
+#include <optional>
 /**
  * 使用开源库实现的需求
  * 1、2D坐标标准化
@@ -29,11 +33,18 @@
  * 2、Mol3D里面附着空间坐标系和基本图元的法向量，标准法向量需要有计算（没有开源实现）
  */
 
-class Mol2D  {
+class Mol2D {
     std::shared_ptr<JMol> mol;
+    //2D 原子坐标 <id,<isExplicit, position>>
+    std::unordered_map<size_t, std::pair<bool, cv::Point2f>> atomPosMap2D;
 public:
     Mol2D(std::shared_ptr<JMol> _mol);
-    std::unordered_map<size_t, cv::Point2f> get2DCoordinates() const;
+
+    std::unordered_map<size_t, cv::Point2f> calcCoord2D(bool _updateAtomPosMap2D = false);
+
+    float calcAvgBondLength() const;
+
+    void insertAtomPos2D(const size_t &_aid, bool _isExplicit, const cv::Point2f &_pos);
 };
 
 #endif//_MOL2D_HPP_

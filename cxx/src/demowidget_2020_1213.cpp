@@ -144,7 +144,7 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
         for (auto &mol:mols) {
 //            std::cout << mol->toSMILES(false) << std::endl;
             auto rootEntity = new Qt3DCore::QEntity();
-            auto sceneBuilder = new Mol3D(rootEntity);
+            auto sceneBuilder = new Mol3DBuilder(rootEntity);
             auto view = new Mol3DWindow(rootEntity);
             try {
                 sceneBuilder->resetMol(mol);

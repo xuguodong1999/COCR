@@ -29,9 +29,12 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/bond.cpp
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/mol2d.cpp
-        ${SRC_DIR}/mol_rand.cpp
+        ${SRC_DIR}/mol3d.cpp
+        ${SRC_DIR}/mol3d_builder.cpp
+        ${SRC_DIR}/mol_op.cpp
         ${SRC_DIR}/mol_base.cpp
         ${SRC_DIR}/mol_graph.cpp
+        ${SRC_DIR}/mol_util.cpp
 
         ${SRC_DIR}/box2graph.cpp
 
@@ -44,7 +47,7 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/polya.cpp
         ${SRC_DIR}/isomer.cpp
 
-        ${SRC_DIR}/rdkit_util.cpp
+        ${SRC_DIR}/openbabel_util.cpp
         ${SRC_DIR}/std_util.cpp
         ${SRC_DIR}/opencv_util.cpp
         ${SRC_DIR}/torch_util.cpp
@@ -78,5 +81,7 @@ if (MSVC)
 elseif (UNIX)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             Qt5::Widgets Qt5::Quick
+            Qt5::3DAnimation Qt5::3DCore Qt5::3DExtras
+            Qt5::3DInput Qt5::3DLogic Qt5::3DRender
             ${COCR_UNIX_LIB} ${OpenCV_LIBS} ${TORCH_LIBRARIES})
 endif (MSVC)
