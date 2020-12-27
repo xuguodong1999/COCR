@@ -7,13 +7,14 @@ extern std::shared_ptr<MolUtil> molUtil;
 int _main() {
     molUtil = std::make_shared<MolUtilOpenBabelImpl>();
     for (auto &choice:molUtil->getFormatChoices()) {
-        std::cout << choice << std::endl;
+        std::cout << choice << "\n";
     }
-    std::cout << "******" << std::endl;
+    std::cout << std::endl << "******" << std::endl;
     for (auto &choice:molUtil->getForcefieldChoices()) {
-        std::cout << choice << std::endl;
+        std::cout << choice << "\n";
     }
-    std::cout << "******" << std::endl;
+    std::cout << std::endl << "******" << std::endl;
+    molUtil->fromFormat("",molUtil->getFormatChoices()[0]);
     return 0;
 }
 
