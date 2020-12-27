@@ -19,7 +19,7 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/bond.cpp
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/mol2d.cpp
-#        ${SRC_DIR}/mol3d.cpp
+        ${SRC_DIR}/mol3d.cpp
 #        ${SRC_DIR}/mol3d_builder.cpp
 #        ${SRC_DIR}/mol_op.cpp
 #        ${SRC_DIR}/mol_base.cpp

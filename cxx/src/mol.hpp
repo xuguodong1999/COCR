@@ -28,7 +28,6 @@ public:
 
     void setAlkane(const std::string &_alkaneSMILES);
 
-    std::string toSMILES(bool _addRandomStereo = true) const;
 
     std::shared_ptr<JAtom> getAtomById(const size_t &_aid) const;
 

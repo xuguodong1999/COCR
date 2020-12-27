@@ -5,6 +5,8 @@
 
 #include <random>
 
+extern std::shared_ptr<MolUtil> molUtil;
+
 std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber) {
     auto aid = mAids++;
     auto atom = std::make_shared<JAtom>(aid, _atomicNumber);
@@ -30,9 +32,6 @@ void JMol::clear() {
     mAids = mBids = std::numeric_limits<size_t>::lowest();
 }
 
-std::string JMol::toSMILES(bool _addRandomStereo) const {
-    return getSMILES(*this);
-}
 
 void JMol::safeTraverseBonds(const std::function<void(const size_t &)> &func) const {
     std::vector<size_t> bids;
