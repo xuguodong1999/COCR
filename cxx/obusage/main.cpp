@@ -14,7 +14,7 @@ int _main() {
         std::cout << choice << "\n";
     }
     std::cout << std::endl << "******" << std::endl;
-    molUtil->fromFormat("",molUtil->getFormatChoices()[0]);
+//    molUtil->fromFormat("",molUtil->getFormatChoices()[0]);
     return 0;
 }
 
