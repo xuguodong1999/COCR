@@ -24,7 +24,7 @@ public:
 
     virtual std::string getFormat(const std::shared_ptr<JMol> &_mol, const std::string &_format) = 0;
 
-    virtual std::shared_ptr<Mol3D> fromFormat(
+    virtual std::shared_ptr<JMol> fromFormat(
             const std::string &_content, const std::string &_format) = 0;
 
     virtual std::vector<std::vector<size_t>> getLSSR(const std::shared_ptr<JMol> &_mol) = 0;

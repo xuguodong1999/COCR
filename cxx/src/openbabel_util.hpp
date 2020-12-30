@@ -22,7 +22,7 @@ public:
 
     std::string getFormat(const std::shared_ptr<JMol> &_mol, const std::string &_format);
 
-    std::shared_ptr<Mol3D> fromFormat(
+    std::shared_ptr<JMol> fromFormat(
             const std::string &_content, const std::string &_format);
 
     std::vector<std::vector<size_t>> getLSSR(const std::shared_ptr<JMol> &_mol);

@@ -122,6 +122,12 @@ inline T &randSelect(std::vector<T> &_container, const std::vector<float> &_prob
     return _container[std::min(i, _container.size() - 1)];
 }
 
+inline std::string chopByFirstSpace(const std::string &_str) {
+    auto pos = _str.find(" ");
+    if (std::string::npos == pos) { return _str; }
+    return _str.substr(0, pos);
+}
+
 struct pair_hash {
     template<class T1, class T2>
     std::size_t operator()(const std::pair<T1, T2> &pair) const {
