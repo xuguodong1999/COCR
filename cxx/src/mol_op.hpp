@@ -1,10 +1,9 @@
 #ifndef _MOL_OP_HPP_
 #define _MOL_OP_HPP_
 
-#include "mol.hpp"
+#include "mol_base.hpp"
 
-class MolOp  {
-    std::shared_ptr<JMol> mol;
+class MolOp :virtual public MolBase{
     //<原子id，化合价or当前键级>
     std::unordered_map<size_t, frac> atomValenceMap;
     //<原子id，邻居原子们的id>

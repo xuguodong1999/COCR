@@ -16,8 +16,7 @@ int _main() {
         std::cout << chopByFirstSpace(choice)<< "\n";
     }
     std::cout << std::endl << "******" << std::endl;
-    //[H]OC1=CC=CC([C@](C2=CC([H])=CC([H])=C2)(C2=CC(C)=C([H])N=C2)[C@@](Cl)(C2=CC([H])=C[P@@H]2)C([H])([H])O[H])=N1
-    auto jmol = molUtil->fromFormat("CCCCCCO","smi");
+    auto jmol = molUtil->fromFormat("[H]OC1=CC=CC([C@](C2=CC([H])=CC([H])=C2)(C2=CC(C)=C([H])N=C2)[C@@](Cl)(C2=CC([H])=C[P@@H]2)C([H])([H])O[H])=N1","smi");
     std::cout<<molUtil->getFormat(jmol,"pdb")<<std::endl;
     return 0;
 }

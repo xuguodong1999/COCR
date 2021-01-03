@@ -39,7 +39,7 @@ inline QColor atomColor(const ElementType &_element) {
 }
 
 Mol3DBuilder::Mol3DBuilder(Qt3DCore::QEntity *_rootEntity, std::shared_ptr<JMol> _mol)
-        : mRootEntity(_rootEntity), mol(_mol),
+        : mRootEntity(_rootEntity), MolBase(std::move(_mol)),
           sphereSlices(20), sphereRings(40),
           cylinderSlices(20), cylinderRings(20),
           doubleBondSpaceScale(3), tripleBondSpaceScale(4) {
@@ -97,12 +97,13 @@ Qt3DCore::QEntity *Mol3DBuilder::getSingleCylinderEntity(
 }
 
 
-void Mol3DBuilder::resetMol(std::shared_ptr<JMol> _mol) {
+std::shared_ptr<Mol3D> Mol3DBuilder::resetMol(std::shared_ptr<JMol> _mol) {
     clear();
-    mol = _mol;
-    if (mol->getAtomsMap().empty()) {
+    oldMol=_mol;
+    newMol=oldMol->addHydrogens();
+    if (oldMol->atomsNum()==0) {
         std::cerr << "get empty molecule in Mol3D::resetMol" << std::endl;
-        return;
+        return nullptr;
     }
     const float baseSize = 200;
     // 坐标系
@@ -110,7 +111,7 @@ void Mol3DBuilder::resetMol(std::shared_ptr<JMol> _mol) {
 //    getCylinderEntity(offset + zeroP, offset + axisX * 10, 0.2, Qt::blue);
 //    getCylinderEntity(offset + zeroP, offset + axisY * 10, 0.2, Qt::red);
 //    getCylinderEntity(offset + zeroP, offset + axisZ * 10, 0.2, Qt::green);
-    auto pos3DMap = mol->get3DCoordinates(true);
+    auto pos3DMap = oldMol->get3DCoordinates(true);
     float minx, miny, minz, maxx, maxy, maxz;
     minx = miny = minz = std::numeric_limits<float>::max();
     maxx = maxy = maxz = std::numeric_limits<float>::lowest();
@@ -130,33 +131,33 @@ void Mol3DBuilder::resetMol(std::shared_ptr<JMol> _mol) {
         p *= k;
     }
     float avgBondLength = 0;
-    if (mol->getBondsMap().size() == 0) {
+    if (oldMol->getBondsMap().size() == 0) {
         avgBondLength = baseSize;
     } else {
         auto getAvgBondLength = [&](const size_t &_bid) -> void {
-            auto &bond = mol->getBondsMap().at(_bid);
+            auto &bond = oldMol->getBondsMap().at(_bid);
             cv::Point3f from = pos3DMap[bond->getAtomFrom()];
             cv::Point3f to = pos3DMap[bond->getAtomTo()];
             avgBondLength += getDistance3D(from, to);
         };
-        mol->safeTraverseBonds(getAvgBondLength);
-        avgBondLength /= (std::max)((decltype(mol->getBondsMap().size())) (1),
-                                    mol->getBondsMap().size());
+        oldMol->safeTraverseBonds(getAvgBondLength);
+        avgBondLength /= (std::max)((decltype(oldMol->getBondsMap().size())) (1),
+                                    oldMol->getBondsMap().size());
         avgBondLength = (std::min)(avgBondLength, baseSize);
     }
     auto convert = [](const cv::Point3f &cvPts) -> QVector3D {
         return QVector3D(cvPts.x, cvPts.y, cvPts.z);
     };
     auto addAtomEntity = [&](const size_t &_aid) -> void {
-        auto &ele = mol->getAtomsMap().at(_aid)->getElementType();
+        auto &ele = oldMol->getAtomsMap().at(_aid)->getElementType();
         cv::Point3f pos = pos3DMap[_aid];
 //        qDebug() << convert(pos);
         mAtomEntities.insert({_aid, getSphereEntity(
                 convert(pos), avgBondLength / 3.5 * atomRadius(ele), atomColor(ele))});
     };
-    mol->safeTraverseAtoms(addAtomEntity);
+    oldMol->safeTraverseAtoms(addAtomEntity);
     auto addBondEntity = [&](const size_t &_bid) -> void {
-        auto &bond = mol->getBondsMap().at(_bid);
+        auto &bond = oldMol->getBondsMap().at(_bid);
         cv::Point3f from = pos3DMap[bond->getAtomFrom()];
         cv::Point3f to = pos3DMap[bond->getAtomTo()];
         switch (bond->getBondType()) {
@@ -189,7 +190,7 @@ void Mol3DBuilder::resetMol(std::shared_ptr<JMol> _mol) {
             }
         }
     };
-    mol->safeTraverseBonds(addBondEntity);
+    oldMol->safeTraverseBonds(addBondEntity);
 }
 
 void Mol3DBuilder::clear() {

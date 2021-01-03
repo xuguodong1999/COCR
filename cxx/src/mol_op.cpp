@@ -36,7 +36,7 @@ void MolOp::clear() {
     aromaticRingBids.clear();
 }
 
-void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _replaceAtom,
+void MolOp::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _replaceAtom,
                      bool _addAromaticRing, bool _addCommonRing) {
     updateAtomValenceMap();
     // 换化学键类型
@@ -215,7 +215,7 @@ void JMol::randomize(const float &_addHydrogenProb, bool _replaceBond, bool _rep
     // TODO: 波浪线
     // TODO: 添加不展开的字符串
 }
-void JMol::addHs(const size_t &_aid) {
+void MolOp::addHs(const size_t &_aid) {
     auto &valence = atomValenceMap.at(_aid);
     const auto &atom = atomsMap[_aid];
     frac numOfH = ElementValenceData[atom->getElementType()] - valence;
@@ -230,7 +230,7 @@ void JMol::addHs(const size_t &_aid) {
         valence += numOfH;
     }
 }
-void JMol::addGroup(const size_t &_aid) {
+void MolOp::addGroup(const size_t &_aid) {
     std::vector<std::shared_ptr<JAtom>> newAtoms;
     std::vector<std::shared_ptr<JBond>> newBonds;
     int index = rand() % 1;
@@ -266,7 +266,7 @@ void JMol::addGroup(const size_t &_aid) {
     updateAtomValenceMap(newBonds);
 }
 
-void JMol::addAromaticRing(const size_t &_bid) {
+void MolOp::addAromaticRing(const size_t &_bid) {
     std::vector<std::shared_ptr<JAtom>> newAtoms;
     std::vector<std::shared_ptr<JBond>> newBonds;
     auto from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
@@ -535,7 +535,7 @@ void JMol::addAromaticRing(const size_t &_bid) {
     updateAtomValenceMap(newBonds);
 }
 
-void JMol::addCommonRing(const size_t &_bid) {
+void MolOp::addCommonRing(const size_t &_bid) {
     std::vector<std::shared_ptr<JAtom>> newAtoms;
     std::vector<std::shared_ptr<JBond>> newBonds;
     auto from = bondsMap[_bid]->getAtomFrom(), to = bondsMap[_bid]->getAtomTo();
@@ -658,7 +658,7 @@ void JMol::addCommonRing(const size_t &_bid) {
     updateAtomValenceMap(newBonds);
 }
 
-void JMol::updateNeighborInfoMap() {
+void MolOp::updateNeighborInfoMap() {
     neighborAtomsMap.clear();
     neighborBondsMap.clear();
     for (auto&[bid, bond]:bondsMap) {
@@ -672,11 +672,11 @@ void JMol::updateNeighborInfoMap() {
 
 
 const std::vector<std::vector<std::unordered_set<size_t>>> &
-JMol::getAromaticRings(bool _retAid) const {
+MolOp::getAromaticRings(bool _retAid) const {
     return _retAid ? aromaticRingAids : aromaticRingBids;
 }
 
-void JMol::updateAtomValenceMap() {
+void MolOp::updateAtomValenceMap() {
     atomValenceMap.clear();
     auto addValence4Atom = [&](const size_t &_aid, const frac &_valence) {
         if (notExist(atomValenceMap, _aid)) {
@@ -697,7 +697,7 @@ void JMol::updateAtomValenceMap() {
     }
 }
 
-void JMol::updateAtomValenceMap(const std::vector<size_t> &_bids) {
+void MolOp::updateAtomValenceMap(const std::vector<size_t> &_bids) {
     for (auto &bid:_bids) {
         const auto &bond = bondsMap[bid];
         addValence4Atom(bond->getAtomFrom(), bond->asValence());
@@ -705,7 +705,7 @@ void JMol::updateAtomValenceMap(const std::vector<size_t> &_bids) {
     }
 }
 
-void JMol::addValence4Atom(const size_t &_aid, const frac &_valence) {
+void MolOp::addValence4Atom(const size_t &_aid, const frac &_valence) {
     if (notExist(atomValenceMap, _aid)) {
         atomValenceMap[_aid] = _valence;
     } else {
@@ -714,7 +714,7 @@ void JMol::addValence4Atom(const size_t &_aid, const frac &_valence) {
 }
 
 
-void JMol::removeBond(const size_t &_bid) {
+void MolOp::removeBond(const size_t &_bid) {
     auto it = bondsMap.find(_bid);
     if (bondsMap.end() != it) {
         auto oldVal = it->second->asValence();
@@ -724,7 +724,7 @@ void JMol::removeBond(const size_t &_bid) {
     }
 }
 
-void JMol::updateAtomValenceMap(const std::vector<std::shared_ptr<JBond>> &_bonds) {
+void MolOp::updateAtomValenceMap(const std::vector<std::shared_ptr<JBond>> &_bonds) {
     for (auto &bond:_bonds) {
         addValence4Atom(bond->getAtomFrom(), bond->asValence());
         addValence4Atom(bond->getAtomTo(), bond->asValence());

@@ -1,17 +1,17 @@
 #ifndef _MOL3D_BUILDER_HPP_
 #define _MOL3D_BUILDER_HPP_
 
-#include "mol.hpp"
+#include "mol_base.hpp"
+#include "mol3d.hpp"
 
 #include <Qt3DCore/QEntity>
 #include <Qt3DExtras/QTorusMesh>
 
 #include <unordered_map>
 
-class Mol3DBuilder : public QObject {
+class Mol3DBuilder : public QObject, public MolBase {
 Q_OBJECT
     Qt3DCore::QEntity *mRootEntity;
-    std::shared_ptr<JMol> mol;
     int sphereRings, sphereSlices, cylinderRings, cylinderSlices;
     float doubleBondSpaceScale, tripleBondSpaceScale;
 
@@ -20,11 +20,11 @@ private:
     std::unordered_map<size_t, Qt3DCore::QEntity *> mAtomEntities;
     std::unordered_multimap<size_t, Qt3DCore::QEntity *> mBondEntities;
 public:
-    explicit Mol3DBuilder(Qt3DCore::QEntity *_rootEntity, std::shared_ptr<JMol> _mol = nullptr);
+    explicit Mol3DBuilder(Qt3DCore::QEntity *_rootEntity, std::shared_ptr<JMol> _mol);
 
     ~Mol3DBuilder();
 
-    void resetMol(std::shared_ptr<JMol> _mol);
+    std::shared_ptr<Mol3D> resetMol(std::shared_ptr<JMol> _mol);
 
     float getDoubleBondSpaceScale() const;
 

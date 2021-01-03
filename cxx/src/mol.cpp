@@ -108,3 +108,11 @@ JMol::JMol(JMol &&_mol)
         : mAids(_mol.mAids), mBids(_mol.mBids),
           atomsMap(std::move(_mol.atomsMap)), bondsMap(std::move(_mol.bondsMap)) {
 }
+
+void JMol::addHydrogensInside(bool _withCarbon) {
+
+}
+
+std::shared_ptr<JMol> JMol::addHydrogens(bool _withCarbon) {
+    return std::shared_ptr<JMol>();
+}

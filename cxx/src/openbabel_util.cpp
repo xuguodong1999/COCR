@@ -57,7 +57,7 @@ bool runOBForceField(OpenBabel::OBMol &_obMol, const std::string &_forcefield = 
     try {
         OBBuilder builder;
         builder.Build(_obMol);
-        // FIXME: failed for C1CCCCC1
+        // FIXME: add or delete hydrogens dont wrok
         _obMol.AddHydrogens(false, true);
     } catch (std::exception &e) {
         std::cerr << "runOBForceField build & add H step:" << e.what() << std::endl;
@@ -129,7 +129,6 @@ std::string MolUtilOpenBabelImpl::getFormat(
     if ("pdb" == _format) {
         std::cout<<"runOBForceField(obMol)="<<runOBForceField(obMol)<<std::endl;
     }
-    std::cout<<"obMol.NumAtoms()"<<obMol.NumAtoms()<<std::endl;
     return conv.WriteString(&obMol);
 }
 

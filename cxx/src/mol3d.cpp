@@ -62,5 +62,10 @@ std::unordered_map<size_t, cv::Point3f> Mol3D::calcCoord3D(bool _updateAtomPosMa
     return std::move(depAtomPosMap);
 }
 
-Mol3D::Mol3D(const std::shared_ptr<JMol> &_mol) : mol(_mol) {
+Mol3D::Mol3D(std::shared_ptr<JMol> _originMol, std::shared_ptr<JMol> _molWithHydrogens)
+:MolBase(_originMol,_molWithHydrogens){
+
+}
+
+Mol3D::Mol3D(std::shared_ptr<JMol> _mol) : MolBase(std::move(_mol)) {
 }

@@ -26,8 +26,11 @@ public:
 
     JMol();
 
-    void setAlkane(const std::string &_alkaneSMILES);
+    void addHydrogensInside(bool _withCarbon=true);
 
+    std::shared_ptr<JMol> addHydrogens(bool _withCarbon=true);
+
+    void setAlkane(const std::string &_alkaneSMILES);
 
     std::shared_ptr<JAtom> getAtomById(const size_t &_aid) const;
 

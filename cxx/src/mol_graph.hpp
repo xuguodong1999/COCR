@@ -13,13 +13,23 @@
  * 2、LSSR、SSSR
  * 3、平面环的法向量（实现为Mol2D和MolGraph的双重继承）
  */
-class MolGraph : virtual public MolBase {
+class MolGraph :virtual public MolBase{
+    std::vector<std::shared_ptr<JRing>> rings;
 public:
+    const std::shared_ptr<JMol> &getOldMol() const;
+
+    const std::shared_ptr<JMol> &getNewMol() const;
+
+    MolGraph(std::shared_ptr<JMol> _mol);
+
     /**
      * 根据图的连通性分解当前分子图
      * @return 连通的若干碎片
      */
-    std::vector<std::shared_ptr<MolBase>> split() const;
+    std::vector<std::shared_ptr<JMol>> iSplit() const;
+
+    const std::vector<std::shared_ptr<JRing>> &calcLSSR(
+            const std::shared_ptr<JMol>&_mol,bool _isDirNeeded=true);
 
 };
 
