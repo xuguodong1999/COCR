@@ -1,7 +1,8 @@
 include_directories(/usr/include)
 include_directories(/usr/include/openbabel3)
 include_directories(/usr/include/rdkit)
-include_directories(/usr/include/opencv4)
+# wsl
+# include_directories(/usr/include/opencv4)
 
 set(QT_INCLUDE_DIR ${Qt5_DIR}/../../../include)
 include_directories(${QT_INCLUDE_DIR})
@@ -11,6 +12,9 @@ include_directories(${QT_INCLUDE_DIR}/QtQuick)
 include_directories(${QT_INCLUDE_DIR}/QtWidgets)
 
 set(COCR_UNIX_3RDPARTY_LIB
+        Qt5::Widgets Qt5::Quick Qt5::3DAnimation Qt5::3DCore
+        Qt5::3DExtras Qt5::3DInput Qt5::3DLogic Qt5::3DRender
+        ${OpenCV_LIBS} ${TORCH_LIBRARIES}
         -lRDKitDistGeomHelpers -lRDKitForceField -lRDKitForceFieldHelpers
         -lRDKitDepictor -lRDKitGraphMol -lRDKitRDGeneral -lRDKitSmilesParse
         # -lRDKitAlignment -lRDKitCatalogs -lRDKitChemReactions -lRDKitChemTransforms

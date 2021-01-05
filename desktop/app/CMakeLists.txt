@@ -90,11 +90,14 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if (MSVC)
     set(LINKED_LIBS Qt5::Widgets Qt5::Quick Qt5::3DAnimation Qt5::3DCore
             Qt5::3DExtras Qt5::3DInput Qt5::3DLogic Qt5::3DRender
-            opencv_core opencv_highgui opencv_imgproc opencv_imgcodecs opencv_dnn
             openbabel coordgen)
 
     if (ALLOW_USER_TRAIN)
         list(APPEND LINKED_LIBS ${TORCH_LIBRARIES})
+        list(APPEND LINKED_LIBS ${OpenCV_LIBS})
+    else(ALLOW_USER_TRAIN)
+        list(APPEND LINKED_LIBS opencv_core opencv_highgui 
+            opencv_imgproc opencv_imgcodecs opencv_dnn)
     endif (ALLOW_USER_TRAIN)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${LINKED_LIBS})
 elseif (APPLE)
