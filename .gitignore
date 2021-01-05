@@ -12,6 +12,5 @@ weights/
 win/
 linux/
 mac/
-android/
 ios/
 *build*/

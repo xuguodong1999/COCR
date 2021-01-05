@@ -1,0 +1,36 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/'
+        }
+        maven {
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/google/'
+        }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.0.0"
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/'
+        }
+        maven {
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/google/'
+        }
+    }
+    // 如果接了一个卷标为T且根目录有build文件夹的硬盘，那么更改构建目录
+    if (Os.isFamily(Os.FAMILY_WINDOWS) && (new File("T:/build")).exists()) {
+        buildDir = "T:/build/${rootProject.name}/${project.name}"
+    } else if (Os.isFamily(Os.FAMILY_UNIX) && !Os.isFamily(Os.FAMILY_MAC) && new File("/tmp").exists()) {
+        buildDir = "/tmp/build-${rootProject.name}/${project.name}"
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
