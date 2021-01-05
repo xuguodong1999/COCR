@@ -1,0 +1,17 @@
+cache/
+*.pth
+csharp/
+_csharp/
+weights/
+.idea/
+
+*.user.pro
+.idea/
+.vs/
+.vscode/ 
+win/
+linux/
+mac/
+android/
+ios/
+*build*/

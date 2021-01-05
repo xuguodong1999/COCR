@@ -1,0 +1,542 @@
+run on device:cuda
+10000
+20000
+30000
+40000
+50000
+60000
+70000
+80000
+90000
+100000
+110000
+120000
+130000
+140000
+150000
+160000
+170000
+180000
+190000
+200000
+210000
+220000
+230000
+240000
+250000
+260000
+270000
+280000
+290000
+300000
+310000
+320000
+330000
+340000
+350000
+360000
+370000
+380000
+390000
+400000
+410000
+420000
+430000
+440000
+450000
+460000
+470000
+480000
+490000
+500000
+510000
+520000
+530000
+540000
+550000
+560000
+570000
+580000
+590000
+600000
+610000
+620000
+630000
+640000
+650000
+660000
+670000
+680000
+690000
+700000
+710000
+720000
+730000
+740000
+750000
+760000
+770000
+780000
+790000
+800000
+810000
+820000
+830000
+840000
+850000
+860000
+870000
+880000
+890000
+900000
+910000
+920000
+930000
+940000
+950000
+960000
+970000
+980000
+990000
+1000000
+1010000
+1020000
+1030000
+1040000
+1050000
+1060000
+1070000
+1080000
+1090000
+1100000
+1110000
+1120000
+1130000
+1140000
+1150000
+1160000
+1170000
+1180000
+1190000
+1200000
+1210000
+1220000
+1230000
+1240000
+1250000
+1260000
+1270000
+1280000
+1290000
+1300000
+1310000
+1320000
+CouchDataSet::CouchDataSet,size=1200408
+CouchDataSet::CouchDataSet,size=120041
+Training...
+Epoch [1/20], Batch [100], Acc: 0.9499
+Epoch [1/20], Batch [200], Acc: 0.9497
+Epoch [1/20], Batch [300], Acc: 0.9490
+Epoch [1/20], Batch [400], Acc: 0.9488
+Epoch [1/20], Batch [500], Acc: 0.9482
+Epoch [1/20], Batch [600], Acc: 0.9480
+Epoch [1/20], Batch [700], Acc: 0.9479
+Epoch [1/20], Batch [800], Acc: 0.9481
+Epoch [1/20], Batch [900], Acc: 0.9480
+Epoch [1/20], Batch [1000], Acc: 0.9479
+Epoch [1/20], Batch [1100], Acc: 0.9477
+Epoch [1/20], Batch [1200], Acc: 0.9476
+Epoch [1/20], Batch [1300], Acc: 0.9475
+Epoch [1/20], Batch [1400], Acc: 0.9476
+Epoch [1/20], Batch [1500], Acc: 0.9475
+Epoch [1/20], Batch [1600], Acc: 0.9473
+Epoch [1/20], Batch [1700], Acc: 0.9473
+Epoch [1/20], Batch [1800], Acc: 0.9470
+Epoch [1/20], Batch [1900], Acc: 0.9468
+Epoch [1/20], Batch [2000], Acc: 0.9465
+Epoch [1/20], Batch [2100], Acc: 0.9464
+Epoch [1/20], Batch [2200], Acc: 0.9462
+Epoch [1/20], Batch [2300], Acc: 0.9462
+Epoch [1/20], Batch [2400], Acc: 0.9461
+Epoch [1/20], Batch [2500], Acc: 0.9460
+Epoch [1/20], Batch [2600], Acc: 0.9459
+Epoch [1/20], Batch [2700], Acc: 0.9458
+Epoch [1/20], Batch [2800], Acc: 0.9458
+Epoch [1/20], Batch [2900], Acc: 0.9458
+Epoch [1/20], Batch [3000], Acc: 0.9457
+Epoch [1/20], Batch [3100], Acc: 0.9457
+Epoch [1/20], Batch [3200], Acc: 0.9458
+Epoch [1/20], Batch [3300], Acc: 0.9457
+Epoch [1/20], Batch [3400], Acc: 0.9456
+Epoch [1/20], Batch [3500], Acc: 0.9457
+Epoch [1/20], Batch [3600], Acc: 0.9456
+Epoch [1/20], Batch [3700], Acc: 0.9456
+Epoch [1/20], Batch [3800], Acc: 0.9457
+Epoch [1/20], Batch [3900], Acc: 0.9457
+Epoch [1/20], Batch [4000], Acc: 0.9457
+Epoch [1/20], Batch [4100], Acc: 0.9457
+Epoch [1/20], Batch [4200], Acc: 0.9457
+Epoch [1/20], Batch [4300], Acc: 0.9457
+Epoch [1/20], Batch [4400], Acc: 0.9457
+Epoch [1/20], Batch [4500], Acc: 0.9457
+Epoch [1/20], Batch [4600], Acc: 0.9458
+Epoch [1/20], Batch [4700], Acc: 0.9458
+Epoch [1/20], Batch [4800], Acc: 0.9458
+Epoch [1/20], Batch [4900], Acc: 0.9458
+Epoch [1/20], Batch [5000], Acc: 0.9458
+Epoch [1/20], Batch [5100], Acc: 0.9458
+Epoch [1/20], Batch [5200], Acc: 0.9458
+Epoch [1/20], Batch [5300], Acc: 0.9459
+Epoch [1/20], Batch [5400], Acc: 0.9459
+Epoch [1/20], Batch [5500], Acc: 0.9459
+Testing...
+Testing finished!
+Testset - Loss: 0.3399, Accuracy: 0.9113
+Epoch [2/20], Batch [100], Acc: 0.9496
+Epoch [2/20], Batch [200], Acc: 0.9493
+Epoch [2/20], Batch [300], Acc: 0.9495
+Epoch [2/20], Batch [400], Acc: 0.9494
+Epoch [2/20], Batch [500], Acc: 0.9487
+Epoch [2/20], Batch [600], Acc: 0.9491
+Epoch [2/20], Batch [700], Acc: 0.9490
+Epoch [2/20], Batch [800], Acc: 0.9493
+Epoch [2/20], Batch [900], Acc: 0.9494
+Epoch [2/20], Batch [1000], Acc: 0.9495
+Epoch [2/20], Batch [1100], Acc: 0.9494
+Epoch [2/20], Batch [1200], Acc: 0.9494
+Epoch [2/20], Batch [1300], Acc: 0.9494
+Epoch [2/20], Batch [1400], Acc: 0.9494
+Epoch [2/20], Batch [1500], Acc: 0.9495
+Epoch [2/20], Batch [1600], Acc: 0.9495
+Epoch [2/20], Batch [1700], Acc: 0.9494
+Epoch [2/20], Batch [1800], Acc: 0.9493
+Epoch [2/20], Batch [1900], Acc: 0.9493
+Epoch [2/20], Batch [2000], Acc: 0.9493
+Epoch [2/20], Batch [2100], Acc: 0.9493
+Epoch [2/20], Batch [2200], Acc: 0.9492
+Epoch [2/20], Batch [2300], Acc: 0.9492
+Epoch [2/20], Batch [2400], Acc: 0.9491
+Epoch [2/20], Batch [2500], Acc: 0.9492
+Epoch [2/20], Batch [2600], Acc: 0.9493
+Epoch [2/20], Batch [2700], Acc: 0.9493
+Epoch [2/20], Batch [2800], Acc: 0.9493
+Epoch [2/20], Batch [2900], Acc: 0.9492
+Epoch [2/20], Batch [3000], Acc: 0.9492
+Epoch [2/20], Batch [3100], Acc: 0.9492
+Epoch [2/20], Batch [3200], Acc: 0.9492
+Epoch [2/20], Batch [3300], Acc: 0.9491
+Epoch [2/20], Batch [3400], Acc: 0.9491
+Epoch [2/20], Batch [3500], Acc: 0.9490
+Epoch [2/20], Batch [3600], Acc: 0.9490
+Epoch [2/20], Batch [3700], Acc: 0.9491
+Epoch [2/20], Batch [3800], Acc: 0.9490
+Epoch [2/20], Batch [3900], Acc: 0.9490
+Epoch [2/20], Batch [4000], Acc: 0.9489
+Epoch [2/20], Batch [4100], Acc: 0.9489
+Epoch [2/20], Batch [4200], Acc: 0.9489
+Epoch [2/20], Batch [4300], Acc: 0.9489
+Epoch [2/20], Batch [4400], Acc: 0.9489
+Epoch [2/20], Batch [4500], Acc: 0.9489
+Epoch [2/20], Batch [4600], Acc: 0.9489
+Epoch [2/20], Batch [4700], Acc: 0.9489
+Epoch [2/20], Batch [4800], Acc: 0.9488
+Epoch [2/20], Batch [4900], Acc: 0.9488
+Epoch [2/20], Batch [5000], Acc: 0.9488
+Epoch [2/20], Batch [5100], Acc: 0.9488
+Epoch [2/20], Batch [5200], Acc: 0.9488
+Epoch [2/20], Batch [5300], Acc: 0.9488
+Epoch [2/20], Batch [5400], Acc: 0.9488
+Epoch [2/20], Batch [5500], Acc: 0.9488
+Testing...
+Testing finished!
+Testset - Loss: 0.3024, Accuracy: 0.9188
+Epoch [3/20], Batch [100], Acc: 0.9505
+Epoch [3/20], Batch [200], Acc: 0.9515
+Epoch [3/20], Batch [300], Acc: 0.9520
+Epoch [3/20], Batch [400], Acc: 0.9518
+Epoch [3/20], Batch [500], Acc: 0.9518
+Epoch [3/20], Batch [600], Acc: 0.9522
+Epoch [3/20], Batch [700], Acc: 0.9521
+Epoch [3/20], Batch [800], Acc: 0.9522
+Epoch [3/20], Batch [900], Acc: 0.9522
+Epoch [3/20], Batch [1000], Acc: 0.9520
+Epoch [3/20], Batch [1100], Acc: 0.9519
+Epoch [3/20], Batch [1200], Acc: 0.9519
+Epoch [3/20], Batch [1300], Acc: 0.9520
+Epoch [3/20], Batch [1400], Acc: 0.9521
+Epoch [3/20], Batch [1500], Acc: 0.9522
+Epoch [3/20], Batch [1600], Acc: 0.9522
+Epoch [3/20], Batch [1700], Acc: 0.9519
+Epoch [3/20], Batch [1800], Acc: 0.9518
+Epoch [3/20], Batch [1900], Acc: 0.9518
+Epoch [3/20], Batch [2000], Acc: 0.9518
+Epoch [3/20], Batch [2100], Acc: 0.9518
+Epoch [3/20], Batch [2200], Acc: 0.9517
+Epoch [3/20], Batch [2300], Acc: 0.9518
+Epoch [3/20], Batch [2400], Acc: 0.9517
+Epoch [3/20], Batch [2500], Acc: 0.9516
+Epoch [3/20], Batch [2600], Acc: 0.9516
+Epoch [3/20], Batch [2700], Acc: 0.9516
+Epoch [3/20], Batch [2800], Acc: 0.9515
+Epoch [3/20], Batch [2900], Acc: 0.9514
+Epoch [3/20], Batch [3000], Acc: 0.9514
+Epoch [3/20], Batch [3100], Acc: 0.9514
+Epoch [3/20], Batch [3200], Acc: 0.9514
+Epoch [3/20], Batch [3300], Acc: 0.9513
+Epoch [3/20], Batch [3400], Acc: 0.9514
+Epoch [3/20], Batch [3500], Acc: 0.9513
+Epoch [3/20], Batch [3600], Acc: 0.9513
+Epoch [3/20], Batch [3700], Acc: 0.9513
+Epoch [3/20], Batch [3800], Acc: 0.9512
+Epoch [3/20], Batch [3900], Acc: 0.9512
+Epoch [3/20], Batch [4000], Acc: 0.9512
+Epoch [3/20], Batch [4100], Acc: 0.9511
+Epoch [3/20], Batch [4200], Acc: 0.9512
+Epoch [3/20], Batch [4300], Acc: 0.9512
+Epoch [3/20], Batch [4400], Acc: 0.9512
+Epoch [3/20], Batch [4500], Acc: 0.9512
+Epoch [3/20], Batch [4600], Acc: 0.9512
+Epoch [3/20], Batch [4700], Acc: 0.9512
+Epoch [3/20], Batch [4800], Acc: 0.9512
+Epoch [3/20], Batch [4900], Acc: 0.9512
+Epoch [3/20], Batch [5000], Acc: 0.9512
+Epoch [3/20], Batch [5100], Acc: 0.9512
+Epoch [3/20], Batch [5200], Acc: 0.9512
+Epoch [3/20], Batch [5300], Acc: 0.9512
+Epoch [3/20], Batch [5400], Acc: 0.9512
+Epoch [3/20], Batch [5500], Acc: 0.9512
+Testing...
+Testing finished!
+Testset - Loss: 0.2949, Accuracy: 0.9216
+Epoch [4/20], Batch [100], Acc: 0.9550
+Epoch [4/20], Batch [200], Acc: 0.9556
+Epoch [4/20], Batch [300], Acc: 0.9556
+Epoch [4/20], Batch [400], Acc: 0.9551
+Epoch [4/20], Batch [500], Acc: 0.9548
+Epoch [4/20], Batch [600], Acc: 0.9551
+Epoch [4/20], Batch [700], Acc: 0.9551
+Epoch [4/20], Batch [800], Acc: 0.9547
+Epoch [4/20], Batch [900], Acc: 0.9544
+Epoch [4/20], Batch [1000], Acc: 0.9545
+Epoch [4/20], Batch [1100], Acc: 0.9544
+Epoch [4/20], Batch [1200], Acc: 0.9544
+Epoch [4/20], Batch [1300], Acc: 0.9542
+Epoch [4/20], Batch [1400], Acc: 0.9543
+Epoch [4/20], Batch [1500], Acc: 0.9542
+Epoch [4/20], Batch [1600], Acc: 0.9543
+Epoch [4/20], Batch [1700], Acc: 0.9544
+Epoch [4/20], Batch [1800], Acc: 0.9543
+Epoch [4/20], Batch [1900], Acc: 0.9543
+Epoch [4/20], Batch [2000], Acc: 0.9542
+Epoch [4/20], Batch [2100], Acc: 0.9542
+Epoch [4/20], Batch [2200], Acc: 0.9543
+Epoch [4/20], Batch [2300], Acc: 0.9542
+Epoch [4/20], Batch [2400], Acc: 0.9542
+Epoch [4/20], Batch [2500], Acc: 0.9542
+Epoch [4/20], Batch [2600], Acc: 0.9541
+Epoch [4/20], Batch [2700], Acc: 0.9541
+Epoch [4/20], Batch [2800], Acc: 0.9541
+Epoch [4/20], Batch [2900], Acc: 0.9542
+Epoch [4/20], Batch [3000], Acc: 0.9542
+Epoch [4/20], Batch [3100], Acc: 0.9541
+Epoch [4/20], Batch [3200], Acc: 0.9541
+Epoch [4/20], Batch [3300], Acc: 0.9541
+Epoch [4/20], Batch [3400], Acc: 0.9541
+Epoch [4/20], Batch [3500], Acc: 0.9541
+Epoch [4/20], Batch [3600], Acc: 0.9541
+Epoch [4/20], Batch [3700], Acc: 0.9540
+Epoch [4/20], Batch [3800], Acc: 0.9540
+Epoch [4/20], Batch [3900], Acc: 0.9539
+Epoch [4/20], Batch [4000], Acc: 0.9539
+Epoch [4/20], Batch [4100], Acc: 0.9539
+Epoch [4/20], Batch [4200], Acc: 0.9539
+Epoch [4/20], Batch [4300], Acc: 0.9539
+Epoch [4/20], Batch [4400], Acc: 0.9537
+Epoch [4/20], Batch [4500], Acc: 0.9538
+Epoch [4/20], Batch [4600], Acc: 0.9537
+Epoch [4/20], Batch [4700], Acc: 0.9537
+Epoch [4/20], Batch [4800], Acc: 0.9538
+Epoch [4/20], Batch [4900], Acc: 0.9537
+Epoch [4/20], Batch [5000], Acc: 0.9537
+Epoch [4/20], Batch [5100], Acc: 0.9537
+Epoch [4/20], Batch [5200], Acc: 0.9537
+Epoch [4/20], Batch [5300], Acc: 0.9537
+Epoch [4/20], Batch [5400], Acc: 0.9537
+Epoch [4/20], Batch [5500], Acc: 0.9536
+Testing...
+Testing finished!
+Testset - Loss: 0.2978, Accuracy: 0.9204
+Epoch [5/20], Batch [100], Acc: 0.9573
+Epoch [5/20], Batch [200], Acc: 0.9575
+Epoch [5/20], Batch [300], Acc: 0.9567
+Epoch [5/20], Batch [400], Acc: 0.9559
+Epoch [5/20], Batch [500], Acc: 0.9561
+Epoch [5/20], Batch [600], Acc: 0.9557
+Epoch [5/20], Batch [700], Acc: 0.9558
+Epoch [5/20], Batch [800], Acc: 0.9557
+Epoch [5/20], Batch [900], Acc: 0.9556
+Epoch [5/20], Batch [1000], Acc: 0.9560
+Epoch [5/20], Batch [1100], Acc: 0.9560
+Epoch [5/20], Batch [1200], Acc: 0.9561
+Epoch [5/20], Batch [1300], Acc: 0.9560
+Epoch [5/20], Batch [1400], Acc: 0.9560
+Epoch [5/20], Batch [1500], Acc: 0.9560
+Epoch [5/20], Batch [1600], Acc: 0.9560
+Epoch [5/20], Batch [1700], Acc: 0.9559
+Epoch [5/20], Batch [1800], Acc: 0.9560
+Epoch [5/20], Batch [1900], Acc: 0.9559
+Epoch [5/20], Batch [2000], Acc: 0.9559
+Epoch [5/20], Batch [2100], Acc: 0.9559
+Epoch [5/20], Batch [2200], Acc: 0.9559
+Epoch [5/20], Batch [2300], Acc: 0.9559
+Epoch [5/20], Batch [2400], Acc: 0.9558
+Epoch [5/20], Batch [2500], Acc: 0.9558
+Epoch [5/20], Batch [2600], Acc: 0.9558
+Epoch [5/20], Batch [2700], Acc: 0.9558
+Epoch [5/20], Batch [2800], Acc: 0.9558
+Epoch [5/20], Batch [2900], Acc: 0.9558
+Epoch [5/20], Batch [3000], Acc: 0.9558
+Epoch [5/20], Batch [3100], Acc: 0.9558
+Epoch [5/20], Batch [3200], Acc: 0.9558
+Epoch [5/20], Batch [3300], Acc: 0.9558
+Epoch [5/20], Batch [3400], Acc: 0.9557
+Epoch [5/20], Batch [3500], Acc: 0.9557
+Epoch [5/20], Batch [3600], Acc: 0.9557
+Epoch [5/20], Batch [3700], Acc: 0.9557
+Epoch [5/20], Batch [3800], Acc: 0.9557
+Epoch [5/20], Batch [3900], Acc: 0.9556
+Epoch [5/20], Batch [4000], Acc: 0.9556
+Epoch [5/20], Batch [4100], Acc: 0.9556
+Epoch [5/20], Batch [4200], Acc: 0.9556
+Epoch [5/20], Batch [4300], Acc: 0.9555
+Epoch [5/20], Batch [4400], Acc: 0.9555
+Epoch [5/20], Batch [4500], Acc: 0.9555
+Epoch [5/20], Batch [4600], Acc: 0.9555
+Epoch [5/20], Batch [4700], Acc: 0.9555
+Epoch [5/20], Batch [4800], Acc: 0.9555
+Epoch [5/20], Batch [4900], Acc: 0.9554
+Epoch [5/20], Batch [5000], Acc: 0.9554
+Epoch [5/20], Batch [5100], Acc: 0.9554
+Epoch [5/20], Batch [5200], Acc: 0.9554
+Epoch [5/20], Batch [5300], Acc: 0.9554
+Epoch [5/20], Batch [5400], Acc: 0.9554
+Epoch [5/20], Batch [5500], Acc: 0.9553
+Testing...
+Testing finished!
+Testset - Loss: 0.2938, Accuracy: 0.9220
+Epoch [6/20], Batch [100], Acc: 0.9604
+Epoch [6/20], Batch [200], Acc: 0.9597
+Epoch [6/20], Batch [300], Acc: 0.9592
+Epoch [6/20], Batch [400], Acc: 0.9590
+Epoch [6/20], Batch [500], Acc: 0.9590
+Epoch [6/20], Batch [600], Acc: 0.9589
+Epoch [6/20], Batch [700], Acc: 0.9588
+Epoch [6/20], Batch [800], Acc: 0.9586
+Epoch [6/20], Batch [900], Acc: 0.9583
+Epoch [6/20], Batch [1000], Acc: 0.9578
+Epoch [6/20], Batch [1100], Acc: 0.9579
+Epoch [6/20], Batch [1200], Acc: 0.9579
+Epoch [6/20], Batch [1300], Acc: 0.9580
+Epoch [6/20], Batch [1400], Acc: 0.9579
+Epoch [6/20], Batch [1500], Acc: 0.9577
+Epoch [6/20], Batch [1600], Acc: 0.9576
+Epoch [6/20], Batch [1700], Acc: 0.9575
+Epoch [6/20], Batch [1800], Acc: 0.9574
+Epoch [6/20], Batch [1900], Acc: 0.9574
+Epoch [6/20], Batch [2000], Acc: 0.9575
+Epoch [6/20], Batch [2100], Acc: 0.9575
+Epoch [6/20], Batch [2200], Acc: 0.9573
+Epoch [6/20], Batch [2300], Acc: 0.9573
+Epoch [6/20], Batch [2400], Acc: 0.9573
+Epoch [6/20], Batch [2500], Acc: 0.9573
+Epoch [6/20], Batch [2600], Acc: 0.9573
+Epoch [6/20], Batch [2700], Acc: 0.9572
+Epoch [6/20], Batch [2800], Acc: 0.9572
+Epoch [6/20], Batch [2900], Acc: 0.9573
+Epoch [6/20], Batch [3000], Acc: 0.9573
+Epoch [6/20], Batch [3100], Acc: 0.9573
+Epoch [6/20], Batch [3200], Acc: 0.9573
+Epoch [6/20], Batch [3300], Acc: 0.9572
+Epoch [6/20], Batch [3400], Acc: 0.9572
+Epoch [6/20], Batch [3500], Acc: 0.9572
+Epoch [6/20], Batch [3600], Acc: 0.9572
+Epoch [6/20], Batch [3700], Acc: 0.9572
+Epoch [6/20], Batch [3800], Acc: 0.9572
+Epoch [6/20], Batch [3900], Acc: 0.9572
+Epoch [6/20], Batch [4000], Acc: 0.9572
+Epoch [6/20], Batch [4100], Acc: 0.9572
+Epoch [6/20], Batch [4200], Acc: 0.9572
+Epoch [6/20], Batch [4300], Acc: 0.9572
+Epoch [6/20], Batch [4400], Acc: 0.9572
+Epoch [6/20], Batch [4500], Acc: 0.9572
+Epoch [6/20], Batch [4600], Acc: 0.9572
+Epoch [6/20], Batch [4700], Acc: 0.9571
+Epoch [6/20], Batch [4800], Acc: 0.9571
+Epoch [6/20], Batch [4900], Acc: 0.9571
+Epoch [6/20], Batch [5000], Acc: 0.9571
+Epoch [6/20], Batch [5100], Acc: 0.9570
+Epoch [6/20], Batch [5200], Acc: 0.9570
+Epoch [6/20], Batch [5300], Acc: 0.9570
+Epoch [6/20], Batch [5400], Acc: 0.9570
+Epoch [6/20], Batch [5500], Acc: 0.9570
+Testing...
+Testing finished!
+Testset - Loss: 0.2908, Accuracy: 0.9223
+Epoch [7/20], Batch [100], Acc: 0.9589
+Epoch [7/20], Batch [200], Acc: 0.9605
+Epoch [7/20], Batch [300], Acc: 0.9599
+Epoch [7/20], Batch [400], Acc: 0.9602
+Epoch [7/20], Batch [500], Acc: 0.9602
+Epoch [7/20], Batch [600], Acc: 0.9600
+Epoch [7/20], Batch [700], Acc: 0.9595
+Epoch [7/20], Batch [800], Acc: 0.9592
+Epoch [7/20], Batch [900], Acc: 0.9591
+Epoch [7/20], Batch [1000], Acc: 0.9592
+Epoch [7/20], Batch [1100], Acc: 0.9589
+Epoch [7/20], Batch [1200], Acc: 0.9590
+Epoch [7/20], Batch [1300], Acc: 0.9589
+Epoch [7/20], Batch [1400], Acc: 0.9590
+Epoch [7/20], Batch [1500], Acc: 0.9590
+Epoch [7/20], Batch [1600], Acc: 0.9589
+Epoch [7/20], Batch [1700], Acc: 0.9587
+Epoch [7/20], Batch [1800], Acc: 0.9588
+Epoch [7/20], Batch [1900], Acc: 0.9588
+Epoch [7/20], Batch [2000], Acc: 0.9589
+Epoch [7/20], Batch [2100], Acc: 0.9589
+Epoch [7/20], Batch [2200], Acc: 0.9589
+Epoch [7/20], Batch [2300], Acc: 0.9588
+Epoch [7/20], Batch [2400], Acc: 0.9588
+Epoch [7/20], Batch [2500], Acc: 0.9588
+Epoch [7/20], Batch [2600], Acc: 0.9588
+Epoch [7/20], Batch [2700], Acc: 0.9587
+Epoch [7/20], Batch [2800], Acc: 0.9588
+Epoch [7/20], Batch [2900], Acc: 0.9588
+Epoch [7/20], Batch [3000], Acc: 0.9589
+Epoch [7/20], Batch [3100], Acc: 0.9589
+Epoch [7/20], Batch [3200], Acc: 0.9589
+Epoch [7/20], Batch [3300], Acc: 0.9589
+Epoch [7/20], Batch [3400], Acc: 0.9589
+Epoch [7/20], Batch [3500], Acc: 0.9588
+Epoch [7/20], Batch [3600], Acc: 0.9588
+Epoch [7/20], Batch [3700], Acc: 0.9588
+Epoch [7/20], Batch [3800], Acc: 0.9588
+Epoch [7/20], Batch [3900], Acc: 0.9588
+Epoch [7/20], Batch [4000], Acc: 0.9588
+Epoch [7/20], Batch [4100], Acc: 0.9588
+Epoch [7/20], Batch [4200], Acc: 0.9588
+Epoch [7/20], Batch [4300], Acc: 0.9587
+Epoch [7/20], Batch [4400], Acc: 0.9587
+Epoch [7/20], Batch [4500], Acc: 0.9587
+Epoch [7/20], Batch [4600], Acc: 0.9587
+Epoch [7/20], Batch [4700], Acc: 0.9586
+Epoch [7/20], Batch [4800], Acc: 0.9586
+Epoch [7/20], Batch [4900], Acc: 0.9586
+Epoch [7/20], Batch [5000], Acc: 0.9586
+Epoch [7/20], Batch [5100], Acc: 0.9586
+Epoch [7/20], Batch [5200], Acc: 0.9586
+Epoch [7/20], Batch [5300], Acc: 0.9585
+Epoch [7/20], Batch [5400], Acc: 0.9585
+Epoch [7/20], Batch [5500], Acc: 0.9585
+Testing...
+Testing finished!
+Testset - Loss: 0.2976, Accuracy: 0.9232
