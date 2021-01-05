@@ -41,7 +41,7 @@ void HwStr::push_char(const std::string &_charStr, const HwCharType &_hwCharType
             rect->height = 100;
         }
         switch (_hwCharType) {
-            case HwCharType::RightButtom: {
+            case HwCharType::RightBottom: {
                 sym.resizeTo(ss, ss);
                 sym.moveLeftTopTo(cv::Point2f(
                         rect->x + rect->width + ssx, 50 + ssy));

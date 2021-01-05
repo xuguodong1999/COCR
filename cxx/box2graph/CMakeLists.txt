@@ -17,14 +17,17 @@ add_executable(${PROJECT_NAME} ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
 
         ${SRC_DIR}/box2graph.cpp
         ${SRC_DIR}/colors.cpp
-        ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/bond.cpp
-        ${SRC_DIR}/mol3d.cpp
+        ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/mol2d.cpp
+        ${SRC_DIR}/mol3d.cpp
+        ${SRC_DIR}/mol3d_builder.cpp
         ${SRC_DIR}/mol_op.cpp
-        ${SRC_DIR}/mol_base.cpp
+        ${SRC_DIR}/mol_holder.cpp
         ${SRC_DIR}/mol_graph.cpp
+        ${SRC_DIR}/mol_util.cpp
+
 
         ${SRC_DIR}/config.cpp
         ${SRC_DIR}/std_util.cpp

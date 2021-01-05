@@ -3,7 +3,7 @@
 
 #include <coordgen/sketcherMinimizer.h>
 
-Mol2D::Mol2D(std::shared_ptr<JMol> _mol) {
+Mol2D::Mol2D(std::shared_ptr<JMol> _mol):MolHolder(std::move(_mol)) {
 
 }
 
@@ -41,7 +41,7 @@ std::unordered_map<size_t, cv::Point2f> Mol2D::calcCoord2D(bool _updateAtomPosMa
 }
 
 float Mol2D::calcAvgBondLength() const {
-    if (mol->emptyBonds()) {
+    if (mol->IsBondsEmpty()) {
         return -1;
     }
     float avgBondLength = 0;

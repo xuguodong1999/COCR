@@ -1,7 +1,7 @@
 #ifndef _MOL_GRAPH_HPP_
 #define _MOL_GRAPH_HPP_
 
-#include "mol_base.hpp"
+#include "mol_holder.hpp"
 #include <memory>
 #include <vector>
 
@@ -13,13 +13,9 @@
  * 2、LSSR、SSSR
  * 3、平面环的法向量（实现为Mol2D和MolGraph的双重继承）
  */
-class MolGraph :virtual public MolBase{
+class MolGraph :virtual public MolHolder{
     std::vector<std::shared_ptr<JRing>> rings;
 public:
-    const std::shared_ptr<JMol> &getOldMol() const;
-
-    const std::shared_ptr<JMol> &getNewMol() const;
-
     MolGraph(std::shared_ptr<JMol> _mol);
 
     /**

@@ -32,7 +32,7 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/mol3d.cpp
         ${SRC_DIR}/mol3d_builder.cpp
         ${SRC_DIR}/mol_op.cpp
-        ${SRC_DIR}/mol_base.cpp
+        ${SRC_DIR}/mol_holder.cpp
         ${SRC_DIR}/mol_graph.cpp
         ${SRC_DIR}/mol_util.cpp
 

@@ -87,7 +87,7 @@ std::shared_ptr<JBond> JMol::getBondById(const size_t &_bid) const {
     return itr->second;
 }
 
-bool JMol::emptyBonds() const {
+bool JMol::IsBondsEmpty() const {
     return bondsMap.empty();
 }
 
@@ -109,10 +109,29 @@ JMol::JMol(JMol &&_mol)
           atomsMap(std::move(_mol.atomsMap)), bondsMap(std::move(_mol.bondsMap)) {
 }
 
-void JMol::addHydrogensInside(bool _withCarbon) {
 
+std::shared_ptr<JMol> JMol::clone() const {
+    return std::make_shared<JMol>(*this);
 }
 
-std::shared_ptr<JMol> JMol::addHydrogens(bool _withCarbon) {
-    return std::shared_ptr<JMol>();
+void JMol::safeTraverseBondsBreakIf(const std::function<bool(const size_t &)> &func) const {
+    std::vector<size_t> bids;
+    bids.reserve(bondsMap.size());
+    for (auto&[id, _]:bondsMap) bids.push_back(id);
+    for (auto &bid:bids) {
+        if(!func(bid))return;
+    }
+}
+
+void JMol::safeTraverseAtomsBreakIf(const std::function<bool(const size_t &)> &func) const {
+    std::vector<size_t> aids;
+    aids.reserve(atomsMap.size());
+    for (auto&[id, _]:atomsMap) aids.push_back(id);
+    for (auto &aid:aids) {
+        if(!func(aid))return;
+    }
+}
+
+void JMol::removeBond(const size_t &_bid) {
+    bondsMap.erase(_bid);
 }

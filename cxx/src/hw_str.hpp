@@ -5,7 +5,7 @@
 
 enum class HwCharType {
     Normal,
-    RightButtom,
+    RightBottom,
     RightTop,
     Up,
     Down,

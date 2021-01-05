@@ -13,6 +13,7 @@ endif (MSVC)
 
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
+
 add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
 
         ${SRC_DIR}/atom.cpp
@@ -20,10 +21,10 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/mol2d.cpp
         ${SRC_DIR}/mol3d.cpp
-#        ${SRC_DIR}/mol3d_builder.cpp
-#        ${SRC_DIR}/mol_op.cpp
-#        ${SRC_DIR}/mol_base.cpp
-#        ${SRC_DIR}/mol_graph.cpp
+        ${SRC_DIR}/mol3d_builder.cpp
+        ${SRC_DIR}/mol_op.cpp
+        ${SRC_DIR}/mol_holder.cpp
+        ${SRC_DIR}/mol_graph.cpp
         ${SRC_DIR}/mol_util.cpp
 
         ${SRC_DIR}/config.cpp
@@ -43,6 +44,8 @@ add_executable(${PROJECT_NAME} ${SRC_PRO_FILES}
 if (MSVC)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             Qt5::Widgets Qt5::Quick
+            Qt5::3DAnimation Qt5::3DCore Qt5::3DExtras
+            Qt5::3DInput Qt5::3DLogic Qt5::3DRender
             ${OpenBabel_LIBS}
             ${OpenCV_LIBS}
             coordgen)
@@ -51,5 +54,5 @@ elseif (UNIX)
             Qt5::Widgets Qt5::Quick
             Qt5::3DAnimation Qt5::3DCore Qt5::3DExtras
             Qt5::3DInput Qt5::3DLogic Qt5::3DRender
-            ${COCR_UNIX_LIB} ${OpenCV_LIBS} ${TORCH_LIBRARIES})
+            ${COCR_UNIX_LIB} ${OpenCV_LIBS})
 endif (MSVC)

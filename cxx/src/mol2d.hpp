@@ -1,14 +1,13 @@
 #ifndef _MOL2D_HPP_
 #define _MOL2D_HPP_
 
-#include "mol.hpp"
+#include "mol_holder.hpp"
 
 #include <opencv2/core/types.hpp>
 
 #include <optional>
 
-class Mol2D {
-    std::shared_ptr<JMol> mol;
+class Mol2D :virtual public MolHolder{
     //2D 原子坐标 <id,<isExplicit, position>>
     std::unordered_map<size_t, std::pair<bool, cv::Point2f>> atomPosMap2D;
 public:

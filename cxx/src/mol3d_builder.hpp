@@ -1,7 +1,6 @@
 #ifndef _MOL3D_BUILDER_HPP_
 #define _MOL3D_BUILDER_HPP_
 
-#include "mol_base.hpp"
 #include "mol3d.hpp"
 
 #include <Qt3DCore/QEntity>
@@ -9,14 +8,12 @@
 
 #include <unordered_map>
 
-class Mol3DBuilder : public QObject, public MolBase {
-Q_OBJECT
+class Mol3DBuilder : public QObject, private Mol3D {
+    Q_OBJECT
+//    Q_INTERFACES(Mol3D)
     Qt3DCore::QEntity *mRootEntity;
     int sphereRings, sphereSlices, cylinderRings, cylinderSlices;
     float doubleBondSpaceScale, tripleBondSpaceScale;
-
-private:
-
     std::unordered_map<size_t, Qt3DCore::QEntity *> mAtomEntities;
     std::unordered_multimap<size_t, Qt3DCore::QEntity *> mBondEntities;
 public:
@@ -24,7 +21,7 @@ public:
 
     ~Mol3DBuilder();
 
-    std::shared_ptr<Mol3D> resetMol(std::shared_ptr<JMol> _mol);
+    void reset(std::shared_ptr<JMol> _mol);
 
     float getDoubleBondSpaceScale() const;
 
