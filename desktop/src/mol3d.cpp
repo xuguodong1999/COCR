@@ -6,7 +6,7 @@
 #include "opencv_util.hpp"
 #include "mol_op.hpp"
 
-void Mol3D::calcCoord3D() {
+void Mol3D::calcCoord3D_addHs() {
     // 要求更新3D坐标的时候必须加氢
     auto op = std::make_shared<MolOp>(mol);
     auto add_all_hydrogen = [&](const size_t &_aid) {

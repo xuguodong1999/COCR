@@ -12,7 +12,7 @@ protected:
     std::unordered_map<size_t, cv::Point3f> atomPosMap3D;
 public:
     Mol3D(std::shared_ptr<JMol> _mol);
-    void calcCoord3D();
+    void calcCoord3D_addHs();
 };
 
 

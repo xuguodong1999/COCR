@@ -3,7 +3,7 @@
 
 #include "mol_holder.hpp"
 
-class MolOp :virtual public MolHolder{
+class MolOp : virtual public MolHolder {
     //<原子id，化合价or当前键级>
     std::unordered_map<size_t, frac> atomValenceMap;
     //<原子id，邻居原子们的id>
@@ -14,16 +14,19 @@ class MolOp :virtual public MolHolder{
     std::vector<std::vector<std::unordered_set<size_t>>> aromaticRingAids, aromaticRingBids;
 
 public:
-MolOp(std::shared_ptr<JMol>_mol);
+    MolOp(std::shared_ptr<JMol> _mol);
+
     void randomize(const float &_addHydrogenProb = 0.1, bool _replaceBond = true,
                    bool _replaceAtom = true, bool _addAromaticRing = true,
                    bool _addCommonRing = true);
+
     /**
      * 为当前原子补全氢原子，修改化合价表
      * @param _aid 原子 id
      * @param _atomValenceMap 化合价表
      */
     void addHs(const size_t &_aid);
+
     /**
      * 把 _bid 两侧的基团挂到芳环上，删掉编号 _bid 的化学键
      * 涉及删除操作，会导致bondMap的迭代器失效
@@ -50,7 +53,8 @@ MolOp(std::shared_ptr<JMol>_mol);
      */
     void addGroup(const size_t &_aid);
 
-    void clear()override;
+    void clear() override;
+
     /**
      * 获取手动添加的芳环
      * FIXME: 目前没有实现 or 对接 LSSR 和 SSSR 算法，不具备事后找环的能力
@@ -59,6 +63,7 @@ MolOp(std::shared_ptr<JMol>_mol);
      */
     const std::vector<std::vector<std::unordered_set<size_t>>> &
     getAromaticRings(bool _retAid) const;
+
 private:
 
     /**
