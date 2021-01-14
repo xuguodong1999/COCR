@@ -81,7 +81,7 @@ if (MSVC)
     include(${CMAKE_SOURCE_DIR}/cmake/CoordgenConfig.cmake)
     # opencv for using yolo in app
     if (NOT ALLOW_USER_TRAIN)
-        include(${CMAKE_SOURCE_DIR}/cmake/OpenCVConfig.cmake)
+      include(${CMAKE_SOURCE_DIR}/cmake/OpenCVConfig.cmake)
     endif ()
 elseif (APPLE)
     message(FATAL "TODO: ADD CMAKE CONFIG ON MACOS")
@@ -97,8 +97,10 @@ set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 include_directories(${SRC_DIR})
 include_directories(${INSTALL_DIR}/include)
 
-# client side app with opencv dnn engine backened
+# client side app with opencv dnn engine backend
 add_subdirectory(app)
+add_subdirectory(test_ui)
+add_subdirectory(test_3d)
 if (ALLOW_USER_TRAIN)
     add_subdirectory(train)
 endif (ALLOW_USER_TRAIN)

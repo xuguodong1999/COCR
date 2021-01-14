@@ -26,7 +26,9 @@ allprojects {
     // 如果接了一个卷标为T且根目录有build文件夹的硬盘，那么更改构建目录
     if (Os.isFamily(Os.FAMILY_WINDOWS) && (new File("T:/build")).exists()) {
         buildDir = "T:/build/${rootProject.name}/${project.name}"
-    } else if (Os.isFamily(Os.FAMILY_UNIX) && !Os.isFamily(Os.FAMILY_MAC) && new File("/tmp").exists()) {
+    }
+    // 如果在linux上，使用内存盘作为构建目录
+    else if (Os.isFamily(Os.FAMILY_UNIX) && !Os.isFamily(Os.FAMILY_MAC) && new File("/tmp").exists()) {
         buildDir = "/tmp/build-${rootProject.name}/${project.name}"
     }
 }

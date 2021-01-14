@@ -24,7 +24,7 @@ import java.io.StringWriter;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    void addImplicitHydrogens(IAtomContainer container) throws Exception {
+  void addImplicitHydrogens(IAtomContainer container) throws Exception {
         CDKAtomTypeMatcher matcher = CDKAtomTypeMatcher.getInstance(container.getBuilder());
         int atomCount = container.getAtomCount();
         String[] originalAtomTypeNames = new String[atomCount];
