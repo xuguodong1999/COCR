@@ -19,21 +19,21 @@ CifarDataSet::CifarDataSet(const CifarType &cifarType,
 torch::data::Example<> CifarDataSet::get(size_t index) {
     cv::Mat cvImg;
     if (isTrainMode() && byProb(0.5)) {
+        // 0 竖直 1 水平 -1 同时
+        cv::flip(mImages[index], cvImg, 1);
+    }else{
+        cvImg = mImages[index].clone();
+    }
+    if (isTrainMode() && byProb(0.1)) {
         cv::resize(mImages[index], cvImg, cv::Size(28, 28));
         cv::copyMakeBorder(cvImg, cvImg,
                            2, 2, 2, 2,
                            cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
-    } else {
-        cvImg = mImages[index].clone();
     }
-    if (isTrainMode() && byProb(0.5)) {
-        // 0 竖直 1 水平 -1 同时
-        cv::flip(cvImg, cvImg, 1);
-    }
-    if (isTrainMode() && byProb(0.5)) {
+    if (isTrainMode() && byProb(0.1)) {
         cv::Mat noise(cvImg.size(), CV_32FC3);
         cv::randn(noise, 0, belowProb(0.05));
-        cvImg = cvImg + noise;
+        cvImg += noise;
         cv::normalize(cvImg, cvImg, 0.0, 1.0, cv::NORM_MINMAX, CV_32F);
     }
 //    cv::imshow("", cvImg);
@@ -76,8 +76,6 @@ std::pair<std::vector<cv::Mat>, torch::Tensor> CifarDataSet::Cifar10Util::loadDa
         // The first byte of each row is the target class index.
         uint32_t startIndex = i * bytesPerSample() + labelOffset();
         targets[i] = dataBuffer[startIndex];
-//        std::cout<<(int)dataBuffer[startIndex]<<std::endl;
-//        system("pause");
         // The next bytes correspond to the rgb channel values in the following order:
         // red (32 *32 = 1024 bytes) | green (1024 bytes) | blue (1024 bytes)
         auto imgBegin = dataBuffer.data() + startIndex + 1;

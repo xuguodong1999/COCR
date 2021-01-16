@@ -47,18 +47,18 @@ Mv3Large::Mv3Large(const int &_numOfClass, const float &_mv3Scale) : BaseClassif
                                           5, 1, Mv3Activation::HSwish, true))},
         Sequential(
                 // part1: fc1
-                Conv2d(Conv2dOptions(160, 960, {1, 1})
+                Conv2d(Conv2dOptions(RESCALE(160), RESCALE(960), {1, 1})
                                .bias(false)),
-                BatchNorm2d(BatchNorm2dOptions(960)),
+                BatchNorm2d(BatchNorm2dOptions(RESCALE(960))),
                 HSwish(),
                 // part2: apply avg pool
                 AdaptiveAvgPool2d(AdaptiveAvgPool2dOptions({1, 1})),
                 // part3: fc2
-                Conv2d(Conv2dOptions(960, 1280, {1, 1})
+                Conv2d(Conv2dOptions(RESCALE(960),RESCALE( 1280), {1, 1})
                                .bias(true)),
                 HSwish(),
                 // part4: 到节点
-                Conv2d(Conv2dOptions(1280, _numOfClass, {1, 1})
+                Conv2d(Conv2dOptions(RESCALE(1280), _numOfClass, {1, 1})
                                .bias(true)))) {
     registerModule();
 }
