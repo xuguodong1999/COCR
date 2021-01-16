@@ -84,6 +84,6 @@ if (MSVC)
 elseif (APPLE)
     message(FATAL "TODO: support app build on macOS")
 elseif (UNIX)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${COCR_UNIX_3RDPARTY_LIB})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${COCR_UNIX_3RDPARTY_LIB} )
 endif (MSVC)
 

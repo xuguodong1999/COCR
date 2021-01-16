@@ -32,7 +32,6 @@ if (MSVC)
 elseif (APPLE)
     message(FATAL "dont support train build on macOS")
 elseif (UNIX)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-            ${COCR_UNIX_3RDPARTY_LIB} ${TORCH_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${COCR_UNIX_3RDPARTY_LIB})
 endif (MSVC)
 

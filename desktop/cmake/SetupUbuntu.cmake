@@ -10,11 +10,25 @@ include_directories(${QT_INCLUDE_DIR}/QtCore)
 include_directories(${QT_INCLUDE_DIR}/QtGui)
 include_directories(${QT_INCLUDE_DIR}/QtQuick)
 include_directories(${QT_INCLUDE_DIR}/QtWidgets)
+set(Qt5_LIBS Qt5::Widgets Qt5::Quick Qt5::3DAnimation Qt5::3DCore
+        Qt5::3DExtras Qt5::3DInput Qt5::3DLogic Qt5::3DRender)
+
+# 我试图把cuda训练子工程和不带cuda的应用子工程在一个父项目里编译
+# g++ only allow -fPIC while nvcc only allow -Xcompiler=-fPIC
+# qt's cmake set -fPIC as Qt5::Core's property, wtf.
+# https://gitlab.kitware.com/cmake/cmake/-/issues/16915#note_270754
+if (TARGET Qt5::Core)
+    get_property(core_options TARGET Qt5::Core PROPERTY INTERFACE_COMPILE_OPTIONS)
+    string(REPLACE "-fPIC" "" new_core_options "${core_options}")
+    set_property(TARGET Qt5::Core PROPERTY INTERFACE_COMPILE_OPTIONS ${new_core_options})
+    set_property(TARGET Qt5::Core PROPERTY INTERFACE_POSITION_INDEPENDENT_CODE "ON")
+    set(CMAKE_CXX_COMPILE_OPTIONS_PIE "-fPIC")
+endif ()
 
 set(COCR_UNIX_3RDPARTY_LIB
-        Qt5::Widgets Qt5::Quick Qt5::3DAnimation Qt5::3DCore
-        Qt5::3DExtras Qt5::3DInput Qt5::3DLogic Qt5::3DRender
-        ${OpenCV_LIBS} ${TORCH_LIBRARIES}
+        ${Qt5_LIBS}
+        ${OpenCV_LIBS}
+        ${TORCH_LIBRARIES}
         -lRDKitDistGeomHelpers -lRDKitForceField -lRDKitForceFieldHelpers
         -lRDKitDepictor -lRDKitGraphMol -lRDKitRDGeneral -lRDKitSmilesParse
         # -lRDKitAlignment -lRDKitCatalogs -lRDKitChemReactions -lRDKitChemTransforms
