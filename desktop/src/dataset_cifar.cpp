@@ -24,7 +24,7 @@ torch::data::Example<> CifarDataSet::get(size_t index) {
     }else{
         cvImg = mImages[index].clone();
     }
-    if (isTrainMode() && byProb(0.1)) {
+    if (isTrainMode() && byProb(0.5)) {
         cv::resize(mImages[index], cvImg, cv::Size(28, 28));
         cv::copyMakeBorder(cvImg, cvImg,
                            2, 2, 2, 2,

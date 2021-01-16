@@ -13,7 +13,7 @@ const std::string cifar10_root = "/home/xgd/source/COCR/data/cifar-10";
 struct TrainConfig {
     int64_t BATCH_SIZE = 512;
     size_t MAX_EPOCHS = 200;
-    double LR_BEGIN = 0.0005, LR_CURRENT;
+    double LR_BEGIN = 0.001, LR_CURRENT;
     size_t LR_CHANGE_TIMES = 10;
     double LR_DECAY_FACTOR = 0.8;
 
@@ -30,7 +30,7 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
         task_name = "cifar100";
         data_root = cifar100_root;
     }
-    auto model = std::make_shared<Mv3Large>(num_classes,4.0);
+    auto model = std::make_shared<Mv3Large>(num_classes,1.0);
     torch::save(model,"/tmp/fuck.pth");
     model->setName(task_name + "-mv3large");
     model->to(_device);
@@ -81,11 +81,11 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
 //            static_cast<torch::optim::SGDOptions &>(optimizer.param_groups().front().options()).lr(cfg.LR_CURRENT);
         }
         double acc = static_cast<double>(num_correct) / num_train_samples;
-        std::cout << "epoch-" << epoch << ", train loss = "
+        std::cout << "epoch-" << epoch << "\ntrain loss = "
                   << running_loss / num_train_samples << " ,acc = "
                   << acc << '\n';
-        if (acc > 0.2) {
-            std::cout << "Testing...\n";
+        if (acc > 0.5) {
+//            std::cout << "Testing...\n";
             model->eval();
             double test_loss = 0.0;
             size_t test_correct = 0;
@@ -98,7 +98,7 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
                 auto prediction = output.argmax(1);
                 test_correct += prediction.eq(target).sum().item<int64_t>();
             }
-            std::cout << "Testing on " << num_test_samples << " samples finished!\n";
+//            std::cout << "Testing on " << num_test_samples << " samples finished!\n";
             auto test_accuracy = static_cast<double>(test_correct) / num_test_samples;
             auto test_sample_mean_loss = test_loss / num_test_samples;
             std::cout << "test loss = " << test_sample_mean_loss << " ,acc = " << test_accuracy << '\n';
