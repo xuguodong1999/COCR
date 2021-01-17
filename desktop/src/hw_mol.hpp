@@ -1,31 +1,32 @@
 #ifndef _MOL_HW_HPP_
 #define _MOL_HW_HPP_
 
-//#include "hw.hpp"
 #include "hw_bond.hpp"
 #include "hw_str.hpp"
-#include "mol.hpp"
+#include "mol_holder.hpp"
 #include <string>
 #include <vector>
 #include <map>
 
-class HwMol : public HwBase {
+/**
+ * 向JMol填充图元
+ */
+class HwMol : public HwBase, public MolHolder {
     std::vector<std::shared_ptr<HwBase>> mData;
     HwController *hwController;
-
-    const JMol &mol;
+    std::shared_ptr<MolHolder> mol2dHolder, molOpHolder;
 
     /**
-     * @param _pt 控制碳原子是否显示写出
+     * @param _explicitCarbonProb 控制碳原子是否显示写出
      * @return 平均图元大小
      */
-    float reloadHWData(const float &_pt = 0.1);
+    float reloadHWData(const float &_explicitCarbonProb = 0.1);
 
 public:
 
     void setHwController(HwController &_hwController) override;
 
-    void showOnScreen(const size_t &_repeatTimes = 1);
+    void showOnScreen(const size_t &_repeatTimes =1,bool _showBox=false);
 
     /**
      *
@@ -40,7 +41,7 @@ public:
      * 用 JMol 构造一个几何分子类型
      * @param _jmol Construct a MolItem from JMol
      */
-    HwMol(const JMol &_jmol);
+    HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder> _mol2dHolder = nullptr);
 
     void paintTo(cv::Mat &_canvas) const override;
 

@@ -5,11 +5,16 @@
 #ifndef _COCR_TYPES_HPP_
 #define _COCR_TYPES_HPP_
 
+#include "fraction.hpp"
+
 #include <cstdint>
 #include <string>
+#include <vector>
+#include <unordered_map>
 
 using hash_type = uint64_t;
 using node_type = unsigned char;
+
 
 enum class DetectorClasses {
     ItemEmpty,
@@ -54,8 +59,14 @@ enum class AtomStereo {
     S
 };
 
+extern std::vector<std::string> ElementsData;
+extern std::unordered_map<ElementType, frac> ElementValenceData;
+
 DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementType);
 
 const std::string &convertElementTypeToString(const ElementType &_elementType);
+
+// 返回建议比例，以碳为基准
+float atomRadius(const ElementType &_element);
 
 #endif//_COCR_TYPES_HPP_

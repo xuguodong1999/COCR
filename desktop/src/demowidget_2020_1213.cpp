@@ -95,7 +95,7 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
             hwScript.push_back(hwStroke);
         }
         auto shapeBox = hwScript.getBoundingBox();
-        if(!shapeBox)return;
+        if (!shapeBox)return;
         hwScript.moveLeftTopTo(cv::Point2f(4, 4));
         std::vector<gt_box> gtBox;
         cv::Mat detMat;
@@ -145,7 +145,7 @@ DemoWidget_2020_1213::DemoWidget_2020_1213(QWidget *parent) : QWidget(parent) {
         for (auto &mol:mols) {
 //            std::cout << mol->toSMILES(false) << std::endl;
             auto rootEntity = new Qt3DCore::QEntity();
-            auto sceneBuilder = new Mol3DBuilder(rootEntity,mol);
+            auto sceneBuilder = new Mol3DBuilder(rootEntity, mol);
             auto view = new Mol3DWindow(rootEntity);
             try {
                 sceneBuilder->reset(mol);

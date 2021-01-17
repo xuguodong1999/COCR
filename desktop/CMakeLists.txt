@@ -75,9 +75,9 @@ if (ALLOW_USER_TRAIN)
 endif (ALLOW_USER_TRAIN)
 
 if (MSVC)
-    # openbabel for 3d molecule pos generation
+    # openbabel for 3d molecule getPos2D generation
     include(${CMAKE_SOURCE_DIR}/cmake/OpenBabelConfig.cmake)
-    # coordgen for 2d molecule pos generation
+    # coordgen for 2d molecule getPos2D generation
     include(${CMAKE_SOURCE_DIR}/cmake/CoordgenConfig.cmake)
     # opencv for using yolo in app
     if (NOT ALLOW_USER_TRAIN)

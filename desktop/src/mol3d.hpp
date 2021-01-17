@@ -6,12 +6,13 @@
 
 #include <unordered_map>
 
-class Mol3D : public MolHolder{
+class Mol3D : public MolHolder {
 protected:
     //3D 原子坐标
     std::unordered_map<size_t, cv::Point3f> atomPosMap3D;
 public:
     Mol3D(std::shared_ptr<JMol> _mol);
+
     void calcCoord3D_addHs();
 };
 

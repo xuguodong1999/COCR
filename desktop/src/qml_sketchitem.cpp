@@ -75,7 +75,7 @@ void SketchItem::init(const int &_w, const int &_h) {
 }
 
 void SketchItem::mousePressEvent(QMouseEvent *event) {
-    //  qDebug() << "SketchItem::mousePress@" << event->pos();
+    //  qDebug() << "SketchItem::mousePress@" << event->getPos2D();
     lastPos = event->localPos();
 
     putPointAt(lastPos);
@@ -103,12 +103,12 @@ void SketchItem::putPointAt(const QPointF &_p) {
 }
 
 void SketchItem::mouseMoveEvent(QMouseEvent *event) {
-    //  qDebug() << "SketchItem::mouseMove@" << event->pos();
+    //  qDebug() << "SketchItem::mouseMove@" << event->getPos2D();
     auto curPos = event->localPos();
     putLineAt(curPos, lastPos);
     lastPos = curPos;
 }
 
 void SketchItem::mouseReleaseEvent(QMouseEvent *event) {
-    //  qDebug() << "SketchItem::mouseRelease@" << event->pos();
+    //  qDebug() << "SketchItem::mouseRelease@" << event->getPos2D();
 }

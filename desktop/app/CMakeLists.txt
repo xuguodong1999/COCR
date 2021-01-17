@@ -20,7 +20,7 @@ add_custom_target(app_resources ALL DEPENDS ${RES_FILES})
 
 add_dependencies(app_resources app_translations)
 
-set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main_demo_2020_1213.cpp)
+set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main_datagen.cpp)
 
 set(SRC_ALL ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
         ${UI_SRC} ${MOL_SRC} ${HW_SRC} ${BASE_SRC})

@@ -1,4 +1,4 @@
-#ifndef _XXXXX_HPP_
-#define _XXXXX_HPP_
+#ifndef _SOSO_QSM_HPP_
+#define _SOSO_QSM_HPP_
 
-#endif//_XXXXX_HPP_
+#endif//_SOSO_QSM_HPP_

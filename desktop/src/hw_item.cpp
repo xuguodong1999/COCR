@@ -11,6 +11,10 @@ void HwItem::push_back(HwScript &_script) {
     mData.push_back(std::move(_script));
 }
 
+void HwItem::push_back(HwScript &&_script) {
+    mData.push_back(_script);
+}
+
 void HwItem::keepIf(const std::function<bool(const cv::Point2f &)> &_cond) {
     for (auto &script:mData) {
         script.keepIf(_cond);

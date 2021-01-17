@@ -124,10 +124,10 @@ std::string MolUtilOpenBabelImpl::getFormat(
         std::cerr << "MolUtilOpenBabelImpl::getFormat: cannot set format!" << std::endl;
         exit(-1);
     }
-    std::cout<<"_mol->atomsNum()"<<_mol->atomsNum()<<std::endl;
+    std::cout << "_mol->atomsNum()" << _mol->atomsNum() << std::endl;
     auto obMol = convertJMolToOBMol(_mol);
     if ("pdb" == _format) {
-        std::cout<<"runOBForceField(obMol)="<<runOBForceField(obMol)<<std::endl;
+        std::cout << "runOBForceField(obMol)=" << runOBForceField(obMol) << std::endl;
     }
     return conv.WriteString(&obMol);
 }

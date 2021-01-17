@@ -30,7 +30,7 @@ public:
      * 获取一个深拷贝
      * @return JMol 对象的深拷贝
      */
-    std::shared_ptr<JMol> clone()const;
+    std::shared_ptr<JMol> clone() const;
 
     void setAlkane(const std::string &_alkaneSMILES);
 
@@ -51,18 +51,22 @@ public:
      * @param func 传入 bid，表示原子 id
      */
     void safeTraverseBonds(const std::function<void(const size_t &)> &func) const;
+
     void safeTraverseBondsBreakIf(const std::function<bool(const size_t &)> &func) const;
+
     /**
      * "安全地"遍历当前所有原子
      * 允许对原子进行增删
      * @param func 传入 aid，表示原子 id
      */
     void safeTraverseAtoms(const std::function<void(const size_t &)> &func) const;
+
     void safeTraverseAtomsBreakIf(const std::function<bool(const size_t &)> &func) const;
 
     virtual void clear();
 
     void removeBond(const size_t &_bid);
+
     std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber);
 
     std::shared_ptr<JBond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
@@ -70,4 +74,5 @@ public:
 
 private:
 };
+
 #endif//_MOL_HPP_

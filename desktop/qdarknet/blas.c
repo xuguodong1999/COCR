@@ -633,7 +633,7 @@ grad_contrastive_loss_positive_f(size_t i, int *labels, size_t num_of_samples, f
                 //const float d = mult*(sim * z[i][m] + sim * z[j][m] - z[j][m]) *(1 - P); // 1+2
                 const float d = mult * (sim * z[i][m] - z[j][m]) * (1 - P); // 1 (70%)
                 //const float d = mult*(sim * z[j][m] - z[j][m]) * (1 - P); // 2
-                // printf(" pos: z[j][m] = %f, z[i][m] = %f, d = %f, sim = %f \n", z[j][m], z[i][m], d, sim);
+                // printf(" getPos2D: z[j][m] = %f, z[i][m] = %f, d = %f, sim = %f \n", z[j][m], z[i][m], d, sim);
                 delta[m] -= d;
             }
         }
@@ -752,7 +752,7 @@ void grad_contrastive_loss_positive(size_t i, int *labels, size_t num_of_samples
             for (m = 0; m < feature_size; ++m) {
                 const float d = mult * (sim * z[i][m] - z[j][m]) * (1 - P); // good
                 //const float d = mult*(sim * z[j][m] - z[j][m]) * (1 - P); // bad
-                // printf(" pos: z[j][m] = %f, z[i][m] = %f, d = %f, sim = %f \n", z[j][m], z[i][m], d, sim);
+                // printf(" getPos2D: z[j][m] = %f, z[i][m] = %f, d = %f, sim = %f \n", z[j][m], z[i][m], d, sim);
                 delta[m] -= d;
             }
         }

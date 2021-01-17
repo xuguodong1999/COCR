@@ -54,7 +54,7 @@ Mv3Large::Mv3Large(const int &_numOfClass, const float &_mv3Scale) : BaseClassif
                 // part2: apply avg pool
                 AdaptiveAvgPool2d(AdaptiveAvgPool2dOptions({1, 1})),
                 // part3: fc2
-                Conv2d(Conv2dOptions(RESCALE(960),RESCALE( 1280), {1, 1})
+                Conv2d(Conv2dOptions(RESCALE(960), RESCALE(1280), {1, 1})
                                .bias(true)),
                 HSwish(),
                 // part4: 到节点

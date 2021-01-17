@@ -2,13 +2,6 @@
 #define _ATOM_HPP_
 
 #include "cocr_types.hpp"
-#include "fraction.hpp"
-#include <string>
-#include <vector>
-#include <unordered_map>
-
-extern std::vector<std::string> ElementsData;
-extern std::unordered_map<ElementType, frac> ElementValenceData;
 
 class JAtom {
     ElementType elementType;
@@ -38,10 +31,7 @@ public:
     JAtom();
 
     JAtom(const size_t &_id, const size_t &_atomicNumber);
-
-
 };
 
-// 返回建议比例，以碳为基准
-float atomRadius(const ElementType &_element);
+
 #endif//_ATOM_HPP_

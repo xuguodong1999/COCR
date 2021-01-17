@@ -9,7 +9,7 @@
 #include <unordered_map>
 
 class Mol3DBuilder : public QObject, private Mol3D {
-    Q_OBJECT
+Q_OBJECT
 //    Q_INTERFACES(Mol3D)
     Qt3DCore::QEntity *mRootEntity;
     int sphereRings, sphereSlices, cylinderRings, cylinderSlices;

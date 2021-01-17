@@ -149,7 +149,7 @@ void Mol3DBuilder::reset(std::shared_ptr<JMol> _mol) {
     auto addAtomEntity = [&](const size_t &_aid) -> void {
         auto &ele = mol->getAtomById(_aid)->getElementType();
         cv::Point3f pos = atomPosMap3D[_aid];
-//        qDebug() << convert(pos);
+//        qDebug() << convert(getPos2D);
         mAtomEntities.insert({_aid, getSphereEntity(
                 convert(pos), avgBondLength / 3.5 * atomRadius(ele), atomColor(ele))});
     };

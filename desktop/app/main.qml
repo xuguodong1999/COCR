@@ -31,13 +31,13 @@ Window {
     //            TouchPoint {
     //                id: touch1
     //                onXChanged: {
-    //                    console.log("1.pos=", x, ",", y)
+    //                    console.log("1.getPos2D=", x, ",", y)
     //                }
     //            },
     //            TouchPoint {
     //                id: touch2
     //                onXChanged: {
-    //                    console.log("2.pos=", x, ",", y)
+    //                    console.log("2.getPos2D=", x, ",", y)
     //                }
     //            }
     //        ]

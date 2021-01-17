@@ -21,7 +21,7 @@ torch::data::Example<> CifarDataSet::get(size_t index) {
     if (isTrainMode() && byProb(0.5)) {
         // 0 竖直 1 水平 -1 同时
         cv::flip(mImages[index], cvImg, 1);
-    }else{
+    } else {
         cvImg = mImages[index].clone();
     }
     if (isTrainMode() && byProb(0.5)) {

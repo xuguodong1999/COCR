@@ -119,7 +119,7 @@ void JMol::safeTraverseBondsBreakIf(const std::function<bool(const size_t &)> &f
     bids.reserve(bondsMap.size());
     for (auto&[id, _]:bondsMap) bids.push_back(id);
     for (auto &bid:bids) {
-        if(!func(bid))return;
+        if (!func(bid))return;
     }
 }
 
@@ -128,7 +128,7 @@ void JMol::safeTraverseAtomsBreakIf(const std::function<bool(const size_t &)> &f
     aids.reserve(atomsMap.size());
     for (auto&[id, _]:atomsMap) aids.push_back(id);
     for (auto &aid:aids) {
-        if(!func(aid))return;
+        if (!func(aid))return;
     }
 }
 

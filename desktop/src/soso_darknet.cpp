@@ -7,10 +7,10 @@
 #include <filesystem>
 #include <iostream>
 
-DarknetDataGenerator::DarknetDataGenerator() : isInited(false) {
+SOSODarknet::SOSODarknet() : isInited(false) {
 }
 
-bool DarknetDataGenerator::init(const char *_topDir) {
+bool SOSODarknet::init(const char *_topDir) {
     if (!std::filesystem::exists(_topDir)) {
         if (!std::filesystem::create_directories(_topDir)) {
             std::cerr << "fail to create dir: " << _topDir << std::endl;
@@ -38,9 +38,9 @@ bool DarknetDataGenerator::init(const char *_topDir) {
     return true;
 }
 
-void DarknetDataGenerator::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) {
+void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) {
     if (!isInited) {
-        std::cerr << "you must call DarknetDataGenerator::init before dump data" << std::endl;
+        std::cerr << "you must call SOSODarknet::init before dump data" << std::endl;
         exit(-1);
     }
     auto &isomer = IsomerCounter::GetInstance();
@@ -49,12 +49,13 @@ void DarknetDataGenerator::dump(const size_t &_numOfSamples, const size_t &_repe
                                              8, 9, 10, 11, 12, 13, 14, 15
 //                                             10, 11, 12, 13, 14, 15
                                      });
-    auto mol=std::make_shared<JMol>();
+    auto mol = std::make_shared<JMol>();
     int loop = _numOfSamples;
     do {
         mol->setAlkane(alkanes[loop % alkanes.size()]);
-        MolOp(mol).randomize();
-        HwMol molItem(*mol);
+        auto molOp = std::make_shared<MolOp>(mol);
+        molOp->randomize();
+        HwMol molItem(molOp);
         molItem.dumpAsDarknet(imgPath + std::to_string(loop),
                               labelPath + std::to_string(loop),
                               _repeatTimes);

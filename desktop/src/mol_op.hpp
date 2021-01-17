@@ -3,7 +3,7 @@
 
 #include "mol_holder.hpp"
 
-class MolOp : virtual public MolHolder {
+class MolOp : public MolHolder {
     //<原子id，化合价or当前键级>
     std::unordered_map<size_t, frac> atomValenceMap;
     //<原子id，邻居原子们的id>

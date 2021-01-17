@@ -27,7 +27,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::handleNoBond() {
         auto mol = std::make_shared<JMol>();
         auto atom = mol->addAtom(0);
         // FIXME: add pos3d here
-//        mol->insertAtomPos2D(atom->getId(), true, center);
+//        mol->setPos2D(atom->getId(), true, center);
         atom->setElementType(getElementTyoeFromLabelIdx(aLabel));
         mols.push_back(std::move(mol));
     }
@@ -41,7 +41,7 @@ std::vector<std::shared_ptr<JMol>> BoxGraphConverter::handleNoBond() {
     return std::move(mols);
 }
 
-// FIXME: add mol->insertAtomPos2D for all atoms
+// FIXME: add mol->setPos2D for all atoms
 std::vector<std::shared_ptr<JMol>> BoxGraphConverter::then() {
     // analysis features here
     // modify mol here

@@ -15,6 +15,8 @@ public:
 
     void push_back(HwScript &_script);
 
+    void push_back(HwScript &&_script);
+
     void keepIf(const std::function<bool(const cv::Point2f &)> &_cond);
 
     HwItem(HwController *_hwController = nullptr);

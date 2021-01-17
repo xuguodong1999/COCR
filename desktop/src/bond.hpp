@@ -11,6 +11,7 @@ class JBond {
     JBondType bondType;
     size_t atomFrom, atomTo;
     size_t id;
+
 public:
     frac asValence() const;
 

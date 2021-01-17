@@ -55,8 +55,8 @@ int testHWDraw() {
         mol.setAlkane(alkane);
 //        mol.randomize();
 //        auto posMap = mol.get3DCoordinates(true);
-//        for (auto&[id, pos]:posMap) {
-//            std::cout << id << ": " << pos << std::endl;
+//        for (auto&[id, getPos2D]:posMap) {
+//            std::cout << id << ": " << getPos2D << std::endl;
 //        }
         HwMol molItem(mol);
         molItem.showOnScreen(1);
@@ -66,7 +66,7 @@ int testHWDraw() {
 
 
 int testDarknetDump() {
-    DarknetDataGenerator ddg;
+    SOSODarknet ddg;
     ddg.init("T:/soso17_v2");
     ddg.dump(200000/5, 5);
     return 0;

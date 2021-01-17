@@ -201,8 +201,9 @@ void MolOp::randomize(
     // TODO: 波浪线
     // TODO: 添加不展开的字符串
 }
+
 void MolOp::addHs(const size_t &_aid) {
-    if(atomValenceMap.empty()){
+    if (atomValenceMap.empty()) {
         updateAtomValenceMap();
     }
     auto &valence = atomValenceMap.at(_aid);
@@ -219,6 +220,7 @@ void MolOp::addHs(const size_t &_aid) {
         valence += numOfH;
     }
 }
+
 void MolOp::addGroup(const size_t &_aid) {
     std::vector<std::shared_ptr<JAtom>> newAtoms;
     std::vector<std::shared_ptr<JBond>> newBonds;

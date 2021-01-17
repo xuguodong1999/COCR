@@ -3,12 +3,12 @@
 
 #include <string>
 
-class DarknetDataGenerator {
+class SOSODarknet {
     inline static const std::string imgDir = "/JPEGImages/", labelDir = "/labels/";
     bool isInited;
     std::string imgPath, labelPath;
 public:
-    DarknetDataGenerator();
+    SOSODarknet();
 
     bool init(const char *_topDir);
 
