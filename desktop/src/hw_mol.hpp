@@ -41,7 +41,7 @@ public:
      * 用 JMol 构造一个几何分子类型
      * @param _jmol Construct a MolItem from JMol
      */
-    HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder> _mol2dHolder = nullptr);
+    HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder> _mol2dHolder = nullptr,HwController *_hwController= nullptr);
 
     void paintTo(cv::Mat &_canvas) const override;
 

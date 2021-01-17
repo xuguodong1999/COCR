@@ -349,11 +349,13 @@ void HwMol::rotate(float _angle) {
 }
 
 
-HwMol::HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder> _mol2dHolder)
-        : MolHolder(_molOpHolder->getMol()), mol2dHolder(_mol2dHolder), molOpHolder(_molOpHolder) {
-    hwController = &(HwBase::baseController);
+HwMol::HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder> _mol2dHolder,HwController *_hwController)
+        : MolHolder(_molOpHolder->getMol()), mol2dHolder(_mol2dHolder), molOpHolder(_molOpHolder), hwController(_hwController) {
+    if(!hwController) {
+        hwController = &(HwBase::baseController);
+    }
     // TODO: 校验两个holder持有同一个JMol对象
-    if (nullptr == _mol2dHolder) {
+    if (!_mol2dHolder) {
         mol2dHolder = std::make_shared<Mol2D>(mol);
     }
 }

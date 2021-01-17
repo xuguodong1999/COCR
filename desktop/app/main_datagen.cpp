@@ -1,7 +1,38 @@
 #include "hw_mol.hpp"
 #include "mol_op.hpp"
+#include "isomer.hpp"
+#include "soso_qsm.hpp"
 #include <memory>
-#include <isomer.hpp>
+#include <QThreadPool>
+#include <QApplication>
+#include <QWidget>
+#include <QDebug>
+
+std::shared_ptr<SOSOMemory> qsm;
+
+class Widget : public QWidget {
+//    Q_OBJECT
+
+public:
+    Widget(QWidget *_parent = nullptr) : QWidget(_parent) {
+        qsm = std::make_shared<SOSOMemory>("fuck0");
+        QThreadPool::globalInstance()->start(qsm.get());
+    }
+
+    ~Widget() {
+        qsm->setStop(true);
+        qDebug() << __FUNCTION__ << QThread::currentThreadId();
+    }
+};
+
+int _test_qsm(int argc, char **argv) {
+    qsm = std::make_shared<SOSOMemory>("fuck");
+    QThreadPool::globalInstance()->start(qsm.get());
+    return 0;
+    QApplication a(argc, argv);
+    (new Widget)->show();
+    return a.exec();
+}
 
 int _main() {
     auto &isomer = IsomerCounter::GetInstance();
@@ -22,9 +53,10 @@ int _main() {
     return 0;
 }
 
-int main() {
+int main(int argc, char **argv) {
     try {
-        return _main();
+        return _test_qsm(argc, argv);
+//        return _main();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(-1);
