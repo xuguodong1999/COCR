@@ -187,7 +187,7 @@ load_image_augment_paths(char **paths, int n, int use_flip, int min, int max, in
     return X;
 }
 
-
+// TODO: 添加共享内存加载机制
 box_label *read_boxes(char *filename, int *n) {
     box_label *boxes = (box_label *) xcalloc(1, sizeof(box_label));
     FILE *file = fopen(filename, "r");
@@ -368,7 +368,7 @@ int fill_truth_detection(const char *path, int num_boxes, int truth_size, float 
                          int net_w, int net_h) {
     char labelpath[4096];
     replace_image_to_label(path, labelpath);
-
+    // TODO: 直接从路径映射到共享内存
     int count = 0;
     int i;
     box_label *boxes = read_boxes(labelpath, &count);

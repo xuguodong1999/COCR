@@ -1,37 +1,28 @@
-project(train-cifar)
+project(cocr-train_cifar)
+
 
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/train_cifar.cpp)
 
-set(SRC_LIST ${SRC_DIR}/config.cpp
-#        ${SRC_DIR}/cocr_types.cpp
+set(SRC_ALL ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
+        ${TORCH_SRC} ${BASE_SRC})
 
-        ${SRC_DIR}/timer.cpp
-        ${SRC_DIR}/std_util.cpp
-        ${SRC_DIR}/opencv_util.cpp
+add_executable(${PROJECT_NAME} ${SRC_ALL})
 
-        ${SRC_DIR}/torch_activation.cpp
-        ${SRC_DIR}/torch_classifier.cpp
-        ${SRC_DIR}/torch_module.cpp
-        ${SRC_DIR}/torch_mv3_large.cpp
-        ${SRC_DIR}/torch_mv3_small.cpp
-        ${SRC_DIR}/torch_transform.cpp
-        ${SRC_DIR}/torch_util.cpp
-        ${SRC_DIR}/dataset_cifar.cpp
-        )
-
-add_executable(${PROJECT_NAME} ${SRC_PRO_FILES} ${SRC_LIST})
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+        $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
 if (MSVC)
-    set(LINKED_LIBS
-#            Qt5::Widgets Qt5::Quick Qt5::3DAnimation Qt5::3DCore
-#            Qt5::3DExtras Qt5::3DInput Qt5::3DLogic Qt5::3DRender
-            opencv_core opencv_highgui opencv_imgproc opencv_imgcodecs opencv_dnn
-#            openbabel coordgen
-            ${TORCH_LIBRARIES})
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${LINKED_LIBS})
-elseif (APPLE)
-    message(FATAL "dont support train build on macOS")
+    set(MSVC_LIBS Qt5::Widgets Qt5::Quick Qt5::3DAnimation Qt5::3DCore
+            Qt5::3DExtras Qt5::3DInput Qt5::3DLogic Qt5::3DRender
+            openbabel coordgen)
+    if (ALLOW_USER_TRAIN)
+        list(APPEND MSVC_LIBS ${TORCH_LIBRARIES})
+        list(APPEND MSVC_LIBS ${OpenCV_LIBS})
+    else (ALLOW_USER_TRAIN)
+        list(APPEND MSVC_LIBS opencv_core opencv_highgui
+                opencv_imgproc opencv_imgcodecs opencv_dnn)
+    endif (ALLOW_USER_TRAIN)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${MSVC_LIBS})
 elseif (UNIX)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${COCR_UNIX_3RDPARTY_LIB})
 endif (MSVC)
-

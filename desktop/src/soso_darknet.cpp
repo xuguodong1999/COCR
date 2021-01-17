@@ -1,4 +1,4 @@
-#include "darknet_data.hpp"
+#include "soso_darknet.hpp"
 #include "mol_op.hpp"
 #include "hw_mol.hpp"
 #include "isomer.hpp"

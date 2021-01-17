@@ -21,7 +21,8 @@ file(GLOB CPP_SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 set_source_files_properties(${C_SRC} PROPERTIES LANGUAGE CXX)
 
-add_executable(${PROJECT_NAME} ${C_SRC} ${HEADERS} ${CUDA_SRC} ${CPP_SRC})
+add_executable(${PROJECT_NAME} ${C_SRC} ${HEADERS} ${CUDA_SRC} ${CPP_SRC}
+        ${BASE_SRC}  ${HW_SRC})
 
 # clear -fPIC flag for nvcc
 #set_property(TARGET Qt5::Core PROPERTY INTERFACE_COMPILE_OPTIONS)

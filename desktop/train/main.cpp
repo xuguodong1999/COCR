@@ -2,7 +2,7 @@
 #include "hw_mol.hpp"
 #include "isomer.hpp"
 //#include "couch_data.hpp"
-#include "darknet_data.hpp"
+#include "soso_darknet.hpp"
 //
 //#include "torch_yolov4.hpp"
 //#include "torch_util.hpp"
@@ -53,7 +53,7 @@ int testHWDraw() {
     JMol mol;
     for (auto &alkane:alkanes) {
         mol.setAlkane(alkane);
-        mol.randomize();
+//        mol.randomize();
 //        auto posMap = mol.get3DCoordinates(true);
 //        for (auto&[id, pos]:posMap) {
 //            std::cout << id << ": " << pos << std::endl;

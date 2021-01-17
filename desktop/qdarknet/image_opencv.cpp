@@ -100,7 +100,7 @@ cv::Mat image_to_mat(image img);
 //    cv::Mat ipl_to_mat(IplImage *ipl);
 //    IplImage *mat_to_ipl(cv::Mat mat);
 
-
+// TODO: 添加共享内存加载机制
 extern "C" mat_cv *load_image_mat_cv(const char *filename, int flag) {
     cv::Mat *mat_ptr = NULL;
     try {

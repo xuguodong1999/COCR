@@ -97,11 +97,73 @@ set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 include_directories(${SRC_DIR})
 include_directories(${INSTALL_DIR}/include)
 
+set(BASE_SRC ${SRC_DIR}/atom.cpp
+        ${SRC_DIR}/bignumber.cpp
+        ${SRC_DIR}/bond.cpp
+        ${SRC_DIR}/cocr_types.cpp
+        ${SRC_DIR}/colors.cpp
+        ${SRC_DIR}/config.cpp
+        ${SRC_DIR}/isomer.cpp
+        ${SRC_DIR}/mol.cpp
+        ${SRC_DIR}/opencv_util.cpp
+        ${SRC_DIR}/opencv_yolo.cpp
+        ${SRC_DIR}/polya.cpp
+        ${SRC_DIR}/std_util.cpp
+        ${SRC_DIR}/timer.cpp
+        )
+
+set(TORCH_SRC ${SRC_DIR}/dataset_cifar.cpp
+        ${SRC_DIR}/dataset_couch.cpp
+        ${SRC_DIR}/torch_activation.cpp
+        ${SRC_DIR}/torch_classifier.cpp
+        ${SRC_DIR}/torch_crnn.cpp
+        ${SRC_DIR}/torch_enet.cpp
+        ${SRC_DIR}/torch_module.cpp
+        ${SRC_DIR}/torch_mv3_large.cpp
+        ${SRC_DIR}/torch_mv3_small.cpp
+        ${SRC_DIR}/torch_transform.cpp
+        ${SRC_DIR}/torch_util.cpp
+        ${SRC_DIR}/torch_yolov4.cpp
+        )
+
+set(HW_SRC ${SRC_DIR}/hw_base.cpp
+        ${SRC_DIR}/hw_bond.cpp
+        ${SRC_DIR}/hw_data.cpp
+        ${SRC_DIR}/hw_item.cpp
+        ${SRC_DIR}/hw_mol.cpp
+        ${SRC_DIR}/hw_script.cpp
+        ${SRC_DIR}/hw_str.cpp
+        ${SRC_DIR}/hw_stroke.cpp
+
+        ${SRC_DIR}/box2graph.cpp
+        ${SRC_DIR}/qt_util.cpp
+        ${SRC_DIR}/soso_darknet.cpp
+        ${SRC_DIR}/soso_qsm.cpp)
+
+set(MOL_SRC ${SRC_DIR}/openbabel_util.cpp
+        ${SRC_DIR}/mol2d.cpp
+        ${SRC_DIR}/mol3d.cpp
+        ${SRC_DIR}/mol3d_builder.cpp
+        ${SRC_DIR}/mol3dwindow.cpp
+        ${SRC_DIR}/mol_graph.cpp
+        ${SRC_DIR}/mol_holder.cpp
+        ${SRC_DIR}/mol_op.cpp
+        ${SRC_DIR}/mol_util.cpp
+        )
+
+set(UI_SRC ${SRC_DIR}/demowidget_2020_1213.cpp
+        ${SRC_DIR}/qml_sketchitem.cpp
+        )
+
 # client side app with opencv dnn engine backend
 add_subdirectory(app)
+add_subdirectory(test_box2graph)
+add_subdirectory(test_datagen)
+add_subdirectory(test_obusage)
 add_subdirectory(test_ui)
-add_subdirectory(test_3d)
+
 if (ALLOW_USER_TRAIN)
+    add_subdirectory(train)
     add_subdirectory(train_cifar)
     if (UNIX AND NOT APPLE)
         add_subdirectory(qdarknet)

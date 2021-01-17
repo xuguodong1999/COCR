@@ -1,4 +1,4 @@
-project(cocr-test_ui)
+project(cocr-test_box2graph)
 
 
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)

@@ -21,7 +21,7 @@ int _main() {
     return 0;
 }
 int main() {
-    _putenv("BABEL_DATADIR=C:/shared/openbabel3.1.1/bin/data");
+    putenv("BABEL_DATADIR=C:/shared/openbabel3.1.1/bin/data");
     try {
         return _main();
     } catch (std::exception &e) {

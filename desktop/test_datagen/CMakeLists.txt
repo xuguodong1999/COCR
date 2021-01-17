@@ -1,4 +1,4 @@
-project(cocr-test_ui)
+project(cocr-test_datagen)
 
 
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
@@ -27,6 +27,8 @@ if (MSVC)
                 opencv_imgproc opencv_imgcodecs opencv_dnn)
     endif (ALLOW_USER_TRAIN)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${MSVC_LIBS})
+elseif (APPLE)
+    message(FATAL "TODO: support test_3d build on macOS")
 elseif (UNIX)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${COCR_UNIX_3RDPARTY_LIB})
 endif (MSVC)
