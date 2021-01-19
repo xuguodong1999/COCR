@@ -3,7 +3,7 @@ project(cocr-train_cifar)
 
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/train_cifar.cpp)
 
-set(SRC_ALL ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
+set(SRC_ALL  ${SRC_PRO_FILES}
         ${TORCH_SRC} ${BASE_SRC})
 
 add_executable(${PROJECT_NAME} ${SRC_ALL})

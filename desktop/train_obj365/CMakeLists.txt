@@ -1,10 +1,10 @@
-project(cocr-test_ui)
+project(cocr-train_obj365)
 
 
-set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/train_obj365.cpp)
 
-set(SRC_ALL ${SRC_PRO_FILES})
-
+set(SRC_ALL  ${SRC_PRO_FILES}
+        ${TORCH_SRC} ${BASE_SRC})
 
 add_executable(${PROJECT_NAME} ${SRC_ALL})
 

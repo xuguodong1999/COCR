@@ -3,12 +3,7 @@ project(cocr-test_box2graph)
 
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
-set(SRC_ALL ${RES_FILES} ${BIG_RES_FILES} ${SRC_PRO_FILES}
-        ${UI_SRC} ${MOL_SRC} ${HW_SRC} ${BASE_SRC})
-
-if (ALLOW_USER_TRAIN)
-    list(APPEND SRC_ALL ${TORCH_SRC})
-endif (ALLOW_USER_TRAIN)
+set(SRC_ALL ${SRC_PRO_FILES})
 
 add_executable(${PROJECT_NAME} ${SRC_ALL})
 

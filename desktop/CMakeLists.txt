@@ -114,6 +114,7 @@ set(BASE_SRC ${SRC_DIR}/atom.cpp
 
 set(TORCH_SRC ${SRC_DIR}/dataset_cifar.cpp
         ${SRC_DIR}/dataset_couch.cpp
+        ${SRC_DIR}/qt_util.cpp
         ${SRC_DIR}/torch_activation.cpp
         ${SRC_DIR}/torch_classifier.cpp
         ${SRC_DIR}/torch_crnn.cpp
@@ -136,7 +137,6 @@ set(HW_SRC ${SRC_DIR}/hw_base.cpp
         ${SRC_DIR}/hw_stroke.cpp
 
         ${SRC_DIR}/box2graph.cpp
-        ${SRC_DIR}/qt_util.cpp
         ${SRC_DIR}/soso_darknet.cpp
         ${SRC_DIR}/soso_qsm.cpp)
 
@@ -163,8 +163,9 @@ add_subdirectory(test_obusage)
 add_subdirectory(test_ui)
 
 if (ALLOW_USER_TRAIN)
-    add_subdirectory(train)
+#    add_subdirectory(train)
     add_subdirectory(train_cifar)
+    add_subdirectory(train_obj365)
     if (UNIX AND NOT APPLE)
         add_subdirectory(qdarknet)
     endif ()

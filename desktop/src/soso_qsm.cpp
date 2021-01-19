@@ -42,6 +42,8 @@ void SOSOMemory::setSleepTime(int sleepTime) {
     SOSOMemory::sleepTime = sleepTime;
 }
 
+static bool stop;
+
 void SOSOMemory::run() {
     stop = false;
     while (true) {
@@ -53,8 +55,6 @@ void SOSOMemory::run() {
 //        qsmVec[idx]->lock();
 //        memcpy(beg, img.data, IMG_SIZE);
 //        beg += IMG_SIZE;
-//        *beg = labels.size();
-//        beg += 1;
 //        memcpy(beg, labels.data(), labels.size() * sizeof(float));
 //        qsmVec[idx]->unlock();
         idx = (idx + 1) % IMG_NUM;
@@ -69,8 +69,8 @@ bool SOSOMemory::isStop() const {
     return stop;
 }
 
-void SOSOMemory::setStop(bool stop) {
-    SOSOMemory::stop = stop;
+void SOSOMemory::setStop(bool _stop) {
+    stop = _stop;
 }
 
 SOSOMemory::~SOSOMemory() {

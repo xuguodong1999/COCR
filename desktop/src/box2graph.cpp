@@ -12,9 +12,7 @@
 #include <variant>
 #include <unordered_map>
 
-std::vector<std::string> CLASSES = {
-        "Br", "O", "I", "S", "H", "N", "C", "B",
-        "-", "--", "-+", "=", "F", "#", "Cl", "P", "[o]"};
+extern std::vector<std::string> CLASSES;
 
 std::vector<std::shared_ptr<JMol>> BoxGraphConverter::handleNoBond() {
     if (!bondBoxes.empty()) {

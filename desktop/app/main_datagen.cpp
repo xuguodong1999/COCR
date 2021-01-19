@@ -17,18 +17,20 @@ public:
     Widget(QWidget *_parent = nullptr) : QWidget(_parent) {
         qsm = std::make_shared<SOSOMemory>("fuck0");
         QThreadPool::globalInstance()->start(qsm.get());
+        connect(this,&QWidget::close,[&](){
+            qsm->setStop(true);
+        });
     }
 
     ~Widget() {
-        qsm->setStop(true);
         qDebug() << __FUNCTION__ << QThread::currentThreadId();
     }
 };
 
 int _test_qsm(int argc, char **argv) {
-    qsm = std::make_shared<SOSOMemory>("fuck");
-    QThreadPool::globalInstance()->start(qsm.get());
-    return 0;
+//    qsm = std::make_shared<SOSOMemory>("fuck");
+//    QThreadPool::globalInstance()->start(qsm.get());
+//    return 0;
     QApplication a(argc, argv);
     (new Widget)->show();
     return a.exec();

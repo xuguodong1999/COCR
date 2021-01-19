@@ -19,11 +19,10 @@ class SOSOMemory : public QRunnable {
     std::string key;
     int sleepTime;
     size_t idx;
-    bool stop;
 public:
     bool isStop() const;
 
-    void setStop(bool stop);
+    void setStop(bool _stop);
 
 public:
     int getSleepTime() const;
