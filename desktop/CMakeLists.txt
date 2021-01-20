@@ -138,7 +138,7 @@ set(HW_SRC ${SRC_DIR}/hw_base.cpp
 
         ${SRC_DIR}/box2graph.cpp
         ${SRC_DIR}/soso_darknet.cpp
-        ${SRC_DIR}/soso_qsm.cpp)
+        ${SRC_DIR}/soso_mem.cpp)
 
 set(MOL_SRC ${SRC_DIR}/openbabel_util.cpp
         ${SRC_DIR}/mol2d.cpp

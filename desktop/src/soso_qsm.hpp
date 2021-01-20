@@ -3,6 +3,7 @@
 
 #include <QSharedMemory>
 #include <QRunnable>
+#include <QList>
 #include <memory>
 #include <string>
 
@@ -14,8 +15,9 @@ class SOSOMemory : public QRunnable {
     size_t WIDTH, HEIGHT;// 3通道图像大小
     size_t LABEL_SIZE;// 为一个图像对应的标签预留的空间大小
     size_t SAMPLE_SIZE, MAX_SIZE, IMG_SIZE;
-    std::vector<std::shared_ptr<QSharedMemory>> qsmVec;
-    std::vector<std::string> keys;
+    QSharedMemory mem;
+    std::unordered_map<std::string,size_t>keys;
+//    std::vector<std::string> keys;
     std::string key;
     int sleepTime;
     size_t idx;
