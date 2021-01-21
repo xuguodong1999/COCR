@@ -23,7 +23,7 @@ private:
     int thickness, lineType, shift;
     float revertColorProb;
 public:
-    HwController();
+    HwController(const int&_thickness=2);
 };
 
 class HwBase {

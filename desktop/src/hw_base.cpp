@@ -20,8 +20,8 @@ int HwController::getShift() const {
     return shift;
 }
 
-HwController::HwController()
-        : color(0, 0, 0), lineType(cv::LINE_AA), thickness(2), shift(0),
+HwController::HwController(const int&_thickness)
+        : color(0, 0, 0), lineType(cv::LINE_AA), thickness(_thickness), shift(0),
           revertColorProb(0.5) {
 }
 

@@ -3,7 +3,7 @@
 void HwItem::setHwController(HwController &_hwController) {
     hwController = &_hwController;
     for (auto &script:mData) {
-        script.setHwController(_hwController);
+        script.setHwController(*hwController);
     }
 }
 

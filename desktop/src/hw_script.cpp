@@ -64,7 +64,7 @@ void HwScript::mulK(float _kx, float _ky) {
 void HwScript::setHwController(HwController &_hwController) {
     hwController = &_hwController;
     for (auto &script:mData) {
-        script.setHwController(_hwController);
+        script.setHwController(*hwController);
     }
 }
 

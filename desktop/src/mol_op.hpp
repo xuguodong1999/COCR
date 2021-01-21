@@ -15,7 +15,6 @@ class MolOp : public MolHolder {
 
 public:
     MolOp(std::shared_ptr<JMol> _mol);
-
     void randomize(const float &_addHydrogenProb = 0.1, bool _replaceBond = true,
                    bool _replaceAtom = true, bool _addAromaticRing = true,
                    bool _addCommonRing = true);

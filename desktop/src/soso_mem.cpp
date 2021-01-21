@@ -24,11 +24,34 @@ void MemDataGenerator::reAllocateMem() {
     } else {
         qDebug() << "isAttached = " << mem.isAttached();
     }
+    for (auto &lock:locks) {
+        if (lock) {
+            delete lock;
+            lock = nullptr;
+        }
+    }
+    locks.clear();
+    for (size_t i = 0; i < sampleNum; i++) {
+        auto lock1 = new QSharedMemory(("q" + std::to_string(i) + ".jpg").c_str());
+        auto lock2 = new QSharedMemory(("q" + std::to_string(i) + ".txt").c_str());
+        if (!lock1->create(1, QSharedMemory::ReadOnly)) {
+            qDebug() << lock1->errorString();
+            lock1->attach();
+//            std::cerr << "Try run again." << std::endl;
+        }
+        if (!lock2->create(1, QSharedMemory::ReadOnly)) {
+            qDebug() << lock2->errorString();
+            lock2->attach();
+//            std::cerr << "Try run again." << std::endl;
+        }
+        locks.push_back(lock1);
+        locks.push_back(lock2);
+    }
 }
 
 MemDataGenerator::MemDataGenerator()
         : sampleNum(256), imgWidth(416), imgHeight(416), imgChannel(3), labelSize(10240 * sizeof(float)),
-          sleepTime(1000), stop(false), idx(0) {
+          sleepTime(100), stop(false), idx(0) {
     updateParm();
 }
 
@@ -50,12 +73,15 @@ void MemDataGenerator::run() {
         std::vector<float> labels;
         // get data above
         labels.resize(labelSize / sizeof(float), 5);
-        mem.lock();
+
+        locks[2 * idx]->lock();
+        locks[2 * idx + 1]->lock();
         uchar *beg = (uchar *) mem.data() + idx * sampleSize;
         memcpy(beg, img.data, imgSize);
         beg += imgSize;
 //        memcpy(beg, labels.data(), labelSize);
-        mem.unlock();
+        locks[2 * idx]->unlock();
+        locks[2 * idx + 1]->unlock();
         cv::Mat img2;
         img2.flags = CV_32FC3;
         img2.rows = imgHeight;
@@ -65,7 +91,10 @@ void MemDataGenerator::run() {
         cv::imshow(memKey, img2);
         idx = (idx + 1) % sampleNum;
         qDebug() << "loop...";
-        QThread::msleep(sleepTime);
+        count++;
+        if (count >= sampleNum) {
+            QThread::msleep(sleepTime);
+        }
     }
     qDebug() << "exit";
 }
@@ -95,6 +124,12 @@ void MemDataGenerator::exit_run() {
 
 MemDataGenerator::~MemDataGenerator() {
     qDebug() << "fuck:" << __FUNCTION__;
+    for (auto &lock:locks) {
+        if (lock) {
+            delete lock;
+            lock = nullptr;
+        }
+    }
 }
 
 MCWidget::MCWidget(QWidget *_parent) : QWidget(_parent) {
@@ -115,4 +150,38 @@ void MCWidget::closeEvent(QCloseEvent *e) {
 //    dg.quit();
 //    QThread::msleep(2000);
     QWidget::closeEvent(e);
+}
+
+
+
+std::optional<cv::Mat> MemDataGenerator::readImageFromMem(const char *_filename) {
+    if (jpgMap.empty()) {
+        for (size_t i = 0; i < 10240; i++)jpgMap["q" + std::to_string(i) + ".jpg"] = i;
+    }
+    auto itr = jpgMap.find(_filename);
+    if (itr == jpgMap.end()) {
+        return std::nullopt;
+    }
+    locks[itr->second]->lock();
+    cv::Mat img2;
+    img2.flags = CV_32FC3;
+    img2.rows = 416;
+    img2.cols = 416;
+    img2.channels();
+    img2.data = (uchar *) mem.data() + idx * sampleSize;
+    locks[itr->second]->unlock();
+}
+
+std::optional<std::vector<std::tuple<int, float, float, float, float, float>>>
+        MemDataGenerator::readLabelFromMem(const char *_filename) {
+    if (txtMap.empty()) {
+        for (size_t i = 0; i < 10240; i++)txtMap["q" + std::to_string(i) + ".jpg"] = i;
+    }
+    auto itr = txtMap.find(_filename);
+    if (itr == txtMap.end()) {
+        return std::nullopt;
+    }
+    locks[itr->second]->lock();
+
+    locks[itr->second]->unlock();
 }

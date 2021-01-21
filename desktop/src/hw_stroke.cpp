@@ -62,6 +62,7 @@ void HwStroke::mulK(float _kx, float _ky) {
     }
 }
 
+
 HwStroke::HwStroke(HwController *_hwController) : hwController(_hwController) {
     if (nullptr == _hwController) {
         hwController = &(HwBase::baseController);

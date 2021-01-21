@@ -43,7 +43,7 @@ void HwMol::mulK(float kx, float ky) {
 void HwMol::setHwController(HwController &_hwController) {
     hwController = &_hwController;
     for (auto &sym:mData) {
-        sym->setHwController(_hwController);
+        sym->setHwController(*hwController);
     }
 }
 
@@ -76,7 +76,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     // 添加原子图元
     auto add_atom_item = [&](const size_t &_aid) {
         auto atom = mol->getAtomById(_aid);
-        auto sym = std::make_shared<HwStr>(atom->getElementName());
+        auto sym = std::make_shared<HwStr>(atom->getElementType());
         sym->setKeepDirection(true);
         float fontSize = avgBondLength * betweenProb(0.3, 0.7);
         sym->resizeTo(fontSize, fontSize);
@@ -96,7 +96,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     std::vector<std::unordered_set<size_t>> kekuleRings;// 记录画圈圈的化学键id
     std::unordered_set<size_t> bondInKekuleRings;// 记录画圈圈的化学键id，用于快速查找
     for (auto &aromaticStruct:bondInRing) {
-        if (byProb(0.5)) {
+        if (byProb(0.8)) {
             for (auto &ring:aromaticStruct) {
                 kekuleRings.push_back(ring);// 深拷贝
                 for (auto &bid:ring) {
@@ -186,8 +186,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     if (!mData.empty()) avgSize /= mData.size();
 //    return avgSize;
     // 添加弧线转折
-    std::cout << "lineBondMap.size()=" << lineBondMap.size() << std::endl;
-    std::cout << "avgBondLength=" << avgSize << std::endl;
+//    std::cout << "lineBondMap.size()=" << lineBondMap.size() << std::endl;
+//    std::cout << "avgBondLength=" << avgSize << std::endl;
     for (auto&[bid1, bid2]:lineBondMap) {
         auto item1 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid1]]);
         auto item2 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid2]]);
@@ -207,7 +207,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         }
         // aid is angle atom
         cv::Point2f A = mol2d->getPos2D(aid);
-        std::cout << "A=" << A << std::endl;
+//        std::cout << "A=" << A << std::endl;
 //        std::cout << "bbox1=" << item1->getBoundingBox().value() << std::endl;
 //        std::cout << "bbox2=" << item2->getBoundingBox().value() << std::endl;
         const float threshDis = avgBondLength / 4.0;
@@ -250,7 +250,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         item1->push_back(add_arc(B, A));
         item2->push_back(add_arc(C, A));
     }
-    std::cout << "avgSize=" << avgSize << std::endl;
+//    std::cout << "avgSize=" << avgSize << std::endl;
     return avgSize;
 }
 
@@ -274,11 +274,24 @@ static std::unordered_map<DetectorClasses, int> labels = {
         {DetectorClasses::ItemCl,             14}};
 //static int beginLabel = 0;
 
+static std::vector<HwController> controllers = {
+//        HwController(2),
+        HwController(3),
+        HwController(4),
+        HwController(5),
+        HwController(6),
+        HwController(7),
+        HwController(8),
+};
+
 void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
                           const size_t &_repeatTimes) {
     float avgSize = reloadHWData(0.1);
-    float k = 50.0f / (std::max)(0.01f, avgSize);
+    setHwController(controllers[rand() % controllers.size()]);
+    float k = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
+    size_t fixW, fixH;
+    fixW = fixH = 416;
     for (size_t i = 0; i < _repeatTimes; i++) {
         this->rotate(rand() % 360);
         auto bBox = this->getBoundingBox().value();
@@ -288,10 +301,14 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         this->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
+        auto paddingColor=getScalar(ColorName::rgbWhite);
         if (byProb(hwController->getRevertColorProb())) {// 反转颜色
             cv::bitwise_not(img, img);
+            paddingColor=getScalar(ColorName::rgbBlack);
         }
-        cv::imwrite(_imgPath + suffix + ".jpg", img,
+        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH,paddingColor);
+        auto&[k, offsetx, offsety]=offset;
+        cv::imwrite(_imgPath + suffix + ".jpg", resImg,
                     {cv::IMWRITE_JPEG_QUALITY, 100});
         std::ofstream ofsm(_labelPath + suffix + ".txt");
         ofsm.precision(6);
@@ -302,22 +319,25 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         for (auto &sym:mData) {
             auto name = sym->getItemType();
             auto bBox = sym->getBoundingBox().value();
+            bBox.x = bBox.x * k + offsetx;
+            bBox.y = bBox.y * k + offsety;
+            bBox.width *= k;
+            bBox.height *= k;
             float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
-//            if (notExist(labels, name)) {
-//                labels.insert({name, beginLabel++});
-//                std::cout << name << " " << beginLabel - 1 << std::endl;
-//            }
-            ofsm << labels[name] << " " << centX / minWidth << " " << centY / minHeight << " "
-                 << bBox.width / minWidth << " " << bBox.height / minHeight << "\n";
+            ofsm << labels[name] << " " << centX / fixW << " " << centY / fixH << " "
+                 << bBox.width / fixW << " " << bBox.height / fixH << "\n";
         }
         ofsm.close();
     }
 }
 
 void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
-    float avgSize = reloadHWData(0);
+    float avgSize = reloadHWData(0.1);
+    setHwController(controllers[rand() % controllers.size()]);
     float k = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
+    size_t fixW, fixH;
+    fixW = fixH = 416;
     for (size_t i = 0; i < _repeatTimes; i++) {
         this->rotate(rand() % 360);
         auto bBox = this->getBoundingBox().value();
@@ -331,7 +351,18 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
                 cv::rectangle(img, sym->getBoundingBox().value(), getScalar(ColorName::rgbBlue));
             }
         }
-        cv::imshow("MolHwItem::showOnScreen", img);
+        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
+        auto&[k, offsetx, offsety]=offset;
+        for (auto &sym:mData) {
+            std::cout<<labels[sym->getItemType()]<<std::endl;
+            auto bBox = sym->getBoundingBox().value();
+            bBox.x = bBox.x * k + offsetx;
+            bBox.y = bBox.y * k + offsety;
+            bBox.width *= k;
+            bBox.height *= k;
+            cv::rectangle(resImg, bBox, getScalar(ColorName::rgbBlue));
+        }
+        cv::imshow("MolHwItem::showOnScreen", resImg);
         cv::waitKey(0);
     }
 }
@@ -349,9 +380,11 @@ void HwMol::rotate(float _angle) {
 }
 
 
-HwMol::HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder> _mol2dHolder,HwController *_hwController)
-        : MolHolder(_molOpHolder->getMol()), mol2dHolder(_mol2dHolder), molOpHolder(_molOpHolder), hwController(_hwController) {
-    if(!hwController) {
+HwMol::HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder> _mol2dHolder,
+             HwController *_hwController)
+        : MolHolder(_molOpHolder->getMol()), mol2dHolder(_mol2dHolder), molOpHolder(_molOpHolder),
+          hwController(_hwController) {
+    if (!hwController) {
         hwController = &(HwBase::baseController);
     }
     // TODO: 校验两个holder持有同一个JMol对象

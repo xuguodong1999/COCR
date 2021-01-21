@@ -84,7 +84,7 @@ void MolOp::randomize(
             mol->getAtomById(_aid)->setElementType(ele);
         }
     };
-    if (_replaceAtom) mol->safeTraverseAtoms(replace_atom_type);
+    if (_replaceAtom){ mol->safeTraverseAtoms(replace_atom_type);}
     // 添加官能团
     auto add_group = [&](const size_t &_aid) {// COOH CHO etc
         auto atom = mol->getAtomById(_aid);
