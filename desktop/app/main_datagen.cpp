@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
 int dump(){
     HwDataLoader::getInstance();
     SOSODarknet sd;
-    sd.init("/media/xgd/hjyy-ext4/soso17");
-    sd.dump(400000,4);
+    sd.init("/media/xgd/hjyy-ext4/soso17_small");
+    sd.dump(1000,4);
     return 0;
 }
 int _main() {

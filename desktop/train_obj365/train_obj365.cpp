@@ -131,6 +131,10 @@ public:
             _ist.read((char *) &y, sizeof(float));
             _ist.read((char *) &w, sizeof(float));
             _ist.read((char *) &h, sizeof(float));
+            if (x < 0)x = 0;
+            if (y < 0)y = 0;
+            if (x + w > _dataBlob.image.w)w = _dataBlob.image.w - x;
+            if (y + h > _dataBlob.image.h)h = _dataBlob.image.h - y;
             _dataBlob.annotations.emplace_back(x, y, w, h, label);
         }
         return _ist;
@@ -161,13 +165,41 @@ public:
         return true;
     }
 
-    bool isValidSize() const {
+    bool isValidSizeAndObj() const {
         auto mat = cv::imread(getTruePath());
-        return mat.cols == image.w && mat.rows == image.h && mat.channels() == 3;
+        if (mat.cols != image.w || mat.rows != image.h || mat.channels() != 3)return false;
+        for (auto &annotation:annotations) {
+            float tlx, tly, brx, bry;
+            tlx = annotation.x;
+            tly = annotation.y;
+            brx = tlx + annotation.w;
+            bry = tly + annotation.h;
+            if (tlx < 0 || tly < 0 || brx < 0 || bry < 0 ||
+                tlx > image.w || tly > image.h || brx > image.w || bry > image.h)
+                return false;
+            if(annotation.w<0.0001||annotation.h<0.0001)return false;
+        }
+        return true;
     }
 
     void addBoundingBox(const float &_x, const float &_y, const float &_w, const float &_h, const int &_id) {
         annotations.emplace_back(_x, _y, _w, _h, _id);
+    }
+
+    void display() {
+        cv::Mat canvas = cv::imread(getTruePath());
+        for (auto &annotation:annotations) {
+            float tlx, tly, brx, bry;
+            tlx = annotation.x;
+            tly = annotation.y;
+            brx = tlx + annotation.w;
+            bry = tly + annotation.h;
+            cv::rectangle(canvas,
+                          cv::Point(std::round(tlx) + 1, std::round(tly) + 1),
+                          cv::Point(std::round(brx) - 1, std::round(bry) - 1), cv::Scalar(0, 0, 0), 3);
+        }
+        cv::imshow("sample", canvas);
+        cv::waitKey(0);
     }
 
     static std::shared_ptr<ObjDataBlob> GetImgBlobById(const int &_id) {
@@ -190,10 +222,12 @@ public:
             exit(-1);
         }
         for (auto &imgBlob:ObjDataBlob::sDataBlob) {
-            if (imgBlob.second->isValid())
+            if (imgBlob.second->isValid()) {
                 ofs << *(imgBlob.second);
-            else
+//                imgBlob.second->display();
+            } else {
                 std::cerr << "invalid img @ " << imgBlob.second->image.filepath << std::endl;
+            }
         }
         ofs.close();
         ofs.open(label_path, std::ios::out);
@@ -278,10 +312,27 @@ std::vector<ObjDataBlob> LoadFromBin(const std::string &_filepath) {
     return std::move(dataBlobs);
 }
 
+int convertRaw() {
+    ObjDataBlob::ReadRawAnnotations(raw_annotation_path);
+    ObjDataBlob::DumpAsBin();
+    return 0;
+}
+
+int washAsDarknet() {
+    auto dataBlobs = LoadFromBin(train_annotations_path);
+    std::cout << dataBlobs.size() << std::endl;
+#pragma omp parallel for num_threads(8)
+    for (size_t i = 0; i < dataBlobs.size(); i++) {
+        if (dataBlobs[i].isValidSizeAndObj()) {
+            dataBlobs[i].dumpAsDarknet();
+        }
+    }
+    return 0;
+}
+
 int main() {
-//    ObjDataBlob::ReadRawAnnotations(raw_annotation_path);
-//    ObjDataBlob::DumpAsBin();
-//    return 0;
+//    return convertRaw();
+    return washAsDarknet();
 
     auto dataBlobs = LoadFromBin(train_annotations_path);
     std::cout << dataBlobs.size() << std::endl;
@@ -292,7 +343,7 @@ int main() {
 //        dataBlobs[i].dumpAsDarknet();
         all.push_back(dataBlobs[i].getTruePath());
 //        ofs << dataBlobs[i].getTruePath() << std::endl;
-//        if (!dataBlobs[i].isValidSize()) {
+//        if (!dataBlobs[i].isValidSizeAndObj()) {
 //            std::cout << dataBlobs[i].getTruePath();
 //        }
     }
