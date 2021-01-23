@@ -170,6 +170,7 @@ std::optional<cv::Mat> MemDataGenerator::readImageFromMem(const char *_filename)
     img2.channels();
     img2.data = (uchar *) mem.data() + idx * sampleSize;
     locks[itr->second]->unlock();
+    return std::nullopt;
 }
 
 std::optional<std::vector<std::tuple<int, float, float, float, float, float>>>
@@ -184,4 +185,5 @@ std::optional<std::vector<std::tuple<int, float, float, float, float, float>>>
     locks[itr->second]->lock();
 
     locks[itr->second]->unlock();
+    return std::nullopt;
 }

@@ -52,10 +52,10 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
 //                                             14, 15
 //                                             10, 11, 12, 13, 14, 15
                                      });
-    const size_t loopTime = _numOfSamples / _repeatTimes;
+    const int loopTime = _numOfSamples / _repeatTimes;
     std::shuffle(alkanes.begin(), alkanes.end(), std::default_random_engine());
 #pragma omp parallel for num_threads(8)
-    for (size_t i = 0; i < loopTime; i++) {
+    for (int i = 0; i < loopTime; i++) {
         auto mol = std::make_shared<JMol>();
         mol->setAlkane(alkanes[i % alkanes.size()]);
         auto molOp = std::make_shared<MolOp>(mol);

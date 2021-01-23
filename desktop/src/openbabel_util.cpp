@@ -11,24 +11,24 @@
 static std::unordered_map<size_t, OpenBabel::OBAtom *> j2oAtomMap;
 static std::unordered_map<unsigned long, size_t> o2jAtomMap;
 
-OpenBabel::OBMol convertJMolToOBMol(const std::shared_ptr<JMol> &_jMol) {
+OpenBabel::OBMol convertJMolToOBMol(const JMol &_jMol) {
     OpenBabel::OBMol obMol;
     // FIXME: 这里的转换丢失了构型信息、没有包含离域键
     j2oAtomMap.clear();
     auto convert_atom = [&](const size_t &_aid) {
         auto obAtom = obMol.NewAtom();
-        obAtom->SetAtomicNum(_jMol->getAtomById(_aid)->getAtomicNumber());
+        obAtom->SetAtomicNum(_jMol.getAtomById(_aid)->getAtomicNumber());
         j2oAtomMap[_aid] = obAtom;
     };
-    _jMol->safeTraverseAtoms(convert_atom);
+    _jMol.safeTraverseAtoms(convert_atom);
     auto convert_bond = [&](const size_t &_bid) {
         auto obBond = obMol.NewBond();
-        auto bond = _jMol->getBondById(_bid);
+        auto bond = _jMol.getBondById(_bid);
         obBond->SetBondOrder(std::lround(bond->asValence().floatValue()));
         obBond->SetBegin(j2oAtomMap[bond->getAtomFrom()]);
         obBond->SetEnd(j2oAtomMap[bond->getAtomTo()]);
     };
-    _jMol->safeTraverseBonds(convert_bond);
+    _jMol.safeTraverseBonds(convert_bond);
     return std::move(obMol);
 }
 
@@ -43,7 +43,8 @@ std::shared_ptr<JMol> convertOBMolToJMol(const OpenBabel::OBMol &_obMol) {
     FOR_BONDS_OF_MOL(obBond, const_cast<OpenBabel::OBMol &>(_obMol)) {
         auto aid1 = o2jAtomMap[obBond->GetBeginAtom()->GetId()];
         auto aid2 = o2jAtomMap[obBond->GetEndAtom()->GetId()];
-        jMol->addBond(aid1, aid2, static_cast<JBondType>(obBond->GetBondOrder()));
+        jMol->addBond(
+                aid1, aid2, static_cast<JBondType>(obBond->GetBondOrder()));
     }
     return jMol;
 }
@@ -73,8 +74,8 @@ bool runOBForceField(OpenBabel::OBMol &_obMol, const std::string &_forcefield = 
     pFF->SetLogFile(&std::cerr);
     pFF->SetLogLevel(OBFF_LOGLVL_NONE);
     if (!pFF->Setup(_obMol)) {
-        std::cerr << "runOBForceField: could not setup force field." << std::endl;
-        return false;
+        std::cerr << "runOBForceField: setup force field ret false" << std::endl;
+//        return false;
     }
     try {
         pFF->SteepestDescent(500, 1.0e-4);
@@ -89,7 +90,7 @@ bool runOBForceField(OpenBabel::OBMol &_obMol, const std::string &_forcefield = 
 }
 
 
-std::string MolUtilOpenBabelImpl::getSMILES(const std::shared_ptr<JMol> &_mol) {
+std::string MolUtilOpenBabelImpl::getSMILES(const JMol &_mol) {
     // can -- Canonical SMILES format
     return getFormat(_mol, "can");
 }
@@ -106,25 +107,29 @@ std::vector<std::string> MolUtilOpenBabelImpl::getFormatChoices() {
     return std::move(result);
 }
 
-std::shared_ptr<Mol3D> MolUtilOpenBabelImpl::getCoord3D(const std::shared_ptr<JMol> &_mol) {
-    auto obMol = convertJMolToOBMol(_mol);
+bool MolUtilOpenBabelImpl::getCoord3D(Mol3D &_mol3d) {
+    auto &jMol = *_mol3d.getMol();
+    auto obMol = convertJMolToOBMol(jMol);
     if (!runOBForceField(obMol, "uff")) {
-        return nullptr;
+        return false;
     }
-    auto mol3d = std::make_shared<Mol3D>(_mol);
-    // TODO: 切换坐标
-    return mol3d;
+    _mol3d.reset(convertOBMolToJMol(obMol));
+    FOR_ATOMS_OF_MOL(obAtom, const_cast<OpenBabel::OBMol &>(obMol)) {
+        _mol3d.setAtomPos3DById(o2jAtomMap[obAtom->GetId()],
+                                obAtom->x(), obAtom->y(), obAtom->z());
+    }
+    return true;
 }
 
 std::string MolUtilOpenBabelImpl::getFormat(
-        const std::shared_ptr<JMol> &_mol, const std::string &_format) {
+        const JMol &_mol, const std::string &_format) {
     OpenBabel::OBConversion conv;
     auto formatOut = conv.FindFormat(_format);
     if (!formatOut || !conv.SetOutFormat(formatOut)) {
         std::cerr << "MolUtilOpenBabelImpl::getFormat: cannot set format!" << std::endl;
         exit(-1);
     }
-    std::cout << "_mol->atomsNum()" << _mol->atomsNum() << std::endl;
+    std::cout << "_mol->atomsNum()" << _mol.atomsNum() << std::endl;
     auto obMol = convertJMolToOBMol(_mol);
     if ("pdb" == _format) {
         std::cout << "runOBForceField(obMol)=" << runOBForceField(obMol) << std::endl;
@@ -150,12 +155,12 @@ std::shared_ptr<JMol> MolUtilOpenBabelImpl::fromFormat(const std::string &_conte
     return convertOBMolToJMol(obMol);
 }
 
-std::vector<std::vector<size_t>> MolUtilOpenBabelImpl::getLSSR(const std::shared_ptr<JMol> &_mol) {
+std::vector<std::vector<size_t>> MolUtilOpenBabelImpl::getLSSR(const JMol &_mol) {
     // TODO: 实现之
     return std::vector<std::vector<size_t>>();
 }
 
-std::vector<std::vector<size_t>> MolUtilOpenBabelImpl::getSSSR(const std::shared_ptr<JMol> &_mol) {
+std::vector<std::vector<size_t>> MolUtilOpenBabelImpl::getSSSR(const JMol &_mol) {
     // TODO: 实现之
     return std::vector<std::vector<size_t>>();
 }

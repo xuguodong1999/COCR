@@ -7,6 +7,7 @@
 #include <QPointer>
 #include <vector>
 #include <string>
+#include <optional>
 
 class MemDataGenerator : public QThread {
 Q_OBJECT

@@ -151,8 +151,16 @@ set(MOL_SRC ${SRC_DIR}/openbabel_util.cpp
         ${SRC_DIR}/mol_util.cpp
         )
 
-set(UI_SRC ${SRC_DIR}/demowidget_2020_1213.cpp
-        ${SRC_DIR}/qml_sketchitem.cpp
+set(UI_SRC ${SRC_DIR}/qt_aboutdialog.cpp
+        ${SRC_DIR}/qt_mainwindow.cpp
+        ${SRC_DIR}/qt_mol3deditor.cpp
+        ${SRC_DIR}/qt_util.cpp
+        ${SRC_DIR}/qt_application.cpp
+        ${SRC_DIR}/qt_menubuilder.cpp
+        ${SRC_DIR}/qt_molfileeditpr.cpp
+        ${SRC_DIR}/qt_conceptbutton.cpp
+        ${SRC_DIR}/qt_mol2deditor.cpp
+        ${SRC_DIR}/qt_sketchwidget.cpp
         )
 
 # client side app with opencv dnn engine backend

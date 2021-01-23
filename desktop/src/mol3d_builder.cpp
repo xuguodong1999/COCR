@@ -39,7 +39,7 @@ inline QColor atomColor(const ElementType &_element) {
 }
 
 Mol3DBuilder::Mol3DBuilder(Qt3DCore::QEntity *_rootEntity, std::shared_ptr<JMol> _mol)
-        : mRootEntity(_rootEntity), Mol3D(std::move(_mol)),
+        : mRootEntity(_rootEntity), mol3d(std::make_shared<Mol3D>(std::move(_mol))),
           sphereSlices(20), sphereRings(40),
           cylinderSlices(20), cylinderRings(20),
           doubleBondSpaceScale(3), tripleBondSpaceScale(4) {
@@ -99,100 +99,11 @@ Qt3DCore::QEntity *Mol3DBuilder::getSingleCylinderEntity(
 
 void Mol3DBuilder::reset(std::shared_ptr<JMol> _mol) {
     clear();
-    mol = std::move(_mol);
-    if (mol->atomsNum() == 0) {
-        std::cerr << "get empty molecule in Mol3D::resetMol" << std::endl;
-        return;
-    }
-    const float baseSize = 200;
-    // 坐标系
-//    QVector3D offset(-baseSize / 3, baseSize / 3, 0);
-//    getCylinderEntity(offset + zeroP, offset + axisX * 10, 0.2, Qt::blue);
-//    getCylinderEntity(offset + zeroP, offset + axisY * 10, 0.2, Qt::red);
-//    getCylinderEntity(offset + zeroP, offset + axisZ * 10, 0.2, Qt::green);
-    float minx, miny, minz, maxx, maxy, maxz;
-    minx = miny = minz = std::numeric_limits<float>::max();
-    maxx = maxy = maxz = std::numeric_limits<float>::lowest();
-    for (auto&[_, p]:atomPosMap3D) {
-        minx = (std::min)(minx, p.x);
-        miny = (std::min)(miny, p.y);
-        minz = (std::min)(minz, p.z);
-        maxx = (std::max)(maxx, p.x);
-        maxy = (std::max)(maxy, p.y);
-        maxz = (std::max)(maxz, p.z);
-    }
-    cv::Point3f centOffset((minx + maxx) / 2, (miny + maxy) / 2, (minz + maxz) / 2);
-    float k = baseSize /
-              (0.001 + std::abs((std::max)((std::max)(maxx - minx, maxy - miny), maxz - minz)));
-    for (auto&[_, p]:atomPosMap3D) {
-        p -= centOffset;
-        p *= k;
-    }
-    float avgBondLength = 0;
-    if (mol->IsBondsEmpty()) {
-        avgBondLength = baseSize;
-    } else {
-        auto getAvgBondLength = [&](const size_t &_bid) -> void {
-            auto bond = mol->getBondById(_bid);
-            cv::Point3f from = atomPosMap3D[bond->getAtomFrom()];
-            cv::Point3f to = atomPosMap3D[bond->getAtomTo()];
-            avgBondLength += getDistance3D(from, to);
-        };
-        mol->safeTraverseBonds(getAvgBondLength);
-        avgBondLength /= (std::max)((decltype(mol->bondsNum())) (1),
-                                    mol->bondsNum());
-        avgBondLength = (std::min)(avgBondLength, baseSize);
-    }
-    auto convert = [](const cv::Point3f &cvPts) -> QVector3D {
-        return QVector3D(cvPts.x, cvPts.y, cvPts.z);
-    };
-    auto addAtomEntity = [&](const size_t &_aid) -> void {
-        auto &ele = mol->getAtomById(_aid)->getElementType();
-        cv::Point3f pos = atomPosMap3D[_aid];
-//        qDebug() << convert(getPos2D);
-        mAtomEntities.insert({_aid, getSphereEntity(
-                convert(pos), avgBondLength / 3.5 * atomRadius(ele), atomColor(ele))});
-    };
-    mol->safeTraverseAtoms(addAtomEntity);
-    auto addBondEntity = [&](const size_t &_bid) -> void {
-        auto bond = mol->getBondById(_bid);
-        cv::Point3f from = atomPosMap3D[bond->getAtomFrom()];
-        cv::Point3f to = atomPosMap3D[bond->getAtomTo()];
-        switch (bond->getBondType()) {
-            case JBondType::SingleBond:
-            case JBondType::DelocalizedBond:
-            case JBondType::DashWedgeBond:
-            case JBondType::SolidWedgeBond:
-            case JBondType::WaveBond: {
-                mBondEntities.insert({_bid, getSingleCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 20,
-                        getQColor(ColorName::rgbLightSkyBlue))});
-                break;
-            }
-            case JBondType::DoubleBond: {
-                mBondEntities.insert({_bid, getDoubleCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 30,
-                        getQColor(ColorName::rgbLightSkyBlue))});
-                break;
-            }
-            case JBondType::TripleBond: {
-                mBondEntities.insert({_bid, getTripleCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 40,
-                        getQColor(ColorName::rgbLightSkyBlue))});
-                break;
-            }
-            default: {
-                std::cerr << "unhandled bond type: "
-                          << static_cast<int>(bond->getBondType()) << std::endl;
-                exit(-1);
-            }
-        }
-    };
-    mol->safeTraverseBonds(addBondEntity);
+    mol3d = std::make_shared<Mol3D>(_mol);
 }
 
 void Mol3DBuilder::clear() {
-    mol = nullptr;// free shared ptr
+    mol3d = nullptr;// free shared ptr
     for (auto&[_, entity]:mAtomEntities) {
         entity->deleteLater();
     }
@@ -207,8 +118,8 @@ Qt3DCore::QEntity *Mol3DBuilder::getDoubleCylinderEntity(
         const QVector3D &_from, const QVector3D &_to, const float &_radius, const QColor &_color) {
     float distance = _radius * doubleBondSpaceScale;
     std::vector<QVector3D> translations = {
-            axisZ * distance + (_from + _to) / 2.0,
-            axisZ * -distance + (_from + _to) / 2.0
+            axisZ * distance ,
+            axisZ * -distance
     };
     return getMultiCylinderEntities(translations, _radius, _color, _from, _to);
 }
@@ -216,10 +127,15 @@ Qt3DCore::QEntity *Mol3DBuilder::getDoubleCylinderEntity(
 Qt3DCore::QEntity *Mol3DBuilder::getTripleCylinderEntity(
         const QVector3D &_from, const QVector3D &_to, const float &_radius, const QColor &_color) {
     float distance = _radius * tripleBondSpaceScale;
+//    std::vector<QVector3D> translations = {
+//            axisZ * distance + (_from + _to) / 2.0,
+//            (_from + _to) / 2.0,
+//            axisZ * -distance + (_from + _to) / 2.0
+//    };
     std::vector<QVector3D> translations = {
-            axisZ * distance + (_from + _to) / 2.0,
-            (_from + _to) / 2.0,
-            axisZ * -distance + (_from + _to) / 2.0
+            axisZ * distance ,
+            zeroP,
+            axisZ * -distance ,
     };
     return getMultiCylinderEntities(translations, _radius, _color, _from, _to);
 }
@@ -243,7 +159,6 @@ Mol3DBuilder::getMultiCylinderEntities(const std::vector<QVector3D> &translation
         cylinderTransforms[i] = new Qt3DCore::QTransform();
         cylinderTransforms[i]->setScale(1.0f);
         // 内置圆柱中轴线在y轴上，重心位于坐标原点
-        cylinderTransforms[i]->setRotation(QQuaternion::rotationTo(axisY, _from - _to));
         cylinderTransforms[i]->setTranslation(translations[i]);
     }
     std::vector<Qt3DExtras::QPhongMaterial *> cylinderMaterials(entityNum, nullptr);
@@ -259,6 +174,10 @@ Mol3DBuilder::getMultiCylinderEntities(const std::vector<QVector3D> &translation
         cylinderEntities[i]->addComponent(cylinderMaterials[i]);
         cylinderEntities[i]->addComponent(cylinderTransforms[i]);
     }
+    Qt3DCore::QTransform *rotateTransform=new Qt3DCore::QTransform();
+    rotateTransform->setRotation(QQuaternion::rotationTo(axisY,_from-_to));
+    rotateTransform->setTranslation((_from + _to) / 2.0);
+    multiCylinderEntity->addComponent(rotateTransform);
     return multiCylinderEntity;
 }
 
@@ -308,4 +227,83 @@ float Mol3DBuilder::getTripleBondSpaceScale() const {
 
 void Mol3DBuilder::setTripleBondSpaceScale(float tripleBondSpaceScale) {
     Mol3DBuilder::tripleBondSpaceScale = tripleBondSpaceScale;
+}
+
+bool Mol3DBuilder::build() {
+    if(!mol3d)return false;
+    if(!mol3d->calcCoord3D_addHs())return false;
+    auto mol = mol3d->getMol();
+    if (mol->atomsNum() == 0) {
+        std::cerr << "get empty molecule in Mol3D::resetMol" << std::endl;
+        return false;
+    }
+    const float baseSize = 200;
+    // 坐标系
+    QVector3D offset(-baseSize / 3, baseSize / 3, 0);
+    getSingleCylinderEntity(offset + zeroP, offset + axisX * 10, 0.2, Qt::blue);
+    getSingleCylinderEntity(offset + zeroP, offset + axisY * 10, 0.2, Qt::red);
+    getSingleCylinderEntity(offset + zeroP, offset + axisZ * 10, 0.2, Qt::green);
+    mol3d->normAtomPosMap3D(baseSize);
+    float avgBondLength = 0;
+    if (mol->IsBondsEmpty()) {
+        avgBondLength = baseSize;
+    } else {
+        auto getAvgBondLength = [&](const size_t &_bid) -> void {
+            auto bond = mol->getBondById(_bid);
+            auto &from = mol3d->getAtomPos3DById(bond->getAtomFrom());
+            auto &to = mol3d->getAtomPos3DById(bond->getAtomTo());
+            avgBondLength += getDistance3D(from, to);
+        };
+        mol->safeTraverseBonds(getAvgBondLength);
+        avgBondLength /= (std::max)((decltype(mol->bondsNum())) (1),
+                                    mol->bondsNum());
+        avgBondLength = (std::min)(avgBondLength, baseSize);
+    }
+    auto convert = [](const cv::Point3f &cvPts) -> QVector3D {
+        return QVector3D(cvPts.x, cvPts.y, cvPts.z);
+    };
+    auto addAtomEntity = [&](const size_t &_aid) -> void {
+        auto &ele = mol->getAtomById(_aid)->getElementType();
+        auto &pos = mol3d->getAtomPos3DById(_aid);
+//        qDebug() << convert(getPos2D);
+        mAtomEntities.insert({_aid, getSphereEntity(
+                convert(pos), avgBondLength / 3.5 * atomRadius(ele), atomColor(ele))});
+    };
+    mol->safeTraverseAtoms(addAtomEntity);
+    auto addBondEntity = [&](const size_t &_bid) -> void {
+        auto bond = mol->getBondById(_bid);
+        auto &from = mol3d->getAtomPos3DById(bond->getAtomFrom());
+        auto &to = mol3d->getAtomPos3DById(bond->getAtomTo());
+        switch (bond->getBondType()) {
+            case JBondType::SingleBond:
+            case JBondType::DelocalizedBond:
+            case JBondType::DashWedgeBond:
+            case JBondType::SolidWedgeBond:
+            case JBondType::WaveBond: {
+                mBondEntities.insert({_bid, getSingleCylinderEntity(
+                        convert(from), convert(to), avgBondLength / 20,
+                        getQColor(ColorName::rgbLightSkyBlue))});
+                break;
+            }
+            case JBondType::DoubleBond: {
+                mBondEntities.insert({_bid, getDoubleCylinderEntity(
+                        convert(from), convert(to), avgBondLength / 30,
+                        getQColor(ColorName::rgbLightSkyBlue))});
+                break;
+            }
+            case JBondType::TripleBond: {
+                mBondEntities.insert({_bid, getTripleCylinderEntity(
+                        convert(from), convert(to), avgBondLength / 40,
+                        getQColor(ColorName::rgbIndianRed))});
+                break;
+            }
+            default: {
+                std::cerr << "unhandled bond type: "
+                          << static_cast<int>(bond->getBondType()) << std::endl;
+                exit(-1);
+            }
+        }
+    };
+    mol->safeTraverseBonds(addBondEntity);
+    return true;//success
 }

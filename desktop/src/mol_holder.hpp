@@ -14,6 +14,7 @@ public:
     virtual void clear();
 
     void reset(std::shared_ptr<JMol> _mol);
+
 };
 
 #endif//_MOL_HOLDER_HPP_

@@ -13,7 +13,12 @@ protected:
 public:
     Mol3D(std::shared_ptr<JMol> _mol);
 
-    void calcCoord3D_addHs();
+    void normAtomPosMap3D(const float&_targetBondLength);
+
+    const cv::Point3f&getAtomPos3DById(const size_t&_aid);
+    void setAtomPos3DById(const size_t&_aid,const float& _x,const float& _y,const float& _z);
+
+    bool calcCoord3D_addHs();
 };
 
 
