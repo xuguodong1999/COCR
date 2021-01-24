@@ -26,6 +26,9 @@ Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
     setActivatedRadius(250);
     setRootEntity(_rootEntity);
     defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
+    // 禁用实时渲染
+    renderSettings()->setRenderPolicy(
+            Qt3DRender::QRenderSettings::OnDemand);
 }
 
 void Mol3DWindow::mousePressEvent(QMouseEvent *event) {

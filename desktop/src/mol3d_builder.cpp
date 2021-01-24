@@ -115,35 +115,35 @@ void Mol3DBuilder::clear() {
 }
 
 Qt3DCore::QEntity *Mol3DBuilder::getDoubleCylinderEntity(
-        const QVector3D &_from, const QVector3D &_to, const float &_radius, const QColor &_color) {
+        const QVector3D &_from, const QVector3D &_to,
+        const float &_radius, const QColor &_color,
+        const std::optional<QVector3D> &_normVec) {
     float distance = _radius * doubleBondSpaceScale;
     std::vector<QVector3D> translations = {
-            axisZ * distance ,
+            axisZ * distance,
             axisZ * -distance
     };
-    return getMultiCylinderEntities(translations, _radius, _color, _from, _to);
+    return getMultiCylinderEntities(translations, _radius, _color, _from, _to, _normVec);
 }
 
 Qt3DCore::QEntity *Mol3DBuilder::getTripleCylinderEntity(
-        const QVector3D &_from, const QVector3D &_to, const float &_radius, const QColor &_color) {
+        const QVector3D &_from, const QVector3D &_to,
+        const float &_radius, const QColor &_color,
+        const std::optional<QVector3D> &_normVec) {
     float distance = _radius * tripleBondSpaceScale;
-//    std::vector<QVector3D> translations = {
-//            axisZ * distance + (_from + _to) / 2.0,
-//            (_from + _to) / 2.0,
-//            axisZ * -distance + (_from + _to) / 2.0
-//    };
     std::vector<QVector3D> translations = {
-            axisZ * distance ,
+            axisZ * distance,
             zeroP,
-            axisZ * -distance ,
+            axisZ * -distance,
     };
-    return getMultiCylinderEntities(translations, _radius, _color, _from, _to);
+    return getMultiCylinderEntities(translations, _radius, _color, _from, _to, _normVec);
 }
 
 Qt3DCore::QEntity *
 Mol3DBuilder::getMultiCylinderEntities(const std::vector<QVector3D> &translations,
                                        const float &_radius, const QColor &_color,
-                                       const QVector3D &_from, const QVector3D &_to) {
+                                       const QVector3D &_from, const QVector3D &_to,
+                                       const std::optional<QVector3D> &_normVec) {
     float length = _from.distanceToPoint(_to);
     const size_t entityNum = translations.size();
     std::vector<Qt3DExtras::QCylinderMesh *> cylinderMeshes(entityNum, nullptr);
@@ -159,6 +159,7 @@ Mol3DBuilder::getMultiCylinderEntities(const std::vector<QVector3D> &translation
         cylinderTransforms[i] = new Qt3DCore::QTransform();
         cylinderTransforms[i]->setScale(1.0f);
         // 内置圆柱中轴线在y轴上，重心位于坐标原点
+        // 构造平行圆柱体
         cylinderTransforms[i]->setTranslation(translations[i]);
     }
     std::vector<Qt3DExtras::QPhongMaterial *> cylinderMaterials(entityNum, nullptr);
@@ -174,10 +175,24 @@ Mol3DBuilder::getMultiCylinderEntities(const std::vector<QVector3D> &translation
         cylinderEntities[i]->addComponent(cylinderMaterials[i]);
         cylinderEntities[i]->addComponent(cylinderTransforms[i]);
     }
-    Qt3DCore::QTransform *rotateTransform=new Qt3DCore::QTransform();
-    rotateTransform->setRotation(QQuaternion::rotationTo(axisY,_from-_to));
-    rotateTransform->setTranslation((_from + _to) / 2.0);
-    multiCylinderEntity->addComponent(rotateTransform);
+    // 将平行圆柱体整体平移、旋转到目标位置
+    auto groupTransform = new Qt3DCore::QTransform();
+    // 四元数旋转的合成：依次旋转q1、q2 推导为 q2 x q1
+    // 键角度调整策略：遍历获取所有需要调整的键，为每个键从三个共面原子计算一个法向量
+    QQuaternion rotation = QQuaternion::rotationTo(axisY, _from - _to);
+    // FIXME: direction error here
+    if (_normVec) {
+        auto originVec = rotation * axisX;
+        auto &normVec = _normVec.value();
+        float dot = QVector3D::dotProduct(normVec, originVec);
+        float angle = 180.0 / M_PI * acos(
+                dot / originVec.length() / normVec.length());
+//        qDebug() << "angle=" << angle;
+        rotation *= QQuaternion::fromAxisAndAngle(axisY, angle);
+    }
+    groupTransform->setRotation(rotation);
+    groupTransform->setTranslation((_from + _to) / 2.0);
+    multiCylinderEntity->addComponent(groupTransform);
     return multiCylinderEntity;
 }
 
@@ -259,18 +274,57 @@ bool Mol3DBuilder::build() {
                                     mol->bondsNum());
         avgBondLength = (std::min)(avgBondLength, baseSize);
     }
-    auto convert = [](const cv::Point3f &cvPts) -> QVector3D {
+    auto convertCvPointToQVector3D = [](const cv::Point3f &cvPts) -> QVector3D {
         return QVector3D(cvPts.x, cvPts.y, cvPts.z);
     };
-    auto addAtomEntity = [&](const size_t &_aid) -> void {
+    auto add_atom_entity = [&](const size_t &_aid) -> void {
         auto &ele = mol->getAtomById(_aid)->getElementType();
         auto &pos = mol3d->getAtomPos3DById(_aid);
 //        qDebug() << convert(getPos2D);
         mAtomEntities.insert({_aid, getSphereEntity(
-                convert(pos), avgBondLength / 3.5 * atomRadius(ele), atomColor(ele))});
+                convertCvPointToQVector3D(pos), avgBondLength / 3.5 * atomRadius(ele), atomColor(ele))});
     };
-    mol->safeTraverseAtoms(addAtomEntity);
-    auto addBondEntity = [&](const size_t &_bid) -> void {
+    mol->safeTraverseAtoms(add_atom_entity);
+    std::unordered_map<size_t, QVector3D> normVecMap;
+    std::unordered_map<size_t, std::vector<size_t>> neighborMap;
+    auto get_neighbor_map = [&](const size_t &_bid) -> void {
+        auto bond = mol->getBondById(_bid);
+        neighborMap[bond->getAtomFrom()].push_back(bond->getAtomTo());
+        neighborMap[bond->getAtomTo()].push_back(bond->getAtomFrom());
+    };
+    mol->safeTraverseBonds(get_neighbor_map);
+    auto find_double_bond_for_rotation = [&](const size_t &_bid) -> void {
+        auto bond = mol->getBondById(_bid);
+        if (JBondType::DoubleBond != bond->getBondType()) return;
+        std::vector<cv::Point3f> poses;
+        std::unordered_set<size_t> aids;
+        auto itr1 = neighborMap.find(bond->getAtomFrom());
+        if (itr1 != neighborMap.end()) {
+            for (auto &aid:itr1->second) {
+                if (notExist(aids, aid)) {
+                    aids.insert(aid);
+                    poses.push_back(mol3d->getAtomPos3DById(aid));
+                }
+            }
+        }
+        auto itr2 = neighborMap.find(bond->getAtomTo());
+        if (itr2 != neighborMap.end()) {
+            for (auto &aid:itr2->second) {
+                if (notExist(aids, aid)) {
+                    aids.insert(aid);
+                    poses.push_back(mol3d->getAtomPos3DById(aid));
+                }
+            }
+        }
+        if (poses.size() >= 3) {
+            auto p1 = convertCvPointToQVector3D(poses[0]);
+            auto p2 = convertCvPointToQVector3D(poses[1]);
+            auto p3 = convertCvPointToQVector3D(poses[2]);
+            normVecMap[_bid] = QVector3D::crossProduct(p1 - p2, p2 - p3);
+        }
+    };
+    mol->safeTraverseBonds(find_double_bond_for_rotation);
+    auto add_bond_entity = [&](const size_t &_bid) -> void {
         auto bond = mol->getBondById(_bid);
         auto &from = mol3d->getAtomPos3DById(bond->getAtomFrom());
         auto &to = mol3d->getAtomPos3DById(bond->getAtomTo());
@@ -281,20 +335,33 @@ bool Mol3DBuilder::build() {
             case JBondType::SolidWedgeBond:
             case JBondType::WaveBond: {
                 mBondEntities.insert({_bid, getSingleCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 20,
+                        convertCvPointToQVector3D(from),
+                        convertCvPointToQVector3D(to), avgBondLength / 20,
                         getQColor(ColorName::rgbLightSkyBlue))});
                 break;
             }
             case JBondType::DoubleBond: {
+                auto itr = normVecMap.find(_bid);
+                std::optional<QVector3D> normVec = std::nullopt;
+                if (itr != normVecMap.end()) {
+                    normVec = itr->second;
+                }
                 mBondEntities.insert({_bid, getDoubleCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 30,
-                        getQColor(ColorName::rgbLightSkyBlue))});
+                        convertCvPointToQVector3D(from),
+                        convertCvPointToQVector3D(to), avgBondLength / 30,
+                        getQColor(ColorName::rgbLightSkyBlue), normVec)});
                 break;
             }
             case JBondType::TripleBond: {
+                auto itr = normVecMap.find(_bid);
+                std::optional<QVector3D> normVec = std::nullopt;
+                if (itr != normVecMap.end()) {
+                    normVec = itr->second;
+                }
                 mBondEntities.insert({_bid, getTripleCylinderEntity(
-                        convert(from), convert(to), avgBondLength / 40,
-                        getQColor(ColorName::rgbIndianRed))});
+                        convertCvPointToQVector3D(from),
+                        convertCvPointToQVector3D(to), avgBondLength / 40,
+                        getQColor(ColorName::rgbIndianRed), normVec)});
                 break;
             }
             default: {
@@ -304,6 +371,6 @@ bool Mol3DBuilder::build() {
             }
         }
     };
-    mol->safeTraverseBonds(addBondEntity);
+    mol->safeTraverseBonds(add_bond_entity);
     return true;//success
 }

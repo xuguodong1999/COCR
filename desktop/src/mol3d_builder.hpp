@@ -6,6 +6,7 @@
 #include <Qt3DCore/QEntity>
 #include <Qt3DExtras/QTorusMesh>
 
+#include <optional>
 #include <unordered_map>
 
 class Mol3DBuilder : public QObject {
@@ -25,14 +26,14 @@ Q_OBJECT
                                                const float &_radius, const QColor &_color);
 
     Qt3DCore::QEntity *getDoubleCylinderEntity(const QVector3D &_from, const QVector3D &_to,
-                                               const float &_radius, const QColor &_color);
+                                               const float &_radius, const QColor &_color,const std::optional<QVector3D>&_normVec);
 
     Qt3DCore::QEntity *getTripleCylinderEntity(const QVector3D &_from, const QVector3D &_to,
-                                               const float &_radius, const QColor &_color);
+                                               const float &_radius, const QColor &_color,const std::optional<QVector3D>&_normVec);
 
     Qt3DCore::QEntity *getMultiCylinderEntities(
             const std::vector<QVector3D> &translations, const float &_radius,
-            const QColor &_color, const QVector3D &_from, const QVector3D &_to);
+            const QColor &_color, const QVector3D &_from, const QVector3D &_to,const std::optional<QVector3D>&_normVec);
 
     void clear();
 
