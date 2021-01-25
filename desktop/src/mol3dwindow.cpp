@@ -29,6 +29,12 @@ Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
     // 禁用实时渲染
     renderSettings()->setRenderPolicy(
             Qt3DRender::QRenderSettings::OnDemand);
+
+}
+
+bool Mol3DWindow::event(QEvent *event) {
+    qDebug() << event->type();
+    return Qt3DWindow::event(event);
 }
 
 void Mol3DWindow::mousePressEvent(QMouseEvent *event) {
@@ -119,5 +125,11 @@ void Mol3DWindow::wheelEvent(QWheelEvent *event) {
         cam->setPosition(cam->position() - k * (cam->viewCenter() - cam->position()));
         lightTrans->setTranslation(cam->position());
     }
+}
+
+void Mol3DWindow::touchEvent(QTouchEvent *e) {
+    qDebug() << "touch @ " << e->touchPoints();
+    qDebug() << "touch 4 " << e->touchPointStates();
+    QWindow::touchEvent(e);
 }
 

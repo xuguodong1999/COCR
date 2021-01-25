@@ -70,8 +70,8 @@ bool SOSOMemory::isStop() const {
 
 void SOSOMemory::setStop(bool _stop) {
     stop = _stop;
-    std::cout<<"stop===="<<stop<<std::endl;
-    qDebug()<<stop;
+    std::cout << "stop====" << stop << std::endl;
+    qDebug() << stop;
 }
 
 SOSOMemory::~SOSOMemory() {

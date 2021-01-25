@@ -5,7 +5,7 @@
 #include "opencv_util.hpp"
 
 #include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+//#include <opencv2/highgui.hpp>
 
 #include <QApplication>
 #include <QFile>
@@ -133,7 +133,7 @@ OpenCVYolo::forward(const cv::Mat &_input, bool _debug, const int &_gridSize) {
                           getScalar(colorIdx(labels[i])), 1);
         }
 //        cv::resize(displayImg, displayImg, cv::Size(displayImg.cols, displayImg.rows) * 2);
-        cv::imshow("YoloForward", displayImg);
+//        cv::imshow("YoloForward", displayImg);
 //        cv::waitKey(0);
     }
     return {std::move(gtBoxes), std::move(resizedImg)};

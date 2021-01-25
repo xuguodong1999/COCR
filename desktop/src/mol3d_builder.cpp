@@ -180,15 +180,23 @@ Mol3DBuilder::getMultiCylinderEntities(const std::vector<QVector3D> &translation
     // 四元数旋转的合成：依次旋转q1、q2 推导为 q2 x q1
     // 键角度调整策略：遍历获取所有需要调整的键，为每个键从三个共面原子计算一个法向量
     QQuaternion rotation = QQuaternion::rotationTo(axisY, _from - _to);
-    // FIXME: direction error here
     if (_normVec) {
-        auto originVec = rotation * axisX;
-        auto &normVec = _normVec.value();
-        float dot = QVector3D::dotProduct(normVec, originVec);
-        float angle = 180.0 / M_PI * acos(
-                dot / originVec.length() / normVec.length());
-//        qDebug() << "angle=" << angle;
-        rotation *= QQuaternion::fromAxisAndAngle(axisY, angle);
+        auto &originVec = axisX;
+        auto normVec = (rotation.inverted() * _normVec.value()).normalized();
+        float angle = 180.0 / M_PI * acos(QVector3D::dotProduct(normVec, originVec));
+        auto preRotation = QQuaternion::fromAxisAndAngle(axisY, angle);
+        auto roVec = (preRotation * originVec).normalized();
+        const float thresh = 0.05;
+        auto cmp_vec3d = [&](const QVector3D &_v1, const QVector3D &_v2) -> bool {
+            return fabs(_v1.x() - _v2.x()) < thresh &&
+                   fabs(_v1.y() - _v2.y()) < thresh &&
+                   fabs(_v1.z() - _v2.z()) < thresh;
+        };
+        if (!cmp_vec3d(roVec, normVec) && !cmp_vec3d(roVec, -normVec)) {
+            rotation *= QQuaternion::fromAxisAndAngle(axisY, -angle);
+        } else {
+            rotation *= preRotation;
+        }
     }
     groupTransform->setRotation(rotation);
     groupTransform->setTranslation((_from + _to) / 2.0);
@@ -245,8 +253,8 @@ void Mol3DBuilder::setTripleBondSpaceScale(float tripleBondSpaceScale) {
 }
 
 bool Mol3DBuilder::build() {
-    if(!mol3d)return false;
-    if(!mol3d->calcCoord3D_addHs())return false;
+    if (!mol3d)return false;
+    if (!mol3d->calcCoord3D_addHs())return false;
     auto mol = mol3d->getMol();
     if (mol->atomsNum() == 0) {
         std::cerr << "get empty molecule in Mol3D::resetMol" << std::endl;
@@ -254,10 +262,10 @@ bool Mol3DBuilder::build() {
     }
     const float baseSize = 200;
     // 坐标系
-    QVector3D offset(-baseSize / 3, baseSize / 3, 0);
-    getSingleCylinderEntity(offset + zeroP, offset + axisX * 10, 0.2, Qt::blue);
-    getSingleCylinderEntity(offset + zeroP, offset + axisY * 10, 0.2, Qt::red);
-    getSingleCylinderEntity(offset + zeroP, offset + axisZ * 10, 0.2, Qt::green);
+//    QVector3D offset(-baseSize / 3, baseSize / 3, 0);
+//    getSingleCylinderEntity(offset + zeroP, offset + axisX * 10, 0.2, Qt::blue);
+//    getSingleCylinderEntity(offset + zeroP, offset + axisY * 10, 0.2, Qt::red);
+//    getSingleCylinderEntity(offset + zeroP, offset + axisZ * 10, 0.2, Qt::green);
     mol3d->normAtomPosMap3D(baseSize);
     float avgBondLength = 0;
     if (mol->IsBondsEmpty()) {

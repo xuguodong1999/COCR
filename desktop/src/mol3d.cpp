@@ -14,7 +14,7 @@ bool Mol3D::calcCoord3D_addHs() {
         op->addHs(_aid);
     };
     mol->safeTraverseAtoms(add_all_hydrogen);
-    auto molUtil=std::make_shared<MolUtilOpenBabelImpl>();
+    auto molUtil = std::make_shared<MolUtilOpenBabelImpl>();
     return molUtil->getCoord3D(*this);
 }
 
@@ -55,6 +55,6 @@ const cv::Point3f &Mol3D::getAtomPos3DById(const size_t &_aid) {
     return atomPosMap3D[_aid];
 }
 
-void Mol3D::setAtomPos3DById(const size_t &_aid, const float& _x,const float& _y,const float& _z) {
-atomPosMap3D[_aid]=cv::Point3f (_x,_y,_z);
+void Mol3D::setAtomPos3DById(const size_t &_aid, const float &_x, const float &_y, const float &_z) {
+    atomPosMap3D[_aid] = cv::Point3f(_x, _y, _z);
 }

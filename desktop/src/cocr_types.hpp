@@ -17,7 +17,7 @@ using node_type = unsigned char;
 
 
 enum class DetectorClasses {
-    ItemEmpty=0,
+    ItemEmpty = 0,
     ItemC,
     ItemH,
     ItemO,

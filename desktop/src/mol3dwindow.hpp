@@ -30,7 +30,11 @@ public:
     ~Mol3DWindow() = default;
 
 protected:
+    bool event(QEvent *event) override;
+
     void mousePressEvent(QMouseEvent *event) override;
+
+    void touchEvent(QTouchEvent *e) override;
 
     void mouseReleaseEvent(QMouseEvent *event) override;
 

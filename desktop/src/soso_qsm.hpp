@@ -16,7 +16,7 @@ class SOSOMemory : public QRunnable {
     size_t LABEL_SIZE;// 为一个图像对应的标签预留的空间大小
     size_t SAMPLE_SIZE, MAX_SIZE, IMG_SIZE;
     QSharedMemory mem;
-    std::unordered_map<std::string,size_t>keys;
+    std::unordered_map<std::string, size_t> keys;
 //    std::vector<std::string> keys;
     std::string key;
     int sleepTime;

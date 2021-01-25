@@ -1,5 +1,6 @@
 #ifndef _SOSO_MEM_HPP_
 #define _SOSO_MEM_HPP_
+
 #include <opencv2/core/mat.hpp>
 #include <QWidget>
 #include <QThread>
@@ -25,7 +26,7 @@ Q_OBJECT
     std::vector<QSharedMemory *> locks;
     bool stop;
     size_t sampleNum, imgWidth, imgHeight, imgChannel, labelSize;
-    size_t sampleSize, imgSize, memSize, idx, sleepTime,count;
+    size_t sampleSize, imgSize, memSize, idx, sleepTime, count;
     std::unordered_map<std::string, size_t> jpgMap, txtMap;
 public:
 
@@ -47,9 +48,12 @@ public:
              const size_t &_labelSize);
 
     void run() override;
+
     std::optional<cv::Mat> readImageFromMem(const char *_filename);
+
     std::optional<std::vector<std::tuple<int, float, float, float, float, float>>>
     readLabelFromMem(const char *_filename);
+
 public slots:
 
     void exit_run();

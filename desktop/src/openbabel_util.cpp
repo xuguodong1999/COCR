@@ -8,6 +8,8 @@
 #include <openbabel/forcefield.h>
 #include <openbabel/obconversion.h>
 
+#include <QDebug>
+
 static std::unordered_map<size_t, OpenBabel::OBAtom *> j2oAtomMap;
 static std::unordered_map<unsigned long, size_t> o2jAtomMap;
 
@@ -52,7 +54,7 @@ std::shared_ptr<JMol> convertOBMolToJMol(const OpenBabel::OBMol &_obMol) {
 bool runOBForceField(OpenBabel::OBMol &_obMol, const std::string &_forcefield = "uff") {
     using namespace OpenBabel;
     if (_obMol.Empty()) {
-        std::cerr << "mol.Empty()" << std::endl;
+        qDebug() << "mol.Empty()";
         return false;
     }
     try {
@@ -61,29 +63,28 @@ bool runOBForceField(OpenBabel::OBMol &_obMol, const std::string &_forcefield = 
         // FIXME: add or delete hydrogens dont wrok
         _obMol.AddHydrogens(false, true);
     } catch (std::exception &e) {
-        std::cerr << "runOBForceField build & add H step:" << e.what() << std::endl;
+        qDebug() << "runOBForceField build & add H step:" << e.what();
         return false;
     }
     auto pFF = static_cast<OBForceField *>(OBPlugin::GetPlugin(
             "forcefields", _forcefield.c_str()));
     if (!pFF) {
-        std::cerr << "runOBForceField: could not find forcefield '"
-                  << _forcefield << "'." << std::endl;
+        qDebug() << "runOBForceField: could not find forcefield '"
+                 << _forcefield.c_str() << "'.";
         return false;
     }
-    pFF->SetLogFile(&std::cerr);
     pFF->SetLogLevel(OBFF_LOGLVL_NONE);
     if (!pFF->Setup(_obMol)) {
-        std::cerr << "runOBForceField: setup force field ret false" << std::endl;
+        qDebug() << "runOBForceField: setup force field ret false";
 //        return false;
     }
     try {
-        pFF->SteepestDescent(100, 1.0e-4);
-        pFF->WeightedRotorSearch(20, 10);
-        pFF->SteepestDescent(100, 1.0e-6);
+        pFF->SteepestDescent(500, 1.0e-4);
+        pFF->WeightedRotorSearch(50, 10);
+        pFF->SteepestDescent(500, 1.0e-6);
         pFF->UpdateCoordinates(_obMol);
     } catch (std::exception &e) {
-        std::cerr << "runOBForceField MD step:" << e.what() << std::endl;
+        qDebug() << "runOBForceField MD step:" << e.what();
         return false;
     }
     return true;
@@ -126,13 +127,13 @@ std::string MolUtilOpenBabelImpl::getFormat(
     OpenBabel::OBConversion conv;
     auto formatOut = conv.FindFormat(_format);
     if (!formatOut || !conv.SetOutFormat(formatOut)) {
-        std::cerr << "MolUtilOpenBabelImpl::getFormat: cannot set format!" << std::endl;
+        qDebug() << "MolUtilOpenBabelImpl::getFormat: cannot set format!";
         exit(-1);
     }
-    std::cout << "_mol->atomsNum()" << _mol.atomsNum() << std::endl;
+    std::cout << "_mol->atomsNum()" << _mol.atomsNum();
     auto obMol = convertJMolToOBMol(_mol);
     if ("pdb" == _format) {
-        std::cout << "runOBForceField(obMol)=" << runOBForceField(obMol) << std::endl;
+        std::cout << "runOBForceField(obMol)=" << runOBForceField(obMol);
     }
     return conv.WriteString(&obMol);
 }
@@ -141,14 +142,14 @@ std::shared_ptr<JMol> MolUtilOpenBabelImpl::fromFormat(const std::string &_conte
     OpenBabel::OBConversion conv;
     auto formatIn = conv.FindFormat(_format);
     if (!formatIn || !conv.SetInFormat(formatIn)) {
-        std::cerr << "MolUtilOpenBabelImpl::fromFormat: cannot set format!" << std::endl;
+        qDebug() << "MolUtilOpenBabelImpl::fromFormat: cannot set format!";
         exit(-1);
     }
     OpenBabel::OBMol obMol;
     std::stringstream ssm(_content);
     if (!conv.Read(&obMol, &ssm)) {
-        std::cerr << "MolUtilOpenBabelImpl::fromFormat: cannot read:"
-                  << _content << " as " << _format << std::endl;
+        qDebug() << "MolUtilOpenBabelImpl::fromFormat: cannot read:"
+                 << _content.c_str() << " as " << _format.c_str();
         return nullptr;
     }
     // TODO: 如果文件包含坐标信息，填入mol3d

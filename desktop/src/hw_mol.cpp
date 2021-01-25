@@ -301,12 +301,12 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         this->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
-        auto paddingColor=getScalar(ColorName::rgbWhite);
+        auto paddingColor = getScalar(ColorName::rgbWhite);
         if (byProb(hwController->getRevertColorProb())) {// 反转颜色
             cv::bitwise_not(img, img);
-            paddingColor=getScalar(ColorName::rgbBlack);
+            paddingColor = getScalar(ColorName::rgbBlack);
         }
-        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH,paddingColor);
+        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH, paddingColor);
         auto&[k, offsetx, offsety]=offset;
         cv::imwrite(_imgPath + suffix + ".jpg", resImg,
                     {cv::IMWRITE_JPEG_QUALITY, 100});
@@ -354,7 +354,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
         auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
         auto&[k, offsetx, offsety]=offset;
         for (auto &sym:mData) {
-            std::cout<<labels[sym->getItemType()]<<std::endl;
+            std::cout << labels[sym->getItemType()] << std::endl;
             auto bBox = sym->getBoundingBox().value();
             bBox.x = bBox.x * k + offsetx;
             bBox.y = bBox.y * k + offsety;

@@ -153,7 +153,6 @@ void MCWidget::closeEvent(QCloseEvent *e) {
 }
 
 
-
 std::optional<cv::Mat> MemDataGenerator::readImageFromMem(const char *_filename) {
     if (jpgMap.empty()) {
         for (size_t i = 0; i < 10240; i++)jpgMap["q" + std::to_string(i) + ".jpg"] = i;
@@ -174,7 +173,7 @@ std::optional<cv::Mat> MemDataGenerator::readImageFromMem(const char *_filename)
 }
 
 std::optional<std::vector<std::tuple<int, float, float, float, float, float>>>
-        MemDataGenerator::readLabelFromMem(const char *_filename) {
+MemDataGenerator::readLabelFromMem(const char *_filename) {
     if (txtMap.empty()) {
         for (size_t i = 0; i < 10240; i++)txtMap["q" + std::to_string(i) + ".jpg"] = i;
     }
