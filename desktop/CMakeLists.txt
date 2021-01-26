@@ -83,6 +83,8 @@ if (MSVC)
     if (NOT ALLOW_USER_TRAIN)
         include(${CMAKE_SOURCE_DIR}/cmake/OpenCVConfig.cmake)
     endif ()
+    set(ncnn_DIR ${SHARED_LIBS_DIR}/ncnn/lib/cmake/ncnn)
+    include(${CMAKE_SOURCE_DIR}/cmake/SetupNCNN.cmake)
 elseif (APPLE)
     message(FATAL "TODO: ADD CMAKE CONFIG ON MACOS")
 elseif (UNIX)
@@ -106,10 +108,12 @@ set(BASE_SRC ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/isomer.cpp
         ${SRC_DIR}/mol.cpp
         ${SRC_DIR}/opencv_util.cpp
-        ${SRC_DIR}/opencv_yolo.cpp
         ${SRC_DIR}/polya.cpp
         ${SRC_DIR}/std_util.cpp
         ${SRC_DIR}/timer.cpp
+        ${SRC_DIR}/yolo_ncnn.cpp
+        ${SRC_DIR}/yolo_opencv.cpp
+        ${SRC_DIR}/yolo.cpp
         )
 
 set(TORCH_SRC ${SRC_DIR}/dataset_cifar.cpp

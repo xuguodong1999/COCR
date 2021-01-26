@@ -37,7 +37,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if (MSVC)
     set(MSVC_LIBS Qt5::Widgets Qt5::Quick Qt5::3DAnimation Qt5::3DCore
             Qt5::3DExtras Qt5::3DInput Qt5::3DLogic Qt5::3DRender
-            openbabel coordgen)
+            openbabel coordgen ncnn)
     if (ALLOW_USER_TRAIN)
         list(APPEND MSVC_LIBS ${TORCH_LIBRARIES})
         list(APPEND MSVC_LIBS ${OpenCV_LIBS})

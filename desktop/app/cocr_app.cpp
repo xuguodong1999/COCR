@@ -7,8 +7,27 @@
 #include <Qt3DCore/QEntity>
 #include <QDebug>
 #include <iostream>
+#include <opencv2/imgcodecs.hpp>
+
+#include "yolo_ncnn.hpp"
+#include "yolo_opencv.hpp"
+extern std::string WORKSPACE;
+extern std::vector<std::string> CLASSES;
 
 int main(int argc, char *argv[]) {
+    try {
+        std::shared_ptr<YoloDetector> detector = std::make_shared<YoloOpenCVImpl>();
+        detector->init((WORKSPACE + "/yolov4-smallest-3l.cfg").c_str(),
+                       (WORKSPACE + "/yolov4-smallest-3l_400000.weights").c_str());
+//        detector = std::make_shared<YoloNCNNImpl>();
+//        detector->init((WORKSPACE + "/cocr17.int8.param").c_str(),
+//                       (WORKSPACE + "/cocr17_400000.int8.bin").c_str());
+        cv::Mat img = cv::imread("C:/Users/xgd/Pictures/alkane.png");
+        detector->detectAndDisplay(img, CLASSES);
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+    return 0;
     std::srand(0);
 #ifdef Q_OS_WIN64
     _putenv("BABEL_DATADIR=C:/static/openbabel-3.1.1/data");

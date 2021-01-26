@@ -3,7 +3,7 @@
 
 using namespace std;
 #ifdef WIN32
-string WORKSPACE("C:/Users/xgd/source/COCR/cache");
+string WORKSPACE("C:/source/COCR/cache");
 #else
 string WORKSPACE("/home/xgd/source/COCR");
 #endif
