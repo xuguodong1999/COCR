@@ -114,6 +114,11 @@ set(BASE_SRC ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/yolo_ncnn.cpp
         ${SRC_DIR}/yolo_opencv.cpp
         ${SRC_DIR}/yolo.cpp
+        ${SRC_DIR}/soso17_converter.cpp
+        ${SRC_DIR}/mol_graph.cpp
+        ${SRC_DIR}/mol_holder.cpp
+        ${SRC_DIR}/mol_op.cpp
+        ${SRC_DIR}/mol_util.cpp
         )
 
 set(TORCH_SRC ${SRC_DIR}/dataset_cifar.cpp
@@ -139,8 +144,6 @@ set(HW_SRC ${SRC_DIR}/hw_base.cpp
         ${SRC_DIR}/hw_script.cpp
         ${SRC_DIR}/hw_str.cpp
         ${SRC_DIR}/hw_stroke.cpp
-
-        ${SRC_DIR}/box2graph.cpp
         ${SRC_DIR}/soso_darknet.cpp
         ${SRC_DIR}/soso_mem.cpp)
 
@@ -149,10 +152,6 @@ set(MOL_SRC ${SRC_DIR}/openbabel_util.cpp
         ${SRC_DIR}/mol3d.cpp
         ${SRC_DIR}/mol3d_builder.cpp
         ${SRC_DIR}/mol3dwindow.cpp
-        ${SRC_DIR}/mol_graph.cpp
-        ${SRC_DIR}/mol_holder.cpp
-        ${SRC_DIR}/mol_op.cpp
-        ${SRC_DIR}/mol_util.cpp
         )
 
 set(UI_SRC ${SRC_DIR}/qt_aboutdialog.cpp

@@ -11,6 +11,7 @@
 
 #include "yolo_ncnn.hpp"
 #include "yolo_opencv.hpp"
+#include "soso17_converter.hpp"
 extern std::string WORKSPACE;
 extern std::vector<std::string> CLASSES;
 
@@ -22,8 +23,11 @@ int main(int argc, char *argv[]) {
 //        detector = std::make_shared<YoloNCNNImpl>();
 //        detector->init((WORKSPACE + "/cocr17.int8.param").c_str(),
 //                       (WORKSPACE + "/cocr17_400000.int8.bin").c_str());
-        cv::Mat img = cv::imread("C:/Users/xgd/Pictures/alkane.png");
-        detector->detectAndDisplay(img, CLASSES);
+        cv::Mat img = cv::imread("C:/source/COCR/cache/soso17_small/JPEGImages/49_1.jpg");
+//        detector->detectAndDisplay(img, CLASSES);
+        auto objs = detector->detect(img);
+        SOSO17Converter converter;
+        converter.accept(img, objs);
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }

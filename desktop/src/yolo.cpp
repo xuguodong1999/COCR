@@ -37,12 +37,13 @@ cv::Mat YoloDetector::detectAndDisplay(
         return static_cast<const ColorName>((7 + _a) * 5123 % 455);
     };
     for (auto &obj:objs) {
-        auto info = _names[obj.label] + "," + to_string_with_precision(obj.prob, 2);
+        size_t idx = std::min((size_t) obj.label, _names.size());
+        auto info = _names[idx] + "," + to_string_with_precision(obj.prob, 2);
         cv::putText(img, info, cv::Point(obj.x, obj.y),
                     1, 1.2, getScalar(colorIdx(obj.label)),
                     2, cv::LINE_AA, false);
         cv::rectangle(img, cv::Rect(obj.x, obj.y, obj.w, obj.h),
-                      getScalar(colorIdx(obj.label)), 1);
+                      getScalar(colorIdx(idx)), 1);
     }
 #ifdef Q_OS_WIN64
     cv::imshow("YoloForward", img);
