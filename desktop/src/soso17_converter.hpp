@@ -71,7 +71,7 @@ class SOSO17Converter : public MolHolder {
 
     void clear();
 
-    inline static float sQuotaThresh = 2;
+    inline static float sQuotaThresh = 1.2;
 public:
     SOSO17Converter();
 
