@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 //        detector = std::make_shared<YoloNCNNImpl>();
 //        detector->init((WORKSPACE + "/cocr17.int8.param").c_str(),
 //                       (WORKSPACE + "/cocr17_400000.int8.bin").c_str());
-        cv::Mat img = cv::imread("C:/source/COCR/cache/soso17_small/JPEGImages/49_1.jpg");
+        cv::Mat img = cv::imread("D:/35_1.jpg");
 //        detector->detectAndDisplay(img, CLASSES);
         auto objs = detector->detect(img);
         SOSO17Converter converter;

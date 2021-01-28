@@ -135,3 +135,7 @@ void JMol::safeTraverseAtomsBreakIf(const std::function<bool(const size_t &)> &f
 void JMol::removeBond(const size_t &_bid) {
     bondsMap.erase(_bid);
 }
+
+std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_elementType) {
+    return addAtom(static_cast<size_t>(_elementType));
+}

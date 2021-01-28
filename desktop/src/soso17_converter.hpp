@@ -16,25 +16,35 @@ class SOSO17Converter : public MolHolder {
         ExplicitAtom, ImplicitAtom
     };
 
-    struct ExplicitAtomItem {
+    struct NeighborStruct{
+        std::vector<std::pair<size_t,ItemType>>neighbors;
+    };
+    struct ImplicitAtomItem: public NeighborStruct {
         ElementType elementType;
         cv::Point2f center;
+        std::vector<std::pair<size_t,ItemType>> neb;
+        ImplicitAtomItem(const float &_x, const float &_y, const ElementType &_elementType)
+                : center(_x, _y), elementType(_elementType) {}
+    };
+
+    struct ExplicitAtomItem : public ImplicitAtomItem {
         float w, h;
 
         ExplicitAtomItem(const float &_x, const float &_y, const float &_w, const float &_h,
-                         const ElementType &_elementType)
-                : center(_x + _w / 2, _y + _h / 2), w(_w), h(_h),
-                  elementType(_elementType) {}
+                         const ElementType &_elementType) : w(_w), h(_h), ImplicitAtomItem(
+                _x + _w / 2, _y + _h / 2, _elementType) {}
     };
 
-    struct LineBondItem {
+    struct LineBondItem: public NeighborStruct {
         cv::Rect2f rect;
         JBondType bondType;
         cv::Point2f from, to;
+        float length;
+        std::vector<std::pair<size_t,ItemType>>fromNeb,toNeb;
 
         LineBondItem(const float &_x, const float &_y, const float &_w, const float &_h,
                      const JBondType &_bondType)
-                : rect(_x, _y, _w, _h), bondType(_bondType) {}
+                : rect(_x, _y, _w, _h), bondType(_bondType), length(0.1) {}
         void predFromTo(const cv::Mat&_img);
 
     private:
@@ -52,21 +62,23 @@ class SOSO17Converter : public MolHolder {
                 : center(_x, _y), radius(_r) {}
     };
 
-    std::vector<ExplicitAtomItem> explicitAtoms;
+    std::vector<ExplicitAtomItem> chars;
+    std::vector<ImplicitAtomItem> points;
     std::vector<LineBondItem> lines;
     std::vector<CircleBondItem> circles;
     cv::Mat imgGray;
 
     void clear();
 
+    inline static float sQuotaThresh = 2;
 public:
     SOSO17Converter();
 
     void accept(const cv::Mat &_img, const std::vector<YoloObject> &_objs);
+
+    void then();
 };
 
-std::pair<cv::Point2f, cv::Point2f> extractBondFromTo(
-        const cv::Mat &_img, const YoloObject &_obj);
 
 ElementType convertLabelToElementType(const int &_label);
 

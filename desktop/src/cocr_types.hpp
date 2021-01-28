@@ -39,7 +39,7 @@ enum class DetectorClasses {
     ItemHorizontalStr
 };
 
-enum class ElementType {
+enum class ElementType : size_t {
     None = 0, H = 1, He, Li, Be, B, C = 6, N = 7, O = 8, F = 9, Ne,
     Na, Mg, Al, Si, P, S = 16, Cl = 17, Ar, K, Ca = 20,
     Sc, Ti, V, Cr, Mn, Fe, Co, Ni, Cu, Zn,
