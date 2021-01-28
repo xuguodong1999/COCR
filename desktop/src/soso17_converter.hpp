@@ -23,7 +23,8 @@ class SOSO17Converter : public MolHolder {
         ElementType elementType;
         cv::Point2f center;
         std::vector<std::pair<size_t,ItemType>> neb;
-        ImplicitAtomItem(const float &_x, const float &_y, const ElementType &_elementType)
+        ImplicitAtomItem(const float &_x, const float &_y,
+                         const ElementType &_elementType=ElementType::C)
                 : center(_x, _y), elementType(_elementType) {}
     };
 
