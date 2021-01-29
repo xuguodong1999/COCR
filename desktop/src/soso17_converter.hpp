@@ -16,15 +16,13 @@ class SOSO17Converter : public MolHolder {
         ExplicitAtom, ImplicitAtom
     };
 
-    struct NeighborStruct{
-        std::vector<std::pair<size_t,ItemType>>neighbors;
-    };
-    struct ImplicitAtomItem: public NeighborStruct {
+
+    struct ImplicitAtomItem {
         ElementType elementType;
         cv::Point2f center;
-        std::vector<std::pair<size_t,ItemType>> neb;
+
         ImplicitAtomItem(const float &_x, const float &_y,
-                         const ElementType &_elementType=ElementType::C)
+                         const ElementType &_elementType = ElementType::C)
                 : center(_x, _y), elementType(_elementType) {}
     };
 
@@ -36,17 +34,17 @@ class SOSO17Converter : public MolHolder {
                 _x + _w / 2, _y + _h / 2, _elementType) {}
     };
 
-    struct LineBondItem: public NeighborStruct {
+    struct LineBondItem {
         cv::Rect2f rect;
         JBondType bondType;
         cv::Point2f from, to;
         float length;
-        std::vector<std::pair<size_t,ItemType>>fromNeb,toNeb;
 
         LineBondItem(const float &_x, const float &_y, const float &_w, const float &_h,
                      const JBondType &_bondType)
                 : rect(_x, _y, _w, _h), bondType(_bondType), length(0.1) {}
-        void predFromTo(const cv::Mat&_img);
+
+        void predFromTo(const cv::Mat &_img);
 
     private:
         void predFromToForLine(const cv::Mat&_imgGray);
@@ -67,11 +65,12 @@ class SOSO17Converter : public MolHolder {
     std::vector<ImplicitAtomItem> points;
     std::vector<LineBondItem> lines;
     std::vector<CircleBondItem> circles;
+
     cv::Mat imgGray;
 
     void clear();
 
-    inline static float sQuotaThresh = 1.2;
+    inline static float sQuotaThresh = (1.8 + 0.8) / 2;
 public:
     SOSO17Converter();
 

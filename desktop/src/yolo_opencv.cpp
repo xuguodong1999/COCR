@@ -27,10 +27,10 @@ bool YoloOpenCVImpl::init(const char *cfgPath, const char *parmPath) {
                                           weightsBuffer.data(), weightsBuffer.length());
         cfgBuffer.clear();
         weightsBuffer.clear();
-        net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-        net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
-//        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-//        net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+//        net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
+//        net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+        net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
         auto outLayers = net.getUnconnectedOutLayers();
         auto layersNames = net.getLayerNames();
         outBlobNames.resize(outLayers.size());

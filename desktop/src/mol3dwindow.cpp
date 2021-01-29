@@ -33,7 +33,7 @@ Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen)
 }
 
 bool Mol3DWindow::event(QEvent *event) {
-    qDebug() << event->type();
+//    qDebug() << event->type();
     return Qt3DWindow::event(event);
 }
 

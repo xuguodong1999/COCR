@@ -131,22 +131,12 @@ void SOSO17Converter::clear() {
     reset(std::make_shared<JMol>());
 }
 // 通过形式化的抽象总结构造分子树
-namespace abs_solver {
-    enum TmpType {
-        AA, BB, CC
-    };
-    struct Item {
-        TmpType t;
-//        size_t id;
-        size_t belonging;
-    };
-    using F = std::pair<size_t, size_t>;
-    using S = std::unordered_set<size_t>;
+namespace abstract_solver {
+
+
 }
 
 void SOSO17Converter::then() {
-    if (!mol)mol = std::make_shared<JMol>();
-    mol->clear();
     using quota_type = std::tuple<float, size_t, ItemType, size_t, ItemType>;
     std::vector<quota_type> quotas;
     for (size_t i = 0; i < chars.size(); i++) {
@@ -210,125 +200,211 @@ void SOSO17Converter::then() {
             const quota_type &_a, const quota_type &_b) {
         return std::get<0>(_a) < std::get<0>(_b);
     });
-    using namespace abs_solver;
-    std::map<std::pair<size_t, ItemType>, size_t> m_caster;
+
+
+    struct Item {
+        enum TmpType {
+            AA, BB, CC
+        } t;
+//        size_t id;
+        size_t belonging;
+    };
+    using S = std::unordered_set<size_t>;
     std::vector<Item> m_all;
-    std::vector<F> m_feats;
     std::vector<S> m_sets;
-    size_t idx = 0;
-    for (size_t i = 0; i < chars.size(); i++) {
-        auto &charItem = chars[i];
-        Item itemA;
-        itemA.t = AA;
+    auto solve_soso17 = [&]() {
+        using F = std::pair<size_t, size_t>;
+        std::map<std::pair<size_t, ItemType>, size_t> m_caster;
+        std::vector<F> m_feats;
+        for (size_t i = 0; i < chars.size(); i++) {
+            auto &charItem = chars[i];
+            Item itemA;
+            itemA.t = Item::AA;
 //        itemA.id = idx++;
-        itemA.belonging = i;
-        m_all.push_back(itemA);
-        m_caster[{i, ItemType::ExplicitAtom}] = m_all.size() - 1;
-    }
-    for (size_t i = 0; i < lines.size(); i++) {
-        auto &line = lines[i];
-        Item itemB;
-        itemB.t = BB;
-        itemB.belonging = i;
+            itemA.belonging = i;
+            m_all.push_back(itemA);
+            m_caster[{i, ItemType::ExplicitAtom}] = m_all.size() - 1;
+        }
+        for (size_t i = 0; i < lines.size(); i++) {
+            auto &line = lines[i];
+            Item itemB;
+            itemB.t = Item::BB;
+            itemB.belonging = i;
 //        itemB.id = idx++;
-        m_all.push_back(itemB);
-        m_caster[{i, ItemType::BondFrom}] = m_all.size() - 1;
-        itemB.t = CC;
+            m_all.push_back(itemB);
+            m_caster[{i, ItemType::BondFrom}] = m_all.size() - 1;
+            itemB.t = Item::CC;
 //        itemB.id = idx++;
-        m_all.push_back(itemB);
-        m_caster[{i, ItemType::BondTo}] = m_all.size() - 1;
-    }
-    for (auto &[feat, id1, type1, id2, type2]:quotas) {
-        m_feats.emplace_back(m_caster[{id1, type1}], m_caster[{id2, type2}]);
-    }
-    std::unordered_map<size_t, size_t> valSet;// <id，集合下标>
-    auto insert_for_01 = [&](const decltype(valSet.end()) &_itr_none,
-                             const decltype(valSet.end()) &_itr_exist,
-                             const size_t &_none, const size_t &_exist) {
-        // _exist 已经在一个集合里了
-        auto &curSet = m_sets[_itr_exist->second];
-        // 验证 _none 能不能被插入
-        if (m_all[_none].t == AA) {
-            bool existA = false;
-            for (auto &id:curSet) {
-                if (m_all[id].t == AA) {
-                    existA = true;
-                    break;
+            m_all.push_back(itemB);
+            m_caster[{i, ItemType::BondTo}] = m_all.size() - 1;
+        }
+        for (auto &[feat, id1, type1, id2, type2]:quotas) {
+            m_feats.emplace_back(m_caster[{id1, type1}], m_caster[{id2, type2}]);
+        }
+        std::unordered_map<size_t, size_t> valSet;// <id，集合下标>
+        auto insert_for_01 = [&](const decltype(valSet.end()) &_itr_none,
+                                 const decltype(valSet.end()) &_itr_exist,
+                                 const size_t &_none, const size_t &_exist) {
+            // _exist 已经在一个集合里了
+            auto &curSet = m_sets[_itr_exist->second];
+            // 验证 _none 能不能被插入
+            if (m_all[_none].t == Item::AA) {
+                bool existA = false;
+                for (auto &id:curSet) {
+                    if (m_all[id].t == Item::AA) {
+                        existA = true;
+                        break;
+                    }
+                }
+                if (!existA) {
+                    // 插入
+                    valSet[_none] = _itr_exist->second;
+                    curSet.insert(_none);
+                }
+            } else {// BB or CC
+                bool existSameBond = false;
+                for (auto &id:curSet) {
+                    if (m_all[id].t != Item::AA &&
+                        m_all[id].belonging == m_all[_none].belonging) {
+                        existSameBond = true;
+                        break;
+                    }
+                }
+                if (!existSameBond) {
+                    // 插入
+                    valSet[_none] = _itr_exist->second;
+                    curSet.insert(_none);
                 }
             }
-            if (!existA) {
-                // 插入
-                valSet[_none] = _itr_exist->second;
-                curSet.insert(_none);
+        };
+        for (auto&[id1, id2]:m_feats) {
+            auto itr1 = valSet.find(id1);
+            auto itr2 = valSet.find(id2);
+            if (itr1 == valSet.end() && itr2 == valSet.end()) {
+                // 造一个新集合
+                m_sets.push_back(S());
+                auto &curSet = m_sets.back();
+                // 无条件插入
+                curSet.insert(id1);
+                curSet.insert(id2);
+                // 标记在哪个集合
+                valSet[id1] = valSet[id2] = m_sets.size() - 1;
+            } else if (itr1 == valSet.end()) {
+                insert_for_01(itr1, itr2, id1, id2);
+            } else if (itr2 == valSet.end()) {
+                insert_for_01(itr2, itr1, id2, id1);
             }
-        } else {// BB or CC
-            bool existSameBond = false;
-            for (auto &id:curSet) {
-                if (m_all[id].t != AA && m_all[id].belonging == m_all[_none].belonging) {
-                    existSameBond = true;
-                    break;
-                }
+        }
+        for (size_t i = 0; i < m_all.size(); i++) {
+            if (notExist(valSet, i)) {
+                // 造一个新集合
+                m_sets.push_back(S());
+                auto &curSet = m_sets.back();
+                // 无条件插入
+                curSet.insert(i);
+                // 标记在哪个集合
+                valSet[i] = m_sets.size() - 1;
             }
-            if (!existSameBond) {
-                // 插入
-                valSet[_none] = _itr_exist->second;
-                curSet.insert(_none);
+        }
+        std::cout << "!!!" << m_sets.size() << std::endl;
+        for (auto &m_set:m_sets) {
+            std::cout << "*****\n";
+            for (auto &id:m_set) {
+                std::cout << id << ",";
             }
+            std::cout << "\n";
         }
     };
-    for (auto&[id1, id2]:m_feats) {
-        auto itr1 = valSet.find(id1);
-        auto itr2 = valSet.find(id2);
-        if (itr1 == valSet.end() && itr2 == valSet.end()) {
-            // 造一个新集合
-            m_sets.push_back(S());
-            auto &curSet = m_sets.back();
-            // 无条件插入
-            curSet.insert(id1);
-            curSet.insert(id2);
-            // 标记在哪个集合
-            valSet[id1] = valSet[id2] = m_sets.size() - 1;
-        } else if (itr1 == valSet.end()) {
-            insert_for_01(itr1, itr2, id1, id2);
-        } else if (itr2 == valSet.end()) {
-            insert_for_01(itr2, itr1, id2, id1);
-        }
-    }
-    for(size_t i=0;i<m_all.size();i++){
-        if(notExist(valSet,i)){
-            // 造一个新集合
-            m_sets.push_back(S());
-            auto &curSet = m_sets.back();
-            // 无条件插入
-            curSet.insert(i);
-            // 标记在哪个集合
-            valSet[i]  = m_sets.size() - 1;
-        }
-    }
-    std::cout<<"!!!"<<m_sets.size()<<std::endl;
-    for(auto&m_set:m_sets){
-        std::cout<<"*****\n";
-        for(auto&id:m_set){
-            std::cout<<id<<",";
-        }
-        std::cout<<"\n";
-    }
+    solve_soso17();
 
-    size_t breakLine = 0;
-    for (auto &quota:quotas) {
-        std::cout << std::get<0>(quota) << ",";
-        if ((++breakLine) % 5 == 0)std::cout << "\n";
+    if (!mol)mol = std::make_shared<JMol>();
+    mol->clear();
+    // 新建原子
+    std::vector<size_t> a2a(m_sets.size());// <集合索引，mol中的原子id>
+    for (size_t i = 0; i < m_sets.size(); i++) {
+        auto &m_set = m_sets[i];
+        bool containAtom = false;
+        std::shared_ptr<JAtom> atom;
+        cv::Point2f p;
+        for (auto &id:m_set) {
+            if (m_all[id].t == Item::AA) {
+                containAtom = true;
+                size_t aid = m_all[id].belonging;
+                p = chars[aid].center;
+                atom = mol->addAtom(chars[aid].elementType);
+                break;
+            }
+        }
+        if (!containAtom) {
+            for (auto &id:m_set) {
+                if (m_all[id].t == Item::BB) {
+                    p += lines[m_all[id].belonging].from;
+                } else {
+                    p += lines[m_all[id].belonging].to;
+                }
+            }
+            p /= (float) m_set.size();
+            points.emplace_back(p.x, p.y);
+            atom = mol->addAtom(ElementType::C);
+        }
+        atom->x = p.x;
+        atom->y = p.y;
+        a2a[i] = atom->getId();
     }
-    std::cout << std::endl;
-    cv::Mat displayImg;
-    cv::cvtColor(imgGray, displayImg, cv::COLOR_GRAY2BGR);
-    for (auto &line:lines) {
-        cv::rectangle(displayImg, line.rect, getScalar(ColorName::rgbGreen), 2);
-        cv::circle(displayImg, line.from, 4, getScalar(ColorName::rgbBlue), -1);
-        cv::circle(displayImg, line.to, 4, getScalar(ColorName::rgbRed), -1);
+    // 新建线形键
+    std::vector<size_t> bc(lines.size(), 0);
+    std::vector<std::pair<size_t, size_t>> ba(lines.size());
+    for (size_t i = 0; i < m_sets.size(); i++) {
+        auto &m_set = m_sets[i];
+        for (auto &id:m_set) {
+            size_t bid = m_all[id].belonging;
+            if (m_all[id].t == Item::BB) {
+                bc[bid]++;
+                ba[bid].first = a2a[i];
+            } else if (m_all[id].t == Item::CC) {
+                bc[bid]++;
+                ba[bid].second = a2a[i];
+            }
+            if (2 == bc[m_all[id].belonging]) {
+                mol->addBond(ba[bid].first, ba[bid].second,
+                             lines[m_all[id].belonging].bondType);
+            }
+        }
     }
-    cv::imshow("bond", displayImg);
-    cv::waitKey(0);
+//    size_t breakLine = 0;
+//    for (auto &quota:quotas) {
+//        std::cout << std::get<0>(quota) << ",";
+//        if ((++breakLine) % 5 == 0)std::cout << "\n";
+//    }
+//    std::cout << std::endl;
+//    cv::Mat displayImg;
+//    cv::cvtColor(imgGray, displayImg, cv::COLOR_GRAY2BGR);
+//    cv::Mat displayImg2(displayImg.rows,displayImg.cols,CV_8UC3,
+//                        getScalar(ColorName::rgbWhite));
+//    for (size_t i = 0; i < m_all.size(); i++) {
+//        auto &m_tar = m_all[i];
+//        cv::Point p;
+//        float k=0.7;
+//        if (m_tar.t == Item::AA) {
+//            p = chars[m_tar.belonging].center;
+//        } else if (m_tar.t == Item::BB) {
+//            p = 0.7*lines[m_tar.belonging].from+(1-k)*lines[m_tar.belonging].to;
+//        } else {
+//            p = 0.7*lines[m_tar.belonging].to+(1-k)*lines[m_tar.belonging].from;
+//        }
+//        auto info = std::to_string(i);
+//        cv::putText(displayImg2, info, p,
+//                    1, 1.2, getScalar(ColorName::rgbBlue),
+//                    1, cv::LINE_AA, false);
+//    }
+//    for (auto &line:lines) {
+//        cv::rectangle(displayImg, line.rect, getScalar(ColorName::rgbGreen), 2);
+//        cv::circle(displayImg, line.from, 4, getScalar(ColorName::rgbBlue), -1);
+//        cv::circle(displayImg, line.to, 4, getScalar(ColorName::rgbRed), -1);
+//    }
+//    cv::imshow("1", displayImg);
+//    cv::imshow("2", displayImg2);
+//    cv::waitKey(0);
 }
 
 void SOSO17Converter::LineBondItem::predFromTo(const cv::Mat &_img) {

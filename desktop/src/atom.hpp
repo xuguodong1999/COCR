@@ -8,6 +8,8 @@ class JAtom {
     size_t id;
     AtomStereo atomStereo;
 public:
+    float x, y, z;
+
     const AtomStereo &getAtomStereo() const;
 
     void setAtomStereo(const AtomStereo &_atomStereo);
