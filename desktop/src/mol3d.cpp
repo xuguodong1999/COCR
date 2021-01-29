@@ -7,6 +7,8 @@
 #include "mol_op.hpp"
 #include "openbabel_util.hpp"
 
+extern std::shared_ptr<MolUtil> molUtil;
+
 bool Mol3D::calcCoord3D_addHs() {
     // 要求更新3D坐标的时候必须加氢
     auto op = std::make_shared<MolOp>(mol);
@@ -14,7 +16,6 @@ bool Mol3D::calcCoord3D_addHs() {
         op->addHs(_aid);
     };
     mol->safeTraverseAtoms(add_all_hydrogen);
-    auto molUtil = std::make_shared<MolUtilOpenBabelImpl>();
     return molUtil->getCoord3D(*this);
 }
 

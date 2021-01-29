@@ -14,8 +14,9 @@
 #include "soso17_converter.hpp"
 extern std::string WORKSPACE;
 extern std::vector<std::string> CLASSES;
-
+extern std::shared_ptr<MolUtil> molUtil;
 int main(int argc, char *argv[]) {
+    molUtil = std::make_shared<MolUtilOpenBabelImpl>();
     std::srand(0);
 #ifdef Q_OS_WIN64
     _putenv("BABEL_DATADIR=C:/static/openbabel-3.1.1/data");
@@ -31,12 +32,13 @@ int main(int argc, char *argv[]) {
 //        detector->init((WORKSPACE + "/cocr17.int8.param").c_str(),
 //                       (WORKSPACE + "/cocr17_400000.int8.bin").c_str());
         cv::Mat img = cv::imread(WORKSPACE +
-                "/soso17_small/JPEGImages/4_0.jpg");
+                                 "/test.jpg");
+//                "/soso17_small/JPEGImages/0_0.jpg");
 //        detector->detectAndDisplay(img, CLASSES);
         auto objs = detector->detect(img);
         SOSO17Converter converter;
         converter.accept(img, objs);
-
+        std::cout << converter.getMol()->bondsNum() << std::endl;
         auto rootEntity = new Qt3DCore::QEntity();
         auto molBuilder = new Mol3DBuilder(rootEntity, converter.getMol());
         if (!molBuilder->build())exit(-1);

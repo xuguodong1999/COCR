@@ -2,7 +2,8 @@
 #include "opencv_util.hpp"
 #include "std_util.hpp"
 #include "colors.hpp"
-#include "mol_graph.hpp"
+#include "mol_util.hpp"
+#include "mol_op.hpp"
 
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
@@ -13,6 +14,7 @@
 #include <variant>
 #include <unordered_map>
 
+extern std::shared_ptr<MolUtil> molUtil;
 
 std::vector<std::string> CLASSES = {
         "Br", "O", "I", "S", "H", "N", "C", "B",
@@ -130,11 +132,7 @@ void SOSO17Converter::clear() {
     imgGray.release();
     reset(std::make_shared<JMol>());
 }
-// 通过形式化的抽象总结构造分子树
-namespace abstract_solver {
 
-
-}
 
 void SOSO17Converter::then() {
     using quota_type = std::tuple<float, size_t, ItemType, size_t, ItemType>;
@@ -173,7 +171,7 @@ void SOSO17Converter::then() {
         auto &b1 = lines[i];
         for (size_t j = i + 1; j < lines.size(); j++) {
             auto &b2 = lines[j];
-            float avgLen = (b1.length + b2.length) / 2;
+            float avgLen = (b1.length + b2.length) / 2 / sBondExpandThresh;
             float q1 = getDistance2D(b1.from, b2.from) / avgLen;
             float q2 = getDistance2D(b1.from, b2.to) / avgLen;
             float q3 = getDistance2D(b1.to, b2.from) / avgLen;
@@ -201,7 +199,7 @@ void SOSO17Converter::then() {
         return std::get<0>(_a) < std::get<0>(_b);
     });
 
-
+    // 通过形式化的抽象总结构造分子树
     struct Item {
         enum TmpType {
             AA, BB, CC
@@ -281,6 +279,7 @@ void SOSO17Converter::then() {
             auto itr1 = valSet.find(id1);
             auto itr2 = valSet.find(id2);
             if (itr1 == valSet.end() && itr2 == valSet.end()) {
+                // FIXME: 关系对属于一个已知聚类
                 // 造一个新集合
                 m_sets.push_back(S());
                 auto &curSet = m_sets.back();
@@ -305,14 +304,6 @@ void SOSO17Converter::then() {
                 // 标记在哪个集合
                 valSet[i] = m_sets.size() - 1;
             }
-        }
-        std::cout << "!!!" << m_sets.size() << std::endl;
-        for (auto &m_set:m_sets) {
-            std::cout << "*****\n";
-            for (auto &id:m_set) {
-                std::cout << id << ",";
-            }
-            std::cout << "\n";
         }
     };
     solve_soso17();
@@ -344,7 +335,6 @@ void SOSO17Converter::then() {
                 }
             }
             p /= (float) m_set.size();
-            points.emplace_back(p.x, p.y);
             atom = mol->addAtom(ElementType::C);
         }
         atom->x = p.x;
@@ -365,46 +355,127 @@ void SOSO17Converter::then() {
                 bc[bid]++;
                 ba[bid].second = a2a[i];
             }
-            if (2 == bc[m_all[id].belonging]) {
+            if (m_all[id].t != Item::AA && 2 == bc[bid]) {
                 mol->addBond(ba[bid].first, ba[bid].second,
                              lines[m_all[id].belonging].bondType);
             }
         }
     }
-//    size_t breakLine = 0;
-//    for (auto &quota:quotas) {
-//        std::cout << std::get<0>(quota) << ",";
-//        if ((++breakLine) % 5 == 0)std::cout << "\n";
-//    }
-//    std::cout << std::endl;
-//    cv::Mat displayImg;
-//    cv::cvtColor(imgGray, displayImg, cv::COLOR_GRAY2BGR);
-//    cv::Mat displayImg2(displayImg.rows,displayImg.cols,CV_8UC3,
-//                        getScalar(ColorName::rgbWhite));
-//    for (size_t i = 0; i < m_all.size(); i++) {
-//        auto &m_tar = m_all[i];
-//        cv::Point p;
-//        float k=0.7;
-//        if (m_tar.t == Item::AA) {
-//            p = chars[m_tar.belonging].center;
-//        } else if (m_tar.t == Item::BB) {
-//            p = 0.7*lines[m_tar.belonging].from+(1-k)*lines[m_tar.belonging].to;
-//        } else {
-//            p = 0.7*lines[m_tar.belonging].to+(1-k)*lines[m_tar.belonging].from;
-//        }
-//        auto info = std::to_string(i);
-//        cv::putText(displayImg2, info, p,
-//                    1, 1.2, getScalar(ColorName::rgbBlue),
-//                    1, cv::LINE_AA, false);
-//    }
-//    for (auto &line:lines) {
-//        cv::rectangle(displayImg, line.rect, getScalar(ColorName::rgbGreen), 2);
-//        cv::circle(displayImg, line.from, 4, getScalar(ColorName::rgbBlue), -1);
-//        cv::circle(displayImg, line.to, 4, getScalar(ColorName::rgbRed), -1);
-//    }
-//    cv::imshow("1", displayImg);
-//    cv::imshow("2", displayImg2);
-//    cv::waitKey(0);
+    if (circles.empty())return;
+    // 处理圆
+    auto rings = molUtil->getSSSR(*mol);
+    std::cout << "rings.size()=" << rings.size() << std::endl;
+    if (rings.empty()) {
+        std::cerr << circles.size() << " circles but no rings detected" << std::endl;
+        return;
+    }
+    auto op = std::make_shared<MolOp>(getMol());
+    for (auto &ring:rings) {
+        if (ring.empty())continue;
+//        std::cout<<"ring.size()="<<ring.size()<<std::endl;
+        cv::Point2f p(0, 0);
+        float r = 0;
+        for (auto &id:ring) {
+            p += cv::Point2f(mol->getAtomById(id)->x, mol->getAtomById(id)->y);
+        }
+        p /= (float) ring.size();
+        for (auto &id:ring) {
+            r += getDistance2D(p, cv::Point2f(
+                    mol->getAtomById(id)->x, mol->getAtomById(id)->y));
+        }
+        r /= rings.size() / 2;
+        bool needAromatic = false;
+        for (auto &circle:circles) {
+            if (r - circle.radius > getDistance2D(p, circle.center)) {
+                needAromatic = true;
+                break;
+            }
+        }
+        if (!needAromatic) continue;
+        std::unordered_set<size_t> aidSet;
+        for (auto &id:ring)aidSet.insert(id);
+        std::vector<std::shared_ptr<JBond>> cb, cb2;
+        auto modify_bond = [&](const size_t &_bid) -> void {
+            auto bond = mol->getBondById(_bid);
+            if (notExist(aidSet, bond->getAtomFrom()) ||
+                notExist(aidSet, bond->getAtomTo())) {
+                return;
+            }
+            cb.push_back(std::move(bond));
+        };
+        mol->safeTraverseBonds(modify_bond);
+        size_t start = 0;
+        for (size_t i = 0; i < cb.size(); i++) {
+            if (JBondType::DoubleBond == cb[i]->getBondType()) {
+                start = i;
+                break;
+            }
+        }
+        size_t target = cb[start]->getAtomFrom();
+        cb2.push_back(cb[start]);
+        cb.erase(cb.begin() + start);
+        while (!cb.empty()) {
+            for (size_t i = 0; i < cb.size(); i++) {
+                if (cb[i]->getAtomFrom() == target) {
+                    cb2.push_back(cb[i]);
+                    target = cb[i]->getAtomTo();
+                    cb.erase(cb.begin() + i);
+                    break;
+                } else if (cb[i]->getAtomTo() == target) {
+                    cb2.push_back(cb[i]);
+                    target = cb[i]->getAtomFrom();
+                    cb.erase(cb.begin() + i);
+                    break;
+                }
+            }
+        }
+        for (auto &b:cb2) {
+//                b->setType(JBondType::DelocalizedBond);
+            op->markAsDouble(b->getId());
+        }
+
+    }
+    std::cout << "m_sets.size()=" << m_sets.size() << std::endl;
+    for (auto &m_set:m_sets) {
+        for (auto &id:m_set) {
+            std::cout << id << ",";
+        }
+        std::cout << "\n*****\n";
+    }
+    size_t breakLine = 0;
+    for (auto &quota:quotas) {
+        std::cout << std::get<0>(quota) << ",";
+        if ((++breakLine) % 5 == 0)std::cout << "\n";
+    }
+    std::cout << std::endl;
+    cv::Mat displayImg;
+    cv::cvtColor(imgGray, displayImg, cv::COLOR_GRAY2BGR);
+    cv::Mat displayImg2(displayImg.rows,displayImg.cols,CV_8UC3,
+                        getScalar(ColorName::rgbWhite));
+    for (size_t i = 0; i < m_all.size(); i++) {
+        auto &m_tar = m_all[i];
+        cv::Point p;
+        float k=0.7;
+        if (m_tar.t == Item::AA) {
+            p = chars[m_tar.belonging].center;
+        } else if (m_tar.t == Item::BB) {
+            p = 0.7*lines[m_tar.belonging].from+(1-k)*lines[m_tar.belonging].to;
+        } else {
+            p = 0.7*lines[m_tar.belonging].to+(1-k)*lines[m_tar.belonging].from;
+        }
+        auto info = std::to_string(i);
+        cv::putText(displayImg2, info, p,
+                    1, 1.2, getScalar(ColorName::rgbBlue),
+                    1, cv::LINE_AA, false);
+    }
+    for (auto &line:lines) {
+        cv::rectangle(displayImg, line.rect, getScalar(ColorName::rgbGreen), 1);
+        cv::circle(displayImg, line.from, 4, getScalar(ColorName::rgbBlue), -1);
+        cv::circle(displayImg, line.to, 4, getScalar(ColorName::rgbRed), -1);
+    }
+    cv::imshow("1", displayImg);
+    cv::imshow("2", displayImg2);
+    cv::waitKey(0);
 }
 
 void SOSO17Converter::LineBondItem::predFromTo(const cv::Mat &_img) {

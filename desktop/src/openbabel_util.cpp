@@ -2,6 +2,7 @@
 
 #include <openbabel/mol.h>
 #include <openbabel/bond.h>
+#include <openbabel/ring.h>
 #include <openbabel/obiter.h>
 #include <openbabel/plugin.h>
 #include <openbabel/builder.h>
@@ -17,18 +18,24 @@ OpenBabel::OBMol convertJMolToOBMol(const JMol &_jMol) {
     OpenBabel::OBMol obMol;
     // FIXME: 这里的转换丢失了构型信息、没有包含离域键
     j2oAtomMap.clear();
+    o2jAtomMap.clear();
     auto convert_atom = [&](const size_t &_aid) {
         auto obAtom = obMol.NewAtom();
         obAtom->SetAtomicNum(_jMol.getAtomById(_aid)->getAtomicNumber());
         j2oAtomMap[_aid] = obAtom;
+        o2jAtomMap[obAtom->GetId()] = _aid;
     };
     _jMol.safeTraverseAtoms(convert_atom);
     auto convert_bond = [&](const size_t &_bid) {
         auto obBond = obMol.NewBond();
         auto bond = _jMol.getBondById(_bid);
-        obBond->SetBondOrder(std::lround(bond->asValence().floatValue()));
         obBond->SetBegin(j2oAtomMap[bond->getAtomFrom()]);
         obBond->SetEnd(j2oAtomMap[bond->getAtomTo()]);
+        if (JBondType::DelocalizedBond == bond->getBondType()) {
+            obBond->SetBondOrder(5);
+        } else {
+            obBond->SetBondOrder(std::lround(bond->asValence().floatValue()));
+        }
     };
     _jMol.safeTraverseBonds(convert_bond);
     return std::move(obMol);
@@ -45,8 +52,13 @@ std::shared_ptr<JMol> convertOBMolToJMol(const OpenBabel::OBMol &_obMol) {
     FOR_BONDS_OF_MOL(obBond, const_cast<OpenBabel::OBMol &>(_obMol)) {
         auto aid1 = o2jAtomMap[obBond->GetBeginAtom()->GetId()];
         auto aid2 = o2jAtomMap[obBond->GetEndAtom()->GetId()];
-        jMol->addBond(
-                aid1, aid2, static_cast<JBondType>(obBond->GetBondOrder()));
+        JBondType bondType;
+        if (5 == obBond->GetBondOrder()) {
+            bondType = JBondType::DelocalizedBond;
+        } else {
+            bondType = static_cast<JBondType>(obBond->GetBondOrder());
+        }
+        jMol->addBond(aid1, aid2, bondType);
     }
     return jMol;
 }
@@ -157,11 +169,27 @@ std::shared_ptr<JMol> MolUtilOpenBabelImpl::fromFormat(const std::string &_conte
 }
 
 std::vector<std::vector<size_t>> MolUtilOpenBabelImpl::getLSSR(const JMol &_mol) {
-    // TODO: 实现之
-    return std::vector<std::vector<size_t>>();
+    auto obMol = convertJMolToOBMol(_mol);
+    auto &rings = obMol.GetLSSR();
+    std::vector<std::vector<size_t>> retRings(rings.size());
+    for (size_t i = 0; i < rings.size(); i++) {
+        auto &ring = rings[i];
+        for (auto &idx:ring->_path) {
+            retRings[i].push_back(o2jAtomMap[obMol.GetAtom(idx)->GetId()]);
+        }
+    }
+    return std::move(retRings);
 }
 
 std::vector<std::vector<size_t>> MolUtilOpenBabelImpl::getSSSR(const JMol &_mol) {
-    // TODO: 实现之
-    return std::vector<std::vector<size_t>>();
+    auto obMol = convertJMolToOBMol(_mol);
+    auto &rings = obMol.GetSSSR();
+    std::vector<std::vector<size_t>> retRings(rings.size());
+    for (size_t i = 0; i < rings.size(); i++) {
+        auto &ring = rings[i];
+        for (auto &idx:ring->_path) {
+            retRings[i].push_back(o2jAtomMap[obMol.GetAtom(idx)->GetId()]);
+        }
+    }
+    return std::move(retRings);
 }

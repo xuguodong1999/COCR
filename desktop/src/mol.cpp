@@ -5,8 +5,6 @@
 
 #include <random>
 
-extern std::shared_ptr<MolUtil> molUtil;
-
 std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber) {
     auto aid = mAids++;
     auto atom = std::make_shared<JAtom>(aid, _atomicNumber);

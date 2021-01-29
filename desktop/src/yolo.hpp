@@ -8,9 +8,10 @@
 
 class YoloDetector {
 protected:
-    float iouThresh,confThresh;
+    float iouThresh, confThresh;
 public:
-    YoloDetector():iouThresh(0.6),confThresh(0.15){ }
+    YoloDetector() : iouThresh(0.25), confThresh(0.15) {}
+
     float getIouThresh() const;
 
     void setIouThresh(float iouThresh);
@@ -20,15 +21,17 @@ public:
     void setConfThresh(float confThresh);
 
     virtual bool init(const char *cfgPath, const char *parmPath) = 0;
+
     /**
      *
      * @param _img 长宽要求为32的倍数
      * @return
      */
-    virtual std::vector<YoloObject> detect(const cv::Mat&_img) = 0;
+    virtual std::vector<YoloObject> detect(const cv::Mat &_img) = 0;
 
-    cv::Mat detectAndDisplay(const cv::Mat&_img,const std::vector<std::string>&_names);
+    cv::Mat detectAndDisplay(const cv::Mat &_img, const std::vector<std::string> &_names);
 };
 
-float getAvgObjectSize(const std::vector<YoloObject>&_objs);
+float getAvgObjectSize(const std::vector<YoloObject> &_objs);
+
 #endif//_YOLO_HPP_

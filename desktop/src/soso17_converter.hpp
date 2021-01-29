@@ -6,16 +6,23 @@
 #include "bond_type.hpp"
 #include "opencv2/core/types.hpp"
 #include "opencv2/core/mat.hpp"
+
 #include <utility>
 
 extern std::vector<std::string> CLASSES;
 
 class SOSO17Converter : public MolHolder {
+
     enum class ItemType {
         BondFrom, BondTo, BondIn,
         ExplicitAtom, ImplicitAtom
     };
 
+    // 【关系对聚类】过程 使用下面两个超参
+    // 特征值小于该数的【图元对】成为【候选】关系对
+    inline static float sQuotaThresh = (1.8 + 0.8) / 2;
+    // 【键端-键端】特征值的放大倍数，认为【字符-键端】比【键端-键端】有更大的冗余度
+    inline static float sBondExpandThresh = 3;
 
     struct ImplicitAtomItem {
         ElementType elementType;
@@ -47,10 +54,12 @@ class SOSO17Converter : public MolHolder {
         void predFromTo(const cv::Mat &_img);
 
     private:
-        void predFromToForLine(const cv::Mat&_imgGray);
-        void predFromToForWedge(const cv::Mat&_imgGray);
-        inline static int sMinSize=5;
-        inline static float sLineThresh=2;
+        void predFromToForLine(const cv::Mat &_imgGray);
+
+        void predFromToForWedge(const cv::Mat &_imgGray);
+
+        inline static int sMinSize = 5;
+        inline static float sLineThresh = 2;
     };
 
     struct CircleBondItem {
@@ -62,7 +71,6 @@ class SOSO17Converter : public MolHolder {
     };
 
     std::vector<ExplicitAtomItem> chars;
-    std::vector<ImplicitAtomItem> points;
     std::vector<LineBondItem> lines;
     std::vector<CircleBondItem> circles;
 
@@ -70,7 +78,6 @@ class SOSO17Converter : public MolHolder {
 
     void clear();
 
-    inline static float sQuotaThresh = (1.8 + 0.8) / 2;
 public:
     SOSO17Converter();
 

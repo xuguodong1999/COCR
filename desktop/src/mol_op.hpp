@@ -6,6 +6,8 @@
 class MolOp : public MolHolder {
     //<原子id，化合价or当前键级>
     std::unordered_map<size_t, frac> atomValenceMap;
+    //<原子id，邻接的双键数>
+    std::unordered_map<size_t, size_t> dbCounter;
     //<原子id，邻居原子们的id>
     std::unordered_map<size_t, std::unordered_set<size_t>> neighborAtomsMap;
     //<原子id，键们的id>
@@ -26,6 +28,8 @@ public:
      * @param _atomValenceMap 化合价表
      */
     void addHs(const size_t &_aid);
+
+    bool markAsDouble(const size_t &_bid);
 
     /**
      * 把 _bid 两侧的基团挂到芳环上，删掉编号 _bid 的化学键
@@ -85,11 +89,6 @@ private:
      */
     void updateAtomValenceMap();
 
-    /**
-     * 增量更新化合价表
-     * @param _bids 引起化合价变动的化学键id数组
-     */
-    void updateAtomValenceMap(const std::vector<size_t> &_bids);
 
     /**
      * 增量更新化合价表
@@ -101,6 +100,8 @@ private:
      * 全量更新原子邻居表，包括原子表和键表
      */
     void updateNeighborInfoMap();
+
+    void updateDoubleBondCounter();
 };
 
 #endif//_MOL_OP_HPP_

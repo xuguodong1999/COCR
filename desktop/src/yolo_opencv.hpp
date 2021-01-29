@@ -9,12 +9,13 @@
 
 #include <vector>
 
-class YoloOpenCVImpl : public YoloDetector{
+class YoloOpenCVImpl : public YoloDetector {
     cv::dnn::Net net;
     std::vector<cv::String> outBlobNames;
 public:
-    bool init(const char *cfgPath, const char *parmPath)override;
-    std::vector<YoloObject> detect(const cv::Mat&_img) override;
+    bool init(const char *cfgPath, const char *parmPath) override;
+
+    std::vector<YoloObject> detect(const cv::Mat &_img) override;
 };
 
 #endif//_YOLO_OPENCV_HPP_
