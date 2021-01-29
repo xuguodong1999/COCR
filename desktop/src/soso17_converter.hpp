@@ -11,6 +11,10 @@
 
 extern std::vector<std::string> CLASSES;
 
+/**
+ * 拆东墙补西墙的图元聚类 qwq
+ * anyway, it works.
+ */
 class SOSO17Converter : public MolHolder {
 
     enum class ItemType {
@@ -18,11 +22,13 @@ class SOSO17Converter : public MolHolder {
         ExplicitAtom, ImplicitAtom
     };
 
-    // 【关系对聚类】过程 使用下面两个超参
+    // 【关系对聚类】过程 使用下面三个超参
     // 特征值小于该数的【图元对】成为【候选】关系对
     inline static float sQuotaThresh = (1.8 + 0.8) / 2;
     // 【键端-键端】特征值的放大倍数，认为【字符-键端】比【键端-键端】有更大的冗余度
     inline static float sBondExpandThresh = 3;
+    // 补丁参数，是否合并两个纯键端聚类
+    inline static float sGroupPtsThresh = 3;
 
     struct ImplicitAtomItem {
         ElementType elementType;

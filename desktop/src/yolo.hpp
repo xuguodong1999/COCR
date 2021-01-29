@@ -10,7 +10,7 @@ class YoloDetector {
 protected:
     float iouThresh, confThresh;
 public:
-    YoloDetector() : iouThresh(0.25), confThresh(0.15) {}
+    YoloDetector() : iouThresh(0.3), confThresh(0.2) {}
 
     float getIouThresh() const;
 

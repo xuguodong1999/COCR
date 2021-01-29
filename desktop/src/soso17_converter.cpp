@@ -280,6 +280,7 @@ void SOSO17Converter::then() {
             auto itr2 = valSet.find(id2);
             if (itr1 == valSet.end() && itr2 == valSet.end()) {
                 // FIXME: 关系对属于一个已知聚类
+                // 这个留在最后打一个补丁，对象是所有仅包含两个键端的聚类
                 // 造一个新集合
                 m_sets.push_back(S());
                 auto &curSet = m_sets.back();
@@ -292,6 +293,8 @@ void SOSO17Converter::then() {
                 insert_for_01(itr1, itr2, id1, id2);
             } else if (itr2 == valSet.end()) {
                 insert_for_01(itr2, itr1, id2, id1);
+            } else {
+                // 需要合并吗
             }
         }
         for (size_t i = 0; i < m_all.size(); i++) {
@@ -304,6 +307,72 @@ void SOSO17Converter::then() {
                 // 标记在哪个集合
                 valSet[i] = m_sets.size() - 1;
             }
+        }
+        auto val_pts = [](const std::vector<cv::Point2f> &_pts, const float &_d) {
+            std::vector<float> dis = {
+                    getDistance2D(_pts[0], _pts[1]),
+                    getDistance2D(_pts[0], _pts[2]),
+                    getDistance2D(_pts[0], _pts[3]),
+                    getDistance2D(_pts[1], _pts[2]),
+                    getDistance2D(_pts[1], _pts[3]),
+                    getDistance2D(_pts[2], _pts[3])
+            };
+            std::sort(dis.begin(), dis.end(), std::greater<float>());
+            return dis[0] * sGroupPtsThresh < _d;
+        };
+        for (size_t i = 0; i < m_sets.size(); i++) {
+            auto &m_set = m_sets[i];
+            if (m_set.size() != 2)continue;
+            bool isTwoBondSide = true;
+            std::unordered_set<size_t> belongingSet;
+            for (auto &id:m_set) {
+                belongingSet.insert(m_all[id].belonging);
+                if (Item::AA == m_all[id].t) {
+                    isTwoBondSide = false;
+                    break;
+                }
+            }
+            if (!isTwoBondSide)continue;
+            for (size_t j = i + 1; j < m_sets.size(); j++) {
+                if (m_sets[j].size() != 2)continue;
+                isTwoBondSide = true;
+                for (auto &id:m_sets[j]) {
+                    if (Item::AA == m_all[id].t ||
+                        !notExist(belongingSet, m_all[id].belonging)) {
+                        isTwoBondSide = false;
+                        break;
+                    }
+                }
+                if (!isTwoBondSide)continue;
+                // 比较两个集合<i,j>的距离
+                std::vector<cv::Point2f> pts;
+                std::vector<float> lens;
+                for (auto &id:m_sets[j]) {
+                    if (Item::BB == m_all[id].t) {
+                        pts.push_back(lines[m_all[id].belonging].from);
+                        lens.push_back(lines[m_all[id].belonging].length);
+                    } else if (Item::CC == m_all[id].t) {
+                        pts.push_back(lines[m_all[id].belonging].to);
+                        lens.push_back(lines[m_all[id].belonging].length);
+                    }
+                }
+                for (auto &id:m_set) {
+                    if (Item::BB == m_all[id].t) {
+                        pts.push_back(lines[m_all[id].belonging].from);
+                        lens.push_back(lines[m_all[id].belonging].length);
+                    } else if (Item::CC == m_all[id].t) {
+                        pts.push_back(lines[m_all[id].belonging].to);
+                        lens.push_back(lines[m_all[id].belonging].length);
+                    }
+                }
+                if (val_pts(pts, std::accumulate(
+                        lens.begin(), lens.end(), 0) / lens.size())) {
+                    for (auto &id:m_sets[j])m_set.insert(id);
+                    m_sets.erase(m_sets.begin() + j);
+                    break;// 合过一次，不可能再合一次
+                }
+            }
+
         }
     };
     solve_soso17();
@@ -361,80 +430,81 @@ void SOSO17Converter::then() {
             }
         }
     }
-    if (circles.empty())return;
-    // 处理圆
-    auto rings = molUtil->getSSSR(*mol);
-    std::cout << "rings.size()=" << rings.size() << std::endl;
-    if (rings.empty()) {
-        std::cerr << circles.size() << " circles but no rings detected" << std::endl;
-        return;
-    }
-    auto op = std::make_shared<MolOp>(getMol());
-    for (auto &ring:rings) {
-        if (ring.empty())continue;
+    if (!circles.empty()) {
+        // 处理圆
+        auto rings = molUtil->getSSSR(*mol);
+        std::cout << "rings.size()=" << rings.size() << std::endl;
+        if (rings.empty()) {
+            std::cerr << circles.size() << " circles but no rings detected" << std::endl;
+            return;
+        }
+        auto op = std::make_shared<MolOp>(getMol());
+        for (auto &ring:rings) {
+            if (ring.empty())continue;
 //        std::cout<<"ring.size()="<<ring.size()<<std::endl;
-        cv::Point2f p(0, 0);
-        float r = 0;
-        for (auto &id:ring) {
-            p += cv::Point2f(mol->getAtomById(id)->x, mol->getAtomById(id)->y);
-        }
-        p /= (float) ring.size();
-        for (auto &id:ring) {
-            r += getDistance2D(p, cv::Point2f(
-                    mol->getAtomById(id)->x, mol->getAtomById(id)->y));
-        }
-        r /= rings.size() / 2;
-        bool needAromatic = false;
-        for (auto &circle:circles) {
-            if (r - circle.radius > getDistance2D(p, circle.center)) {
-                needAromatic = true;
-                break;
+            cv::Point2f p(0, 0);
+            float r = 0;
+            for (auto &id:ring) {
+                p += cv::Point2f(mol->getAtomById(id)->x, mol->getAtomById(id)->y);
             }
-        }
-        if (!needAromatic) continue;
-        std::unordered_set<size_t> aidSet;
-        for (auto &id:ring)aidSet.insert(id);
-        std::vector<std::shared_ptr<JBond>> cb, cb2;
-        auto modify_bond = [&](const size_t &_bid) -> void {
-            auto bond = mol->getBondById(_bid);
-            if (notExist(aidSet, bond->getAtomFrom()) ||
-                notExist(aidSet, bond->getAtomTo())) {
-                return;
+            p /= (float) ring.size();
+            for (auto &id:ring) {
+                r += getDistance2D(p, cv::Point2f(
+                        mol->getAtomById(id)->x, mol->getAtomById(id)->y));
             }
-            cb.push_back(std::move(bond));
-        };
-        mol->safeTraverseBonds(modify_bond);
-        size_t start = 0;
-        for (size_t i = 0; i < cb.size(); i++) {
-            if (JBondType::DoubleBond == cb[i]->getBondType()) {
-                start = i;
-                break;
-            }
-        }
-        size_t target = cb[start]->getAtomFrom();
-        cb2.push_back(cb[start]);
-        cb.erase(cb.begin() + start);
-        while (!cb.empty()) {
-            for (size_t i = 0; i < cb.size(); i++) {
-                if (cb[i]->getAtomFrom() == target) {
-                    cb2.push_back(cb[i]);
-                    target = cb[i]->getAtomTo();
-                    cb.erase(cb.begin() + i);
-                    break;
-                } else if (cb[i]->getAtomTo() == target) {
-                    cb2.push_back(cb[i]);
-                    target = cb[i]->getAtomFrom();
-                    cb.erase(cb.begin() + i);
+            r /= rings.size() / 2;
+            bool needAromatic = false;
+            for (auto &circle:circles) {
+                if (r - circle.radius > getDistance2D(p, circle.center)) {
+                    needAromatic = true;
                     break;
                 }
             }
-        }
-        for (auto &b:cb2) {
+            if (!needAromatic) continue;
+            std::unordered_set<size_t> aidSet;
+            for (auto &id:ring)aidSet.insert(id);
+            std::vector<std::shared_ptr<JBond>> cb, cb2;
+            auto modify_bond = [&](const size_t &_bid) -> void {
+                auto bond = mol->getBondById(_bid);
+                if (notExist(aidSet, bond->getAtomFrom()) ||
+                    notExist(aidSet, bond->getAtomTo())) {
+                    return;
+                }
+                cb.push_back(std::move(bond));
+            };
+            mol->safeTraverseBonds(modify_bond);
+            size_t start = 0;
+            for (size_t i = 0; i < cb.size(); i++) {
+                if (JBondType::DoubleBond == cb[i]->getBondType()) {
+                    start = i;
+                    break;
+                }
+            }
+            size_t target = cb[start]->getAtomFrom();
+            cb2.push_back(cb[start]);
+            cb.erase(cb.begin() + start);
+            while (!cb.empty()) {
+                for (size_t i = 0; i < cb.size(); i++) {
+                    if (cb[i]->getAtomFrom() == target) {
+                        cb2.push_back(cb[i]);
+                        target = cb[i]->getAtomTo();
+                        cb.erase(cb.begin() + i);
+                        break;
+                    } else if (cb[i]->getAtomTo() == target) {
+                        cb2.push_back(cb[i]);
+                        target = cb[i]->getAtomFrom();
+                        cb.erase(cb.begin() + i);
+                        break;
+                    }
+                }
+            }
+            for (auto &b:cb2) {
 //                b->setType(JBondType::DelocalizedBond);
-            op->markAsDouble(b->getId());
+                op->markAsDouble(b->getId());
+            }
         }
-
     }
+
     std::cout << "m_sets.size()=" << m_sets.size() << std::endl;
     for (auto &m_set:m_sets) {
         for (auto &id:m_set) {
@@ -450,18 +520,18 @@ void SOSO17Converter::then() {
     std::cout << std::endl;
     cv::Mat displayImg;
     cv::cvtColor(imgGray, displayImg, cv::COLOR_GRAY2BGR);
-    cv::Mat displayImg2(displayImg.rows,displayImg.cols,CV_8UC3,
+    cv::Mat displayImg2(displayImg.rows, displayImg.cols, CV_8UC3,
                         getScalar(ColorName::rgbWhite));
     for (size_t i = 0; i < m_all.size(); i++) {
         auto &m_tar = m_all[i];
         cv::Point p;
-        float k=0.7;
+        float k = 0.7;
         if (m_tar.t == Item::AA) {
             p = chars[m_tar.belonging].center;
         } else if (m_tar.t == Item::BB) {
-            p = 0.7*lines[m_tar.belonging].from+(1-k)*lines[m_tar.belonging].to;
+            p = 0.7 * lines[m_tar.belonging].from + (1 - k) * lines[m_tar.belonging].to;
         } else {
-            p = 0.7*lines[m_tar.belonging].to+(1-k)*lines[m_tar.belonging].from;
+            p = 0.7 * lines[m_tar.belonging].to + (1 - k) * lines[m_tar.belonging].from;
         }
         auto info = std::to_string(i);
         cv::putText(displayImg2, info, p,
