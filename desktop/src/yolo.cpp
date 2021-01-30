@@ -10,6 +10,8 @@
 
 #endif
 
+std::shared_ptr<YoloDetector>yoloDetector;
+
 float YoloDetector::getIouThresh() const {
     return iouThresh;
 }

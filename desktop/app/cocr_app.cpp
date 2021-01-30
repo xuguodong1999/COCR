@@ -1,23 +1,29 @@
-#include "mol3d.hpp"
-#include "mol3d_builder.hpp"
-#include "mol3dwindow.hpp"
+//#include "mol3d.hpp"
+//#include "mol3d_builder.hpp"
+//#include "mol3dwindow.hpp"
+#include "qt_mainwindow.hpp"
 #include "openbabel_util.hpp"
 #include <QApplication>
-#include <QWidget>
-#include <Qt3DCore/QEntity>
-#include <QDebug>
-#include <iostream>
-#include <opencv2/imgcodecs.hpp>
-
-#include "yolo_ncnn.hpp"
+//#include <QWidget>
+//#include <Qt3DCore/QEntity>
+//#include <QDebug>
+//#include <iostream>
+//#include <opencv2/imgcodecs.hpp>
+//
+//#include "yolo_ncnn.hpp"
 #include "yolo_opencv.hpp"
-#include "soso17_converter.hpp"
+//#include "soso17_converter.hpp"
+
 extern std::string WORKSPACE;
 extern std::vector<std::string> CLASSES;
 extern std::shared_ptr<MolUtil> molUtil;
+extern std::shared_ptr<YoloDetector> yoloDetector;
+
 int main(int argc, char *argv[]) {
-    molUtil = std::make_shared<MolUtilOpenBabelImpl>();
     std::srand(0);
+    molUtil = std::make_shared<MolUtilOpenBabelImpl>();
+    yoloDetector = std::make_shared<YoloOpenCVImpl>();
+
 #ifdef Q_OS_WIN64
     _putenv("BABEL_DATADIR=C:/static/openbabel-3.1.1/data");
 #endif
@@ -25,28 +31,29 @@ int main(int argc, char *argv[]) {
     qApp->setAttribute(Qt::AA_SynthesizeMouseForUnhandledTouchEvents);
     QApplication a(argc, argv);
     try {
-        std::shared_ptr<YoloDetector> detector = std::make_shared<YoloOpenCVImpl>();
-        detector->init((WORKSPACE + "/yolov4-smallest-3l.cfg").c_str(),
-                       (WORKSPACE + "/yolov4-smallest-3l_400000.weights").c_str());
-//        detector = std::make_shared<YoloNCNNImpl>();
-//        detector->init((WORKSPACE + "/cocr17.int8.param").c_str(),
-//                       (WORKSPACE + "/cocr17_400000.int8.bin").c_str());
-        cv::Mat img = cv::imread(WORKSPACE +
-                                 "/test.jpg");
-//                "/soso17_small/JPEGImages/0_0.jpg");
+        (new MainWindow)->showMaximized();
+//        std::shared_ptr<YoloDetector> detector = std::make_shared<YoloOpenCVImpl>();
+//        detector->init((WORKSPACE + "/yolov4-ss-3l.cfg").c_str(),
+//                       (WORKSPACE + "/yolov4-ss-3l_300000.weights").c_str());
+////        detector = std::make_shared<YoloNCNNImpl>();
+////        detector->init((WORKSPACE + "/cocr17.int8.param").c_str(),
+////                       (WORKSPACE + "/cocr17_400000.int8.bin").c_str());
+//        cv::Mat img = cv::imread(WORKSPACE +
+//                                 "/test4.jpg");// bug: 7 6
+////                "/soso17_small/JPEGImages/0_0.jpg");
+////        detector->detectAndDisplay(img, CLASSES);
+//        auto objs = detector->detect(img);
+//        SOSO17Converter converter;
+//        converter.accept(img, objs);
+//        std::cout << converter.getMol()->bondsNum() << std::endl;
+//        auto rootEntity = new Qt3DCore::QEntity();
+//        auto molBuilder = new Mol3DBuilder(rootEntity, converter.getMol());
+//        if (!molBuilder->build())exit(-1);
+//        auto view = new Mol3DWindow(rootEntity);
+//        auto container = QWidget::createWindowContainer(view);
+//        container->setAttribute(Qt::WidgetAttribute::WA_AcceptTouchEvents);
+//        container->showMaximized();
 //        detector->detectAndDisplay(img, CLASSES);
-        auto objs = detector->detect(img);
-        SOSO17Converter converter;
-        converter.accept(img, objs);
-        std::cout << converter.getMol()->bondsNum() << std::endl;
-        auto rootEntity = new Qt3DCore::QEntity();
-        auto molBuilder = new Mol3DBuilder(rootEntity, converter.getMol());
-        if (!molBuilder->build())exit(-1);
-        auto view = new Mol3DWindow(rootEntity);
-        auto container = QWidget::createWindowContainer(view);
-        container->setAttribute(Qt::WidgetAttribute::WA_AcceptTouchEvents);
-        container->showMaximized();
-        detector->detectAndDisplay(img, CLASSES);
         return a.exec();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

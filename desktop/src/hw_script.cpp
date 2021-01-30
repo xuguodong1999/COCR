@@ -144,3 +144,7 @@ void HwScript::castBy(const std::vector<cv::Point2f> &_from, const std::vector<c
         }
     }
 }
+
+void HwScript::clear() {
+    mData.clear();
+}

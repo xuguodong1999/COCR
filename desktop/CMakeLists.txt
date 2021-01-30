@@ -155,17 +155,19 @@ set(MOL_SRC ${SRC_DIR}/openbabel_util.cpp
         )
 
 set(UI_SRC ${SRC_DIR}/qt_aboutdialog.cpp
+        ${SRC_DIR}/qt_aboutdialog.ui
         ${SRC_DIR}/qt_mainwindow.cpp
+        ${SRC_DIR}/qt_mainwindow.ui
         ${SRC_DIR}/qt_mol3deditor.cpp
+        ${SRC_DIR}/qt_mol3deditor.ui
         ${SRC_DIR}/qt_util.cpp
         ${SRC_DIR}/qt_application.cpp
-        ${SRC_DIR}/qt_menubuilder.cpp
-        ${SRC_DIR}/qt_molfileeditpr.cpp
-        ${SRC_DIR}/qt_conceptbutton.cpp
+        ${SRC_DIR}/qt_molfileeditor.cpp
+        ${SRC_DIR}/qt_molfileeditor.ui
         ${SRC_DIR}/qt_mol2deditor.cpp
+        ${SRC_DIR}/qt_mol2deditor.ui
         ${SRC_DIR}/qt_sketchwidget.cpp
         )
-
 # client side app with opencv dnn engine backend
 add_subdirectory(app)
 add_subdirectory(test_box2graph)

@@ -91,9 +91,9 @@ bool runOBForceField(OpenBabel::OBMol &_obMol, const std::string &_forcefield = 
 //        return false;
     }
     try {
-        pFF->SteepestDescent(500, 1.0e-4);
-        pFF->WeightedRotorSearch(25, 500);
-        pFF->SteepestDescent(500, 1.0e-6);
+        pFF->SteepestDescent(100, 1.0e-4);
+        pFF->WeightedRotorSearch(10, 200);
+        pFF->SteepestDescent(100, 1.0e-6);
         pFF->UpdateCoordinates(_obMol);
     } catch (std::exception &e) {
         qDebug() << "runOBForceField MD step:" << e.what();

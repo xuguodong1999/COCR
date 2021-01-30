@@ -10,6 +10,9 @@ class HwScript : public HwBase {
     std::vector<HwStroke> mData;
     HwController *hwController;
 public:
+
+    void clear();
+
     void setHwController(HwController &_hwController) override;
 
     void push_back(HwStroke &_stroke);

@@ -505,47 +505,47 @@ void SOSO17Converter::then() {
         }
     }
 
-    std::cout << "m_sets.size()=" << m_sets.size() << std::endl;
-    for (auto &m_set:m_sets) {
-        for (auto &id:m_set) {
-            std::cout << id << ",";
-        }
-        std::cout << "\n*****\n";
-    }
-    size_t breakLine = 0;
-    for (auto &quota:quotas) {
-        std::cout << std::get<0>(quota) << ",";
-        if ((++breakLine) % 5 == 0)std::cout << "\n";
-    }
-    std::cout << std::endl;
-    cv::Mat displayImg;
-    cv::cvtColor(imgGray, displayImg, cv::COLOR_GRAY2BGR);
-    cv::Mat displayImg2(displayImg.rows, displayImg.cols, CV_8UC3,
-                        getScalar(ColorName::rgbWhite));
-    for (size_t i = 0; i < m_all.size(); i++) {
-        auto &m_tar = m_all[i];
-        cv::Point p;
-        float k = 0.7;
-        if (m_tar.t == Item::AA) {
-            p = chars[m_tar.belonging].center;
-        } else if (m_tar.t == Item::BB) {
-            p = 0.7 * lines[m_tar.belonging].from + (1 - k) * lines[m_tar.belonging].to;
-        } else {
-            p = 0.7 * lines[m_tar.belonging].to + (1 - k) * lines[m_tar.belonging].from;
-        }
-        auto info = std::to_string(i);
-        cv::putText(displayImg2, info, p,
-                    1, 1.2, getScalar(ColorName::rgbBlue),
-                    1, cv::LINE_AA, false);
-    }
-    for (auto &line:lines) {
-        cv::rectangle(displayImg, line.rect, getScalar(ColorName::rgbGreen), 1);
-        cv::circle(displayImg, line.from, 4, getScalar(ColorName::rgbBlue), -1);
-        cv::circle(displayImg, line.to, 4, getScalar(ColorName::rgbRed), -1);
-    }
-    cv::imshow("1", displayImg);
-    cv::imshow("2", displayImg2);
-    cv::waitKey(0);
+//    std::cout << "m_sets.size()=" << m_sets.size() << std::endl;
+//    for (auto &m_set:m_sets) {
+//        for (auto &id:m_set) {
+//            std::cout << id << ",";
+//        }
+//        std::cout << "\n*****\n";
+//    }
+//    size_t breakLine = 0;
+//    for (auto &quota:quotas) {
+//        std::cout << std::get<0>(quota) << ",";
+//        if ((++breakLine) % 5 == 0)std::cout << "\n";
+//    }
+//    std::cout << std::endl;
+//    cv::Mat displayImg;
+//    cv::cvtColor(imgGray, displayImg, cv::COLOR_GRAY2BGR);
+//    cv::Mat displayImg2(displayImg.rows, displayImg.cols, CV_8UC3,
+//                        getScalar(ColorName::rgbWhite));
+//    for (size_t i = 0; i < m_all.size(); i++) {
+//        auto &m_tar = m_all[i];
+//        cv::Point p;
+//        float k = 0.7;
+//        if (m_tar.t == Item::AA) {
+//            p = chars[m_tar.belonging].center;
+//        } else if (m_tar.t == Item::BB) {
+//            p = 0.7 * lines[m_tar.belonging].from + (1 - k) * lines[m_tar.belonging].to;
+//        } else {
+//            p = 0.7 * lines[m_tar.belonging].to + (1 - k) * lines[m_tar.belonging].from;
+//        }
+//        auto info = std::to_string(i);
+//        cv::putText(displayImg2, info, p,
+//                    1, 1.2, getScalar(ColorName::rgbBlue),
+//                    1, cv::LINE_AA, false);
+//    }
+//    for (auto &line:lines) {
+//        cv::rectangle(displayImg, line.rect, getScalar(ColorName::rgbGreen), 1);
+//        cv::circle(displayImg, line.from, 4, getScalar(ColorName::rgbBlue), -1);
+//        cv::circle(displayImg, line.to, 4, getScalar(ColorName::rgbRed), -1);
+//    }
+//    cv::imshow("1", displayImg);
+//    cv::imshow("2", displayImg2);
+//    cv::waitKey(0);
 }
 
 void SOSO17Converter::LineBondItem::predFromTo(const cv::Mat &_img) {
