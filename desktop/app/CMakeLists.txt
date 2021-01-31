@@ -2,7 +2,7 @@ project(cocr-desktop-app)
 
 set(TS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/trans_zh_CN.ts)
 
-qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.qml ${TS_FILES})
+qt5_create_translation(QM_FILES ${UI_SRC}  ${TS_FILES})
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc
         "<RCC>\n<qresource prefix=\"/\">\n<file alias=\"trans_zh_CN.qm\">trans_zh_CN.qm</file>\n</qresource>\n</RCC>")

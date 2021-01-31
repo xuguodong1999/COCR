@@ -11,16 +11,20 @@ QT_END_NAMESPACE
 class Mol3DEditor : public QWidget {
     Q_OBJECT
     QHBoxLayout*layout;
-    std::vector<QWidget*>widgets;
+    std::vector<QWidget *> widgets;
+    std::vector<std::shared_ptr<JMol>> mols;
 public:
     Mol3DEditor(QWidget *parent = nullptr);
 
     ~Mol3DEditor();
 
-    void setMols(const std::vector<std::shared_ptr<JMol>>&_mols);
+    void setMols(const std::vector<std::shared_ptr<JMol>> &_mols);
 
 private:
     Ui::Mol3DEditor *ui;
+private slots:
+
+    void onFormatSelected(QString index);
 };
 
 #endif//_MOL_3D_EDITOR_HPP_

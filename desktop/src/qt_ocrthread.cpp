@@ -45,7 +45,7 @@ void OCRThread::run() {
         } else {
             mols.clear();
         }
-        yoloDetector->detectAndDisplay(image,CLASSES);
+//        yoloDetector->detectAndDisplay(image,CLASSES);
     } catch (std::exception &e) {
         mols.clear();
         script.clear();

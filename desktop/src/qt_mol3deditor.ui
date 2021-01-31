@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Widget</string>
+   <string>Mol3D Viewer</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout" stretch="9,1">
    <property name="spacing">
@@ -21,40 +21,24 @@
     <widget class="QWidget" name="container" native="true"/>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="2,2,1,2,3">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,3">
      <property name="spacing">
       <number>10</number>
      </property>
      <item>
-      <widget class="QToolButton" name="moveBtn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>MOVE</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="rotateBtn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>ROTATE</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="exportLabel">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <italic>true</italic>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
-        <string>SAVE AS</string>
+        <string>SAVE AS
+( format )</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -63,26 +47,17 @@
      </item>
      <item>
       <widget class="QComboBox" name="formatBox">
-       <item>
-        <property name="text">
-         <string>PDB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>SDF</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>XYZ</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>SMI</string>
-        </property>
-       </item>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
       </widget>
      </item>
      <item>

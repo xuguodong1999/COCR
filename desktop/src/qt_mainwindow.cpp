@@ -53,6 +53,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::openSketchWidget() {
     setMainWidget(sketchWidget);
+    statusBar()->showMessage("draw a molecule * >< *");
 }
 
 //void MainWindow::tryOpen2DRawEditor() {
@@ -66,10 +67,16 @@ void MainWindow::openSketchWidget() {
 void MainWindow::tryOpen3DEditor() {
     if(isSketchLatest){
         setMainWidget(mol3DEditor);
+        if(mols.empty()){
+            statusBar()->showMessage("nothing found ?");
+        }else{
+            statusBar()->showMessage("rendered by qt3d * >< *");
+        }
     }else {
         ocrThread->setHwScript(sketchWidget->getScript());
         ocrThread->start();
         setMainWidget(waitLabel);
+        statusBar()->showMessage("detecting...");
         waitLabel->movie()->setScaledSize(waitLabel->size());
         waitLabel->movie()->start();
     }
@@ -86,9 +93,14 @@ void MainWindow::tryOpen3DEditor() {
 void MainWindow::open3DEditor() {
     setMainWidget(mol3DEditor);
     mols = std::move(ocrThread->getMols());
-    qDebug() << "MainWindow::open3DEditor";
+//    qDebug() << "MainWindow::open3DEditor";
     mol3DEditor->setMols(mols);
     isSketchLatest=true;
+    if(mols.empty()){
+        statusBar()->showMessage("nothing found ?");
+    }else{
+        statusBar()->showMessage("rendered by qt3d * >< *");
+    }
 }
 
 void MainWindow::setMainWidget(QWidget *target) {
