@@ -6,14 +6,15 @@
 
 std::shared_ptr<MolUtil> molUtil;
 
-std::vector<std::shared_ptr<JMol>> split(const std::shared_ptr<JMol> &_mol) {
+
+std::vector<std::shared_ptr<JMol>> MolUtil::split(const JMol &_mol) {
     AlkaneGraph<size_t> graph;
     std::unordered_map<size_t, size_t> j2gAidMap, g2jMap;
     std::vector<std::shared_ptr<JMol>> result;
     size_t gAidIdx = 0;
-    _mol->safeTraverseAtoms([&](const size_t &aid) { j2gAidMap[aid] = gAidIdx++; });
-    _mol->safeTraverseBonds([&](const size_t &bid) {
-        auto bond = _mol->getBondById(bid);
+    _mol.safeTraverseAtoms([&](const size_t &aid) { j2gAidMap[aid] = gAidIdx++; });
+    _mol.safeTraverseBonds([&](const size_t &bid) {
+        auto bond = _mol.getBondById(bid);
         if (!bond)return;
         graph.push_back(j2gAidMap[bond->getAtomFrom()], j2gAidMap[bond->getAtomTo()]);
     });
@@ -25,13 +26,13 @@ std::vector<std::shared_ptr<JMol>> split(const std::shared_ptr<JMol> &_mol) {
         std::unordered_map<size_t, size_t> aidMap;//<old,new>
         for (auto &gid:group) {
             size_t oldAid = g2jMap[gid];
-            auto atom = _mol->getAtomById(oldAid);
+            auto atom = _mol.getAtomById(oldAid);
             if (!atom) continue;
             auto newAtom = mol->addAtom(atom->getAtomicNumber());
             aidMap[oldAid] = newAtom->getId();
         }
-        _mol->safeTraverseBonds([&](const size_t &bid) {
-            auto bond = _mol->getBondById(bid);
+        _mol.safeTraverseBonds([&](const size_t &bid) {
+            auto bond = _mol.getBondById(bid);
             if (!bond)return;
             if (notExist(group, bond->getAtomFrom())) return;
             mol->addBond(aidMap[bond->getAtomFrom()], aidMap[bond->getAtomTo()],
@@ -39,7 +40,5 @@ std::vector<std::shared_ptr<JMol>> split(const std::shared_ptr<JMol> &_mol) {
         });
         result.push_back(std::move(mol));
     }
-    return result;
+    return std::move(result);
 }
-
-

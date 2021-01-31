@@ -56,5 +56,4 @@ public:
     void wheelEvent(QWheelEvent *event) override;
 };
 
-
 #endif//_SKETCH_WIDGET_HPP_

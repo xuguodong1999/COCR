@@ -7,5 +7,6 @@
         <file compress="9" compress-algo="best">img/draw.png</file>
         <file compress="9" compress-algo="best">img/2d.png</file>
         <file compress="9" compress-algo="best">img/3d.png</file>
+        <file compress="9" compress-algo="best">img/wait.gif</file>
     </qresource>
 </RCC>

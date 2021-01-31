@@ -10,6 +10,9 @@ class HwScript : public HwBase {
     std::vector<HwStroke> mData;
     HwController *hwController;
 public:
+    float getAvgMaxSize() const;
+
+    float getAvgPtsNum() const;
 
     void clear();
 
@@ -20,6 +23,12 @@ public:
     void keepIf(const std::function<bool(const cv::Point2f &)> &_cond);
 
     HwScript(HwController *_hwController = nullptr);
+
+    HwScript(const HwScript &_hwScript) = default;
+
+    HwScript(HwScript &&_hwScript);
+
+    HwScript &operator=(HwScript &&_hwScript) = default;
 
     void paintTo(cv::Mat &_canvas) const;
 

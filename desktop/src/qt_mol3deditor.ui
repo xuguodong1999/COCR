@@ -1,18 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Mol3DEditor</class>
- <widget class="QWidget" name="Widget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>800</width>
-    <height>600</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Widget</string>
-  </property>
+ <widget class="QWidget" name="Mol3DEditor">
+     <property name="geometry">
+         <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>400</width>
+             <height>300</height>
+         </rect>
+     </property>
+     <property name="windowTitle">
+         <string>Widget</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="9,1">
+         <item>
+             <widget class="QWidget" name="widget" native="true"/>
+         </item>
+         <item>
+             <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,3">
+                 <item>
+                     <widget class="QToolButton" name="toolButton">
+                         <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                             </sizepolicy>
+                         </property>
+                         <property name="text">
+                             <string>move</string>
+                         </property>
+                     </widget>
+                 </item>
+                 <item>
+                     <widget class="QToolButton" name="toolButton_2">
+                         <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                             </sizepolicy>
+                         </property>
+                         <property name="text">
+                             <string>rotate</string>
+                         </property>
+                     </widget>
+                 </item>
+                 <item>
+                     <widget class="QLabel" name="label">
+                         <property name="text">
+                             <string>export as</string>
+                         </property>
+                     </widget>
+                 </item>
+                 <item>
+                     <widget class="QComboBox" name="comboBox">
+                         <item>
+                             <property name="text">
+                                 <string>pdb</string>
+                             </property>
+                         </item>
+                         <item>
+                             <property name="text">
+                                 <string>smi</string>
+                             </property>
+                         </item>
+                         <item>
+                             <property name="text">
+                                 <string>sdf</string>
+                             </property>
+                         </item>
+                     </widget>
+                 </item>
+                 <item>
+                     <spacer name="verticalSpacer">
+                         <property name="orientation">
+                             <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                             <size>
+                                 <width>20</width>
+                                 <height>40</height>
+                             </size>
+                         </property>
+                     </spacer>
+                 </item>
+             </layout>
+         </item>
+     </layout>
  </widget>
  <resources/>
  <connections/>

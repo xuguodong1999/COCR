@@ -6,12 +6,11 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MolFileEditor; }
 QT_END_NAMESPACE
 
-class MolFileEditor : public QWidget
-{
+class MolFileEditor : public QWidget {
 Q_OBJECT
-
 public:
     MolFileEditor(QWidget *parent = nullptr);
+
     ~MolFileEditor();
 
 private:

@@ -99,3 +99,7 @@ void HwStroke::setData(std::vector<cv::Point2f> &_data) {
     mData.swap(_data);
     _data.clear();
 }
+
+size_t HwStroke::size() const {
+    return mData.size();
+}

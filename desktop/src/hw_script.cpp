@@ -148,3 +148,35 @@ void HwScript::castBy(const std::vector<cv::Point2f> &_from, const std::vector<c
 void HwScript::clear() {
     mData.clear();
 }
+
+float HwScript::getAvgMaxSize() const {
+    if (mData.empty())return 0;
+    float mmSize = 0;
+    size_t counter = 0;
+    for (auto &stroke:mData) {
+        auto rect = stroke.getBoundingBox();
+        if (rect) {
+            counter++;
+            mmSize += std::max(rect->width, rect->height);
+        }
+    }
+    if (counter) {
+        return mmSize / counter;
+    } else {
+        return 0;
+    }
+}
+
+float HwScript::getAvgPtsNum() const {
+    if (mData.empty())return 0;
+    float mmSize = 0;
+    for (auto &stroke:mData) {
+        mmSize += stroke.size();
+    }
+    return mmSize / mData.size();
+}
+
+HwScript::HwScript(HwScript &&_hwScript) {
+    mData = std::move(_hwScript.mData);
+}
+

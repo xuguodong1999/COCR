@@ -8,7 +8,7 @@ namespace Ui { class Mol3DEditor; }
 QT_END_NAMESPACE
 
 class Mol3DEditor : public QWidget {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     Mol3DEditor(QWidget *parent = nullptr);

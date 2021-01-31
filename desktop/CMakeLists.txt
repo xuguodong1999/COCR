@@ -167,6 +167,9 @@ set(UI_SRC ${SRC_DIR}/qt_aboutdialog.cpp
         ${SRC_DIR}/qt_mol2deditor.cpp
         ${SRC_DIR}/qt_mol2deditor.ui
         ${SRC_DIR}/qt_sketchwidget.cpp
+        ${SRC_DIR}/qt_sketchmanager.cpp
+        ${SRC_DIR}/qt_sketchmanager.ui
+        ${SRC_DIR}/qt_ocrthread.cpp
         )
 # client side app with opencv dnn engine backend
 add_subdirectory(app)

@@ -1,4 +1,10 @@
-#ifndef _XXXXX_HPP_
-#define _XXXXX_HPP_
+#ifndef _APPLICATION_HPP_
+#define _APPLICATION_HPP_
 
-#endif//_XXXXX_HPP_
+#include <QApplication>
+
+class COCRApplication : public QApplication {
+
+};
+
+#endif//_APPLICATION_HPP_

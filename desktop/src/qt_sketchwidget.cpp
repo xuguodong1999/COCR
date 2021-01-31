@@ -37,7 +37,7 @@ void SketchWidget::paintEvent(QPaintEvent *event) {
 }
 
 void SketchWidget::mousePressEvent(QMouseEvent *event) {
-    qDebug() << "SketchWidget::mousePressEvent";
+//    qDebug() << "SketchWidget::mousePressEvent";
     QWidget::mousePressEvent(event);
     lastPos = event->pos();
     painter.begin(&bufPixmap);
@@ -50,7 +50,7 @@ void SketchWidget::mousePressEvent(QMouseEvent *event) {
 }
 
 void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
-    qDebug() << "SketchWidget::mouseMoveEvent";
+//    qDebug() << "SketchWidget::mouseMoveEvent";
     QWidget::mouseMoveEvent(event);
     auto currentPos = event->pos();
     painter.drawLine(lastPos, currentPos);
@@ -60,7 +60,7 @@ void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
-    qDebug() << "SketchWidget::mouseReleaseEvent";
+//    qDebug() << "SketchWidget::mouseReleaseEvent";
     QWidget::mouseReleaseEvent(event);
     painter.end();
 }
@@ -100,8 +100,16 @@ void SketchWidget::clear() {
 }
 
 HwScript SketchWidget::getScript() const {
-    // TODO
-    return HwScript();
+    HwScript script;
+    for (auto &stroke:ptsVec) {
+        if (stroke.empty())continue;
+        HwStroke hs;
+        for (auto &p:stroke) {
+            hs.push_back(cv::Point2f(p.x(), p.y()));
+        }
+        script.push_back(hs);
+    }
+    return std::move(script);
 }
 
 void SketchWidget::closeEvent(QCloseEvent *event) {
@@ -111,4 +119,3 @@ void SketchWidget::closeEvent(QCloseEvent *event) {
 void SketchWidget::wheelEvent(QWheelEvent *event) {
     QWidget::wheelEvent(event);
 }
-
