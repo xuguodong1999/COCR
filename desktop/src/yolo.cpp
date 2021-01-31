@@ -49,7 +49,7 @@ cv::Mat YoloDetector::detectAndDisplay(
     }
 #ifdef Q_OS_WIN64
     cv::imshow("YoloForward", img);
-    cv::waitKey(0);
+//    cv::waitKey(0);
 #endif
     return img;
 }

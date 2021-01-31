@@ -180,3 +180,7 @@ HwScript::HwScript(HwScript &&_hwScript) {
     mData = std::move(_hwScript.mData);
 }
 
+size_t HwScript::size() const {
+    return mData.size();
+}
+

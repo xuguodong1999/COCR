@@ -39,6 +39,7 @@ void SketchWidget::paintEvent(QPaintEvent *event) {
 void SketchWidget::mousePressEvent(QMouseEvent *event) {
 //    qDebug() << "SketchWidget::mousePressEvent";
     QWidget::mousePressEvent(event);
+    emit new_script();
     lastPos = event->pos();
     painter.begin(&bufPixmap);
     painter.setPen(pen);

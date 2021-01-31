@@ -11,6 +11,8 @@ class HwScript : public HwBase {
     HwController *hwController;
 public:
     float getAvgMaxSize() const;
+    size_t size()const;
+
 
     float getAvgPtsNum() const;
 

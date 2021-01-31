@@ -1,5 +1,5 @@
 #include "qt_mainwindow.hpp"
-#include "qt_mol2deditor.hpp"
+//#include "qt_mol2deditor.hpp"
 #include "qt_mol3deditor.hpp"
 #include "qt_sketchwidget.hpp"
 #include "qt_ocrthread.hpp"
@@ -22,20 +22,28 @@ MainWindow::MainWindow(QWidget *parent)
 
     sketchWidget = new SketchWidget(this);
     sketchWidget->show();
-    mol2DEditor = new Mol2DEditor(this);
-    mol2DEditor->hide();
+//    mol2DEditor = new Mol2DEditor(this);
+//    mol2DEditor->hide();
     mol3DEditor = new Mol3DEditor(this);
     mol3DEditor->hide();
     ocrThread = new OCRThread(this);
     connect(ocrThread, &QThread::finished, this, &MainWindow::open3DEditor);
     connect(ui->drawBtn, &QToolButton::clicked, this,
             &MainWindow::openSketchWidget);
-    connect(ui->mol2dRawBtn, &QToolButton::clicked, this,
-            &MainWindow::tryOpen2DRawEditor);
-    connect(ui->mol2DNormBtn, &QToolButton::clicked, this,
-            &MainWindow::tryOpen2DNormEditor);
+//    connect(ui->mol2dRawBtn, &QToolButton::clicked, this,
+//            &MainWindow::tryOpen2DRawEditor);
+//    connect(ui->mol2DNormBtn, &QToolButton::clicked, this,
+//            &MainWindow::tryOpen2DNormEditor);
     connect(ui->mol3DBtn, &QToolButton::clicked, this,
             &MainWindow::tryOpen3DEditor);
+    connect(ui->clsBtn, &QToolButton::clicked, [&](){
+        sketchWidget->clear();
+        openSketchWidget();
+        isSketchLatest=false;
+    });
+    connect(sketchWidget,&SketchWidget::new_script,this,[&](){
+       isSketchLatest=false;
+    });
     openSketchWidget();
 }
 
@@ -44,50 +52,43 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::openSketchWidget() {
-setMainWidget(sketchWidget);
+    setMainWidget(sketchWidget);
 }
 
-void MainWindow::tryOpen2DRawEditor() {
-
-}
-
-void MainWindow::tryOpen2DNormEditor() {
-
-}
+//void MainWindow::tryOpen2DRawEditor() {
+//
+//}
+//
+//void MainWindow::tryOpen2DNormEditor() {
+//
+//}
 
 void MainWindow::tryOpen3DEditor() {
-//    if(isSketchLatest){
+    if(isSketchLatest){
+        setMainWidget(mol3DEditor);
+    }else {
+        ocrThread->setHwScript(sketchWidget->getScript());
+        ocrThread->start();
+        setMainWidget(waitLabel);
+        waitLabel->movie()->setScaledSize(waitLabel->size());
+        waitLabel->movie()->start();
+    }
+}
+
+//void MainWindow::open2DRawEditor() {
 //
-//    }else{
-    ocrThread->setHwScript(sketchWidget->getScript());
-    ocrThread->start();
-    setMainWidget(waitLabel);
-    waitLabel->movie()->setScaledSize(waitLabel->size());
-    waitLabel->movie()->start();
-//    auto waitLabel = new QLabel();
-//    QMovie *movie = new QMovie(":/img/wait.gif", "gif", waitLabel);
-//    waitLabel->setMovie(new QMovie(":/img/wait.gif", "gif", waitLabel));
-//    movie->start();
-//    waitLabel->show();
-//    ocrThread->wait();
-//    waitLabel->close();
-//    delete waitLabel;
-//    qDebug() << "fuck";
-//    }
-}
-
-void MainWindow::open2DRawEditor() {
-
-}
-
-void MainWindow::open2DNormEditor() {
-
-}
+//}
+//
+//void MainWindow::open2DNormEditor() {
+//
+//}
 
 void MainWindow::open3DEditor() {
     setMainWidget(mol3DEditor);
     mols = std::move(ocrThread->getMols());
     qDebug() << "MainWindow::open3DEditor";
+    mol3DEditor->setMols(mols);
+    isSketchLatest=true;
 }
 
 void MainWindow::setMainWidget(QWidget *target) {

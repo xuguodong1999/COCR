@@ -120,6 +120,8 @@ std::vector<std::string> MolUtilOpenBabelImpl::getFormatChoices() {
     return std::move(result);
 }
 
+extern std::string pdb_str, sdf_str, xyz_str, smi_str;
+
 bool MolUtilOpenBabelImpl::getCoord3D(Mol3D &_mol3d) {
     auto &jMol = *_mol3d.getMol();
     auto obMol = convertJMolToOBMol(jMol);
@@ -131,6 +133,27 @@ bool MolUtilOpenBabelImpl::getCoord3D(Mol3D &_mol3d) {
         _mol3d.setAtomPos3DById(o2jAtomMap[obAtom->GetId()],
                                 obAtom->x(), obAtom->y(), obAtom->z());
     }
+    OpenBabel::OBConversion conv;
+    auto formatOut = conv.FindFormat("pdb");
+    if (!formatOut || !conv.SetOutFormat(formatOut)) {
+        qDebug() << "MolUtilOpenBabelImpl::getFormat: cannot set format!";
+    }
+    pdb_str = conv.WriteString(&obMol);
+    formatOut = conv.FindFormat("xyz");
+    if (!formatOut || !conv.SetOutFormat(formatOut)) {
+        qDebug() << "MolUtilOpenBabelImpl::getFormat: cannot set format!";
+    }
+    xyz_str = conv.WriteString(&obMol);
+    formatOut = conv.FindFormat("sdf");
+    if (!formatOut || !conv.SetOutFormat(formatOut)) {
+        qDebug() << "MolUtilOpenBabelImpl::getFormat: cannot set format!";
+    }
+    sdf_str = conv.WriteString(&obMol);
+    formatOut = conv.FindFormat("smi");
+    if (!formatOut || !conv.SetOutFormat(formatOut)) {
+        qDebug() << "MolUtilOpenBabelImpl::getFormat: cannot set format!";
+    }
+    smi_str = conv.WriteString(&obMol);
     return true;
 }
 

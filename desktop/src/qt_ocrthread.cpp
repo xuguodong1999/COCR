@@ -11,7 +11,6 @@ extern std::shared_ptr<YoloDetector> yoloDetector;
 extern std::shared_ptr<MolUtil> molUtil;
 
 void OCRThread::run() {
-    QThread::currentThread()->msleep(2000);
     try {
         float avgSize = script.getAvgMaxSize();
         auto rect = script.getBoundingBox();
@@ -19,19 +18,26 @@ void OCRThread::run() {
         float k = idealItemSize / avgSize;
         auto round32 = [&](const float &_num) -> int {
             int num2 = std::round(_num * k);
-            num2 += (32 - num2 % 32);
+            num2 += (64 - num2 % 32);
             return (std::max)(minSize, (std::min)(maxSize, num2));
         };
         int nw = round32(ow);
         int nh = round32(oh);
-        cv::Mat image(nh, nw, CV_8UC3, getScalar(ColorName::rgbWhite));
-        script.resizeTo(nw - 8, nh - 8);
+        auto image=cv::Mat(nh, nw, CV_8UC3, getScalar(
+                ColorName::rgbWhite));
+        script.resizeTo(nw - 16, nh - 16);
         script.moveCenterTo(cv::Point2f(nw / 2.0, nh / 2.0));
         script.paintTo(image);
-        script.clear();
-        qDebug() << "OCRThread::run, size=" << image.cols << "x" << image.rows;
-//        cv::imshow("fuck",image);
         SOSO17Converter converter;
+        auto objs=yoloDetector->detect(image);
+        k= idealItemSize /getAvgObjectSize(objs);
+        nw = round32(nw);
+        nh = round32(nh);
+        image=cv::Mat(nh, nw, CV_8UC3, getScalar(
+                ColorName::rgbWhite));
+        script.resizeTo(nw - 16, nh - 16);
+        script.moveCenterTo(cv::Point2f(nw / 2.0, nh / 2.0));
+        script.paintTo(image);
         converter.accept(image, yoloDetector->detect(image));
         auto mol = converter.getMol();
         if (mol && mol->atomsNum() > 0) {
@@ -39,6 +45,7 @@ void OCRThread::run() {
         } else {
             mols.clear();
         }
+        yoloDetector->detectAndDisplay(image,CLASSES);
     } catch (std::exception &e) {
         mols.clear();
         script.clear();
@@ -54,6 +61,10 @@ OCRThread::OCRThread(QObject *_parent) : QThread(_parent) {
 
 }
 
+static HwController hw(1);
+
 void OCRThread::setHwScript(HwScript _hwScript) {
     script = std::move(_hwScript);
+    script.setHwController(hw);
+    script.rotate(3);
 }

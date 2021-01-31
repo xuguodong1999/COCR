@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QtWidgets/QHBoxLayout>
 
-class Mol2DEditor;
+//class Mol2DEditor;
 
 class Mol3DEditor;
 
@@ -21,7 +21,7 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow {
 Q_OBJECT
     bool isSketchLatest;
-    Mol2DEditor *mol2DEditor;
+//    Mol2DEditor *mol2DEditor;
     Mol3DEditor *mol3DEditor;
     SketchWidget *sketchWidget;
     OCRThread *ocrThread;
@@ -43,15 +43,15 @@ private slots:
 
     void openSketchWidget();
 
-    void open2DRawEditor();
-
-    void open2DNormEditor();
+//    void open2DRawEditor();
+//
+//    void open2DNormEditor();
 
     void open3DEditor();
 
-    void tryOpen2DRawEditor();
-
-    void tryOpen2DNormEditor();
+//    void tryOpen2DRawEditor();
+//
+//    void tryOpen2DNormEditor();
 
     void tryOpen3DEditor();
 };

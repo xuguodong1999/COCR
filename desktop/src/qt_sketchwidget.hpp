@@ -54,6 +54,8 @@ public:
     void closeEvent(QCloseEvent *event) override;
 
     void wheelEvent(QWheelEvent *event) override;
+    signals:
+    void new_script();
 };
 
 #endif//_SKETCH_WIDGET_HPP_

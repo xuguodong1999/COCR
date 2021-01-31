@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
     std::srand(0);
     molUtil = std::make_shared<MolUtilOpenBabelImpl>();
     yoloDetector = std::make_shared<YoloOpenCVImpl>();
-    yoloDetector->init((WORKSPACE + "/yolov4-ss-3l.cfg").c_str(),
-                       (WORKSPACE + "/yolov4-ss-3l_300000.weights").c_str());
+    yoloDetector->init((WORKSPACE + "/yolov4-smallest-3l.cfg").c_str(),
+                       (WORKSPACE + "/yolov4-smallest-3l_400000.weights").c_str());
 #ifdef Q_OS_WIN64
     _putenv("BABEL_DATADIR=C:/static/openbabel-3.1.1/data");
 #endif

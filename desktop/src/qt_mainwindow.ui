@@ -21,7 +21,7 @@
        <widget class="QWidget" name="container" native="true"/>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1,1">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
         <item>
          <widget class="QToolButton" name="drawBtn">
           <property name="sizePolicy">
@@ -31,12 +31,12 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>...</string>
+           <string>DRAW</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="mol2dRawBtn">
+         <widget class="QToolButton" name="clsBtn">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -44,20 +44,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="mol2DNormBtn">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>...</string>
+           <string>CLEAR</string>
           </property>
          </widget>
         </item>
@@ -70,7 +57,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>...</string>
+           <string>VIEW3D</string>
           </property>
          </widget>
         </item>

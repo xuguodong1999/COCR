@@ -9,7 +9,7 @@
 class OCRThread : public QThread {
 Q_OBJECT
     HwScript script;
-    const float idealItemSize = 40;// [10,120] is ok
+    const float idealItemSize = 60;// [10,120] is ok
     const int maxSize = 1280, minSize = 96;
     std::vector<std::shared_ptr<JMol>> mols;
 public:
