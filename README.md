@@ -51,7 +51,7 @@
     5. （可选）从源码编译oencv4.5.1，从Release页面下载打过补丁的OpenBabel，文件名是 openbabel3.1.1.7z
 
 * LINUX
-    1. 使用包管理器安装 OpenBabe
+    1. 使用包管理器安装 OpenBabel
     2. 下载 Qt 5.15.2
     3. 自己编译 OpenCV 4.5.0
     4. 设置 pro 文件中的 MY_OPENCV_DIR 变量指向 OpenCV 安装目录
