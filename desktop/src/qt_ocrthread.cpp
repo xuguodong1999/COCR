@@ -45,7 +45,7 @@ void OCRThread::run() {
         } else {
             mols.clear();
         }
-//        yoloDetector->detectAndDisplay(image,CLASSES);
+        yoloDetector->detectAndDisplay(image,CLASSES);
     } catch (std::exception &e) {
         mols.clear();
         script.clear();
@@ -61,7 +61,7 @@ OCRThread::OCRThread(QObject *_parent) : QThread(_parent) {
 
 }
 
-static HwController hw(1);
+static HwController hw(2);
 
 void OCRThread::setHwScript(HwScript _hwScript) {
     script = std::move(_hwScript);

@@ -110,7 +110,7 @@ void SOSO17Converter::accept(const cv::Mat &_img,
                 // 是圆
                 circles.emplace_back(obj.x + obj.w / 2,
                                      obj.y + obj.h / 2,
-                                     (obj.w + obj.h) / 2);
+                                     (obj.w + obj.h) / 4);
             } else {
                 // 是线
                 lines.emplace_back(obj.x, obj.y, obj.w, obj.h, bondType);
@@ -406,6 +406,7 @@ void SOSO17Converter::then() {
             p /= (float) m_set.size();
             atom = mol->addAtom(ElementType::C);
         }
+//        std::cout<<"p="<<p<<std::endl;
         atom->x = p.x;
         atom->y = p.y;
         a2a[i] = atom->getId();
@@ -452,14 +453,15 @@ void SOSO17Converter::then() {
                 r += getDistance2D(p, cv::Point2f(
                         mol->getAtomById(id)->x, mol->getAtomById(id)->y));
             }
-            r /= rings.size() / 2;
+            r /= ring.size();
             bool needAromatic = false;
             for (auto &circle:circles) {
-                if (r - circle.radius > getDistance2D(p, circle.center)) {
+                if (std::fabs(r - circle.radius) > getDistance2D(p, circle.center)) {
                     needAromatic = true;
                     break;
                 }
             }
+            std::cout<<"needAromatic="<<needAromatic<<"\n";
             if (!needAromatic) continue;
             std::unordered_set<size_t> aidSet;
             for (auto &id:ring)aidSet.insert(id);

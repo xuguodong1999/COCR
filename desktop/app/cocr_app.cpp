@@ -1,18 +1,18 @@
-//#include "mol3d.hpp"
-//#include "mol3d_builder.hpp"
-//#include "mol3dwindow.hpp"
+#include "mol3d.hpp"
+#include "mol3d_builder.hpp"
+#include "mol3dwindow.hpp"
 #include "qt_mainwindow.hpp"
 #include "openbabel_util.hpp"
 #include <QApplication>
-//#include <QWidget>
-//#include <Qt3DCore/QEntity>
-//#include <QDebug>
-//#include <iostream>
-//#include <opencv2/imgcodecs.hpp>
+#include <QWidget>
+#include <Qt3DCore/QEntity>
+#include <QDebug>
+#include <iostream>
+#include <opencv2/imgcodecs.hpp>
 //
 //#include "yolo_ncnn.hpp"
 #include "yolo_opencv.hpp"
-//#include "soso17_converter.hpp"
+#include "soso17_converter.hpp"
 
 extern std::string WORKSPACE;
 extern std::vector<std::string> CLASSES;
@@ -33,16 +33,9 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     try {
         (new MainWindow)->showMaximized();
-//        std::shared_ptr<YoloDetector> detector = std::make_shared<YoloOpenCVImpl>();
-
-////        detector = std::make_shared<YoloNCNNImpl>();
-////        detector->init((WORKSPACE + "/cocr17.int8.param").c_str(),
-////                       (WORKSPACE + "/cocr17_400000.int8.bin").c_str());
 //        cv::Mat img = cv::imread(WORKSPACE +
-//                                 "/test4.jpg");// bug: 7 6
-////                "/soso17_small/JPEGImages/0_0.jpg");
-////        detector->detectAndDisplay(img, CLASSES);
-//        auto objs = detector->detect(img);
+//                                 "/test1.jpg");// bug: 7 6
+//        auto objs = yoloDetector->detect(img);
 //        SOSO17Converter converter;
 //        converter.accept(img, objs);
 //        std::cout << converter.getMol()->bondsNum() << std::endl;
@@ -53,7 +46,7 @@ int main(int argc, char *argv[]) {
 //        auto container = QWidget::createWindowContainer(view);
 //        container->setAttribute(Qt::WidgetAttribute::WA_AcceptTouchEvents);
 //        container->showMaximized();
-//        detector->detectAndDisplay(img, CLASSES);
+//        yoloDetector->detectAndDisplay(img, CLASSES);
         return a.exec();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
