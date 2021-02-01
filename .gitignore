@@ -1,0 +1,10 @@
+msvc_x64_lib/
+linux_lib/
+*.pro.user
+*.pro.user.*
+.vscode/
+.idea/
+*.7z
+*.exe
+*.tar.gz
+release/
