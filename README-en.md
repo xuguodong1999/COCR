@@ -25,7 +25,7 @@
 
 ## Demo
 
-* Support single element symbols: C、H、O、N、P、S、F、Cl、Br、I
+* Support single element symbols: C、H、O、N、P、B、S、F、Cl、Br、I
 * support bond types: single, double, triple, hash wedge, solid wedge, circle
 * dont support string like -CH3COOH, -OEt. dont support any numbers
 
@@ -39,7 +39,7 @@
                 ├── msvc_x64_lib\
                 │   ├── include\
                 │   └── x64
-    2. Install Qt 5.15.2. This was a qt3d-bug in Qt 5.15.1.
+    2. Install Qt 5.15.2. There was a qt3d-bug in 5.15.1 dealing with coordinate systems under high dpi.
     3. Open COCR.pro with QtCreator, select release option, compile and run
     4. (optional) You may compile opencv4.5.0 and patched openbabel from source. You can found patched openbabel by openbabel3.1.1.7z in Release page.
 * For LINUX
