@@ -26,6 +26,20 @@ void OCRThread::run() {
         auto&[kSize,offsetx,offsety]=offset;
         image.release();
         std::swap(image,image2);
+        auto rect = script.getBoundingBox();
+        float ow = rect->width*kSize;
+        float oh = rect->height*kSize;
+        float x=rect->x*kSize+offsetx;
+        float y=rect->y*kSize+offsety;
+        int xx=(std::max)(0,(int)x);
+        int yy=(std::max)(0,(int)y);
+        int ww=(std::min)(image.cols,(int)(xx+ow))-xx;
+        int hh=(std::min)(image.rows,(int)(yy+oh))-yy;
+        ww += (32-ww%32);
+        hh += (32-hh%32);
+        if(ww<image.cols&&hh<image.rows){
+            image=image(cv::Rect2i(xx,yy,ww,hh));
+        }
         // pre detection
 //        yoloDetector->detectAndDisplay(image,CLASSES);
         auto objs = yoloDetector->detect(image);
@@ -35,9 +49,6 @@ void OCRThread::run() {
         }
         float k = kSize * idealItemSize / avgSize;
 
-        auto rect = script.getBoundingBox();
-        float ow = rect->width;
-        float oh = rect->height;
         auto round32 = [&](const float &_num) -> int {
             int num2 = std::round(_num * k);
             num2 += (64 - num2 % 32);

@@ -8,3 +8,4 @@ linux_lib/
 *.exe
 *.tar.gz
 release/
+android/
