@@ -14,9 +14,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000 \
 
 INCLUDEPATH += $${PWD}/include
 
-
 # For OpenBabel
-
 OB_SRC_DIR = $${PWD}/openbabel
 
 INCLUDEPATH += $${OB_SRC_DIR}/include \
@@ -56,7 +54,7 @@ msvc:{
     INCLUDEPATH += $${MY_MSVC_LIB_DIR}/include
 
     LIB_NAME_LIST = openbabel-3.lib \
-#        opencv_highgui451.lib \
+        opencv_highgui451.lib \
         opencv_imgcodecs451.lib opencv_imgproc451.lib \
         opencv_dnn451.lib opencv_core451.lib \
         ade.lib libopenjp2.lib libwebp.lib IlmImf.lib \

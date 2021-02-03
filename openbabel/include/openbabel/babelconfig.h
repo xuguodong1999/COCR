@@ -120,7 +120,7 @@
 /* #undef HAVE_CONIO_H */
 
 /* have <sys/time.h> */
-#define HAVE_SYS_TIME_H 1
+#define HAVE_SYS_TIME_H 0
 
 /* have <time.h> */
 #define HAVE_TIME_H 1
@@ -192,3 +192,13 @@
     #define TIME_WITH_SYS_TIME 0
   #endif
 #endif
+
+#ifdef _MSC_VER  
+#define strtoll _strtoi64  
+#define strtoull _strtoui64  
+#define snprintf _snprintf  
+#define popen   _popen  
+#define pclose  _pclose  
+#define strcasecmp _stricmp  
+#define strncasecmp _strnicmp  
+#endif  

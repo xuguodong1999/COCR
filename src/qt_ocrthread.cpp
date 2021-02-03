@@ -6,6 +6,8 @@
 #include "opencv_util.hpp"
 #include "soso17_converter.hpp"
 #include <QDebug>
+#include <opencv2/imgproc.hpp>
+
 extern std::shared_ptr<YoloDetector> yoloDetector;
 extern std::shared_ptr<MolUtil> molUtil;
 
@@ -31,14 +33,14 @@ void OCRThread::run() {
         float oh = rect->height*kSize;
         float x=rect->x*kSize+offsetx;
         float y=rect->y*kSize+offsety;
-        int xx=(std::max)(0,(int)x);
-        int yy=(std::max)(0,(int)y);
-        int ww=(std::min)(image.cols,(int)(xx+ow))-xx;
-        int hh=(std::min)(image.rows,(int)(yy+oh))-yy;
-        ww += (32-ww%32);
-        hh += (32-hh%32);
+        int xx=(std::max)(0,(int)x-32);
+        int yy=(std::max)(0,(int)y-32);
+        int ww=(std::min)(image.cols,(int)(x+ow))-xx;
+        int hh=(std::min)(image.rows,(int)(y+oh))-yy;
+        ww += (64-ww%32);
+        hh += (64-hh%32);
         if(ww<image.cols&&hh<image.rows){
-            image=image(cv::Rect2i(xx,yy,ww,hh));
+//            image=image(cv::Rect2i(xx,yy,ww,hh));
         }
         // pre detection
 //        yoloDetector->detectAndDisplay(image,CLASSES);

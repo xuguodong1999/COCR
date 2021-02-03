@@ -798,13 +798,13 @@ namespace OpenBabel
     string pattern(" *\\* *[a-zA-Z]{1,2}[0-9]* *[0-9]{1,3}\\.[0-9]{1}");
     bool iok;
 #ifdef _MSC_VER
-    std::tr1::regex myregex;
+    std::regex myregex;
     try {
       myregex.assign(pattern,
-                     std::tr1::regex_constants::extended |
-                     std::tr1::regex_constants::nosubs);
+                     std::regex_constants::extended |
+                     std::regex_constants::nosubs);
       iok = true;
-    } catch (std::tr1::regex_error ex) {
+    } catch (std::regex_error ex) {
       iok = false;
     }
 #else
@@ -821,7 +821,7 @@ namespace OpenBabel
       // End of geometry block
       if (strstr(buffer, "*************************") != nullptr) break;
 #ifdef _MSC_VER
-      if (std::tr1::regex_search(buffer, myregex)) {
+      if (std::regex_search(buffer, myregex)) {
 #else
         if (regexec(myregex, buffer, 0, nullptr, 0) == 0) {
 #endif

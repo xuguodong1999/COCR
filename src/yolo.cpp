@@ -3,7 +3,7 @@
 #include "std_util.hpp"
 #include <opencv2/imgproc.hpp>
 
-//#include <opencv2/highgui.hpp>
+#include <opencv2/highgui.hpp>
 
 std::shared_ptr<YoloDetector> yoloDetector;
 
@@ -39,6 +39,7 @@ cv::Mat YoloDetector::detectAndDisplay(
         cv::rectangle(img, cv::Rect(obj.x, obj.y, obj.w, obj.h),
                       getScalar(colorIdx(idx)), 1);
     }
-//    cv::imshow("YoloForward", img);
+    cv::imshow("YoloForward", img);
+    cv::waitKey(0);
     return img;
 }

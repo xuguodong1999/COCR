@@ -28,17 +28,22 @@ General Public License for more details.
 #include <sstream>
 #include <cstring>
 
+#include <string.h>
+
 #ifndef OBERROR
  #define OBERROR
 #endif
 
 namespace OpenBabel
 {
+template<class Arg1, class Arg2, class Result>
+struct binary_function {
+};
 ///@addtogroup plugins Plugins
 ///@{
 
 /// @brief Case insensitive string comparison for PluginMapType key.
-struct OBERROR CharPtrLess : public std::binary_function<const char*,const char*, bool>
+struct OBERROR CharPtrLess : public binary_function<const char*,const char*, bool>
 {
   bool operator()(const char* p1,const char* p2) const
   { return strcasecmp(p1,p2)<0; }
