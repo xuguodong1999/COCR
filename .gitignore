@@ -72,7 +72,6 @@ Thumbs.db
 *.dll
 *.exe
 
-3rdparty/
 .idea
 .vs
 .vscode
