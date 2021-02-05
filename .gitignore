@@ -55,7 +55,6 @@ Thumbs.db
 *.vcproj
 *vcproj.*.*.user
 *.ncb
-*.sdf
 *.opensdf
 *.vcxproj
 *vcxproj.*

@@ -29,6 +29,7 @@ set(CMAKE_AUTORCC ON)
 
 # opencv, you need to compile it>=4.5.1 for crnn and yolo call
 if(MSVC)
+    set(OpenCV_DIR C:/shared/opencv4.5.1/x64/vc16/lib)
 elseif(APPLE)
 elseif(ANDROID)
     set(ANDROID_NATIVE_API_LEVEL 21)

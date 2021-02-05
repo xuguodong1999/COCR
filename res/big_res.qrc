@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>model/yolo-3l.weights</file>
+        <file>big_res.qrc</file>
     </qresource>
 </RCC>
