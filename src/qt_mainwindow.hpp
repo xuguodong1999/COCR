@@ -4,6 +4,7 @@
 #include "mol.hpp"
 #include <QMainWindow>
 #include <QLabel>
+#include <QMovie>
 #include <QtWidgets/QHBoxLayout>
 
 class Mol3DEditor;
@@ -23,6 +24,7 @@ Q_OBJECT
     OCRThread *ocrThread;
     std::vector<std::shared_ptr<JMol>> mols;
     QLabel *waitLabel;
+    QMovie *waitMovie;
     QWidget *currentWidget;
     QHBoxLayout *mainLayout;
 public:

@@ -36,7 +36,7 @@ msvc:{
     }
 }
 
-unix:{
+unix:!android{
     # TODO: set your opencv dir here.
     # >=4.5.0 is required, 4.4.0 is not ok.
     MY_OPENCV_DIR=/home/xgd/shared/opencv4.5.1
@@ -45,6 +45,46 @@ unix:{
     LIBS += -L$${MY_OPENCV_DIR}/lib -lopenbabel \
         -lopencv_imgcodecs -lopencv_imgproc -lopencv_dnn \
         -lopencv_core -lopencv_highgui
+}
+
+android:{
+    # extract 4.5.1 for OpenCV-android-sdk
+    OPENCV_SDK_DIR = $${PWD}/android/OpenCV-android-sdk
+
+    INCLUDEPATH += $${OPENCV_SDK_DIR}/sdk/native/jni/include
+
+    OPENCV_STATICLIB_DIR = $${OPENCV_SDK_DIR}/sdk/native/staticlibs
+
+    OPENCV_3RDPARTY_DIR = $${OPENCV_SDK_DIR}/sdk/native/3rdparty/libs
+
+    OPENCV_NATIVE_LIST = libopencv_dnn.a libopencv_highgui.a \
+        libopencv_imgcodecs.a libopencv_imgproc.a libopencv_core.a
+
+    for(LIB_NAME, OPENCV_NATIVE_LIST){
+        LIBS += \
+            $${OPENCV_STATICLIB_DIR}/$${ANDROID_TARGET_ARCH}/$${LIB_NAME}
+    }
+
+    OPENCV_3RDPARTY_LIST = libquirc.a \
+        libade.a libIlmImf.a liblibopenjp2.a liblibjpeg-turbo.a \
+        liblibpng.a liblibprotobuf.a liblibtiff.a liblibwebp.a \
+        libcpufeatures.a libittnotify.a libtbb.a
+
+    equals(ANDROID_TARGET_ARCH, x86){
+        OPENCV_3RDPARTY_LIST += libippiw.a libippicv.a
+    }
+    equals(ANDROID_TARGET_ARCH, x86_64){
+        OPENCV_3RDPARTY_LIST += libippiw.a libippicv.a
+    }
+    equals(ANDROID_TARGET_ARCH, armeabi-v7a){
+        OPENCV_3RDPARTY_LIST += libtegra_hal.a
+    }
+    equals(ANDROID_TARGET_ARCH, arm64-v8a) {
+        OPENCV_3RDPARTY_LIST += libtegra_hal.a
+    }
+    for(LIB_NAME, OPENCV_3RDPARTY_LIST){
+        LIBS += $${OPENCV_3RDPARTY_DIR}/$${ANDROID_TARGET_ARCH}/$${LIB_NAME}
+    }
 }
 
 INCLUDE_LIST = alkane_graph.hpp hw_script.hpp mol3dwindow.hpp \

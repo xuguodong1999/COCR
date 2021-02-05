@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
           isSketchLatest(true), currentWidget(nullptr) {
     ui->setupUi(this);
     waitLabel = new QLabel(this);
-    waitLabel->setMovie(new QMovie(
-            ":/img/wait.gif", "gif", waitLabel));
+    waitMovie = new QMovie(":/img/wait.gif", "gif",this);
+    waitLabel->setMovie(waitMovie);
     waitLabel->hide();
     mainLayout = new QHBoxLayout();
     ui->container->setLayout(mainLayout);
