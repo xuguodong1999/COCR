@@ -1,3 +1,5 @@
+#include <QtCore/qglobal.h>
+
 /* The version of Open Babel */
 #define BABEL_VERSION "3.1.1"
 
@@ -8,53 +10,11 @@
 /* OB_VERSION is (major << 16) + (minor << 8) + patch */
 #define OB_VERSION OB_VERSION_CHECK(3, 1, 1)
 
-
-// If we are using a recent GCC version with visibility support use it
-#ifdef HAVE_GCC_VISIBILITY
-  #define OB_EXPORT __attribute__ ((visibility("default")))
-  #define OB_IMPORT __attribute__ ((visibility("default")))
-  #define OB_HIDDEN __attribute__ ((visibility("hidden")))
-#elif defined(WIN32) && defined(USING_DYNAMIC_LIBS) && !defined(__MINGW32__)
- #define OB_EXPORT __declspec(dllexport)
- #define OB_IMPORT __declspec(dllimport)
- #define OB_HIDDEN
-#else
- #define OB_EXPORT
- #define OB_IMPORT
- #define OB_HIDDEN
-#endif
+#define OB_EXPORT Q_DECL_EXPORT
+#define OB_IMPORT Q_DECL_IMPORT
+#define OB_HIDDEN Q_DECL_HIDDEN
 
 /* Used to export symbols for DLL / shared library builds */
-#if defined(MAKE_OBDLL) // e.g. in src/main.cpp
- #ifndef OB_EXTERN
-  #define OB_EXTERN   OB_EXPORT extern
- #endif
- #ifndef OBAPI
-  #define OBAPI    OB_EXPORT
- #endif
- #ifndef OBCOMMON
-  #define OBCOMMON OB_EXPORT
- #endif
- #ifndef OBCONV
-  #define OBCONV   OB_EXPORT
- #endif
- #ifndef OBERROR
-  #define OBERROR  OB_EXPORT
- #endif
- #ifndef OBFPRT
-  #define OBFPRT   OB_EXPORT
- #endif
- #ifndef OBFPTR
-  #define OBFPTR   OB_EXPORT
- #endif
- #ifndef OBMCDL
-  #define OBMCDL   OB_EXPORT
- #endif
- #ifndef OBDEPICT
-  #define OBDEPICT OB_EXPORT
- #endif
-
-#else   // defined(MAKE_OBDLL)
 
  #ifndef OB_EXTERN
   #define OB_EXTERN   OB_IMPORT extern
@@ -85,7 +45,6 @@
 
  #endif
 
-#endif
 
 #ifdef _MSC_VER
  // Suppress warning on deprecated functions
@@ -115,26 +74,10 @@
 /* have <sys/time.h> */
 #define HAVE_SYS_TIME_H 0
 
-/* have <time.h> */
-#define HAVE_TIME_H 1
-
-/* have <sstream> */
-#define HAVE_SSTREAM 1
 
 /* have symbol clock_t */
 #define HAVE_CLOCK_T 1
 
-/* have symbol rint */
-/* #undef HAVE_RINT */
-
-/* have symbol snprintf */
-#define HAVE_SNPRINTF 1
-
-/* have symbol sranddev */
-/* #undef HAVE_SRANDDEV */
-
-/* have symbol strcasecmp */
-#define HAVE_STRCASECMP 1
 
 /* have symbol strncasecmp */
 #define HAVE_STRNCASECMP 1

@@ -1,3 +1,22 @@
+/**********************************************************************
+atom.cpp - Handle OBAtom class.
+
+Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
+Some portions Copyright (C) 2001-2008 by Geoffrey R. Hutchison
+Some portions Copyright (C) 2003 by Michael Banck
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.org/>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+***********************************************************************/
 #include <openbabel/babelconfig.h>
 
 #include <openbabel/atom.h>
@@ -16,6 +35,10 @@
 #include <openbabel/chains.h>
 
 #include <openbabel/math/matrix3x3.h>
+
+#if !HAVE_STRNCASECMP
+extern "C" int strncasecmp(const char *s1, const char *s2, size_t n);
+#endif
 
 using namespace std;
 
