@@ -28,7 +28,6 @@ GNU General Public License for more details.
 #include <Eigen/LU>
 #include <Eigen/SVD>
 
-#define pi 3.1415926
 #define sqr(x) ((x)*(x))
 #define cube(x) ((x)*(x)*(x))
 

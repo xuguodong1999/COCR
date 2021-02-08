@@ -250,7 +250,7 @@ namespace OpenBabel {
         Hardness.block(N, 0, 1, N).setOnes();
         Hardness.block(0, N, N, 1).setOnes();
 
-        double OverlapMaxDistance = sqrt(log((pi / cube(2 * SmallestGaussianExponent))
+        double OverlapMaxDistance = sqrt(log((M_PI / cube(2 * SmallestGaussianExponent))
                                              / sqr(OverlapThreshold)) / SmallestGaussianExponent);
 
         //This matrix can be sparse, but I didn't get Eigen's SparseMatrix to

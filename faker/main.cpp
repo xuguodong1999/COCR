@@ -13,32 +13,36 @@
 #include <opencv2/highgui.hpp>
 
 int _main();
+
 int dump();
-int gen_str(){
+
+int gen_str() {
+    srand(22);
     HwDataLoader::getInstance();
-    int w=416;
-    int h=w/2;
-    cv::Point2f  center(w/2,h/2);
-    cv::Mat mat(h,w,CV_32FC3,getScalar(ColorName::rgbWhite));
+    int w = 100;
+    int h = 32;
+    cv::Point2f center(w / 2, h / 2);
+    cv::Mat mat(h, w, CV_8UC3, getScalar(ColorName::rgbWhite));
 
     HwStr hwStr;
-    hwStr.push_char("C",HwCharType::Normal);
-    hwStr.push_char("H",HwCharType::Normal);
-    hwStr.push_char("3",HwCharType::RightBottom);
-    hwStr.push_char("-",HwCharType::Normal);
-    hwStr.push_char("O",HwCharType::Normal);
-    hwStr.push_char("E",HwCharType::Normal);
-    hwStr.push_char("t",HwCharType::Normal);
+    hwStr.push_char("C", HwCharType::Normal);
+    hwStr.push_char("H", HwCharType::Normal);
+    hwStr.push_char("3", HwCharType::RightBottom);
+    hwStr.push_char("-", HwCharType::Normal);
+    hwStr.push_char("O", HwCharType::Normal);
+    hwStr.push_char("E", HwCharType::Normal);
+    hwStr.push_char("t", HwCharType::Normal);
     hwStr.moveCenterTo(center);
-    hwStr.resizeTo(w,h);
-    HwController hwController(5);
+    hwStr.resizeTo(w - 4, h - 4);
+    HwController hwController(2);
     hwStr.setHwController(hwController);
     hwStr.paintTo(mat);
 
-    cv::imshow("",mat);
+    cv::imshow("wtf", mat);
     cv::waitKey(0);
     return 0;
 }
+
 int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     try {
@@ -51,13 +55,14 @@ int main(int argc, char **argv) {
     }
 }
 
-int dump(){
+int dump() {
     HwDataLoader::getInstance();
     SOSODarknet sd;
     sd.init("/media/xgd/hjyy-ext4/soso17_small");
-    sd.dump(1000,4);
+    sd.dump(1000, 4);
     return 0;
 }
+
 int _main() {
 //    auto& ic=PolyaIsomerCounter::GetInstance();
 //    ic.count(18);
@@ -69,9 +74,9 @@ int _main() {
     std::cout << alkanes.size() << std::endl;
 //    exit(-1);
     size_t full_size = 400000;
-    for(size_t i=0;i<full_size;i++){
+    for (size_t i = 0; i < full_size; i++) {
         auto mol = std::make_shared<JMol>();
-        mol->setAlkane(alkanes[i%alkanes.size()]);
+        mol->setAlkane(alkanes[i % alkanes.size()]);
         auto molOp = std::make_shared<MolOp>(mol);
         //const float &_addHydrogenProb, bool _replaceBond,
         //        bool _replaceAtom, bool _addAromaticR+ing, bool _addCommonRing

@@ -1,11 +1,11 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <opencv2/core/mat.hpp>
-#include <openbabel/mol.h>
+
 int main(int argc, char *argv[])
 {
     cv::Mat mat;
-    OpenBabel::OBMol mol;
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif

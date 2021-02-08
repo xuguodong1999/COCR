@@ -28,6 +28,8 @@ General Public License for more details.
 #include <vector>
 #include <deque>
 
+#include <QDebug>
+
 #ifndef OBERROR
 #define OBERROR
 #endif
@@ -64,8 +66,14 @@ namespace OpenBabel {
         //! \return A formatted message string, including optional explanations, etc.
         std::string message(void) const;
 
+        QString qMessage(void) const;
+
         //! Output a formatted message string
         friend std::ostream &operator<<(std::ostream &os, const OBError &er) { return os << er.message(); };
+
+        friend QDebug operator<<(QDebug dbg, const OBError &er) {
+            dbg << qPrintable(er.qMessage());
+        }
 
         /** \return The method which caused this error
             (typically supplied via the __FUNCTION__ compiler macro **/

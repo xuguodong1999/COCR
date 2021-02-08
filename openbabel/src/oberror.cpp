@@ -70,6 +70,46 @@ namespace OpenBabel {
 
     bool OBError::operator==(const OBError &other) const { return GetError() == other.GetError(); }
 
+    QString OBError::qMessage(void) const {
+        QString tmp = "==============================\n";
+
+        if (_level == obError)
+            tmp += "*** Open Babel Error ";
+        else if (_level == obWarning)
+            tmp += "*** Open Babel Warning ";
+        else if (_level == obInfo)
+            tmp += "*** Open Babel Information ";
+        else if (_level == obAuditMsg)
+            tmp += "*** Open Babel Audit Log ";
+        else
+            tmp += "*** Open Babel Debugging Message ";
+
+        if (_method.length() != 0) {
+            tmp += " in ";
+            tmp += _method.c_str();
+            tmp += "\n  ";
+        }
+        tmp += _errorMsg.c_str();
+        tmp += "\n";
+        if (!_explanation.empty()) {
+            tmp += "  ";
+            tmp += _explanation.c_str();
+            tmp += "\n";
+        }
+
+        if (!_possibleCause.empty()) {
+            tmp += "  Possible reason: ";
+            tmp += _possibleCause.c_str();
+            tmp += "\n";
+        }
+        if (!_suggestedRemedy.empty()) {
+            tmp += "  Suggestion: ";
+            tmp += _suggestedRemedy.c_str();
+            tmp += "\n";
+        }
+        return tmp;
+    }
+
     /** \class OBMessageHandler oberror.h <openbabel/oberror.h>
 
     OBMessageHandler represents a configurable error system for Open Babel.
@@ -161,7 +201,8 @@ namespace OpenBabel {
         //Output error message if level sufficiently high and, if onceOnly set, it has not been logged before
         if (err.GetLevel() <= _outputLevel &&
             (qualifier != onceOnly || find(_messageList.begin(), _messageList.end(), err) == _messageList.end())) {
-            *_outputStream << err;
+//            *_outputStream << err;
+            qDebug() << err;
         }
 
         _messageList.push_back(err);
