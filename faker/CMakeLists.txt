@@ -9,9 +9,11 @@ find_package(OpenCV REQUIRED)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 
+set(CMAKE_AUTORCC ON)
+
 aux_source_directory(. PROJECT_SOURCES)
 
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ../res/obdata.qrc)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
         $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)

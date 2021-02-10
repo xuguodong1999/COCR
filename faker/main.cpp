@@ -6,7 +6,7 @@
 #include "std_util.hpp"
 #include "hw_data.hpp"
 #include "soso_darknet.hpp"
-
+#include "linetextdata.hpp"
 #include <random>
 #include <memory>
 #include <QCoreApplication>
@@ -15,6 +15,14 @@
 int _main();
 
 int dump();
+
+int gen_str_text() {
+    LineTextDataCreator lc;
+    lc.loadFromSuperAtom();
+    lc.loadFromWordDict();
+    lc.displaySet();
+    return 0;
+}
 
 int gen_str() {
     srand(22);
@@ -48,7 +56,7 @@ int main(int argc, char **argv) {
     try {
 //        return dump();
 //        return _main();
-        return gen_str();
+        return gen_str_text();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(-1);

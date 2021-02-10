@@ -1,4 +1,6 @@
-QT += core quick quick3d
+QT += core 3dcore 3dextras 3drender
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17 big_resources console object_parallel_to_source
 
@@ -116,8 +118,7 @@ for(UI_FILE,UI_LIST){
     FORMS += $${PWD}/src/$${UI_FILE}
 }
 
-RESOURCES += $${PWD}/qml/qml.qrc \
-    $${PWD}/res/big_res.qrc \
+RESOURCES += $${PWD}/res/big_res.qrc \
     $${PWD}/res/obdata.qrc
 
 TRANSLATIONS += $${PWD}/res/jokejoker_zh_CN.ts
