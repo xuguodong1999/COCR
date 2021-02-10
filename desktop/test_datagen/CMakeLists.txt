@@ -3,7 +3,7 @@ project(cocr-test_datagen)
 
 set(SRC_PRO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
-set(SRC_ALL ${SRC_PRO_FILES})
+set(SRC_ALL ${SRC_PRO_FILES} ${BASE_SRC} ${HW_SRC} ${MOL_SRC} ${UI_SRC})
 
 add_executable(${PROJECT_NAME} ${SRC_ALL})
 

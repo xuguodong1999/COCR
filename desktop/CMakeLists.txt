@@ -111,7 +111,7 @@ set(BASE_SRC ${SRC_DIR}/atom.cpp
         ${SRC_DIR}/polya.cpp
         ${SRC_DIR}/std_util.cpp
         ${SRC_DIR}/timer.cpp
-        ${SRC_DIR}/yolo_ncnn.cpp
+#        ${SRC_DIR}/yolo_ncnn.cpp
         ${SRC_DIR}/yolo_opencv.cpp
         ${SRC_DIR}/yolo.cpp
         ${SRC_DIR}/soso17_converter.cpp
