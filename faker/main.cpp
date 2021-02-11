@@ -18,9 +18,10 @@ int dump();
 
 int gen_str_text() {
     LineTextDataCreator lc;
-    lc.loadFromSuperAtom();
-    lc.loadFromWordDict();
-    lc.displaySet();
+//    lc.loadFromSuperAtom();
+//    lc.loadFromWordDict();
+//    lc.displaySet();
+    lc.loadFromPattern();
     return 0;
 }
 
