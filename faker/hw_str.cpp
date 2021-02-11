@@ -1,5 +1,6 @@
 #include "hw_str.hpp"
 #include "hw_data.hpp"
+#include "std_util.hpp"
 #include <iostream>
 
 HwStr::HwStr(const std::string &_plainText) {
@@ -13,21 +14,8 @@ void HwStr::push_char(const std::string &_charStr, const HwCharType &_hwCharType
     richText.emplace_back(_charStr, _hwCharType);
     auto &dataLoader = HwDataLoader::getInstance();
     auto sym = dataLoader.GetByStrLabel(_charStr);
-    // TODO: 分离随机要素
-    float sNormSizeK = 1.0;// (-1,1)*100
-    float sSubSizeK = 1.0;// (-1,1)*50
-    float sNormOffsetKx = 0.2;// (-1,1)*100
-    float sNormOffsetKy = 0.2;// (-1,1)*100
-    float sSubOffsetKx = 0.1;// (-1,1)*50
-    float sSubOffsetKy = 0.1;// (-1,1)*50
-    float sAngleK = 0.0;// [0,1)*30
-    sym.rotate(30 * sAngleK);
-    float s = 100 * sNormSizeK;
-    float sx = 100 * sNormOffsetKx;
-    float sy = 100 * sNormOffsetKy;
-    float ss = 50 * sSubSizeK;
-    float ssx = 50 * sSubOffsetKx;
-    float ssy = 50 * sSubOffsetKy;
+    sym.rotate(betweenProb(-randAngle,randAngle));
+
     if (mData.empty()) {
         sym.resizeTo(s, s, true);
         sym.moveLeftTopTo(cv::Point2f(0, 0));

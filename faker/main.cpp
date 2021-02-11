@@ -33,17 +33,23 @@ int gen_str() {
     cv::Point2f center(w / 2, h / 2);
     cv::Mat mat(h, w, CV_8UC3, getScalar(ColorName::rgbWhite));
 
-    HwStr hwStr;
-    hwStr.push_char("C", HwCharType::Normal);
-    hwStr.push_char("H", HwCharType::Normal);
-    hwStr.push_char("3", HwCharType::RightBottom);
-    hwStr.push_char("-", HwCharType::Normal);
-    hwStr.push_char("O", HwCharType::Normal);
-    hwStr.push_char("E", HwCharType::Normal);
-    hwStr.push_char("t", HwCharType::Normal);
+//    HwStr hwStr;
+//    hwStr.push_char("C", HwCharType::Normal);
+//    hwStr.push_char("1", HwCharType::RightBottom);
+//    hwStr.push_char("2", HwCharType::RightBottom);
+//    hwStr.push_char("H", HwCharType::Normal);
+//    hwStr.push_char("2", HwCharType::RightBottom);
+//    hwStr.push_char("5", HwCharType::RightBottom);
+//    hwStr.push_char("-", HwCharType::Normal);
+//    hwStr.push_char("O", HwCharType::Normal);
+//    hwStr.push_char("E", HwCharType::Normal);
+//    hwStr.push_char("t", HwCharType::Normal);
+
+    HwStr hwStr("c-Butyl");
+
     hwStr.moveCenterTo(center);
     hwStr.resizeTo(w - 4, h - 4);
-    HwController hwController(2);
+    HwController hwController(1);
     hwStr.setHwController(hwController);
     hwStr.paintTo(mat);
 
@@ -57,7 +63,8 @@ int main(int argc, char **argv) {
     try {
 //        return dump();
 //        return _main();
-        return gen_str_text();
+        return gen_str();
+//        return gen_str_text();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(-1);

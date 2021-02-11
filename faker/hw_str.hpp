@@ -22,6 +22,9 @@ enum class HwSpecText {
 class HwStr : public HwItem {
     std::vector<std::pair<std::string, HwCharType>> richText;
     DetectorClasses label;
+    inline static const float
+            refH = 32, refX = 0, refY = 0, refCentY = 16, refSubMinH = 12,randAngle=3;
+
 public:
     DetectorClasses getItemType() const override;
 
