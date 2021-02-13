@@ -4,6 +4,7 @@
 #include "colors.hpp"
 #include "polya.hpp"
 #include "std_util.hpp"
+#include "crnn_data.hpp"
 #include "hw_data.hpp"
 #include "soso_darknet.hpp"
 #include "linetextdata.hpp"
@@ -55,8 +56,11 @@ int main(int argc, char **argv) {
     try {
 //        return dump();
 //        return _main();
-        return gen_str();
+//        return gen_str();
 //        return gen_str_text();
+        CRNNDataGenerator crnnDataGenerator;
+        crnnDataGenerator.display();
+        return 0;
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(-1);

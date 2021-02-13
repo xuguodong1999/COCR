@@ -199,3 +199,4 @@ void HwStr::pushHwData(HwScript &_hwScript, const HwCharType &_hwCharType) {
     }
     push_back(_hwScript);
 }
+

@@ -36,6 +36,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         # -lRDKitSubstructMatch -lRDKitTrajectory -lRDKithc
 
         -lcoordgen
+        -llmdb
         # -lmaeparser
 
         -lboost_iostreams -lboost_system

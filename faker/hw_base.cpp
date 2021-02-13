@@ -48,7 +48,7 @@ void HwBase::moveLeftTopTo(const cv::Point2f &_leftTop) {
     auto bbox = getBoundingBox();
     if (!bbox)return;
     auto offset = _leftTop - bbox.value().tl();
-    moveBy(_leftTop);
+    moveBy(offset);
 }
 
 void HwBase::resizeTo(float _w, float _h, bool _keepRatio) {

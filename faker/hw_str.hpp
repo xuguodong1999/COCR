@@ -30,7 +30,7 @@ class HwStr : public HwItem {
     std::vector<std::pair<std::string, HwCharType>> richText;
     DetectorClasses label;
     inline static const float
-            centHeight = 40, offset = 5, offsetW = 3, maxHeight = centHeight + 2 * offset,
+            centHeight = 30, offset = 10, offsetW = 3, maxHeight = centHeight + 2 * offset,
             subCentHeight = 20, subOffset = 5, subOffsetW = 2, subMaxHeight = subCentHeight + 2 * subOffset,
             subStartMinRatio = 0.5,
             randAngle = 3;

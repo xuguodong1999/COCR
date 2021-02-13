@@ -209,14 +209,14 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
 
     std::unordered_set<std::string> fruits;
     std::vector<std::string> c4, c3, c2, c1;
-    c4 = {"C", "C", "C", "C", "Si", "Ge", "Sn", "Pb"};
-    c3 = {"N", "N", "N", "N", "P", "As", "Sb", "Bi", "Al"};
-    c2 = {"O", "S", "O", "S", "O", "S", "Mg", "Zn"};
-    c1 = {"F", "Cl", "Br", "I", "H", "H", "H", "H"};
-//    c4 = {"C"};
-//    c3 = {"N"};
-//    c2 = {"O", "S"};
-//    c1 = {"H"};
+//    c4 = {"C", "C", "C", "C", "Si", "Ge", "Sn", "Pb"};
+//    c3 = {"N", "N", "N", "N", "P", "As", "Sb", "Bi", "Al"};
+//    c2 = {"O", "S", "O", "S", "O", "S", "Mg", "Zn"};
+//    c1 = {"F", "Cl", "Br", "I", "H", "H", "H", "H"};
+    c4 = {"C"};
+    c3 = {"N"};
+    c2 = {"O", "S"};
+    c1 = {"H"};
     for (int i = 0; i < 10; i++) {
         for (auto &str:c4) {
             originSTVec.emplace_back(str, 3, 1);
@@ -302,7 +302,7 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
 //    exit(-1);
     tempST = originST;
     tempSTVec = originSTVec;
-    while (fruits.size() < 5000) {
+    while (fruits.size() < 500) {
         auto st1 = randSelect(originSTVec);
         auto st2 = randSelect(tempSTVec);
         if (byProb(0.5))std::swap(st1, st2);
@@ -317,7 +317,9 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
             }
         }
     }
-//    for (auto &st:fruits) {
+    for (auto &st:fruits) {
 //        std::cout << st << std::endl;
-//    }
+        wordSet.insert(st);
+    }
+    updateCharSet();
 }
