@@ -60,6 +60,8 @@ int main(int argc, char **argv) {
 //        return gen_str_text();
         CRNNDataGenerator crnnDataGenerator;
         crnnDataGenerator.display();
+//        crnnDataGenerator.init("/tmp/fuck");
+//        crnnDataGenerator.dump();
         return 0;
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

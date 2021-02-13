@@ -53,54 +53,24 @@ void CRNNDataGenerator::dump() {
             exit(-1);
         }
     }
-    env.open(dbPath.c_str(), 0, 0664);
+    std::cout << "path=" << dbPath << std::endl;
+    env.open(topDir.c_str(), 0, 0664);
     auto wtxn = lmdb::txn::begin(env);
     auto dbi = lmdb::dbi::open(wtxn, nullptr);
     LineTextDataCreator lineTextDataCreator;
-    lineTextDataCreator.loadFromPattern();
-    size_t idx = 0;
-    lineTextDataCreator.loopOnce([&](const std::string &_text) {
-        HwStr hwStr;
-        hwStr.loadRichACSII(_text);
-        hwStr.resizeTo(10240, height, true);
-        auto rect = hwStr.getBoundingBox().value();
-        cv::Mat img = cv::Mat(height * 4, width * 4, CV_8UC3,
-                              getScalar(ColorName::rgbWhite));
-        hwStr.setHwController(randSelect(controllers));
-        hwStr.moveLeftTopTo(cv::Point2f(0, 0));
-        hwStr.paintTo(img);
-        cv::resize(img, img, cv::Size(width, height), 0, 0, cv::INTER_CUBIC);
-        if (byProb(0.5)) {// 反转颜色
-            cv::bitwise_not(img, img);
-        }
-        std::vector<uchar> buffer;
-        cv::imencode("jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
-        buffer.push_back('\0');
-        char a[100];
-        sprintf(a, imgKey, idx);
-        dbi.put(wtxn, a, buffer.data());
-        sprintf(a, labelKey, idx);
-        dbi.put(wtxn, a, _text.c_str());
-        wtxn.commit();
-        exit(-1);
-    });
-}
-
-void CRNNDataGenerator::display() {
-    LineTextDataCreator lineTextDataCreator;
 //    lineTextDataCreator.loadFromPattern();
-    lineTextDataCreator.loadFromSuperAtom();
+    lineTextDataCreator.loadFromWordDict();
     size_t idx = 0;
     lineTextDataCreator.loopOnce([&](const std::string &_text) {
         HwStr hwStr;
         hwStr.loadRichACSII(_text);
-        float k=betweenProb(1.3,2.2);
-        hwStr.resizeTo(width*k - 4, height*k - 4, true);
+        float k = betweenProb(1.3, 2.2);
+        hwStr.resizeTo(width * k - 4, height * k - 4, true);
         auto rect = hwStr.getBoundingBox().value();
-        if (rect.width > width*k - 4) {
-            hwStr.resizeTo(width*k - 4, height*k - 4, false);
+        if (rect.width > width * k - 4) {
+            hwStr.resizeTo(width * k - 4, height * k - 4, false);
         }
-        cv::Mat img = cv::Mat(height*k, width*k, CV_8UC3,
+        cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
         HwController hwController(2);
         hwStr.setHwController(hwController);
@@ -112,12 +82,64 @@ void CRNNDataGenerator::display() {
         }
         std::vector<uchar> buffer;
         cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
+        buffer.push_back('\0');
+        std::cout << "********************\nlabel=" << _text << std::endl;
+        char a[100];
+        sprintf(a, imgKey, idx);
+        std::cout << "image-key=" << a << std::endl;
+        dbi.put(wtxn, a, buffer.data());
+        sprintf(a, labelKey, idx++);
+        std::cout << "label-key=" << a << std::endl;
+        dbi.put(wtxn, a, _text.c_str());
+//        wtxn.commit();
+        if (idx > 30000) {
+            wtxn.commit();
+            exit(-1);
+        }
+    });
+    wtxn.commit();
+}
+
+void CRNNDataGenerator::display() {
+    LineTextDataCreator lineTextDataCreator;
+//    lineTextDataCreator.loadFromPattern();
+    lineTextDataCreator.loadFromWordDict();
+//    lineTextDataCreator.loadFromSuperAtom();
+
+    size_t idx = 0;
+    lineTextDataCreator.loopOnce([&](const std::string &_text) {
+        HwStr hwStr;
+        hwStr.loadRichACSII(_text);
+        float k = betweenProb(1.3, 2.2);
+        hwStr.resizeTo(width * k - 4, height * k - 4, true);
+        auto rect = hwStr.getBoundingBox().value();
+        if (rect.width > width * k - 4) {
+            hwStr.resizeTo(width * k - 4, height * k - 4, false);
+        }
+        cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
+                              getScalar(ColorName::rgbWhite));
+        HwController hwController(2);
+        hwStr.setHwController(hwController);
+        hwStr.moveLeftTopTo(cv::Point2f(1, 1));
+//        hwStr.paintTo(img);
+        cv::putText(img, _text, cv::Point(0,height * k/1.4),
+                    2, 1.5, getScalar(ColorName::rgbBlack),
+                    1, cv::LINE_AA,false);
+        cv::resize(img, img, cv::Size(width, height), 0, 0, cv::INTER_CUBIC);
+        if (byProb(0.5)) {// 反转颜色
+            cv::bitwise_not(img, img);
+        }
+        std::vector<uchar> buffer;
+        cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
+        buffer.push_back('\0');
         std::cout << "********************\nlabel=" << _text << std::endl;
         char a[100];
         sprintf(a, imgKey, idx);
         std::cout << "image-key=" << a << std::endl;
         sprintf(a, labelKey, idx++);
         std::cout << "label-key=" << a << std::endl;
+
+
         auto img2 = cv::imdecode(buffer, CV_8UC1);
         cv::imshow("origin-data", img);
         cv::imshow("ed-data", img2);
