@@ -11,6 +11,8 @@ protected:
     std::vector<HwScript> mData;
     HwController *hwController;
 public:
+    HwScript asScript() const;
+
     void setHwController(HwController &_hwController) override;
 
     void push_back(HwScript &_script);

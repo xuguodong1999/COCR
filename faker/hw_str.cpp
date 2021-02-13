@@ -3,80 +3,6 @@
 #include "std_util.hpp"
 #include <iostream>
 
-HwStr::HwStr(const std::string &_plainText) {
-    for (auto &character:_plainText) {
-        push_char(std::string(1, character));
-    }
-
-}
-
-void HwStr::push_char(const std::string &_charStr, const HwCharType &_hwCharType) {
-    richText.emplace_back(_charStr, _hwCharType);
-    auto &dataLoader = HwDataLoader::getInstance();
-    auto sym = dataLoader.GetByStrLabel(_charStr);
-    sym.rotate(betweenProb(-randAngle,randAngle));
-
-    if (mData.empty()) {
-        sym.resizeTo(s, s, true);
-        sym.moveLeftTopTo(cv::Point2f(0, 0));
-    } else {
-        auto rect = getBoundingBox();
-        if (!rect) {
-            std::cerr << "found empty shapes in HwStr::push_char" << std::endl;
-            exit(-1);
-        }
-        if (rect->height < 100) {
-            rect->height = 100;
-        }
-        switch (_hwCharType) {
-            case HwCharType::RightBottom: {
-                sym.resizeTo(ss, ss);
-                sym.moveLeftTopTo(cv::Point2f(
-                        rect->x + rect->width + ssx, 50 + ssy));
-                break;
-            }
-            case HwCharType::RightTop: {
-                sym.resizeTo(ss, ss);
-                sym.moveLeftTopTo(cv::Point2f(
-                        rect->x + rect->width + ssx, ssy));
-                break;
-            }
-            case HwCharType::Up: {
-                rect = mData.back().getBoundingBox();
-                if (!rect) {
-                    std::cerr << "found empty shapes in HwStr::push_char" << std::endl;
-                    exit(-1);
-                }
-                sym.resizeTo(ss, ss);
-                sym.moveLeftTopTo(cv::Point2f(
-                        rect->x + ssx, ssy));
-                break;
-            }
-            case HwCharType::Down: {
-                break;
-            }
-            case HwCharType::UpRand: {
-                break;
-            }
-            case HwCharType::DownRand: {
-                break;
-            }
-            default: {
-                sym.resizeTo(s, s);
-                sym.moveLeftTopTo(cv::Point2f(
-                        rect->x + rect->width + sx, sy));
-            }
-        }
-    }
-//    if (!shapes.empty()) {
-//        auto rect = shapes.back().getBoundingBox();
-//        // 左上角对齐右上角
-//        sym.resizeTo(std::numeric_limits<float>::max(), rect.height);
-//        sym.moveLeftTopTo(cv::Point2f(
-//                rect.x + 1.2 * rect.width, rect.y));
-//    }
-    push_back(sym);
-}
 
 std::string HwStr::getShownText() const {
     if (richText.empty())return "[]";
@@ -108,16 +34,28 @@ std::shared_ptr<HwItem> HwStr::GetSpecText(const HwSpecText &_specText) {
             sym1.resizeTo(100, 100);
             sym1.moveCenterTo(cv::Point2f(50, 50));
             auto sym2 = dataLoader.GetByStrLabel("-");
-            // TODO: 分离随机要素
             sym2.resizeTo(80, 80);
             sym2.moveCenterTo(cv::Point2f(50, 50));
             specText->push_back(sym1);
             specText->push_back(sym2);
             break;
         }
+        case HwSpecText::TripleHorizontalLine: {
+            float w = betweenProb(30, 80);
+            auto sym1 = dataLoader.GetShape(ShapeType::Line);
+            sym1.castToLine(cv::Point2f(0, 0), cv::Point2f(100, 0));
+            auto sym2 = dataLoader.GetShape(ShapeType::Line);
+            sym2.castToLine(cv::Point2f(0, w / 2), cv::Point2f(100, w / 2));
+            auto sym3 = dataLoader.GetShape(ShapeType::Line);
+            sym3.castToLine(cv::Point2f(0, w), cv::Point2f(100, w));
+            specText->push_back(sym1);
+            specText->push_back(sym2);
+            specText->push_back(sym3);
+            break;
+        }
         default: {
             std::cerr << "HwSpecText:" << (int) _specText
-                      << "not implemented in HwStr::GetSpecText" << std::endl;
+                      << " not implemented in HwStr::GetSpecText" << std::endl;
             exit(-1);
         }
     }
@@ -132,7 +70,132 @@ HwStr::HwStr() : label(DetectorClasses::ItemHorizontalStr) {
 
 }
 
-HwStr::HwStr(const ElementType &_elementType)
-        : HwStr(convertElementTypeToString(_elementType)) {
+
+//centHeight = 32, refX = 0, refY = 0, refCentY = 16, refSubMinH = 12,randAngle=3;
+void HwStr::pushCommon(const std::string &_text, const HwCharType &_hwCharType) {
+    richText.emplace_back(_text, _hwCharType);
+    auto &dataLoader = HwDataLoader::getInstance();
+    auto sym = dataLoader.GetByStrLabel(_text);
+    pushHwData(sym, _hwCharType);
+}
+
+void HwStr::pushSpecText(const HwSpecText &_specText, const HwCharType &_hwCharType) {
+    auto sym = GetSpecText(_specText)->asScript();
+    pushHwData(sym, _hwCharType);
+}
+
+void HwStr::pushBlank() {
+    richText.emplace_back(" ", HwCharType::Normal);
+    floatX += betweenProb(offset, centHeight);
+}
+
+HwCharType HwStr::decideHwCharType(const std::string &_text) const {
+    auto it = sTextMap.find(_text);
+    if (sTextMap.end() != it) {
+        switch (it->second) {
+            case HwSpecText::NegativeElec:
+            case HwSpecText::PositiveElec: {
+                return HwCharType::RightUp;
+            }
+            case HwSpecText::LineRightBracket:
+            case HwSpecText::LineLeftBracket: {
+                return HwCharType::Normal;
+            }
+            default: {
+                return HwCharType::Normal;
+            }
+        }
+    } else if (1 != _text.length()) {
+        return HwCharType::Normal;
+    } else {
+        char c = _text[0];
+        if ('0' <= c && c <= '9')return HwCharType::RightDown;
+        else if ('a' <= c && c <= 'z') {
+            if (byProb(0.6))return HwCharType::Normal;
+            else return HwCharType::RightDown;
+        } else {
+            return HwCharType::Normal;
+        }
+    }
+}
+
+void HwStr::loadRichText(const std::vector<std::string> &_unlabeledText) {
+    floatX = 0;
+    for (auto &text:_unlabeledText) {
+        auto it = sTextMap.find(text);
+        if (sTextMap.end() == it) {
+            pushCommon(text, decideHwCharType(text));
+        } else {
+            if (HwSpecText::Blank == it->second) {
+                pushBlank();
+            } else {
+                auto tp = decideHwCharType(text);
+                richText.emplace_back(text, tp);
+                pushSpecText(it->second, tp);
+            }
+        }
+    }
+}
+
+void HwStr::loadElement(const ElementType &_elementType) {
+    loadPlainText(convertElementTypeToString(_elementType));
+    // override label
     label = convertElementTypeToDetectorClasses(_elementType);
+}
+
+void HwStr::loadPlainText(const std::string &_plainText) {
+    floatX = 0;
+    label = DetectorClasses::ItemHorizontalStr;
+    for (auto &character:_plainText) {
+        pushCommon(std::string(1, character));
+    }
+}
+
+HwStr::HwStr(const ElementType &_elementType) {
+    loadElement(_elementType);
+}
+
+void HwStr::loadRichACSII(const std::string &_text) {
+    std::vector<std::string> text;
+    for (auto &character:_text) {
+        text.push_back(std::string(1, character));
+    }
+    loadRichText(text);
+}
+
+void HwStr::pushHwData(HwScript &_hwScript, const HwCharType &_hwCharType) {
+    _hwScript.rotate(betweenProb(-randAngle, randAngle));
+    if (HwCharType::Normal == _hwCharType) {
+        float w = betweenProb(centHeight, maxHeight);
+        _hwScript.resizeTo(w, w, true);
+        auto rect = _hwScript.getBoundingBox();
+        float offsetY = std::min(offset, (maxHeight - rect->height) / 2);
+        float centY = betweenProb(-offsetY, offsetY) + maxHeight / 2;
+        float offsetX = betweenProb(-offsetW / 3, offsetW) + rect->width / 2;
+        _hwScript.moveCenterTo(cv::Point2f(floatX + offsetX, centY));
+        floatX += (rect->width / 2 + offsetX);
+    } else if (HwCharType::RightDown == _hwCharType) {
+        float w = betweenProb(subCentHeight, subMaxHeight);
+        _hwScript.resizeTo(w, w, true);
+        auto rect = _hwScript.getBoundingBox();
+        float offsetY = ((1 - subStartMinRatio) * maxHeight - rect->height) / 2;
+        float centY = betweenProb(-offsetY, offsetY) + maxHeight * (subStartMinRatio + 1) / 2;
+        float offsetX = betweenProb(-subOffsetW / 3, subOffsetW) + rect->width / 2;
+        _hwScript.moveCenterTo(cv::Point2f(floatX + offsetX, centY));
+        floatX += (rect->width + offsetX);
+    } else if (HwCharType::RightUp == _hwCharType) {
+        float w = betweenProb(subCentHeight, subMaxHeight);
+        _hwScript.resizeTo(w, w, true);
+        auto rect = _hwScript.getBoundingBox();
+        float offsetY = ((1 - subStartMinRatio) * maxHeight - rect->height) / 2;
+        float centY = betweenProb(-offsetY, offsetY) + maxHeight * (subStartMinRatio + 1) / 2;
+        centY = maxHeight - centY;
+        float offsetX = betweenProb(-subOffsetW / 3, subOffsetW) + rect->width / 2;
+        _hwScript.moveCenterTo(cv::Point2f(floatX + offsetX, centY));
+        floatX += (rect->width + offsetX);
+    } else {
+        std::cerr << "unhandled hwCharType: " << (int) _hwCharType << std::endl;
+        exit(-1);
+    }
+    push_back(_hwScript);
 }

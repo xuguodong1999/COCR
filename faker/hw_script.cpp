@@ -184,3 +184,9 @@ size_t HwScript::size() const {
     return mData.size();
 }
 
+void HwScript::append(const HwScript &_hwScript) {
+    for (auto &stroke:_hwScript.mData) {
+        mData.push_back(stroke);
+    }
+}
+

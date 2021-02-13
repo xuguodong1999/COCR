@@ -57,6 +57,7 @@ enum class AtomStereo {
 
 extern std::vector<std::string> ElementsData;
 extern std::unordered_map<ElementType, frac> ElementValenceData;
+extern std::string POS_CHARGE_TEXT, NEG_CHARGE_TEXT;
 
 DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementType);
 

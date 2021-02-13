@@ -25,28 +25,20 @@ int gen_str_text() {
     return 0;
 }
 
+#include <opencv2/imgproc.hpp>
+
 int gen_str() {
     srand(22);
     HwDataLoader::getInstance();
-    int w = 100;
+    int w = 640;
     int h = 32;
     cv::Point2f center(w / 2, h / 2);
     cv::Mat mat(h, w, CV_8UC3, getScalar(ColorName::rgbWhite));
-
-//    HwStr hwStr;
-//    hwStr.push_char("C", HwCharType::Normal);
-//    hwStr.push_char("1", HwCharType::RightBottom);
-//    hwStr.push_char("2", HwCharType::RightBottom);
-//    hwStr.push_char("H", HwCharType::Normal);
-//    hwStr.push_char("2", HwCharType::RightBottom);
-//    hwStr.push_char("5", HwCharType::RightBottom);
-//    hwStr.push_char("-", HwCharType::Normal);
-//    hwStr.push_char("O", HwCharType::Normal);
-//    hwStr.push_char("E", HwCharType::Normal);
-//    hwStr.push_char("t", HwCharType::Normal);
-
-    HwStr hwStr("c-Butyl");
-
+    HwStr hwStr;
+//    hwStr.loadRichACSII("C12H25COO-CH2CH2-C#C-COOEt");
+//    hwStr.loadRichText({"C", "H", "3", "C", "O", "O", NEG_CHARGE_TEXT});
+    hwStr.loadRichText({POS_CHARGE_TEXT, "N", "#", "N", "-", "N", "O", "3", NEG_CHARGE_TEXT});
+//    HwStr hwStr("1111111111");
     hwStr.moveCenterTo(center);
     hwStr.resizeTo(w - 4, h - 4);
     HwController hwController(1);

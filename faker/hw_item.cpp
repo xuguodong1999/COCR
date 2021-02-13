@@ -67,3 +67,11 @@ void HwItem::mulK(float _kx, float _ky) {
         script.mulK(_kx, _ky);
     }
 }
+
+HwScript HwItem::asScript() const {
+    HwScript hwScript;
+    for (auto &script:mData) {
+        hwScript.append(script);
+    }
+    return std::move(hwScript);
+}

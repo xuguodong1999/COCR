@@ -15,7 +15,7 @@ std::vector<std::string> ElementsData = {
         "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No",
         "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn"
 };
-
+std::string POS_CHARGE_TEXT = "⊕", NEG_CHARGE_TEXT = "㊀";
 // FIXME: add all elements you need here
 // H B C N O F Si P S Cl Br I
 std::unordered_map<ElementType, frac> ElementValenceData = {
