@@ -109,8 +109,10 @@ HwCharType HwStr::decideHwCharType(const std::string &_text) const {
         return HwCharType::Normal;
     } else {
         char c = _text[0];
-        if ('0' <= c && c <= '9')return HwCharType::RightDown;
-        else if ('a' <= c && c <= 'z') {
+        if ('0' <= c && c <= '9') {
+            if (byProb(0.6))return HwCharType::RightDownSmall;
+            else return HwCharType::RightDown;
+        } else if ('a' <= c && c <= 'z') {
             if (byProb(0.6))return HwCharType::Normal;
             else return HwCharType::RightDown;
         } else {
@@ -171,16 +173,25 @@ void HwStr::pushHwData(HwScript &_hwScript, const HwCharType &_hwCharType) {
         auto rect = _hwScript.getBoundingBox();
         float offsetY = std::min(offset, (maxHeight - rect->height) / 2);
         float centY = betweenProb(-offsetY, offsetY) + maxHeight / 2;
-        float offsetX = betweenProb(-offsetW / 3, offsetW) + rect->width / 2;
+        float offsetX = betweenProb(0, offsetW) + rect->width / 2;
         _hwScript.moveCenterTo(cv::Point2f(floatX + offsetX, centY));
         floatX += (rect->width / 2 + offsetX);
-    } else if (HwCharType::RightDown == _hwCharType) {
+    } else if (HwCharType::RightDownSmall == _hwCharType) {
         float w = betweenProb(subCentHeight, subMaxHeight);
         _hwScript.resizeTo(w, w, true);
         auto rect = _hwScript.getBoundingBox();
         float offsetY = ((1 - subStartMinRatio) * maxHeight - rect->height) / 2;
         float centY = betweenProb(-offsetY, offsetY) + maxHeight * (subStartMinRatio + 1) / 2;
-        float offsetX = betweenProb(-subOffsetW / 3, subOffsetW) + rect->width / 2;
+        float offsetX = betweenProb(0, subOffsetW) + rect->width / 2;
+        _hwScript.moveCenterTo(cv::Point2f(floatX + offsetX, centY));
+        floatX += (rect->width + offsetX);
+    } else if (HwCharType::RightDown == _hwCharType) {
+        float w = betweenProb(subCentHeight2, subMaxHeight2);
+        _hwScript.resizeTo(w, w, true);
+        auto rect = _hwScript.getBoundingBox();
+        float offsetY = ((1 - subStartMinRatio2) * maxHeight - rect->height) / 2;
+        float centY = betweenProb(-offsetY, offsetY) + maxHeight * (subStartMinRatio2 + 1) / 2;
+        float offsetX = betweenProb(0, subOffsetW2) + rect->width / 2;
         _hwScript.moveCenterTo(cv::Point2f(floatX + offsetX, centY));
         floatX += (rect->width + offsetX);
     } else if (HwCharType::RightUp == _hwCharType) {
@@ -190,7 +201,7 @@ void HwStr::pushHwData(HwScript &_hwScript, const HwCharType &_hwCharType) {
         float offsetY = ((1 - subStartMinRatio) * maxHeight - rect->height) / 2;
         float centY = betweenProb(-offsetY, offsetY) + maxHeight * (subStartMinRatio + 1) / 2;
         centY = maxHeight - centY;
-        float offsetX = betweenProb(-subOffsetW / 3, subOffsetW) + rect->width / 2;
+        float offsetX = betweenProb(0, subOffsetW) + rect->width / 2;
         _hwScript.moveCenterTo(cv::Point2f(floatX + offsetX, centY));
         floatX += (rect->width + offsetX);
     } else {

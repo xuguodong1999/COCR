@@ -536,7 +536,7 @@ void MolOp::addCommonRing(const size_t &_bid) {
     auto from = bond->getAtomFrom(), to = bond->getAtomTo();
     removeBond(_bid);
     std::vector<size_t> nodeNums = {3, 3, 4, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7};
-    size_t &nodeNum = randSelect(nodeNums);
+    auto &nodeNum = randSelect(nodeNums);
     std::vector<size_t> atomicNumbers = {5, 6, 7, 8, 15, 16};
     switch (nodeNum) {
         case 3: {// 三元环

@@ -5,8 +5,9 @@
 
 enum class HwCharType {
     Normal,
-    RightDown,
-    RightUp
+    RightDownSmall,
+    RightUp,
+    RightDown
 };
 
 enum class HwSpecText {
@@ -30,17 +31,19 @@ class HwStr : public HwItem {
     std::vector<std::pair<std::string, HwCharType>> richText;
     DetectorClasses label;
     inline static const float
-            centHeight = 30, offset = 10, offsetW = 3, maxHeight = centHeight + 2 * offset,
-            subCentHeight = 20, subOffset = 5, subOffsetW = 2, subMaxHeight = subCentHeight + 2 * subOffset,
-            subStartMinRatio = 0.5,
-            randAngle = 3;
+            centHeight = 30, offset = 10, offsetW = 10, maxHeight = centHeight + 2 * offset,
+            subCentHeight = 20, subOffset = 5, subOffsetW = 5, subMaxHeight =
+            subCentHeight + 2 * subOffset, subStartMinRatio = 0.5,
+            randAngle = 3,
+            subCentHeight2 = 27, subOffset2 = 5, subOffsetW2 = 8, subMaxHeight2 =
+            subCentHeight2 + 2 * subOffset2, subStartMinRatio2 = 0.3;
     inline static std::unordered_map<std::string, HwSpecText> sTextMap = {
-            {POS_CHARGE_TEXT, HwSpecText::PositiveElec},
-            {NEG_CHARGE_TEXT, HwSpecText::NegativeElec},
-            {" ",             HwSpecText::Blank},// 空格
-            {"(",             HwSpecText::LineLeftBracket},
-            {")",             HwSpecText::LineRightBracket},
-            {"#",             HwSpecText::TripleHorizontalLine},
+            {"+", HwSpecText::PositiveElec},
+            {"_", HwSpecText::NegativeElec},
+            {" ", HwSpecText::Blank},// 空格
+//            {"(",             HwSpecText::LineLeftBracket},
+//            {")",             HwSpecText::LineRightBracket},
+            {"#", HwSpecText::TripleHorizontalLine},
     };
 
 

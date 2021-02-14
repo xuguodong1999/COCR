@@ -74,7 +74,15 @@ inline float minMaxProb(const float &_posProb) {
  * @return
  */
 template<typename T>
-inline T &randSelect(std::vector<T> &_container) {
+inline const T &randSelect(const std::vector<T> &_container) {
+    if (_container.empty()) {
+        std::cerr << "randSelect empty container" << std::endl;
+        exit(-1);
+    }
+    return _container[rand() % _container.size()];
+}
+
+inline const char &randSelect(const std::string &_container) {
     if (_container.empty()) {
         std::cerr << "randSelect empty container" << std::endl;
         exit(-1);
@@ -101,7 +109,7 @@ inline T getSum(const std::vector<T> &_container) {
  * @return
  */
 template<typename T>
-inline T &randSelect(std::vector<T> &_container, const std::vector<float> &_probMap) {
+inline const T &randSelect(const std::vector<T> &_container, const std::vector<float> &_probMap) {
     if (_container.empty()) {
         std::cerr << "randSelect empty container" << std::endl;
         exit(-1);

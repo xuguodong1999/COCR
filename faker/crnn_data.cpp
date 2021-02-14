@@ -14,6 +14,10 @@
 #include <opencv2/highgui.hpp>
 
 CRNNDataGenerator::CRNNDataGenerator() : isInited(false) {
+    std_alphabet_set.clear();
+    for (auto &c:std_alphabet) {
+        std_alphabet_set.insert(c);
+    }
 }
 
 bool CRNNDataGenerator::init(const char *_topDir) {
@@ -22,21 +26,20 @@ bool CRNNDataGenerator::init(const char *_topDir) {
         if (!std::filesystem::create_directories(topDir)) {
             std::cerr << "fail to create dir: " << topDir << std::endl;
             exit(-1);
-            return false;
         }
     }
     isInited = true;
+    getChemTexts();
+    getDictTexts();
+    std::cout << "chemTexts.size()=" << chemTexts.size() << ", dictTexts.size()="
+              << dictTexts.size() << std::endl;
+    getRandomTexts(chemTexts.size() + dictTexts.size());
     return true;
 }
 
-static std::vector<HwController> controllers = {
-        HwController(3),
-        HwController(4),
-        HwController(5),
-        HwController(6),
-        HwController(7),
-        HwController(8),
-};
+static const std::vector<int> fontChoices = {
+        cv::FONT_HERSHEY_SIMPLEX, cv::FONT_HERSHEY_DUPLEX, cv::FONT_HERSHEY_COMPLEX,
+        cv::FONT_HERSHEY_TRIPLEX};
 
 void CRNNDataGenerator::dump() {
     if (!isInited) {
@@ -45,104 +48,193 @@ void CRNNDataGenerator::dump() {
     }
     auto env = lmdb::env::create();
     env.set_mapsize(1UL * 1024UL * 1024UL * 1024UL * 1024UL); // 1 TB
-    auto dbPath = topDir + "/" + dbName;
-    if (std::filesystem::exists(dbPath)) {
-        std::filesystem::remove(dbPath);
-        if (std::filesystem::exists(dbPath)) {
-            std::cerr << "fail to delete file " << dbPath << std::endl;
-            exit(-1);
-        }
-    }
-    std::cout << "path=" << dbPath << std::endl;
     env.open(topDir.c_str(), 0, 0664);
     auto wtxn = lmdb::txn::begin(env);
     auto dbi = lmdb::dbi::open(wtxn, nullptr);
-    LineTextDataCreator lineTextDataCreator;
-//    lineTextDataCreator.loadFromPattern();
-    lineTextDataCreator.loadFromWordDict();
-    size_t idx = 0;
-    lineTextDataCreator.loopOnce([&](const std::string &_text) {
+    std::string text;
+    int textType;
+    for (size_t idx = 0; idx <= 500000; idx++) {
+        if (byProb(0.4)) {//四六开
+            text = randSelect(chemTexts);
+            textType = 2;
+        } else if (byProb(0.5)) {//五五开
+            text = randSelect(randomTexts);
+            textType = 0;
+        } else {
+            text = randSelect(dictTexts);
+            textType = 1;
+        }
+        auto[buffer, label]=getSample(text, textType);
+        char a[100];
+        sprintf(a, imgKey, idx);
+        dbi.put(wtxn, a, buffer.data());
+        sprintf(a, labelKey, idx);
+        dbi.put(wtxn, a, label.c_str());
+        if (idx % 10000 == 9999) {
+//            wtxn.commit();
+            std::cout<<"idx="<<idx<<std::endl;
+        }
+    }
+    wtxn.commit();
+}
+
+std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
+        const std::string &_text, int _type) {
+    float k = betweenProb(1.3, 2.2);
+    cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
+                          getScalar(ColorName::rgbWhite));
+    if (byProb(0.5) && std::string::npos == _text.find("#") &&
+        std::string::npos == _text.find("_") &&
+        std::string::npos == _text.find("+")) {// 机打数据
+        cv::putText(img, _text, cv::Point(0, height * k / 1.25),
+                    randSelect(fontChoices), 1.5, getScalar(ColorName::rgbBlack),
+                    1, cv::LINE_AA, false);
+    } else {// 手写数据
         HwStr hwStr;
-        hwStr.loadRichACSII(_text);
-        float k = betweenProb(1.3, 2.2);
+        if (0 == _type) {// 随机字符
+            hwStr.loadRichACSII(_text);
+        } else if (1 == _type) {// 字典内容
+            if (byProb(0.1)) {
+                hwStr.loadRichACSII(_text);
+            } else {
+                hwStr.loadPlainText(_text);
+            }
+        } else {
+            hwStr.loadRichACSII(_text);
+        }
         hwStr.resizeTo(width * k - 4, height * k - 4, true);
         auto rect = hwStr.getBoundingBox().value();
         if (rect.width > width * k - 4) {
             hwStr.resizeTo(width * k - 4, height * k - 4, false);
         }
-        cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
-                              getScalar(ColorName::rgbWhite));
         HwController hwController(2);
         hwStr.setHwController(hwController);
         hwStr.moveLeftTopTo(cv::Point2f(1, 1));
         hwStr.paintTo(img);
-        cv::resize(img, img, cv::Size(width, height), 0, 0, cv::INTER_CUBIC);
-        if (byProb(0.5)) {// 反转颜色
-            cv::bitwise_not(img, img);
-        }
-        std::vector<uchar> buffer;
-        cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
-        buffer.push_back('\0');
-        std::cout << "********************\nlabel=" << _text << std::endl;
-        char a[100];
-        sprintf(a, imgKey, idx);
-        std::cout << "image-key=" << a << std::endl;
-        dbi.put(wtxn, a, buffer.data());
-        sprintf(a, labelKey, idx++);
-        std::cout << "label-key=" << a << std::endl;
-        dbi.put(wtxn, a, _text.c_str());
-//        wtxn.commit();
-        if (idx > 30000) {
-            wtxn.commit();
-            exit(-1);
-        }
-    });
-    wtxn.commit();
+    }
+    cv::resize(img, img, cv::Size(width, height), 0, 0, cv::INTER_CUBIC);
+    if (byProb(0.5)) {// 反转颜色
+        cv::bitwise_not(img, img);
+    }
+    std::vector<uchar> buffer;
+    cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
+    buffer.push_back('\0');
+    return {std::move(buffer), std::move(convertToKey(_text))};
 }
 
 void CRNNDataGenerator::display() {
-    LineTextDataCreator lineTextDataCreator;
-//    lineTextDataCreator.loadFromPattern();
-    lineTextDataCreator.loadFromWordDict();
-//    lineTextDataCreator.loadFromSuperAtom();
-
-    size_t idx = 0;
-    lineTextDataCreator.loopOnce([&](const std::string &_text) {
-        HwStr hwStr;
-        hwStr.loadRichACSII(_text);
-        float k = betweenProb(1.3, 2.2);
-        hwStr.resizeTo(width * k - 4, height * k - 4, true);
-        auto rect = hwStr.getBoundingBox().value();
-        if (rect.width > width * k - 4) {
-            hwStr.resizeTo(width * k - 4, height * k - 4, false);
+    if (!isInited) {
+        std::cerr << "you must call CRNNDataGenerator::init before dump data" << std::endl;
+        exit(-1);
+    }
+    std::string text;
+    int textType;
+    for (size_t idx = 0; idx <= 500000; idx++) {
+        if (byProb(0.4)) {//四六开
+            text = randSelect(chemTexts);
+            textType = 2;
+        } else if (byProb(0.5)) {//五五开
+            text = randSelect(randomTexts);
+            textType = 0;
+        } else {
+            text = randSelect(dictTexts);
+            textType = 1;
         }
-        cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
-                              getScalar(ColorName::rgbWhite));
-        HwController hwController(2);
-        hwStr.setHwController(hwController);
-        hwStr.moveLeftTopTo(cv::Point2f(1, 1));
-//        hwStr.paintTo(img);
-        cv::putText(img, _text, cv::Point(0,height * k/1.4),
-                    2, 1.5, getScalar(ColorName::rgbBlack),
-                    1, cv::LINE_AA,false);
-        cv::resize(img, img, cv::Size(width, height), 0, 0, cv::INTER_CUBIC);
-        if (byProb(0.5)) {// 反转颜色
-            cv::bitwise_not(img, img);
-        }
-        std::vector<uchar> buffer;
-        cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
-        buffer.push_back('\0');
-        std::cout << "********************\nlabel=" << _text << std::endl;
+        auto[buffer, label]=getSample(text, textType);
+        std::cout << "********************\nlabel=" << label << std::endl;
         char a[100];
         sprintf(a, imgKey, idx);
         std::cout << "image-key=" << a << std::endl;
-        sprintf(a, labelKey, idx++);
+        sprintf(a, labelKey, idx);
         std::cout << "label-key=" << a << std::endl;
-
-
-        auto img2 = cv::imdecode(buffer, CV_8UC1);
-        cv::imshow("origin-data", img);
-        cv::imshow("ed-data", img2);
+        auto img = cv::imdecode(buffer, CV_8UC1);
+        cv::imshow("fuck", img);
         cv::waitKey(0);
-    });
+    }
+}
+
+void CRNNDataGenerator::getDictTexts() {
+    LineTextDataCreator dc;
+    dc.loadFromWordDict();
+    std::unordered_set<std::string> textSet;
+    for (auto &text:dc.getWordSet()) {
+        if (text.length() <= MAX_TEXT_LENGTH) {
+            textSet.insert(text);
+        }
+    }
+    dictTexts.clear();
+    dictTexts.reserve(textSet.size());
+    for (auto &text:textSet) {
+        dictTexts.push_back(text);
+    }
+//    std::cout << textSet.size() << std::endl;
+//    std::unordered_set<char> charSet;
+//    for (auto &text:textSet) {
+//        for (auto &c:text)charSet.insert(c);
+//    }
+//    for (auto &c:charSet) {
+//        alphabet.push_back(c);
+//    }
+//    alphabet = convertToKey(alphabet);
+//    charSet.clear();
+//    for (auto &c:alphabet) {
+//        charSet.insert(c);
+//    }
+//    alphabet.clear();
+//    for (auto &c:charSet) {
+//        alphabet.push_back(c);
+//    }
+//    std::sort(alphabet.begin(), alphabet.end());
+//    std::cout << "alphabet=" << alphabet << std::endl;
+}
+
+std::string CRNNDataGenerator::convertToKey(const std::string &_key) const {
+    std::string key;
+    key.reserve(_key.size());
+    for (auto &c:_key) {
+        if (notExist(std_alphabet_set, c)) {
+            if (std::isalpha(c)) {
+                key.push_back(std::tolower(c));
+            } else {
+                std::cerr << "unhandled char: " << c << std::endl;
+                exit(-1);
+            }
+        } else {
+            key.push_back(c);
+        }
+    }
+    return std::move(key);
+}
+
+void CRNNDataGenerator::getRandomTexts(const size_t &_num, const size_t &_len) {
+    std::unordered_set<std::string> tmpTextSet;
+    std::string tmp;
+    tmp.resize(_len);
+    while (tmpTextSet.size() < _num) {
+        for (size_t i = 0; i < _len; i++) {
+            tmp[i] = randSelect(std_alphabet);
+        }
+        tmpTextSet.insert(tmp);
+    }
+    randomTexts.clear();
+    randomTexts.reserve(tmpTextSet.size());
+    for (auto &text:tmpTextSet) {
+        randomTexts.push_back(text);
+    }
+}
+
+void CRNNDataGenerator::getChemTexts() {
+    LineTextDataCreator dc;
+    dc.loadFromPattern();
+    std::unordered_set<std::string> textSet;
+    for (auto &text:dc.getWordSet()) {
+        if (text.length() <= MAX_TEXT_LENGTH) {
+            textSet.insert(text);
+        }
+    }
+    chemTexts.clear();
+    chemTexts.reserve(textSet.size());
+    for (auto &text:textSet) {
+        chemTexts.push_back(text);
+    }
 }

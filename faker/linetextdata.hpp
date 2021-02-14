@@ -42,8 +42,13 @@ struct HashSpliceableText {
 
 class LineTextDataCreator {
     std::unordered_set<char> charSet;
+
     std::unordered_set<std::string> wordSet;
 public:
+    const std::unordered_set<char> &getCharSet() const;
+
+    const std::unordered_set<std::string> &getWordSet() const;
+
     void loadFromSuperAtom(const char *_filepath =
     ":/obdata/superatom.txt");
 

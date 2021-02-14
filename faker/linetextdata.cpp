@@ -20,11 +20,11 @@ const std::string &SpliceableText::getRaw() const {
 }
 
 std::string SpliceableText::getRand() const {
-    if (l && r) {
+    if (l && r && byProb(0.6)) {
         return cons[rand() % std::min(l, 3)] + text + cons[rand() % std::min(r, 3)];
-    } else if (l) {
+    } else if (l && byProb(0.6)) {
         return cons[rand() % std::min(l, 3)] + text;
-    } else if (r) {
+    } else if (r && byProb(0.6)) {
         // 右侧有自由基
         return text + cons[rand() % std::min(r, 3)];
     } else {
@@ -164,6 +164,10 @@ void LineTextDataCreator::loadFromWordDict(const char *_filepath) {
         auto text = key.simplified();
         wordSet.insert(text.toLower().toStdString());
         wordSet.insert(text.toUpper().toStdString());
+        if (text.length() > 1) {
+            wordSet.insert((text[0].toUpper() + text.mid(1).toLower()).toStdString());
+        }
+
     }
     updateCharSet();
 }
@@ -209,20 +213,23 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
 
     std::unordered_set<std::string> fruits;
     std::vector<std::string> c4, c3, c2, c1;
-//    c4 = {"C", "C", "C", "C", "Si", "Ge", "Sn", "Pb"};
-//    c3 = {"N", "N", "N", "N", "P", "As", "Sb", "Bi", "Al"};
-//    c2 = {"O", "S", "O", "S", "O", "S", "Mg", "Zn"};
-//    c1 = {"F", "Cl", "Br", "I", "H", "H", "H", "H"};
-    c4 = {"C"};
-    c3 = {"N"};
-    c2 = {"O", "S"};
-    c1 = {"H"};
+    c4 = {"C", "C", "C", "C"};
+    c3 = {"N", "N", "N", "N", "P", "Al"};
+    c2 = {"O", "S", "O", "S", "O", "S", "Mg", "Zn"};
+    c1 = {"F", "Cl", "Br", "I", "H", "H", "H", "H"};
+//    c4 = {"C"};
+//    c3 = {"N"};
+//    c2 = {"O", "S"};
+//    c1 = {"H"};
     for (int i = 0; i < 10; i++) {
         for (auto &str:c4) {
             originSTVec.emplace_back(str, 3, 1);
             originSTVec.emplace_back(str, 1, 3);
             originSTVec.emplace_back(str, 2, 2);
             originSTVec.emplace_back(str + randSelect(c1) + "3", 1, 0);//-CH3
+            originSTVec.emplace_back(str + "(" + str + randSelect(c1) + "3)3", 1, 0);//-C(CH3)3
+            originSTVec.emplace_back(str + "H(" + str + randSelect(c1) + "3)2", 1, 0);//-CH(CH3)2
+            originSTVec.emplace_back(str + "(" + str + randSelect(c1) + "3)2", 2, 0);//=C(CH3)2
             originSTVec.emplace_back(str + randSelect(c1) + "3", 0, 1);//CH3-
             originSTVec.emplace_back(randSelect(c1) + "3" + str, 0, 1);//H3C-
             originSTVec.emplace_back(str + randSelect(c1) + "2", 2, 0);//=CH2
@@ -266,24 +273,28 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
         try {
             iss_line >> a;
             if (!a.empty() && '#' == a[0])continue;
-//            iss_line >> b;
-//            if ('-' != a.front() && '-' != a.back())
-//                originSTVec.emplace_back(a, 1, 0);//CO2H
-//            if ('-' != b.front() && '-' != b.back())
-//                originSTVec.emplace_back(b, 0, 1);//HO2C
+            iss_line >> b;
+            if ('-' != a.front() && '-' != a.back()) {
+                originSTVec.emplace_back(a, 1, 0);//CO2H
+            }
+            if ('-' != b.front() && '-' != b.back()) {
+                originSTVec.emplace_back(b, 0, 1);//HO2C
+            }
         } catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
         }
     }
     std::cout << "step2.size=" << originSTVec.size() << std::endl;
-    size_t maxLoop = 4;
-    for (size_t i = 2; i <= maxLoop; i++) {
-        originSTVec.emplace_back(
-                randSelect(c4) + std::to_string(i) +
-                randSelect(c1) + std::to_string(2 * i), 1, 1);
-        originSTVec.emplace_back(
-                randSelect(c3) + std::to_string(i) +
-                randSelect(c1) + std::to_string(i), 1, 1);
+    size_t maxLoop = 19;
+    for (int j = 0; j < 10; j++) {
+        for (size_t i = 2; i <= maxLoop; i++) {
+            originSTVec.emplace_back(
+                    randSelect(c4) + std::to_string(i) +
+                    randSelect(c1) + std::to_string(2 * i), 1, 1);
+            originSTVec.emplace_back(
+                    randSelect(c3) + std::to_string(i) +
+                    randSelect(c1) + std::to_string(i), 1, 1);
+        }
     }
     std::cout << "step3.size=" << originSTVec.size() << std::endl;
     for (auto &st:originSTVec) {
@@ -292,7 +303,7 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
     originSTVec.clear();
     originSTVec.reserve(originST.size());
     for (auto &st:originST) {
-        originSTVec.push_back(std::move(st));
+        originSTVec.push_back(st);
     }
     std::cout << "step4.size=" << originSTVec.size() << std::endl;
 //    for (auto &st:originSTVec) {
@@ -302,17 +313,54 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
 //    exit(-1);
     tempST = originST;
     tempSTVec = originSTVec;
-    while (fruits.size() < 500) {
+    for (auto &st3:originSTVec) {
+        auto str = st3.getRaw();
+        if (str.length() <= 7) {// 且不存在
+            fruits.insert(str);
+            if (str.front() == '-') {
+                auto str2 = str;
+                str2.front() = '+';
+                fruits.insert(str2);
+                str2.front() = '_';
+                fruits.insert(str2);
+            }
+            if (str.back() == '-') {
+                auto str2 = str;
+                str2.front() = '+';
+                fruits.insert(str2);
+                str2.front() = '_';
+                fruits.insert(str2);
+            }
+        }
+        str = st3.getNeutral();
+        if (str.length() <= 7) {// 且不存在
+            fruits.insert(str);
+            if (str.front() == '-') {
+                auto str2 = str;
+                str2.front() = '+';
+                fruits.insert(str2);
+                str2.front() = '_';
+                fruits.insert(str2);
+            }
+            if (str.back() == '-') {
+                auto str2 = str;
+                str2.front() = '+';
+                fruits.insert(str2);
+                str2.front() = '_';
+                fruits.insert(str2);
+            }
+        }
+    }
+    while (fruits.size() < 1000) {
         auto st1 = randSelect(originSTVec);
         auto st2 = randSelect(tempSTVec);
         if (byProb(0.5))std::swap(st1, st2);
         auto st3 = joinSpliceableText(st1, st2);
         if (st3 && !st3->isFull()) {// 满足新建条件
             auto str = st3->getNeutral();
-            if (str.length() < 10 && notExist(tempST, st3.value())) {// 且不存在
+            if (str.length() <= 7 && notExist(tempST, st3.value())) {// 且不存在
                 tempST.insert(st3.value());
                 tempSTVec.push_back(st3.value());
-                std::cout << str << std::endl;
                 fruits.insert(std::move(str));
             }
         }
@@ -322,4 +370,12 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
         wordSet.insert(st);
     }
     updateCharSet();
+}
+
+const std::unordered_set<char> &LineTextDataCreator::getCharSet() const {
+    return charSet;
+}
+
+const std::unordered_set<std::string> &LineTextDataCreator::getWordSet() const {
+    return wordSet;
 }
