@@ -81,3 +81,5 @@ cmake-*/
 soso-data/
 *.onnx
 __pycache__/
+saved_models/
+*.mdb

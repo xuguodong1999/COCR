@@ -211,3 +211,21 @@ void HwStr::pushHwData(HwScript &_hwScript, const HwCharType &_hwCharType) {
     push_back(_hwScript);
 }
 
+void HwStr::equalize(const float &_width) {
+    auto rect = getBoundingBox().value();
+    float w = _width;
+    std::vector<cv::Rect2f> rectVec;
+    for (auto &script:mData) {
+        auto rect0 = script.getBoundingBox().value();
+        w -= rect0.width;
+        rectVec.push_back(rect0);
+    }
+    w /= (mData.size() + 1);
+    floatX = rect.x + w;
+    for (size_t i = 0; i < mData.size(); i++) {
+        auto &rect0 = rectVec[i];
+        mData[i].moveLeftTopTo(cv::Point2f(floatX, rect0.y));
+        floatX += (rect0.width + w);
+    }
+}
+

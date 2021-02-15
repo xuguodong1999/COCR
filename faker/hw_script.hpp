@@ -11,6 +11,7 @@ class HwScript : public HwBase {
     HwController *hwController;
 public:
     float getAvgMaxSize() const;
+
     size_t size() const;
 
     void append(const HwScript &_hwScript);

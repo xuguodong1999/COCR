@@ -3,13 +3,12 @@
 
 using namespace std;
 #ifdef WIN32
-string WORKSPACE("C:/source/COCR/cache");
+string WORKSPACE("C:/source/repos/jokejoker/workspace");
 #else
-string WORKSPACE("/home/xgd/source/COCR");
+string WORKSPACE("/home/xgd/source/repos/jokejoker/workspace/");
 #endif
-string DATA_DIR(WORKSPACE + "/data");
 
-string COUCH_DIR(DATA_DIR + "/couch");
+string COUCH_DIR(WORKSPACE + "/couch");
 
 string COUCH_SYM_PATH(COUCH_DIR + "/couch-sym.dat");
 

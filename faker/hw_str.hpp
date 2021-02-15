@@ -66,6 +66,11 @@ class HwStr : public HwItem {
                     const HwCharType &_hwCharType = HwCharType::Normal);
 
 public:
+    /**
+     * 在当前包围盒中均匀分布所有图元的包围盒
+     */
+    void equalize(const float &_width);
+
     DetectorClasses getItemType() const override;
 
     static std::shared_ptr<HwItem> GetSpecText(const HwSpecText &_specText);

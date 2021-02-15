@@ -17,15 +17,16 @@
 #include <iostream>
 #include <fstream>
 
-
+std::string ROOT_DIR="/home/xgd/source/repos/jokejoker/";
+std::string std_alphabet = "-=#+_()0123456789ABDEFGHLNQRTYabcdefghijklmnopqrstuvwxyz";
 void test_crnn() {
     int rgb = cv::IMREAD_GRAYSCALE;
     cv::Mat image = cv::imread(
-            "/home/xgd/source/repos/jokejoker/soso-data/demo.jpg",
+    ROOT_DIR+"soso-data/demo.jpg",
 //            "/home/xgd/source/crnn.pytorch/data/demo2.png",
             rgb);
     cv::dnn::TextRecognitionModel model(
-            "/home/xgd/source/ocr.pytorch/crnn.onnx"//1x47x57 47-192
+            ROOT_DIR+"crnn.pytorch/crnn.onnx"//1x47x57 47-192
 //            "/home/xgd/source/crnn.pytorch/data/crnn.onnx"//26x1x37 26-100
             );
     auto &net = model.getNetwork_();
@@ -33,18 +34,11 @@ void test_crnn() {
 //        std::cout << l << std::endl;
 //    }
     model.setDecodeType("CTC-greedy");
-    std::ifstream vocFile;
-    vocFile.open(
-            "/home/xgd/source/repos/jokejoker/soso-data/alphabet_56.txt"
-//            "/home/xgd/source/crnn.pytorch/data/alphabet_36.txt"
-            );
-    CV_Assert(vocFile.is_open());
-    cv::String vocLine;
-    std::vector<cv::String> vocabulary;
-    while (std::getline(vocFile, vocLine)) {
-        vocabulary.push_back(vocLine);
+    std::vector<std::string> vocabulary;
+    for(auto&s:std_alphabet){
+        vocabulary.push_back(std::string(1,s));
     }
-    std::cout << "vocabulary.size=" << vocabulary.size() << std::endl;
+
     model.setVocabulary(vocabulary);
     auto vb=model.getVocabulary();
     for(auto&v:vb){

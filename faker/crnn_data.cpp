@@ -14,14 +14,16 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
+std::string SOSO_ALPHABET = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty";
+
 CRNNDataGenerator::CRNNDataGenerator() : isInited(false) {
-    std_alphabet_set.clear();
-    for (auto &c:std_alphabet) {
-        std_alphabet_set.insert(c);
+    alphabetSet.clear();
+    for (auto &c:SOSO_ALPHABET) {
+        alphabetSet.insert(c);
     }
 }
 
-bool CRNNDataGenerator::init(const char *_topDir) {
+bool CRNNDataGenerator::init(const std::string &_topDir) {
     topDir = _topDir;
     if (!std::filesystem::exists(topDir)) {
         if (!std::filesystem::create_directories(topDir)) {
@@ -29,7 +31,14 @@ bool CRNNDataGenerator::init(const char *_topDir) {
             exit(-1);
         }
     }
-    auto imgPath = topDir + "/" + imgDir;
+    auto imgPath = topDir + trainDir + imgDir;
+    if (!std::filesystem::exists(imgPath)) {
+        if (!std::filesystem::create_directories(imgPath)) {
+            std::cerr << "fail to create dir: " << imgPath << std::endl;
+            exit(-1);
+        }
+    }
+    imgPath = topDir + testDir + imgDir;
     if (!std::filesystem::exists(imgPath)) {
         if (!std::filesystem::create_directories(imgPath)) {
             std::cerr << "fail to create dir: " << imgPath << std::endl;
@@ -49,7 +58,7 @@ static const std::vector<int> fontChoices = {
         cv::FONT_HERSHEY_SIMPLEX, cv::FONT_HERSHEY_DUPLEX, cv::FONT_HERSHEY_COMPLEX,
         cv::FONT_HERSHEY_TRIPLEX};
 
-void CRNNDataGenerator::dump(const size_t& SAMPLE_NUM) {
+void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
     if (!isInited) {
         std::cerr << "you must call CRNNDataGenerator::init before dump data" << std::endl;
         exit(-1);
@@ -61,9 +70,10 @@ void CRNNDataGenerator::dump(const size_t& SAMPLE_NUM) {
 //    auto dbi = lmdb::dbi::open(wtxn, nullptr);
     std::string text;
     int textType;
-    std::ofstream ofsm(topDir + "/" + gtFileName);
-//    dbi.put(wtxn, "num-samples", std::to_string(SAMPLE_NUM).c_str());
-    for (size_t idx = 0; idx <= SAMPLE_NUM; idx++) {
+    std::string trainLabelFile = topDir + trainDir + gtFileName, testLabelFile = topDir + testDir + gtFileName;
+    std::ofstream trainOfsm(trainLabelFile), testOfsm(testLabelFile);
+//    dbi.put(wtxn, "num-samples", std::to_string(_trainNum).c_str());
+    for (size_t idx = 0; idx < _trainNum; idx++) {
         if (byProb(0.4)) {//四六开
             text = randSelect(chemTexts);
             textType = 2;
@@ -77,9 +87,9 @@ void CRNNDataGenerator::dump(const size_t& SAMPLE_NUM) {
         auto[buffer, label]=getSample(text, textType);
         auto img = cv::imdecode(buffer, CV_8UC1);
         std::string filename = std::to_string(idx) + ".jpg";
-        std::string file_path = topDir + "/" + imgDir + "/" + filename;
+        std::string file_path = topDir + trainDir + imgDir + filename;
         cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
-        ofsm << filename << "\t" << label << "\n";
+        trainOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
 //        dbi.put(wtxn, a,"fuck");
@@ -87,18 +97,48 @@ void CRNNDataGenerator::dump(const size_t& SAMPLE_NUM) {
 //        sprintf(a, labelKey, idx);
 //        dbi.put(wtxn, a, label.c_str(), label.length()+1, true);
 //        dbi.put(wtxn, a,"fuck");
-        if (idx % (SAMPLE_NUM / 20) == SAMPLE_NUM / 20 - 1) {
+        if (idx % (_trainNum / 20) == _trainNum / 20 - 1) {
 //            wtxn.commit();
             std::cout << "idx=" << idx << std::endl;
         }
     }
-    ofsm.close();
+    trainOfsm.close();
+    for (size_t idx = 0; idx < _testNum; idx++) {
+        if (byProb(0.4)) {//四六开
+            text = randSelect(chemTexts);
+            textType = 2;
+        } else if (byProb(0.5)) {//五五开
+            text = randSelect(randomTexts);
+            textType = 0;
+        } else {
+            text = randSelect(dictTexts);
+            textType = 1;
+        }
+        auto[buffer, label]=getSample(text, textType);
+        auto img = cv::imdecode(buffer, CV_8UC1);
+        std::string filename = std::to_string(idx) + ".jpg";
+        std::string file_path = topDir + testDir + imgDir + filename;
+        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
+        testOfsm << filename << "\t" << label << "\n";
+//        char a[100];
+//        sprintf(a, imgKey, idx);
+//        dbi.put(wtxn, a,"fuck");
+//        dbi.put(wtxn, a, buffer.data(), buffer.size()+1, true);
+//        sprintf(a, labelKey, idx);
+//        dbi.put(wtxn, a, label.c_str(), label.length()+1, true);
+//        dbi.put(wtxn, a,"fuck");
+        if (idx % (_testNum / 20) == _testNum / 20 - 1) {
+//            wtxn.commit();
+            std::cout << "idx=" << idx << std::endl;
+        }
+    }
+    testOfsm.close();
 //    wtxn.commit();
 }
 
 std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         const std::string &_text, int _type) {
-    float k = betweenProb(1.3, 2.2);
+    float k = betweenProb(1.5, 2.2);
     cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
                           getScalar(ColorName::rgbWhite));
     if (byProb(0.5) && std::string::npos == _text.find("#") &&
@@ -124,6 +164,9 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         auto rect = hwStr.getBoundingBox().value();
         if (rect.width > width * k - 4) {
             hwStr.resizeTo(width * k - 4, height * k - 4, false);
+        }
+        if (byProb(0.2)) {// 均匀化间隔
+            hwStr.equalize(width * k - 4);
         }
         HwController hwController(2);
         hwStr.setHwController(hwController);
@@ -210,9 +253,9 @@ std::string CRNNDataGenerator::convertToKey(const std::string &_key) const {
     std::string key;
     key.reserve(_key.size());
     for (auto &c:_key) {
-        if (notExist(std_alphabet_set, c)) {
+        if (notExist(alphabetSet, c)) {
             if (std::isalpha(c)) {
-                key.push_back(std::tolower(c));
+                key.push_back(std::toupper(c));
             } else {
                 std::cerr << "unhandled char: " << c << std::endl;
                 exit(-1);
@@ -230,7 +273,7 @@ void CRNNDataGenerator::getRandomTexts(const size_t &_num, const size_t &_len) {
     tmp.resize(_len);
     while (tmpTextSet.size() < _num) {
         for (size_t i = 0; i < _len; i++) {
-            tmp[i] = randSelect(std_alphabet);
+            tmp[i] = randSelect(SOSO_ALPHABET);
         }
         tmpTextSet.insert(tmp);
     }

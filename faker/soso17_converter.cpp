@@ -462,7 +462,7 @@ void SOSO17Converter::then() {
                     break;
                 }
             }
-            std::cout<<"needAromatic="<<needAromatic<<"\n";
+            std::cout << "needAromatic=" << needAromatic << "\n";
             if (!needAromatic) continue;
             std::unordered_set<size_t> aidSet;
             for (auto &id:ring)aidSet.insert(id);

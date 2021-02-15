@@ -19,9 +19,11 @@ public:
 
     friend std::optional<SpliceableText> joinSpliceableText(
             const SpliceableText &_st1, const SpliceableText &_st2);
-    bool isFull()const;
 
-    bool operator==(const SpliceableText & _st) const;
+    bool isFull() const;
+
+    bool operator==(const SpliceableText &_st) const;
+
     explicit SpliceableText();
 
     explicit SpliceableText(std::string _text, int _l, int _r);
