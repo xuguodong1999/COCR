@@ -4,9 +4,10 @@
 #include "colors.hpp"
 #include "std_util.hpp"
 
-#include <lmdb++.h>
+//#include "lmdb++.h"
 
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -28,6 +29,13 @@ bool CRNNDataGenerator::init(const char *_topDir) {
             exit(-1);
         }
     }
+    auto imgPath = topDir + "/" + imgDir;
+    if (!std::filesystem::exists(imgPath)) {
+        if (!std::filesystem::create_directories(imgPath)) {
+            std::cerr << "fail to create dir: " << imgPath << std::endl;
+            exit(-1);
+        }
+    }
     isInited = true;
     getChemTexts();
     getDictTexts();
@@ -41,19 +49,21 @@ static const std::vector<int> fontChoices = {
         cv::FONT_HERSHEY_SIMPLEX, cv::FONT_HERSHEY_DUPLEX, cv::FONT_HERSHEY_COMPLEX,
         cv::FONT_HERSHEY_TRIPLEX};
 
-void CRNNDataGenerator::dump() {
+void CRNNDataGenerator::dump(const size_t& SAMPLE_NUM) {
     if (!isInited) {
         std::cerr << "you must call CRNNDataGenerator::init before dump data" << std::endl;
         exit(-1);
     }
-    auto env = lmdb::env::create();
-    env.set_mapsize(1UL * 1024UL * 1024UL * 1024UL * 1024UL); // 1 TB
-    env.open(topDir.c_str(), 0, 0664);
-    auto wtxn = lmdb::txn::begin(env);
-    auto dbi = lmdb::dbi::open(wtxn, nullptr);
+//    auto env = lmdb::env::create();
+//    env.set_mapsize(1UL * 1024UL * 1024UL * 1024UL * 1024UL); // 1 TB
+//    env.open(topDir.c_str(), 0, 0664);
+//    auto wtxn = lmdb::txn::begin(env);
+//    auto dbi = lmdb::dbi::open(wtxn, nullptr);
     std::string text;
     int textType;
-    for (size_t idx = 0; idx <= 500000; idx++) {
+    std::ofstream ofsm(topDir + "/" + gtFileName);
+//    dbi.put(wtxn, "num-samples", std::to_string(SAMPLE_NUM).c_str());
+    for (size_t idx = 0; idx <= SAMPLE_NUM; idx++) {
         if (byProb(0.4)) {//四六开
             text = randSelect(chemTexts);
             textType = 2;
@@ -65,17 +75,25 @@ void CRNNDataGenerator::dump() {
             textType = 1;
         }
         auto[buffer, label]=getSample(text, textType);
-        char a[100];
-        sprintf(a, imgKey, idx);
-        dbi.put(wtxn, a, buffer.data());
-        sprintf(a, labelKey, idx);
-        dbi.put(wtxn, a, label.c_str());
-        if (idx % 10000 == 9999) {
+        auto img = cv::imdecode(buffer, CV_8UC1);
+        std::string filename = std::to_string(idx) + ".jpg";
+        std::string file_path = topDir + "/" + imgDir + "/" + filename;
+        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
+        ofsm << filename << "\t" << label << "\n";
+//        char a[100];
+//        sprintf(a, imgKey, idx);
+//        dbi.put(wtxn, a,"fuck");
+//        dbi.put(wtxn, a, buffer.data(), buffer.size()+1, true);
+//        sprintf(a, labelKey, idx);
+//        dbi.put(wtxn, a, label.c_str(), label.length()+1, true);
+//        dbi.put(wtxn, a,"fuck");
+        if (idx % (SAMPLE_NUM / 20) == SAMPLE_NUM / 20 - 1) {
 //            wtxn.commit();
-            std::cout<<"idx="<<idx<<std::endl;
+            std::cout << "idx=" << idx << std::endl;
         }
     }
-    wtxn.commit();
+    ofsm.close();
+//    wtxn.commit();
 }
 
 std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
@@ -117,7 +135,7 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         cv::bitwise_not(img, img);
     }
     std::vector<uchar> buffer;
-    cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
+    cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
     buffer.push_back('\0');
     return {std::move(buffer), std::move(convertToKey(_text))};
 }

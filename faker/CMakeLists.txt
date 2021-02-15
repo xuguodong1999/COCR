@@ -2,7 +2,7 @@ project(faker)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(../openbabel/include /usr/include/rdkit)
+include_directories(../openbabel/include ../include)
 
 find_package(OpenCV REQUIRED)
 

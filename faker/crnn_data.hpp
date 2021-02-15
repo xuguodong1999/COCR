@@ -7,6 +7,7 @@
 
 class CRNNDataGenerator {
     inline static const char *imgKey = "image-%09d", *labelKey = "label-%09d";
+    inline static const std::string imgDir = "JPEGImages", gtFileName = "labels.txt";
     inline static const int height = 32, width = 192;
     inline static const size_t MAX_TEXT_LENGTH = 7;
     bool isInited;
@@ -38,7 +39,7 @@ public:
 
     void getChemTexts();
 
-    void dump();
+    void dump(const size_t& SAMPLE_NUM=500000);
 
     void display();
 

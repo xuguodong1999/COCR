@@ -58,12 +58,18 @@ int main(int argc, char **argv) {
 //        return _main();
 //        return gen_str();
 //        return gen_str_text();
+        srand(0633);
         CRNNDataGenerator crnnDataGenerator;
 //        crnnDataGenerator.display();
 //        crnnDataGenerator.getDictTexts();
-        crnnDataGenerator.init("/home/xgd/source/repos/jokejoker/data/soso-full");
+        crnnDataGenerator.init("/home/xgd/source/repos/jokejoker/soso-data/crnn-test");
 //        crnnDataGenerator.display();
-        crnnDataGenerator.dump();
+        crnnDataGenerator.dump(10000);
+        srand(0022);
+        CRNNDataGenerator crnnDataGenerator2;
+        crnnDataGenerator2.init("/home/xgd/source/repos/jokejoker/soso-data/crnn-train");
+        crnnDataGenerator2.dump(500000);
+
         return 0;
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

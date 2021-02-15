@@ -78,4 +78,6 @@ Thumbs.db
 cmake-*/
 *.tar.gz
 *.weights
-soso-full/
+soso-data/
+*.onnx
+__pycache__/
