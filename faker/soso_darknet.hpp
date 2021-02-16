@@ -10,7 +10,7 @@ class SOSODarknet {
 public:
     SOSODarknet();
 
-    bool init(const char *_topDir);
+    bool init(const std::string&_topDir);
 
     void dump(const size_t &_numOfSamples, const size_t &_repeatTimes = 1);
 };

@@ -85,7 +85,7 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
             textType = 1;
         }
         auto[buffer, label]=getSample(text, textType);
-        auto img = cv::imdecode(buffer, CV_8UC1);
+        auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
         std::string filename = std::to_string(idx) + ".jpg";
         std::string file_path = topDir + trainDir + imgDir + filename;
         cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
@@ -115,7 +115,7 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
             textType = 1;
         }
         auto[buffer, label]=getSample(text, textType);
-        auto img = cv::imdecode(buffer, CV_8UC1);
+        auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
         std::string filename = std::to_string(idx) + ".jpg";
         std::string file_path = topDir + testDir + imgDir + filename;
         cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
@@ -177,9 +177,16 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
     if (byProb(0.5)) {// 反转颜色
         cv::bitwise_not(img, img);
     }
+    img.convertTo(img, CV_32F, 1. / 255);
+    if (byProb(0.2)) {
+        cv::Mat noise(img.size(), CV_32FC3);
+        cv::randn(noise, 0, belowProb(0.1));
+        img = img + noise;
+        cv::normalize(img, img, 1.0, 0, cv::NORM_MINMAX, CV_32F);
+    }
+    img.convertTo(img,CV_8U,255);
     std::vector<uchar> buffer;
     cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
-    buffer.push_back('\0');
     return {std::move(buffer), std::move(convertToKey(_text))};
 }
 
@@ -208,7 +215,7 @@ void CRNNDataGenerator::display() {
         std::cout << "image-key=" << a << std::endl;
         sprintf(a, labelKey, idx);
         std::cout << "label-key=" << a << std::endl;
-        auto img = cv::imdecode(buffer, CV_8UC1);
+        auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
         cv::imshow("fuck", img);
         cv::waitKey(0);
     }

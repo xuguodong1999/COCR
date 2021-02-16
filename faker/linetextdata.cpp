@@ -221,7 +221,7 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
 //    c3 = {"N"};
 //    c2 = {"O", "S"};
 //    c1 = {"H"};
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 1000; i++) {
         for (auto &str:c4) {
             originSTVec.emplace_back(str, 3, 1);
             originSTVec.emplace_back(str, 1, 3);
@@ -285,8 +285,8 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
         }
     }
     std::cout << "step2.size=" << originSTVec.size() << std::endl;
-    size_t maxLoop = 19;
-    for (int j = 0; j < 10; j++) {
+    size_t maxLoop = 49;
+    for (int j = 0; j < 1000; j++) {
         for (size_t i = 2; i <= maxLoop; i++) {
             originSTVec.emplace_back(
                     randSelect(c4) + std::to_string(i) +
@@ -351,7 +351,7 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
             }
         }
     }
-    while (fruits.size() < 1000) {
+    while (fruits.size() < 10000) {
         auto st1 = randSelect(originSTVec);
         auto st2 = randSelect(tempSTVec);
         if (byProb(0.5))std::swap(st1, st2);

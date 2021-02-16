@@ -13,7 +13,7 @@ def onnx_export(opt):
     model.load_state_dict(torch.load(opt.saved_model, map_location=device))
     model.eval()
     model = model.module
-    img = Image.open('/home/xgd/source/repos/jokejoker/soso-data/demo.jpg').convert('L')
+    img = Image.open('../workspace/demo.jpg').convert('L')
     # img = Image.open('/home/xgd/source/crnn.pytorch/data/demo2.png').convert('L')
     # img = img.resize([192,32])
     # Image._show(img)

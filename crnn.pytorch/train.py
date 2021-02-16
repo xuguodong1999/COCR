@@ -1,21 +1,20 @@
+import argparse
 import os
+import random
 import sys
 import time
-import random
-import string
-import argparse
 
+import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 import torch.nn.init as init
 import torch.optim as optim
 import torch.utils.data
-import numpy as np
 
-from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabelConverter, Averager
 from dataset import hierarchical_dataset, AlignCollate, Batch_Balanced_Dataset
 from model import Model
 from test import validation
+from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabelConverter, Averager
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -159,7 +158,7 @@ def train(opt):
                 # preds = preds.permute(1, 0, 2)  # to use CTCLoss format
                 cost = criterion(preds, text, preds_size, length) / batch_size
             else:
-                preds = preds.log_softmax(2)# .permute(1, 0, 2)
+                preds = preds.log_softmax(2)  # .permute(1, 0, 2)
                 cost = criterion(preds, text, preds_size, length)
 
         else:
@@ -175,8 +174,8 @@ def train(opt):
         loss_avg.add(cost)
 
         # validation part
-        if (
-                iteration + 1) % opt.valInterval == 0 or iteration == 0:  # To see training progress, we also conduct validation when 'iteration == 0'
+        # To see training progress, we also conduct validation when 'iteration == 0'
+        if (iteration + 1) % opt.valInterval == 0 or iteration == 0:
             elapsed_time = time.time() - start_time
             # for log
             with open(f'./saved_models/{opt.exp_name}/log_train.txt', 'a') as log:
@@ -191,7 +190,7 @@ def train(opt):
                 loss_avg.reset()
 
                 current_model_log = f'{"Current_accuracy":17s}: {current_accuracy:0.3f}, {"Current_norm_ED":17s}: {current_norm_ED:0.2f}'
-
+                torch.save(model.state_dict(), f'./saved_models/{opt.exp_name}/latest.pth')
                 # keep best accuracy model (on valid dataset)
                 if current_accuracy > best_accuracy:
                     best_accuracy = current_accuracy

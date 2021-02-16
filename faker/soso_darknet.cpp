@@ -12,7 +12,7 @@
 SOSODarknet::SOSODarknet() : isInited(false) {
 }
 
-bool SOSODarknet::init(const char *_topDir) {
+bool SOSODarknet::init(const std::string &_topDir) {
     if (!std::filesystem::exists(_topDir)) {
         if (!std::filesystem::create_directories(_topDir)) {
             std::cerr << "fail to create dir: " << _topDir << std::endl;
@@ -48,9 +48,7 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
                                              2, 3, 4, 5, 6, 7,
-                                             8, 9, 10, 11, 12, 13
-//                                             14, 15
-//                                             10, 11, 12, 13, 14, 15
+                                             8, 9, 10, 11, 12, 13, 14, 15, 16
                                      });
     const int loopTime = _numOfSamples / _repeatTimes;
     std::shuffle(alkanes.begin(), alkanes.end(), std::default_random_engine());
@@ -62,10 +60,10 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
         //const float &_addHydrogenProb, bool _replaceBond,
         //        bool _replaceAtom, bool _addAromaticRing, bool _addCommonRing
         bool add_aro = byProb(0.5), add_com = byProb(0.5);
-        if (alkanes[i % alkanes.size()].length() > 20) {
+        if (alkanes[i % alkanes.size()].length() > 40) {
             add_com = false;
         }
-        if (alkanes[i % alkanes.size()].length() > 30) {
+        if (alkanes[i % alkanes.size()].length() > 50) {
             add_aro = false;
         }
         molOp->randomize(0.1, byProb(0.95), byProb(0.95), add_aro, add_com);

@@ -250,6 +250,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         item1->push_back(add_arc(B, A));
         item2->push_back(add_arc(C, A));
     }
+    // 添加字符串
+
 //    std::cout << "avgSize=" << avgSize << std::endl;
     return avgSize;
 }
@@ -291,7 +293,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
     float k = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
     size_t fixW, fixH;
-    fixW = fixH = 416;
+    fixW = fixH = 640;
     for (size_t i = 0; i < _repeatTimes; i++) {
         this->rotate(rand() % 360);
         auto bBox = this->getBoundingBox().value();
@@ -337,7 +339,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     float k = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
     size_t fixW, fixH;
-    fixW = fixH = 416;
+    fixW = fixH = 640;
     for (size_t i = 0; i < _repeatTimes; i++) {
         this->rotate(rand() % 360);
         auto bBox = this->getBoundingBox().value();
