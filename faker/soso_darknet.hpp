@@ -10,9 +10,11 @@ class SOSODarknet {
 public:
     SOSODarknet();
 
-    bool init(const std::string&_topDir);
+    bool init(const std::string &_topDir);
 
     void dump(const size_t &_numOfSamples, const size_t &_repeatTimes = 1);
+
+    void display();
 };
 
 #endif//_DARKNET_DATA_HPP_

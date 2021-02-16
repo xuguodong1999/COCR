@@ -73,3 +73,30 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
                              _repeatTimes);
     }
 }
+
+void SOSODarknet::display() {
+    auto &isomer = IsomerCounter::GetInstance();
+    auto alkanes = isomer.getIsomers({
+                                             2, 3, 4, 5, 6, 7,
+                                             8, 9, 10, 11, 12, 13, 14, 15, 16
+                                     });
+    const int loopTime = 100;
+    std::shuffle(alkanes.begin(), alkanes.end(), std::default_random_engine());
+    for (int i = 0; i < loopTime; i++) {
+        auto mol = std::make_shared<JMol>();
+        mol->setAlkane(alkanes[i % alkanes.size()]);
+        auto molOp = std::make_shared<MolOp>(mol);
+        //const float &_addHydrogenProb, bool _replaceBond,
+        //        bool _replaceAtom, bool _addAromaticRing, bool _addCommonRing
+        bool add_aro = byProb(0.5), add_com = byProb(0.5);
+        if (alkanes[i % alkanes.size()].length() > 40) {
+            add_com = false;
+        }
+        if (alkanes[i % alkanes.size()].length() > 50) {
+            add_aro = false;
+        }
+        molOp->randomize(0.1, byProb(0.95), byProb(0.95), add_aro, add_com);
+        auto hwMol = std::make_shared<HwMol>(molOp);
+        hwMol->showOnScreen();
+    }
+}
