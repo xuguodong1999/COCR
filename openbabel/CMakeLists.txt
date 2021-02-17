@@ -8,9 +8,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 # rapidjson, eigen3 and openbabel
 set(OPENBABEL_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-include_directories(${OPENBABEL_SRC_DIR}/include)
-include_directories(${OPENBABEL_SRC_DIR}/../include)
-include_directories(${OPENBABEL_SRC_DIR}/include/inchi)
+include_directories(${OPENBABEL_SRC_DIR}/include ${OPENBABEL_SRC_DIR}/include/inchi)
 
 set(OPENBABEL_SRCS)
 set(SRC_DIR_LIST src src/charges src/depict src/descriptors

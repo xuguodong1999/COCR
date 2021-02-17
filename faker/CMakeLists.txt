@@ -2,7 +2,7 @@ project(faker)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(../openbabel/include ../include)
+include_directories(../openbabel/include)
 
 find_package(OpenCV REQUIRED)
 

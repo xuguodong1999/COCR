@@ -73,6 +73,7 @@ namespace OpenBabel {
 
         friend QDebug operator<<(QDebug dbg, const OBError &er) {
             dbg << qPrintable(er.qMessage());
+            return dbg;
         }
 
         /** \return The method which caused this error
