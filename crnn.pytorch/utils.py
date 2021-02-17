@@ -1,4 +1,5 @@
 import torch
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
@@ -65,6 +66,7 @@ class CTCLabelConverterForBaiduWarpctc(object):
             self.dict[char] = i + 1
 
         self.character = ['[CTCblank]'] + dict_character  # dummy '[CTCblank]' token for CTCLoss (index 0)
+        print('dict=', self.dict)
 
     def encode(self, text, batch_max_length=25):
         """convert text-label into text-index.

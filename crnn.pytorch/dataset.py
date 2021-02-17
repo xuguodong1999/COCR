@@ -1,17 +1,17 @@
-import os
-import sys
-import re
-import six
 import math
-import lmdb
-import torch
+import os
+import re
+import sys
 
-from natsort import natsorted
-from PIL import Image
+import lmdb
 import numpy as np
-from torch.utils.data import Dataset, ConcatDataset, Subset
-from torch._utils import _accumulate
+import six
+import torch
 import torchvision.transforms as transforms
+from PIL import Image
+from natsort import natsorted
+from torch._utils import _accumulate
+from torch.utils.data import Dataset, ConcatDataset, Subset
 
 
 class Batch_Balanced_Dataset(object):
@@ -22,12 +22,13 @@ class Batch_Balanced_Dataset(object):
         For example, when select_data is "MJ-ST" and batch_ratio is "0.5-0.5",
         the 50% of the batch is filled with MJ and the other 50% of the batch is filled with ST.
         """
-        log = open(f'./saved_models/{opt.exp_name}/log_dataset.txt', 'a')
+        log = open(f'{opt.model_top_dir}/{opt.exp_name}/log_dataset.txt', 'a')
         dashed_line = '-' * 80
         print(dashed_line)
         log.write(dashed_line + '\n')
         print(f'dataset_root: {opt.train_data}\nopt.select_data: {opt.select_data}\nopt.batch_ratio: {opt.batch_ratio}')
-        log.write(f'dataset_root: {opt.train_data}\nopt.select_data: {opt.select_data}\nopt.batch_ratio: {opt.batch_ratio}\n')
+        log.write(
+            f'dataset_root: {opt.train_data}\nopt.select_data: {opt.select_data}\nopt.batch_ratio: {opt.batch_ratio}\n')
         assert len(opt.select_data) == len(opt.batch_ratio)
 
         _AlignCollate = AlignCollate(imgH=opt.imgH, imgW=opt.imgW, keep_ratio_with_pad=opt.PAD)
@@ -106,7 +107,7 @@ def hierarchical_dataset(root, opt, select_data='/'):
     dataset_log = f'dataset_root:    {root}\t dataset: {select_data[0]}'
     print(dataset_log)
     dataset_log += '\n'
-    for dirpath, dirnames, filenames in os.walk(root+'/'):
+    for dirpath, dirnames, filenames in os.walk(root + '/'):
         if not dirnames:
             select_flag = False
             for selected_d in select_data:
@@ -139,6 +140,7 @@ class LmdbDataset(Dataset):
 
         with self.env.begin(write=False) as txn:
             nSamples = int(txn.get('num-samples'.encode()))
+            # print('nSamples=', nSamples)
             self.nSamples = nSamples
 
             if self.opt.data_filtering_off:
@@ -167,9 +169,9 @@ class LmdbDataset(Dataset):
 
                     # By default, images containing characters which are not in opt.character are filtered.
                     # You can add [UNK] token to `opt.character` in utils.py instead of this filtering.
-                    out_of_char = f'[^{self.opt.character}]'
-                    if re.search(out_of_char, label.lower()):
-                        continue
+                    # out_of_char = f'[^{self.opt.character}]'
+                    # if re.search(out_of_char, label.lower()):
+                    #     continue
 
                     self.filtered_index_list.append(index)
 

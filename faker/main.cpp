@@ -11,7 +11,8 @@ extern std::string WORKSPACE;
 void generateCRNNData() {
     srand(0633);
     CRNNDataGenerator generator;
-    generator.init(WORKSPACE + "soso-text");
+//    generator.init(WORKSPACE + "soso-text-nb");
+    generator.init("/media/xgd/hjyy-ext4/soso-text");
     generator.dump(2000000, 10000);
 //        generator.display();
 }

@@ -97,6 +97,6 @@ void SOSODarknet::display() {
         }
         molOp->randomize(0.1, byProb(0.95), byProb(0.95), add_aro, add_com);
         auto hwMol = std::make_shared<HwMol>(molOp);
-        hwMol->showOnScreen();
+        hwMol->showOnScreen(1,true);
     }
 }

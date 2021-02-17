@@ -340,6 +340,9 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     this->mulK(k, k);
     size_t fixW, fixH;
     fixW = fixH = 640;
+    auto colorIdx = [](const int &_a) -> ColorName {
+        return static_cast<const ColorName>((7 + _a) * 13 % 455);
+    };
     for (size_t i = 0; i < _repeatTimes; i++) {
         this->rotate(rand() % 360);
         auto bBox = this->getBoundingBox().value();
@@ -348,21 +351,18 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
                               getScalar(ColorName::rgbWhite));
         this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         this->paintTo(img);
-        if (_showBox) {
-            for (auto &sym:mData) {
-                cv::rectangle(img, sym->getBoundingBox().value(), getScalar(ColorName::rgbBlue));
-            }
-        }
         auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
         auto&[k, offsetx, offsety]=offset;
         for (auto &sym:mData) {
-            std::cout << labels[sym->getItemType()] << std::endl;
+//            std::cout << labels[sym->getItemType()] << std::endl;
             auto bBox = sym->getBoundingBox().value();
             bBox.x = bBox.x * k + offsetx;
             bBox.y = bBox.y * k + offsety;
             bBox.width *= k;
             bBox.height *= k;
-            cv::rectangle(resImg, bBox, getScalar(ColorName::rgbBlue));
+            if (_showBox)
+                cv::rectangle(resImg, bBox, getScalar(
+                        colorIdx((int)sym->getItemType())),1,cv::LINE_AA);
         }
         cv::imshow("MolHwItem::showOnScreen", resImg);
         cv::waitKey(0);
@@ -393,4 +393,8 @@ HwMol::HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder>
     if (!_mol2dHolder) {
         mol2dHolder = std::make_shared<Mol2D>(mol);
     }
+}
+
+void HwMol::charToText(const float &_prob) {
+
 }

@@ -1,7 +1,12 @@
-python create_lmdb_dataset.py ../workspace/soso-text/train/JPEGImages ../workspace/soso-text/train/labels.txt ./data/train
+x-special/nautilus-clipboard
+copy
+file:///media/xgd/hjyy-ext4/soso-text
 
-python create_lmdb_dataset.py ../workspace/soso-text/test/JPEGImages ../workspace/soso-text/test/labels.txt ./data/test
 
-python train.py --train_data='./data/train' --valid_data='./data/test' --FeatureExtraction='VGG' --SequenceModeling='BiLSTM' --Prediction='CTC' --Transformation='None' --baiduCTC --sensitive --select_data / --batch_ratio 1  --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=256 --batch_size=256 --workers=2 --num_iter=100000 --valInterval=5000 --exp_name='vgg-baidu-256'
+python create_lmdb_dataset.py /media/xgd/hjyy-ext4/soso-text/train/JPEGImages /media/xgd/hjyy-ext4/soso-text/train/labels.txt ./data/train-cls
 
-python onnx_export.py  --FeatureExtraction='VGG' --SequenceModeling='BiLSTM' --Prediction='CTC' --Transformation='None' --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty'  --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=256 --saved_model='./saved_models/vgg-baidu-256/best_accuracy.pth'
+python create_lmdb_dataset.py /media/xgd/hjyy-ext4/soso-text/test/JPEGImages /media/xgd/hjyy-ext4/soso-text/test/labels.txt ./data/test-cls
+
+python train.py --train_data='./data/train' --valid_data='./data/test' --model_top_dir='../workspace' --FeatureExtraction='VGG' --SequenceModeling='BiLSTM' --Prediction='CTC' --Transformation='None' --baiduCTC --sensitive --select_data / --batch_ratio 1  --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=256 --batch_size=256 --workers=2 --num_iter=500000 --valInterval=5000 --exp_name='VGG-BiLSTM-baidu_ctc'
+
+python onnx_export.py  --FeatureExtraction='VGG' --SequenceModeling='BiLSTM' --Prediction='CTC' --Transformation='None' --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty'  --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=256 --saved_model='../workspace/VGG-BiLSTM-baidu_ctc/best_accuracy.pth'

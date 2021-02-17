@@ -13,8 +13,7 @@ project(jokejoker-project)
 
 
 # opencv, you need to compile it>=4.5.1 for crnn and yolo call
-#set(OPENCV_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/opencv)
-set(OPENCV_INSTALL_DIR /home/xgd/shared/opencv451-patched)
+set(OPENCV_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/opencv)
 
 set(ANDROID_OPENCV_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android/OpenCV-android-sdk)
 
@@ -31,8 +30,8 @@ elseif (UNIX)
     set(QT_DIR /home/xgd/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5)
     set(Qt5_DIR /home/xgd/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5)
     #    set(OpenCV_DIR ${OPENCV_INSTALL_DIR}/lib/cmake/opencv4)
-#    set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
-    set(OpenCV_DIR /home/xgd/shared/opencv451-patched/lib/cmake/opencv4)
+    set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
+#    set(OpenCV_DIR /home/xgd/shared/opencv451-patched/lib/cmake/opencv4)
 endif (MSVC)
 
 add_subdirectory(openbabel)

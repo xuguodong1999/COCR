@@ -22,6 +22,12 @@ class HwMol : public HwBase, public MolHolder {
      */
     float reloadHWData(const float &_explicitCarbonProb = 0.1);
 
+    /**
+     * 检查所有字符的周边环境，如果满足嵌入要求，则替换为字符串图元
+     * @param _prob 替换为字符串图元的概率
+     */
+    void charToText(const float &_prob);
+
 public:
 
     void setHwController(HwController &_hwController) override;
