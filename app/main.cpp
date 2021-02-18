@@ -21,7 +21,6 @@ void test_crnn_opencv() {
     xgd::TextRecognitionOpenCVSolver solver;
     solver.initModel(ROOT_DIR + "crnn_sim_3200.onnx", std_alphabet, 3200);
     cv::Mat image = cv::imread(ROOT_DIR + "demo.jpg", cv::IMREAD_GRAYSCALE);
-    cv::hconcat(image, image, image);
     auto[strRes, scores]=solver.recognize(image);
     cv::imshow("result=" + strRes, image);
     cv::waitKey(0);
@@ -31,7 +30,7 @@ void test_crnn_ncnn() {
     xgd::TextRecognitionNCNNSolver solver;
     if (!solver.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.bin",
                           ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.param",
-                          std_alphabet)) {
+                          std_alphabet, 3200)) {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
     }
     while (true) {

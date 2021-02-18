@@ -14,37 +14,39 @@ namespace xgd {
         const float meanValues = 127.5, normValues = 1.0 / 127.5;
         const int dstHeight = 32;
 
-        void preProcess(cv::Mat &_src, const int &_dstWidth);
+        virtual cv::Mat preProcess(const cv::Mat &_src);
 
     public:
         virtual void freeModel() = 0;
 
-        virtual std::pair<std::string, std::vector<float>> recognize(cv::Mat &_originImage) = 0;
+        virtual std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) = 0;
     };
 
     class TextRecognitionOpenCVSolver : public TextRecognitionSolver {
         cv::dnn::TextRecognitionModel model;
+        int dstWidth;
+        cv::Mat preProcess(const cv::Mat &_src)override;
     public:
         bool initModel(const std::string &_onnxFile, const std::string &_words, int _width);
 
         void freeModel() override;
 
-        std::pair<std::string, std::vector<float>> recognize(cv::Mat &_originImage) override;
+        std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) override;
     };
 
     class TextRecognitionNCNNSolver : public TextRecognitionSolver {
         int numThread;
         ncnn::Net net;
-
         std::pair<std::string, std::vector<float>>
         recognize(const float *_outputData, const int &_h, const int _w);
-
+        int maxWidth;
+        cv::Mat preProcess(const cv::Mat &_src)override;
     public:
         TextRecognitionNCNNSolver();
 
-        bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words);
+        bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words,const int&_maxWidth);
 
-        std::pair<std::string, std::vector<float>> recognize(cv::Mat &_originImage) override;
+        std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) override;
 
         void freeModel() override;
     };
