@@ -24,7 +24,7 @@ def onnx_export(opt):
     img.sub_(0.5).div_(0.5)
     print('img.shape=', img.shape)
     image = img.unsqueeze(0).to(device)
-    image = torch.rand(torch.Size([1, 1, 32, 3200])).to(device)
+    image = torch.rand(torch.Size([1, 1, 32, 192])).to(device)
     print('image.shape=', image.shape)
     preds = model(image).permute(1, 0, 2)
     # Select max probabilty (greedy decoding) then decode index to character
@@ -35,7 +35,7 @@ def onnx_export(opt):
     print('preds_str=', preds_str)
     onnxfile1 = "../workspace/crnn_fixed.onnx"
     onnxfile2 = "../workspace/crnn.onnx"
-    torch.onnx.export(model, image, onnxfile1)
+    # torch.onnx.export(model, image, onnxfile1)
     # torch.onnx.export(model, image, onnxfile2,
     #                   input_names=['input'],
     #                   output_names=['output'],

@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 #            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
 #    endif()
 #endif()
-include_directories(../openbabel/include)
+include_directories(../openbabel/include ../ncnn/include)
 # qt5, you need to install it >=5.15.2 for bug-free qt3d call
 set(QT_COMPONENTS Widgets 3DCore 3DExtras 3DRender LinguistTools)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -21,7 +21,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(OpenCV REQUIRED)
-
+find_package(ncnn REQUIRED)
 # set project source here
 set(TS_FILES ../res/${PROJECT_NAME}_zh_CN.ts)
 qt_create_translation(QM_FILES ../src ${TS_FILES})
@@ -51,5 +51,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::3DExtras
         Qt${QT_VERSION_MAJOR}::3DRender
         Qt${QT_VERSION_MAJOR}::Widgets
-        ${OpenCV_LIBS}
+        opencv_core opencv_dnn opencv_imgproc opencv_imgcodecs opencv_highgui
+        ncnn
         openbabel)

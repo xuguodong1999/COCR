@@ -1,0 +1,4 @@
+#ifndef _XGD_OCR_THREAD_HPP_
+#define _XGD_OCR_THREAD_HPP_
+
+#endif//_XGD_OCR_THREAD_HPP_

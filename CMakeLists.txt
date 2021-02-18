@@ -34,6 +34,9 @@ elseif (UNIX)
 #    set(OpenCV_DIR /home/xgd/shared/opencv451-patched/lib/cmake/opencv4)
 endif (MSVC)
 
+# ncnn
+set(ncnn_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ncnn/lib/cmake/ncnn)
+
 add_subdirectory(openbabel)
 add_subdirectory(faker)
 add_subdirectory(src)

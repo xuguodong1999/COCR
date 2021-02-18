@@ -74,7 +74,7 @@ class Model(nn.Module):
             input = self.Transformation(input)
 
         """ Feature extraction stage """
-        visual_feature = self.FeatureExtraction(input)
+        visual_feature = self.FeatureExtraction(input)# 0 1 2 3
         visual_feature = self.AdaptiveAvgPool(visual_feature.permute(0, 3, 1, 2))  # [b, c, h, w] -> [b, w, c, h]
         visual_feature = visual_feature.squeeze(3)
 
@@ -91,5 +91,5 @@ class Model(nn.Module):
         else:
             prediction = self.Prediction(contextual_feature.contiguous(), text, is_train,
                                          batch_max_length=self.opt.batch_max_length)
-
+        print('prediction=',prediction.shape)
         return prediction
