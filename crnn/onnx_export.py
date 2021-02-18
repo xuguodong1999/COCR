@@ -41,7 +41,12 @@ def onnx_export(opt):
     #                   output_names=['output'],
     #                   dynamic_axes={'input': [3],
     #                                 'output': [0]})
-
+    # Find total parameters and trainable parameters
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f'{total_params:,} total parameters.')
+    total_trainable_params = sum(
+        p.numel() for p in model.parameters() if p.requires_grad)
+    print(f'{total_trainable_params:,} training parameters.')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

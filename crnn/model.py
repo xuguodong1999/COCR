@@ -84,7 +84,7 @@ class Model(nn.Module):
             contextual_feature = self.SequenceModeling(visual_feature)
         else:
             contextual_feature = visual_feature  # for convenience. this is NOT contextually modeled by BiLSTM
-
+        print('self.SequenceModeling: ', sum(m.numel() for m in self.SequenceModeling.parameters()))
         """ Prediction stage """
         if self.stages['Pred'] == 'CTC':
             prediction = self.Prediction(contextual_feature.contiguous())
@@ -92,5 +92,6 @@ class Model(nn.Module):
         else:
             prediction = self.Prediction(contextual_feature.contiguous(), text, is_train,
                                          batch_max_length=self.opt.batch_max_length)
+        print('self.Prediction: ', sum(m.numel() for m in self.Prediction.parameters()))
         print('prediction=',prediction.shape)
         return prediction

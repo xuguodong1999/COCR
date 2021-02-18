@@ -72,9 +72,9 @@ Thumbs.db
 *.dll
 *.exe
 
-.idea
-.vs
-.vscode
+.idea/
+.vs/
+.vscode/
 cmake-*/
 *.tar.gz
 *.weights

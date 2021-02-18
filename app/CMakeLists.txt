@@ -1,4 +1,4 @@
-project(jokejoker)
+project(app)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 #            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
 #    endif()
 #endif()
-include_directories(../openbabel/include ../ncnn/include)
+include_directories(../openbabel/include ../ncnn/include ../data)
 # qt5, you need to install it >=5.15.2 for bug-free qt3d call
 set(QT_COMPONENTS Widgets 3DCore 3DExtras 3DRender LinguistTools)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -23,14 +23,14 @@ set(CMAKE_AUTORCC ON)
 find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
 # set project source here
-set(TS_FILES ../res/${PROJECT_NAME}_zh_CN.ts)
-qt_create_translation(QM_FILES ../src ${TS_FILES})
+set(TS_FILES ../resources/${PROJECT_NAME}_zh_CN.ts)
+qt_create_translation(QM_FILES ../app ${TS_FILES})
 
-qt5_add_big_resources(BIG_RES_FILES ../res/big_res.qrc)
-set(RES_SRCS ${BIG_RES_FILES} ../res/obdata.qrc)
+qt5_add_big_resources(BIG_RES_FILES ../resources/big_res.qrc)
+set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc)
 
-aux_source_directory(../src DIR_SRCS)
-set(PROJECT_SOURCES ${DIR_SRCS} ${RES_SRCS} ${TS_FILES})
+aux_source_directory(../app DIR_SRCS)
+set(PROJECT_SOURCES ${DIR_SRCS} ${RES_SRCS} ${TS_FILES} ../data/timer.cpp)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

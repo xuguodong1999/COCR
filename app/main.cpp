@@ -9,7 +9,7 @@
 //    (new QWidget)->show();
 //    return app.exec();
 //}
-
+#include "timer.hpp"
 #include "text_recognition.hpp"
 #include <opencv2/highgui.hpp>
 #include <iostream>
@@ -29,18 +29,25 @@ void test_crnn_opencv() {
 
 void test_crnn_ncnn() {
     xgd::TextRecognitionNCNNSolver solver;
-    if (!solver.initModel(ROOT_DIR + "crnn_3200.bin",
-                          ROOT_DIR + "crnn_3200.param",
+    if (!solver.initModel(ROOT_DIR + "../res/model/vgg_lstm_57_fp16.bin",
+                          ROOT_DIR + "../res/model/vgg_lstm_57_fp16.param",
                           std_alphabet)) {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
     }
-    cv::Mat image = cv::imread(ROOT_DIR + "demo.jpg", cv::IMREAD_GRAYSCALE);
-    auto[strRes, scores]=solver.recognize(image);
-    for (size_t i = 0; i < strRes.length(); i++) {
-        std::cout << strRes[i] << ":" << scores[i] << std::endl;
+    while (true) {
+        cv::Mat image = cv::imread(ROOT_DIR + "demo.jpg", cv::IMREAD_GRAYSCALE);
+        Timer timer;
+        timer.start();
+        auto[strRes, scores]=solver.recognize(image);
+        timer.start();
+//    for (size_t i = 0; i < strRes.length(); i++) {
+//        std::cout << strRes[i] << ":" << scores[i] << std::endl;
+//    }
+        std::cout << "result=" << strRes << std::endl;
+        cv::destroyAllWindows();
+        cv::imshow("result=" + strRes, image);
+        cv::waitKey(0);
     }
-    cv::imshow("result=" + strRes, image);
-    cv::waitKey(0);
 }
 
 int main(int argc, char **args) {

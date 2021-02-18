@@ -1,4 +1,4 @@
-project(faker)
+project(data)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -13,7 +13,7 @@ set(CMAKE_AUTORCC ON)
 
 aux_source_directory(. PROJECT_SOURCES)
 
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ../res/obdata.qrc)
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ../resources/obdata.qrc)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
         $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
@@ -36,7 +36,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         # -lRDKitSubstructMatch -lRDKitTrajectory -lRDKithc
 
         -lcoordgen
-        -llmdb
         # -lmaeparser
 
         -lboost_iostreams -lboost_system
