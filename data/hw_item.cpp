@@ -75,3 +75,12 @@ HwScript HwItem::asScript() const {
     }
     return std::move(hwScript);
 }
+
+std::shared_ptr<HwBase> HwItem::clone() const {
+    auto brother = std::make_shared<HwItem>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
+}

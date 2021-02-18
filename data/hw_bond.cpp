@@ -31,6 +31,7 @@ std::shared_ptr<HwBond> HwBond::GetHwBond(const JBondType &_bondType) {
     }
 }
 
+
 void HwCircleBond::setVertices(const std::vector<cv::Point2f> &_pts) {
     if (_pts.size() < 2) {
         std::cerr << "圆键的pts约定为多边形顶点,but "
@@ -86,6 +87,18 @@ DetectorClasses HwCircleBond::getItemType() const {
     return DetectorClasses::ItemCircleBond;
 }
 
+std::shared_ptr<HwBase> HwCircleBond::clone() const {
+    auto brother = std::make_shared<HwCircleBond>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    brother->rx = rx;
+    brother->ry = ry;
+    brother->center = center;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
+}
+
 void HwSingleBond::loadHwData() {
     auto &dataLoader = HwDataLoader::getInstance();
     auto line = dataLoader.GetShape(ShapeType::Line);
@@ -134,6 +147,17 @@ void HwSingleBond::mulK(float _kx, float _ky) {
 
 DetectorClasses HwSingleBond::getItemType() const {
     return DetectorClasses::ItemSingleBond;
+}
+
+std::shared_ptr<HwBase> HwSingleBond::clone() const {
+    auto brother = std::make_shared<HwSingleBond>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    brother->from = from;
+    brother->to = to;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
 }
 
 void HwDoubleBond::loadHwData() {

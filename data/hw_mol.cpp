@@ -8,6 +8,7 @@
 
 #include "opencv_util.hpp"
 #include "std_util.hpp"
+#include "crnn_data.hpp"
 
 #include <opencv2/opencv.hpp>
 
@@ -336,24 +337,26 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
 void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     float avgSize = reloadHWData(0.1);
     setHwController(controllers[rand() % controllers.size()]);
-    float k = 100.0f / (std::max)(0.01f, avgSize);
-    this->mulK(k, k);
+    float k0 = 100.0f / (std::max)(0.01f, avgSize);
+    this->mulK(k0, k0);
     size_t fixW, fixH;
     fixW = fixH = 640;
     auto colorIdx = [](const int &_a) -> ColorName {
         return static_cast<const ColorName>((7 + _a) * 13 % 455);
     };
     for (size_t i = 0; i < _repeatTimes; i++) {
-        this->rotate(rand() % 360);
-        auto bBox = this->getBoundingBox().value();
+        auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
+        target->rotate(rand() % 360);
+        target->replaceCharWithText();
+        auto bBox = target->getBoundingBox().value();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
-        this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
-        this->paintTo(img);
+        target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
+        target->paintTo(img);
         auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
         auto&[k, offsetx, offsety]=offset;
-        for (auto &sym:mData) {
+        for (auto &sym:target->mData) {
 //            std::cout << labels[sym->getItemType()] << std::endl;
             auto bBox = sym->getBoundingBox().value();
             bBox.x = bBox.x * k + offsetx;
@@ -362,7 +365,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
             bBox.height *= k;
             if (_showBox)
                 cv::rectangle(resImg, bBox, getScalar(
-                        colorIdx((int)sym->getItemType())),1,cv::LINE_AA);
+                        colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
         }
         cv::imshow("MolHwItem::showOnScreen", resImg);
         cv::waitKey(0);
@@ -395,6 +398,53 @@ HwMol::HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder>
     }
 }
 
-void HwMol::charToText(const float &_prob) {
 
+static std::unordered_set<DetectorClasses> bondClassSet = {
+        DetectorClasses::ItemSingleBond,
+        DetectorClasses::ItemDoubleBond,
+        DetectorClasses::ItemTripleBond,
+        DetectorClasses::ItemSolidWedgeBond,
+        DetectorClasses::ItemDashWedgeBond,
+        DetectorClasses::ItemCircleBond,
+        DetectorClasses::ItemWaveBond,
+};
+extern CRNNDataGenerator crnnDataGenerator;
+
+void HwMol::replaceCharWithText(const float &_prob) {
+    std::vector<cv::Rect2f> rects(mData.size());
+    for (size_t i = 0; i < mData.size(); i++) {
+        auto &item = mData[i];
+        rects[i] = item->getBoundingBox().value();
+    }
+    /**
+     * 为第idx个边框水平向右搜索空白空间，返回可利用的空间，如果空间小于预定尺寸，则返回空值
+     */
+    auto calc_free_space = [&](const size_t &_curIdx) -> std::optional<cv::Rect2f> {
+
+        return std::nullopt;
+    };
+    auto fill_rect_with_text = [&](const cv::Rect &_freeRect, const size_t &_curIdx) -> void {
+        auto newItem = crnnDataGenerator.getRectStr(_freeRect);
+        if (newItem) {
+            mData[_curIdx] = newItem;
+        }
+        rects[_curIdx] = newItem->getBoundingBox().value();
+    };
+    for (size_t i = 0; i < mData.size(); i++) {
+        if (!notExist(bondClassSet, mData[i]->getItemType()))continue;
+        auto freeRectOpt = calc_free_space(i);
+        if (!freeRectOpt)continue;
+        auto &freeRect = freeRectOpt.value();
+        fill_rect_with_text(freeRect, i);
+    }
+}
+
+shared_ptr<HwBase> HwMol::clone() const {
+    auto sister = std::make_shared<HwMol>(molOpHolder, mol2dHolder, hwController);
+    sister->keepDirection = keepDirection;
+    sister->mData.resize(mData.size());
+    for (size_t i = 0; i < mData.size(); i++) {
+        sister->mData[i] = mData[i]->clone();
+    }
+    return sister;
 }

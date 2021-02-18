@@ -66,6 +66,8 @@ class HwStr : public HwItem {
                     const HwCharType &_hwCharType = HwCharType::Normal);
 
 public:
+    std::shared_ptr<HwBase> clone() const override;
+
     /**
      * 在当前包围盒中均匀分布所有图元的包围盒
      */

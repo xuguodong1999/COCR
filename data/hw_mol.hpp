@@ -23,12 +23,15 @@ class HwMol : public HwBase, public MolHolder {
     float reloadHWData(const float &_explicitCarbonProb = 0.1);
 
     /**
-     * 检查所有字符的周边环境，如果满足嵌入要求，则替换为字符串图元
+     * 检查所有字符的周边环境，如果满足嵌入要求，将字符图元替换为字符串图元
+     * 替换策略为随机，满足低交叠原则
+     * 在 paintTo 函数调用前调用之，调用该函数后需要重新计算画布位置
      * @param _prob 替换为字符串图元的概率
      */
-    void charToText(const float &_prob);
+    void replaceCharWithText(const float &_prob = 0.5);
 
 public:
+    std::shared_ptr<HwBase> clone() const override;
 
     void setHwController(HwController &_hwController) override;
 

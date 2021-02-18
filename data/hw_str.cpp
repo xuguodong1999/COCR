@@ -229,3 +229,15 @@ void HwStr::equalize(const float &_width) {
     }
 }
 
+std::shared_ptr<HwBase> HwStr::clone() const {
+    auto brother = std::make_shared<HwStr>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    brother->floatX = floatX;
+    brother->label = label;
+    brother->richText = richText;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
+}
+

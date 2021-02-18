@@ -11,6 +11,8 @@ protected:
     std::vector<HwScript> mData;
     HwController *hwController;
 public:
+    std::shared_ptr<HwBase> clone() const override;
+
     HwScript asScript() const;
 
     void setHwController(HwController &_hwController) override;

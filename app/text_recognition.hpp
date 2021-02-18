@@ -2,9 +2,13 @@
 #define _XGD_TEXT_RECOGNITION_HPP_
 
 #include <opencv2/core/mat.hpp>
-#include <ncnn/net.h>
-#include <string>
 #include <opencv2/dnn.hpp>
+#include <string>
+#include <memory>
+
+namespace ncnn {
+    class Net;
+}
 
 namespace xgd {
     class TextRecognitionSolver {
@@ -23,9 +27,11 @@ namespace xgd {
     };
 
     class TextRecognitionOpenCVSolver : public TextRecognitionSolver {
-        cv::dnn::TextRecognitionModel model;
+        std::shared_ptr<cv::dnn::TextRecognitionModel> model;
         int dstWidth;
-        cv::Mat preProcess(const cv::Mat &_src)override;
+
+        cv::Mat preProcess(const cv::Mat &_src) override;
+
     public:
         bool initModel(const std::string &_onnxFile, const std::string &_words, int _width);
 
@@ -36,15 +42,20 @@ namespace xgd {
 
     class TextRecognitionNCNNSolver : public TextRecognitionSolver {
         int numThread;
-        ncnn::Net net;
+        std::shared_ptr<ncnn::Net> net;
+
         std::pair<std::string, std::vector<float>>
         recognize(const float *_outputData, const int &_h, const int _w);
+
         int maxWidth;
-        cv::Mat preProcess(const cv::Mat &_src)override;
+
+        cv::Mat preProcess(const cv::Mat &_src) override;
+
     public:
         TextRecognitionNCNNSolver();
 
-        bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words,const int&_maxWidth);
+        bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words,
+                       const int &_maxWidth);
 
         std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) override;
 

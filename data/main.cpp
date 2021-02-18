@@ -8,12 +8,12 @@
 
 extern std::string WORKSPACE;
 
+CRNNDataGenerator crnnDataGenerator;
 void generateCRNNData() {
     srand(0633);
-    CRNNDataGenerator generator;
 //    generator.init(WORKSPACE + "soso-text-nb");
-    generator.init("/media/xgd/hjyy-ext4/soso-text");
-    generator.dump(2000000, 10000);
+    crnnDataGenerator.init("/media/xgd/hjyy-ext4/soso-text");
+    crnnDataGenerator.dump(2000000, 10000);
 //        generator.display();
 }
 
@@ -25,6 +25,7 @@ void generateYoloData() {
 }
 void testYoloDara(){
     srand(0022);
+    crnnDataGenerator.init("/tmp/fuck");
     SOSODarknet generator;
     generator.init(WORKSPACE + "soso-obj");
     generator.display();

@@ -22,6 +22,9 @@ class HwCircleBond : public HwBond {
     void loadHwData() override;
 
 public:
+
+    std::shared_ptr<HwBase> clone() const override;
+
     DetectorClasses getItemType() const override;
 
     HwCircleBond() = default;
@@ -42,6 +45,8 @@ protected:
     void loadHwData() override;
 
 public:
+    std::shared_ptr<HwBase> clone() const override;
+
     DetectorClasses getItemType() const override;
 
     HwSingleBond() = default;

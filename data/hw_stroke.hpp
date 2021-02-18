@@ -12,6 +12,8 @@ class HwStroke : public HwBase {
     std::vector<cv::Point2f> mData;
     HwController *hwController;
 public:
+    std::shared_ptr<HwBase> clone() const override;
+
     size_t size() const;
 
     void setData(std::vector<cv::Point2f> &_data);

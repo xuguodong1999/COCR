@@ -190,3 +190,12 @@ void HwScript::append(const HwScript &_hwScript) {
     }
 }
 
+std::shared_ptr<HwBase> HwScript::clone() const {
+    auto sister = std::make_shared<HwScript>();
+    sister->keepDirection = keepDirection;
+    sister->mData = mData;
+    if (hwController)
+        sister->setHwController(*hwController);
+    return sister;
+}
+

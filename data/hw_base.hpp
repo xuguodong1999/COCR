@@ -27,9 +27,12 @@ public:
 };
 
 class HwBase {
+protected:
     bool keepDirection;
 public:
     HwBase();
+
+    virtual std::shared_ptr<HwBase> clone() const = 0;
 
     /**
      * 在子类重写这个函数，使得子类获得一个标签

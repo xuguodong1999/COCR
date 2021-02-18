@@ -1,4 +1,6 @@
 #include "text_recognition.hpp"
+#include <ncnn/net.h>
+#include <opencv2/dnn.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <numeric>
@@ -6,8 +8,9 @@
 
 bool xgd::TextRecognitionNCNNSolver::initModel(
         const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words, const int &_maxWidth) {
-    int ret_param = net.load_param(_ncnnParam.c_str());
-    int ret_bin = net.load_model(_ncnnBin.c_str());
+    net = std::make_shared<ncnn::Net>();
+    int ret_param = net->load_param(_ncnnParam.c_str());
+    int ret_bin = net->load_model(_ncnnBin.c_str());
     if (ret_param != 0 || ret_bin != 0) {
         return false;
     }
@@ -27,7 +30,7 @@ std::pair<std::string, std::vector<float>> xgd::TextRecognitionNCNNSolver::recog
     const float mv[3] = {meanValues, meanValues, meanValues}, nv[3] = {normValues, normValues, normValues};
     input.substract_mean_normalize(mv, nv);
 
-    ncnn::Extractor extractor = net.create_extractor();
+    ncnn::Extractor extractor = net->create_extractor();
     extractor.set_num_threads(numThread);
     extractor.input("input", input);
     ncnn::Mat out;
@@ -36,7 +39,8 @@ std::pair<std::string, std::vector<float>> xgd::TextRecognitionNCNNSolver::recog
 }
 
 void xgd::TextRecognitionNCNNSolver::freeModel() {
-    net.clear();
+    net->clear();
+    net = nullptr;
 }
 
 template<class ForwardIterator>
@@ -84,13 +88,13 @@ bool xgd::TextRecognitionOpenCVSolver::initModel(
         const std::string &_onnxFile, const std::string &_words, int _width) {
     try {
         dstWidth = _width;
-        model = cv::dnn::TextRecognitionModel(_onnxFile);
-        model.setDecodeType("CTC-greedy");
+        model = std::make_shared<cv::dnn::TextRecognitionModel>(_onnxFile);
+        model->setDecodeType("CTC-greedy");
         for (auto &c:_words) {
             wordVec.push_back(std::string(1, c));
         }
-        model.setVocabulary(wordVec);
-        model.setInputParams(normValues, cv::Size(dstWidth, dstHeight), cv::Scalar(meanValues));
+        model->setVocabulary(wordVec);
+        model->setInputParams(normValues, cv::Size(dstWidth, dstHeight), cv::Scalar(meanValues));
     } catch (...) {
         return false;
     }
@@ -98,13 +102,13 @@ bool xgd::TextRecognitionOpenCVSolver::initModel(
 }
 
 void xgd::TextRecognitionOpenCVSolver::freeModel() {
-
+    model = nullptr;
 }
 
 std::pair<std::string, std::vector<float>> xgd::TextRecognitionOpenCVSolver::recognize(
         const cv::Mat &_originImage) {
     cv::Mat srcResized = preProcess(_originImage);
-    std::string recognitionResult = model.recognize(srcResized);
+    std::string recognitionResult = model->recognize(srcResized);
     std::vector<float> scores(recognitionResult.size(), -1);
     return {recognitionResult, scores};
 }

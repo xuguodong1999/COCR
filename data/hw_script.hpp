@@ -10,6 +10,8 @@ class HwScript : public HwBase {
     std::vector<HwStroke> mData;
     HwController *hwController;
 public:
+    std::shared_ptr<HwBase> clone() const override;
+
     float getAvgMaxSize() const;
 
     size_t size() const;
@@ -34,6 +36,8 @@ public:
     HwScript(HwScript &&_hwScript);
 
     HwScript &operator=(HwScript &&_hwScript) = default;
+
+    HwScript &operator=(const HwScript &_hwScript) = default;
 
     void paintTo(cv::Mat &_canvas) const;
 

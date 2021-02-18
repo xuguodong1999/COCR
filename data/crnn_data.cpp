@@ -184,7 +184,7 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         img = img + noise;
         cv::normalize(img, img, 1.0, 0, cv::NORM_MINMAX, CV_32F);
     }
-    img.convertTo(img,CV_8U,255);
+    img.convertTo(img, CV_8U, 255);
     std::vector<uchar> buffer;
     cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
     return {std::move(buffer), std::move(convertToKey(_text))};
@@ -305,4 +305,8 @@ void CRNNDataGenerator::getChemTexts() {
     for (auto &text:textSet) {
         chemTexts.push_back(text);
     }
+}
+
+std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect &_freeRect) {
+    return nullptr;
 }

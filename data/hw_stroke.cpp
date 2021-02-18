@@ -103,3 +103,12 @@ void HwStroke::setData(std::vector<cv::Point2f> &_data) {
 size_t HwStroke::size() const {
     return mData.size();
 }
+
+std::shared_ptr<HwBase> HwStroke::clone() const {
+    auto brother = std::make_shared<HwStroke>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
+}

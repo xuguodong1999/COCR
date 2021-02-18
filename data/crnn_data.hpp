@@ -3,7 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <unordered_set>
+#include "hw_base.hpp"
 
 extern std::string SOSO_ALPHABET;
 
@@ -45,7 +47,12 @@ public:
 
     void display();
 
-
+    /**
+     * 返回一个可以填入 freeRect 的字符串图元
+     * @param _freeRect
+     * @return
+     */
+    std::shared_ptr<HwBase> getRectStr(const cv::Rect &_freeRect);
 };
 
 #endif//_CRNN_DATA_HPP_
