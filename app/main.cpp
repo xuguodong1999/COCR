@@ -29,8 +29,8 @@ void test_crnn_opencv() {
 
 void test_crnn_ncnn() {
     xgd::TextRecognitionNCNNSolver solver;
-    if (!solver.initModel(ROOT_DIR + "../res/model/vgg_lstm_57_fp16.bin",
-                          ROOT_DIR + "../res/model/vgg_lstm_57_fp16.param",
+    if (!solver.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.bin",
+                          ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.param",
                           std_alphabet)) {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
     }

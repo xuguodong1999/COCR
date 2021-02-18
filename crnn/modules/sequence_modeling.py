@@ -14,11 +14,11 @@ class BidirectionalLSTM(nn.Module):
         output : contextual feature [batch_size x T x output_size]
         """
         self.rnn.flatten_parameters()
-        print('in=',input.shape)
+        # print('in=',input.shape)
         recurrent, _ = self.rnn(input)  # batch_size x T x input_size -> batch_size x T x (2*hidden_size)
-        print('out1=',recurrent.shape)
+        # print('out1=',recurrent.shape)
         # T, b, h = recurrent.size()
         output = self.linear(recurrent)  # batch_size x T x output_size
-        print('out2=',output.shape)
+        # print('out2=',output.shape)
         # output = output.view(T, b, -1)
         return output
