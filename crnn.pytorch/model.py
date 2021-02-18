@@ -75,6 +75,7 @@ class Model(nn.Module):
 
         """ Feature extraction stage """
         visual_feature = self.FeatureExtraction(input)# 0 1 2 3
+        print('self.FeatureExtraction: ', sum(m.numel() for m in self.FeatureExtraction.parameters()))
         visual_feature = self.AdaptiveAvgPool(visual_feature.permute(0, 3, 1, 2))  # [b, c, h, w] -> [b, w, c, h]
         visual_feature = visual_feature.squeeze(3)
 
