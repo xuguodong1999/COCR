@@ -412,15 +412,24 @@ extern CRNNDataGenerator crnnDataGenerator;
 
 void HwMol::replaceCharWithText(const float &_prob) {
     std::vector<cv::Rect2f> rects(mData.size());
+    float avgSize = 0;
     for (size_t i = 0; i < mData.size(); i++) {
         auto &item = mData[i];
         rects[i] = item->getBoundingBox().value();
+        avgSize += (std::max)(rects[i].width, rects[i].height);
     }
+    avgSize /= mData.size();
+    auto iou=[](const cv::Rect &_r1,const cv::Rect &_r2)->float{
+
+    };
     /**
      * 为第idx个边框水平向右搜索空白空间，返回可利用的空间，如果空间小于预定尺寸，则返回空值
      */
     auto calc_free_space = [&](const size_t &_curIdx) -> std::optional<cv::Rect2f> {
-
+        for (size_t i = 0; i < mData.size(); i++) {
+            if (i == _curIdx)continue;
+            if(iou(rects[i],rects[_curIdx])<=0)continue;
+        }
         return std::nullopt;
     };
     auto fill_rect_with_text = [&](const cv::Rect &_freeRect, const size_t &_curIdx) -> void {
