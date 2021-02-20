@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <limits>
+#include <cmath>
 
 template<typename T>
 inline T gcd(const T &x, const T &y) {
@@ -102,6 +103,10 @@ public:
 
     float floatValue() const {
         return static_cast<float>(first) / static_cast<float>(second);
+    }
+
+    int intValue() const {
+        return static_cast<int>(std::round(floatValue()));
     }
 
     bool operator<(const Fraction &x) const {

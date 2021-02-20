@@ -89,6 +89,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         }
         if (explicitAtomMap[_aid]) {
             mData.push_back(std::move(sym));
+            hwToAtomMap[mData.size() - 1] = _aid;// 记录映射用于字符转字符串时的化合价评估
         }
     };
     mol->safeTraverseAtoms(add_atom_item);
@@ -251,8 +252,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         item1->push_back(add_arc(B, A));
         item2->push_back(add_arc(C, A));
     }
-    // 添加字符串
-
+    // 添加字符串操作在写入画布前的深拷贝对象上完成
 //    std::cout << "avgSize=" << avgSize << std::endl;
     return avgSize;
 }
@@ -360,7 +360,6 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
 
 void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     float avgSize = reloadHWData(0.1);
-    setHwController(controllers[rand() % controllers.size()]);
     float k0 = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k0, k0);
     size_t fixW, fixH;
@@ -371,7 +370,8 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
         target->rotate(rand() % 360);
-        target->replaceCharWithText();
+        target->replaceCharWithText(1);
+        target->setHwController(controllers[rand() % controllers.size()]);
         auto bBox = target->getBoundingBox().value();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
@@ -435,6 +435,8 @@ static std::unordered_set<DetectorClasses> bondClassSet = {
 extern CRNNDataGenerator crnnDataGenerator;
 
 void HwMol::replaceCharWithText(const float &_prob) {
+    auto molOp = std::static_pointer_cast<MolOp>(molOpHolder);
+    molOp->updateAtomValenceMap();
     std::vector<cv::Rect2f> rects(mData.size());
     float avgSize = 0;
     for (size_t i = 0; i < mData.size(); i++) {
@@ -444,31 +446,41 @@ void HwMol::replaceCharWithText(const float &_prob) {
     }
     avgSize /= mData.size();
     auto iou = [](const cv::Rect &_r1, const cv::Rect &_r2) -> float {
-
+        return -1;
     };
     /**
-     * 为第idx个边框水平向右搜索空白空间，返回可利用的空间，如果空间小于预定尺寸，则返回空值
+     * 为第idx个边框水平向左右搜索空白空间，返回可利用的空间，如果空间小于预定尺寸，则返回空值
      */
-    auto calc_free_space = [&](const size_t &_curIdx) -> std::optional<cv::Rect2f> {
+    auto calc_free_space = [&](const size_t &_curIdx) -> std::optional<std::pair<cv::Rect2f, bool>> {
         for (size_t i = 0; i < mData.size(); i++) {
             if (i == _curIdx)continue;
             if (iou(rects[i], rects[_curIdx]) <= 0)continue;
         }
-        return std::nullopt;
+//        return std::nullopt;
+        bool isLeft = false;
+        cv::Rect2f rect = rects[_curIdx];
+        rect.width *= 20;
+        return std::make_pair(rect, isLeft);
     };
-    auto fill_rect_with_text = [&](const cv::Rect &_freeRect, const size_t &_curIdx) -> void {
-        auto newItem = crnnDataGenerator.getRectStr(_freeRect);
+    auto fill_rect_with_text = [&](const cv::Rect &_freeRect, bool _isLeft, const size_t &_curIdx) -> void {
+        auto aid = hwToAtomMap[_curIdx];
+        auto atom = mol->getAtomById(aid);
+        frac val = molOp->getValByAtomId(aid);
+        std::cout << "element=" << atom->getElementName() << ",curVal=" << val << std::endl;
+        auto newItem = crnnDataGenerator.getRectStr(_freeRect, val.intValue(), _isLeft);
         if (newItem) {
+            std::cout << "!!!!! replace\n";
             mData[_curIdx] = newItem;
+            rects[_curIdx] = newItem->getBoundingBox().value();
         }
-        rects[_curIdx] = newItem->getBoundingBox().value();
     };
+    std::cout << "*****************\n";
     for (size_t i = 0; i < mData.size(); i++) {
         if (!notExist(bondClassSet, mData[i]->getItemType()))continue;
         auto freeRectOpt = calc_free_space(i);
         if (!freeRectOpt)continue;
-        auto &freeRect = freeRectOpt.value();
-        fill_rect_with_text(freeRect, i);
+        auto &[freeRect, isLeft] = freeRectOpt.value();
+        fill_rect_with_text(freeRect, isLeft, i);
     }
 }
 
@@ -479,5 +491,6 @@ shared_ptr<HwBase> HwMol::clone() const {
     for (size_t i = 0; i < mData.size(); i++) {
         sister->mData[i] = mData[i]->clone();
     }
+    sister->hwToAtomMap = hwToAtomMap;// TODO: 这个值不会被修改，可改引用
     return sister;
 }

@@ -68,6 +68,13 @@ public:
     const std::vector<std::vector<std::unordered_set<size_t>>> &
     getAromaticRings(bool _retAid) const;
 
+    /**
+     * 全量更新化合价表
+     */
+    void updateAtomValenceMap();
+
+    frac getValByAtomId(const size_t &_aid) const;
+
 private:
 
     /**
@@ -83,11 +90,6 @@ private:
      * @param _valence 待添加化合价
      */
     void addValence4Atom(const size_t &_aid, const frac &_valence);
-
-    /**
-     * 全量更新化合价表
-     */
-    void updateAtomValenceMap();
 
 
     /**

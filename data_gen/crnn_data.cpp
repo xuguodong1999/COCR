@@ -307,6 +307,42 @@ void CRNNDataGenerator::getChemTexts() {
     }
 }
 
-std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect &_freeRect) {
-    return nullptr;
+static std::vector<std::vector<std::string>> lGroupCandidates = {
+        {"CH3", "NH2", "OH"},//1
+        {"CH2", "NH"},//2
+        {"CH"},//3
+};
+static std::vector<std::vector<std::string>> rGroupCandidates = {
+        {"H3C", "H2N", "HO"},//1
+        {"H2C", "HN"},//2
+        {"HC"},//3
+};
+
+std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect &_freeRect, const int &_val, bool _isLeft) {
+    if (_val <= 0 || _val > 3)
+        return nullptr;
+    std::string str;
+    if (_isLeft) {
+        str = randSelect(lGroupCandidates[_val - 1]);
+    } else {
+        str = randSelect(rGroupCandidates[_val - 1]);
+    }
+    auto hwStr = std::make_shared<HwStr>();
+    hwStr->loadRichACSII(str);
+    auto rect0 = hwStr->getBoundingBox().value();
+    float k0 = rect0.width / rect0.height;
+    float k1 = _freeRect.width / _freeRect.height;
+    float height = _freeRect.height;
+    float width = (std::min)(rect0.width, height * k0);
+    if (k0 / 1.5 < k1) {// 允许水平1.5倍的压缩
+        hwStr->resizeTo(width, height, false);
+        if (_isLeft) {
+            hwStr->moveLeftTopTo(_freeRect.tl());
+        } else {
+            hwStr->moveLeftTopTo(cv::Point2f(_freeRect.x + _freeRect.width - width, _freeRect.y));
+        }
+    } else {
+        return nullptr;
+    }
+    return hwStr;
 }

@@ -50,9 +50,10 @@ public:
     /**
      * 返回一个可以填入 freeRect 的字符串图元
      * @param _freeRect
+     * @param _isLeft 自由基在左侧
      * @return
      */
-    std::shared_ptr<HwBase> getRectStr(const cv::Rect &_freeRect);
+    std::shared_ptr<HwBase> getRectStr(const cv::Rect &_freeRect, const int &_val, bool _isLeft);
 };
 
 #endif//_CRNN_DATA_HPP_

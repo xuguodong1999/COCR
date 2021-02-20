@@ -775,3 +775,11 @@ void MolOp::updateDoubleBondCounter() {
     };
     mol->safeTraverseBonds(add_db_num);
 }
+
+frac MolOp::getValByAtomId(const size_t &_aid) const {
+    auto it = atomValenceMap.find(_aid);
+    if (it == atomValenceMap.end())
+        return 0;
+    else
+        return it->second;
+}

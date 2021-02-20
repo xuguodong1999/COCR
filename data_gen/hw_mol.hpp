@@ -15,7 +15,7 @@ class HwMol : public HwBase, public MolHolder {
     std::vector<std::shared_ptr<HwBase>> mData;
     HwController *hwController;
     std::shared_ptr<MolHolder> mol2dHolder, molOpHolder;
-
+    std::unordered_map<size_t, size_t> hwToAtomMap;
     /**
      * @param _explicitCarbonProb 控制碳原子是否显示写出
      * @return 平均图元大小
