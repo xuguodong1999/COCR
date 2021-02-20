@@ -38,8 +38,8 @@ endif (MSVC)
 set(ncnn_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ncnn/lib/cmake/ncnn)
 
 add_subdirectory(openbabel)
-add_subdirectory(data)
+add_subdirectory(data_gen)
 add_subdirectory(app)
 
 add_dependencies(app openbabel)
-add_dependencies(data openbabel)
+add_dependencies(data_gen openbabel)

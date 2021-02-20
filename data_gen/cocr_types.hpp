@@ -14,6 +14,13 @@ using node_type = unsigned char;
 
 enum class DetectorClasses {
     ItemEmpty = 0,
+    ItemSingleBond,
+    ItemDoubleBond,
+    ItemTripleBond,
+    ItemSolidWedgeBond,
+    ItemDashWedgeBond,
+    ItemWaveBond,
+    ItemCircleBond,
     ItemC,
     ItemH,
     ItemO,
@@ -25,13 +32,6 @@ enum class DetectorClasses {
     ItemBr,
     ItemI,
     ItemB,
-    ItemSingleBond,
-    ItemDoubleBond,
-    ItemTripleBond,
-    ItemSolidWedgeBond,
-    ItemDashWedgeBond,
-    ItemCircleBond,
-    ItemWaveBond,
     ItemHorizontalStr
 };
 

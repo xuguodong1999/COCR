@@ -257,7 +257,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     return avgSize;
 }
 
-static std::unordered_map<DetectorClasses, int> labels = {
+// soso17 labels
+static std::unordered_map<DetectorClasses, int> soso17Labels = {
         {DetectorClasses::ItemO,              1},
         {DetectorClasses::ItemI,              2},
         {DetectorClasses::ItemC,              6},
@@ -276,7 +277,30 @@ static std::unordered_map<DetectorClasses, int> labels = {
         {DetectorClasses::ItemSolidWedgeBond, 10},
         {DetectorClasses::ItemCl,             14}};
 //static int beginLabel = 0;
-
+static std::unordered_map<DetectorClasses, int> fullLabels = {
+        // bond type
+        {DetectorClasses::ItemSingleBond, 0},
+        {DetectorClasses::ItemDoubleBond, 1},
+        {DetectorClasses::ItemTripleBond, 2},
+        {DetectorClasses::ItemSolidWedgeBond, 3},
+        {DetectorClasses::ItemDashWedgeBond, 4},
+        {DetectorClasses::ItemWaveBond, 5},
+        {DetectorClasses::ItemCircleBond, 6},
+        // deprecated char type
+        {DetectorClasses::ItemC, 7},
+        {DetectorClasses::ItemH, 7},
+        {DetectorClasses::ItemO, 7},
+        {DetectorClasses::ItemN, 7},
+        {DetectorClasses::ItemP, 7},
+        {DetectorClasses::ItemS, 7},
+        {DetectorClasses::ItemF, 7},
+        {DetectorClasses::ItemCl, 7},
+        {DetectorClasses::ItemBr, 7},
+        {DetectorClasses::ItemI, 7},
+        {DetectorClasses::ItemB, 7},
+        // new text type
+        {DetectorClasses::ItemHorizontalStr, 7}
+};
 static std::vector<HwController> controllers = {
 //        HwController(2),
         HwController(3),
@@ -327,7 +351,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
             bBox.width *= k;
             bBox.height *= k;
             float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
-            ofsm << labels[name] << " " << centX / fixW << " " << centY / fixH << " "
+            ofsm << fullLabels[name] << " " << centX / fixW << " " << centY / fixH << " "
                  << bBox.width / fixW << " " << bBox.height / fixH << "\n";
         }
         ofsm.close();
@@ -357,7 +381,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
         auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
         auto&[k, offsetx, offsety]=offset;
         for (auto &sym:target->mData) {
-//            std::cout << labels[sym->getItemType()] << std::endl;
+//            std::cout << fullLabels[sym->getItemType()] << std::endl;
             auto bBox = sym->getBoundingBox().value();
             bBox.x = bBox.x * k + offsetx;
             bBox.y = bBox.y * k + offsety;
@@ -419,7 +443,7 @@ void HwMol::replaceCharWithText(const float &_prob) {
         avgSize += (std::max)(rects[i].width, rects[i].height);
     }
     avgSize /= mData.size();
-    auto iou=[](const cv::Rect &_r1,const cv::Rect &_r2)->float{
+    auto iou = [](const cv::Rect &_r1, const cv::Rect &_r2) -> float {
 
     };
     /**
@@ -428,7 +452,7 @@ void HwMol::replaceCharWithText(const float &_prob) {
     auto calc_free_space = [&](const size_t &_curIdx) -> std::optional<cv::Rect2f> {
         for (size_t i = 0; i < mData.size(); i++) {
             if (i == _curIdx)continue;
-            if(iou(rects[i],rects[_curIdx])<=0)continue;
+            if (iou(rects[i], rects[_curIdx]) <= 0)continue;
         }
         return std::nullopt;
     };
