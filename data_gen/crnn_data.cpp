@@ -308,17 +308,17 @@ void CRNNDataGenerator::getChemTexts() {
 }
 
 static std::vector<std::vector<std::string>> lGroupCandidates = {
-        {"CH3", "NH2", "OH"},//1
+        {"CH3", "NH2", "OH","CH2CH2COOEt","COOH","CHO","COCH3"},//1
         {"CH2", "NH"},//2
         {"CH"},//3
 };
 static std::vector<std::vector<std::string>> rGroupCandidates = {
-        {"H3C", "H2N", "HO"},//1
+        {"H3C", "H2N", "HO","EtO","EtOH2C"},//1
         {"H2C", "HN"},//2
         {"HC"},//3
 };
 
-std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect &_freeRect, const int &_val, bool _isLeft) {
+std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect2f &_freeRect, const int &_val, bool _isLeft) {
     if (_val <= 0 || _val > 3)
         return nullptr;
     std::string str;
@@ -333,7 +333,7 @@ std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect &_freeRect,
     float k0 = rect0.width / rect0.height;
     float k1 = _freeRect.width / _freeRect.height;
     float height = _freeRect.height;
-    float width = (std::min)(rect0.width, height * k0);
+    float width = (std::min)(_freeRect.width, height * k0);
     if (k0 / 1.5 < k1) {// 允许水平1.5倍的压缩
         hwStr->resizeTo(width, height, false);
         if (_isLeft) {

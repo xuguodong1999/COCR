@@ -254,6 +254,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     }
     // 添加字符串操作在写入画布前的深拷贝对象上完成
 //    std::cout << "avgSize=" << avgSize << std::endl;
+    molOp->updateAtomValenceMap();
     return avgSize;
 }
 
@@ -320,13 +321,16 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
     size_t fixW, fixH;
     fixW = fixH = 640;
     for (size_t i = 0; i < _repeatTimes; i++) {
-        this->rotate(rand() % 360);
-        auto bBox = this->getBoundingBox().value();
+        auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
+        target->rotate(rand() % 360);
+        target->replaceCharWithText(0.5);
+        target->setHwController(controllers[rand() % controllers.size()]);
+        auto bBox = target->getBoundingBox().value();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
-        this->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
-        this->paintTo(img);
+        target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
+        target->paintTo(img);
         std::string suffix = "_" + std::to_string(i);
         auto paddingColor = getScalar(ColorName::rgbWhite);
         if (byProb(hwController->getRevertColorProb())) {// 反转颜色
@@ -343,7 +347,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
             std::cerr << "fail to open " << _labelPath + suffix + ".txt" << std::endl;
             exit(-1);
         }
-        for (auto &sym:mData) {
+        for (auto &sym:target->mData) {
             auto name = sym->getItemType();
             auto bBox = sym->getBoundingBox().value();
             bBox.x = bBox.x * k + offsetx;
@@ -436,7 +440,7 @@ extern CRNNDataGenerator crnnDataGenerator;
 
 void HwMol::replaceCharWithText(const float &_prob) {
     auto molOp = std::static_pointer_cast<MolOp>(molOpHolder);
-    molOp->updateAtomValenceMap();
+//    molOp->updateAtomValenceMap();
     std::vector<cv::Rect2f> rects(mData.size());
     float avgSize = 0;
     for (size_t i = 0; i < mData.size(); i++) {
@@ -445,22 +449,50 @@ void HwMol::replaceCharWithText(const float &_prob) {
         avgSize += (std::max)(rects[i].width, rects[i].height);
     }
     avgSize /= mData.size();
-    auto iou = [](const cv::Rect &_r1, const cv::Rect &_r2) -> float {
-        return -1;
-    };
     /**
      * 为第idx个边框水平向左右搜索空白空间，返回可利用的空间，如果空间小于预定尺寸，则返回空值
      */
     auto calc_free_space = [&](const size_t &_curIdx) -> std::optional<std::pair<cv::Rect2f, bool>> {
+        /**
+         * 规则：
+         * 1、新空间不小于原空间
+         * 2、若左右都有空间，随机返回方向，裁剪另一侧空间
+         * 3、
+         */
+        auto &curRect = rects[_curIdx];
+        float xBegin = -10000, xMid = curRect.x + curRect.width / 2,
+                xEnd = 10000;
+        float yBegin = curRect.y, yEnd = curRect.y + curRect.height;
         for (size_t i = 0; i < mData.size(); i++) {
             if (i == _curIdx)continue;
-            if (iou(rects[i], rects[_curIdx]) <= 0)continue;
+            auto &cmpRect = rects[i];
+            float yBegin2 = cmpRect.y, yEnd2 = cmpRect.y + cmpRect.height;
+            if (yBegin2 > yEnd || yEnd2 < yBegin)continue;// 不在水平线上
+            float xBegin2 = cmpRect.x, xEnd2 = cmpRect.x + cmpRect.width;
+            if (xEnd2 < xMid) {
+                xBegin = (std::max)(xBegin, xEnd2);
+            }
+            if (xBegin2 > xMid) {
+                xEnd = (std::min)(xEnd, xBegin2);
+            }
+            if (xBegin > xMid && xEnd < xMid)return std::nullopt;
         }
-//        return std::nullopt;
-        bool isLeft = false;
-        cv::Rect2f rect = rects[_curIdx];
-        rect.width *= 20;
-        return std::make_pair(rect, isLeft);
+        std::cout << xBegin << "," << xMid << "," << xEnd << std::endl;
+        if (xBegin < xMid || xMid < xEnd) {
+            bool isLeft = (curRect.width + curRect.x) < xEnd;
+            if (xBegin == -10000)isLeft = false;
+            cv::Rect2f rect = curRect;
+            if (isLeft) {
+                rect.width = xEnd - curRect.x;
+            } else {
+                rect.x = xBegin;
+                rect.width = curRect.x + curRect.width - xBegin;
+            }
+            if (rect.width / curRect.width < 2)return std::nullopt;
+            return std::make_pair(rect, isLeft);
+        } else {
+            return std::nullopt;
+        }
     };
     auto fill_rect_with_text = [&](const cv::Rect &_freeRect, bool _isLeft, const size_t &_curIdx) -> void {
         auto aid = hwToAtomMap[_curIdx];
@@ -477,6 +509,7 @@ void HwMol::replaceCharWithText(const float &_prob) {
     std::cout << "*****************\n";
     for (size_t i = 0; i < mData.size(); i++) {
         if (!notExist(bondClassSet, mData[i]->getItemType()))continue;
+        if (byProb(_prob))continue;
         auto freeRectOpt = calc_free_space(i);
         if (!freeRectOpt)continue;
         auto &[freeRect, isLeft] = freeRectOpt.value();

@@ -53,7 +53,7 @@ public:
      * @param _isLeft 自由基在左侧
      * @return
      */
-    std::shared_ptr<HwBase> getRectStr(const cv::Rect &_freeRect, const int &_val, bool _isLeft);
+    std::shared_ptr<HwBase> getRectStr(const cv::Rect2f &_freeRect, const int &_val, bool _isLeft);
 };
 
 #endif//_CRNN_DATA_HPP_

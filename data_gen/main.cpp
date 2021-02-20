@@ -1,5 +1,6 @@
 #include "crnn_data.hpp"
 #include "soso_darknet.hpp"
+#include "hw_data.hpp"
 #include <QCoreApplication>
 
 #include <random>
@@ -20,8 +21,8 @@ void generateCRNNData() {
 void generateYoloData() {
     srand(0022);
     SOSODarknet generator;
-    generator.init(WORKSPACE + "soso-obj");
-    generator.dump(2000000, 2);
+    generator.init("/media/xgd/hjyy-ext4/soso-obj");
+    generator.dump(2000, 5);
 }
 void testYoloDara(){
     srand(0022);
@@ -30,11 +31,14 @@ void testYoloDara(){
     generator.init(WORKSPACE + "soso-obj");
     generator.display();
 }
+
 int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    HwDataLoader::getInstance();
     try {
 //        generateCRNNData();
-        testYoloDara();
+//        testYoloDara();
+        generateYoloData();
         return 0;
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

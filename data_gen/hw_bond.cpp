@@ -7,6 +7,9 @@
 #include <iostream>
 
 std::shared_ptr<HwBond> HwBond::GetHwBond(const JBondType &_bondType) {
+    if (JBondType::SingleBond == _bondType && byProb(0.1)) {
+        return std::make_shared<HwWaveBond>();
+    }
     switch (_bondType) {
         case JBondType::SolidWedgeBond:
             return std::make_shared<HwSolidWedgeBond>();
@@ -286,7 +289,7 @@ DetectorClasses HwDashWedgeBond::getItemType() const {
 }
 
 void HwWaveBond::loadHwData() {
-    float cyclesOfSin = belowProb(5) + 4;
+    float cyclesOfSin = belowProb(3) + 4;
     float end = M_PI * 2 * cyclesOfSin;
     HwStroke stroke;
     // TODO: 这里存在一个随机要素

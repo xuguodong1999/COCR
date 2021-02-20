@@ -12,7 +12,7 @@ public:
 
     bool init(const std::string &_topDir);
 
-    void dump(const size_t &_numOfSamples, const size_t &_repeatTimes = 1);
+    void dump(const size_t &_numOfSamples, const size_t &_repeatTimes = 5);
 
     void display();
 };
