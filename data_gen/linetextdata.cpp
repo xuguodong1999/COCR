@@ -21,12 +21,12 @@ const std::string &SpliceableText::getRaw() const {
 
 std::string SpliceableText::getRand() const {
     if (l && r && byProb(0.6)) {
-        return cons[rand() % std::min(l, 3)] + text + cons[rand() % std::min(r, 3)];
+        return cons[randInt() % std::min(l, 3)] + text + cons[randInt() % std::min(r, 3)];
     } else if (l && byProb(0.6)) {
-        return cons[rand() % std::min(l, 3)] + text;
+        return cons[randInt() % std::min(l, 3)] + text;
     } else if (r && byProb(0.6)) {
         // 右侧有自由基
-        return text + cons[rand() % std::min(r, 3)];
+        return text + cons[randInt() % std::min(r, 3)];
     } else {
         return text;
     }
@@ -274,6 +274,7 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
             iss_line >> a;
             if (!a.empty() && '#' == a[0])continue;
             iss_line >> b;
+//            std::cout << "\"" << b << "\",";
             if ('-' != a.front() && '-' != a.back()) {
                 originSTVec.emplace_back(a, 1, 0);//CO2H
             }

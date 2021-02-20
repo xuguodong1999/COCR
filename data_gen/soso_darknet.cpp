@@ -47,9 +47,10 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
     }
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
-                                             2, 3, 4, 5, 6, 7,
+//                                             2, 3, 4, 5,
+                                             6, 7,
                                              8, 9, 10, 11, 12, 13,
-//                                             14, 15, 16
+                                             14, 15, 16
                                      });
     const int loopTime = _numOfSamples / _repeatTimes;
     std::shuffle(alkanes.begin(), alkanes.end(), std::default_random_engine());
@@ -79,7 +80,8 @@ void SOSODarknet::display() {
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
                                              2, 3, 4, 5, 6, 7,
-//                                             8, 9, 10, 11, 12, 13, 14, 15, 16
+//                                             8, 9, 10, 11, 12, 13, 14, 15,
+//                                             16
                                      });
     const int loopTime = 100;
     std::shuffle(alkanes.begin(), alkanes.end(), std::default_random_engine());

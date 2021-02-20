@@ -15,7 +15,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
-#include <math.h>
+#include <random>
 
 template<typename T>
 std::string to_string_with_precision(const T _fValue, const int n = 2) {
@@ -31,12 +31,19 @@ std::string deleteSubStr(const std::string &_target, const std::string &_subStr)
 std::string replaceSubStr(const std::string &_target,
                           const std::string &_subStr, const std::string &_newSubStr);
 
+extern std::default_random_engine DRE;
+extern std::uniform_int_distribution<int> UID;
+
+inline int randInt() {
+    return UID(DRE);
+}
+
 /**
  * @param _prob 返回值为真的概率
  * @return 概率为 _prob 的真值
  */
 inline bool byProb(const float &_prob) {
-    return rand() / static_cast<float>(RAND_MAX) < _prob;
+    return randInt() / static_cast<float>(RAND_MAX) < _prob;
 }
 
 /**
@@ -44,7 +51,7 @@ inline bool byProb(const float &_prob) {
  * @return 返回 [0, _prob) 的浮点数
  */
 inline float belowProb(const float &_prob) {
-    return rand() / static_cast<float>(RAND_MAX) * _prob;
+    return randInt() / static_cast<float>(RAND_MAX) * _prob;
 }
 
 /**
@@ -52,7 +59,7 @@ inline float belowProb(const float &_prob) {
  * @return 返回 (1-_prob,1] 的浮点数
  */
 inline float aboveProb(const float &_prob) {
-    return 1.0 - rand() / static_cast<float>(RAND_MAX) * _prob;
+    return 1.0 - randInt() / static_cast<float>(RAND_MAX) * _prob;
 }
 
 inline float betweenProb(const float &_minProb, const float &_maxProb) {
@@ -79,7 +86,7 @@ inline const T &randSelect(const std::vector<T> &_container) {
         std::cerr << "randSelect empty container" << std::endl;
         exit(-1);
     }
-    return _container[rand() % _container.size()];
+    return _container[randInt() % _container.size()];
 }
 
 inline const char &randSelect(const std::string &_container) {
@@ -87,7 +94,7 @@ inline const char &randSelect(const std::string &_container) {
         std::cerr << "randSelect empty container" << std::endl;
         exit(-1);
     }
-    return _container[rand() % _container.size()];
+    return _container[randInt() % _container.size()];
 }
 
 template<typename T>

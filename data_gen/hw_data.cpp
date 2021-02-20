@@ -1,4 +1,5 @@
 #include "hw_data.hpp"
+#include "std_util.hpp"
 #include <QFile>
 #include <sstream>
 #include <fstream>
@@ -205,10 +206,10 @@ HwScript HwDataLoader::GetByIntLabel(int label) {
         exit(-1);
     }
     auto &classData = mData[label];
-    size_t idx = rand() % classData.size();
+    size_t idx = randInt() % classData.size();
     if (label == 43) {
         // 补丁：这个字符有问题
-        while (idx == 43) idx = rand() % classData.size();
+        while (idx == 43) idx = randInt() % classData.size();
     }
     return classData[idx].toHwScript();
 }
@@ -227,11 +228,11 @@ HwScript HwDataLoader::GetShape(const ShapeType &_shapeType) {
     switch (_shapeType) {
         case ShapeType::Line: {
             return std::move(GetByIntLabel(
-                    sLabelCharLikeLine[rand() % sLabelCharLikeLine.size()]));
+                    sLabelCharLikeLine[randInt() % sLabelCharLikeLine.size()]));
         }
         case ShapeType::Circle: {
             auto circle = GetByIntLabel(
-                    sLabelCharLikeCircle[rand() % sLabelCharLikeCircle.size()]);
+                    sLabelCharLikeCircle[randInt() % sLabelCharLikeCircle.size()]);
             circle.castToCircle(cv::Point2f(50, 50), 50, 50);
             return std::move(circle);
         }

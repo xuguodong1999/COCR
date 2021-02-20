@@ -31,11 +31,11 @@ void MolOp::randomize(
             std::vector<JBondType> sBondCandidates;
             if (delta >= 2) {// 三键、双键
                 sBondCandidates = {JBondType::SingleBond, JBondType::SingleBond,
-                                   JBondType::SingleBond, JBondType::SingleBond,
+                                   JBondType::SingleBond, JBondType::WaveBond,
                                    JBondType::DoubleBond, JBondType::TripleBond};
             } else {// 双键
                 sBondCandidates = {JBondType::SingleBond, JBondType::SingleBond,
-                                   JBondType::SingleBond, JBondType::SingleBond,
+                                   JBondType::SingleBond, JBondType::WaveBond,
                                    JBondType::DoubleBond};
             }
             // 检查键端原子是不是已经有双键
@@ -226,7 +226,7 @@ void MolOp::addHs(const size_t &_aid) {
 void MolOp::addGroup(const size_t &_aid) {
     std::vector<std::shared_ptr<JAtom>> newAtoms;
     std::vector<std::shared_ptr<JBond>> newBonds;
-    int index = rand() % 1;
+    int index = randInt() % 1;
     switch (index) {
         case 0: {// 羰基、酰基、醛基、羧基、巯基
             static std::vector<size_t> carbonyl = {8, 8, 8, 8, 16};
@@ -265,7 +265,7 @@ void MolOp::addAromaticRing(const size_t &_bid) {
     auto bond = mol->getBondById(_bid);
     auto from = bond->getAtomFrom(), to = bond->getAtomTo();
     removeBond(_bid);
-    int index = rand() % 9;
+    int index = randInt() % 9;
     switch (index) {
         case 0:
         case 1:
@@ -298,9 +298,9 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                 bondInRing.insert(bond->getId());
             }
             aromaticRingBids.push_back({std::move(bondInRing)});
-            newBonds.push_back(mol->addBond(from, newAtoms[1 + rand() % 2]->getId(),
+            newBonds.push_back(mol->addBond(from, newAtoms[1 + randInt() % 2]->getId(),
                                             JBondType::SingleBond));
-            newBonds.push_back(mol->addBond(to, newAtoms[3 + rand() % 2]->getId(),
+            newBonds.push_back(mol->addBond(to, newAtoms[3 + randInt() % 2]->getId(),
                                             JBondType::SingleBond));
             break;
         }
@@ -356,8 +356,8 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                 }
             }
             if (poses.size() < 2) {
-                size_t pos1 = rand() % (reactSiteNum / 2);
-                size_t pos2 = reactSiteNum / 2 + rand() % (reactSiteNum / 2);
+                size_t pos1 = randInt() % (reactSiteNum / 2);
+                size_t pos2 = reactSiteNum / 2 + randInt() % (reactSiteNum / 2);
                 newAtoms[pos1]->setElementType(ElementType::C);
                 newAtoms[pos2]->setElementType(ElementType::C);
                 poses = {newAtoms[pos1]->getId(), newAtoms[pos2]->getId()};
@@ -409,8 +409,8 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                 }
             }
             if (poses.size() < 2) {
-                size_t pos1 = rand() % (reactSiteNum / 2);
-                size_t pos2 = reactSiteNum / 2 + rand() % (reactSiteNum / 2);
+                size_t pos1 = randInt() % (reactSiteNum / 2);
+                size_t pos2 = reactSiteNum / 2 + randInt() % (reactSiteNum / 2);
                 newAtoms[pos1]->setElementType(ElementType::C);
                 newAtoms[pos2]->setElementType(ElementType::C);
                 poses = {newAtoms[pos1]->getId(), newAtoms[pos2]->getId()};
@@ -466,8 +466,8 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                 }
             }
             if (poses.size() < 2) {
-                size_t pos1 = rand() % (reactSiteNum / 2);
-                size_t pos2 = reactSiteNum / 2 + rand() % (reactSiteNum / 2);
+                size_t pos1 = randInt() % (reactSiteNum / 2);
+                size_t pos2 = reactSiteNum / 2 + randInt() % (reactSiteNum / 2);
                 newAtoms[pos1]->setElementType(ElementType::C);
                 newAtoms[pos2]->setElementType(ElementType::C);
                 poses = {newAtoms[pos1]->getId(), newAtoms[pos2]->getId()};
@@ -548,8 +548,8 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
                     mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
                     mol->addBond(newAtoms[2]->getId(), newAtoms[0]->getId()),
-                    mol->addBond(from, newAtoms[rand() % 2]->getId()),
-                    mol->addBond(to, newAtoms[rand() % 2]->getId())
+                    mol->addBond(from, newAtoms[randInt() % 2]->getId()),
+                    mol->addBond(to, newAtoms[randInt() % 2]->getId())
             };
             break;
         }
@@ -563,8 +563,8 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
                     mol->addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
                     mol->addBond(newAtoms[3]->getId(), newAtoms[0]->getId()),
-                    mol->addBond(from, newAtoms[rand() % 3]->getId()),
-                    mol->addBond(to, newAtoms[rand() % 3]->getId())
+                    mol->addBond(from, newAtoms[randInt() % 3]->getId()),
+                    mol->addBond(to, newAtoms[randInt() % 3]->getId())
             };
             break;
         }
@@ -580,8 +580,8 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
                     mol->addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
                     mol->addBond(newAtoms[4]->getId(), newAtoms[0]->getId()),
-                    mol->addBond(from, newAtoms[rand() % 4]->getId()),
-                    mol->addBond(to, newAtoms[rand() % 4]->getId())
+                    mol->addBond(from, newAtoms[randInt() % 4]->getId()),
+                    mol->addBond(to, newAtoms[randInt() % 4]->getId())
             };
             break;
         }
@@ -598,8 +598,8 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
                     mol->addBond(newAtoms[4]->getId(), newAtoms[5]->getId()),
                     mol->addBond(newAtoms[5]->getId(), newAtoms[0]->getId()),
-                    mol->addBond(from, newAtoms[rand() % 5]->getId()),
-                    mol->addBond(to, newAtoms[rand() % 5]->getId())
+                    mol->addBond(from, newAtoms[randInt() % 5]->getId()),
+                    mol->addBond(to, newAtoms[randInt() % 5]->getId())
             };
             break;
         }
@@ -618,8 +618,8 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addBond(newAtoms[4]->getId(), newAtoms[5]->getId()),
                     mol->addBond(newAtoms[5]->getId(), newAtoms[6]->getId()),
                     mol->addBond(newAtoms[6]->getId(), newAtoms[0]->getId()),
-                    mol->addBond(from, newAtoms[rand() % 6]->getId()),
-                    mol->addBond(to, newAtoms[rand() % 6]->getId())
+                    mol->addBond(from, newAtoms[randInt() % 6]->getId()),
+                    mol->addBond(to, newAtoms[randInt() % 6]->getId())
             };
             break;
         }
@@ -640,8 +640,8 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addBond(newAtoms[4]->getId(), newAtoms[5]->getId(),
                                  JBondType::DoubleBond),
                     mol->addBond(newAtoms[5]->getId(), newAtoms[0]->getId()),
-                    mol->addBond(from, newAtoms[0 + rand() % 3]->getId()),
-                    mol->addBond(to, newAtoms[3 + rand() % 3]->getId()),
+                    mol->addBond(from, newAtoms[0 + randInt() % 3]->getId()),
+                    mol->addBond(to, newAtoms[3 + randInt() % 3]->getId()),
                     mol->addBond(newAtoms[0]->getId(), newAtoms[6]->getId()),
                     mol->addBond(newAtoms[3]->getId(), newAtoms[6]->getId())
             };

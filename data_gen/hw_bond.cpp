@@ -7,9 +7,6 @@
 #include <iostream>
 
 std::shared_ptr<HwBond> HwBond::GetHwBond(const JBondType &_bondType) {
-    if (JBondType::SingleBond == _bondType && byProb(0.1)) {
-        return std::make_shared<HwWaveBond>();
-    }
     switch (_bondType) {
         case JBondType::SolidWedgeBond:
             return std::make_shared<HwSolidWedgeBond>();
@@ -187,6 +184,17 @@ DetectorClasses HwDoubleBond::getItemType() const {
     return DetectorClasses::ItemDoubleBond;
 }
 
+std::shared_ptr<HwBase> HwDoubleBond::clone() const {
+    auto brother = std::make_shared<HwDoubleBond>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    brother->from = from;
+    brother->to = to;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
+}
+
 void HwTripleBond::loadHwData() {
     // TODO: 分离随机变量
     const float intervalK = 0.4;
@@ -212,6 +220,17 @@ void HwTripleBond::loadHwData() {
 
 DetectorClasses HwTripleBond::getItemType() const {
     return DetectorClasses::ItemTripleBond;
+}
+
+std::shared_ptr<HwBase> HwTripleBond::clone() const {
+    auto brother = std::make_shared<HwTripleBond>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    brother->from = from;
+    brother->to = to;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
 }
 
 void HwSolidWedgeBond::loadHwData() {
@@ -245,9 +264,20 @@ DetectorClasses HwSolidWedgeBond::getItemType() const {
     return DetectorClasses::ItemSolidWedgeBond;
 }
 
+std::shared_ptr<HwBase> HwSolidWedgeBond::clone() const {
+    auto brother = std::make_shared<HwSolidWedgeBond>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    brother->from = from;
+    brother->to = to;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
+}
+
 void HwDashWedgeBond::loadHwData() {
     const float intervalK = 0.5;
-    const int numOfSplit = 4 + rand() % 3; // default: 5
+    const int numOfSplit = 4 + randInt() % 3; // default: 5
     cv::Point2f vec = from - to;
     auto length = getDistance2D(from, to);
     cv::Point2f vecT(0, 1);
@@ -288,8 +318,19 @@ DetectorClasses HwDashWedgeBond::getItemType() const {
     return DetectorClasses::ItemDashWedgeBond;
 }
 
+std::shared_ptr<HwBase> HwDashWedgeBond::clone() const {
+    auto brother = std::make_shared<HwDashWedgeBond>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    brother->from = from;
+    brother->to = to;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
+}
+
 void HwWaveBond::loadHwData() {
-    float cyclesOfSin = belowProb(3) + 4;
+    float cyclesOfSin = belowProb(2) + 4;
     float end = M_PI * 2 * cyclesOfSin;
     HwStroke stroke;
     // TODO: 这里存在一个随机要素
@@ -304,4 +345,15 @@ void HwWaveBond::loadHwData() {
 
 DetectorClasses HwWaveBond::getItemType() const {
     return DetectorClasses::ItemWaveBond;
+}
+
+std::shared_ptr<HwBase> HwWaveBond::clone() const {
+    auto brother = std::make_shared<HwWaveBond>();
+    brother->keepDirection = keepDirection;
+    brother->mData = mData;
+    brother->from = from;
+    brother->to = to;
+    if (hwController)
+        brother->setHwController(*hwController);
+    return brother;
 }

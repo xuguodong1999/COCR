@@ -88,7 +88,7 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
         auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
         std::string filename = std::to_string(idx) + ".jpg";
         std::string file_path = topDir + trainDir + imgDir + filename;
-        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
+        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + randInt() % 30});
         trainOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
@@ -118,7 +118,7 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
         auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
         std::string filename = std::to_string(idx) + ".jpg";
         std::string file_path = topDir + testDir + imgDir + filename;
-        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + rand() % 30});
+        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + randInt() % 30});
         testOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
@@ -308,14 +308,31 @@ void CRNNDataGenerator::getChemTexts() {
 }
 
 static std::vector<std::vector<std::string>> lGroupCandidates = {
-        {"CH3", "NH2", "OH","CH2CH2COOEt","COOH","CHO","COCH3"},//1
-        {"CH2", "NH"},//2
-        {"CH"},//3
+        {"+NH4", "N+H4", "_S", "_O",  "_NH", "C_H2", "N_H", "_CH2", "_NH", "_CH2", "N+H4", "NH4+", "S_", "O_", "NH_", "CH2_", "N_H", "C_H2", "PH2", "OH", "SH", "NH2", "CO2Et", "COOEt", "CO2H", "CO2R", "COOR", "Et", "NCF3", "CF3", "CCl3", "CN", "NC", "N(OH)CH3", "NO2", "NO2", "NO", "SO3H", "COOH", "OEt", "OAc", "NHAc", "Ac", "CHO", "NMe", "SMe", "OMe", "COO_", "Ph", "OR", "NOH", "CO2Me", "COOMe", "SO2Me", "CBr3", "NHCbz", "SO2Cl", "COBr", "COBu", "COCF3", "COCl", "NHOH", "NMe2", "CH3", "C2H5",
+
+                "+NH4", "N+H4", "_S", "_O", "_NH", "C_H2", "N_H", "_CH2", "_NH", "_CH2", "N+H4", "NH4+", "S_", "O_", "NH_", "CH2_", "N_H", "C_H2", "PH2", "OH", "SH", "NH2", "CO2Et", "COOEt", "CO2H", "CO2R", "COOR", "Et", "NCF3", "CF3", "CCl3", "CN", "NC", "N(OH)CH3", "NO2", "NO2", "NO", "SO3H", "COOH", "OEt", "OAc", "NHAc", "Ac", "CHO", "NMe", "SMe", "OMe", "COO_", "Ph", "OR", "NOH", "CO2Me", "COOMe", "SO2Me", "CBr3", "NHCbz", "SO2Cl", "COBr", "COBu", "COCF3", "COCl", "NHOH", "NMe2", "CH3", "C2H5",
+
+                "+NH4", "N+H4", "_S", "_O", "_NH", "C_H2", "N_H", "_CH2", "_NH", "_CH2", "N+H4", "NH4+", "S_", "O_", "NH_", "CH2_", "N_H", "C_H2", "PH2", "OH", "SH", "NH2", "CO2Et", "COOEt", "CO2H", "CO2R", "COOR", "Et", "NCF3", "CF3", "CCl3", "CN", "NC", "N(OH)CH3", "NO2", "NO2", "NO", "SO3H", "COOH", "OEt", "OAc", "NHAc", "Ac", "CHO", "NMe", "SMe", "OMe", "COO_", "Ph", "OR", "NOH", "CO2Me", "COOMe", "SO2Me", "CBr3", "NHCbz", "SO2Cl", "COBr", "COBu", "COCF3", "COCl", "NHOH", "NMe2", "CH3", "C2H5",
+
+                "+NH4", "N+H4", "_S", "_O", "_NH", "C_H2", "N_H", "_CH2", "_NH", "_CH2", "N+H4", "NH4+", "S_", "O_", "NH_", "CH2_", "N_H", "C_H2", "PH2", "OH", "SH", "NH2", "CO2Et", "COOEt", "CO2H", "CO2R", "COOR", "Et", "NCF3", "CF3", "CCl3", "CN", "NC", "N(OH)CH3", "NO2", "NO2", "NO", "SO3H", "COOH", "OEt", "OAc", "NHAc", "Ac", "CHO", "NMe", "SMe", "OMe", "COO_", "Ph", "OR", "NOH", "CO2Me", "COOMe", "SO2Me", "CBr3", "NHCbz", "SO2Cl", "COBr", "COBu", "COCF3", "COCl", "NHOH", "NMe2", "CH3", "C2H5",
+
+                "OiBu", "tBu", "nBu", "iPr", "nPr", "OBz", "THPO", "NMe2", "NHZ", "CH2OH", "CH2NH2", "Me", "OBn", "NHAm", "OAm", "CO2Am", "COOAm", "SAm", "NHBn", "CO2Bn", "SnBu3", "NHBu", "OBu", "CO2Bu", "COOBu", "SBu", "COCO", "COEt", "COF", "COMe", "CONEt2", "CONH2", "CONHEt", "CONHMe", "CONMe2", "COSH", "NEt2", "NEt3", "NHEt", "SO2NH2", "OMs", "OCN", "SCN", "NHAm", "NHBn", "NHBu", "NHEt", "NHOH", "NHPr", "NO", "POEt2", "POEt3", "POOEt2", "PrNH", "SEt", "CH", "CH_", "D", "ND2", "DS", "Ace", "Acetyl", "Acyl", "AcAc", "Ad", "AOC", "Alloc", "Allyl", "All", "BDMS", "Boc", "BOC", "t-Boc", "BOM", "Bn", "Benzyl", "Bz", "Benzoyl", "Bromo", "n-Bu", "t-Bu", "cBu", "c-Bu", "c-But", "nButyl", "n-Butyl", "n-But", "t-Butyl", "cButyl", "c-Butyl", "Bs", "Cbz", "Z", "CE", "cinnamyl", "Chloro", "Dansyl", "Dan", "DEM", "DEIPS", "Dip", "Dmb", "DPA", "DPhAc", "DTBMS", "Et", "Ethyl", "EE", "EOM", "Fluoro", "Formyl", "FMOC", "nHeptyl", "n-Heptyl", "cHeptyl", "c-Heptyl", "nHexyl", "n-Hexyl", "cHexyl", "c-Hexyl", "Iodo", "IPDMS", "Methoxy", "MEM", "Mesityl", "MOM", "Mesyl", "Ms", "Nitro", "nOctyl", "n-Octyl", "n-Oct", "PAB", "nPentyl", "n-Pentyl", "cPentyl", "c-Pentyl", "Phenyl", "PMB", "Pv", "Pivaloyl", "Propargyl", "nPropyl", "n-Propyl", "n-Pr", "n-Pro", "cPropyl", "c-Propyl", "c-Pr", "c-Pro", "cPr", "i-Propyl", "i-Pr", "i-Pro", "SEM", "THP", "TMS", "TBDMS", "TBDPS", "TES", "Tf", "TIPS", "Tos", "p-Tos", "p-Tosyl", "4-Tosyl", "Tr", "Troc", "Vinyl", "Voc"},//1
+        {"CH2",  "NH",   "N_", "C_H", "CH_", "NH2+", "N+H2"},//2
+        {"CH",   "C_",   "C+", "NH+", "N+H"},//3
 };
 static std::vector<std::vector<std::string>> rGroupCandidates = {
-        {"H3C", "H2N", "HO","EtO","EtOH2C"},//1
-        {"H2C", "HN"},//2
-        {"HC"},//3
+        {
+                "H4+N", "_S", "_O", "H_N", "H2_C", "H_N", "H2_C", "H4+N", "H4N+", "S_", "O_", "HN_", "H2C_", "HN_", "H2C_", "PH2", "OH", "SH", "_OOC", "H2N", "HO", "EtO2C", "EtOOC", "iBuO", "tBu", "nBu", "iPr", "nPr", "Et", "F3CN", "F3C", "Cl3C", "NC", "CN", "CH3(OH)N", "O2N", "O2N", "ON", "HO3S", "HOOC", "EtO", "AcO", "AcNH", "Ac", "OHC", "MeN", "MeS", "MeO", "Ph", "RO", "HON", "HO2C", "MeO2C", "MeOOC", "MeO2S", "Me2N", "RO2C", "ROOC", "ZNH", "HOCH2", "H2NCH2", "Me", "F3CCO", "ClCO", "COCO", "EtCO", "FCO", "MeCO", "Et2NCO", "H2NCO", "EtHNCO", "MeHNCO", "Me2NCO", "HSOC", "Et2N", "Et3N", "EtNH", "H2NSO2", "HONH", "Me2N",
+
+                "H4+N", "_S", "_O", "H_N", "H2_C", "H_N", "H2_C", "H4+N", "H4N+", "S_", "O_", "HN_", "H2C_", "HN_", "H2C_", "PH2", "OH", "SH", "_OOC", "H2N", "HO", "EtO2C", "EtOOC", "iBuO", "tBu", "nBu", "iPr", "nPr", "Et", "F3CN", "F3C", "Cl3C", "NC", "CN", "CH3(OH)N", "O2N", "O2N", "ON", "HO3S", "HOOC", "EtO", "AcO", "AcNH", "Ac", "OHC", "MeN", "MeS", "MeO", "Ph", "RO", "HON", "HO2C", "MeO2C", "MeOOC", "MeO2S", "Me2N", "RO2C", "ROOC", "ZNH", "HOCH2", "H2NCH2", "Me", "F3CCO", "ClCO", "COCO", "EtCO", "FCO", "MeCO", "Et2NCO", "H2NCO", "EtHNCO", "MeHNCO", "Me2NCO", "HSOC", "Et2N", "Et3N", "EtNH", "H2NSO2", "HONH", "Me2N",
+
+                "H4+N", "_S", "_O", "H_N", "H2_C", "H_N", "H2_C", "H4+N", "H4N+", "S_", "O_", "HN_", "H2C_", "HN_", "H2C_", "PH2", "OH", "SH", "_OOC", "H2N", "HO", "EtO2C", "EtOOC", "iBuO", "tBu", "nBu", "iPr", "nPr", "Et", "F3CN", "F3C", "Cl3C", "NC", "CN", "CH3(OH)N", "O2N", "O2N", "ON", "HO3S", "HOOC", "EtO", "AcO", "AcNH", "Ac", "OHC", "MeN", "MeS", "MeO", "Ph", "RO", "HON", "HO2C", "MeO2C", "MeOOC", "MeO2S", "Me2N", "RO2C", "ROOC", "ZNH", "HOCH2", "H2NCH2", "Me", "F3CCO", "ClCO", "COCO", "EtCO", "FCO", "MeCO", "Et2NCO", "H2NCO", "EtHNCO", "MeHNCO", "Me2NCO", "HSOC", "Et2N", "Et3N", "EtNH", "H2NSO2", "HONH", "Me2N",
+
+                "H4+N", "_S", "_O", "H_N", "H2_C", "H_N", "H2_C", "H4+N", "H4N+", "S_", "O_", "HN_", "H2C_", "HN_", "H2C_", "PH2", "OH", "SH", "_OOC", "H2N", "HO", "EtO2C", "EtOOC", "iBuO", "tBu", "nBu", "iPr", "nPr", "Et", "F3CN", "F3C", "Cl3C", "NC", "CN", "CH3(OH)N", "O2N", "O2N", "ON", "HO3S", "HOOC", "EtO", "AcO", "AcNH", "Ac", "OHC", "MeN", "MeS", "MeO", "Ph", "RO", "HON", "HO2C", "MeO2C", "MeOOC", "MeO2S", "Me2N", "RO2C", "ROOC", "ZNH", "HOCH2", "H2NCH2", "Me", "F3CCO", "ClCO", "COCO", "EtCO", "FCO", "MeCO", "Et2NCO", "H2NCO", "EtHNCO", "MeHNCO", "Me2NCO", "HSOC", "Et2N", "Et3N", "EtNH", "H2NSO2", "HONH", "Me2N",
+
+                "BzO", "THPO", "BnO", "AmNH", "AmO", "AmO2C", "AmOOC", "AmS", "BnNH", "BnO2C", "Bu3Sn", "BuNH", "BuO", "BuO2C", "BuOOC", "BuS", "Br3C", "CbzNH", "ClSO2", "BrCO", "BuCO", "MsO", "NCO", "NCS", "AmHN", "BnHN", "BuHN", "EtHB", "HOHN", "PrHN", "ON", "EtO2P", "EtO3P", "Et2OOP", "HNPr", "CCS", "HC", "HC_", "D", "D2N", "SD", "H3C", "C2H5", "Ace", "Acetyl", "Acyl", "AcAc", "Ad", "AOC", "Alloc", "Allyl", "All", "BDMS", "Boc", "BOC", "t-Boc", "BOM", "Bn", "Benzyl", "Bz", "Benzoyl", "Bromo", "n-Bu", "t-Bu", "cBu", "c-Bu", "c-But", "nButyl", "n-Butyl", "n-But", "t-Butyl", "cButyl", "c-Butyl", "Bs", "Cbz", "Z", "CE", "cinnamyl", "Chloro", "Dansyl", "Dan", "DEM", "DEIPS", "Dip", "Dmb", "DPA", "DPhAc", "DTBMS", "Et", "Ethyl", "EE", "EOM", "Fluoro", "Formyl", "FMOC", "nHeptyl", "n-Heptyl", "cHeptyl", "c-Heptyl", "nHexyl", "n-Hexyl", "cHexyl", "c-Hexyl", "Iodo", "IPDMS", "Methoxy", "MEM", "Mesityl", "MOM", "Mesyl", "Ms", "Nitro", "nOctyl", "n-Octyl", "n-Oct", "PAB", "nPentyl", "n-Pentyl", "cPentyl", "c-Pentyl", "Phenyl", "PMB", "Pv", "Pivaloyl", "Propargyl", "nPropyl", "n-Propyl", "n-Pr", "n-Pro", "cPropyl", "c-Propyl", "c-Pr", "c-Pro", "cPr", "i-Propyl", "i-Pr", "i-Pro", "SEM", "THP", "TMS", "TBDMS", "TBDPS", "TES", "Tf", "TIPS", "Tos", "p-Tos", "p-Tosyl", "4-Tosyl", "Tr", "Troc", "Vinyl", "Voc"},//1
+        {       "H2C",  "HN", "N_", "H_C", "H2_N", "HC+", "H2N+"},//2
+        {       "HC",   "C_", "C+", "HN+", "H+N"},//3
 };
 
 std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect2f &_freeRect, const int &_val, bool _isLeft) {
@@ -323,9 +340,9 @@ std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect2f &_freeRec
         return nullptr;
     std::string str;
     if (_isLeft) {
-        str = randSelect(lGroupCandidates[_val - 1]);
+        str = randSelect(lGroupCandidates[randInt() % _val]);
     } else {
-        str = randSelect(rGroupCandidates[_val - 1]);
+        str = randSelect(rGroupCandidates[randInt() % _val]);
     }
     auto hwStr = std::make_shared<HwStr>();
     hwStr->loadRichACSII(str);

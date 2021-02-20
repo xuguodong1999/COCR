@@ -21,8 +21,8 @@ void generateCRNNData() {
 void generateYoloData() {
     srand(0022);
     SOSODarknet generator;
-    generator.init("/media/xgd/hjyy-ext4/soso-obj");
-    generator.dump(2000, 5);
+    generator.init("/home/xgd/datasets/soso-obj");
+    generator.dump(2000000, 10);
 }
 void testYoloDara(){
     srand(0022);

@@ -315,16 +315,16 @@ static std::vector<HwController> controllers = {
 void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
                           const size_t &_repeatTimes) {
     float avgSize = reloadHWData(0.1);
-    setHwController(controllers[rand() % controllers.size()]);
+    setHwController(controllers[randInt() % controllers.size()]);
     float k = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
     size_t fixW, fixH;
     fixW = fixH = 640;
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
-        target->rotate(rand() % 360);
+        target->rotate(randInt() % 360);
         target->replaceCharWithText(0.5);
-        target->setHwController(controllers[rand() % controllers.size()]);
+        target->setHwController(controllers[randInt() % controllers.size()]);
         auto bBox = target->getBoundingBox().value();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
@@ -339,8 +339,9 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         }
         auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH, paddingColor);
         auto&[k, offsetx, offsety]=offset;
+        cv::cvtColor(resImg, resImg, cv::COLOR_BGR2GRAY);
         cv::imwrite(_imgPath + suffix + ".jpg", resImg,
-                    {cv::IMWRITE_JPEG_QUALITY, 100});
+                    {cv::IMWRITE_JPEG_QUALITY, 70 + randInt() % 30});
         std::ofstream ofsm(_labelPath + suffix + ".txt");
         ofsm.precision(6);
         if (!ofsm.is_open()) {
@@ -373,9 +374,9 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     };
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
-        target->rotate(rand() % 360);
+        target->rotate(randInt() % 360);
         target->replaceCharWithText(1);
-        target->setHwController(controllers[rand() % controllers.size()]);
+        target->setHwController(controllers[randInt() % controllers.size()]);
         auto bBox = target->getBoundingBox().value();
         const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
@@ -477,7 +478,7 @@ void HwMol::replaceCharWithText(const float &_prob) {
             }
             if (xBegin > xMid && xEnd < xMid)return std::nullopt;
         }
-        std::cout << xBegin << "," << xMid << "," << xEnd << std::endl;
+//        std::cout << xBegin << "," << xMid << "," << xEnd << std::endl;
         if (xBegin < xMid || xMid < xEnd) {
             bool isLeft = (curRect.width + curRect.x) < xEnd;
             if (xBegin == -10000)isLeft = false;
@@ -498,18 +499,18 @@ void HwMol::replaceCharWithText(const float &_prob) {
         auto aid = hwToAtomMap[_curIdx];
         auto atom = mol->getAtomById(aid);
         frac val = molOp->getValByAtomId(aid);
-        std::cout << "element=" << atom->getElementName() << ",curVal=" << val << std::endl;
+//        std::cout << "element=" << atom->getElementName() << ",curVal=" << val << std::endl;
         auto newItem = crnnDataGenerator.getRectStr(_freeRect, val.intValue(), _isLeft);
         if (newItem) {
-            std::cout << "!!!!! replace\n";
+//            std::cout << "!!!!! replace\n";
             mData[_curIdx] = newItem;
             rects[_curIdx] = newItem->getBoundingBox().value();
         }
     };
-    std::cout << "*****************\n";
+//    std::cout << "*****************\n";
     for (size_t i = 0; i < mData.size(); i++) {
         if (!notExist(bondClassSet, mData[i]->getItemType()))continue;
-        if (byProb(_prob))continue;
+        if (!byProb(_prob))continue;
         auto freeRectOpt = calc_free_space(i);
         if (!freeRectOpt)continue;
         auto &[freeRect, isLeft] = freeRectOpt.value();

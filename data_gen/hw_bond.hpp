@@ -65,6 +65,7 @@ class HwDoubleBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    std::shared_ptr<HwBase> clone() const override;
     DetectorClasses getItemType() const override;
 
     HwDoubleBond() = default;
@@ -74,6 +75,7 @@ class HwTripleBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    std::shared_ptr<HwBase> clone() const override;
     DetectorClasses getItemType() const override;
 
     HwTripleBond() = default;
@@ -83,6 +85,7 @@ class HwSolidWedgeBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    std::shared_ptr<HwBase> clone() const override;
     DetectorClasses getItemType() const override;
 
     HwSolidWedgeBond() = default;
@@ -92,6 +95,7 @@ class HwDashWedgeBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    std::shared_ptr<HwBase> clone() const override;
     DetectorClasses getItemType() const override;
 
     HwDashWedgeBond() = default;
@@ -101,6 +105,7 @@ class HwWaveBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
+    std::shared_ptr<HwBase> clone() const override;
     DetectorClasses getItemType() const override;
 
     HwWaveBond() = default;
