@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 
 project(jokejoker-project)
 
@@ -40,15 +40,15 @@ elseif (UNIX)
     set(Qt5_DIR /home/xgd/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5)
     #    set(OpenCV_DIR ${OPENCV_INSTALL_DIR}/lib/cmake/opencv4)
     set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
-#    set(OpenCV_DIR /home/xgd/shared/opencv451-patched/lib/cmake/opencv4)
 endif (MSVC)
 
 # ncnn
 set(ncnn_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ncnn/lib/cmake/ncnn)
 
 add_subdirectory(openbabel)
-add_subdirectory(data_gen)
 add_subdirectory(app)
-
 add_dependencies(app openbabel)
-add_dependencies(data_gen openbabel)
+if(UNIX AND NOT APPLE)
+  add_subdirectory(data_gen)
+  add_dependencies(data_gen openbabel)
+endif(UNIX AND NOT APPLE)

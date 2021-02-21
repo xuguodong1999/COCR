@@ -34,22 +34,21 @@ msvc:{
     QMAKE_CFLAGS += /utf-8
     QMAKE_CXXFLAGS += /utf-8 /openmp
 
-    RC_FILE = $${PWD}/src/resources/COCR.rc
+    RC_FILE = $${PWD}/resources/app.rc
 
-    MY_MSVC_LIB_DIR = $${PWD}/msvc_x64_lib
+    OPENCV_LIB_DIR = $${PWD}/opencv
+    NCNN_LIB_DIR = $${PWD}/ncnn
 
-    INCLUDEPATH += $${MY_MSVC_LIB_DIR}/include
-
+    INCLUDEPATH += $${PWD}/data_gen \
+        $${OPENCV_LIB_DIR}/include $${NCNN_LIB_DIR}/include
     LIB_NAME_LIST = opencv_highgui451.lib \
         opencv_imgcodecs451.lib opencv_imgproc451.lib \
         opencv_dnn451.lib opencv_core451.lib \
-        ade.lib libopenjp2.lib libwebp.lib IlmImf.lib \
-        libpng.lib  ittnotify.lib zlib.lib \
-        libprotobuf.lib libjpeg-turbo.lib libtiff.lib
-
+        zlib.lib libprotobuf.lib libjpeg-turbo.lib libpng.lib
     for(LIB_NAME, LIB_NAME_LIST){
-        LIBS += $${MY_MSVC_LIB_DIR}/x64/$${LIB_NAME}
+        LIBS += $${OPENCV_LIB_DIR}/x64/vc16/staticlib/$${LIB_NAME}
     }
+    LIBS += $${NCNN_LIB_DIR}/lib/ncnn.lib gdi32.lib user32.Lib advAPI32.Lib comdlg32.lib
 }
 
 unix:!android:{
@@ -102,26 +101,28 @@ android:{
 
 }
 
-INCLUDE_LIST = 
+INCLUDE_LIST = graph_composer.hpp mainwindow.h object_detection.hpp text_recognition.hpp ocr_thread.hpp
 
-SRC_LIST = main.cpp
+SRC_LIST = main.cpp graph_composer.cpp mainwindow.cpp object_detection.cpp text_recognition.cpp ocr_thread.cpp
 
-UI_LIST = 
+UI_LIST = mainwindow.ui
 
 for(INCLUDE_FILE,INCLUDE_LIST){
-    HEADERS += $${PWD}/src/$${INCLUDE_FILE}
+    HEADERS += $${PWD}/app/$${INCLUDE_FILE}
 }
 for(SRC_FILE,SRC_LIST){
-    SOURCES += $${PWD}/src/$${SRC_FILE}
+    SOURCES += $${PWD}/app/$${SRC_FILE}
 }
 for(UI_FILE,UI_LIST){
-    FORMS += $${PWD}/src/$${UI_FILE}
+    FORMS += $${PWD}/app/$${UI_FILE}
 }
 
-RESOURCES += $${PWD}/res/big_res.qrc \
-    $${PWD}/res/obdata.qrc
+SOURCES += $${PWD}/data_gen/timer.cpp
 
-TRANSLATIONS += $${PWD}/res/jokejoker_zh_CN.ts
+RESOURCES += $${PWD}/resources/big_res.qrc \
+    $${PWD}/resources/obdata.qrc
+
+TRANSLATIONS += $${PWD}/resources/jokejoker_zh_CN.ts
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

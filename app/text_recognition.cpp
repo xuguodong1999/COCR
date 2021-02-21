@@ -1,8 +1,8 @@
 #include "text_recognition.hpp"
-#include <ncnn/net.h>
 #include <opencv2/dnn.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+#include <ncnn/net.h>
 #include <numeric>
 #include <iostream>
 

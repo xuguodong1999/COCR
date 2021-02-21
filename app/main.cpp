@@ -1,5 +1,5 @@
-//#include <QApplication>
-//#include <QWidget>
+#include <QApplication>
+#include <QWidget>
 //
 //int main(int argc, char *argv[]) {
 //#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -14,7 +14,12 @@
 #include <opencv2/highgui.hpp>
 #include <iostream>
 
+#ifdef Q_OS_LINUX
 std::string ROOT_DIR = "/home/xgd/source/repos/jokejoker/workspace/";
+#elif defined(Q_OS_WIN)
+std::string ROOT_DIR = "C:/Users/xgd/Desktop/jokejoker/workspace/";
+#endif
+
 std::string std_alphabet = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty";
 
 void test_crnn_opencv() {
@@ -34,6 +39,7 @@ void test_crnn_ncnn() {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
     }
     while (true) {
+        std::cout<<ROOT_DIR + "demo.jpg"<<std::endl;
         cv::Mat image = cv::imread(ROOT_DIR + "demo.jpg", cv::IMREAD_GRAYSCALE);
         Timer timer;
         timer.start();

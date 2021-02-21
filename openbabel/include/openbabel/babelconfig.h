@@ -10,9 +10,12 @@
 /* OB_VERSION is (major << 16) + (minor << 8) + patch */
 #define OB_VERSION OB_VERSION_CHECK(3, 1, 1)
 
-#define OB_EXPORT Q_DECL_EXPORT
-#define OB_IMPORT Q_DECL_IMPORT
-#define OB_HIDDEN Q_DECL_HIDDEN
+//#define OB_EXPORT Q_DECL_EXPORT
+//#define OB_IMPORT Q_DECL_IMPORT
+//#define OB_HIDDEN Q_DECL_HIDDEN
+#define OB_EXPORT
+#define OB_IMPORT
+#define OB_HIDDEN
 
 /* Used to export symbols for DLL / shared library builds */
 
