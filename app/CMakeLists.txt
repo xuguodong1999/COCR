@@ -30,7 +30,7 @@ qt5_add_big_resources(BIG_RES_FILES ../resources/big_res.qrc)
 set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc)
 
 aux_source_directory(../app DIR_SRCS)
-set(PROJECT_SOURCES ${DIR_SRCS} ${RES_SRCS} ${TS_FILES} ../data_gen/timer.cpp)
+set(PROJECT_SOURCES ${DIR_SRCS} ${RES_SRCS} ${TS_FILES} ../data_gen/timer.cpp ../data_gen/colors.cpp ../data_gen/std_util.cpp)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

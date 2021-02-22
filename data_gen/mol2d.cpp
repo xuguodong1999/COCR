@@ -18,6 +18,12 @@ void Mol2D::calcCoord2D() {
         cAtom->setAtomicNumber(mol->getAtomById(aid)->getAtomicNumber());
         j2cAtomMap[aid] = cAtom;
     });
+    // atom->constrained = params->dbg_useConstrained;
+    //      atom->fixed = params->dbg_useFixed;
+    // const RDGeom::Point2D& coords =
+    //            params->coordMap.find(oatom->getIdx())->second;
+    //        atom->templateCoordinates = sketcherMinimizerPointF(
+    //            coords.x * scaleFactor, coords.y * scaleFactor);
     std::vector<sketcherMinimizerBond *> cBondVec;
     mol->safeTraverseBonds([&](const size_t &bid) {
         auto jBond = mol->getBondById(bid);

@@ -11,7 +11,8 @@ project(jokejoker-project)
 #    endif()
 #endif()
 
-# openmp for alkane generation acceleration
+# openmp
+# for alkane generation acceleration
 find_package(OpenMP)
 if (OPENMP_FOUND)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -21,17 +22,19 @@ else (OPENMP_FOUND)
     message(WARNING "openmp not found. Acceleration for alkane generation disabled.")
 endif (OPENMP_FOUND)
 
-# opencv, you need to compile it>=4.5.1 for crnn and yolo call
+# ncnn
+set(ncnn_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ncnn/lib/cmake/ncnn)
+
+# opencv and qt
+# you need to compile opencv>=4.5.1 for crnn and yolo call
 set(OPENCV_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/opencv)
-
 set(ANDROID_OPENCV_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android/OpenCV-android-sdk)
-
 if (MSVC)
     set(OpenCV_DIR ${OPENCV_INSTALL_DIR}/x64/vc16/lib)
 elseif (APPLE)
     set(OpenCV_DIR ${OPENCV_INSTALL_DIR}/lib/cmake/opencv4)
 elseif (ANDROID)
-        set(ANDROID_NATIVE_API_LEVEL 21)
+    set(ANDROID_NATIVE_API_LEVEL 21)
     #    set(ANDROID_BUILD_ABI_x86 ON)
     #    set(ANDROID_BUILD_ABI_armeabi-v7a ON)
     set(OpenCV_DIR ${ANDROID_OPENCV_DIR}/sdk/native/jni)
@@ -42,13 +45,12 @@ elseif (UNIX)
     set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
 endif (MSVC)
 
-# ncnn
-set(ncnn_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ncnn/lib/cmake/ncnn)
 
-add_subdirectory(openbabel)
 add_subdirectory(app)
+add_subdirectory(data_gen)
+add_subdirectory(openbabel)
+add_subdirectory(coordgenlibs)
+
 add_dependencies(app openbabel)
-if(UNIX AND NOT APPLE)
-  add_subdirectory(data_gen)
-  add_dependencies(data_gen openbabel)
-endif(UNIX AND NOT APPLE)
+add_dependencies(data_gen coordgen)
+add_dependencies(data_gen openbabel)

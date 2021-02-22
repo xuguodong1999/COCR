@@ -11,9 +11,8 @@ namespace ncnn {
 }
 
 namespace xgd {
-    class TextRecognitionSolver {
+    class TextRecognition {
     protected:
-        bool isInited;
         std::vector<std::string> wordVec;
         const float meanValues = 127.5, normValues = 1.0 / 127.5;
         const int dstHeight = 32;
@@ -26,7 +25,7 @@ namespace xgd {
         virtual std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) = 0;
     };
 
-    class TextRecognitionOpenCVSolver : public TextRecognitionSolver {
+    class TextRecognitionOpenCVImpl : public TextRecognition {
         std::shared_ptr<cv::dnn::TextRecognitionModel> model;
         int dstWidth;
 
@@ -40,7 +39,7 @@ namespace xgd {
         std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) override;
     };
 
-    class TextRecognitionNCNNSolver : public TextRecognitionSolver {
+    class TextRecognitionNcnnImpl : public TextRecognition {
         int numThread;
         std::shared_ptr<ncnn::Net> net;
 
@@ -52,7 +51,7 @@ namespace xgd {
         cv::Mat preProcess(const cv::Mat &_src) override;
 
     public:
-        TextRecognitionNCNNSolver();
+        TextRecognitionNcnnImpl();
 
         bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words,
                        const int &_maxWidth);

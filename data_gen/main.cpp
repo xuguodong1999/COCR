@@ -37,8 +37,8 @@ int main(int argc, char **argv) {
     HwDataLoader::getInstance();
     try {
 //        generateCRNNData();
-//        testYoloDara();
-        generateYoloData();
+        testYoloDara();
+//        generateYoloData();
         return 0;
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
