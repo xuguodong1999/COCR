@@ -64,3 +64,7 @@ void xgd::TextCorrector::InitData() {
         c2Map[std::move(upperCase)] = ele;
     }
 }
+
+const std::string &xgd::TextCorrector::GetAlphabet() {
+    return ALPHABET;
+}

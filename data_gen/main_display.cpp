@@ -11,7 +11,14 @@ extern std::string WORKSPACE;
 
 CRNNDataGenerator crnnDataGenerator;
 
-
+/**
+ * TODO:
+ * 1、标准水平长文本
+ * 2、细楔形键
+ * 3、文本粗细泛化太弱
+ * 4、键类型的混淆
+ * 5、坐标嵌入
+ */
 void testYoloDara() {
     srand(0022);
     crnnDataGenerator.init("/tmp/fuck");

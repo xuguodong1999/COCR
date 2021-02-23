@@ -80,6 +80,8 @@ cv::Mat xgd::TextRecognitionNcnnImpl::preProcess(const cv::Mat &_src) {
     if (srcResized.cols > maxWidth) {
         cv::resize(srcResized, srcResized, cv::Size(maxWidth, dstHeight), 0, 0, cv::INTER_CUBIC);
     }
+//    cv::imshow("fuck",srcResized);
+//    cv::waitKey(0);
     return srcResized;
 }
 

@@ -25,11 +25,11 @@ std::vector<xgd::OCRItem> xgd::OCRManager::convert(const std::vector<DetectorObj
     int width = _input.cols, height = _input.rows;
     auto round_scale = [&](const float &_x, const float &_y, const float &_w, const float &_h) -> cv::Rect {
         int x, y, w, h;
-        int s = 4;
-        x = std::max(0, (int) std::round(_x - s));
-        y = std::max(0, (int) std::round(_y - s));
-        w = std::min(width - 1, (int) std::round(_x + _w + 2 * s)) - x;
-        h = std::min(height - 1, (int) std::round(_y + _h + 2 * s)) - y;
+        int sx = 4, sy = 2;
+        x = std::max(0, (int) std::round(_x - sx));
+        y = std::max(0, (int) std::round(_y - sy));
+        w = std::min(width - 1, (int) std::round(_x + _w + 2 * sx)) - x;
+        h = std::min(height - 1, (int) std::round(_y + _h + 2 * sy)) - y;
         return cv::Rect(x, y, w, h);
     };
     std::vector<OCRItem> items(_objects.size());
@@ -102,7 +102,7 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
                 break;
             }
             case OCRItemType::Circle: {
-                color = cvColor(ColorName::rgbYellow);
+                color = cvColor(ColorName::rgbBlue);
                 xgd::cross_line(canvas, item.getCenter(), 5, cvColor(ColorName::rgbRed), 2, true);
                 break;
             }
@@ -116,7 +116,6 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
                     2, cv::LINE_AA, false);
         cv::rectangle(canvas, rect, color, 1, cv::LINE_AA);
     }
-    cv::destroyAllWindows();
     cv::imshow("xgd::OCRManager::display", canvas);
     cv::waitKey(0);
 }
