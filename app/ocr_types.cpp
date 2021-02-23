@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 namespace xgd {
-    static std::vector<std::string> ElementsData = {
+    std::vector<std::string> ELEMENT_NAME_LIST = {
             "None",
             "H",
             "He",
@@ -276,7 +276,7 @@ namespace xgd {
 
         ElementType getElement() const override { return element; }
 
-        std::string getText() const override { return ElementsData[static_cast<size_t>(element)]; }
+        std::string getText() const override { return ELEMENT_NAME_LIST[static_cast<size_t>(element)]; }
 
         OCRElementDataItem(const ElementType &_elementType, const cv::Rect2f &_rect)
                 : element(_elementType), OCRDataItem(_rect) {}

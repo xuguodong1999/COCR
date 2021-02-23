@@ -5,9 +5,9 @@
 #include <opencv2/highgui.hpp>
 #include <iostream>
 
-xgd::OCRManager::OCRManager(
-        xgd::ObjectDetector &_detector, xgd::TextRecognition &_recognizer, GraphComposer &_composer)
-        : detector(_detector), recognizer(_recognizer), composer(_composer) {
+xgd::OCRManager::OCRManager(xgd::ObjectDetector &_detector, xgd::TextRecognition &_recognizer,
+                            TextCorrector &_corrector, GraphComposer &_composer)
+        : detector(_detector), recognizer(_recognizer), corrector(_corrector), composer(_composer) {
 
 }
 
@@ -54,7 +54,7 @@ std::vector<xgd::OCRItem> xgd::OCRManager::convert(const std::vector<DetectorObj
             }
             case DetectorObjectType::Text : {
                 auto[text, scores]=recognizer.recognize(_input(round_scale(obj.x(), obj.y(), obj.w(), obj.h())));
-
+                if (text.length() <= 2) { text = corrector.correct2(text); }
                 item.setAsText(text, obj.asRect());
                 break;
             }

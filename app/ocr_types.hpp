@@ -82,7 +82,7 @@ namespace xgd {
 
         virtual std::string getText() const;
 
-        virtual cv::Point2f getCenter()const;
+        virtual cv::Point2f getCenter() const;
     };
 
     struct OCRItem {
@@ -106,7 +106,8 @@ namespace xgd {
         std::string getText() const;
 
         const cv::Rect2f &getRect() const;
-        cv::Point2f getCenter()const;
+
+        cv::Point2f getCenter() const;
     };
 
     inline BondType toBondType(const DetectorObjectType &_objType) {

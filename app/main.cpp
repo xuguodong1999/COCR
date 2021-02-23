@@ -118,16 +118,18 @@ void testYolo() {
     }
     detector.setConfThresh(0.25);
     detector.setIouThresh(0.45);
-    xgd::TextRecognitionNcnnImpl solver;
-    if (!solver.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.bin",
+    xgd::TextRecognitionNcnnImpl recognizer;
+    if (!recognizer.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.bin",
                           ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.param",
-                          std_alphabet, 3200)) {
+                              std_alphabet, 3200)) {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
     }
-    cv::Mat image = cv::imread("/media/xgd/hjyy-ext4/soso17_small/JPEGImages/2_0.jpg",
+    cv::Mat image = cv::imread("/home/xgd/source/imago/examples/0000603_rnd.png",
                                cv::IMREAD_GRAYSCALE);
     xgd::GraphComposer composer;
-    xgd::OCRManager ocrManager(detector, solver, composer);
+    xgd::TextCorrector corrector;
+    corrector.InitData();
+    xgd::OCRManager ocrManager(detector, recognizer, corrector,composer);
     ocrManager.ocr(image, true);
 }
 
