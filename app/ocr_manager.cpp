@@ -79,23 +79,26 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
     for (auto &item:_items) {
         const auto &rect = item.getRect();
         cv::Scalar color;
+        std::string info;
         switch (item.type) {
             case OCRItemType::Element: {
                 color = cvColor(ColorName::rgbRed);
-                cv::putText(canvas, item.getText(), move_text_box(item.getRect().tl()),
-                            1, 1.5, color,
-                            2, cv::LINE_AA, false);
                 break;
             }
             case OCRItemType::Group: {
                 color = cvColor(ColorName::rgbBlue);
-                cv::putText(canvas, item.getText(), move_text_box(item.getRect().tl()),
-                            1, 1.5, color,
-                            2, cv::LINE_AA, false);
                 break;
             }
             case OCRItemType::Line: {
-                color = cvColor(ColorName::rgbGreen);
+                static std::unordered_map<BondType, ColorName> mm = {
+                        {BondType::SingleBond,   ColorName::rgbDarkRed},
+                        {BondType::DoubleBond,   ColorName::rgbDarkGreen},
+                        {BondType::TripleBond,   ColorName::rgbDarkGrey},
+                        {BondType::ImplicitBond, ColorName::rgbDarkGoldenrod},
+                        {BondType::UpBond,       ColorName::rgbDarkOliveGreen},
+                        {BondType::DownBond,     ColorName::rgbDarkKhaki}
+                };
+                color = cvColor(mm[item.getBondType()]);
                 xgd::cross_line(canvas, item.getFrom(), 5, cvColor(ColorName::rgbPink), 2, true);
                 xgd::cross_line(canvas, item.getTo(), 5, cvColor(ColorName::rgbDeepPink), 2, true);
                 break;
@@ -109,6 +112,10 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
                 throw std::runtime_error("xgd::OCRManager::display: unknown item.type");
             }
         }
+        info = item.getText();
+        cv::putText(canvas, info, move_text_box(item.getRect().tl()),
+                    1, 1.5, color,
+                    2, cv::LINE_AA, false);
         cv::rectangle(canvas, rect, color, 1, cv::LINE_AA);
     }
     cv::destroyAllWindows();

@@ -248,6 +248,25 @@ namespace xgd {
 
         cv::Point2f getCenter() const override { return (from + to) / 2.0; }
 
+        std::string getText() const override {
+            switch (bondType) {
+                case BondType::SingleBond:
+                    return "-";
+                case BondType::DoubleBond:
+                    return "=";
+                case BondType::TripleBond:
+                    return "#";
+                case BondType::UpBond:
+                    return "Up";
+                case BondType::DownBond:
+                    return "Down";
+                case BondType::ImplicitBond:
+                    return "~~";
+                default:
+                    return "err";
+            }
+        }
+
         void predFromTo(const cv::Mat &_imgGray);
 
         void predFromToForLine(const cv::Mat &_imgGray);
@@ -257,11 +276,14 @@ namespace xgd {
         cv::Point2f getFrom() const override { return from; }
 
         cv::Point2f getTo() const override { return to; }
+        BondType getBondType()const override{return bondType;}
     };
 
     struct OCRCircleDataItem : public OCRDataItem {
         float radius;
         cv::Point2f center;
+
+        std::string getText() const override { return "circle"; }
 
         float getRadius() const override { return radius; }
 
@@ -315,6 +337,10 @@ namespace xgd {
 
     cv::Point2f OCRDataItem::getCenter() const {
         return cv::Point2f(0, 0);
+    }
+
+    BondType OCRDataItem::getBondType() const {
+        return BondType::ImplicitBond;
     }
 }
 
@@ -540,4 +566,8 @@ const cv::Rect2f &xgd::OCRItem::getRect() const {
 
 cv::Point2f xgd::OCRItem::getCenter() const {
     return data->getCenter();
+}
+
+xgd::BondType xgd::OCRItem::getBondType() const {
+    return data->getBondType();
 }

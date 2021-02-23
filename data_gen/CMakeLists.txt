@@ -12,12 +12,24 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 set(CMAKE_AUTORCC ON)
 
 aux_source_directory(. PROJECT_SOURCES)
+list(REMOVE_ITEM PROJECT_SOURCES ./main_detect.cpp ./main_text.cpp ./main_display.cpp)
 
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ../resources/obdata.qrc)
+add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
+add_executable(${PROJECT_NAME}_detect main_detect.cpp ../resources/obdata.qrc)
+add_executable(${PROJECT_NAME}_text main_text.cpp ../resources/obdata.qrc)
+add_executable(${PROJECT_NAME}_display main_display.cpp ../resources/obdata.qrc)
+
+add_dependencies(${PROJECT_NAME}_detect ${PROJECT_NAME})
+add_dependencies(${PROJECT_NAME}_text ${PROJECT_NAME})
+add_dependencies(${PROJECT_NAME}_display ${PROJECT_NAME})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
         $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
 # link opencv, patched openbabel and coordgen here
-target_link_libraries(${PROJECT_NAME} PRIVATE
+target_link_libraries(${PROJECT_NAME} PUBLIC
         ${OpenCV_LIBS} Qt${QT_VERSION_MAJOR}::Core openbabel coordgen)
+
+target_link_libraries(${PROJECT_NAME}_detect PRIVATE ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_display PRIVATE ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_text PRIVATE ${PROJECT_NAME})

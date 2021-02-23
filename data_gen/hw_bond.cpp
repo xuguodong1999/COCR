@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <iostream>
+#include <opencv2/imgproc.hpp>
 
 std::shared_ptr<HwBond> HwBond::GetHwBond(const JBondType &_bondType) {
     switch (_bondType) {
@@ -29,6 +30,10 @@ std::shared_ptr<HwBond> HwBond::GetHwBond(const JBondType &_bondType) {
             exit(-1);
         }
     }
+}
+
+void HwBond::setUseHwCharProb(float useHwCharProb) {
+    HwBond::useHwCharProb = useHwCharProb;
 }
 
 
@@ -356,4 +361,35 @@ std::shared_ptr<HwBase> HwWaveBond::clone() const {
     if (hwController)
         brother->setHwController(*hwController);
     return brother;
+}
+
+
+void HwCircleBond::paintTo(cv::Mat &_canvas) const {
+    if (byProb(useHwCharProb))
+        HwBond::paintTo(_canvas);
+    else {
+        auto rf = getBoundingBox().value();
+        cv::RotatedRect rect(getRectCenter2D(rf), cv::Size(rf.width, rf.height), 0);
+        cv::ellipse(_canvas, rect,
+                    hwController->getColor(),
+                    hwController->getThickness(),
+                    hwController->getLineType());
+    }
+}
+
+
+void HwSolidWedgeBond::paintTo(cv::Mat &_canvas) const {
+    if (byProb(useHwCharProb))
+        HwBond::paintTo(_canvas);
+    else {
+
+    }
+}
+
+void HwDashWedgeBond::paintTo(cv::Mat &_canvas) const {
+    if (byProb(useHwCharProb))
+        HwBond::paintTo(_canvas);
+    else {
+
+    }
 }

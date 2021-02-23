@@ -124,7 +124,7 @@ void testYolo() {
                               std_alphabet, 3200)) {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
     }
-    cv::Mat image = cv::imread("/home/xgd/source/imago/examples/0000603_rnd.png",
+    cv::Mat image = cv::imread("/home/xgd/source/repos/jokejoker/workspace/uspto-validation-updated/images/US07314576-20080101-C00010.TIF",
                                cv::IMREAD_GRAYSCALE);
     xgd::GraphComposer composer;
     xgd::TextCorrector corrector;
