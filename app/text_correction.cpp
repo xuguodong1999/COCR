@@ -57,7 +57,7 @@ void xgd::TextCorrector::InitData() {
             while (beg != end) {
                 tmpStr[j] = beg->second;
                 c2Map[tmpStr] = ele;
-                std::cout << tmpStr << "," << ele << std::endl;
+//                std::cout << tmpStr << "," << ele << std::endl;
                 ++beg;
             }
         }

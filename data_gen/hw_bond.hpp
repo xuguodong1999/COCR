@@ -7,7 +7,7 @@
 class HwBond : public HwItem {
 protected:
     virtual void loadHwData() = 0;
-    inline static float useHwCharProb=0.9;
+    inline static float useHwCharProb = 0.8;
 public:
     static void setUseHwCharProb(float useHwCharProb);
 
@@ -103,7 +103,6 @@ public:
     DetectorClasses getItemType() const override;
 
     HwDashWedgeBond() = default;
-    void paintTo(cv::Mat &_canvas) const override;
 };
 
 class HwWaveBond : public HwSingleBond {

@@ -292,9 +292,9 @@ void HwDashWedgeBond::loadHwData() {
     }
     auto offset = vecT * length * intervalK;
     auto to1 = to + offset / 2, to2 = to - offset / 2;
-    //         _ to1
-    // from--<          from-to1,from-to2采样
-    //        \__to2
+    // _ to1
+    // from--< from-to1,from-to2采样
+    // \__to2
     float d[4] = {
             -from.x + to1.x,
             -from.y + to1.y,
@@ -382,14 +382,47 @@ void HwSolidWedgeBond::paintTo(cv::Mat &_canvas) const {
     if (byProb(useHwCharProb))
         HwBond::paintTo(_canvas);
     else {
-
-    }
-}
-
-void HwDashWedgeBond::paintTo(cv::Mat &_canvas) const {
-    if (byProb(useHwCharProb))
-        HwBond::paintTo(_canvas);
-    else {
-
+        auto paint_wedge_template = [&](
+                const cv::Rect2f &_rect, const int &_direction, const float &_k = 2) {
+            int _w = std::round(_rect.width), _h = std::round(_rect.height);
+            std::vector<cv::Point2i> pts(3);
+            const float up = _k / (_k + 1);
+            const float down = 1 - up;
+            switch (_direction) {
+                case 0:
+                    pts[0] = {0, 0};
+                    pts[1] = {_w - 1, (int) (_h * up)};
+                    pts[2] = {(int) (_w * up), _h - 1};
+                    break;
+                case 1:
+                    pts[0] = {_w - 1, 0};
+                    pts[1] = {0, (int) (_h * up)};
+                    pts[2] = {(int) (_w * down), _h - 1};
+                    break;
+                case 2:
+                    pts[0] = {0, _h - 1};
+                    pts[1] = {_w - 1, (int) (_h * down)};
+                    pts[2] = {(int) (_w * up), 0};
+                    break;
+                case 3:
+                    pts[0] = {_w - 1, _h - 1};
+                    pts[1] = {0, (int) (_h * down)};
+                    pts[2] = {(int) (_w * down), 0};
+                    break;
+            }
+            for (auto &pt:pts)pt += cv::Point(_rect.tl());
+            cv::fillPoly(_canvas, pts, hwController->getColor(), hwController->getLineType(), hwController->getShift());
+        };
+        auto rect = getBoundingBox().value();
+        std::vector<std::pair<float, int>> dir = {
+                {getDistance2D(rect.tl(), from),                                 0},
+                {getDistance2D(cv::Point2f(rect.x + rect.width, rect.y), from),  1},
+                {getDistance2D(cv::Point2f(rect.x, rect.y + rect.height), from), 2},
+                {getDistance2D(rect.br(), from),                                 3}
+        };
+        std::sort(dir.begin(), dir.end(), [](const std::pair<float, int> &_a, const std::pair<float, int> &_b) {
+            return _a.first < _b.first;
+        });
+        paint_wedge_template(rect, dir[0].second, betweenProb(1, 6));
     }
 }

@@ -14,7 +14,6 @@ xgd::OCRManager::OCRManager(xgd::ObjectDetector &_detector, xgd::TextRecognition
 std::shared_ptr<xgd::Molecule> xgd::OCRManager::ocr(cv::Mat &_originInput, bool _debug) {
     auto[input, objects]=detector.detect(_originInput);
     auto items = convert(objects, input);
-    std::cout << items.size() << std::endl;
     objects.clear();
     if (_debug) {
         display(items, input);
@@ -37,7 +36,6 @@ std::vector<xgd::OCRItem> xgd::OCRManager::convert(const std::vector<DetectorObj
     for (size_t i = 0; i < _objects.size(); i++) {
         const auto &obj = _objects[i];
         auto &item = items[i];
-        std::cout << "label=" << (int) obj.label << std::endl;
         switch (obj.label) {
             case DetectorObjectType::SingleLine :
             case DetectorObjectType::DoubleLine :
