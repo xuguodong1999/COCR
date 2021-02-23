@@ -1,1 +1,0 @@
-#include "ocr_thread.hpp"

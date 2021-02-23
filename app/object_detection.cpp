@@ -1,11 +1,39 @@
 #include "object_detection.hpp"
+#include "ocr_types.hpp"
+#include "color_types.hpp"
+
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 #include <opencv2/highgui.hpp>
 
-xgd::DetectorObject::DetectorObject(const float &_x, const float &_y, const float &_w, const float &_h,
-                                    const int &_label,
-                                    const float &_prob) : x(_x), y(_y), w(_w), h(_h), label(_label), prob(_prob) {}
+xgd::DetectorObject::DetectorObject(
+        const float &_x, const float &_y, const float &_w, const float &_h,
+        const int &_label, const float &_prob)
+        : rect(_x, _y, _w, _h), label(static_cast<DetectorObjectType>(_label)), prob(_prob) {}
+
+bool xgd::DetectorObject::isValidLabel(const int &_label) {
+    return minLabel <= _label && _label <= maxLabel;
+}
+
+const cv::Rect2f &xgd::DetectorObject::asRect() const {
+    return rect;
+}
+
+const float &xgd::DetectorObject::x() const {
+    return rect.x;
+}
+
+const float &xgd::DetectorObject::y() const {
+    return rect.y;
+}
+
+const float &xgd::DetectorObject::w() const {
+    return rect.width;
+}
+
+const float &xgd::DetectorObject::h() const {
+    return rect.height;
+}
 
 /**
  * 默认行为：转单通道，边长向上转 sizeBase 的倍数，边长限制到 [maxWidth,maxHeight]
@@ -47,6 +75,10 @@ cv::Mat xgd::ObjectDetector::preProcess(const cv::Mat &_src) {
             procImg = _src;
         }
     }
+    cv::vconcat(procImg, cv::Mat(16, procImg.cols, procImg.type(), cvColor(ColorName::rgbWhite)), procImg);
+    cv::vconcat(cv::Mat(16, procImg.cols, procImg.type(), cvColor(ColorName::rgbWhite)), procImg, procImg);
+    cv::hconcat(procImg, cv::Mat(procImg.rows, 16, procImg.type(), cvColor(ColorName::rgbWhite)), procImg);
+    cv::hconcat(cv::Mat(procImg.rows, 16, procImg.type(), cvColor(ColorName::rgbWhite)), procImg, procImg);
     return procImg;
 }
 
@@ -91,7 +123,7 @@ xgd::ObjectDetectorOpenCVImpl::detect(const cv::Mat &_originImage) {
     std::vector<cv::Mat> outputBlobs;
     net.forward(outputBlobs, outBlobNames);
     blob.release();
-    std::vector<float> probs;
+    std::vector<float> confs;
     std::vector<cv::Rect2d> boxes;
     std::vector<int> labels;
     for (size_t i = 0; i < outputBlobs.size(); i++) {
@@ -102,21 +134,23 @@ xgd::ObjectDetectorOpenCVImpl::detect(const cv::Mat &_originImage) {
             minMaxLoc(vec.row(j).colRange(5, vec.cols),
                       nullptr, &maxProb, nullptr, &maxLoc);
             if (maxProb < confThresh) continue;
+            const int &label = maxLoc.x;
+            if (!DetectorObject::isValidLabel(label)) continue;
             float cx = vec.at<float>(j, 0) * input.cols;
             float cy = vec.at<float>(j, 1) * input.rows;
             float bw = vec.at<float>(j, 2) * input.cols;
             float bh = vec.at<float>(j, 3) * input.rows;
             boxes.emplace_back(cx - bw / 2, cy - bh / 2, bw, bh);
-            labels.push_back(maxLoc.x);
-            probs.push_back(maxProb);
+            labels.push_back(label);
+            confs.push_back(maxProb);
         }
     }
     std::vector<int> selectedBoxIndices;
-    cv::dnn::NMSBoxes(boxes, probs, confThresh, iouThresh, selectedBoxIndices);
+    cv::dnn::NMSBoxes(boxes, confs, confThresh, iouThresh, selectedBoxIndices);
     std::vector<DetectorObject> objects;
     for (const auto &i:selectedBoxIndices) {
         objects.emplace_back(boxes[i].x, boxes[i].y, boxes[i].width, boxes[i].height,
-                             labels[i], probs[i]);
+                             labels[i], confs[i]);
     }
     return {input, objects};
 }
@@ -128,3 +162,4 @@ void xgd::ObjectDetectorOpenCVImpl::setConfThresh(float confThresh) {
 void xgd::ObjectDetectorOpenCVImpl::setIouThresh(float iouThresh) {
     ObjectDetectorOpenCVImpl::iouThresh = iouThresh;
 }
+

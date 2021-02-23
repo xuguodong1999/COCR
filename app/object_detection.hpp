@@ -1,18 +1,12 @@
 #ifndef _XGD_OBJECT_DETECTION_HPP_
 #define _XGD_OBJECT_DETECTION_HPP_
-
+#include "ocr_types.hpp"
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
 #include <string>
 #include <memory>
 #include <vector>
 namespace xgd {
-    struct DetectorObject {
-        float x, y, w, h, prob;
-        int label;
-        DetectorObject(const float &_x, const float &_y, const float &_w, const float &_h,
-                       const int &_label, const float &_prob = 1);
-    };
 
     class ObjectDetector {
     protected:
