@@ -5,9 +5,10 @@
 
 #include <random>
 
-std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber) {
+std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber, const float &_x, const float &_y) {
     auto aid = mAids++;
     auto atom = std::make_shared<JAtom>(aid, _atomicNumber);
+    atom->setCoord2d(_x, _y);
     atomsMap[aid] = atom;
     return std::move(atom);
 }

@@ -31,6 +31,7 @@ class HwMol : public HwBase, public MolHolder {
     void replaceCharWithText(const float &_prob = 0.5);
 
 public:
+    static std::shared_ptr<HwMol> GetSpecialExample(float _explicitCarbonProb);
     std::shared_ptr<HwBase> clone() const override;
 
     void setHwController(HwController &_hwController) override;

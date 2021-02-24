@@ -6,6 +6,8 @@
 #include <random>
 #include <memory>
 #include <iostream>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 extern std::string WORKSPACE;
 

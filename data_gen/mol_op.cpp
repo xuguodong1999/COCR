@@ -544,6 +544,7 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addAtom(6), mol->addAtom(6),
                     mol->addAtom(randSelect(atomicNumbers))
             };
+            std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
             newBonds = {
                     mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
                     mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
@@ -558,6 +559,7 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addAtom(6), mol->addAtom(6),
                     mol->addAtom(6), mol->addAtom(randSelect(atomicNumbers))
             };
+            std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
             newBonds = {
                     mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
                     mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
@@ -574,6 +576,7 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addAtom(6), mol->addAtom(6),
                     mol->addAtom(randSelect(atomicNumbers))
             };
+            std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
             newBonds = {
                     mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
                     mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
@@ -591,6 +594,17 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addAtom(6), mol->addAtom(6),
                     mol->addAtom(6), mol->addAtom(randSelect(atomicNumbers))
             };
+            std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
+//            static std::vector<std::vector<std::pair<float, float>>> c6Coords2d = {
+//                    {{78,  324}, {132, 224}, {265, 268}, {352, 237}, {292, 339}, {172, 291}},
+//                    {{433, 231}, {522, 260}, {643, 221}, {699, 318}, {615, 286}, {483, 328}},
+//                    {{475, 317}, {522, 371}, {583, 371}, {629, 321}, {608, 415}, {500, 413}}
+//            };
+//            for (size_t i = 0; i < 6; i++) {
+//                const auto &coord_template = randSelect(c6Coords2d);
+//                const auto&[x, y]=coord_template[i];
+//                newAtoms[i]->setCoord2d(x, y);
+//            }
             newBonds = {
                     mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
                     mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
@@ -610,6 +624,7 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addAtom(6), mol->addAtom(6),
                     mol->addAtom(randSelect(atomicNumbers))
             };
+            std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
             newBonds = {
                     mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
                     mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
@@ -631,6 +646,7 @@ void MolOp::addCommonRing(const size_t &_bid) {
                     mol->addAtom(6), mol->addAtom(6),
                     mol->addAtom(randSelect(atomicNumbers))
             };
+            std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
             newBonds = {
                     mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
                     mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId(),

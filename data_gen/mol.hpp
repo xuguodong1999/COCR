@@ -67,7 +67,7 @@ public:
 
     void removeBond(const size_t &_bid);
 
-    std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber);
+    std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber, const float &_x = -1, const float &_y = -1);
 
     std::shared_ptr<JAtom> addAtom(const ElementType &_elementType);
 

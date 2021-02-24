@@ -39,11 +39,11 @@ void JAtom::setId(const size_t &_id) {
     id = _id;
 }
 
-JAtom::JAtom() {
+JAtom::JAtom() : x(-1), y(-1), z(-1) {
 
 }
 
-JAtom::JAtom(const size_t &_id, const size_t &_atomicNumber) : id(_id) {
+JAtom::JAtom(const size_t &_id, const size_t &_atomicNumber) : x(-1), y(-1), z(-1), id(_id) {
     setElementType(_atomicNumber);
 }
 
@@ -53,4 +53,14 @@ const AtomStereo &JAtom::getAtomStereo() const {
 
 void JAtom::setAtomStereo(const AtomStereo &_atomStereo) {
     atomStereo = _atomStereo;
+}
+
+bool JAtom::isCoord2dEmbedded() const {
+    return std::fabs(x + 1) > 0.001 || std::fabs(y + 1) > 0.001;
+}
+
+void JAtom::setCoord2d(const float &_x, const float &_y) {
+    x = _x;
+    y = _y;
+    z = -1;
 }

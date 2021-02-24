@@ -15,7 +15,12 @@ void Mol2D::calcCoord2D() {
     std::unordered_map<size_t, sketcherMinimizerAtom *> j2cAtomMap;
     mol->safeTraverseAtoms([&](const size_t &aid) {
         auto cAtom = cMol->addNewAtom();
-        cAtom->setAtomicNumber(mol->getAtomById(aid)->getAtomicNumber());
+        auto jAtom = mol->getAtomById(aid);
+        cAtom->setAtomicNumber(jAtom->getAtomicNumber());
+        if (jAtom->isCoord2dEmbedded()) {
+            cAtom->constrained = cAtom->fixed = true;
+            cAtom->templateCoordinates = sketcherMinimizerPointF(jAtom->x, jAtom->y);
+        }
         j2cAtomMap[aid] = cAtom;
     });
     // atom->constrained = params->dbg_useConstrained;

@@ -528,3 +528,143 @@ shared_ptr<HwBase> HwMol::clone() const {
     sister->hwToAtomMap = hwToAtomMap;// TODO: 这个值不会被修改，可改引用
     return sister;
 }
+
+std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
+    auto mol = std::make_shared<JMol>();
+    auto molOp = std::make_shared<MolOp>(mol);
+    auto example = std::make_shared<HwMol>(molOp);
+    std::vector<size_t> atomicNumbers = {5, 6, 7, 8, 15, 16};
+    std::vector<std::shared_ptr<JAtom>> newAtoms = {
+            mol->addAtom(6), mol->addAtom(6),
+            mol->addAtom(6), mol->addAtom(6),
+            mol->addAtom(6), mol->addAtom(randSelect(atomicNumbers))
+    };
+    std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
+    std::vector<std::shared_ptr<JBond>> newBonds = {
+            mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+            mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
+            mol->addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
+            mol->addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
+            mol->addBond(newAtoms[4]->getId(), newAtoms[5]->getId()),
+            mol->addBond(newAtoms[5]->getId(), newAtoms[0]->getId()),
+    };
+    static std::vector<std::vector<std::pair<float, float>>> c6Coords2d = {
+            {{78,  324}, {132, 224}, {265, 268}, {352, 237}, {292, 339}, {172, 291}},
+            {{433, 231}, {522, 260}, {643, 221}, {699, 318}, {615, 286}, {483, 328}},
+            {{475, 317}, {522, 371}, {583, 371}, {629, 321}, {608, 415}, {500, 413}}
+    };
+    for (size_t i = 0; i < 6; i++) {
+        const auto &coord_template = randSelect(c6Coords2d);
+        const auto&[x, y]=coord_template[i];
+        newAtoms[i]->setCoord2d(x, y);
+    }
+
+    auto &mData = example->mData;
+    auto &hwToAtomMap = example->hwToAtomMap;
+    mData.clear();
+    // 记录显式写出的原子 id
+    std::unordered_map<size_t, bool> explicitAtomMap;
+    auto &dataLoader = HwDataLoader::getInstance();
+    float avgBondLength = 0;
+    auto calc_avg_bond_lenth = [&](const size_t &_bid) -> void {
+        auto bond = mol->getBondById(_bid);
+        auto atomFrom = mol->getAtomById(bond->getAtomFrom());
+        auto from_ = cv::Point2f(atomFrom->x, atomFrom->y);
+        auto atomTo = mol->getAtomById(bond->getAtomTo());
+        auto to_ = cv::Point2f(atomTo->x, atomTo->y);
+        avgBondLength += getDistance2D(from_, to_);
+    };
+    avgBondLength /= mol->bondsNum();
+    mol->safeTraverseBonds(calc_avg_bond_lenth);
+    std::cout<<"avgBondLength="<<avgBondLength<<std::endl;
+    // 添加原子图元
+    auto add_atom_item = [&](const size_t &_aid) {
+        auto atom = mol->getAtomById(_aid);
+        auto sym = std::make_shared<HwStr>(atom->getElementType());
+        sym->setKeepDirection(true);
+        float fontSize = avgBondLength * betweenProb(0.3, 0.7);
+        sym->resizeTo(fontSize, fontSize);
+        sym->moveCenterTo(cv::Point2f(atom->x, atom->y));
+        if (ElementType::C == atom->getElementType()) {
+            explicitAtomMap[_aid] = byProb(_explicitCarbonProb);
+        } else {
+            explicitAtomMap[_aid] = true;
+        }
+        if (explicitAtomMap[_aid]) {
+            mData.push_back(std::move(sym));
+            hwToAtomMap[mData.size() - 1] = _aid;// 记录映射用于字符转字符串时的化合价评估
+        }
+    };
+    mol->safeTraverseAtoms(add_atom_item);
+    auto &bondInRing = molOp->getAromaticRings(false);
+    std::vector<std::unordered_set<size_t>> kekuleRings;// 记录画圈圈的化学键id
+    std::unordered_set<size_t> bondInKekuleRings;// 记录画圈圈的化学键id，用于快速查找
+    for (auto &aromaticStruct:bondInRing) {
+        if (byProb(0.8)) {
+            for (auto &ring:aromaticStruct) {
+                kekuleRings.push_back(ring);// 深拷贝
+                for (auto &bid:ring) {
+                    bondInKekuleRings.insert(bid);
+                }
+            }
+        }
+    }
+    // 统计单折线
+    //<键id，键id>
+    std::unordered_map<size_t, size_t> lineBondMap;
+    //<键id,图元下标>
+    std::unordered_map<size_t, size_t> itemBondMap;
+    // <原子id,这个原子关联的键>
+    std::unordered_map<size_t, std::unordered_set<size_t>> atomBondMap;
+    auto init_ab_map = [&](const size_t &_bid) {
+        auto bond = mol->getBondById(_bid);
+        atomBondMap[bond->getAtomFrom()].insert(_bid);
+        atomBondMap[bond->getAtomTo()].insert(_bid);
+    };
+    mol->safeTraverseBonds(init_ab_map);
+    for (auto&[aid, bidSet]:atomBondMap) {
+        if (bidSet.size() != 2 || explicitAtomMap[aid])
+            continue;
+        std::vector<size_t> tmp;
+        for (auto &bid:bidSet) {
+            tmp.push_back(bid);
+        }
+        if (mol->getBondById(tmp[0])->getBondType() != JBondType::SingleBond)
+            continue;
+        if (mol->getBondById(tmp[1])->getBondType() != JBondType::SingleBond)
+            continue;
+        if (tmp[0] < tmp[1])std::swap(tmp[0], tmp[1]);
+        lineBondMap.insert({tmp[0], tmp[1]});
+    }
+    atomBondMap.clear();
+    // 添加键坐标
+    auto add_bond_item = [&](const size_t &_bid) {
+        auto bond = mol->getBondById(_bid);
+        JBondType bondType = bond->getBondType();
+        if (bondInKekuleRings.end() != bondInKekuleRings.find(_bid)) {
+            bondType = JBondType::DelocalizedBond;  // 不能影响 JMol 里的数据
+        }
+        auto sym = HwBond::GetHwBond(bondType);
+//        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
+//        sym->setUseHandWrittenWChar(true);
+        auto atomFrom = mol->getAtomById(bond->getAtomFrom());
+        auto from_ = cv::Point2f(atomFrom->x, atomFrom->y);
+        auto atomTo = mol->getAtomById(bond->getAtomTo());
+        auto to_ = cv::Point2f(atomTo->x, atomTo->y);
+        cv::Point2f from = from_, to = to_;
+        const float k = 0.3;
+        if (explicitAtomMap[bond->getAtomFrom()]) {
+            from = (1 - k) * (from_ - to_) + to_;
+        }
+        if (explicitAtomMap[bond->getAtomTo()]) {
+            to = (1 - k) * (to_ - from_) + from_;
+        }
+        sym->setVertices({from, to});
+        if (bondType == JBondType::SingleBond) {
+            itemBondMap[_bid] = mData.size();
+        }
+        mData.push_back(std::move(sym));
+    };
+    mol->safeTraverseBonds(add_bond_item);
+    return example;
+}

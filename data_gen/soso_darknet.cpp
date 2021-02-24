@@ -98,8 +98,10 @@ void SOSODarknet::display() {
         if (alkanes[i % alkanes.size()].length() > 50) {
             add_aro = false;
         }
+        add_com=true;
         molOp->randomize(0.1, byProb(0.95), byProb(0.95), add_aro, add_com);
         auto hwMol = std::make_shared<HwMol>(molOp);
+        hwMol=HwMol::GetSpecialExample(0.1);
         hwMol->showOnScreen(1, true);
     }
 }
