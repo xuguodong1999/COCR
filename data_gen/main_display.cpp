@@ -24,17 +24,32 @@ CRNNDataGenerator crnnDataGenerator;
 void testYoloDara() {
     srand(0022);
     crnnDataGenerator.init("/tmp/fuck");
-    SOSODarknet generator;
-    generator.init(WORKSPACE + "soso-obj");
-    generator.display();
+    crnnDataGenerator.display();
+//    SOSODarknet generator;
+//    generator.init(WORKSPACE + "soso-obj");
+//    generator.display();
 }
 
+#include <QPainter>
+#include <QTextDocument>
+#include <QAbstractTextDocumentLayout>
+#include <QLabel>
+#include <QApplication>
+#include "opencv_util.hpp"
+
+
+
 int main(int argc, char **argv) {
+//    auto img=cv::imread("/home/xgd/Pictures/2021-02-25 16-59-17 的屏幕截图.png");
+//    cv::resize(img,img,cv::Size(img.cols,img.rows)/2);
+//    cv::imshow("mm",img);
+//    cv::waitKey(0);
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication a(argc, argv);
     HwDataLoader::getInstance();
     try {
         testYoloDara();
-        return 0;
+        return a.exec();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(-1);

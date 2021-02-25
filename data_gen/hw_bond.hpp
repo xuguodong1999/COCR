@@ -7,6 +7,7 @@
 class HwBond : public HwItem {
 protected:
     virtual void loadHwData() = 0;
+
     inline static float useHwCharProb = 0.8;
 public:
     static void setUseHwCharProb(float useHwCharProb);
@@ -38,6 +39,7 @@ public:
     void moveBy(const cv::Point2f &_offset);
 
     void mulK(float _kx, float _ky);
+
     void paintTo(cv::Mat &_canvas) const override;
 };
 
@@ -69,6 +71,7 @@ class HwDoubleBond : public HwSingleBond {
 
 public:
     std::shared_ptr<HwBase> clone() const override;
+
     DetectorClasses getItemType() const override;
 
     HwDoubleBond() = default;
@@ -79,6 +82,7 @@ class HwTripleBond : public HwSingleBond {
 
 public:
     std::shared_ptr<HwBase> clone() const override;
+
     DetectorClasses getItemType() const override;
 
     HwTripleBond() = default;
@@ -89,9 +93,11 @@ class HwSolidWedgeBond : public HwSingleBond {
 
 public:
     std::shared_ptr<HwBase> clone() const override;
+
     DetectorClasses getItemType() const override;
 
     HwSolidWedgeBond() = default;
+
     void paintTo(cv::Mat &_canvas) const override;
 };
 
@@ -100,6 +106,7 @@ class HwDashWedgeBond : public HwSingleBond {
 
 public:
     std::shared_ptr<HwBase> clone() const override;
+
     DetectorClasses getItemType() const override;
 
     HwDashWedgeBond() = default;
@@ -110,6 +117,7 @@ class HwWaveBond : public HwSingleBond {
 
 public:
     std::shared_ptr<HwBase> clone() const override;
+
     DetectorClasses getItemType() const override;
 
     HwWaveBond() = default;

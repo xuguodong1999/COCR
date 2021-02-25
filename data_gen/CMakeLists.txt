@@ -6,8 +6,8 @@ include_directories(../openbabel/include ../coordgenlibs/include)
 
 find_package(OpenCV REQUIRED)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(CMAKE_AUTORCC ON)
 
@@ -28,7 +28,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 # link opencv, patched openbabel and coordgen here
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        ${OpenCV_LIBS} Qt${QT_VERSION_MAJOR}::Core openbabel coordgen)
+        ${OpenCV_LIBS} Qt${QT_VERSION_MAJOR}::Widgets openbabel coordgen)
 
 target_link_libraries(${PROJECT_NAME}_detect PRIVATE ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}_display PRIVATE ${PROJECT_NAME})

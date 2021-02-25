@@ -10,6 +10,7 @@
 extern std::string WORKSPACE;
 
 CRNNDataGenerator crnnDataGenerator;
+
 void generateCRNNData() {
     srand(0633);
 //    generator.init(WORKSPACE + "soso-text-nb");
@@ -24,7 +25,8 @@ void generateYoloData() {
     generator.init("/home/xgd/datasets/soso-obj");
     generator.dump(2000000, 10);
 }
-void testYoloDara(){
+
+void testYoloDara() {
     srand(0022);
     crnnDataGenerator.init("/tmp/fuck");
     SOSODarknet generator;

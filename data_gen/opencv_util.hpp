@@ -1,10 +1,12 @@
 #ifndef _OPENCV_UTIL_HPP_
 #define _OPENCV_UTIL_HPP_
 
+#include <opencv2/core/mat.hpp>
+#include <QImage>
+#include <QPixmap>
 #include <optional>
 #include <string>
 #include <utility>
-#include <opencv2/core/mat.hpp>
 
 /**
  * 将图像填充到指定尺寸，先进行缩放
@@ -62,4 +64,8 @@ inline _Tp getScalarSum(const cv::Scalar_<_Tp> &_scalar) {
     return sum;
 }
 
+cv::Mat convertQImageToMat(const QImage &_img);
+
+cv::Mat convertQPixmapToMat(const QPixmap &_img);
+void salt_pepper(cv::Mat image, int n);
 #endif//_OPENCV_UTIL_HPP_

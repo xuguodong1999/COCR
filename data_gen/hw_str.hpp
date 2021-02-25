@@ -47,7 +47,7 @@ class HwStr : public HwItem {
     };
 
 
-    HwCharType decideHwCharType(const std::string &_text) const;
+    static HwCharType decideHwCharType(const std::string &_text);
 
     float floatX;
 

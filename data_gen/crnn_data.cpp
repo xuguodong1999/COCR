@@ -3,16 +3,51 @@
 #include "linetextdata.hpp"
 #include "colors.hpp"
 #include "std_util.hpp"
+#include "opencv_util.hpp"
 
-//#include "lmdb++.h"
-
-#include <filesystem>
-#include <fstream>
-#include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+
+#include <QPainter>
+#include <QTextDocument>
+
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <QFontDatabase>
+#include <QDebug>
+
+static QStringList availableFontFamilies;
+
+static cv::Mat GetFont(const QString &_text, const QString &_fontFamily = "Arial") {
+    QFont font;
+    font.setFamily(_fontFamily);
+    font.setWeight(1);
+    font.setItalic(byProb(0.5));
+
+    static QImage image(1280, 164, QImage::Format_Grayscale8);
+    image.fill(Qt::white);
+    QPainter painter(&image);
+    painter.setFont(font);
+    QTextDocument td;
+    td.setDefaultFont(font);
+    td.setHtml(_text);
+    float k = 5;
+    painter.scale(k, k);
+    painter.translate(0, 0);
+    td.drawContents(&painter);
+    cv::Mat cvImg(image.height(), image.width(),
+                  CV_8UC1, (void *) image.constBits(), image.bytesPerLine());
+    auto rectPtr = getBoundBoxForBWFont(cvImg);
+    if (rectPtr) {
+        cvImg = cvImg(cv::Rect(rectPtr.value()));
+    }
+//    cv::imshow("1",cvImg);
+//    cv::waitKey(0);
+    return cvImg.clone();
+}
 
 std::string SOSO_ALPHABET = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty";
 
@@ -50,7 +85,34 @@ bool CRNNDataGenerator::init(const std::string &_topDir) {
     getDictTexts();
     std::cout << "chemTexts.size()=" << chemTexts.size() << ", dictTexts.size()="
               << dictTexts.size() << std::endl;
-    getRandomTexts(chemTexts.size() + dictTexts.size());
+    getRandomTexts(10 * (chemTexts.size() + dictTexts.size()));
+    if (availableFontFamilies.empty()) {
+        auto allSystemFonts = QFontDatabase().families();
+        QSet<QString> whiteList = {
+                "Arial", "Arial Narrow", "Arial Rounded MT Bold",
+
+                "LM Mono 10", "LM Mono 12", "LM Mono 8", "LM Mono 9", "LM Mono Caps 10", "LM Mono Light 10",
+                "LM Mono Light Cond 10", "LM Mono Prop 10", "LM Mono Prop Light 10", "LM Mono Slanted 10",
+                "LM Roman 10",
+                "LM Roman 12", "LM Roman 17", "LM Roman 5", "LM Roman 6", "LM Roman 7", "LM Roman 8", "LM Roman 9",
+                "LM Roman Caps 10", "LM Roman Demi 10", "LM Roman Dunhill 10", "LM Roman Slanted 10",
+                "LM Roman Slanted 12", "LM Roman Slanted 17", "LM Roman Slanted 8", "LM Roman Slanted 9",
+                "LM Roman Unslanted 10", "LM Sans 10", "LM Sans 12", "LM Sans 17", "LM Sans 8", "LM Sans 9",
+                "LM Sans Demi Cond 10", "LM Sans Quot 8",
+
+                "Roboto", "Roboto Black", "Roboto Condensed", "Roboto Condensed Light", "Roboto Condensed Medium",
+                "Roboto Light", "Roboto Medium", "Roboto Thin",
+
+                "Ubuntu", "Ubuntu Condensed", "Ubuntu Light", "Ubuntu Mono", "Ubuntu Thin",
+
+                "华文中宋", "华文仿宋", "华文宋体", "华文新魏", "华文楷体", "华文细黑", "幼圆", "文鼎ＰＬ简中楷", "文鼎ＰＬ简报宋",
+                "方正姚体", "隶书"};
+        for (auto &font:allSystemFonts) {
+            if (whiteList.contains(font)) {
+                availableFontFamilies.push_back(font);
+            }
+        }
+    }
     return true;
 }
 
@@ -104,7 +166,7 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
     }
     trainOfsm.close();
     for (size_t idx = 0; idx < _testNum; idx++) {
-        if (byProb(0.4)) {//四六开
+        if (byProb(0.6)) {
             text = randSelect(chemTexts);
             textType = 2;
         } else if (byProb(0.5)) {//五五开
@@ -118,7 +180,7 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
         auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
         std::string filename = std::to_string(idx) + ".jpg";
         std::string file_path = topDir + testDir + imgDir + filename;
-        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + randInt() % 30});
+        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 60 + randInt() % 40});
         testOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
@@ -141,12 +203,27 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
     float k = betweenProb(1.5, 2.2);
     cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
                           getScalar(ColorName::rgbWhite));
-    if (byProb(0.5) && std::string::npos == _text.find("#") &&
+    if (byProb(1) && std::string::npos == _text.find("#") &&
         std::string::npos == _text.find("_") &&
         std::string::npos == _text.find("+")) {// 机打数据
-        cv::putText(img, _text, cv::Point(0, height * k / 1.25),
-                    randSelect(fontChoices), 1.5, getScalar(ColorName::rgbBlack),
-                    1, cv::LINE_AA, false);
+        if (byProb(0.7)) {// 走 Qt 的富文本渲染
+            QString qData;
+            for (auto &c:_text) {
+                if ('0' <= c && c <= '9') {
+                    qData.push_back(QString("<sub>") + c + "</sub>");
+                } else {
+                    qData.append(c);
+                }
+            }
+            auto rawText = GetFont(qData, availableFontFamilies[randInt() % availableFontFamilies.size()]);
+            cv::cvtColor(rawText, rawText, cv::COLOR_GRAY2BGR);
+            auto[img2, _]=resizeCvMatTo(rawText, img.cols, img.rows);
+            img = img2;
+        } else {// 走 OpenCV 的常规字体渲染
+            cv::putText(img, _text, cv::Point(0, height * k / 1.25),
+                        randSelect(fontChoices), 1.5, getScalar(ColorName::rgbBlack),
+                        1, cv::LINE_AA, false);
+        }
     } else {// 手写数据
         HwStr hwStr;
         if (0 == _type) {// 随机字符
@@ -185,6 +262,9 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         cv::normalize(img, img, 1.0, 0, cv::NORM_MINMAX, CV_32F);
     }
     img.convertTo(img, CV_8U, 255);
+    if (byProb(0.6)) {
+        salt_pepper(img, randInt() % 400);
+    }
     std::vector<uchar> buffer;
     cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
     return {std::move(buffer), std::move(convertToKey(_text))};

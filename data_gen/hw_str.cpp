@@ -89,7 +89,7 @@ void HwStr::pushBlank() {
     floatX += betweenProb(offset, centHeight);
 }
 
-HwCharType HwStr::decideHwCharType(const std::string &_text) const {
+HwCharType HwStr::decideHwCharType(const std::string &_text) {
     auto it = sTextMap.find(_text);
     if (sTextMap.end() != it) {
         switch (it->second) {

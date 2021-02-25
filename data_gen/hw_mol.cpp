@@ -179,7 +179,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         sym->setVertices(pts);
         mData.push_back(std::move(sym));
     }
-    float avgSize = 0;
+    avgSize = 0;
     for (auto &sym:mData) {
         auto bBox = sym->getBoundingBox();
         if (!bBox)continue;
@@ -280,30 +280,30 @@ static std::unordered_map<DetectorClasses, int> soso17Labels = {
 //static int beginLabel = 0;
 static std::unordered_map<DetectorClasses, int> fullLabels = {
         // bond type
-        {DetectorClasses::ItemSingleBond, 0},
-        {DetectorClasses::ItemDoubleBond, 1},
-        {DetectorClasses::ItemTripleBond, 2},
+        {DetectorClasses::ItemSingleBond,     0},
+        {DetectorClasses::ItemDoubleBond,     1},
+        {DetectorClasses::ItemTripleBond,     2},
         {DetectorClasses::ItemSolidWedgeBond, 3},
-        {DetectorClasses::ItemDashWedgeBond, 4},
-        {DetectorClasses::ItemWaveBond, 5},
-        {DetectorClasses::ItemCircleBond, 6},
+        {DetectorClasses::ItemDashWedgeBond,  4},
+        {DetectorClasses::ItemWaveBond,       5},
+        {DetectorClasses::ItemCircleBond,     6},
         // deprecated char type
-        {DetectorClasses::ItemC, 7},
-        {DetectorClasses::ItemH, 7},
-        {DetectorClasses::ItemO, 7},
-        {DetectorClasses::ItemN, 7},
-        {DetectorClasses::ItemP, 7},
-        {DetectorClasses::ItemS, 7},
-        {DetectorClasses::ItemF, 7},
-        {DetectorClasses::ItemCl, 7},
-        {DetectorClasses::ItemBr, 7},
-        {DetectorClasses::ItemI, 7},
-        {DetectorClasses::ItemB, 7},
+        {DetectorClasses::ItemC,              7},
+        {DetectorClasses::ItemH,              7},
+        {DetectorClasses::ItemO,              7},
+        {DetectorClasses::ItemN,              7},
+        {DetectorClasses::ItemP,              7},
+        {DetectorClasses::ItemS,              7},
+        {DetectorClasses::ItemF,              7},
+        {DetectorClasses::ItemCl,             7},
+        {DetectorClasses::ItemBr,             7},
+        {DetectorClasses::ItemI,              7},
+        {DetectorClasses::ItemB,              7},
         // new text type
-        {DetectorClasses::ItemHorizontalStr, 7}
+        {DetectorClasses::ItemHorizontalStr,  7}
 };
 static std::vector<HwController> controllers = {
-//        HwController(2),
+        HwController(2),
         HwController(3),
         HwController(4),
         HwController(5),
@@ -314,7 +314,7 @@ static std::vector<HwController> controllers = {
 
 void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
                           const size_t &_repeatTimes) {
-    float avgSize = reloadHWData(0.1);
+    reloadHWData(0.1);
     setHwController(controllers[randInt() % controllers.size()]);
     float k = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
@@ -364,7 +364,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
 }
 
 void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
-    float avgSize = reloadHWData(0.1);
+    reloadHWData(0.1);
     float k0 = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k0, k0);
     size_t fixW, fixH;
@@ -533,56 +533,126 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
     auto mol = std::make_shared<JMol>();
     auto molOp = std::make_shared<MolOp>(mol);
     auto example = std::make_shared<HwMol>(molOp);
-    std::vector<size_t> atomicNumbers = {5, 6, 7, 8, 15, 16};
-    std::vector<std::shared_ptr<JAtom>> newAtoms = {
-            mol->addAtom(6), mol->addAtom(6),
-            mol->addAtom(6), mol->addAtom(6),
-            mol->addAtom(6), mol->addAtom(randSelect(atomicNumbers))
-    };
-    std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
-    std::vector<std::shared_ptr<JBond>> newBonds = {
-            mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
-            mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
-            mol->addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
-            mol->addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
-            mol->addBond(newAtoms[4]->getId(), newAtoms[5]->getId()),
-            mol->addBond(newAtoms[5]->getId(), newAtoms[0]->getId()),
-    };
-    static std::vector<std::vector<std::pair<float, float>>> c6Coords2d = {
-            {{78,  324}, {132, 224}, {265, 268}, {352, 237}, {292, 339}, {172, 291}},
-            {{433, 231}, {522, 260}, {643, 221}, {699, 318}, {615, 286}, {483, 328}},
-            {{475, 317}, {522, 371}, {583, 371}, {629, 321}, {608, 415}, {500, 413}}
-    };
-    for (size_t i = 0; i < 6; i++) {
+    std::vector<size_t> atomicNumbers;
+    std::vector<std::shared_ptr<JAtom>> newAtoms;
+    std::vector<std::shared_ptr<JBond>> newBonds;
+    auto add_c6 = [&]() {
+        atomicNumbers = {5, 6, 7, 8, 15, 16};
+        newAtoms = {
+                mol->addAtom(6), mol->addAtom(6),
+                mol->addAtom(6), mol->addAtom(6),
+                mol->addAtom(6), mol->addAtom(randSelect(atomicNumbers))
+        };
+        std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
+        newBonds = {
+                mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+                mol->addBond(newAtoms[1]->getId(), newAtoms[2]->getId()),
+                mol->addBond(newAtoms[2]->getId(), newAtoms[3]->getId()),
+                mol->addBond(newAtoms[3]->getId(), newAtoms[4]->getId()),
+                mol->addBond(newAtoms[4]->getId(), newAtoms[5]->getId()),
+                mol->addBond(newAtoms[5]->getId(), newAtoms[0]->getId()),
+        };
+        static std::vector<std::vector<std::pair<float, float>>> c6Coords2d = {
+                {{78,  324}, {132, 224}, {265, 268}, {352, 237}, {292, 339}, {172, 291}},
+                {{433, 231}, {522, 260}, {643, 221}, {699, 318}, {615, 286}, {483, 328}},
+                {{475, 317}, {522, 371}, {583, 371}, {629, 321}, {608, 415}, {500, 413}}
+        };
         const auto &coord_template = randSelect(c6Coords2d);
-        const auto&[x, y]=coord_template[i];
-        newAtoms[i]->setCoord2d(x, y);
-    }
-
+        for (size_t i = 0; i < 6; i++) {
+            const auto&[x, y]=coord_template[i];
+            newAtoms[i]->setCoord2d(x, y);
+        }
+    };
+    auto add_grid2 = [&]() {
+        atomicNumbers = {5, 6, 6, 6, 6, 6, 6, 6, 7, 8, 15, 16};
+        std::vector<size_t> beginAtomicNumbers = {1, 3, 11, 19, 9, 17, 35, 53, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 8, 15, 16};
+        size_t loop = randInt() % 5 + 2;
+        cv::Point2f pos1(11, 10), pos2(10, 11), offset1(0, 1), offset2(1, 0);
+        auto last1 = mol->addAtom(randSelect(beginAtomicNumbers), pos1.x, pos1.y);
+        auto last2 = mol->addAtom(randSelect(beginAtomicNumbers), pos2.x, pos2.y);;
+        for (size_t i = 0; i < loop; i++) {
+            pos1 += offset1;
+            auto ab = mol->addAtom(6, pos1.x, pos1.y);
+            JBondType bt1, bt2;
+            bt1 = bt2 = JBondType::SingleBond;
+            if (byProb(0.35)) {
+                bt1 = JBondType::SolidWedgeBond;
+                bt2 = JBondType::DashWedgeBond;
+            } else if (byProb(0.25)) {
+                bt1 = JBondType::WaveBond;
+            }
+            if (byProb(0.5)) {
+                std::swap(bt1, bt2);
+            }
+            mol->addBond(ab->getId(), last1->getId(), bt1);
+            mol->addBond(ab->getId(), last2->getId(), bt2);
+            pos1 += offset1;
+            auto a = mol->addAtom(randSelect(atomicNumbers), pos1.x, pos1.y);
+            pos2 += 2 * offset2;
+            auto b = mol->addAtom(randSelect(atomicNumbers), pos2.x, pos2.y);
+            mol->addBond(a->getId(), ab->getId());
+            mol->addBond(b->getId(), ab->getId());
+            std::swap(offset1, offset2);
+            last1 = a;
+            last2 = b;
+        }
+        if (byProb(0.5)) {
+            pos1 += offset1;
+            auto ab = mol->addAtom(randSelect(atomicNumbers), pos1.x, pos1.y);
+            mol->addBond(last1->getId(), ab->getId());
+            mol->addBond(last2->getId(), ab->getId());
+        }
+    };
+    auto add_tetrahedral = [&]() {
+        atomicNumbers = {5, 6, 7, 8, 15, 16};
+        newAtoms = {
+                mol->addAtom(6), mol->addAtom(6),
+                mol->addAtom(6), mol->addAtom(6),
+                mol->addAtom(randSelect(atomicNumbers))
+        };
+        std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
+        newBonds = {
+                mol->addBond(newAtoms[0]->getId(), newAtoms[1]->getId()),
+                mol->addBond(newAtoms[0]->getId(), newAtoms[2]->getId()),
+                mol->addBond(newAtoms[0]->getId(), newAtoms[3]->getId()),
+                mol->addBond(newAtoms[0]->getId(), newAtoms[4]->getId()),
+        };
+        static std::vector<std::vector<std::pair<float, float>>> c5Coords2d = {
+                {{348, 328}, {348, 265}, {299, 356}, {387, 368}, {408, 341}}
+        };
+        const auto &coord_template = randSelect(c5Coords2d);
+        for (size_t i = 0; i < 5; i++) {
+            const auto&[x, y]=coord_template[i];
+            newAtoms[i]->setCoord2d(x, y);
+        }
+    };
+    std::vector<std::function<void(void)>> func_list = {add_c6, add_tetrahedral, add_grid2};
+    auto func = randSelect(func_list);
+    func();
     auto &mData = example->mData;
     auto &hwToAtomMap = example->hwToAtomMap;
+    auto &avgSize = example->avgSize;
     mData.clear();
     // 记录显式写出的原子 id
     std::unordered_map<size_t, bool> explicitAtomMap;
     auto &dataLoader = HwDataLoader::getInstance();
-    float avgBondLength = 0;
+    avgSize = 0;
     auto calc_avg_bond_lenth = [&](const size_t &_bid) -> void {
         auto bond = mol->getBondById(_bid);
         auto atomFrom = mol->getAtomById(bond->getAtomFrom());
         auto from_ = cv::Point2f(atomFrom->x, atomFrom->y);
         auto atomTo = mol->getAtomById(bond->getAtomTo());
         auto to_ = cv::Point2f(atomTo->x, atomTo->y);
-        avgBondLength += getDistance2D(from_, to_);
+        avgSize += getDistance2D(from_, to_);
     };
-    avgBondLength /= mol->bondsNum();
     mol->safeTraverseBonds(calc_avg_bond_lenth);
-    std::cout<<"avgBondLength="<<avgBondLength<<std::endl;
+    avgSize /= mol->bondsNum();
     // 添加原子图元
     auto add_atom_item = [&](const size_t &_aid) {
         auto atom = mol->getAtomById(_aid);
         auto sym = std::make_shared<HwStr>(atom->getElementType());
         sym->setKeepDirection(true);
-        float fontSize = avgBondLength * betweenProb(0.3, 0.7);
+        float fontSize = avgSize * betweenProb(0.3, 0.7);
         sym->resizeTo(fontSize, fontSize);
         sym->moveCenterTo(cv::Point2f(atom->x, atom->y));
         if (ElementType::C == atom->getElementType()) {
@@ -596,19 +666,6 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         }
     };
     mol->safeTraverseAtoms(add_atom_item);
-    auto &bondInRing = molOp->getAromaticRings(false);
-    std::vector<std::unordered_set<size_t>> kekuleRings;// 记录画圈圈的化学键id
-    std::unordered_set<size_t> bondInKekuleRings;// 记录画圈圈的化学键id，用于快速查找
-    for (auto &aromaticStruct:bondInRing) {
-        if (byProb(0.8)) {
-            for (auto &ring:aromaticStruct) {
-                kekuleRings.push_back(ring);// 深拷贝
-                for (auto &bid:ring) {
-                    bondInKekuleRings.insert(bid);
-                }
-            }
-        }
-    }
     // 统计单折线
     //<键id，键id>
     std::unordered_map<size_t, size_t> lineBondMap;
@@ -641,9 +698,6 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
     auto add_bond_item = [&](const size_t &_bid) {
         auto bond = mol->getBondById(_bid);
         JBondType bondType = bond->getBondType();
-        if (bondInKekuleRings.end() != bondInKekuleRings.find(_bid)) {
-            bondType = JBondType::DelocalizedBond;  // 不能影响 JMol 里的数据
-        }
         auto sym = HwBond::GetHwBond(bondType);
 //        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
 //        sym->setUseHandWrittenWChar(true);
@@ -651,6 +705,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         auto from_ = cv::Point2f(atomFrom->x, atomFrom->y);
         auto atomTo = mol->getAtomById(bond->getAtomTo());
         auto to_ = cv::Point2f(atomTo->x, atomTo->y);
+//        std::cout << "from=" << from_ << ",to=" << to_ << std::endl;
         cv::Point2f from = from_, to = to_;
         const float k = 0.3;
         if (explicitAtomMap[bond->getAtomFrom()]) {
@@ -666,5 +721,110 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         mData.push_back(std::move(sym));
     };
     mol->safeTraverseBonds(add_bond_item);
+    for (auto&[bid1, bid2]:lineBondMap) {
+        auto item1 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid1]]);
+        auto item2 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid2]]);
+        size_t aid;
+        std::unordered_set<size_t> tmp;
+        std::vector<size_t> aids = {mol->getBondById(bid1)->getAtomFrom(),
+                                    mol->getBondById(bid1)->getAtomTo(),
+                                    mol->getBondById(bid2)->getAtomFrom(),
+                                    mol->getBondById(bid2)->getAtomTo()};
+        for (auto &id:aids) {
+            if (notExist(tmp, id)) {
+                tmp.insert(id);
+            } else {
+                aid = id;
+                break;
+            }
+        }
+        // aid is angle atom
+        auto curAtom = mol->getAtomById(aid);
+        cv::Point2f A(curAtom->x, curAtom->y);
+//        std::cout << "A=" << A << std::endl;
+//        std::cout << "bbox1=" << item1->getBoundingBox().value() << std::endl;
+//        std::cout << "bbox2=" << item2->getBoundingBox().value() << std::endl;
+        const float threshDis = avgSize / 4.0;
+        // 1、排除影响范围里的所有点
+        cv::Point2f nearestPt, B, C;
+        float minDis;
+        auto keep_condition = [&](const cv::Point2f &_pt) -> bool {
+            const float curDis = getDistance2D(_pt, A);
+            bool res = (curDis > threshDis);
+            if (res && curDis < minDis) {
+                minDis = curDis;
+                nearestPt = _pt;
+            }
+            return res;
+        };
+        minDis = std::numeric_limits<float>::max();
+        item1->keepIf(keep_condition);
+        B = nearestPt;
+
+        minDis = std::numeric_limits<float>::max();
+        item2->keepIf(keep_condition);
+        C = nearestPt;
+        auto D = (B + C) / 2.0;
+        auto h = A - D;
+        // 2、添加圆弧: 斜边 from-to，垂足 D
+        auto add_arc = [&](const cv::Point2f &_from, const cv::Point2f &_to) -> HwScript {
+            HwStroke s;
+            float sx = _from.x, sy = _from.y;
+            float k = 10;
+            float dx = (D.x - _from.x) / k, dy = (D.y - _from.y) / k;
+            for (int i = 0; i <= k; i++) {
+                s.push_back(cv::Point2f(sx, sy) + h * std::sin(M_PI_2 * i / k));
+                sx += dx;
+                sy += dy;
+            }
+            HwScript arc;
+            arc.push_back(s);
+            return std::move(arc);
+        };
+        item1->push_back(add_arc(B, A));
+        item2->push_back(add_arc(C, A));
+    }
+    // 添加字符串操作在写入画布前的深拷贝对象上完成
+//    std::cout << "avgSize=" << avgSize << std::endl;
+    molOp->updateAtomValenceMap();
     return example;
+}
+
+void HwMol::showSpecialExample(const size_t &_repeatTimes, bool _showBox) {
+//    std::cout << "avgSize=" << avgSize << std::endl;
+    float k0 = 100.0f / (std::max)(0.01f, avgSize);
+    this->mulK(k0, k0);
+    size_t fixW, fixH;
+    fixW = fixH = 640;
+    auto colorIdx = [](const int &_a) -> ColorName {
+        return static_cast<const ColorName>((7 + _a) * 13 % 455);
+    };
+    for (size_t i = 0; i < _repeatTimes; i++) {
+        auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
+        target->rotate(randInt() % 360);
+//        target->replaceCharWithText(1);
+        target->setHwController(controllers[randInt() % controllers.size()]);
+        auto bBox = target->getBoundingBox().value();
+        int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
+                              getScalar(ColorName::rgbWhite));
+        target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
+        target->paintTo(img);
+
+        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
+        auto&[k, offsetx, offsety]=offset;
+        for (auto &sym:target->mData) {
+//            std::cout << fullLabels[sym->getItemType()] << std::endl;
+            auto bBox = sym->getBoundingBox().value();
+            bBox.x = bBox.x * k + offsetx;
+            bBox.y = bBox.y * k + offsety;
+            bBox.width *= k;
+            bBox.height *= k;
+            if (_showBox)
+                cv::rectangle(resImg, bBox, getScalar(
+                        colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
+        }
+        cv::imshow("MolHwItem::showOnScreen", resImg);
+        cv::waitKey(0);
+    }
 }

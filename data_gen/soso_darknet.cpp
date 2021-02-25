@@ -86,22 +86,23 @@ void SOSODarknet::display() {
     const int loopTime = 100;
     std::shuffle(alkanes.begin(), alkanes.end(), std::default_random_engine());
     for (int i = 0; i < loopTime; i++) {
-        auto mol = std::make_shared<JMol>();
-        mol->setAlkane(alkanes[i % alkanes.size()]);
-        auto molOp = std::make_shared<MolOp>(mol);
-        //const float &_addHydrogenProb, bool _replaceBond,
-        //        bool _replaceAtom, bool _addAromaticRing, bool _addCommonRing
-        bool add_aro = byProb(0.5), add_com = byProb(0.5);
-        if (alkanes[i % alkanes.size()].length() > 40) {
-            add_com = false;
-        }
-        if (alkanes[i % alkanes.size()].length() > 50) {
-            add_aro = false;
-        }
-        add_com=true;
-        molOp->randomize(0.1, byProb(0.95), byProb(0.95), add_aro, add_com);
-        auto hwMol = std::make_shared<HwMol>(molOp);
-        hwMol=HwMol::GetSpecialExample(0.1);
-        hwMol->showOnScreen(1, true);
+//        auto mol = std::make_shared<JMol>();
+//        mol->setAlkane(alkanes[i % alkanes.size()]);
+//        auto molOp = std::make_shared<MolOp>(mol);
+//        //const float &_addHydrogenProb, bool _replaceBond,
+//        //        bool _replaceAtom, bool _addAromaticRing, bool _addCommonRing
+//        bool add_aro = byProb(0.5), add_com = byProb(0.5);
+//        if (alkanes[i % alkanes.size()].length() > 40) {
+//            add_com = false;
+//        }
+//        if (alkanes[i % alkanes.size()].length() > 50) {
+//            add_aro = false;
+//        }
+//        add_com = true;
+//        molOp->randomize(0.1, byProb(0.95), byProb(0.95), add_aro, add_com);
+//        auto hwMol = std::make_shared<HwMol>(molOp);
+//        hwMol->showOnScreen(1, true);
+        auto hwMol = HwMol::GetSpecialExample(0.1);
+        hwMol->showSpecialExample(1,true);
     }
 }

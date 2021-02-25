@@ -35,6 +35,7 @@ public:
     JAtom(const size_t &_id, const size_t &_atomicNumber);
 
     bool isCoord2dEmbedded() const;
+
     void setCoord2d(const float &_x, const float &_y);
 };
 

@@ -41,6 +41,7 @@ public:
 
     void getDictTexts();
 
+
     void getChemTexts();
 
     void dump(const size_t &_trainNum = 500000, const size_t &_testNum = 10000);

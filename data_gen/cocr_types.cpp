@@ -59,9 +59,7 @@ DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementT
         case ElementType::I:
             return DetectorClasses::ItemI;
         default: {
-            std::cerr << "unsupported convert in convertElementTypeToDetectorClasses: from"
-                      << (int) _elementType << std::endl;
-            exit(-1);
+            return DetectorClasses::ItemHorizontalStr;
         }
     }
 }

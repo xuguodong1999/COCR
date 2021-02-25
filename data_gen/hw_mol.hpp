@@ -16,6 +16,8 @@ class HwMol : public HwBase, public MolHolder {
     HwController *hwController;
     std::shared_ptr<MolHolder> mol2dHolder, molOpHolder;
     std::unordered_map<size_t, size_t> hwToAtomMap;
+    float avgSize;
+
     /**
      * @param _explicitCarbonProb 控制碳原子是否显示写出
      * @return 平均图元大小
@@ -32,11 +34,14 @@ class HwMol : public HwBase, public MolHolder {
 
 public:
     static std::shared_ptr<HwMol> GetSpecialExample(float _explicitCarbonProb);
+
     std::shared_ptr<HwBase> clone() const override;
 
     void setHwController(HwController &_hwController) override;
 
     void showOnScreen(const size_t &_repeatTimes = 1, bool _showBox = false);
+
+    void showSpecialExample(const size_t &_repeatTimes = 1,bool _showBox = false);
 
     /**
      *

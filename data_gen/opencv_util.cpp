@@ -1,4 +1,5 @@
 #include "opencv_util.hpp"
+#include "std_util.hpp"
 #include <opencv2/opencv.hpp>
 
 
@@ -84,3 +85,58 @@ std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar
     return cv::Rect2i(xmin, ymin, xmax - xmin + 1, ymax - ymin + 1);
 }
 
+cv::Mat convertQImageToMat(const QImage &_img) {
+    cv::Mat mat;
+    if (_img.isNull()) {
+        std::cerr << "you are converting an empty QImage to cv::Mat" << std::endl;
+        exit(-1);
+    }
+    void *dataPtr = const_cast<uchar *>(_img.constBits());
+    int step = _img.bytesPerLine();
+    switch (_img.format()) {
+        case QImage::Format_RGB32:
+        case QImage::Format_ARGB32:
+        case QImage::Format_ARGB32_Premultiplied:
+            mat = cv::Mat(_img.height(), _img.width(), CV_8UC4, dataPtr, step);
+            break;
+        case QImage::Format_RGB888:
+            mat = cv::Mat(_img.height(), _img.width(), CV_8UC3, dataPtr, step);
+            cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
+            break;
+        case QImage::Format_Indexed8:
+            mat = cv::Mat(_img.height(), _img.width(), CV_8UC1, dataPtr, step);
+            break;
+        default: {
+            std::cerr << "unImpl image format:" << _img.format() << std::endl;
+            exit(-1);
+        }
+    }
+//    std::cout << mat.cols << "x" << mat.rows << std::endl;
+    return std::move(mat);
+}
+
+cv::Mat convertQPixmapToMat(const QPixmap &_img) {
+    return convertQImageToMat(_img.toImage());
+}
+
+/**
+ *  版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。
+    本文链接：https://blog.csdn.net/iracer/article/details/49383491
+ */
+
+void salt_pepper(cv::Mat image, int n) {
+    int i, j;
+    static std::vector<int> noise{0, 255};
+    for (int k = 0; k < n / 2; k++) {
+        // rand() is the random number generator
+        i = randInt() % image.cols; // % 整除取余数运算符,rand=1022,cols=1000,rand%cols=22
+        j = randInt() % image.rows;
+        if (image.type() == CV_8UC1) { // gray-level image
+            image.at<uchar>(j, i) = randSelect(noise); //at方法需要指定Mat变量返回值类型,如uchar等
+        } else if (image.type() == CV_8UC3) { // color image
+            image.at<cv::Vec3b>(j, i)[0] = randSelect(noise); //cv::Vec3b为opencv定义的一个3个值的向量类型
+            image.at<cv::Vec3b>(j, i)[1] = randSelect(noise); //[]指定通道，B:0，G:1，R:2
+            image.at<cv::Vec3b>(j, i)[2] = randSelect(noise);
+        }
+    }
+}
