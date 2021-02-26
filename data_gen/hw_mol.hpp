@@ -41,7 +41,7 @@ public:
 
     void showOnScreen(const size_t &_repeatTimes = 1, bool _showBox = false);
 
-    void showSpecialExample(const size_t &_repeatTimes = 1,bool _showBox = false);
+    void showSpecialExample(const size_t &_repeatTimes = 1, bool _showBox = false);
 
     /**
      *

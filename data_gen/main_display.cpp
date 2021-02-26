@@ -38,7 +38,6 @@ void generateYoloData() {
 #include "opencv_util.hpp"
 
 
-
 int main(int argc, char **argv) {
 //    auto img=cv::imread("/home/xgd/Pictures/2021-02-25 16-59-17 的屏幕截图.png");
 //    cv::resize(img,img,cv::Size(img.cols,img.rows)/2);

@@ -276,7 +276,8 @@ namespace xgd {
         cv::Point2f getFrom() const override { return from; }
 
         cv::Point2f getTo() const override { return to; }
-        BondType getBondType()const override{return bondType;}
+
+        BondType getBondType() const override { return bondType; }
     };
 
     struct OCRCircleDataItem : public OCRDataItem {

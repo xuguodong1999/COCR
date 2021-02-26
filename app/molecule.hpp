@@ -1,16 +1,19 @@
 #ifndef _XGD_MOLECULE_HPP_
 #define _XGD_MOLECULE_HPP_
-namespace xgd{
-    class Atom{
+namespace xgd {
+    class Atom {
 
     };
-    class Group{
+
+    class Group {
 
     };
-    class Bond{
+
+    class Bond {
 
     };
-    class Molecule{
+
+    class Molecule {
 
     };
 }

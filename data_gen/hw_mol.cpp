@@ -322,6 +322,7 @@ static std::vector<HwController> crude = {
         HwController(7),
         HwController(8),
 };
+
 void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
                           const size_t &_repeatTimes) {
     reloadHWData(0.1);
@@ -333,32 +334,57 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
         target->rotate(randInt() % 360);
-        target->replaceCharWithText(0.5);
+        target->replaceCharWithText(0.25);
         if (target->getMol()->bondsNum() <= 6) {
-            target->setHwController(thin[randInt() % 2]);
-        } else {
             target->setHwController(thin[randInt() % thin.size()]);
+        } else {
+            target->setHwController(crude[randInt() % thin.size()]);
         }
         auto bBox = target->getBoundingBox().value();
         int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         if (target->getMol()->bondsNum() <= 6) {
-            minHeight *= 6;
-            minWidth *= 6;
+            float scale = betweenProb(1.5, 3);
+            minHeight *= scale;
+            minWidth *= scale;
         }
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
         target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         target->paintTo(img);
-        std::string suffix = "_" + std::to_string(i);
         auto paddingColor = getScalar(ColorName::rgbWhite);
-        if (byProb(hwController->getRevertColorProb())) {// 反转颜色
-            cv::bitwise_not(img, img);
-            paddingColor = getScalar(ColorName::rgbBlack);
-        }
-        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH, paddingColor);
+        auto[resImg0, offset]=resizeCvMatTo(img, fixW, fixH, paddingColor);
+        cv::Mat resImg = resImg0;
         auto&[k, offsetx, offsety]=offset;
+        int ow = bBox.width, oh = bBox.height;
+        ow = ow * k;
+        oh = oh * k;
+        std::vector<cv::Rect2f> extraBoxes;
+        auto fill_rect = [&](const cv::Rect2i &_rect) -> void {
+            auto textImg = crnnDataGenerator.getStandardLongText();
+            if (textImg.empty())return;
+            int tw = textImg.cols, th = textImg.rows;
+            int mw = _rect.width - 10, mh = _rect.height - 10;
+            if (tw < mw && th < mh) {
+                int tx = 5 + randInt() % (mw - tw), ty = 5 + randInt() % (mh - th);
+                tx += _rect.x;
+                ty += _rect.y;
+                cv::Rect2i roi(tx, ty, tw, th);
+                textImg.copyTo(resImg(roi));
+                extraBoxes.emplace_back(tx, ty, tw, th);
+            }
+        };
+        if (ow > oh) {
+            int deltaH = (fixH - oh) / 2;
+            cv::Rect2i free1(0, 0, fixW, deltaH), free2(0, fixH - deltaH, fixW, deltaH);
+            fill_rect(free1);
+            fill_rect(free2);
+        }
+
+        std::string suffix = "_" + std::to_string(i);
+        if (byProb(hwController->getRevertColorProb())) {// 反转颜色
+            cv::bitwise_not(resImg, resImg);
+        }
         cv::cvtColor(resImg, resImg, cv::COLOR_BGR2GRAY);
-        // TODO: pad line text here
         cv::imwrite(_imgPath + suffix + ".jpg", resImg,
                     {cv::IMWRITE_JPEG_QUALITY, 60 + randInt() % 40});
         std::ofstream ofsm(_labelPath + suffix + ".txt");
@@ -378,6 +404,11 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
             ofsm << fullLabels[name] << " " << centX / fixW << " " << centY / fixH << " "
                  << bBox.width / fixW << " " << bBox.height / fixH << "\n";
         }
+        for (auto &bBox:extraBoxes) {
+            float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
+            ofsm << fullLabels[DetectorClasses::ItemHorizontalStr] << " " << centX / fixW << " " << centY / fixH << " "
+                 << bBox.width / fixW << " " << bBox.height / fixH << "\n";
+        }
         ofsm.close();
     }
 }
@@ -395,7 +426,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
         target->rotate(randInt() % 360);
-        target->replaceCharWithText(0.5);
+        target->replaceCharWithText(0.25);
         if (target->getMol()->bondsNum() <= 6) {
             target->setHwController(thin[randInt() % thin.size()]);
         } else {
@@ -412,7 +443,9 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
                               getScalar(ColorName::rgbWhite));
         target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         target->paintTo(img);
-        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
+
+        auto[resImg0, offset]=resizeCvMatTo(img, fixW, fixH);
+        cv::Mat resImg = resImg0;
         auto&[k, offsetx, offsety]=offset;
         int ow = bBox.width, oh = bBox.height;
         ow = ow * k;
@@ -427,6 +460,8 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
                 int tx = 5 + randInt() % (mw - tw), ty = 5 + randInt() % (mh - th);
                 tx += _rect.x;
                 ty += _rect.y;
+                cv::Rect2i roi(tx, ty, tw, th);
+                textImg.copyTo(resImg(roi));
                 extraBoxes.emplace_back(tx, ty, tw, th);
             }
         };
@@ -493,6 +528,7 @@ static std::unordered_set<DetectorClasses> bondClassSet = {
         DetectorClasses::ItemCircleBond,
         DetectorClasses::ItemWaveBond,
 };
+
 void HwMol::replaceCharWithText(const float &_prob) {
     auto molOp = std::static_pointer_cast<MolOp>(molOpHolder);
 //    molOp->updateAtomValenceMap();

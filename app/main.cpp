@@ -31,7 +31,7 @@ void testYolo() {
             "/home/xgd/datasets/soso-obj/yolov4-small-3l/weights/yolov4-smallest-3l_last.weights")) {
         std::cerr << "fail to load yolo from opencv" << std::endl;
     }
-    detector.setConfThresh(0.25);
+    detector.setConfThresh(0.15);
     detector.setIouThresh(0.45);
 
     xgd::TextRecognitionNcnnImpl recognizer;
@@ -53,6 +53,7 @@ void testYolo() {
         if (file.suffix() != "TIF")continue;
         qDebug() << file;
         cv::Mat image = cv::imread(file.absoluteFilePath().toStdString(), cv::IMREAD_GRAYSCALE);
+//        cv::erode(image,image,cv::Mat());
         ocrManager.ocr(image, true);
     }
 //    while (true){

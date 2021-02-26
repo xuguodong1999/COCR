@@ -1,11 +1,13 @@
 #ifndef _XGD_OBJECT_DETECTION_HPP_
 #define _XGD_OBJECT_DETECTION_HPP_
+
 #include "ocr_types.hpp"
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
 #include <string>
 #include <memory>
 #include <vector>
+
 namespace xgd {
 
     class ObjectDetector {
@@ -25,9 +27,10 @@ namespace xgd {
 
     public:
         ObjectDetector();
+
         virtual void freeModel() = 0;
 
-        virtual std::pair<cv::Mat,std::vector<DetectorObject>>
+        virtual std::pair<cv::Mat, std::vector<DetectorObject>>
         detect(const cv::Mat &_originImage) = 0;
     };
 
@@ -45,7 +48,7 @@ namespace xgd {
 
         void freeModel();
 
-        std::pair<cv::Mat,std::vector<DetectorObject>>
+        std::pair<cv::Mat, std::vector<DetectorObject>>
         detect(const cv::Mat &_originImage);
     };
 }

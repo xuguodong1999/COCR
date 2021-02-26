@@ -19,9 +19,10 @@
 #include <QFontDatabase>
 #include <QDebug>
 
-static QStringList availableFontFamilies;
+static std::vector<QString> availableFontFamilies;
 
 static cv::Mat GetFont(const QString &_text, const QString &_fontFamily = "Arial") {
+//    return cv::Mat(32,32,CV_8UC1,cv::Scalar(0));
     QFont font;
     font.setFamily(_fontFamily);
     font.setWeight(1);
@@ -37,7 +38,7 @@ static cv::Mat GetFont(const QString &_text, const QString &_fontFamily = "Arial
     float k = 5;
     painter.scale(k, k);
     painter.translate(0, 0);
-    td.drawContents(&painter);
+    td.drawContents(&painter);// FIXME: 已确认这一行代码无法并行
     cv::Mat cvImg(image.height(), image.width(),
                   CV_8UC1, (void *) image.constBits(), image.bytesPerLine());
     auto rectPtr = getBoundBoxForBWFont(cvImg);
@@ -451,9 +452,9 @@ std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect2f &_freeRec
 cv::Mat CRNNDataGenerator::getStandardLongText() {
     std::string text;
     int textType;
-    int MAX_LEN = 200+randInt()%400;
+    int MAX_LEN = 200 + randInt() % 400;
     int curLength = 0;
-    int height = 32 + randInt() % 64;
+    int height = 18 + randInt() % 32;
     cv::Mat result;
     while (curLength < MAX_LEN) {
         if (byProb(0.4)) {//四六开
@@ -470,6 +471,18 @@ cv::Mat CRNNDataGenerator::getStandardLongText() {
         for (auto &c:text) {
             if ('0' <= c && c <= '9') {
                 qData.push_back(QString("<sub>") + c + "</sub>");
+            } else if ('#' == c) {
+                qData.append("≡");
+            } else if ('+' == c) {
+                if (byProb(0.5))
+                    qData.append(QString("<sup>+</sup>"));
+                else
+                    qData.append(QString("<sup>⊕</sup>"));
+            } else if ('-' == c) {
+                if (byProb(0.5))
+                    qData.append(QString("<sup>-</sup>"));
+                else
+                    qData.append(QString("<sup>㊀</sup>"));
             } else {
                 qData.append(c);
             }
@@ -484,10 +497,12 @@ cv::Mat CRNNDataGenerator::getStandardLongText() {
             } else {
                 cv::hconcat(result, img, result);
             }
-        }else{
+        } else {
             break;
         }
         curLength = result.cols;
     }
+    if (!result.empty())
+        cv::cvtColor(result, result, cv::COLOR_GRAY2BGR);
     return result;
 }

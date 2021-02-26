@@ -84,7 +84,7 @@ namespace xgd {
 
         virtual cv::Point2f getCenter() const;
 
-        virtual BondType getBondType()const;
+        virtual BondType getBondType() const;
     };
 
     struct OCRItem {
@@ -110,7 +110,8 @@ namespace xgd {
         const cv::Rect2f &getRect() const;
 
         cv::Point2f getCenter() const;
-        BondType getBondType()const;
+
+        BondType getBondType() const;
     };
 
     inline BondType toBondType(const DetectorObjectType &_objType) {

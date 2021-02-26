@@ -1,6 +1,7 @@
 #include "opencv_util.hpp"
 #include <opencv2/imgproc.hpp>
 #include <opencv2/ml.hpp>
+
 void xgd::cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
                      const cv::Scalar &_color, const int &_thickness, bool _rotate) {
     int x = _center.x, y = _center.y, xx[4], yy[4];

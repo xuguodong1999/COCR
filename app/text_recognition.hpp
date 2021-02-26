@@ -32,7 +32,7 @@ namespace xgd {
         cv::Mat preProcess(const cv::Mat &_src) override;
 
     public:
-        bool initModel(const std::string &_onnxFile, const std::string &_words, int _width=320);
+        bool initModel(const std::string &_onnxFile, const std::string &_words, int _width = 320);
 
         void freeModel() override;
 

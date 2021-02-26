@@ -1,9 +1,11 @@
 #ifndef _XGD_TEXT_CORRECTION_HPP_
 #define _XGD_TEXT_CORRECTION_HPP_
+
 #include <string>
 #include <vector>
 #include <unordered_map>
-namespace xgd{
+
+namespace xgd {
     class TextCorrector {
         inline static std::string ALPHABET = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty";
 
@@ -14,11 +16,12 @@ namespace xgd{
         static std::vector<std::string> similarChar;
     public:
         static const std::string &GetAlphabet();
+
         static void InitData();
 
         std::vector<std::string> correct(const std::string &_text);
 
-        const std::string& correct2(const std::string &_text);
+        const std::string &correct2(const std::string &_text);
     };
 }
 #endif//_XGD_TEXT_CORRECTION_HPP_

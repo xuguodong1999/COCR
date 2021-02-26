@@ -67,5 +67,7 @@ inline _Tp getScalarSum(const cv::Scalar_<_Tp> &_scalar) {
 cv::Mat convertQImageToMat(const QImage &_img);
 
 cv::Mat convertQPixmapToMat(const QPixmap &_img);
+
 void salt_pepper(cv::Mat image, int n);
+
 #endif//_OPENCV_UTIL_HPP_

@@ -47,7 +47,7 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
     }
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
-//                                             2, 3, 4, 5,
+                                             2, 3, 4, 5,
                                              6, 7,
                                              8, 9, 10, 11, 12, 13,
                                              14, 15, 16
@@ -57,17 +57,17 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
 //#pragma omp parallel for num_threads(8)
     for (int i = 0; i < loopTime; i++) {
         std::shared_ptr<HwMol> hwMol(nullptr);
-        if (byProb(0.05)) {
+        if (byProb(0.1)) {
             hwMol = HwMol::GetSpecialExample(0.1);
         } else {
             auto mol = std::make_shared<JMol>();
             mol->setAlkane(alkanes[i % alkanes.size()]);
             auto molOp = std::make_shared<MolOp>(mol);
             bool add_aro = byProb(0.5), add_com = byProb(0.5);
-            if (alkanes[i % alkanes.size()].length() > 50) {
+            if (alkanes[i % alkanes.size()].length() > 40) {
                 add_com = false;
             }
-            if (alkanes[i % alkanes.size()].length() > 60) {
+            if (alkanes[i % alkanes.size()].length() > 30) {
                 add_aro = false;
             }
             molOp->randomize(0.1, byProb(0.95), byProb(0.95),
@@ -77,6 +77,9 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
         if (hwMol) {
             auto idxStr = std::to_string(i);
             hwMol->dumpAsDarknet(imgPath + idxStr, labelPath + idxStr, _repeatTimes);
+        }
+        if (i % 5000 == 0) {
+            std::cout << i << std::endl;
         }
     }
 }
@@ -92,7 +95,7 @@ void SOSODarknet::display() {
     std::shuffle(alkanes.begin(), alkanes.end(), std::default_random_engine());
     for (int i = 0; i < loopTime; i++) {
         std::shared_ptr<HwMol> hwMol(nullptr);
-        if (byProb(0.5)) {
+        if (byProb(0.1)) {
             hwMol = HwMol::GetSpecialExample(0.1);
         } else {
             auto mol = std::make_shared<JMol>();
