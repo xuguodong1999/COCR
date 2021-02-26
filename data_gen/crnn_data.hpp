@@ -30,7 +30,7 @@ class CRNNDataGenerator {
      * @return
      */
     std::pair<std::vector<unsigned char>, std::string> getSample(
-            const std::string &_text, int _type = 0);
+            const std::string &_text, int _type = 0,bool _revertColor=true,bool _gaussianNoise=true,bool _saltNoise=true);
 
 public:
     CRNNDataGenerator();
@@ -55,6 +55,7 @@ public:
      * @return
      */
     std::shared_ptr<HwBase> getRectStr(const cv::Rect2f &_freeRect, const int &_val, bool _isLeft);
+    cv::Mat getStandardLongText();
 };
 
 #endif//_CRNN_DATA_HPP_

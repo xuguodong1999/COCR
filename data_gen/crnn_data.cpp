@@ -27,7 +27,7 @@ static cv::Mat GetFont(const QString &_text, const QString &_fontFamily = "Arial
     font.setWeight(1);
     font.setItalic(byProb(0.5));
 
-    static QImage image(1280, 164, QImage::Format_Grayscale8);
+    QImage image(1280, 164, QImage::Format_Grayscale8);
     image.fill(Qt::white);
     QPainter painter(&image);
     painter.setFont(font);
@@ -198,12 +198,17 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
 //    wtxn.commit();
 }
 
+static std::vector<HwController> comm = {
+        HwController(1),
+        HwController(2),
+};
+
 std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
-        const std::string &_text, int _type) {
+        const std::string &_text, int _type, bool _revertColor, bool _gaussianNoise, bool _saltNoise) {
     float k = betweenProb(1.5, 2.2);
     cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
                           getScalar(ColorName::rgbWhite));
-    if (byProb(1) && std::string::npos == _text.find("#") &&
+    if (byProb(0.5) && std::string::npos == _text.find("#") &&
         std::string::npos == _text.find("_") &&
         std::string::npos == _text.find("+")) {// 机打数据
         if (byProb(0.7)) {// 走 Qt 的富文本渲染
@@ -245,24 +250,23 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         if (byProb(0.2)) {// 均匀化间隔
             hwStr.equalize(width * k - 4);
         }
-        HwController hwController(2);
-        hwStr.setHwController(hwController);
+        hwStr.setHwController(comm[randInt() % comm.size()]);
         hwStr.moveLeftTopTo(cv::Point2f(1, 1));
         hwStr.paintTo(img);
     }
     cv::resize(img, img, cv::Size(width, height), 0, 0, cv::INTER_CUBIC);
-    if (byProb(0.5)) {// 反转颜色
+    if (_revertColor && byProb(0.5)) {// 反转颜色
         cv::bitwise_not(img, img);
     }
     img.convertTo(img, CV_32F, 1. / 255);
-    if (byProb(0.2)) {
+    if (_gaussianNoise && byProb(0.2)) {
         cv::Mat noise(img.size(), CV_32FC3);
         cv::randn(noise, 0, belowProb(0.1));
         img = img + noise;
         cv::normalize(img, img, 1.0, 0, cv::NORM_MINMAX, CV_32F);
     }
     img.convertTo(img, CV_8U, 255);
-    if (byProb(0.6)) {
+    if (_saltNoise && byProb(0.6)) {
         salt_pepper(img, randInt() % 400);
     }
     std::vector<uchar> buffer;
@@ -442,4 +446,48 @@ std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect2f &_freeRec
         return nullptr;
     }
     return hwStr;
+}
+
+cv::Mat CRNNDataGenerator::getStandardLongText() {
+    std::string text;
+    int textType;
+    int MAX_LEN = 200+randInt()%400;
+    int curLength = 0;
+    int height = 32 + randInt() % 64;
+    cv::Mat result;
+    while (curLength < MAX_LEN) {
+        if (byProb(0.4)) {//四六开
+            text = randSelect(chemTexts);
+            textType = 2;
+        } else if (byProb(0.5)) {//五五开
+            text = randSelect(randomTexts);
+            textType = 0;
+        } else {
+            text = randSelect(dictTexts);
+            textType = 1;
+        }
+        QString qData;
+        for (auto &c:text) {
+            if ('0' <= c && c <= '9') {
+                qData.push_back(QString("<sub>") + c + "</sub>");
+            } else {
+                qData.append(c);
+            }
+        }
+        auto img = GetFont(qData, availableFontFamilies[randInt() % availableFontFamilies.size()]);
+        cv::resize(img, img, cv::Size(((float) height / img.rows * img.cols), height),
+                   0, 0, cv::INTER_CUBIC);
+        int originW = result.cols, curW = img.cols;
+        if (originW + curW < MAX_LEN) {
+            if (result.empty()) {
+                result = img;
+            } else {
+                cv::hconcat(result, img, result);
+            }
+        }else{
+            break;
+        }
+        curLength = result.cols;
+    }
+    return result;
 }

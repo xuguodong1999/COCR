@@ -35,7 +35,7 @@ void testYolo() {
     detector.setIouThresh(0.45);
 
     xgd::TextRecognitionNcnnImpl recognizer;
-    if (!recognizer.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.bin",
+    if (!recognizer.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16_mixFont.bin",
                               ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.param",
                               xgd::TextCorrector::GetAlphabet(), 3200)) {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
@@ -49,17 +49,17 @@ void testYolo() {
     xgd::OCRManager ocrManager(detector, recognizer, corrector, composer);
     QDir dir((ROOT_DIR + "/uspto-validation-updated/images").c_str());
     auto fileList = dir.entryInfoList(QDir::Filter(QDir::Files));
-//    for (auto &file:fileList) {
-//        if (file.suffix() != "TIF")continue;
-//        qDebug() << file;
-//        cv::Mat image = cv::imread(file.absoluteFilePath().toStdString(), cv::IMREAD_GRAYSCALE);
-//        ocrManager.ocr(image, true);
-//    }
-    while (true){
-        auto testImg=cv::imread(ROOT_DIR+"/demo.png", cv::IMREAD_GRAYSCALE);
-//    cv::erode(testImg, testImg,cv::Mat());
-        ocrManager.ocr(testImg, true);
+    for (auto &file:fileList) {
+        if (file.suffix() != "TIF")continue;
+        qDebug() << file;
+        cv::Mat image = cv::imread(file.absoluteFilePath().toStdString(), cv::IMREAD_GRAYSCALE);
+        ocrManager.ocr(image, true);
     }
+//    while (true){
+//        auto testImg=cv::imread(ROOT_DIR+"/demo.png", cv::IMREAD_GRAYSCALE);
+////    cv::erode(testImg, testImg,cv::Mat());
+//        ocrManager.ocr(testImg, true);
+//    }
 }
 
 int main(int argc, char **args) {

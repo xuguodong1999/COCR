@@ -21,13 +21,13 @@ CRNNDataGenerator crnnDataGenerator;
  * 4、键类型的混淆
  * 5、坐标嵌入
  */
-void testYoloDara() {
+void generateYoloData() {
     srand(0022);
     crnnDataGenerator.init("/tmp/fuck");
-    crnnDataGenerator.display();
-//    SOSODarknet generator;
-//    generator.init(WORKSPACE + "soso-obj");
-//    generator.display();
+//    crnnDataGenerator.display();
+    SOSODarknet generator;
+    generator.init(WORKSPACE + "soso-obj");
+    generator.display();
 }
 
 #include <QPainter>
@@ -48,8 +48,8 @@ int main(int argc, char **argv) {
     QApplication a(argc, argv);
     HwDataLoader::getInstance();
     try {
-        testYoloDara();
-        return a.exec();
+        generateYoloData();
+        return 0;//a.exec();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(-1);

@@ -18,6 +18,8 @@
 
 using namespace std;
 
+extern CRNNDataGenerator crnnDataGenerator;
+
 void HwMol::paintTo(cv::Mat &canvas) const {
     for (auto &sym:mData) {
         sym->paintTo(canvas);
@@ -66,8 +68,12 @@ std::optional<cv::Rect2f> HwMol::getBoundingBox() const {
 }
 
 float HwMol::reloadHWData(const float &_explicitCarbonProb) {
-    auto mol2d = std::static_pointer_cast<Mol2D>(mol2dHolder);
     auto molOp = std::static_pointer_cast<MolOp>(molOpHolder);
+    if (avgSize > 0) {
+        molOp->updateAtomValenceMap();
+        return avgSize;
+    }
+    auto mol2d = std::static_pointer_cast<Mol2D>(mol2dHolder);
     mol2d->calcCoord2D();
     float avgBondLength = mol2d->getAvgBondLength();
     mData.clear();
@@ -79,7 +85,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         auto atom = mol->getAtomById(_aid);
         auto sym = std::make_shared<HwStr>(atom->getElementType());
         sym->setKeepDirection(true);
-        float fontSize = avgBondLength * betweenProb(0.3, 0.7);
+        float fontSize = avgBondLength * betweenProb(0.2, 0.6);
         sym->resizeTo(fontSize, fontSize);
         sym->moveCenterTo(mol2d->getPos2D(_aid));
         if (ElementType::C == atom->getElementType()) {
@@ -302,8 +308,13 @@ static std::unordered_map<DetectorClasses, int> fullLabels = {
         // new text type
         {DetectorClasses::ItemHorizontalStr,  7}
 };
-static std::vector<HwController> controllers = {
+static std::vector<HwController> thin = {
+        HwController(1),
         HwController(2),
+        HwController(3),
+        HwController(4),
+};
+static std::vector<HwController> crude = {
         HwController(3),
         HwController(4),
         HwController(5),
@@ -311,11 +322,10 @@ static std::vector<HwController> controllers = {
         HwController(7),
         HwController(8),
 };
-
 void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
                           const size_t &_repeatTimes) {
     reloadHWData(0.1);
-    setHwController(controllers[randInt() % controllers.size()]);
+    setHwController(thin[randInt() % thin.size()]);
     float k = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
     size_t fixW, fixH;
@@ -324,9 +334,17 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
         target->rotate(randInt() % 360);
         target->replaceCharWithText(0.5);
-        target->setHwController(controllers[randInt() % controllers.size()]);
+        if (target->getMol()->bondsNum() <= 6) {
+            target->setHwController(thin[randInt() % 2]);
+        } else {
+            target->setHwController(thin[randInt() % thin.size()]);
+        }
         auto bBox = target->getBoundingBox().value();
-        const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        if (target->getMol()->bondsNum() <= 6) {
+            minHeight *= 6;
+            minWidth *= 6;
+        }
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
         target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
@@ -340,8 +358,9 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH, paddingColor);
         auto&[k, offsetx, offsety]=offset;
         cv::cvtColor(resImg, resImg, cv::COLOR_BGR2GRAY);
+        // TODO: pad line text here
         cv::imwrite(_imgPath + suffix + ".jpg", resImg,
-                    {cv::IMWRITE_JPEG_QUALITY, 70 + randInt() % 30});
+                    {cv::IMWRITE_JPEG_QUALITY, 60 + randInt() % 40});
         std::ofstream ofsm(_labelPath + suffix + ".txt");
         ofsm.precision(6);
         if (!ofsm.is_open()) {
@@ -363,6 +382,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
     }
 }
 
+
 void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     reloadHWData(0.1);
     float k0 = 100.0f / (std::max)(0.01f, avgSize);
@@ -375,16 +395,47 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
         target->rotate(randInt() % 360);
-        target->replaceCharWithText(1);
-        target->setHwController(controllers[randInt() % controllers.size()]);
+        target->replaceCharWithText(0.5);
+        if (target->getMol()->bondsNum() <= 6) {
+            target->setHwController(thin[randInt() % thin.size()]);
+        } else {
+            target->setHwController(crude[randInt() % thin.size()]);
+        }
         auto bBox = target->getBoundingBox().value();
-        const int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        if (target->getMol()->bondsNum() <= 6) {
+            float scale = betweenProb(1.5, 3);
+            minHeight *= scale;
+            minWidth *= scale;
+        }
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
         target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         target->paintTo(img);
         auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
         auto&[k, offsetx, offsety]=offset;
+        int ow = bBox.width, oh = bBox.height;
+        ow = ow * k;
+        oh = oh * k;
+        std::vector<cv::Rect2f> extraBoxes;
+        auto fill_rect = [&](const cv::Rect2i &_rect) -> void {
+            auto textImg = crnnDataGenerator.getStandardLongText();
+            if (textImg.empty())return;
+            int tw = textImg.cols, th = textImg.rows;
+            int mw = _rect.width - 10, mh = _rect.height - 10;
+            if (tw < mw && th < mh) {
+                int tx = 5 + randInt() % (mw - tw), ty = 5 + randInt() % (mh - th);
+                tx += _rect.x;
+                ty += _rect.y;
+                extraBoxes.emplace_back(tx, ty, tw, th);
+            }
+        };
+        if (ow > oh) {
+            int deltaH = (fixH - oh) / 2;
+            cv::Rect2i free1(0, 0, fixW, deltaH), free2(0, fixH - deltaH, fixW, deltaH);
+            fill_rect(free1);
+            fill_rect(free2);
+        }
         for (auto &sym:target->mData) {
 //            std::cout << fullLabels[sym->getItemType()] << std::endl;
             auto bBox = sym->getBoundingBox().value();
@@ -395,6 +446,11 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
             if (_showBox)
                 cv::rectangle(resImg, bBox, getScalar(
                         colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
+        }
+        for (auto &bBox:extraBoxes) {
+            if (_showBox)
+                cv::rectangle(resImg, bBox, getScalar(
+                        colorIdx((int) DetectorClasses::ItemHorizontalStr)), 1, cv::LINE_AA);
         }
         cv::imshow("MolHwItem::showOnScreen", resImg);
         cv::waitKey(0);
@@ -417,7 +473,7 @@ void HwMol::rotate(float _angle) {
 HwMol::HwMol(std::shared_ptr<MolHolder> _molOpHolder, std::shared_ptr<MolHolder> _mol2dHolder,
              HwController *_hwController)
         : MolHolder(_molOpHolder->getMol()), mol2dHolder(_mol2dHolder), molOpHolder(_molOpHolder),
-          hwController(_hwController) {
+          hwController(_hwController), avgSize(-1) {
     if (!hwController) {
         hwController = &(HwBase::baseController);
     }
@@ -437,8 +493,6 @@ static std::unordered_set<DetectorClasses> bondClassSet = {
         DetectorClasses::ItemCircleBond,
         DetectorClasses::ItemWaveBond,
 };
-extern CRNNDataGenerator crnnDataGenerator;
-
 void HwMol::replaceCharWithText(const float &_prob) {
     auto molOp = std::static_pointer_cast<MolOp>(molOpHolder);
 //    molOp->updateAtomValenceMap();
@@ -627,8 +681,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         }
     };
     std::vector<std::function<void(void)>> func_list = {add_c6, add_tetrahedral, add_grid2};
-    auto func = randSelect(func_list);
-    func();
+    randSelect(func_list)();
     auto &mData = example->mData;
     auto &hwToAtomMap = example->hwToAtomMap;
     auto &avgSize = example->avgSize;
@@ -652,7 +705,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         auto atom = mol->getAtomById(_aid);
         auto sym = std::make_shared<HwStr>(atom->getElementType());
         sym->setKeepDirection(true);
-        float fontSize = avgSize * betweenProb(0.3, 0.7);
+        float fontSize = avgSize * betweenProb(0.2, 0.6);
         sym->resizeTo(fontSize, fontSize);
         sym->moveCenterTo(cv::Point2f(atom->x, atom->y));
         if (ElementType::C == atom->getElementType()) {
@@ -803,7 +856,7 @@ void HwMol::showSpecialExample(const size_t &_repeatTimes, bool _showBox) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
         target->rotate(randInt() % 360);
 //        target->replaceCharWithText(1);
-        target->setHwController(controllers[randInt() % controllers.size()]);
+        target->setHwController(thin[randInt() % thin.size()]);
         auto bBox = target->getBoundingBox().value();
         int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
