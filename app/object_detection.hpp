@@ -8,8 +8,12 @@
 #include <memory>
 #include <vector>
 
-namespace xgd {
+namespace ncnn {
+    class Net;
+}
 
+namespace xgd {
+    // FIXME: 添加对宽度小于1的边框的优化
     class ObjectDetector {
     protected:
         bool isInited;
@@ -45,6 +49,25 @@ namespace xgd {
 
     public:
         bool initModel(const std::string &_cfgFile, const std::string &_weightsFile);
+
+        void freeModel();
+
+        std::pair<cv::Mat, std::vector<DetectorObject>>
+        detect(const cv::Mat &_originImage);
+    };
+
+    class ObjectDetectorNCNNImpl : public ObjectDetector {
+        int numThread;
+    public:
+        void setNumThread(int numThread);
+
+    private:
+        std::shared_ptr<ncnn::Net> net;
+
+    public:
+        ObjectDetectorNCNNImpl();
+
+        bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth);
 
         void freeModel();
 

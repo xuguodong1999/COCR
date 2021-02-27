@@ -25,15 +25,21 @@ std::string ROOT_DIR = "C:/Users/xgd/Desktop/jokejoker/workspace/";
 #include <opencv2/imgproc.hpp>
 
 void testYolo() {
-    xgd::ObjectDetectorOpenCVImpl detector;
-    if (!detector.initModel(
-            "/home/xgd/datasets/soso-obj/yolov4-small-3l/soso-obj.cfg",
-            "/home/xgd/datasets/soso-obj/yolov4-small-3l/weights/yolov4-smallest-3l_last.weights")) {
-        std::cerr << "fail to load yolo from opencv" << std::endl;
+//    xgd::ObjectDetectorOpenCVImpl detector;
+//    if (!detector.initModel(
+//            ROOT_DIR + "../resources/model/yolo-3l-c8.cfg",
+//            ROOT_DIR + "../resources/model/yolo-3l-c8.weights")) {
+//        std::cerr << "fail to load yolo from opencv" << std::endl;
+//    }
+//    detector.setConfThresh(0.15);
+//    detector.setIouThresh(0.45);
+    xgd::ObjectDetectorNCNNImpl detector;
+    detector.setNumThread(4);
+    if (!detector.initModel(ROOT_DIR + "../resources/model/yolo_3l_c8.bin",
+                            ROOT_DIR + "../resources/model/yolo_3l_c8.param",
+                            1280)) {
+        std::cerr << "fail to load yolo from ncnn" << std::endl;
     }
-    detector.setConfThresh(0.15);
-    detector.setIouThresh(0.45);
-
     xgd::TextRecognitionNcnnImpl recognizer;
     if (!recognizer.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16_mixFont.bin",
                               ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.param",

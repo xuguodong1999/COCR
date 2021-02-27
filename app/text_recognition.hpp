@@ -40,13 +40,13 @@ namespace xgd {
     };
 
     class TextRecognitionNcnnImpl : public TextRecognition {
+        int maxWidth;
         int numThread;
         std::shared_ptr<ncnn::Net> net;
 
         std::pair<std::string, std::vector<float>>
         recognize(const float *_outputData, const int &_h, const int _w);
 
-        int maxWidth;
 
         cv::Mat preProcess(const cv::Mat &_src) override;
 
