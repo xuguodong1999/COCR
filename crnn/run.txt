@@ -16,3 +16,7 @@ python onnx_export.py  --FeatureExtraction='VGG' --SequenceModeling='BiLSTM' --P
 ~/shared/ncnn20201218/tools/ncnnoptimize vgg_lstm_57.param vgg_lstm_57.bin vgg_lstm_57_fp16.param vgg_lstm_57_fp16.bin 1
 
 git add  . && git commit -m "xx" && git push
+
+~/shared/ncnn20201218/tools/darknet2ncnn yolo-3l-c8.cfg yolo-3l-c8.weights yolo_3l_c8.param yolo_3l_c8.bin
+
+~/shared/ncnn20201218/tools/ncnnoptimize yolo_3l_c8.param yolo_3l_c8.bin yolo_3l_c8.param yolo_3l_c8.bin 1

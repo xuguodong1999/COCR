@@ -76,7 +76,6 @@ Thumbs.db
 .vscode/
 cmake-*/
 *.tar.gz
-*.weights
 soso-text/
 soso-detect/
 *.onnx

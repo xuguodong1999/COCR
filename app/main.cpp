@@ -49,18 +49,22 @@ void testYolo() {
     xgd::OCRManager ocrManager(detector, recognizer, corrector, composer);
     QDir dir((ROOT_DIR + "/uspto-validation-updated/images").c_str());
     auto fileList = dir.entryInfoList(QDir::Filter(QDir::Files));
-    for (auto &file:fileList) {
+    srand(time(0));
+    size_t idx = 0;
+    while (true) {
+        auto &file = fileList[rand() % fileList.size()];
+//        auto &file = fileList[idx++];
         if (file.suffix() != "TIF")continue;
         qDebug() << file;
         cv::Mat image = cv::imread(file.absoluteFilePath().toStdString(), cv::IMREAD_GRAYSCALE);
 //        cv::erode(image,image,cv::Mat());
         ocrManager.ocr(image, true);
     }
-//    while (true){
-//        auto testImg=cv::imread(ROOT_DIR+"/demo.png", cv::IMREAD_GRAYSCALE);
-////    cv::erode(testImg, testImg,cv::Mat());
-//        ocrManager.ocr(testImg, true);
-//    }
+    while (true) {
+        auto testImg = cv::imread(ROOT_DIR + "/demo.png", cv::IMREAD_GRAYSCALE);
+//    cv::erode(testImg, testImg,cv::Mat());
+        ocrManager.ocr(testImg, true);
+    }
 }
 
 int main(int argc, char **args) {
