@@ -20,3 +20,10 @@ git add  . && git commit -m "xx" && git push
 ~/shared/ncnn20201218/tools/darknet2ncnn yolo-3l-c8.cfg yolo-3l-c8.weights yolo_3l_c8.param yolo_3l_c8.bin
 
 ~/shared/ncnn20201218/tools/ncnnoptimize yolo_3l_c8.param yolo_3l_c8.bin yolo_3l_c8.param yolo_3l_c8.bin 1
+
+rm -Rf .git/refs/original
+rm -Rf .git/logs/
+git gc
+git prune
+
+git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch --ignore-unmatch resources/model/vgg_lstm_57_fp16.bin' --prune-empty --tag-name-filter cat -- --all
