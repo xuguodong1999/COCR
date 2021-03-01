@@ -47,13 +47,9 @@ cv::Mat xgd::ObjectDetector::preProcess(const cv::Mat &_src) {
     int w = _src.cols, h = _src.rows;
     if (w > maxWidth || h > maxHeight) {
         float kw = static_cast<float >(maxWidth) / w, kh = static_cast<float >(maxHeight) / h;
-        if (kh < kw) {
-            w *= kh;
-            h *= kh;
-        } else {
-            w *= kw;
-            h *= kw;
-        }
+        float k = std::min(kw, kh);
+        w *= k;
+        h *= k;
     }
     w += (sizeBase - w % sizeBase);
     h += (sizeBase - h % sizeBase);
@@ -77,10 +73,11 @@ cv::Mat xgd::ObjectDetector::preProcess(const cv::Mat &_src) {
             procImg = _src;
         }
     }
-    cv::vconcat(procImg, cv::Mat(16, procImg.cols, procImg.type(), cvColor(ColorName::rgbWhite)), procImg);
-    cv::vconcat(cv::Mat(16, procImg.cols, procImg.type(), cvColor(ColorName::rgbWhite)), procImg, procImg);
-    cv::hconcat(procImg, cv::Mat(procImg.rows, 16, procImg.type(), cvColor(ColorName::rgbWhite)), procImg);
-    cv::hconcat(cv::Mat(procImg.rows, 16, procImg.type(), cvColor(ColorName::rgbWhite)), procImg, procImg);
+    const size_t baseSize_2 = sizeBase / 2;
+    cv::vconcat(procImg, cv::Mat(baseSize_2, procImg.cols, procImg.type(), cvColor(ColorName::rgbWhite)), procImg);
+    cv::vconcat(cv::Mat(baseSize_2, procImg.cols, procImg.type(), cvColor(ColorName::rgbWhite)), procImg, procImg);
+    cv::hconcat(procImg, cv::Mat(procImg.rows, baseSize_2, procImg.type(), cvColor(ColorName::rgbWhite)), procImg);
+    cv::hconcat(cv::Mat(procImg.rows, baseSize_2, procImg.type(), cvColor(ColorName::rgbWhite)), procImg, procImg);
     return procImg;
 }
 
@@ -92,10 +89,10 @@ xgd::ObjectDetector::ObjectDetector() : maxHeight(1280), maxWidth(1280) {
 bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const std::string &_weightsFile) {
     try {
         net = cv::dnn::readNetFromDarknet(_cfgFile, _weightsFile);
-        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-        net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-//        net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-//        net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+//        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+//        net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+        net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
+        net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
         auto outLayers = net.getUnconnectedOutLayers();
         auto layersNames = net.getLayerNames();
         outBlobNames.resize(outLayers.size());
@@ -169,7 +166,7 @@ void xgd::ObjectDetectorOpenCVImpl::setIouThresh(float iouThresh) {
 
 bool xgd::ObjectDetectorNCNNImpl::initModel(
         const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth) {
-    maxWidth = maxHeight = _maxWidth;
+    maxWidth = maxHeight = _maxWidth - sizeBase;
     try {
         net = std::make_shared<ncnn::Net>();
         net->opt.num_threads = numThread;

@@ -24,6 +24,18 @@ std::string ROOT_DIR = "C:/Users/xgd/Desktop/jokejoker/workspace/";
 #include <QDebug>
 #include <opencv2/imgproc.hpp>
 
+cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle) {
+    cv::Mat destImage;
+    cv::Point2f center(srcImage.cols / 2, srcImage.rows / 2);//中心
+    cv::Mat M = cv::getRotationMatrix2D(center, angle, 1);//计算旋转的仿射变换矩阵
+    cv::warpAffine(srcImage, destImage, M, cv::Size(srcImage.cols, srcImage.rows),
+               cv::INTER_CUBIC,
+               cv::BORDER_CONSTANT,
+               cv::Scalar(255, 255, 255));//仿射变换
+//    circle(destImage, center, 2, cv::Scalar(255,255,255));
+    return destImage;
+}
+#include <QTime>
 void testYolo() {
 //    xgd::ObjectDetectorOpenCVImpl detector;
 //    if (!detector.initModel(
@@ -33,6 +45,7 @@ void testYolo() {
 //    }
 //    detector.setConfThresh(0.15);
 //    detector.setIouThresh(0.45);
+
     xgd::ObjectDetectorNCNNImpl detector;
     detector.setNumThread(4);
     if (!detector.initModel(ROOT_DIR + "../resources/model/yolo_3l_c8.bin",
@@ -40,6 +53,7 @@ void testYolo() {
                             1280)) {
         std::cerr << "fail to load yolo from ncnn" << std::endl;
     }
+
     xgd::TextRecognitionNcnnImpl recognizer;
     if (!recognizer.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16_mixFont.bin",
                               ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.param",
@@ -57,20 +71,29 @@ void testYolo() {
     auto fileList = dir.entryInfoList(QDir::Filter(QDir::Files));
     srand(time(0));
     size_t idx = 0;
-    while (true) {
-        auto &file = fileList[rand() % fileList.size()];
-//        auto &file = fileList[idx++];
+    QSet<size_t> badExample = {
+            26, 35, 36, 38, 50
+    };
+    while (idx < fileList.size()) {
+        auto &file = fileList[idx++];
+//    while (true) {
+//        auto &file = fileList[rand() % fileList.size()];
         if (file.suffix() != "TIF")continue;
-        qDebug() << file;
+//        if (!badExample.contains(idx))continue;
+//        if(file.fileName()!="US07317008-20080108-C00027.TIF")continue;
+        qDebug() << idx << ":" << file.fileName();
         cv::Mat image = cv::imread(file.absoluteFilePath().toStdString(), cv::IMREAD_GRAYSCALE);
 //        cv::erode(image,image,cv::Mat());
+//        image = rotateCvMat(image, 2);
+//        cv::imshow("origin",image);
+//        cv::waitKey(0);
         ocrManager.ocr(image, true);
     }
-    while (true) {
-        auto testImg = cv::imread(ROOT_DIR + "/demo.png", cv::IMREAD_GRAYSCALE);
-//    cv::erode(testImg, testImg,cv::Mat());
-        ocrManager.ocr(testImg, true);
-    }
+//    while (true) {
+//        auto testImg = cv::imread(ROOT_DIR + "/demo.png", cv::IMREAD_GRAYSCALE);
+////    cv::erode(testImg, testImg,cv::Mat());
+//        ocrManager.ocr(testImg, true);
+//    }
 }
 
 int main(int argc, char **args) {
