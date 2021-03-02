@@ -1,7 +1,6 @@
-#include "text_correction.hpp"
+#include "text_corrector.hpp"
 #include <vector>
 #include <algorithm>
-#include <iostream>
 
 namespace xgd {
     extern std::vector<std::string> ELEMENT_NAME_LIST;

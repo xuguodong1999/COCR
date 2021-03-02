@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 #            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
 #    endif()
 #endif()
-include_directories(../openbabel/include ../ncnn/include)
+include_directories(../openbabel/include ../ncnn/include ../app)
 # qt5, you need to install it >=5.15.2 for bug-free qt3d call
 set(QT_COMPONENTS Widgets 3DCore 3DExtras 3DRender LinguistTools)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -30,7 +30,13 @@ qt5_add_big_resources(BIG_RES_FILES ../resources/big_res.qrc)
 set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc)
 
 aux_source_directory(../app DIR_SRCS)
-set(PROJECT_SOURCES ${DIR_SRCS} ${RES_SRCS} ${TS_FILES})
+aux_source_directory(../app/ncnn_impl NCNN_SRCS)
+aux_source_directory(../app/opencv_dnn_impl OPENCV_DNN_SRCS)
+set(PROJECT_SOURCES ${DIR_SRCS} ${RES_SRCS} ${TS_FILES} ${NCNN_SRCS})
+
+if (NOT ANDROID)
+    list(APPEND PROJECT_SOURCES ${OPENCV_DNN_SRCS})
+endif (NOT ANDROID)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
@@ -51,6 +57,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::3DExtras
         Qt${QT_VERSION_MAJOR}::3DRender
         Qt${QT_VERSION_MAJOR}::Widgets
-        opencv_core opencv_dnn opencv_imgproc opencv_imgcodecs opencv_highgui
+        opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
         ncnn
         openbabel)
+
+if (NOT ANDROID)
+    target_link_libraries(${PROJECT_NAME} PRIVATE opencv_dnn)
+endif (NOT ANDROID)

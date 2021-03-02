@@ -27,3 +27,5 @@ git gc
 git prune
 
 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch --ignore-unmatch resources/model/vgg_lstm_57_fp16.bin' --prune-empty --tag-name-filter cat -- --all
+
+python -m onnxsim a.onnx b.onnx

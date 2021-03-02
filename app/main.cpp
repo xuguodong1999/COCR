@@ -29,23 +29,34 @@ cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle) {
     cv::Point2f center(srcImage.cols / 2, srcImage.rows / 2);//中心
     cv::Mat M = cv::getRotationMatrix2D(center, angle, 1);//计算旋转的仿射变换矩阵
     cv::warpAffine(srcImage, destImage, M, cv::Size(srcImage.cols, srcImage.rows),
-               cv::INTER_CUBIC,
-               cv::BORDER_CONSTANT,
-               cv::Scalar(255, 255, 255));//仿射变换
+                   cv::INTER_CUBIC,
+                   cv::BORDER_CONSTANT,
+                   cv::Scalar(255, 255, 255));//仿射变换
 //    circle(destImage, center, 2, cv::Scalar(255,255,255));
     return destImage;
 }
-#include <QTime>
-void testYolo() {
-//    xgd::ObjectDetectorOpenCVImpl detector;
-//    if (!detector.initModel(
-//            ROOT_DIR + "../resources/model/yolo-3l-c8.cfg",
-//            ROOT_DIR + "../resources/model/yolo-3l-c8.weights")) {
-//        std::cerr << "fail to load yolo from opencv" << std::endl;
-//    }
-//    detector.setConfThresh(0.15);
-//    detector.setIouThresh(0.45);
 
+#include "ncnn_impl/text_recognizer_ncnn_impl.hpp"
+
+#if defined(HAVE_OPENCV_DNN) && not defined(Q_OS_ANDROID)
+
+#include "opencv_dnn_impl/object_detector_opencv_impl.hpp"
+
+#else
+#include "ncnn_impl/object_detector_ncnn_impl.hpp"
+#endif
+
+void testYolo() {
+#if defined(HAVE_OPENCV_DNN) && not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
+    xgd::ObjectDetectorOpenCVImpl detector;
+    if (!detector.initModel(
+            ROOT_DIR + "../resources/model/yolo-3l-c8.cfg",
+            ROOT_DIR + "../resources/model/yolo-3l-c8.weights")) {
+        std::cerr << "fail to load yolo from opencv" << std::endl;
+    }
+    detector.setConfThresh(0.15);
+    detector.setIouThresh(0.45);
+#else
     xgd::ObjectDetectorNCNNImpl detector;
     detector.setNumThread(4);
     if (!detector.initModel(ROOT_DIR + "../resources/model/yolo_3l_c8.bin",
@@ -53,7 +64,7 @@ void testYolo() {
                             1280)) {
         std::cerr << "fail to load yolo from ncnn" << std::endl;
     }
-
+#endif
     xgd::TextRecognitionNcnnImpl recognizer;
     if (!recognizer.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16_mixFont.bin",
                               ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.param",

@@ -1,14 +1,12 @@
 #ifndef _XGD_OCR_MANAGER_HPP_
 #define _XGD_OCR_MANAGER_HPP_
 
-#include "text_recognition.hpp"
-#include "object_detection.hpp"
+#include "text_recognizer.hpp"
+#include "object_detector.hpp"
 #include "graph_composer.hpp"
-#include "text_correction.hpp"
+#include "text_corrector.hpp"
 
 namespace xgd {
-
-
     class OCRManager {
         TextRecognition &recognizer;
         ObjectDetector &detector;
