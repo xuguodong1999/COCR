@@ -30,7 +30,7 @@ namespace xgd {
         ElementType type;
         int charge;
     public:
-        JAtom(const size_t&_id,const ElementType &_element, const float &_x = 0, const float &_y = 0);
+        JAtom(const size_t &_id, const ElementType &_element, const float &_x = 0, const float &_y = 0);
 
         size_t getId() const;
 
