@@ -126,11 +126,19 @@ std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::addAtom(
     return atom;
 }
 
-std::shared_ptr<xgd::JAtom>
-xgd::JMolAdapter::addAtom(const xgd::ElementType &_element, const float &_x, const float &_y, const float &_z) {
+std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::addAtom(
+        const xgd::ElementType &_element, const float &_x, const float &_y, const float &_z) {
     auto atom = addAtom(_element, _x, _y);
     if (!atom)return nullptr;
     atom->set3D(_x, _y, _z);
     return atom;
+}
+
+std::string xgd::JMolAdapter::writeAsPDB() const {
+    return std::string();
+}
+
+std::string xgd::JMolAdapter::writeAs(const std::string &_formatSuffix) const {
+    return std::string();
 }
 

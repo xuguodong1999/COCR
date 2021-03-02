@@ -19,6 +19,10 @@ namespace xgd {
         std::unordered_map<OpenBabel::OBAtom *, decltype(id)> atomIdMap2;
         std::unordered_map<OpenBabel::OBBond *, decltype(id)> bondIdMap2;
     public:
+        virtual std::string writeAsPDB() const;
+
+        virtual std::string writeAs(const std::string &_formatSuffix) const;
+
         JMolAdapter();
 
         ~JMolAdapter();
@@ -35,17 +39,18 @@ namespace xgd {
 
         std::shared_ptr<JResidue> removeResidue(const size_t &_rid, bool _check = false);
 
-        std::shared_ptr<JResidue>
-        addResidue(const std::string &_text, bool _isLeftToRight, const float &_x = 0, const float &_y = 0);
+        std::shared_ptr<JResidue> addResidue(
+                const std::string &_text, bool _isLeftToRight, const float &_x = 0, const float &_y = 0);
 
-        std::shared_ptr<JResidue>
-        addResidue(const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z);
+        std::shared_ptr<JResidue> addResidue(
+                const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z);
 
         std::shared_ptr<JBond> addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2);
 
         std::shared_ptr<JAtom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0);
 
-        std::shared_ptr<JAtom> addAtom(const ElementType &_element, const float &_x, const float &_y, const float &_z);
+        std::shared_ptr<JAtom> addAtom(
+                const ElementType &_element, const float &_x, const float &_y, const float &_z);
     };
 }
 

@@ -4,7 +4,7 @@
 #include "jatom.hpp"
 #include "jbond.hpp"
 #include "jresidue.hpp"
-
+#include <unordered_set>
 #include <vector>
 #include <memory>
 
@@ -15,7 +15,12 @@ namespace xgd {
         std::vector<std::shared_ptr<JAtom>> atomVec;
         std::vector<std::shared_ptr<JBond>> bondVec;
         std::vector<std::shared_ptr<JResidue>> residueVec;
+        inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
     public:
+        virtual std::string writeAsPDB() const = 0;
+
+        virtual std::string writeAs(const std::string &_formatSuffix) const = 0;
+
         void setId(const size_t &_id);
 
         size_t getId();

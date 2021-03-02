@@ -24,7 +24,8 @@ std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_element, const float &_
     return atom;
 }
 
-std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_element, const float &_x, const float &_y, const float &_z) {
+std::shared_ptr<JAtom> JMol::addAtom(
+        const ElementType &_element, const float &_x, const float &_y, const float &_z) {
     auto atom = addAtom(_element, _x, _y);
     if (!atom)return nullptr;
     atom->set3D(_x, _y, _z);
@@ -46,8 +47,8 @@ JMol::addResidue(const std::string &_text, bool _isLeftToRight, const float &_x,
     return residue;
 }
 
-std::shared_ptr<JResidue>
-JMol::addResidue(const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z) {
+std::shared_ptr<JResidue>JMol::addResidue(
+        const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z) {
     auto residue = addResidue(_text, _isLeftToRight, _x, _y);
     if (!residue)return nullptr;
     residue->set3D(_x, _y, _z);
