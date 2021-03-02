@@ -1,8 +1,8 @@
 #ifndef _XGD_GRAPH_COMPOSER_HPP_
 #define _XGD_GRAPH_COMPOSER_HPP_
 
-#include "molecule.hpp"
-#include "ocr_types.hpp"
+#include "jmol.hpp"
+#include "ocr_item.hpp"
 #include <utility>
 #include <vector>
 

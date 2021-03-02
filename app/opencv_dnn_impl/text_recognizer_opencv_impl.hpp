@@ -9,7 +9,10 @@
 
 
 namespace xgd {
-    class TextRecognitionOpenCVImpl : public TextRecognition {
+    /**
+     * FIXME: onnx in opencv_dnn only support fixed image width
+     */
+    class TextRecognizerOpenCVImpl : public TextRecognizer {
         std::shared_ptr<cv::dnn::TextRecognitionModel> model;
         int dstWidth;
 

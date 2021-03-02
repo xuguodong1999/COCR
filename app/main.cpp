@@ -57,7 +57,7 @@ void testYolo() {
     detector.setConfThresh(0.15);
     detector.setIouThresh(0.45);
 #else
-    xgd::ObjectDetectorNCNNImpl detector;
+    xgd::ObjectDetectorNcnnImpl detector;
     detector.setNumThread(4);
     if (!detector.initModel(ROOT_DIR + "../resources/model/yolo_3l_c8.bin",
                             ROOT_DIR + "../resources/model/yolo_3l_c8.param",
@@ -65,7 +65,7 @@ void testYolo() {
         std::cerr << "fail to load yolo from ncnn" << std::endl;
     }
 #endif
-    xgd::TextRecognitionNcnnImpl recognizer;
+    xgd::TextRecognizerNcnnImpl recognizer;
     if (!recognizer.initModel(ROOT_DIR + "../resources/model/vgg_lstm_57_fp16_mixFont.bin",
                               ROOT_DIR + "../resources/model/vgg_lstm_57_fp16.param",
                               xgd::TextCorrector::GetAlphabet(), 3200)) {

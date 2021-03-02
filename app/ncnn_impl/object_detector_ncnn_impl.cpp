@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-bool xgd::ObjectDetectorNCNNImpl::initModel(
+bool xgd::ObjectDetectorNcnnImpl::initModel(
         const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth) {
     maxWidth = maxHeight = _maxWidth - sizeBase;
     try {
@@ -45,13 +45,13 @@ bool xgd::ObjectDetectorNCNNImpl::initModel(
     return true;
 }
 
-void xgd::ObjectDetectorNCNNImpl::freeModel() {
+void xgd::ObjectDetectorNcnnImpl::freeModel() {
     net->clear();
     net = nullptr;
 }
 
 std::pair<cv::Mat, std::vector<xgd::DetectorObject>>
-xgd::ObjectDetectorNCNNImpl::detect(const cv::Mat &_originImage) {
+xgd::ObjectDetectorNcnnImpl::detect(const cv::Mat &_originImage) {
     cv::Mat input = preProcess(_originImage);
     ncnn::Mat in = ncnn::Mat::from_pixels_resize(
             input.data, ncnn::Mat::PIXEL_GRAY,
@@ -77,12 +77,12 @@ xgd::ObjectDetectorNCNNImpl::detect(const cv::Mat &_originImage) {
     return {input, objects};
 }
 
-xgd::ObjectDetectorNCNNImpl::ObjectDetectorNCNNImpl() : numThread(4), net(nullptr) {
+xgd::ObjectDetectorNcnnImpl::ObjectDetectorNcnnImpl() : numThread(4), net(nullptr) {
 
 }
 
-void xgd::ObjectDetectorNCNNImpl::setNumThread(int numThread) {
-    ObjectDetectorNCNNImpl::numThread = numThread;
+void xgd::ObjectDetectorNcnnImpl::setNumThread(int numThread) {
+    ObjectDetectorNcnnImpl::numThread = numThread;
     if (net)
         net->opt.num_threads = numThread;
 }

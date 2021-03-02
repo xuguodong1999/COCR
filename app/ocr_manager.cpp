@@ -1,11 +1,34 @@
 #include "ocr_manager.hpp"
 #include "color_types.hpp"
+#include "detector_object.hpp"
+#include "jbond.hpp"
 #include "opencv_util.hpp"
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <iostream>
 
-xgd::OCRManager::OCRManager(xgd::ObjectDetector &_detector, xgd::TextRecognition &_recognizer,
+inline static xgd::BondType toBondType(const xgd::DetectorObjectType &_objType) {
+    using namespace xgd;
+    switch (_objType) {
+        case DetectorObjectType::SingleLine :
+            return xgd::BondType::SingleBond;
+        case DetectorObjectType::DoubleLine  :
+            return BondType::DoubleBond;
+        case DetectorObjectType::TripleLine  :
+            return BondType::TripleBond;
+        case DetectorObjectType::SolidWedge  :
+            return BondType::UpBond;
+        case DetectorObjectType::DashWedge  :
+            return BondType::DownBond;
+        case DetectorObjectType::WaveLine  :
+            return BondType::ImplicitBond;
+        default: {
+            throw std::runtime_error("toBondType: unknown bondType");
+        }
+    }
+}
+
+xgd::OCRManager::OCRManager(xgd::ObjectDetector &_detector, xgd::TextRecognizer &_recognizer,
                             TextCorrector &_corrector, GraphComposer &_composer)
         : detector(_detector), recognizer(_recognizer), corrector(_corrector), composer(_composer) {
 

@@ -10,7 +10,7 @@ namespace ncnn {
 }
 
 namespace xgd {
-    class TextRecognitionNcnnImpl : public TextRecognition {
+    class TextRecognizerNcnnImpl : public TextRecognizer {
         int maxWidth;
         int numThread;
         std::shared_ptr<ncnn::Net> net;
@@ -22,7 +22,7 @@ namespace xgd {
         cv::Mat preProcess(const cv::Mat &_src) override;
 
     public:
-        TextRecognitionNcnnImpl();
+        TextRecognizerNcnnImpl();
 
         bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words,
                        const int &_maxWidth);

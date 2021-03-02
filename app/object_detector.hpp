@@ -1,7 +1,7 @@
 #ifndef _XGD_OBJECT_DETECTION_HPP_
 #define _XGD_OBJECT_DETECTION_HPP_
 
-#include "ocr_types.hpp"
+#include "ocr_item.hpp"
 #include <string>
 #include <memory>
 #include <vector>

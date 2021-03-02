@@ -7,7 +7,7 @@
 
 
 namespace xgd {
-    class TextRecognition {
+    class TextRecognizer {
     protected:
         std::vector<std::string> wordVec;
         const float meanValues = 127.5, normValues = 1.0 / 127.5;
