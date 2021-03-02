@@ -34,7 +34,7 @@ xgd::OCRManager::OCRManager(xgd::ObjectDetector &_detector, xgd::TextRecognizer 
 
 }
 
-std::shared_ptr<xgd::Molecule> xgd::OCRManager::ocr(cv::Mat &_originInput, bool _debug) {
+std::shared_ptr<xgd::JMol> xgd::OCRManager::ocr(cv::Mat &_originInput, bool _debug) {
     auto[input, objects]=detector.detect(_originInput);
     auto items = convert(objects, input);
     objects.clear();

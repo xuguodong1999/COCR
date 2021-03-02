@@ -129,3 +129,45 @@ std::unordered_map<std::string, ElementType> xgd::STR_ELEMENT_SET = {
         {"Rg",   ElementType::Rg},
         {"Cn",   ElementType::Cn}
 };
+
+const std::string &xgd::convertElementTypeToName(const ElementType &_type) {
+    return ELEMENT_NAME_LIST[static_cast<size_t>(_type)];
+}
+
+ElementType xgd::convertNameToElementType(const std::string &_name) {
+    auto it = STR_ELEMENT_SET.find(_name);
+    if (it != STR_ELEMENT_SET.end())return it->second;
+    return ElementType::None;
+}
+
+const std::string &xgd::JAtom::getName() const {
+    return convertElementTypeToName(type);
+}
+
+const ElementType &xgd::JAtom::getType() const {
+    return type;
+}
+
+void xgd::JAtom::set2D(const float &_x, const float &_y) {
+    x = _x;
+    y = _y;
+}
+
+void xgd::JAtom::set3D(const float &_x, const float &_y, const float &_z) {
+    xx = _x;
+    yy = _y;
+    zz = _z;
+}
+
+int xgd::JAtom::getCharge() const {
+    return charge;
+}
+
+size_t xgd::JAtom::getId() const {
+    return id;
+}
+
+xgd::JAtom::JAtom(const size_t &_id, const ElementType &_element, const float &_x, const float &_y)
+        : id(_id), type(_element), x(_x), y(_y), xx(0), yy(0), zz(0), charge(0) {
+
+}

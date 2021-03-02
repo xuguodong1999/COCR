@@ -292,10 +292,10 @@ void xgd::OCRItem::setAsCircleBond(const cv::Rect2f &_rect) {
 }
 
 void xgd::OCRItem::setAsText(std::string &_text, const cv::Rect2f &_rect) {
-    auto it = STR_ELEMENT_SET.find(_text);
-    if (STR_ELEMENT_SET.end() != it) {
+    ElementType eleType = convertNameToElementType(_text);
+    if (eleType != ElementType::None) {
         type = OCRItemType::Element;
-        data = std::make_shared<OCRElementDataItem>(it->second, _rect);
+        data = std::make_shared<OCRElementDataItem>(eleType, _rect);
     } else {
         type = OCRItemType::Group;
         data = std::make_shared<OCRGroupDataItem>(_text, _rect);

@@ -1,4 +1,8 @@
-#ifndef _XXXXX_HPP_
-#define _XXXXX_HPP_
-
-#endif//_XXXXX_HPP_
+#ifndef _JRESIDUE_HPP_
+#define _JRESIDUE_HPP_
+namespace xgd{
+    class JResidue{
+        
+    };
+}
+#endif//_JRESIDUE_HPP_

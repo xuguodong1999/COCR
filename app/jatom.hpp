@@ -3,9 +3,14 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include <unordered_map>
 
 namespace xgd {
+    class JMol;
+
+    class JResidue;
+
     enum class ElementType : size_t {
         None = 0, H = 1, He, Li, Be, B, C = 6, N = 7, O = 8, F = 9, Ne,
         Na, Mg, Al, Si, P, S = 16, Cl = 17, Ar, K, Ca = 20,
@@ -18,5 +23,30 @@ namespace xgd {
 
     extern std::vector<std::string> ELEMENT_NAME_LIST;
     extern std::unordered_map<std::string, ElementType> STR_ELEMENT_SET;
+
+    class JAtom {
+        size_t id;
+        float x, y, xx, yy, zz;
+        ElementType type;
+        int charge;
+    public:
+        JAtom(const size_t&_id,const ElementType &_element, const float &_x = 0, const float &_y = 0);
+
+        size_t getId() const;
+
+        const std::string &getName() const;
+
+        const ElementType &getType() const;
+
+        void set2D(const float &_x, const float &_y);
+
+        void set3D(const float &_x, const float &_y, const float &_z);
+
+        int getCharge() const;
+    };
+
+    const std::string &convertElementTypeToName(const ElementType &_type);
+
+    ElementType convertNameToElementType(const std::string &_name);
 }
 #endif//_JATOM_HPP_

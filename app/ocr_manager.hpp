@@ -21,7 +21,7 @@ namespace xgd {
         OCRManager(ObjectDetector &_detector, TextRecognizer &_recognizer, TextCorrector &_corrector,
                    GraphComposer &_composer);
 
-        std::shared_ptr<Molecule> ocr(cv::Mat &_originInput, bool _debug = false);
+        std::shared_ptr<JMol> ocr(cv::Mat &_originInput, bool _debug = false);
     };
 }
 #endif//_XGD_OCR_MANAGER_HPP_

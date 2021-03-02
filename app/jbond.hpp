@@ -10,5 +10,8 @@ namespace xgd {
         DownBond = 5,
         DelocalizedBond = 6
     };
+    class JBond{
+
+    };
 }
 #endif//_JBOND_HPP_
