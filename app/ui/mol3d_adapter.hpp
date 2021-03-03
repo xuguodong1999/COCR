@@ -28,7 +28,7 @@ namespace xgd {
 
     private:
         Qt3DCore::QEntity *getSphereEntity(
-                const size_t&_aid,const QVector3D &_center, const float &_radius, const QColor &_color);
+                const size_t &_aid, const QVector3D &_center, const float &_radius, const QColor &_color);
 
         Qt3DCore::QEntity *getSingleCylinderEntity(
                 const QVector3D &_from, const QVector3D &_to, const float &_radius, const QColor &_color);

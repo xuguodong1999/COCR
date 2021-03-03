@@ -981,13 +981,10 @@ namespace OpenBabel {
     }
 
     bool OBAtom::DeleteBond(OBBond *bond) {
-        OBBondIterator i;
-        for (i = _vbond.begin(); i != _vbond.end(); ++i)
-            if ((OBBond *) bond == *i) {
-                _vbond.erase(i);
-                return (true);
-            }
-        return (false);
+        auto i = std::find(_vbond.begin(), _vbond.end(), bond);
+        if (_vbond.end() == i) return false;
+        _vbond.erase(i);
+        return true;
     }
 
     bool OBAtom::MatchesSMARTS(const char *pattern) {

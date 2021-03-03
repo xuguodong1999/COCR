@@ -46,6 +46,7 @@ std::shared_ptr<xgd::JBond> xgd::JMolAdapter::removeBond(const size_t &_bid) {
     if (!bond)return nullptr;
     auto obBond = bondIdMap.find(bond->getId());
     if (bondIdMap.end() != obBond) {
+        // FIXME: crash here
         obMol->DeleteBond(obBond->second);
         bondIdMap.erase(bond->getId());
         bondIdMap2.erase(obBond->second);
@@ -135,6 +136,7 @@ std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::addAtom(
     auto atom = JMol::addAtom(_element, _x, _y);
     if (!atom)return nullptr;
     auto obAtom = obMol->NewAtom();
+    obAtom->SetParent(obMol);
     atomIdMap[atom->getId()] = obAtom;
     atomIdMap2[obAtom] = atom->getId();
     return atom;
@@ -236,7 +238,7 @@ void xgd::JMolAdapter::syncAtoms(std::function<void(xgd::JAtom &, OpenBabel::OBA
 
 void xgd::JMolAdapter::sync3D() {
     auto sync_3d = [&](xgd::JAtom &atom, OpenBabel::OBAtom *obAtom) -> void {
-        atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
+        atom.set3D(obAtom->GetX(), obAtom->GetY(), obAtom->GetZ());
     };
     syncAtoms(sync_3d);
     is3DInfoLatest = true;

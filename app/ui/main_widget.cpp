@@ -2,13 +2,11 @@
 #include "ui_main_widget.h"
 
 MainWidget::MainWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::MainWidget)
-{
+        QWidget(parent),
+        ui(new Ui::MainWidget) {
     ui->setupUi(this);
 }
 
-MainWidget::~MainWidget()
-{
+MainWidget::~MainWidget() {
     delete ui;
 }
