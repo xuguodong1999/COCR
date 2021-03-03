@@ -24,7 +24,7 @@ namespace xgd {
         std::unordered_map<decltype(id), OpenBabel::OBBond *> bondIdMap;
         std::unordered_map<OpenBabel::OBAtom *, decltype(id)> atomIdMap2;
         std::unordered_map<OpenBabel::OBBond *, decltype(id)> bondIdMap2;
-
+        bool isOBMolLatest;
 
         bool runForcefield();
 
@@ -37,6 +37,14 @@ namespace xgd {
         // 使用OpenBabel的加氢接口修改OBMol，向JMol同步数据
         void syncNewEntityFromOBMol();
 
+        void checkOBMol();
+
+        void resetOBMol();
+
+        void addOBAtom(JAtom &_atom);
+
+        void addOBBond(JBond &_bond);
+
     public:
         JMolAdapter();
 
@@ -45,6 +53,8 @@ namespace xgd {
         JMolAdapter(const JMolAdapter &_jMolAdapter);
 
         JMolAdapter(JMolAdapter &&_jMolAdapter);
+
+        void onExtraDataNeeded() override;
 
         JMolAdapter &operator=(const JMolAdapter &) = delete;
 

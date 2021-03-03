@@ -10,7 +10,7 @@
 
 #include <coordgen/sketcherMinimizer.h>
 
-xgd::JMolAdapter::JMolAdapter() {
+xgd::JMolAdapter::JMolAdapter() : isOBMolLatest(true) {
     obMol = new OpenBabel::OBMol();
 }
 
@@ -29,33 +29,19 @@ xgd::JMolAdapter::JMolAdapter(xgd::JMolAdapter &&_jMolAdapter) {
 
 std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::removeAtom(const size_t &_aid) {
     onMolUpdated();
-    auto atom = JMol::removeAtom(_aid);
-    if (!atom)return atom;
-    auto obAtom = atomIdMap.find(atom->getId());
-    if (atomIdMap.end() != obAtom) {
-        obMol->DeleteAtom(obAtom->second);
-        atomIdMap.erase(atom->getId());
-        atomIdMap2.erase(obAtom->second);
-    }
-    return atom;
+    isOBMolLatest = false;
+    return JMol::removeAtom(_aid);
 }
 
 std::shared_ptr<xgd::JBond> xgd::JMolAdapter::removeBond(const size_t &_bid) {
     onMolUpdated();
-    auto bond = JMol::removeBond(_bid);
-    if (!bond)return nullptr;
-    auto obBond = bondIdMap.find(bond->getId());
-    if (bondIdMap.end() != obBond) {
-        // FIXME: crash here
-        obMol->DeleteBond(obBond->second);
-        bondIdMap.erase(bond->getId());
-        bondIdMap2.erase(obBond->second);
-    }
-    return bond;
+    isOBMolLatest = false;
+    return JMol::removeBond(_bid);
 }
 
 std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::removeResidue(const size_t &_rid) {
     onMolUpdated();
+    isOBMolLatest = false;
     // TODO: handle residue in openbabel
     return JMol::removeResidue(_rid);
 }
@@ -63,6 +49,7 @@ std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::removeResidue(const size_t &_ri
 std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
         const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y) {
     onMolUpdated();
+    checkOBMol();
     // TODO: handle residue in openbabel
     return JMol::addResidue(_text, _isLeftToRight, _x, _y);
 }
@@ -70,6 +57,7 @@ std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
 std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
         const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z) {
     onMolUpdated();
+    checkOBMol();
     // TODO: handle residue in openbabel
     return JMol::addResidue(_text, _isLeftToRight, _x, _y, _z);
 }
@@ -77,68 +65,20 @@ std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
 std::shared_ptr<xgd::JBond> xgd::JMolAdapter::addBond(
         std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type) {
     onMolUpdated();
+    checkOBMol();
     auto bond = JMol::addBond(_a1, _a2, _type);
     if (!bond)return nullptr;
-    auto obBond = obMol->NewBond();
-    bondIdMap[bond->getId()] = obBond;
-    bondIdMap2[obBond] = bond->getId();
-    int obBondOrder;
-    switch (bond->getType()) {
-        case BondType::SingleBond:
-            obBondOrder = 1;
-            break;
-        case BondType::DoubleBond:
-            obBondOrder = 2;
-            break;
-        case BondType::TripleBond:
-            obBondOrder = 3;
-            break;
-        case BondType::DelocalizedBond:
-            obBond->SetAromatic(true);
-            obBondOrder = 5;
-            break;
-        case BondType::UpBond:
-            obBond->SetWedge(true);
-            obBondOrder = 1;
-            break;
-        case BondType::DownBond:
-            obBond->SetHash(true);
-            obBondOrder = 1;
-            break;
-        case BondType::ImplicitBond:
-            obBond->SetWedgeOrHash(true);
-            obBondOrder = 1;
-            break;
-        default:
-            throw std::runtime_error("BondType obTo OpenBabel::BondOrder not Implemented!");
-    }
-    obBond->SetBondOrder(obBondOrder);
-    auto from = bond->getFrom();
-    if (from) {
-        auto obFrom = atomIdMap.find(from->getId());
-        if (atomIdMap.end() != obFrom) {
-            obBond->SetBegin(obFrom->second);
-        }
-    }
-    auto to = bond->getTo();
-    if (to) {
-        auto obTo = atomIdMap.find(to->getId());
-        if (atomIdMap.end() != obTo) {
-            obBond->SetEnd(obTo->second);
-        }
-    }
+    addOBBond(*bond);
     return bond;
 }
 
 std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::addAtom(
         const xgd::ElementType &_element, const float &_x, const float &_y) {
     onMolUpdated();
+    checkOBMol();
     auto atom = JMol::addAtom(_element, _x, _y);
     if (!atom)return nullptr;
-    auto obAtom = obMol->NewAtom();
-    obAtom->SetParent(obMol);
-    atomIdMap[atom->getId()] = obAtom;
-    atomIdMap2[obAtom] = atom->getId();
+    addOBAtom(*atom);
     return atom;
 }
 
@@ -155,6 +95,7 @@ std::string xgd::JMolAdapter::writeAsPDB() {
 }
 
 std::string xgd::JMolAdapter::writeAs(const std::string &_formatSuffix) {
+    checkOBMol();
     OpenBabel::OBConversion conv;
     auto formatOut = conv.FindFormat(_formatSuffix);
     if (!formatOut || !conv.SetOutFormat(formatOut)) {
@@ -245,6 +186,7 @@ void xgd::JMolAdapter::sync3D() {
 }
 
 bool xgd::JMolAdapter::generate2D() {
+    checkOBMol();
     try {
         sketcherMinimizer minimizer;
         auto cMol = new sketcherMinimizerMolecule();
@@ -274,6 +216,7 @@ bool xgd::JMolAdapter::generate2D() {
 }
 
 bool xgd::JMolAdapter::generate3D() {
+    checkOBMol();
     return runForcefield();
 }
 
@@ -313,6 +256,94 @@ void xgd::JMolAdapter::syncNewEntityFromOBMol() {
             }
         }
     }
+    isOBMolLatest = true;
+}
+
+void xgd::JMolAdapter::checkOBMol() {
+    if (!isOBMolLatest) {
+        resetOBMol();
+    }
+    isOBMolLatest = true;
+}
+
+void xgd::JMolAdapter::addOBAtom(xgd::JAtom &_atom) {
+    auto obAtom = obMol->NewAtom();
+    obAtom->SetAtomicNum(_atom.getAtomicNumber());
+    atomIdMap[_atom.getId()] = obAtom;
+    atomIdMap2[obAtom] = _atom.getId();
+}
+
+void xgd::JMolAdapter::addOBBond(xgd::JBond &_bond) {
+    auto obBond = obMol->NewBond();
+    bondIdMap[_bond.getId()] = obBond;
+    bondIdMap2[obBond] = _bond.getId();
+    int obBondOrder;
+    switch (_bond.getType()) {
+        case BondType::SingleBond:
+            obBondOrder = 1;
+            break;
+        case BondType::DoubleBond:
+            obBondOrder = 2;
+            break;
+        case BondType::TripleBond:
+            obBondOrder = 3;
+            break;
+        case BondType::DelocalizedBond:
+            obBond->SetAromatic(true);
+            obBondOrder = 5;
+            break;
+        case BondType::UpBond:
+            obBond->SetWedge(true);
+            obBondOrder = 1;
+            break;
+        case BondType::DownBond:
+            obBond->SetHash(true);
+            obBondOrder = 1;
+            break;
+        case BondType::ImplicitBond:
+            obBond->SetWedgeOrHash(true);
+            obBondOrder = 1;
+            break;
+        default:
+            throw std::runtime_error("BondType obTo OpenBabel::BondOrder not Implemented!");
+    }
+    obBond->SetBondOrder(obBondOrder);
+    auto from = _bond.getFrom();
+    if (from) {
+        auto obFrom = atomIdMap.find(from->getId());
+        if (atomIdMap.end() != obFrom) {
+            obBond->SetBegin(obFrom->second);
+        }
+    }
+    auto to = _bond.getTo();
+    if (to) {
+        auto obTo = atomIdMap.find(to->getId());
+        if (atomIdMap.end() != obTo) {
+            obBond->SetEnd(obTo->second);
+        }
+    }
+}
+
+void xgd::JMolAdapter::onExtraDataNeeded() {
+    JMol::onExtraDataNeeded();
+    checkOBMol();
+}
+
+void xgd::JMolAdapter::resetOBMol() {
+    std::cout << "reset" << std::endl;
+    delete obMol;
+    bondIdMap.clear();
+    atomIdMap.clear();
+    bondIdMap2.clear();
+    atomIdMap2.clear();
+    obMol = new OpenBabel::OBMol();
+    onMolUpdated();
+    loopAtomVec([&](JAtom &atom) {
+        addOBAtom(atom);
+    });
+    loopBondVec([&](JBond &bond) {
+        addOBBond(bond);
+    });
 }
 
 

@@ -537,7 +537,8 @@ namespace OpenBabel {
             next.Clear();
             for (i = curr.NextBit(-1); i != curr.EndBit(); i = curr.NextBit(i)) {
                 atom = GetAtom(i);
-                FOR_BONDS_OF_ATOM (bond, atom)if (!used.BitIsSet(bond->GetNbrAtomIdx(atom)))
+                FOR_BONDS_OF_ATOM (bond, atom)
+                    if (!used.BitIsSet(bond->GetNbrAtomIdx(atom)))
                         next.SetBitOn(bond->GetNbrAtomIdx(atom));
             }
 
@@ -2261,16 +2262,16 @@ namespace OpenBabel {
         //don't need to do anything with coordinates b/c
         //BeginModify() blows away coordinates
 
-        //find bonds to delete
-        OBAtom *nbr;
-        vector<OBBond *> vdb;
-        vector<OBBond *>::iterator j;
-        for (nbr = atom->BeginNbrAtom(j); nbr; nbr = atom->NextNbrAtom(j))
-            vdb.push_back(*j);
-
-        for (j = vdb.begin(); j != vdb.end(); ++j)
-            DeleteBond((OBBond *) *j); //delete bonds
-
+        if (destroyAtom) {
+            //find bonds to delete
+            OBAtom *nbr;
+            vector<OBBond *> vdb;
+            vector<OBBond *>::iterator j;
+            for (nbr = atom->BeginNbrAtom(j); nbr; nbr = atom->NextNbrAtom(j))
+                vdb.push_back(*j);
+            for (j = vdb.begin(); j != vdb.end(); ++j)
+                DeleteBond((OBBond *) *j); //delete bonds
+        }
         _atomIds[atom->GetId()] = nullptr;
         _vatom.erase(_vatom.begin() + (atom->GetIdx() - 1));
         _natoms--;

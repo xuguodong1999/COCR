@@ -57,6 +57,8 @@ namespace xgd {
 
         std::shared_ptr<JResidue> getResidue(const size_t &_rid);
 
+        virtual void onExtraDataNeeded();
+
         virtual std::shared_ptr<JAtom> removeAtom(const size_t &_aid);
 
         virtual std::shared_ptr<JBond> removeBond(const size_t &_bid);

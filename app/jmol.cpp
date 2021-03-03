@@ -112,6 +112,7 @@ std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
 }
 
 void JMol::display() {
+    onExtraDataNeeded();
     loopAtomVec([&](JAtom &atom) {
         std::cout << atom.getId() << ":" << atom.getName();
         if (is2DInfoLatest) {
@@ -126,5 +127,9 @@ void JMol::display() {
         std::cout << bond.getId() << ":" << bond.getBondOrder() << ","
                   << bond.getFrom()->getId() << "-" << bond.getTo()->getId() << std::endl;
     });
+}
+
+void JMol::onExtraDataNeeded() {
+    // default behavior: do nothing
 }
 
