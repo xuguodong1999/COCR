@@ -1,0 +1,4 @@
+#ifndef _XGD_APPLICATION_HPP_
+#define _XGD_APPLICATION_HPP_
+
+#endif//_XGD_APPLICATION_HPP_

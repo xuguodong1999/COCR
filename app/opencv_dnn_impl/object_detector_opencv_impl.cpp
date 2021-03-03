@@ -10,8 +10,6 @@ bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const
         net = cv::dnn::readNetFromDarknet(_cfgFile, _weightsFile);
         net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
         net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-//        net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-//        net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
         auto outLayers = net.getUnconnectedOutLayers();
         auto layersNames = net.getLayerNames();
         outBlobNames.resize(outLayers.size());

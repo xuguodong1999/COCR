@@ -2,9 +2,9 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
-    <name>MainWindowClass</name>
+    <name>MainWidget</name>
     <message>
-        <source>MainWindow</source>
+        <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

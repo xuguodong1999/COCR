@@ -13,6 +13,7 @@
 #if defined(HAVE_OPENCV_DNN) && not defined(Q_OS_ANDROID)
 
 #include "opencv_dnn_impl/object_detector_opencv_impl.hpp"
+#include "opencv_dnn_impl/text_recognizer_opencv_impl.hpp"// unused, only for performance test
 
 #else
 
@@ -40,11 +41,17 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
         std::cerr << "fail to load yolo from ncnn" << std::endl;
     }
 #endif
-    /// recognizer
-    static xgd::TextRecognizerNcnnImpl recognizer;
-    if (!recognizer.initModel(_modelDir + "/vgg_lstm_57_fp16_mixFont.bin",
-                              _modelDir + "/vgg_lstm_57_fp16.param",
-                              xgd::TextCorrector::GetAlphabet(), 3200)) {
+//    /// recognizer
+//    static xgd::TextRecognizerNcnnImpl recognizer;
+//    if (!recognizer.initModel(_modelDir + "/vgg_lstm_57_fp16_mixFont.bin",
+//                              _modelDir + "/vgg_lstm_57_fp16.param",
+//                              xgd::TextCorrector::GetAlphabet(), 3200)) {
+//        std::cerr << "fail to load crnn from ncnn" << std::endl;
+//    }
+    /// recognizer by opencv_dnn
+    static xgd::TextRecognizerOpenCVImpl recognizer;
+    if (!recognizer.initModel(_modelDir + "/crnn_192_mix_sim.onnx",
+                              xgd::TextCorrector::GetAlphabet(), 192)) {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
     }
     /// corrector
@@ -125,8 +132,8 @@ int main(int argc, char *argv[]) {
 #endif
     QApplication app(argc, argv);
     try {
-        testJMol();
-//        loopUsptoBenchMark(false, {});
+//        testJMol();
+        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
 //        loopHwDemo();

@@ -1,0 +1,4 @@
+#ifndef _XGD_MOL2D_WIDGET_HPP_
+#define _XGD_MOL2D_WIDGET_HPP_
+
+#endif//_XGD_MOL2D_WIDGET_HPP_
