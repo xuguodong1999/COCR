@@ -27,5 +27,7 @@ namespace xgd {
 
     void cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
                     const cv::Scalar &_color, const int &_thickness = 1, bool _rotate = true);
+
+    cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle);
 }
 #endif//_XGD_OPENCV_UTIL_HPP_

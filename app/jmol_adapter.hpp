@@ -3,7 +3,7 @@
 
 #include "jmol.hpp"
 #include <unordered_map>
-
+#include <functional>
 namespace OpenBabel {
     class OBMol;
 
@@ -18,11 +18,13 @@ namespace xgd {
         std::unordered_map<decltype(id), OpenBabel::OBBond *> bondIdMap;
         std::unordered_map<OpenBabel::OBAtom *, decltype(id)> atomIdMap2;
         std::unordered_map<OpenBabel::OBBond *, decltype(id)> bondIdMap2;
+        bool is3DInfoLatest;
+
+        bool runForcefield();
+
+        void onMolUpdated();
+        void syncAtoms(std::function<void(JAtom&, OpenBabel::OBAtom *)>_func);
     public:
-        virtual std::string writeAsPDB() const;
-
-        virtual std::string writeAs(const std::string &_formatSuffix) const;
-
         JMolAdapter();
 
         ~JMolAdapter();
@@ -33,11 +35,11 @@ namespace xgd {
 
         JMolAdapter &operator=(const JMolAdapter &) = delete;
 
-        std::shared_ptr<JAtom> removeAtom(const size_t &_aid, bool _check = false);
+        std::shared_ptr<JAtom> removeAtom(const size_t &_aid);
 
-        std::shared_ptr<JBond> removeBond(const size_t &_bid, bool _check = false);
+        std::shared_ptr<JBond> removeBond(const size_t &_bid);
 
-        std::shared_ptr<JResidue> removeResidue(const size_t &_rid, bool _check = false);
+        std::shared_ptr<JResidue> removeResidue(const size_t &_rid);
 
         std::shared_ptr<JResidue> addResidue(
                 const std::string &_text, bool _isLeftToRight, const float &_x = 0, const float &_y = 0);
@@ -51,6 +53,18 @@ namespace xgd {
 
         std::shared_ptr<JAtom> addAtom(
                 const ElementType &_element, const float &_x, const float &_y, const float &_z);
+
+        std::string writeAsPDB() ;
+
+        std::string writeAsSMI() ;
+
+        std::string writeAs(const std::string &_formatSuffix) ;
+
+        void readAsPDB(const std::string &_pdbBuffer);
+
+        void readAsSMI(const std::string &_pdbBuffer);
+
+        void readAs(const std::string &_dataBuffer, const std::string &_formatSuffix);
     };
 }
 

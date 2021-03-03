@@ -55,33 +55,24 @@ std::shared_ptr<JResidue>JMol::addResidue(
     return residue;
 }
 
-std::shared_ptr<JAtom> JMol::removeAtom(const size_t &_aid, bool _check) {
+std::shared_ptr<JAtom> JMol::removeAtom(const size_t &_aid) {
     if (_aid >= atomVec.size())return nullptr;
     auto atom = atomVec[_aid];
     atomVec[_aid] = nullptr;
-    if (_check) {
-        // TODO: 清理 bond
-    }
     return atom;
 }
 
-std::shared_ptr<JBond> JMol::removeBond(const size_t &_bid, bool _check) {
+std::shared_ptr<JBond> JMol::removeBond(const size_t &_bid) {
     if (_bid >= bondVec.size())return nullptr;
     auto bond = bondVec[_bid];
     bondVec[_bid] = nullptr;
-    if (_check) {
-        // TODO: 清理 atom
-    }
     return bond;
 }
 
-std::shared_ptr<JResidue> JMol::removeResidue(const size_t &_rid, bool _check) {
+std::shared_ptr<JResidue> JMol::removeResidue(const size_t &_rid) {
     if (_rid >= residueVec.size())return nullptr;
     auto residue = residueVec[_rid];
     residueVec[_rid] = nullptr;
-    if (_check) {
-        // TODO: 清理 residue
-    }
     return residue;
 }
 

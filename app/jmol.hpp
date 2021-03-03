@@ -17,9 +17,6 @@ namespace xgd {
         std::vector<std::shared_ptr<JResidue>> residueVec;
         inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
     public:
-        virtual std::string writeAsPDB() const = 0;
-
-        virtual std::string writeAs(const std::string &_formatSuffix) const = 0;
 
         void setId(const size_t &_id);
 
@@ -46,11 +43,23 @@ namespace xgd {
 
         std::shared_ptr<JResidue> getResidue(const size_t &_rid);
 
-        virtual std::shared_ptr<JAtom> removeAtom(const size_t &_aid, bool _check = false);
+        virtual std::shared_ptr<JAtom> removeAtom(const size_t &_aid);
 
-        virtual std::shared_ptr<JBond> removeBond(const size_t &_bid, bool _check = false);
+        virtual std::shared_ptr<JBond> removeBond(const size_t &_bid);
 
-        virtual std::shared_ptr<JResidue> removeResidue(const size_t &_rid, bool _check = false);
+        virtual std::shared_ptr<JResidue> removeResidue(const size_t &_rid);
+
+        virtual std::string writeAsPDB()  = 0;
+
+        virtual std::string writeAsSMI()  = 0;
+
+        virtual std::string writeAs(const std::string &_formatSuffix)  = 0;
+
+        virtual void readAsPDB(const std::string &_pdbBuffer) = 0;
+
+        virtual void readAsSMI(const std::string &_pdbBuffer) = 0;
+
+        virtual void readAs(const std::string &_dataBuffer, const std::string &_formatSuffix) = 0;
     };
 }
 #endif//_XGD_JMOL_HPP_

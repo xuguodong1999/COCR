@@ -23,3 +23,13 @@ void xgd::cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, co
     cv::line(_canvas, cv::Point(xx[2], yy[2]), cv::Point(xx[3], yy[3]),
              _color, _thickness, cv::LINE_AA);
 }
+
+cv::Mat xgd::rotateCvMat(const cv::Mat &srcImage, double angle) {
+    cv::Mat destImage;
+    cv::Point2f center(srcImage.cols / 2, srcImage.rows / 2);
+    cv::Mat M = cv::getRotationMatrix2D(center, angle, 1);
+    cv::warpAffine(srcImage, destImage, M, cv::Size(srcImage.cols, srcImage.rows),
+                   cv::INTER_CUBIC,cv::BORDER_CONSTANT,
+                   cv::Scalar(255, 255, 255));
+    return destImage;
+}
