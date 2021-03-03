@@ -29,7 +29,7 @@ cv::Mat xgd::rotateCvMat(const cv::Mat &srcImage, double angle) {
     cv::Point2f center(srcImage.cols / 2, srcImage.rows / 2);
     cv::Mat M = cv::getRotationMatrix2D(center, angle, 1);
     cv::warpAffine(srcImage, destImage, M, cv::Size(srcImage.cols, srcImage.rows),
-                   cv::INTER_CUBIC,cv::BORDER_CONSTANT,
+                   cv::INTER_CUBIC, cv::BORDER_CONSTANT,
                    cv::Scalar(255, 255, 255));
     return destImage;
 }

@@ -4,6 +4,7 @@
 #include "jmol.hpp"
 #include <unordered_map>
 #include <functional>
+
 namespace OpenBabel {
     class OBMol;
 
@@ -12,18 +13,27 @@ namespace OpenBabel {
     class OBBond;
 }
 namespace xgd {
+    /**
+     * 适配目标：
+     * 1、使用 OpenBabel 实现三维标准化和其它需求
+     * 2、使用 coordgenlibs 实现二维标准化
+     */
     class JMolAdapter : public JMol {
         OpenBabel::OBMol *obMol;
         std::unordered_map<decltype(id), OpenBabel::OBAtom *> atomIdMap;
         std::unordered_map<decltype(id), OpenBabel::OBBond *> bondIdMap;
         std::unordered_map<OpenBabel::OBAtom *, decltype(id)> atomIdMap2;
         std::unordered_map<OpenBabel::OBBond *, decltype(id)> bondIdMap2;
-        bool is3DInfoLatest;
+
 
         bool runForcefield();
 
         void onMolUpdated();
-        void syncAtoms(std::function<void(JAtom&, OpenBabel::OBAtom *)>_func);
+
+        void syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _func);
+
+        void sync3D();
+
     public:
         JMolAdapter();
 
@@ -54,17 +64,21 @@ namespace xgd {
         std::shared_ptr<JAtom> addAtom(
                 const ElementType &_element, const float &_x, const float &_y, const float &_z);
 
-        std::string writeAsPDB() ;
+        std::string writeAsPDB();
 
-        std::string writeAsSMI() ;
+        std::string writeAsSMI();
 
-        std::string writeAs(const std::string &_formatSuffix) ;
+        std::string writeAs(const std::string &_formatSuffix);
 
         void readAsPDB(const std::string &_pdbBuffer);
 
         void readAsSMI(const std::string &_pdbBuffer);
 
         void readAs(const std::string &_dataBuffer, const std::string &_formatSuffix);
+
+        bool generate2D();
+
+        bool generate3D();
     };
 }
 

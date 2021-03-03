@@ -61,7 +61,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::Widgets
         opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
         ncnn
-        openbabel)
+        openbabel
+        coordgen)
 
 if (NOT ANDROID)
     target_link_libraries(${PROJECT_NAME} PRIVATE opencv_dnn)

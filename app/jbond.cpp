@@ -24,3 +24,18 @@ void xgd::JBond::setType(const xgd::BondType &_type) {
     type = _type;
 }
 
+int xgd::JBond::getBondOrder() const {
+    switch (type) {
+        case BondType::SingleBond:
+        case BondType::UpBond:
+        case BondType::DownBond:
+            return 1;
+        case BondType::DoubleBond:
+            return 2;
+        case BondType::TripleBond:
+            return 3;
+        default:
+            return 1;// in openbabel, BondType::DelocalizedBond is 5
+    }
+}
+

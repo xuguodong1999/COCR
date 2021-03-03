@@ -9,12 +9,15 @@
 #include "ocr_manager.hpp"
 #include "ncnn_impl/text_recognizer_ncnn_impl.hpp"
 
+//#undef HAVE_OPENCV_DNN
 #if defined(HAVE_OPENCV_DNN) && not defined(Q_OS_ANDROID)
 
 #include "opencv_dnn_impl/object_detector_opencv_impl.hpp"
 
 #else
+
 #include "ncnn_impl/object_detector_ncnn_impl.hpp"
+
 #endif
 
 xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
@@ -29,10 +32,10 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
     detector.setConfThresh(0.15);
     detector.setIouThresh(0.45);
 #else
-    xgd::ObjectDetectorNcnnImpl detector;
+    static xgd::ObjectDetectorNcnnImpl detector;
     detector.setNumThread(4);
-    if (!detector.initModel(_modelDir+"/yolo_3l_c8.bin",
-                            _modelDir+"/yolo_3l_c8.param",
+    if (!detector.initModel(_modelDir + "/yolo_3l_c8.bin",
+                            _modelDir + "/yolo_3l_c8.param",
                             1280)) {
         std::cerr << "fail to load yolo from ncnn" << std::endl;
     }
@@ -98,13 +101,22 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
     }
 }
 
+#include "jmol_adapter.hpp"
+
+void testJMol() {
+    using namespace xgd;
+    JMolAdapter mol;
+    mol.readAsSMI("c1ccccc1");
+}
+
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     QApplication app(argc, argv);
     try {
-        loopUsptoBenchMark(false, {});
+        testJMol();
+//        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
 //        loopHwDemo();

@@ -47,7 +47,7 @@ JMol::addResidue(const std::string &_text, bool _isLeftToRight, const float &_x,
     return residue;
 }
 
-std::shared_ptr<JResidue>JMol::addResidue(
+std::shared_ptr<JResidue> JMol::addResidue(
         const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z) {
     auto residue = addResidue(_text, _isLeftToRight, _x, _y);
     if (!residue)return nullptr;
@@ -82,5 +82,21 @@ void JMol::setId(const size_t &_id) {
 
 size_t JMol::getId() {
     return id;
+}
+
+JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false) {
+
+}
+
+void JMol::loopAtomVec(std::function<void(JAtom &)> _func) {
+    for (auto &atom:atomVec) {
+        if (atom)_func(*atom);
+    }
+}
+
+void JMol::loopBondVec(std::function<void(JBond &)> _func) {
+    for (auto &bond:bondVec) {
+        if (bond)_func(*bond);
+    }
 }
 

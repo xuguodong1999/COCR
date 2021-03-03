@@ -7,7 +7,9 @@
 #include <openbabel/builder.h>
 #include <openbabel/forcefield.h>
 
-xgd::JMolAdapter::JMolAdapter() : is3DInfoLatest(false) {
+#include <coordgen/sketcherMinimizer.h>
+
+xgd::JMolAdapter::JMolAdapter() {
     obMol = new OpenBabel::OBMol();
 }
 
@@ -156,8 +158,8 @@ std::string xgd::JMolAdapter::writeAs(const std::string &_formatSuffix) {
         throw std::runtime_error("unknown format suffix: " + _formatSuffix);
     }
     if (!is3DInfoLatest) {
-        if (!runForcefield())
-            throw std::runtime_error("forcefield error");
+        if (!generate3D())
+            throw std::runtime_error("fail to generate 3d");
     }
     return conv.WriteString(obMol);
 }
@@ -176,10 +178,22 @@ void xgd::JMolAdapter::readAsSMI(const std::string &_pdbBuffer) {
 
 void xgd::JMolAdapter::readAs(const std::string &_dataBuffer, const std::string &_formatSuffix) {
     onMolUpdated();
+    OpenBabel::OBConversion conv;
+    auto formatIn = conv.FindFormat(_formatSuffix);
+    if (!formatIn || !conv.SetInFormat(formatIn)) {
+        throw std::runtime_error("unknown readable format suffix: " + _formatSuffix);
+    }
+    std::stringstream ssm(_dataBuffer);
+    if (!conv.Read(obMol, &ssm)) {
+        throw std::runtime_error("fail to read buffer as format suffix: " + _formatSuffix);
+    }
+    if (obMol->Has3D()) {
+        sync3D();
+    }
 }
 
 void xgd::JMolAdapter::onMolUpdated() {
-    is3DInfoLatest = false;
+    is3DInfoLatest = is2DInfoLatest = false;
 }
 
 bool xgd::JMolAdapter::runForcefield() {
@@ -187,8 +201,7 @@ bool xgd::JMolAdapter::runForcefield() {
     try {
         OpenBabel::OBBuilder builder;
         builder.Build(*obMol);
-    } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
+    } catch (...) {
         return false;
     }
     auto pFF = static_cast<OpenBabel::OBForceField *>(OpenBabel::OBPlugin::GetPlugin("forcefields", "uff"));
@@ -204,15 +217,10 @@ bool xgd::JMolAdapter::runForcefield() {
         pFF->WeightedRotorSearch(10, 200);
         pFF->SteepestDescent(100, 1.0e-6);
         pFF->UpdateCoordinates(*obMol);
-    } catch (std::exception &e) {
-        qDebug() << "runOBForceField MD step:" << e.what();
+    } catch (...) {
         return false;
     }
-    auto sync_3d = [&](xgd::JAtom &atom, OpenBabel::OBAtom *obAtom) -> void {
-        atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
-    };
-    syncAtoms(sync_3d);
-    is3DInfoLatest = true;
+    sync3D();
     return true;
 }
 
@@ -223,4 +231,46 @@ void xgd::JMolAdapter::syncAtoms(std::function<void(xgd::JAtom &, OpenBabel::OBA
             _func(*atom, obAtom);
     }
 }
+
+void xgd::JMolAdapter::sync3D() {
+    auto sync_3d = [&](xgd::JAtom &atom, OpenBabel::OBAtom *obAtom) -> void {
+        atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
+    };
+    syncAtoms(sync_3d);
+    is3DInfoLatest = true;
+}
+
+bool xgd::JMolAdapter::generate2D() {
+    try {
+        sketcherMinimizer minimizer;
+        auto cMol = new sketcherMinimizerMolecule();
+        std::unordered_map<JAtom *, sketcherMinimizerAtom *> tmpAtomMap;
+        loopAtomVec([&](JAtom &atom) {
+            auto cAtom = cMol->addNewAtom();
+            cAtom->setAtomicNumber(atom.getAtomicNumber());
+            tmpAtomMap[&atom] = cAtom;
+        });
+        std::vector<sketcherMinimizerBond *> cBondVec;
+        loopBondVec([&](JBond &bond) {
+            auto cBond = cMol->addNewBond(tmpAtomMap[&*bond.getFrom()], tmpAtomMap[&*bond.getTo()]);
+            cBond->setBondOrder(bond.getBondOrder());
+            cBondVec.push_back(cBond);
+        });
+        minimizer.initialize(cMol);
+        minimizer.runGenerateCoordinates();
+        for (auto&[atom, cAtom]:tmpAtomMap) {
+            auto pos = cAtom->getCoordinates();
+            atom->set2D(pos.x(), pos.y());
+        }
+    } catch (...) {
+        return false;
+    }
+    is2DInfoLatest = true;
+    return true;
+}
+
+bool xgd::JMolAdapter::generate3D() {
+    return runForcefield();
+}
+
 

@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <vector>
 #include <memory>
+#include <functional>
 
 namespace xgd {
     class JMol {
@@ -15,8 +16,14 @@ namespace xgd {
         std::vector<std::shared_ptr<JAtom>> atomVec;
         std::vector<std::shared_ptr<JBond>> bondVec;
         std::vector<std::shared_ptr<JResidue>> residueVec;
+        bool is3DInfoLatest, is2DInfoLatest;
         inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
     public:
+        JMol();
+
+        void loopAtomVec(std::function<void(JAtom &_atom)> _func);
+
+        void loopBondVec(std::function<void(JBond &_bond)> _func);
 
         void setId(const size_t &_id);
 
@@ -49,17 +56,21 @@ namespace xgd {
 
         virtual std::shared_ptr<JResidue> removeResidue(const size_t &_rid);
 
-        virtual std::string writeAsPDB()  = 0;
+        virtual std::string writeAsPDB() = 0;
 
-        virtual std::string writeAsSMI()  = 0;
+        virtual std::string writeAsSMI() = 0;
 
-        virtual std::string writeAs(const std::string &_formatSuffix)  = 0;
+        virtual std::string writeAs(const std::string &_formatSuffix) = 0;
 
         virtual void readAsPDB(const std::string &_pdbBuffer) = 0;
 
         virtual void readAsSMI(const std::string &_pdbBuffer) = 0;
 
         virtual void readAs(const std::string &_dataBuffer, const std::string &_formatSuffix) = 0;
+
+        virtual bool generate2D() = 0;
+
+        virtual bool generate3D() = 0;
     };
 }
 #endif//_XGD_JMOL_HPP_

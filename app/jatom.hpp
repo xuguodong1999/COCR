@@ -38,6 +38,8 @@ namespace xgd {
 
         const ElementType &getType() const;
 
+        int getAtomicNumber() const;
+
         void set2D(const float &_x, const float &_y);
 
         void set3D(const float &_x, const float &_y, const float &_z);

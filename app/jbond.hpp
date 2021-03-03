@@ -30,6 +30,8 @@ namespace xgd {
 
         BondType getType() const;
 
+        int getBondOrder() const;
+
         void setType(const BondType &_type);
 
         JBond(const size_t &_id, const BondType &_type = BondType::SingleBond,

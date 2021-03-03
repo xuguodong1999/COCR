@@ -171,3 +171,7 @@ xgd::JAtom::JAtom(const size_t &_id, const ElementType &_element, const float &_
         : id(_id), type(_element), x(_x), y(_y), xx(0), yy(0), zz(0), charge(0) {
 
 }
+
+int xgd::JAtom::getAtomicNumber() const {
+    return static_cast<size_t>(getType());
+}
