@@ -502,7 +502,7 @@ void SOSO17Converter::then() {
                 }
             }
             for (auto &b:cb2) {
-//                b->setType(JBondType::DelocalizedBond);
+//                b->setOrder(JBondType::DelocalizedBond);
                 op->markAsDouble(b->getId());
             }
         }

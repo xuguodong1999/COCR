@@ -34,8 +34,14 @@ namespace xgd {
 
         void setType(const BondType &_type);
 
-        JBond(const size_t &_id, const BondType &_type = BondType::SingleBond,
-              std::shared_ptr<JAtom> _from = nullptr, std::shared_ptr<JAtom> _to = nullptr);
+        void setOrder(const int &_order);
+
+        size_t fromId() const;
+
+        size_t toId() const;
+
+        JBond(const size_t &_id, std::shared_ptr<JAtom> _from = nullptr, std::shared_ptr<JAtom> _to = nullptr,
+              const BondType &_type = BondType::SingleBond);
     };
 }
 #endif//_JBOND_HPP_

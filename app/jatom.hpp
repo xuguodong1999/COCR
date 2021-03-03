@@ -26,10 +26,11 @@ namespace xgd {
 
     class JAtom {
         size_t id;
-        float x, y, xx, yy, zz;
         ElementType type;
         int charge;
     public:
+        float x, y, xx, yy, zz;
+
         JAtom(const size_t &_id, const ElementType &_element, const float &_x = 0, const float &_y = 0);
 
         size_t getId() const;

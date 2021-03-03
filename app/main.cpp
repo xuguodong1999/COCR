@@ -107,6 +107,16 @@ void testJMol() {
     using namespace xgd;
     JMolAdapter mol;
     mol.readAsSMI("c1ccccc1");
+    std::cout << mol.writeAsPDB() << std::endl;
+    mol.display();
+    std::cout << "********************\n";
+    auto b01 = mol.removeBond(0);
+    auto b02 = mol.removeBond(5);
+    mol.removeAtom(0);
+    auto newAtom = mol.addAtom(ElementType::O);
+    auto b1 = mol.addBond(newAtom, mol.getAtom(1), b01->getType());
+    auto b2 = mol.addBond(newAtom, mol.getAtom(5), b01->getType());
+    mol.display();
 }
 
 int main(int argc, char *argv[]) {

@@ -1,5 +1,5 @@
 #include "jmol.hpp"
-
+#include <iostream>
 
 using namespace xgd;
 
@@ -32,12 +32,17 @@ std::shared_ptr<JAtom> JMol::addAtom(
     return atom;
 }
 
-std::shared_ptr<JBond> JMol::addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2) {
-    return std::shared_ptr<JBond>();
+std::shared_ptr<JBond> JMol::addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type) {
+    auto bond = std::make_shared<JBond>(bondVec.size(), _a1, _a2, _type);
+    bondVec.push_back(bond);
+    return bond;
 }
 
-std::shared_ptr<JBond> JMol::addBond(const size_t &_aid1, const size_t &_aid2) {
-    return std::shared_ptr<JBond>();
+std::shared_ptr<JBond> JMol::addBond(const size_t &_aid1, const size_t &_aid2, const BondType &_type) {
+    auto a1 = getAtom(_aid1), a2 = getAtom(_aid2);
+    if (!a1 || !a2)
+        throw std::runtime_error(std::string("empty from or to in ") + __FUNCTION__);
+    return addBond(a1, a2, _type);
 }
 
 std::shared_ptr<JResidue>
@@ -98,5 +103,28 @@ void JMol::loopBondVec(std::function<void(JBond &)> _func) {
     for (auto &bond:bondVec) {
         if (bond)_func(*bond);
     }
+}
+
+std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
+    auto atom = std::make_shared<JAtom>(atomVec.size(), static_cast<ElementType>(_atomicNumber));
+    atomVec.push_back(atom);
+    return atom;
+}
+
+void JMol::display() {
+    loopAtomVec([&](JAtom &atom) {
+        std::cout << atom.getId() << ":" << atom.getName();
+        if (is2DInfoLatest) {
+            std::cout << ", 2d(" << atom.x << "," << atom.y << ")";
+        }
+        if (is3DInfoLatest) {
+            std::cout << ", 3d(" << atom.xx << "," << atom.yy << atom.zz << ")";
+        }
+        std::cout << std::endl;
+    });
+    loopBondVec([&](JBond &bond) {
+        std::cout << bond.getId() << ":" << bond.getBondOrder() << ","
+                  << bond.getFrom()->getId() << "-" << bond.getTo()->getId() << std::endl;
+    });
 }
 

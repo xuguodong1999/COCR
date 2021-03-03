@@ -4,6 +4,7 @@
 #include <openbabel/residue.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
+#include <openbabel/obiter.h>
 #include <openbabel/builder.h>
 #include <openbabel/forcefield.h>
 
@@ -73,9 +74,9 @@ std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
 }
 
 std::shared_ptr<xgd::JBond> xgd::JMolAdapter::addBond(
-        std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2) {
+        std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type) {
     onMolUpdated();
-    auto bond = JMol::addBond(_a1, _a2);
+    auto bond = JMol::addBond(_a1, _a2, _type);
     if (!bond)return nullptr;
     auto obBond = obMol->NewBond();
     bondIdMap[bond->getId()] = obBond;
@@ -187,6 +188,7 @@ void xgd::JMolAdapter::readAs(const std::string &_dataBuffer, const std::string 
     if (!conv.Read(obMol, &ssm)) {
         throw std::runtime_error("fail to read buffer as format suffix: " + _formatSuffix);
     }
+    syncNewEntityFromOBMol();
     if (obMol->Has3D()) {
         sync3D();
     }
@@ -271,6 +273,44 @@ bool xgd::JMolAdapter::generate2D() {
 
 bool xgd::JMolAdapter::generate3D() {
     return runForcefield();
+}
+
+void xgd::JMolAdapter::syncNewEntityFromOBMol() {
+    FOR_ATOMS_OF_MOL(obAtomIter, *obMol) {
+        auto obAtom = obAtomIter.operator->();
+        auto it = atomIdMap2.find(obAtom);
+        if (atomIdMap2.end() == it) {
+            onMolUpdated();
+            auto atom = JMol::addAtom(obAtom->GetAtomicNum());
+            if (atom) {
+                atomIdMap[atom->getId()] = obAtom;
+                atomIdMap2[obAtom] = atom->getId();
+            }
+        }
+    }
+    FOR_BONDS_OF_MOL(obBondIter, *obMol) {
+        auto obBond = obBondIter.operator->();
+        auto it = bondIdMap2.find(obBond);
+        if (bondIdMap2.end() == it) {
+            onMolUpdated();
+            auto bond = JMol::addBond(atomIdMap2[obBond->GetBeginAtom()], atomIdMap2[obBond->GetEndAtom()]);
+            if (bond) {
+                if (5 == obBond->GetBondOrder()) {
+                    bond->setType(BondType::DelocalizedBond);
+                } else if (obBond->IsHash()) {
+                    bond->setType(BondType::DownBond);
+                } else if (obBond->IsWedge()) {
+                    bond->setType(BondType::UpBond);
+                } else if (obBond->IsWedgeOrHash()) {
+                    bond->setType(BondType::ImplicitBond);
+                } else {
+                    bond->setOrder(obBond->GetBondOrder());
+                }
+                bondIdMap[bond->getId()] = obBond;
+                bondIdMap2[obBond] = bond->getId();
+            }
+        }
+    }
 }
 
 

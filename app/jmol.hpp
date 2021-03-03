@@ -18,12 +18,17 @@ namespace xgd {
         std::vector<std::shared_ptr<JResidue>> residueVec;
         bool is3DInfoLatest, is2DInfoLatest;
         inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
+
+        std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
+
     public:
         JMol();
 
         void loopAtomVec(std::function<void(JAtom &_atom)> _func);
 
         void loopBondVec(std::function<void(JBond &_bond)> _func);
+
+        virtual void display();
 
         void setId(const size_t &_id);
 
@@ -34,9 +39,11 @@ namespace xgd {
         virtual std::shared_ptr<JAtom> addAtom(
                 const ElementType &_element, const float &_x, const float &_y, const float &_z);
 
-        virtual std::shared_ptr<JBond> addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2);
+        virtual std::shared_ptr<JBond> addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2,
+                                               const BondType &_type = BondType::SingleBond);
 
-        std::shared_ptr<JBond> addBond(const size_t &_aid1, const size_t &_aid2);
+        std::shared_ptr<JBond> addBond(const size_t &_aid1, const size_t &_aid2,
+                                       const BondType &_type = BondType::SingleBond);
 
         virtual std::shared_ptr<JResidue>
         addResidue(const std::string &_text, bool _isLeftToRight, const float &_x = 0, const float &_y = 0);
