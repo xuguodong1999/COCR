@@ -16,6 +16,7 @@ namespace xgd {
         std::shared_ptr<JMol> mol;
         Qt3DCore::QEntity *root;
         QHash<Qt3DCore::QEntity *, size_t> entityAtomMap, entityBondMap;
+
     public:
         // 约定 mol != nullptr
         explicit Mol3DAdapter(std::shared_ptr<JMol> _mol, Qt3DCore::QEntity *_root = Q_NULLPTR);
