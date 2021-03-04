@@ -57,6 +57,12 @@ namespace xgd {
 
         std::shared_ptr<JResidue> getResidue(const size_t &_rid);
 
+        /**
+         * 添加使用Mol对象前的回调，设计用作同步适配器和适配者的数据
+         * 场景举例：OpenBabel::OBMol::DeleteBond 会同步删除这个建邻接原子持有的键关联，
+         * 如果先调用了 OpenBabel::OBMol::DeleteAtom，会出空指针错误或段错误
+         * 解决方法是，一旦调用适配器关联删除的接口，让旧的适配者失效，使用对象前用这个回调重建适配者
+         */
         virtual void onExtraDataNeeded();
 
         virtual std::shared_ptr<JAtom> removeAtom(const size_t &_aid);

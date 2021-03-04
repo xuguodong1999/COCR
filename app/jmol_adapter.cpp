@@ -10,43 +10,45 @@
 
 #include <coordgen/sketcherMinimizer.h>
 
-xgd::JMolAdapter::JMolAdapter() : isOBMolLatest(true) {
+using namespace xgd;
+
+JMolAdapter::JMolAdapter() : isOBMolLatest(true) {
     obMol = new OpenBabel::OBMol();
 }
 
-xgd::JMolAdapter::~JMolAdapter() {
+JMolAdapter::~JMolAdapter() {
     delete obMol;
     obMol = nullptr;
 }
 
-xgd::JMolAdapter::JMolAdapter(const xgd::JMolAdapter &_jMolAdapter) {
+JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) {
     obMol = new OpenBabel::OBMol(*(_jMolAdapter.obMol));
 }
 
-xgd::JMolAdapter::JMolAdapter(xgd::JMolAdapter &&_jMolAdapter) {
+JMolAdapter::JMolAdapter(JMolAdapter &&_jMolAdapter) {
     obMol = _jMolAdapter.obMol;
 }
 
-std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::removeAtom(const size_t &_aid) {
+std::shared_ptr<JAtom> JMolAdapter::removeAtom(const size_t &_aid) {
     onMolUpdated();
     isOBMolLatest = false;
     return JMol::removeAtom(_aid);
 }
 
-std::shared_ptr<xgd::JBond> xgd::JMolAdapter::removeBond(const size_t &_bid) {
+std::shared_ptr<JBond> JMolAdapter::removeBond(const size_t &_bid) {
     onMolUpdated();
     isOBMolLatest = false;
     return JMol::removeBond(_bid);
 }
 
-std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::removeResidue(const size_t &_rid) {
+std::shared_ptr<JResidue> JMolAdapter::removeResidue(const size_t &_rid) {
     onMolUpdated();
     isOBMolLatest = false;
     // TODO: handle residue in openbabel
     return JMol::removeResidue(_rid);
 }
 
-std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
+std::shared_ptr<JResidue> JMolAdapter::addResidue(
         const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y) {
     onMolUpdated();
     checkOBMol();
@@ -54,7 +56,7 @@ std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
     return JMol::addResidue(_text, _isLeftToRight, _x, _y);
 }
 
-std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
+std::shared_ptr<JResidue> JMolAdapter::addResidue(
         const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z) {
     onMolUpdated();
     checkOBMol();
@@ -62,7 +64,7 @@ std::shared_ptr<xgd::JResidue> xgd::JMolAdapter::addResidue(
     return JMol::addResidue(_text, _isLeftToRight, _x, _y, _z);
 }
 
-std::shared_ptr<xgd::JBond> xgd::JMolAdapter::addBond(
+std::shared_ptr<JBond> JMolAdapter::addBond(
         std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type) {
     onMolUpdated();
     checkOBMol();
@@ -72,8 +74,8 @@ std::shared_ptr<xgd::JBond> xgd::JMolAdapter::addBond(
     return bond;
 }
 
-std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::addAtom(
-        const xgd::ElementType &_element, const float &_x, const float &_y) {
+std::shared_ptr<JAtom> JMolAdapter::addAtom(
+        const ElementType &_element, const float &_x, const float &_y) {
     onMolUpdated();
     checkOBMol();
     auto atom = JMol::addAtom(_element, _x, _y);
@@ -82,19 +84,19 @@ std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::addAtom(
     return atom;
 }
 
-std::shared_ptr<xgd::JAtom> xgd::JMolAdapter::addAtom(
-        const xgd::ElementType &_element, const float &_x, const float &_y, const float &_z) {
+std::shared_ptr<JAtom> JMolAdapter::addAtom(
+        const ElementType &_element, const float &_x, const float &_y, const float &_z) {
     auto atom = addAtom(_element, _x, _y);
     if (!atom)return nullptr;
     atom->set3D(_x, _y, _z);
     return atom;
 }
 
-std::string xgd::JMolAdapter::writeAsPDB() {
+std::string JMolAdapter::writeAsPDB() {
     return writeAs("pdb");
 }
 
-std::string xgd::JMolAdapter::writeAs(const std::string &_formatSuffix) {
+std::string JMolAdapter::writeAs(const std::string &_formatSuffix) {
     checkOBMol();
     OpenBabel::OBConversion conv;
     auto formatOut = conv.FindFormat(_formatSuffix);
@@ -108,19 +110,19 @@ std::string xgd::JMolAdapter::writeAs(const std::string &_formatSuffix) {
     return conv.WriteString(obMol);
 }
 
-std::string xgd::JMolAdapter::writeAsSMI() {
+std::string JMolAdapter::writeAsSMI() {
     return writeAs("can");
 }
 
-void xgd::JMolAdapter::readAsPDB(const std::string &_pdbBuffer) {
+void JMolAdapter::readAsPDB(const std::string &_pdbBuffer) {
     readAs(_pdbBuffer, "pdb");
 }
 
-void xgd::JMolAdapter::readAsSMI(const std::string &_pdbBuffer) {
+void JMolAdapter::readAsSMI(const std::string &_pdbBuffer) {
     readAs(_pdbBuffer, "smi");
 }
 
-void xgd::JMolAdapter::readAs(const std::string &_dataBuffer, const std::string &_formatSuffix) {
+void JMolAdapter::readAs(const std::string &_dataBuffer, const std::string &_formatSuffix) {
     onMolUpdated();
     OpenBabel::OBConversion conv;
     auto formatIn = conv.FindFormat(_formatSuffix);
@@ -137,11 +139,11 @@ void xgd::JMolAdapter::readAs(const std::string &_dataBuffer, const std::string 
     }
 }
 
-void xgd::JMolAdapter::onMolUpdated() {
+void JMolAdapter::onMolUpdated() {
     is3DInfoLatest = is2DInfoLatest = false;
 }
 
-bool xgd::JMolAdapter::runForcefield() {
+bool JMolAdapter::runForcefield() {
     if (obMol->Empty())return true;
     try {
         OpenBabel::OBBuilder builder;
@@ -169,7 +171,7 @@ bool xgd::JMolAdapter::runForcefield() {
     return true;
 }
 
-void xgd::JMolAdapter::syncAtoms(std::function<void(xgd::JAtom &, OpenBabel::OBAtom *)> _func) {
+void JMolAdapter::syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _func) {
     for (auto&[aid, obAtom]:atomIdMap) {
         auto atom = getAtom(aid);
         if (atom)
@@ -177,15 +179,15 @@ void xgd::JMolAdapter::syncAtoms(std::function<void(xgd::JAtom &, OpenBabel::OBA
     }
 }
 
-void xgd::JMolAdapter::sync3D() {
-    auto sync_3d = [&](xgd::JAtom &atom, OpenBabel::OBAtom *obAtom) -> void {
+void JMolAdapter::sync3D() {
+    auto sync_3d = [&](JAtom &atom, OpenBabel::OBAtom *obAtom) -> void {
         atom.set3D(obAtom->GetX(), obAtom->GetY(), obAtom->GetZ());
     };
     syncAtoms(sync_3d);
     is3DInfoLatest = true;
 }
 
-bool xgd::JMolAdapter::generate2D() {
+bool JMolAdapter::generate2D() {
     checkOBMol();
     try {
         sketcherMinimizer minimizer;
@@ -215,12 +217,12 @@ bool xgd::JMolAdapter::generate2D() {
     return true;
 }
 
-bool xgd::JMolAdapter::generate3D() {
+bool JMolAdapter::generate3D() {
     checkOBMol();
     return runForcefield();
 }
 
-void xgd::JMolAdapter::syncNewEntityFromOBMol() {
+void JMolAdapter::syncNewEntityFromOBMol() {
     FOR_ATOMS_OF_MOL(obAtomIter, *obMol) {
         auto obAtom = obAtomIter.operator->();
         auto it = atomIdMap2.find(obAtom);
@@ -259,21 +261,21 @@ void xgd::JMolAdapter::syncNewEntityFromOBMol() {
     isOBMolLatest = true;
 }
 
-void xgd::JMolAdapter::checkOBMol() {
+void JMolAdapter::checkOBMol() {
     if (!isOBMolLatest) {
         resetOBMol();
     }
     isOBMolLatest = true;
 }
 
-void xgd::JMolAdapter::addOBAtom(xgd::JAtom &_atom) {
+void JMolAdapter::addOBAtom(JAtom &_atom) {
     auto obAtom = obMol->NewAtom();
     obAtom->SetAtomicNum(_atom.getAtomicNumber());
     atomIdMap[_atom.getId()] = obAtom;
     atomIdMap2[obAtom] = _atom.getId();
 }
 
-void xgd::JMolAdapter::addOBBond(xgd::JBond &_bond) {
+void JMolAdapter::addOBBond(JBond &_bond) {
     auto obBond = obMol->NewBond();
     bondIdMap[_bond.getId()] = obBond;
     bondIdMap2[obBond] = _bond.getId();
@@ -324,12 +326,12 @@ void xgd::JMolAdapter::addOBBond(xgd::JBond &_bond) {
     }
 }
 
-void xgd::JMolAdapter::onExtraDataNeeded() {
+void JMolAdapter::onExtraDataNeeded() {
     JMol::onExtraDataNeeded();
     checkOBMol();
 }
 
-void xgd::JMolAdapter::resetOBMol() {
+void JMolAdapter::resetOBMol() {
     std::cout << "reset" << std::endl;
     delete obMol;
     bondIdMap.clear();
