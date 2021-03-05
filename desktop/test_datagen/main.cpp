@@ -11,11 +11,12 @@ void test_crnn() {
     // Load a cropped text line image
     // you can find cropped images for testing in "Images for Testing"
     int rgb = cv::IMREAD_GRAYSCALE; // This should be changed according to the model input requirement.
-    cv::Mat image = cv::imread("/home/xgd/source/crnn.pytorch/data/demo2.png", rgb);
+    cv::Mat image = cv::imread("/home/xgd/source/repos/jokejoker/soso-data/test/JPEGImages/115"
+                               ".jpg", rgb);
 
     // Load models weights
     cv::dnn::TextRecognitionModel model(
-            "/home/xgd/source/crnn.pytorch/data/crnn.onnx");
+            "/home/xgd/source/ocr.pytorch/crnn.onnx");
     auto&net=model.getNetwork_();
     for (auto &l:net.getLayerNames()) {
         std::cout << l << std::endl;
@@ -23,29 +24,32 @@ void test_crnn() {
     // The decoding method
     // more methods will be supported in future
     model.setDecodeType("CTC-greedy");
-
     // Load vocabulary
     // vocabulary should be changed according to the text recognition model
     std::ifstream vocFile;
-    vocFile.open(WORKSPACE + "/alphabet_36.txt");
+    vocFile.open(WORKSPACE + "/alphabet_56.txt");
     CV_Assert(vocFile.is_open());
     cv::String vocLine;
     std::vector<cv::String> vocabulary;
     while (std::getline(vocFile, vocLine)) {
         vocabulary.push_back(vocLine);
     }
+    std::cout<<"vocabulary.size="<<vocabulary.size()<<std::endl;
     model.setVocabulary(vocabulary);
     ///////////////////////////////////
     // Normalization parameters
+//    double scale = 1.0 / 255.0;
+//    cv::Scalar mean = cv::Scalar(0,0,0);
     double scale = 1.0 / 127.5;
     cv::Scalar mean = cv::Scalar(127.5, 127.5, 127.5);
     // The input shape
-    cv::Size inputSize = cv::Size(200, 32);
+    cv::Size inputSize = cv::Size(192, 32);
     model.setInputParams(scale, inputSize, mean);
+//    model.setInputSize(inputSize);
     ////////////////////////////////////////////
     std::string recognitionResult = model.recognize(image);
     std::cout << "'" << recognitionResult << "'" << std::endl;
-    cv::imshow(recognitionResult, image);
+    cv::imshow("result="+recognitionResult, image);
     cv::waitKey(0);
 }
 
