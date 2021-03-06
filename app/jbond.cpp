@@ -1,5 +1,6 @@
 #include "jbond.hpp"
 #include "jatom.hpp"
+#include <stdexcept>
 
 xgd::JBond::JBond(const size_t &_id, std::shared_ptr<JAtom> _from, std::shared_ptr<JAtom> _to, const BondType &_type)
         : id(_id), type(_type), from(std::move(_from)), to(std::move(_to)) {

@@ -43,36 +43,9 @@ namespace OpenBabel {
 
     void OBPlugin::LoadAllPlugins() {
         int count = 0;
-#if  defined(USING_DYNAMIC_LIBS)
-        // Depending on availability, look successively in
-        // FORMATFILE_DIR, executable directory or current directory
-        string TargetDir;
 
-#ifdef FORMATFILE_DIR
-        TargetDir="FORMATFILE_DIR";
-#endif
-
-        DLHandler::getConvDirectory(TargetDir);
-
-        vector<string> files;
-        if(!DLHandler::findFiles(files,DLHandler::getFormatFilePattern(),TargetDir)) {
-          obErrorLog.ThrowError(__FUNCTION__, "Unable to find OpenBabel plugins. Try setting the BABEL_LIBDIR environment variable.", obError);
-          return;
-        }
-
-        vector<string>::iterator itr;
-        for(itr=files.begin();itr!=files.end();++itr) {
-          if(DLHandler::openLib(*itr))
-            count++;
-        }
-        if(!count) {
-          string error = "No valid OpenBabel plugs found in "+TargetDir;
-          obErrorLog.ThrowError(__FUNCTION__, error, obError);
-          return;
-        }
-#else
         count = 1; // Avoid calling this function several times
-#endif //USING_DYNAMIC_LIBS
+
 
         // Status have to be updated now
         AllPluginsLoaded = count;

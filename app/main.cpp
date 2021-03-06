@@ -10,7 +10,7 @@
 #include "ncnn_impl/text_recognizer_ncnn_impl.hpp"
 
 //#undef HAVE_OPENCV_DNN
-#if defined(HAVE_OPENCV_DNN) && not defined(Q_OS_ANDROID)
+#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID)
 
 #include "opencv_dnn_impl/object_detector_opencv_impl.hpp"
 #include "opencv_dnn_impl/text_recognizer_opencv_impl.hpp"// unused, only for performance test
@@ -23,7 +23,7 @@
 
 xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
     /// detector
-#if defined(HAVE_OPENCV_DNN) && not defined(Q_OS_ANDROID) && not defined(Q_OS_IOS)
+#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
     static xgd::ObjectDetectorOpenCVImpl detector;
     if (!detector.initModel(
             _modelDir + "/yolo-3l-c8.cfg",
@@ -67,7 +67,7 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
 #ifdef Q_OS_LINUX
 std::string ROOT_DIR = "/home/xgd/source/repos/jokejoker/workspace/";
 #elif defined(Q_OS_WIN)
-std::string ROOT_DIR = "C:/Users/xgd/Desktop/jokejoker/workspace/";
+std::string ROOT_DIR = "C:/Users/xgd/source/repos/jokejoker/workspace/";
 #endif
 
 void loopHwDemo() {
@@ -132,8 +132,8 @@ int main(int argc, char *argv[]) {
 #endif
     QApplication app(argc, argv);
     try {
-        testJMol();
-//        loopUsptoBenchMark(false, {});
+//        testJMol();
+        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
 //        loopHwDemo();

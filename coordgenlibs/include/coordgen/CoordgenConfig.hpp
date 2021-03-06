@@ -1,12 +1,12 @@
 #pragma once
-
+#include <QtCore/qglobal.h>
 #ifndef STATIC_COORDGEN
 
 #ifdef WIN32
 #ifdef IN_COORDGEN
-#define EXPORT_COORDGEN __declspec(dllexport)
+#define EXPORT_COORDGEN Q_DECL_EXPORT
 #else
-#define EXPORT_COORDGEN __declspec(dllimport)
+#define EXPORT_COORDGEN Q_DECL_EXPORT
 #endif // IN_COORDGEN
 
 #else

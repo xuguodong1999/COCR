@@ -2,8 +2,10 @@
 #define _XGD_MOL3D_ADAPTER_HPP_
 
 #include <QObject>
-#include <memory>
 #include <QHash>
+
+#include <memory>
+#include <optional>
 
 namespace Qt3DCore {
     class QEntity;

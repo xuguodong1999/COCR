@@ -29,7 +29,7 @@ qt_create_translation(QM_FILES ../app ${TS_FILES})
 qt5_add_big_resources(BIG_RES_FILES ../resources/big_res.qrc)
 set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc)
 
-include_directories(../openbabel/include ../ncnn/include ../app)
+include_directories(../openbabel/include ../coordgenlibs/include ../ncnn/include ../app)
 aux_source_directory(../app DIR_SRCS)
 aux_source_directory(../app/ui UI_SRCS)
 aux_source_directory(../app/ncnn_impl NCNN_SRCS)
@@ -49,6 +49,8 @@ else ()
         add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
     endif ()
 endif ()
+
+set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
         $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)

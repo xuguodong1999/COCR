@@ -19,10 +19,10 @@ foreach(SRC_DIR ${SRC_DIR_LIST})
     list(APPEND OPENBABEL_SRCS ${OPENBABEL_SRC})
 endforeach(SRC_DIR SRC_DIR_LIST)
 
+add_definitions(-DMAKE_OBDLL)
 add_library(${PROJECT_NAME} SHARED ${OPENBABEL_SRCS})
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 # link qt core here
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core)
