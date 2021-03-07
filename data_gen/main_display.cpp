@@ -1,3 +1,4 @@
+#include "config.hpp"
 #include "crnn_data.hpp"
 #include "soso_darknet.hpp"
 #include "hw_data.hpp"
@@ -9,9 +10,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-extern std::string WORKSPACE;
 
-CRNNDataGenerator crnnDataGenerator;
+extern CRNNDataGenerator crnnDataGenerator;
 
 /**
  * TODO:
@@ -23,10 +23,10 @@ CRNNDataGenerator crnnDataGenerator;
  */
 void generateYoloData() {
     srand(0022);
-    crnnDataGenerator.init("/tmp/fuck");
+    crnnDataGenerator.init(WORKSPACE + "/crnn-text-data");
 //    crnnDataGenerator.display();
     SOSODarknet generator;
-    generator.init(WORKSPACE + "soso-obj");
+    generator.init(WORKSPACE + "/soso-obj-data");
     generator.display();
 }
 

@@ -18,7 +18,7 @@
 #include <random>
 
 template<typename T>
-std::string to_string_with_precision(const T _fValue, const int n = 2) {
+inline std::string to_string_with_precision(const T _fValue, const int n = 2) {
     std::ostringstream out;
     out << std::setprecision(n) << _fValue;
     return out.str();
@@ -145,7 +145,7 @@ inline std::string chopByFirstSpace(const std::string &_str) {
 
 struct pair_hash {
     template<class T1, class T2>
-    std::size_t operator()(const std::pair<T1, T2> &pair) const {
+    inline std::size_t operator()(const std::pair<T1, T2> &pair) const {
         return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
     }
 };

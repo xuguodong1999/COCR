@@ -2,11 +2,19 @@
 #define _HW_DATA_HPP_
 
 #include "hw_script.hpp"
+#include "config.hpp"
 #include <map>
 #include <string>
 #include <vector>
 
-class HwDataSample : public std::vector<std::vector<cv::Point2f>> {
+
+enum class ShapeType {
+    Line,
+    Circle
+};
+
+class HwDataSample {
+    std::vector<std::vector<cv::Point2f>>mData;
 public:
     HwDataSample() = default;
 
@@ -15,11 +23,6 @@ public:
     HwScript toHwScript() const;
 };
 
-extern std::string COUCH_SYM_PATH;
-enum class ShapeType {
-    Line,
-    Circle
-};
 
 class HwDataLoader {
     std::vector<std::vector<HwDataSample>> mData;

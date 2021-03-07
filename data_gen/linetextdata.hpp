@@ -1,9 +1,11 @@
 #ifndef _LINE_TEXT_DATA_HPP_
 #define _LINE_TEXT_DATA_HPP_
 
+#include "config.hpp"
 #include <unordered_set>
 #include <functional>
 #include <string>
+#include <optional>
 
 class SpliceableText {
     int l, r;
@@ -54,8 +56,7 @@ public:
     void loadFromSuperAtom(const char *_filepath =
     ":/obdata/superatom.txt");
 
-    void loadFromWordDict(const char *_filepath =
-    "/home/xgd/Downloads/words_dictionary.json");
+    void loadFromWordDict(const char *_filepath = WORD_DICT_PATH.c_str());
 
     void loadFromPattern(const char *_filepath =
     ":/obdata/superatom.txt");

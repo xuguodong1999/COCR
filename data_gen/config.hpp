@@ -2,8 +2,7 @@
 #define _CONFIG_HPP_
 
 #include <string>
-#include <unordered_map>
-
-extern std::unordered_map<std::string, std::string &> COCR_DIRS;
-extern std::unordered_map<std::string, std::string &> COCR_PATHS;
+extern std::string WORKSPACE;
+extern std::string COUCH_SYM_PATH;
+extern std::string WORD_DICT_PATH;
 #endif//_CONFIG_HPP_

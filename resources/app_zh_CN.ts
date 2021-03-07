@@ -4,6 +4,7 @@
 <context>
     <name>MainWidget</name>
     <message>
+        <location filename="../app/ui/main_widget.ui" line="17"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>

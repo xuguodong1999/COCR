@@ -1,3 +1,4 @@
+#include "config.hpp"
 #include "crnn_data.hpp"
 #include "soso_darknet.hpp"
 #include "hw_data.hpp"
@@ -8,10 +9,8 @@
 #include <iostream>
 #include <QApplication>
 
-extern std::string WORKSPACE;
 
-CRNNDataGenerator crnnDataGenerator;
-
+extern CRNNDataGenerator crnnDataGenerator;
 
 void generateYoloData() {
     srand(0022);

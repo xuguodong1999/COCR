@@ -315,13 +315,13 @@ HwDataLoader &HwDataLoader::getInstance() {
     return e;
 }
 
-HwDataSample::HwDataSample(vector <std::vector<cv::Point2f>> &&_data) {
-    swap(_data);
+HwDataSample::HwDataSample(std::vector<std::vector<cv::Point2f>> &&_data) {
+    mData = _data;
 }
 
 HwScript HwDataSample::toHwScript() const {
     HwScript hwScript;
-    for (auto &stroke:*this) {
+    for (auto &stroke:mData) {
         if (stroke.empty())continue;
         HwStroke hwStroke;
         for (auto &pt:stroke) {

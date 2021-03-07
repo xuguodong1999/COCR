@@ -18,7 +18,7 @@
 
 using namespace std;
 
-extern CRNNDataGenerator crnnDataGenerator;
+CRNNDataGenerator crnnDataGenerator;
 
 void HwMol::paintTo(cv::Mat &canvas) const {
     for (auto &sym:mData) {
