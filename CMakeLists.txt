@@ -45,8 +45,8 @@ elseif (ANDROID)
 elseif (UNIX)
     set(QT_DIR /home/xgd/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5)
     set(Qt5_DIR ${QT_DIR})
-    #    set(OpenCV_DIR ${OPENCV_INSTALL_DIR}/lib/cmake/opencv4)
-    set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
+    set(OpenCV_DIR ${OPENCV_INSTALL_DIR}/lib/cmake/opencv4)
+    # set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
 endif (MSVC)
 
 

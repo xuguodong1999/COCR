@@ -14,7 +14,7 @@ enum class ShapeType {
 };
 
 class HwDataSample {
-    std::vector<std::vector<cv::Point2f>>mData;
+    std::vector<std::vector<cv::Point2f>> mData;
 public:
     HwDataSample() = default;
 

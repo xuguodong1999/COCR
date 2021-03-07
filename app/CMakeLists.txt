@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 #    endif()
 #endif()
 # qt5, you need to install it >=5.15.2 for bug-free qt3d call
-set(QT_COMPONENTS Widgets 3DCore 3DExtras 3DRender LinguistTools)
+set(QT_COMPONENTS Widgets 3DCore 3DExtras 3DRender 3DInput LinguistTools)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
 
@@ -24,7 +24,7 @@ find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
 # set project source here
 set(TS_FILES ../resources/${PROJECT_NAME}_zh_CN.ts)
-qt_create_translation(QM_FILES ../app ${TS_FILES})
+qt5_create_translation(QM_FILES ../app ${TS_FILES})
 
 qt5_add_big_resources(BIG_RES_FILES ../resources/big_res.qrc)
 set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc)
@@ -58,6 +58,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 # link opencv, patched openbabel and qt here
 target_link_libraries(${PROJECT_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::3DCore
+        Qt${QT_VERSION_MAJOR}::3DInput
         Qt${QT_VERSION_MAJOR}::3DExtras
         Qt${QT_VERSION_MAJOR}::3DRender
         Qt${QT_VERSION_MAJOR}::Widgets

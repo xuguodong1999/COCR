@@ -82,3 +82,5 @@ soso-detect/
 __pycache__/
 saved_models/
 *.mdb
+_*ncnn/
+_*opencv/
