@@ -29,16 +29,18 @@ qt5_create_translation(QM_FILES ../app ${TS_FILES})
 qt5_add_big_resources(BIG_RES_FILES ../resources/big_res.qrc)
 set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc)
 
-include_directories(../openbabel/include ../coordgenlibs/include ../ncnn/include ../app)
-aux_source_directory(../app DIR_SRCS)
-aux_source_directory(../app/ui UI_SRCS)
-aux_source_directory(../app/ncnn_impl NCNN_SRCS)
-aux_source_directory(../app/opencv_dnn_impl OPENCV_DNN_SRCS)
-set(PROJECT_SOURCES ${DIR_SRCS} ${RES_SRCS} ${TS_FILES} ${NCNN_SRCS} ${UI_SRCS})
+include_directories(../openbabel/include ../coordgenlibs/include ../ncnn/include ./)
+
+set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d)
 
 if (NOT ANDROID)
-    list(APPEND PROJECT_SOURCES ${OPENCV_DNN_SRCS})
+    list(APPEND SRC_DIR_LIST ./opencv_dnn_impl)
 endif (NOT ANDROID)
+
+foreach (SRC_DIR ${SRC_DIR_LIST})
+    aux_source_directory(${SRC_DIR} PROJECT_SOURCE)
+    list(APPEND PROJECT_SOURCES ${PROJECT_SOURCE})
+endforeach (SRC_DIR SRC_DIR_LIST)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

@@ -24,8 +24,11 @@ namespace xgd {
         float prob;
         DetectorObjectType label;
 
-        DetectorObject(const float &_x, const float &_y, const float &_w, const float &_h,
-                       const int &_label, const float &_prob = 1);
+        template<class RectFloatType, class ProbFloatType>
+        DetectorObject(const RectFloatType &_x, const RectFloatType &_y,
+                       const RectFloatType &_w, const RectFloatType &_h,
+                       const int &_label, const ProbFloatType &_prob = 1):
+                rect(_x, _y, _w, _h), label(static_cast<DetectorObjectType>(_label)), prob(_prob) {}
 
         const cv::Rect2f &asRect() const;
 

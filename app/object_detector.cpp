@@ -5,11 +5,6 @@
 
 #include <iostream>
 
-xgd::DetectorObject::DetectorObject(
-        const float &_x, const float &_y, const float &_w, const float &_h,
-        const int &_label, const float &_prob)
-        : rect(_x, _y, _w, _h), label(static_cast<DetectorObjectType>(_label)), prob(_prob) {}
-
 bool xgd::DetectorObject::isValidLabel(const int &_label) {
     return minLabel <= _label && _label <= maxLabel;
 }

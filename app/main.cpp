@@ -73,7 +73,7 @@ std::string ROOT_DIR = "C:/Users/xgd/source/repos/jokejoker/workspace/";
 void loopHwDemo() {
     auto ocrManager = makeOCRManager(ROOT_DIR + "../resources/model");
     while (true) {
-        auto testImg = cv::imread(ROOT_DIR + "/demo.png", cv::IMREAD_GRAYSCALE);
+        auto testImg = cv::imread(ROOT_DIR + "/demo-o1.jpg", cv::IMREAD_GRAYSCALE);
 //        cv::erode(testImg, testImg, cv::Mat());
         ocrManager.ocr(testImg, true);
     }
@@ -133,10 +133,10 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     try {
 //        testJMol();
-        loopUsptoBenchMark(false, {});
+//        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
-//        loopHwDemo();
+        loopHwDemo();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;

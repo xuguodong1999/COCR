@@ -1,0 +1,4 @@
+#ifndef _RESIDUE_ITEM_HPP_
+#define _RESIDUE_ITEM_HPP_
+
+#endif//_RESIDUE_ITEM_HPP_
