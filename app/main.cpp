@@ -131,7 +131,7 @@ void testJMol() {
 void testMol2D_UI() {
     using namespace xgd;
     auto mol = std::make_shared<JMolAdapter>();
-    mol->readAsSMI("C(C)(C)(C)(N(O)(=O))");
+    mol->readAsSMI("N[C@@](F)(C)C(=O)O");
     auto widget = new Mol2DWidget(nullptr, mol);
     widget->resize(400, 300);
     widget->show();

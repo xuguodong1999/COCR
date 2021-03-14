@@ -2,23 +2,33 @@
 
 
 AtomItem::AtomItem(QGraphicsItem *parent) : BaseItem(parent) {
-    textItem = new QGraphicsTextItem(this);
+    mTextItem = new QGraphicsTextItem(this);
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+    connect(this, &BaseItem::mouse_move, [&](const QPointF &) {
+        auto r = boundingRect();
+        auto p = pos();
+        mCenter = {p.x() + r.width() / 2, p.y() + r.height() / 2};
+    });
 }
 
 void AtomItem::setHTML(const QString &_html) {
-    textItem->setHtml(_html);
+    mTextItem->setHtml(_html);
 }
 
 void AtomItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    textItem->paint(painter, option, widget);
+    mTextItem->paint(painter, option, widget);
 }
 
 QRectF AtomItem::boundingRect() const {
-    return textItem->boundingRect();
+    return mTextItem->boundingRect();
 }
 
-void AtomItem::setPos2D(const float &_x, const float &_y) {
+void AtomItem::setPos2D(const qreal &_x, const qreal &_y) {
+    mCenter = {_x, _y};
     auto rect = boundingRect();
     setPos({_x - rect.x() - rect.width() / 2, _y - rect.y() - rect.height() / 2});
+}
+
+float AtomItem::GetCommonSize() {
+    return sCommonSize;
 }

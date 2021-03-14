@@ -11,7 +11,7 @@ Mol2DWidget::Mol2DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
 }
 
 inline static QString getRichText(const std::string &_text) {
-    return QString("<h1>")+ _text.c_str()+QString("</h1>");// just test
+    return QString("<h1>") + _text.c_str() + QString("</h1>");// just test
 }
 
 void Mol2DWidget::syncMolToScene() {
@@ -31,14 +31,10 @@ void Mol2DWidget::syncMolToScene() {
         auto bondItem = new BondItem();
         auto from = _bond.getFrom(), to = _bond.getTo();
         if (!(from && to)) { return; }
-        bondItem->setBond({from->x, from->y}, {to->x, to->y}, _bond.getType());
         auto itFrom = atomItemMap.find(from->getId()), itTo = atomItemMap.find(to->getId());
-        if (atomItemMap.end() != itFrom) {
-            connect(itFrom->second, &AtomItem::mouse_move, bondItem, &BondItem::updateFrom);
-        }
-        if (atomItemMap.end() != itTo) {
-            connect(itTo->second, &AtomItem::mouse_move, bondItem, &BondItem::updateTo);
-        }
+        if (atomItemMap.end() == itFrom) { return; }
+        if (atomItemMap.end() == itTo) { return; }
+        bondItem->setBond(itFrom->second, itTo->second, _bond.getType());
         scene->addItem(bondItem);
     });
 }

@@ -4,8 +4,13 @@
 #include "base_item.hpp"
 #include <QGraphicsTextItem>
 
+class BondItem;
 class AtomItem : public BaseItem {
-    QGraphicsTextItem *textItem;
+    QGraphicsTextItem *mTextItem;
+    QPointF mCenter;
+    bool mLeftToRight;
+    friend class BondItem;
+    inline static float sCommonSize=10;
 public:
     AtomItem(QGraphicsItem *parent = nullptr);
 
@@ -15,7 +20,14 @@ public:
 
     QRectF boundingRect() const;
 
-    void setPos2D(const float &_x, const float &_y);
+    /**
+     * 设置图元中心位置，仅在初始化时调用
+     * @param _x
+     * @param _y
+     */
+    void setPos2D(const qreal &_x, const qreal &_y);
+
+    static float GetCommonSize();
 };
 
 #endif//_ATOM_ITEM_HPP_

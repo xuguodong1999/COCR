@@ -6,27 +6,28 @@
 #include <QGraphicsPathItem>
 #include <QGraphicsItemGroup>
 
+class AtomItem;
+
 class BondItem : public BaseItem {
-    xgd::BondType type;
-    QGraphicsPathItem *pathItem;
-    QPointF from, to;
-    inline static float sMinSize = 10;
+    xgd::BondType mType;
+    QGraphicsPathItem *mPathItem;
+    AtomItem *mFrom, *mTo;
+    inline static float sDoubleBondAngle = 12, sTripleBondAngle = 15;
+
+    friend class AtomItem;
+
 public:
     BondItem(QGraphicsItem *parent = nullptr);
 
-    void setBond(const QPointF &_from, const QPointF &_to, const xgd::BondType &_type = xgd::BondType::SingleBond);
+    void setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_type = xgd::BondType::SingleBond);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     QRectF boundingRect() const;
 
-public slots:
 
-    void updateFrom(const QPointF &_from);
+private slots:
 
-    void updateTo(const QPointF &_to);
-
-private:
     void updateBond();
 };
 
