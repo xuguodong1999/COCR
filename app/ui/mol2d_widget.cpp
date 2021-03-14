@@ -11,7 +11,7 @@ Mol2DWidget::Mol2DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
 }
 
 inline static QString getRichText(const std::string &_text) {
-    return _text.c_str();// just test
+    return QString("<h1>")+ _text.c_str()+QString("</h1>");// just test
 }
 
 void Mol2DWidget::syncMolToScene() {

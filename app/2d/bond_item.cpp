@@ -1,5 +1,7 @@
 #include "bond_item.hpp"
+#include "math_util.hpp"
 
+using xgd::MathUtil;
 
 BondItem::BondItem(QGraphicsItem *parent) : BaseItem(parent) {
     pathItem = new QGraphicsPathItem(this);
@@ -35,10 +37,12 @@ void BondItem::updateTo(const QPointF &_to) {
 void BondItem::updateBond() {
     using namespace xgd;
     QPainterPath path;
+    QPointF p1,p2;
+
     switch (type) {
         case BondType::SingleBond:
-            path.moveTo(from);
-            path.lineTo(to);
+            path.moveTo(p1);
+            path.lineTo(p2);
             break;
         case BondType::DoubleBond:
             break;

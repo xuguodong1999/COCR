@@ -1,4 +1,0 @@
-#ifndef _ITEM_FACTORY_HPP_
-#define _ITEM_FACTORY_HPP_
-
-#endif//_ITEM_FACTORY_HPP_
