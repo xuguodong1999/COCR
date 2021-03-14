@@ -133,3 +133,31 @@ void JMol::onExtraDataNeeded() {
     // default behavior: do nothing
 }
 
+void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float &_y, bool keepRatio) {
+    if (!is2DInfoLatest) {
+        generate2D();
+    }
+    float minx, miny, maxx, maxy;
+    minx = miny = std::numeric_limits<float>::max();
+    maxx = maxy = std::numeric_limits<float>::lowest();
+    loopAtomVec([&](JAtom &_atom) {
+        minx = std::min(minx, _atom.x);
+        miny = std::min(miny, _atom.y);
+        maxx = std::max(maxx, _atom.x);
+        maxy = std::max(maxy, _atom.y);
+    });
+    float kw = (_w - _x * 2) / (maxx - minx), kh = (_h - _y * 2) / (maxy - miny);
+    if (keepRatio) {
+        float k = std::min(kw, kh);
+        loopAtomVec([&](JAtom &_atom) {
+            _atom.x = (_atom.x - minx) * k + _x;
+            _atom.y = (_atom.y - miny) * k + _y;
+        });
+    } else {
+        loopAtomVec([&](JAtom &_atom) {
+            _atom.x = (_atom.x - minx) * kw + _x;
+            _atom.y = (_atom.y - miny) * kh + _y;
+        });
+    }
+}
+

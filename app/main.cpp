@@ -81,7 +81,7 @@ void loopHwDemo() {
 
 void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = {}) {
     auto ocrManager = makeOCRManager(ROOT_DIR + "../resources/model");
-    QDir dir((ROOT_DIR + "/uspto-validation-updated/images").c_str());
+    QDir dir((ROOT_DIR + "/uspto-validation-updated/CLEF").c_str());
     auto fileList = dir.entryInfoList(QDir::Filter(QDir::Files));
     if (!_badExample.empty()) {
         _random = false;
@@ -96,7 +96,7 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
         auto &file = fileList[idx];
         size_t imgIdx = idx;
         idx = (_random ? (rand() % fileList.size()) : idx + 1);
-        if (file.suffix() != "TIF") continue;
+        if (file.suffix() != "png") continue;
         if (!_badExample.empty() && !_badExample.contains(imgIdx)) continue;
         qDebug() << imgIdx << ":" << file.fileName();
         cv::Mat image = cv::imread(file.absoluteFilePath().toStdString(), cv::IMREAD_GRAYSCALE);
@@ -126,6 +126,18 @@ void testJMol() {
     mol.display();
 }
 
+#include "ui/mol2d_widget.hpp"
+
+void testMol2D_UI() {
+    using namespace xgd;
+    auto mol = std::make_shared<JMolAdapter>();
+    mol->readAsSMI("C(C)(C)(C)(C)");
+    auto widget = new Mol2DWidget(nullptr, mol);
+    widget->resize(400, 300);
+    widget->show();
+    widget->syncMolToScene();
+}
+
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -136,10 +148,11 @@ int main(int argc, char *argv[]) {
 //        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
-        loopHwDemo();
+//        loopHwDemo();
+        testMol2D_UI();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;
     }
-    return 0;
+    return app.exec();
 }

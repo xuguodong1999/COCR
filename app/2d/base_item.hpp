@@ -1,23 +1,23 @@
 #ifndef _BASE_ITEM_HPP_
 #define _BASE_ITEM_HPP_
 
-#include <QPainter>
-#include <QPainterPath>
-#include <QGraphicsPathItem>
+#include <QGraphicsItem>
+#include <QObject>
 
-//class BaseItem : public QObject, public QGraphicsPathItem {
-//Q_OBJECT
-//public:
-//    BaseItem(QGraphicsItem *parent = nullptr, const char *name = "");
-//
-//    enum {
-//        Type = UserType + 2
-//    };
-//
-//    int type() const override {
-//        return Type;
-//    }
-//
-//};
+class BaseItem : public QObject, public QGraphicsItem {
+Q_OBJECT
+public:
+    BaseItem(QGraphicsItem *parent);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
+
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e) override;
+
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e) override;
+
+signals:
+
+    void mouse_move(const QPointF &);
+};
 
 #endif//_BASE_ITEM_HPP_

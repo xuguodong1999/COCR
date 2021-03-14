@@ -22,6 +22,8 @@ namespace xgd {
         std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
 
     public:
+        void norm2D(const float &_w, const float &_h, const float &_x = 0, const float &_y = 0, bool keepRatio = true);
+
         JMol();
 
         void loopAtomVec(std::function<void(JAtom &_atom)> _func);
