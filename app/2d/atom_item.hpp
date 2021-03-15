@@ -5,12 +5,15 @@
 #include <QGraphicsTextItem>
 
 class BondItem;
+
 class AtomItem : public BaseItem {
     QGraphicsTextItem *mTextItem;
     QPointF mCenter;
     bool mLeftToRight;
+
     friend class BondItem;
-    inline static float sCommonSize=10;
+
+    inline static float sCommonSize = 10;
 public:
     AtomItem(QGraphicsItem *parent = nullptr);
 

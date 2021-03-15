@@ -226,36 +226,34 @@ void JMolAdapter::syncNewEntityFromOBMol() {
     FOR_ATOMS_OF_MOL(obAtomIter, *obMol) {
         auto obAtom = obAtomIter.operator->();
         auto it = atomIdMap2.find(obAtom);
-        if (atomIdMap2.end() == it) {
-            onMolUpdated();
-            auto atom = JMol::addAtom(obAtom->GetAtomicNum());
-            if (atom) {
-                atomIdMap[atom->getId()] = obAtom;
-                atomIdMap2[obAtom] = atom->getId();
-            }
+        if (atomIdMap2.end() != it) { continue; }
+        onMolUpdated();
+        auto atom = JMol::addAtom(obAtom->GetAtomicNum());
+        if (atom) {
+            atomIdMap[atom->getId()] = obAtom;
+            atomIdMap2[obAtom] = atom->getId();
         }
     }
     FOR_BONDS_OF_MOL(obBondIter, *obMol) {
         auto obBond = obBondIter.operator->();
         auto it = bondIdMap2.find(obBond);
-        if (bondIdMap2.end() == it) {
-            onMolUpdated();
-            auto bond = JMol::addBond(atomIdMap2[obBond->GetBeginAtom()], atomIdMap2[obBond->GetEndAtom()]);
-            if (bond) {
-                if (5 == obBond->GetBondOrder()) {
-                    bond->setType(BondType::DelocalizedBond);
-                } else if (obBond->IsHash()) {
-                    bond->setType(BondType::DownBond);
-                } else if (obBond->IsWedge()) {
-                    bond->setType(BondType::UpBond);
-                } else if (obBond->IsWedgeOrHash()) {
-                    bond->setType(BondType::ImplicitBond);
-                } else {
-                    bond->setOrder(obBond->GetBondOrder());
-                }
-                bondIdMap[bond->getId()] = obBond;
-                bondIdMap2[obBond] = bond->getId();
+        if (bondIdMap2.end() != it) { continue; }
+        onMolUpdated();
+        auto bond = JMol::addBond(atomIdMap2[obBond->GetBeginAtom()], atomIdMap2[obBond->GetEndAtom()]);
+        if (bond) {
+            if (5 == obBond->GetBondOrder()) {
+                bond->setType(BondType::DelocalizedBond);
+            } else if (obBond->IsHash()) {
+                bond->setType(BondType::DownBond);
+            } else if (obBond->IsWedge()) {
+                bond->setType(BondType::UpBond);
+            } else if (obBond->IsWedgeOrHash()) {
+                bond->setType(BondType::ImplicitBond);
+            } else {
+                bond->setOrder(obBond->GetBondOrder());
             }
+            bondIdMap[bond->getId()] = obBond;
+            bondIdMap2[obBond] = bond->getId();
         }
     }
     isOBMolLatest = true;

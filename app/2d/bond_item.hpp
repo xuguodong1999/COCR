@@ -13,6 +13,7 @@ class BondItem : public BaseItem {
     QGraphicsPathItem *mPathItem;
     AtomItem *mFrom, *mTo;
     inline static float sDoubleBondAngle = 12, sTripleBondAngle = 15;
+    inline static int sDelocalizedPart = 5, sDownPart = 8;
 
     friend class AtomItem;
 
