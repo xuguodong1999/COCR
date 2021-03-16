@@ -52,6 +52,10 @@ else ()
     endif ()
 endif ()
 
+if (MSVC)
+    add_compile_definitions(_USE_MATH_DEFINES)
+endif (MSVC)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

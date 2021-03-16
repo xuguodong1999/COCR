@@ -1,9 +1,11 @@
 #include "jatom.hpp"
+#include "color_types.hpp"
 #include <vector>
 #include <string>
 #include <unordered_map>
 
 using xgd::ElementType;
+using xgd::ColorName;
 
 std::vector<std::string> xgd::ELEMENT_NAME_LIST = {
         "None", "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K",
@@ -174,4 +176,26 @@ xgd::JAtom::JAtom(const size_t &_id, const ElementType &_element, const float &_
 
 int xgd::JAtom::getAtomicNumber() const {
     return static_cast<size_t>(getType());
+}
+
+static std::unordered_map<ElementType, ColorName> colorMap = {
+        {ElementType::H,  ColorName::rgbLightBlue},
+        {ElementType::B,  ColorName::rgbLightCyan},
+        {ElementType::C,  ColorName::rgbOrange},
+        {ElementType::N,  ColorName::rgbYellow},
+        {ElementType::O,  ColorName::rgbDarkSlateBlue},
+        {ElementType::F,  ColorName::rgbLightSeaGreen},
+        {ElementType::P,  ColorName::rgbDarkGrey},
+        {ElementType::S,  ColorName::rgbDarkGoldenrod},
+        {ElementType::Cl, ColorName::rgbLightGreen},
+        {ElementType::Br, ColorName::rgbDarkRed},
+        {ElementType::I,  ColorName::rgbPurple}
+};
+
+QColor xgd::getColor(const ElementType &_element) {
+    auto it = colorMap.find(_element);
+    if (colorMap.end() == it) {
+        return qColor(ColorName::rgbPink);
+    }
+    return qColor(it->second);
 }

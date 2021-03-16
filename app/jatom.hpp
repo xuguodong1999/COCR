@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <QColor>
 
 namespace xgd {
     class JMol;
@@ -51,5 +52,7 @@ namespace xgd {
     const std::string &convertElementTypeToName(const ElementType &_type);
 
     ElementType convertNameToElementType(const std::string &_name);
+
+    QColor getColor(const ElementType&_element);
 }
 #endif//_JATOM_HPP_

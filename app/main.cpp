@@ -126,9 +126,7 @@ void testJMol() {
     mol.display();
 }
 
-#include "ui/mol2d_widget.hpp"
-
-void testMol2D_UI() {
+std::shared_ptr<xgd::JMol> getTestMol() {
     using namespace xgd;
     auto mol = std::make_shared<JMolAdapter>();
 //    mol->readAsSMI("N[C@@](F)(C)C(=O)O");
@@ -137,30 +135,46 @@ void testMol2D_UI() {
     auto c1 = mol->addAtom(ElementType::C);
     auto c2 = mol->addAtom(ElementType::C);
     auto c3 = mol->addAtom(ElementType::C);
-    auto o1 = mol->addAtom(ElementType::O);
+    auto c4 = mol->addAtom(ElementType::C);
+    auto c5 = mol->addAtom(ElementType::C);
     auto o2 = mol->addAtom(ElementType::O);
     auto n1 = mol->addAtom(ElementType::N);
+    auto c6 = mol->addAtom(ElementType::C);
     auto f1 = mol->addAtom(ElementType::F);
     auto cl1 = mol->addAtom(ElementType::Cl);
     auto br1 = mol->addAtom(ElementType::Br);
     auto i1 = mol->addAtom(ElementType::I);
     auto nc = mol->addBond(c2, n1, BondType::UpBond);
+    auto nc6 = mol->addBond(c6, n1, BondType::DoubleBond);
     auto cc1 = mol->addBond(c2, c1);
     auto cf = mol->addBond(c2, f1, BondType::DownBond);
     auto cc2 = mol->addBond(c3, c2);
     auto cc3 = mol->addBond(c0, c1, BondType::TripleBond);
     auto cc4 = mol->addBond(c0, c01);
-    auto ccl = mol->addBond(c0, cl1, BondType::ImplicitBond);
-    auto cbr = mol->addBond(c0, br1);
-    auto ci = mol->addBond(c0, i1);
-    auto co1 = mol->addBond(c3, o1);
-    auto co2 = mol->addBond(c3, o2, BondType::DoubleBond);
+    auto ccl = mol->addBond(c01, cl1, BondType::ImplicitBond);
+    auto cbr = mol->addBond(c01, br1, BondType::ImplicitBond);
+    auto ci = mol->addBond(c01, i1);
+    auto c3c4 = mol->addBond(c3, c4, BondType::DelocalizedBond);
+    auto c4c5 = mol->addBond(c4, c5, BondType::DelocalizedBond);
+    auto co2 = mol->addBond(c3, o2, BondType::DelocalizedBond);
+    return mol;
+}
+#include "ui/mol2d_widget.hpp"
+void testMol2D_UI() {
+    auto mol = getTestMol();
     auto widget = new Mol2DWidget(nullptr, mol);
-    widget->resize(400, 300);
+    widget->resize(960, 640);
     widget->show();
     widget->syncMolToScene();
 }
-
+#include "ui/mol3d_widget.hpp"
+void testMol3D_UI() {
+    auto mol = getTestMol();
+    auto widget = new Mol3DWidget(nullptr, mol);
+    widget->resize(960, 640);
+    widget->show();
+    widget->syncMolToScene();
+}
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -172,7 +186,8 @@ int main(int argc, char *argv[]) {
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
 //        loopHwDemo();
-        testMol2D_UI();
+//        testMol2D_UI();
+        testMol3D_UI();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;
