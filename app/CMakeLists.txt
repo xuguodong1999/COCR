@@ -37,6 +37,7 @@ if (NOT ANDROID)
     list(APPEND SRC_DIR_LIST ./opencv_dnn_impl)
 endif (NOT ANDROID)
 
+set(PROJECT_SOURCES ${RES_SRCS})
 foreach (SRC_DIR ${SRC_DIR_LIST})
     aux_source_directory(${SRC_DIR} PROJECT_SOURCE)
     list(APPEND PROJECT_SOURCES ${PROJECT_SOURCE})

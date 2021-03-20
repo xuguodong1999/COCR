@@ -151,11 +151,12 @@ bool JMolAdapter::runForcefield() {
     } catch (...) {
         return false;
     }
+
     auto pFF = static_cast<OpenBabel::OBForceField *>(OpenBabel::OBPlugin::GetPlugin("forcefields", "uff"));
     if (!pFF) {
         return false;
     }
-    pFF->SetLogLevel(OBFF_LOGLVL_NONE);
+    pFF->SetLogLevel(OBFF_LOGLVL_HIGH);
     if (!pFF->Setup(*obMol)) {
         std::cerr << "runOBForceField: setup force field ret false" << std::endl;
     }
@@ -167,23 +168,30 @@ bool JMolAdapter::runForcefield() {
     } catch (...) {
         return false;
     }
-    sync3D();
+    FOR_ATOMS_OF_MOL(obAtomIter, *obMol) {
+        auto obAtom = obAtomIter.operator->();
+        auto aid=atomIdMap2[obAtom];
+        auto&atom=*getAtom(aid);
+        atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
+//        std::cout<<obAtom->z()<<std::endl;
+    }
+//    sync3D();
     return true;
 }
 
 void JMolAdapter::syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _func) {
     for (auto&[aid, obAtom]:atomIdMap) {
         auto atom = getAtom(aid);
-        if (atom)
+        if (atom) {
             _func(*atom, obAtom);
+        }
     }
 }
 
 void JMolAdapter::sync3D() {
-    auto sync_3d = [&](JAtom &atom, OpenBabel::OBAtom *obAtom) -> void {
-        atom.set3D(obAtom->GetX(), obAtom->GetY(), obAtom->GetZ());
-    };
-    syncAtoms(sync_3d);
+    syncAtoms([&](JAtom &atom, OpenBabel::OBAtom *obAtom) {
+        atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
+    });
     is3DInfoLatest = true;
 }
 
@@ -331,11 +339,11 @@ void JMolAdapter::onExtraDataNeeded() {
 
 void JMolAdapter::resetOBMol() {
     std::cout << "reset" << std::endl;
-    delete obMol;
     bondIdMap.clear();
     atomIdMap.clear();
     bondIdMap2.clear();
     atomIdMap2.clear();
+    delete obMol;
     obMol = new OpenBabel::OBMol();
     onMolUpdated();
     loopAtomVec([&](JAtom &atom) {

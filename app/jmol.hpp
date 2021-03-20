@@ -24,6 +24,9 @@ namespace xgd {
     public:
         void norm2D(const float &_w, const float &_h, const float &_x = 0, const float &_y = 0, bool keepRatio = true);
 
+        void norm3D(const float &_xx, const float &_yy, const float &_zz,
+                    const float &_x = 0, const float &_y = 0,const float &_z = 0, bool keepRatio = true);
+
         JMol();
 
         void loopAtomVec(std::function<void(JAtom &_atom)> _func);

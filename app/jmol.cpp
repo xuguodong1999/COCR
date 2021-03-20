@@ -1,6 +1,5 @@
 #include "jmol.hpp"
 #include <iostream>
-
 using namespace xgd;
 
 std::shared_ptr<JAtom> xgd::JMol::getAtom(const size_t &_aid) {
@@ -157,6 +156,39 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
         loopAtomVec([&](JAtom &_atom) {
             _atom.x = (_atom.x - minx) * kw + _x;
             _atom.y = (_atom.y - miny) * kh + _y;
+        });
+    }
+}
+
+void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
+                  const float &_x, const float &_y, const float &_z, bool keepRatio) {
+    if (!is3DInfoLatest) {
+        generate3D();
+    }
+    float minx, miny, minz, maxx, maxy, maxz;
+    minx = miny = minz = std::numeric_limits<float>::max();
+    maxx = maxy = maxz = std::numeric_limits<float>::lowest();
+    loopAtomVec([&](JAtom &_atom) {
+        minx = std::min(minx, _atom.xx);
+        miny = std::min(miny, _atom.yy);
+        minz = std::min(minz, _atom.zz);
+        maxx = std::max(maxx, _atom.xx);
+        maxy = std::max(maxy, _atom.yy);
+        maxz = std::max(maxz, _atom.zz);
+    });
+    float kx = (_xx - _x * 2) / (maxx - minx), ky = (_yy - _y * 2) / (maxy - miny), kz = (_zz - _z * 2) / (maxz - minz);
+    if (keepRatio) {
+        float k = std::min(kx, std::min(ky, kz));
+        loopAtomVec([&](JAtom &_atom) {
+            _atom.xx = (_atom.xx - minx) * k + _x;
+            _atom.yy = (_atom.yy - miny) * k + _y;
+            _atom.zz = (_atom.zz - minz) * k + _z;
+        });
+    } else {
+        loopAtomVec([&](JAtom &_atom) {
+            _atom.xx = (_atom.xx - minx) * kx + _x;
+            _atom.yy = (_atom.yy - miny) * ky + _y;
+            _atom.zz = (_atom.zz - minz) * kz + _y;
         });
     }
 }

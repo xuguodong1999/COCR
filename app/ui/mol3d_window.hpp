@@ -21,6 +21,8 @@ Q_SIGNALS:
     void activatedRadiusChanged(const float &newAadius);
 
 public:
+    QVector3D getViewSize() const;
+
     float getActivatedRadius() const;
 
     void setActivatedRadius(const float &_activatedRadius);

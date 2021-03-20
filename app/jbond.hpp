@@ -2,6 +2,7 @@
 #define _JBOND_HPP_
 
 #include <memory>
+#include <QColor>
 
 namespace xgd {
     class JAtom;
@@ -43,5 +44,6 @@ namespace xgd {
         JBond(const size_t &_id, std::shared_ptr<JAtom> _from = nullptr, std::shared_ptr<JAtom> _to = nullptr,
               const BondType &_type = BondType::SingleBond);
     };
+    QColor getColor(const BondType&_bondType);
 }
 #endif//_JBOND_HPP_

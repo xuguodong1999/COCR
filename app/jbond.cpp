@@ -1,32 +1,35 @@
 #include "jbond.hpp"
 #include "jatom.hpp"
+#include "color_types.hpp"
 #include <stdexcept>
 
-xgd::JBond::JBond(const size_t &_id, std::shared_ptr<JAtom> _from, std::shared_ptr<JAtom> _to, const BondType &_type)
+using namespace xgd;
+
+JBond::JBond(const size_t &_id, std::shared_ptr<JAtom> _from, std::shared_ptr<JAtom> _to, const BondType &_type)
         : id(_id), type(_type), from(std::move(_from)), to(std::move(_to)) {
 }
 
-std::shared_ptr<xgd::JAtom> xgd::JBond::getFrom() const {
+std::shared_ptr<JAtom> JBond::getFrom() const {
     return from;
 }
 
-std::shared_ptr<xgd::JAtom> xgd::JBond::getTo() const {
+std::shared_ptr<JAtom> JBond::getTo() const {
     return to;
 }
 
-size_t xgd::JBond::getId() const {
+size_t JBond::getId() const {
     return id;
 }
 
-xgd::BondType xgd::JBond::getType() const {
+BondType JBond::getType() const {
     return type;
 }
 
-void xgd::JBond::setType(const xgd::BondType &_type) {
+void JBond::setType(const BondType &_type) {
     type = _type;
 }
 
-int xgd::JBond::getBondOrder() const {
+int JBond::getBondOrder() const {
     switch (type) {
         case BondType::SingleBond:
         case BondType::UpBond:
@@ -41,7 +44,7 @@ int xgd::JBond::getBondOrder() const {
     }
 }
 
-void xgd::JBond::setOrder(const int &_order) {
+void JBond::setOrder(const int &_order) {
     switch (_order) {
         case 2:
             type = BondType::DoubleBond;
@@ -54,13 +57,30 @@ void xgd::JBond::setOrder(const int &_order) {
     }
 }
 
-size_t xgd::JBond::fromId() const {
+size_t JBond::fromId() const {
     if (from)return from->getId();
     throw std::runtime_error("bond with empty from atom");
 }
 
-size_t xgd::JBond::toId() const {
+size_t JBond::toId() const {
     if (to)return to->getId();
     throw std::runtime_error("bond with empty to atom");
 }
 
+static std::unordered_map<BondType, ColorName> colorMap = {
+        {BondType::SingleBond,      ColorName::rgbDarkBlue},
+        {BondType::DoubleBond,      ColorName::rgbDarkCyan},
+        {BondType::TripleBond,      ColorName::rgbLightSkyBlue},
+        {BondType::DelocalizedBond, ColorName::rgbYellow},
+        {BondType::ImplicitBond,    ColorName::rgbLightBlue1},
+        {BondType::UpBond,          ColorName::rgbLightBlue2},
+        {BondType::DownBond,        ColorName::rgbLightBlue3}
+};
+
+QColor getColor(const BondType &_bondType) {
+    auto it = colorMap.find(_bondType);
+    if (colorMap.end() == it) {
+        return qColor(ColorName::rgbBlack);
+    }
+    return qColor(it->second);
+}

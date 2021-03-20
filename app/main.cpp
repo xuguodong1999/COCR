@@ -169,7 +169,9 @@ void testMol2D_UI() {
 }
 #include "ui/mol3d_widget.hpp"
 void testMol3D_UI() {
-    auto mol = getTestMol();
+    auto mol=std::make_shared<xgd::JMolAdapter>();
+    mol->readAsSMI("CCC");
+//    auto mol = getTestMol();
     auto widget = new Mol3DWidget(nullptr, mol);
     widget->resize(960, 640);
     widget->show();

@@ -135,3 +135,8 @@ void Mol3DWindow::touchEvent(QTouchEvent *e) {
     QWindow::touchEvent(e);
 }
 
+QVector3D Mol3DWindow::getViewSize() const {
+    float w = getActivatedRadius();
+    return {w, w, w};
+}
+
