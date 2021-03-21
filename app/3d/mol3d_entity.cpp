@@ -97,7 +97,7 @@ void CylinderEntity::setDirection(const QVector3D &_from, const QVector3D &_to) 
     // 内置圆柱中轴线在y轴上，重心位于坐标原点
     transform->setRotation(QQuaternion::rotationTo(MathUtil::getOneY3(), _from - _to));
     transform->setTranslation((_from + _to) / 2.0);
-    float length=_from.distanceToPoint(_to);
+    float length = _from.distanceToPoint(_to);
     setLength(length);
 }
 

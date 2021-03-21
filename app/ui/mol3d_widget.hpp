@@ -11,7 +11,7 @@ namespace Qt3DCore {
     class QEntity;
 }
 class Mol3DWidget : public QWidget {
-    Q_OBJECT
+Q_OBJECT
     std::shared_ptr<xgd::JMol> mol;
     Mol3DWindow *window;
     Qt3DCore::QEntity *root;

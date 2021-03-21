@@ -1,5 +1,5 @@
-#ifndef _JATOM_HPP_
-#define _JATOM_HPP_
+#ifndef _XGD_JATOM_HPP_
+#define _XGD_JATOM_HPP_
 
 #include <vector>
 #include <string>
@@ -55,4 +55,4 @@ namespace xgd {
 
     QColor getColor(const ElementType &_element);
 }
-#endif//_JATOM_HPP_
+#endif//_XGD_JATOM_HPP_

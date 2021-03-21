@@ -1,5 +1,5 @@
-#ifndef _JBOND_HPP_
-#define _JBOND_HPP_
+#ifndef _XGD_JBOND_HPP_
+#define _XGD_JBOND_HPP_
 
 #include <memory>
 #include <QColor>
@@ -47,4 +47,4 @@ namespace xgd {
 
     QColor getColor(const BondType &_bondType);
 }
-#endif//_JBOND_HPP_
+#endif//_XGD_JBOND_HPP_

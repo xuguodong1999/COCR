@@ -164,7 +164,7 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
 
 void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
                   const float &_x, const float &_y, const float &_z, bool keepRatio) {
-    qDebug() << __FUNCTION__ ;
+    qDebug() << __FUNCTION__;
     if (!is3DInfoLatest) {
         generate3D();
     }
@@ -180,7 +180,7 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
         maxz = std::max(maxz, _atom.zz);
     });
     float kx = (_xx - _x * 2) / (maxx - minx), ky = (_yy - _y * 2) / (maxy - miny), kz = (_zz - _z * 2) / (maxz - minz);
-    float dx=(minx+maxx)/2,dy=(miny+maxy)/2,dz=(minz+maxz)/2;
+    float dx = (minx + maxx) / 2, dy = (miny + maxy) / 2, dz = (minz + maxz) / 2;
     if (keepRatio) {
         float k = std::min(kx, std::min(ky, kz));
         loopAtomVec([&](JAtom &_atom) {

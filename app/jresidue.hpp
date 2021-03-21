@@ -1,5 +1,5 @@
-#ifndef _JRESIDUE_HPP_
-#define _JRESIDUE_HPP_
+#ifndef _XGD_JRESIDUE_HPP_
+#define _XGD_JRESIDUE_HPP_
 
 #include "jatom.hpp"
 #include <string>
@@ -14,4 +14,4 @@ namespace xgd {
         JResidue(const size_t &_id, std::string _text, bool _isLeftToRight, const float &_x = 0, const float &_y = 0);
     };
 }
-#endif//_JRESIDUE_HPP_
+#endif//_XGD_JRESIDUE_HPP_

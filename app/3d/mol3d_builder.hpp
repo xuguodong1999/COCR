@@ -9,12 +9,12 @@
 
 #include <unordered_map>
 
-namespace Qt3DCore{
+namespace Qt3DCore {
     class QEntity;
 }
 
 
-namespace xgd{
+namespace xgd {
     class JMol;
 }
 
@@ -33,9 +33,13 @@ public:
 
     void prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_viewSize,
                  const QVector3D &_blankArea = {5, 5, 5});
+
 signals:
+
     void on_mol_build_done();
+
     void on_mol_prepare_done();
+
 public slots:
 
     void build();
