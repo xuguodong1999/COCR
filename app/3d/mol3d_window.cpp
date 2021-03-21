@@ -32,7 +32,6 @@ Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_root, QScreen *_screen)
     // 禁用实时渲染
     renderSettings()->setRenderPolicy(
             Qt3DRender::QRenderSettings::OnDemand);
-    renderSettings()->pickingSettings()->setPickMethod(Qt3DRender::QPickingSettings::PrimitivePicking);
 }
 
 bool Mol3DWindow::event(QEvent *event) {
@@ -43,14 +42,12 @@ bool Mol3DWindow::event(QEvent *event) {
 void Mol3DWindow::mousePressEvent(QMouseEvent *event) {
     lastPos = event->pos();
     isPressed = true;
-    qDebug() << "mouse press@ " << lastPos;
     Qt3DWindow::mousePressEvent(event);
 }
 
 void Mol3DWindow::mouseReleaseEvent(QMouseEvent *event) {
     lastPos = event->pos();
     isPressed = false;
-    qDebug() << "mouse release@ " << lastPos;
     Qt3DWindow::mouseReleaseEvent(event);
 }
 
@@ -74,22 +71,6 @@ void Mol3DWindow::mouseMoveEvent(QMouseEvent *event) {
 void Mol3DWindow::focusOutEvent(QFocusEvent *event) {
     Qt3DWindow::focusOutEvent(event);
     isPressed = false;
-}
-
-float Mol3DWindow::getActivatedRadius() const {
-    return activatedRadius;
-}
-
-void Mol3DWindow::setActivatedRadius(const float &_activatedRadius) {
-    activatedRadius = _activatedRadius;
-    auto cam = camera();
-    cam->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.001f,
-                                          std::numeric_limits<float>::max());
-    cam->setPosition(activatedRadius * (MathUtil::getOneZ3() + MathUtil::getOneY3() / 2));
-    cam->setUpVector(MathUtil::getOneY3());
-    cam->setViewCenter(MathUtil::getZero3());
-    lightTrans->setTranslation(cam->position());
-    emit activatedRadiusChanged(activatedRadius);
 }
 
 void Mol3DWindow::keyReleaseEvent(QKeyEvent *event) {
@@ -137,9 +118,23 @@ void Mol3DWindow::wheelEvent(QWheelEvent *event) {
 }
 
 void Mol3DWindow::touchEvent(QTouchEvent *e) {
-    qDebug() << "touch @ " << e->touchPoints();
-    qDebug() << "touch 4 " << e->touchPointStates();
     Qt3DWindow::touchEvent(e);
+}
+
+float Mol3DWindow::getActivatedRadius() const {
+    return activatedRadius;
+}
+
+void Mol3DWindow::setActivatedRadius(const float &_activatedRadius) {
+    activatedRadius = _activatedRadius;
+    auto cam = camera();
+    cam->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.001f,
+                                          std::numeric_limits<float>::max());
+    cam->setPosition(activatedRadius * (MathUtil::getOneZ3() + MathUtil::getOneY3() / 2));
+    cam->setUpVector(MathUtil::getOneY3());
+    cam->setViewCenter(MathUtil::getZero3());
+    lightTrans->setTranslation(cam->position());
+    emit activatedRadiusChanged(activatedRadius);
 }
 
 QVector3D Mol3DWindow::getViewSize() const {

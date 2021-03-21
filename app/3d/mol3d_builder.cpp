@@ -43,15 +43,16 @@ void Mol3DBuilder::build() {
     if (avgBondLength < 1)avgBondLength = 20;
     // 添加3D原子球
     mol->loopAtomVec([&](xgd::JAtom &atom) {
-        auto entity = std::make_shared<SphereEntity>(root);
-        atoms[atom.getId()] = entity;
+        auto wrapper = std::make_shared<SphereWrapper>(root);
+        atoms[atom.getId()] = wrapper;
 //        qDebug() << getQVector3D(atom);
-        entity->setId(atom.getId());
-        entity->setTranslation(getQVector3D(atom));
-        entity->setColor(xgd::getColor(atom.getType()));
-        entity->setRadius(atom.getRadius() / atom.getDefaultDadius() * avgBondLength / 3);
-        entity->setScale(1);
-        entity->setRindsAndSlices(100, 100);
+        wrapper->setId(atom.getId());
+        wrapper->setTranslation(getQVector3D(atom));
+        wrapper->setColor(xgd::getColor(atom.getType()));
+        wrapper->setRadius(atom.getRadius() / atom.getDefaultDadius() * avgBondLength / 3);
+        wrapper->setScale(1);
+        wrapper->setRindsAndSlices(100, 100);
+        wrapper->setId(atom.getId());
     });
     // 统计共轭键的共面原子，计算用于修正双键的中轴旋转角度
     std::unordered_map<size_t, QVector3D> normVecMap;
@@ -109,61 +110,60 @@ void Mol3DBuilder::build() {
         }
         if (poses.size() >= 3) {
             normVecMap[bond.getId()] = QVector3D::crossProduct(poses[0] - poses[1], poses[1] - poses[2]);
-            qDebug() << "allow norm";
         }
     });
     float bondRadius = avgBondLength / 40;
     mol->loopBondVec([&](JBond &bond) {
         auto fromAtom = bond.getFrom(), toAtom = bond.getTo();
         QVector3D from = getQVector3D(fromAtom), to = getQVector3D(toAtom);
-        std::shared_ptr<BaseEntity> baseEntity;
+        std::shared_ptr<BaseWrapper> wrapper;
         switch (bond.getType()) {
             case BondType::SingleBond:
             case BondType::DelocalizedBond:
             case BondType::DownBond:
             case BondType::UpBond:
             case BondType::ImplicitBond: {
-                auto entity = std::make_shared<CylinderEntity>(root);
-                entity->setDirection(from, to);
-                entity->setRadius(bondRadius);
-                baseEntity = entity;
+                auto cWrapper = std::make_shared<CylinderWrapper>(root);
+                cWrapper->setDirection(from, to);
+                cWrapper->setRadius(bondRadius);
+                wrapper = cWrapper;
                 break;
             }
             case BondType::DoubleBond: {
-                auto entity = std::make_shared<MultiCylinderEntity>(root, 2);
+                auto mcWrapper = std::make_shared<MultiCylinderWrapper>(root, 2);
                 std::optional<QVector3D> norm = std::nullopt;
                 auto it = normVecMap.find(bond.getId());
                 if (it != normVecMap.end()) {
                     norm = it->second;
                 }
-                entity->setDirection(from, to, norm);
-                entity->setDistance(bondRadius * 2);
-                entity->setRadius(bondRadius);
-                baseEntity = entity;
+                mcWrapper->setDirection(from, to, norm);
+                mcWrapper->setDistance(bondRadius * 2);
+                mcWrapper->setRadius(bondRadius);
+                wrapper = mcWrapper;
                 break;
             }
             case BondType::TripleBond: {
-                auto entity = std::make_shared<MultiCylinderEntity>(root, 3);
+                auto mcWrapper = std::make_shared<MultiCylinderWrapper>(root, 3);
                 std::optional<QVector3D> norm = std::nullopt;
                 auto it = normVecMap.find(bond.getId());
                 if (it != normVecMap.end()) {
                     norm = it->second;
                 }
-                entity->setDirection(from, to, norm);
-                entity->setDistance(bondRadius * 3);
-                entity->setRadius(bondRadius);
-                baseEntity = entity;
+                mcWrapper->setDirection(from, to, norm);
+                mcWrapper->setDistance(bondRadius * 3);
+                mcWrapper->setRadius(bondRadius);
+                wrapper = mcWrapper;
                 break;
             }
             default: {
                 exit(-1);
             }
         }
-        baseEntity->setRindsAndSlices(100, 100);
-        baseEntity->setScale(1);
-        baseEntity->setColor(getColor(bond.getType()));
-        baseEntity->setId(bond.getId());
-        bonds[bond.getId()] = baseEntity;
+        wrapper->setRindsAndSlices(100, 100);
+        wrapper->setScale(1);
+        wrapper->setColor(getColor(bond.getType()));
+        wrapper->setId(bond.getId());
+        bonds[bond.getId()] = wrapper;
     });
     emit sig_mol_build_done();
 }

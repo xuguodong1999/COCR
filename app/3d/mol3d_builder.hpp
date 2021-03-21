@@ -27,8 +27,8 @@ Q_OBJECT
     int sphereRings, sphereSlices, cylinderRings, cylinderSlices;
     float doubleBondSpaceScale, tripleBondSpaceScale;
 
-    std::unordered_map<size_t, std::shared_ptr<SphereEntity>> atoms;
-    std::unordered_map<size_t, std::shared_ptr<BaseEntity>> bonds;
+    std::unordered_map<size_t, std::shared_ptr<SphereWrapper>> atoms;
+    std::unordered_map<size_t, std::shared_ptr<BaseWrapper>> bonds;
 public:
     Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root) : QObject(parent), root(_root) {}
 

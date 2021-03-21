@@ -150,7 +150,7 @@ bool JMolAdapter::runForcefield() {
         OpenBabel::OBBuilder builder;
         builder.Build(*obMol);
 //        obMol->CorrectForPH();
-        obMol->AddHydrogens(false,true);
+        obMol->AddHydrogens(false, true);
     } catch (...) {
         return false;
     }

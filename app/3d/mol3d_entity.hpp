@@ -1,6 +1,7 @@
 #ifndef _MOL3D_ENTITY_HPP_
 #define _MOL3D_ENTITY_HPP_
 
+#include <Qt3DCore/QEntity>
 #include <QObject>
 #include <QColor>
 #include <QVector3D>
@@ -9,8 +10,6 @@
 #include <memory>
 
 namespace Qt3DCore {
-    class QEntity;
-
     class QTransform;
 }
 
@@ -22,26 +21,48 @@ namespace Qt3DExtras {
     class QCylinderMesh;
 }
 
-namespace Qt3DInput {
-    class QMouseHandler;
-
-    class QMouseDevice;
-}
 namespace Qt3DRender {
     class QObjectPicker;
+
+    class QPickEvent;
 }
-class BaseEntity : public QObject {
+
+enum class EntityType {
+    AtomSphere, BondCylinder
+};
+
+class BaseEntity : public Qt3DCore::QEntity {
+Q_OBJECT
+    Qt3DRender::QObjectPicker *mPicker;
+    size_t id;
+    EntityType type;
+public:
+    // 必须指定父节点，不手动管理 BaseEntity类的生命周期
+    explicit BaseEntity(QNode *parent);
+
+    void setType(const EntityType &_type);
+
+    void setId(const size_t &_id);
+
+public slots:
+
+    void onPicked(Qt3DRender::QPickEvent *event);
+
+signals:
+
+    void sig_bond_picked(const size_t &);
+
+    void sig_atom_picked(const size_t &);
+};
+
+class BaseWrapper : public QObject {
 Q_OBJECT
 protected:
-    size_t id;
     Qt3DCore::QEntity *root;
-    Qt3DCore::QEntity *entity;
+    BaseEntity *entity;
     Qt3DCore::QTransform *transform;
-    Qt3DInput::QMouseHandler *mMouseHandler;
-    Qt3DInput::QMouseDevice *mMouseDevice;
-    Qt3DRender::QObjectPicker *mPicker;
 public:
-    BaseEntity(Qt3DCore::QEntity *_root);
+    BaseWrapper(Qt3DCore::QEntity *_root);
 
     void setScale(const float &_scale);
 
@@ -52,53 +73,39 @@ public:
     virtual void setColor(const QColor &_color) = 0;
 
     void setId(const size_t &_id);
-
-signals:
-
-    void sig_bond_picked(const size_t &);
-
-    void sig_atom_picked(const size_t &);
-
-private slots:
-
-    virtual void onEntityClicked() = 0;
 };
 
-class BaseSingleEntity : public BaseEntity {
+class SingleWrapper : public BaseWrapper {
 Q_OBJECT
 protected:
     Qt3DExtras::QPhongMaterial *material;
 public:
-    BaseSingleEntity(Qt3DCore::QEntity *_root);
+    SingleWrapper(Qt3DCore::QEntity *_root);
 
     void setColor(const QColor &_color) override;
 };
 
-class SphereEntity : public BaseSingleEntity {
+class SphereWrapper : public SingleWrapper {
 Q_OBJECT
     Qt3DExtras::QSphereMesh *sphere;
 public:
-    SphereEntity(Qt3DCore::QEntity *_root);
+    SphereWrapper(Qt3DCore::QEntity *_root);
 
     void setRadius(const float &_radius);
 
     void setRindsAndSlices(const int &_rings, const int &_slices) override;
 
     void setColor(const QColor &_color) override;
-
-private slots:
-
-    void onEntityClicked() override;
 };
 
-class CylinderEntity : public BaseSingleEntity {
+class CylinderWrapper : public SingleWrapper {
 Q_OBJECT
 
-    friend class MultiCylinderEntity;
+    friend class MultiCylinderWrapper;
 
     Qt3DExtras::QCylinderMesh *cylinder;
 public:
-    CylinderEntity(Qt3DCore::QEntity *_root);
+    CylinderWrapper(Qt3DCore::QEntity *_root);
 
     void setDirection(const QVector3D &_from, const QVector3D &_to);
 
@@ -106,21 +113,17 @@ public:
 
     void setRadius(const float &_radius);
 
-private slots:
-
-    void onEntityClicked() override;
-
 private:
     void setLength(const float &_length);
 };
 
-class MultiCylinderEntity : public BaseEntity {
+class MultiCylinderWrapper : public BaseWrapper {
 Q_OBJECT
-    std::vector<std::shared_ptr<CylinderEntity>> cylinders;
+    std::vector<std::shared_ptr<CylinderWrapper>> cylinders;
     std::vector<Qt3DExtras::QPhongMaterial *> materials;
     static std::unordered_map<decltype(cylinders.size()), std::vector<QVector3D>> sTransStrategy;
 public:
-    MultiCylinderEntity(Qt3DCore::QEntity *_root, int _num = 1);
+    MultiCylinderWrapper(Qt3DCore::QEntity *_root, int _num = 1);
 
     void setColor(const QColor &_color) override;
 
@@ -133,9 +136,6 @@ public:
 
     void setRadius(const float &_radius);
 
-private slots:
-
-    void onEntityClicked() override;
 
 private:
     void setTranslation(const QVector3D &_trans);
