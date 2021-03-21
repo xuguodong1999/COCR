@@ -10,7 +10,7 @@
 #include <QtGui/QWheelEvent>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QGuiApplication>
-
+#include <cmath>
 using xgd::MathUtil;
 
 

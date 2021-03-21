@@ -12,7 +12,6 @@
 #include <QDebug>
 
 using xgd::MathUtil;
-using std::fabs;
 
 inline QVector3D getQVector3D(const xgd::JAtom &_atom) {
     return {_atom.xx, _atom.yy, _atom.zz};

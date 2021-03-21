@@ -25,9 +25,8 @@ void BondItem::setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_typ
 void BondItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     if (xgd::BondType::UpBond == mType) {
         painter->fillPath(mPathItem->path(), QBrush(Qt::black));
-    } else {
-        mPathItem->paint(painter, option, widget);
     }
+    mPathItem->paint(painter, option, widget);
 }
 
 QRectF BondItem::boundingRect() const {
@@ -80,7 +79,8 @@ void BondItem::updateBond() {
             path.moveTo(o1);
             path.lineTo(o2 + offset * v);
             path.lineTo(o2 - offset * v);
-            path.lineTo(o1);
+//            path.lineTo(o1);
+            path.closeSubpath();
             break;
         }
         case BondType::DownBond: {// 虚楔形键

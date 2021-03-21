@@ -9,7 +9,7 @@
 #include <Qt3DExtras/QPhongMaterial>
 
 #include <QDebug>
-
+#include <cmath>
 using xgd::MathUtil;
 using std::fabs;
 

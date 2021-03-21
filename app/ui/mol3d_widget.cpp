@@ -1,6 +1,6 @@
 #include "mol3d_widget.hpp"
-#include "../3D/mol3d_window.hpp"
-#include "../3D/mol3d_builder.hpp"
+#include "../3d/mol3d_window.hpp"
+#include "../3d/mol3d_builder.hpp"
 
 #include <Qt3DCore/QEntity>
 #include <QHBoxLayout>
@@ -23,7 +23,7 @@ Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol) : QWi
 
 void Mol3DWidget::syncMolToScene() {
     qDebug() << __FUNCTION__;
-    QVector3D viewSize = {200, 200, 200};
+    static QVector3D viewSize = {200, 200, 200};
     QThreadPool::globalInstance()->start([&]() {
         builder->prepare(mol, viewSize);
     });

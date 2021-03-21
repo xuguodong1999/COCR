@@ -8,6 +8,7 @@
 #include <QVector3D>
 
 #include <unordered_map>
+#include <memory>
 
 namespace Qt3DCore {
     class QEntity;

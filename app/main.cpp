@@ -193,8 +193,8 @@ int main(int argc, char *argv[]) {
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
 //        loopHwDemo();
-//        testMol2D_UI();
-        testMol3D_UI();
+        testMol2D_UI();
+//        testMol3D_UI();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;
