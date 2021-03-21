@@ -31,7 +31,7 @@ set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc)
 
 include_directories(../openbabel/include ../coordgenlibs/include ../ncnn/include ./)
 
-set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d)
+set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d)
 
 if (NOT ANDROID)
     list(APPEND SRC_DIR_LIST ./opencv_dnn_impl)

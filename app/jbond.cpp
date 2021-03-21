@@ -77,7 +77,7 @@ static std::unordered_map<BondType, ColorName> colorMap = {
         {BondType::DownBond,        ColorName::rgbLightBlue3}
 };
 
-QColor getColor(const BondType &_bondType) {
+QColor xgd::getColor(const BondType &_bondType) {
     auto it = colorMap.find(_bondType);
     if (colorMap.end() == it) {
         return qColor(ColorName::rgbBlack);

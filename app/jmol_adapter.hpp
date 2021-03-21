@@ -20,10 +20,10 @@ namespace xgd {
      */
     class JMolAdapter : public JMol {
         OpenBabel::OBMol *obMol;
-        std::unordered_map<decltype(id), OpenBabel::OBAtom *> atomIdMap;
-        std::unordered_map<decltype(id), OpenBabel::OBBond *> bondIdMap;
-        std::unordered_map<OpenBabel::OBAtom *, decltype(id)> atomIdMap2;
-        std::unordered_map<OpenBabel::OBBond *, decltype(id)> bondIdMap2;
+        std::unordered_map<decltype(id), unsigned long> atomIdMap;
+        std::unordered_map<decltype(id), unsigned long> bondIdMap;
+        std::unordered_map<unsigned long, decltype(id)> atomIdMap2;
+        std::unordered_map<unsigned long, decltype(id)> bondIdMap2;
         bool isOBMolLatest;
 
         bool runForcefield();

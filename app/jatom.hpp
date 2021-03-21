@@ -53,6 +53,6 @@ namespace xgd {
 
     ElementType convertNameToElementType(const std::string &_name);
 
-    QColor getColor(const ElementType&_element);
+    QColor getColor(const ElementType &_element);
 }
 #endif//_JATOM_HPP_

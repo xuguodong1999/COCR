@@ -144,6 +144,7 @@ void JMolAdapter::onMolUpdated() {
 }
 
 bool JMolAdapter::runForcefield() {
+    qDebug() << __FUNCTION__;
     if (obMol->Empty())return true;
     try {
         OpenBabel::OBBuilder builder;
@@ -168,20 +169,14 @@ bool JMolAdapter::runForcefield() {
     } catch (...) {
         return false;
     }
-    FOR_ATOMS_OF_MOL(obAtomIter, *obMol) {
-        auto obAtom = obAtomIter.operator->();
-        auto aid=atomIdMap2[obAtom];
-        auto&atom=*getAtom(aid);
-        atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
-//        std::cout<<obAtom->z()<<std::endl;
-    }
-//    sync3D();
+    sync3D();
     return true;
 }
 
 void JMolAdapter::syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _func) {
-    for (auto&[aid, obAtom]:atomIdMap) {
+    for (auto&[aid, obAtomId]:atomIdMap) {
         auto atom = getAtom(aid);
+        auto obAtom = obMol->GetAtomById(obAtomId);
         if (atom) {
             _func(*atom, obAtom);
         }
@@ -189,13 +184,15 @@ void JMolAdapter::syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _f
 }
 
 void JMolAdapter::sync3D() {
-    syncAtoms([&](JAtom &atom, OpenBabel::OBAtom *obAtom) {
+    qDebug() << __FUNCTION__;
+    syncAtoms([](JAtom &atom, OpenBabel::OBAtom *obAtom) {
         atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
     });
     is3DInfoLatest = true;
 }
 
 bool JMolAdapter::generate2D() {
+    qDebug() << __FUNCTION__;
     checkOBMol();
     try {
         sketcherMinimizer minimizer;
@@ -226,42 +223,44 @@ bool JMolAdapter::generate2D() {
 }
 
 bool JMolAdapter::generate3D() {
+    qDebug() << __FUNCTION__;
     checkOBMol();
     return runForcefield();
 }
 
 void JMolAdapter::syncNewEntityFromOBMol() {
+    qDebug() << __FUNCTION__;
     FOR_ATOMS_OF_MOL(obAtomIter, *obMol) {
-        auto obAtom = obAtomIter.operator->();
+        auto obAtom = obAtomIter->GetId();
         auto it = atomIdMap2.find(obAtom);
         if (atomIdMap2.end() != it) { continue; }
         onMolUpdated();
-        auto atom = JMol::addAtom(obAtom->GetAtomicNum());
+        auto atom = JMol::addAtom(obAtomIter->GetAtomicNum());
         if (atom) {
             atomIdMap[atom->getId()] = obAtom;
             atomIdMap2[obAtom] = atom->getId();
         }
     }
     FOR_BONDS_OF_MOL(obBondIter, *obMol) {
-        auto obBond = obBondIter.operator->();
-        auto it = bondIdMap2.find(obBond);
+        auto it = bondIdMap2.find(obBondIter->GetId());
         if (bondIdMap2.end() != it) { continue; }
         onMolUpdated();
-        auto bond = JMol::addBond(atomIdMap2[obBond->GetBeginAtom()], atomIdMap2[obBond->GetEndAtom()]);
+        auto bond = JMol::addBond(atomIdMap2[obBondIter->GetBeginAtom()->GetId()],
+                                  atomIdMap2[obBondIter->GetEndAtom()->GetId()]);
         if (bond) {
-            if (5 == obBond->GetBondOrder()) {
+            if (5 == obBondIter->GetBondOrder()) {
                 bond->setType(BondType::DelocalizedBond);
-            } else if (obBond->IsHash()) {
+            } else if (obBondIter->IsHash()) {
                 bond->setType(BondType::DownBond);
-            } else if (obBond->IsWedge()) {
+            } else if (obBondIter->IsWedge()) {
                 bond->setType(BondType::UpBond);
-            } else if (obBond->IsWedgeOrHash()) {
+            } else if (obBondIter->IsWedgeOrHash()) {
                 bond->setType(BondType::ImplicitBond);
             } else {
-                bond->setOrder(obBond->GetBondOrder());
+                bond->setOrder(obBondIter->GetBondOrder());
             }
-            bondIdMap[bond->getId()] = obBond;
-            bondIdMap2[obBond] = bond->getId();
+            bondIdMap[bond->getId()] = obBondIter->GetId();
+            bondIdMap2[obBondIter->GetId()] = bond->getId();
         }
     }
     isOBMolLatest = true;
@@ -277,14 +276,14 @@ void JMolAdapter::checkOBMol() {
 void JMolAdapter::addOBAtom(JAtom &_atom) {
     auto obAtom = obMol->NewAtom();
     obAtom->SetAtomicNum(_atom.getAtomicNumber());
-    atomIdMap[_atom.getId()] = obAtom;
-    atomIdMap2[obAtom] = _atom.getId();
+    atomIdMap[_atom.getId()] = obAtom->GetId();
+    atomIdMap2[obAtom->GetId()] = _atom.getId();
 }
 
 void JMolAdapter::addOBBond(JBond &_bond) {
     auto obBond = obMol->NewBond();
-    bondIdMap[_bond.getId()] = obBond;
-    bondIdMap2[obBond] = _bond.getId();
+    bondIdMap[_bond.getId()] = obBond->GetId();
+    bondIdMap2[obBond->GetId()] = _bond.getId();
     int obBondOrder;
     switch (_bond.getType()) {
         case BondType::SingleBond:
@@ -320,14 +319,14 @@ void JMolAdapter::addOBBond(JBond &_bond) {
     if (from) {
         auto obFrom = atomIdMap.find(from->getId());
         if (atomIdMap.end() != obFrom) {
-            obBond->SetBegin(obFrom->second);
+            obBond->SetBegin(obMol->GetAtomById(obFrom->second));
         }
     }
     auto to = _bond.getTo();
     if (to) {
         auto obTo = atomIdMap.find(to->getId());
         if (atomIdMap.end() != obTo) {
-            obBond->SetEnd(obTo->second);
+            obBond->SetEnd(obMol->GetAtomById(obTo->second));
         }
     }
 }
@@ -338,7 +337,7 @@ void JMolAdapter::onExtraDataNeeded() {
 }
 
 void JMolAdapter::resetOBMol() {
-    std::cout << "reset" << std::endl;
+    qDebug() << __FUNCTION__;
     bondIdMap.clear();
     atomIdMap.clear();
     bondIdMap2.clear();

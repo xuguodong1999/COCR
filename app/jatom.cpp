@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <QDebug>
+
 using xgd::ElementType;
 using xgd::ColorName;
 

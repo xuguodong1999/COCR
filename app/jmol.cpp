@@ -1,5 +1,7 @@
 #include "jmol.hpp"
 #include <iostream>
+#include <QDebug>
+
 using namespace xgd;
 
 std::shared_ptr<JAtom> xgd::JMol::getAtom(const size_t &_aid) {
@@ -162,6 +164,7 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
 
 void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
                   const float &_x, const float &_y, const float &_z, bool keepRatio) {
+    qDebug() << __FUNCTION__ ;
     if (!is3DInfoLatest) {
         generate3D();
     }
@@ -177,18 +180,19 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
         maxz = std::max(maxz, _atom.zz);
     });
     float kx = (_xx - _x * 2) / (maxx - minx), ky = (_yy - _y * 2) / (maxy - miny), kz = (_zz - _z * 2) / (maxz - minz);
+    float dx=(minx+maxx)/2,dy=(miny+maxy)/2,dz=(minz+maxz)/2;
     if (keepRatio) {
         float k = std::min(kx, std::min(ky, kz));
         loopAtomVec([&](JAtom &_atom) {
-            _atom.xx = (_atom.xx - minx) * k + _x;
-            _atom.yy = (_atom.yy - miny) * k + _y;
-            _atom.zz = (_atom.zz - minz) * k + _z;
+            _atom.xx = (_atom.xx - dx) * k + _x;
+            _atom.yy = (_atom.yy - dy) * k + _y;
+            _atom.zz = (_atom.zz - dz) * k + _z;
         });
     } else {
         loopAtomVec([&](JAtom &_atom) {
-            _atom.xx = (_atom.xx - minx) * kx + _x;
-            _atom.yy = (_atom.yy - miny) * ky + _y;
-            _atom.zz = (_atom.zz - minz) * kz + _y;
+            _atom.xx = (_atom.xx - dx) * kx + _x;
+            _atom.yy = (_atom.yy - dy) * ky + _y;
+            _atom.zz = (_atom.zz - dz) * kz + _y;
         });
     }
 }

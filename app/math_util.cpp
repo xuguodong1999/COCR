@@ -1,5 +1,6 @@
 #include "math_util.hpp"
 #include <cmath>
+
 using namespace xgd;
 
 QPointF MathUtil::getZero() { return QPointF(0, 0); }

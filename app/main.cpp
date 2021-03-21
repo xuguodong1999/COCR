@@ -159,7 +159,9 @@ std::shared_ptr<xgd::JMol> getTestMol() {
     auto co2 = mol->addBond(c3, o2, BondType::DelocalizedBond);
     return mol;
 }
+
 #include "ui/mol2d_widget.hpp"
+
 void testMol2D_UI() {
     auto mol = getTestMol();
     auto widget = new Mol2DWidget(nullptr, mol);
@@ -167,16 +169,19 @@ void testMol2D_UI() {
     widget->show();
     widget->syncMolToScene();
 }
+
 #include "ui/mol3d_widget.hpp"
+
 void testMol3D_UI() {
-    auto mol=std::make_shared<xgd::JMolAdapter>();
-    mol->readAsSMI("CCC");
-//    auto mol = getTestMol();
+//    auto mol = std::make_shared<xgd::JMolAdapter>();
+//    mol->readAsSMI("CCC");
+    auto mol = getTestMol();
     auto widget = new Mol3DWidget(nullptr, mol);
     widget->resize(960, 640);
     widget->show();
     widget->syncMolToScene();
 }
+
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
