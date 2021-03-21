@@ -68,13 +68,13 @@ size_t JBond::toId() const {
 }
 
 static std::unordered_map<BondType, ColorName> colorMap = {
-        {BondType::SingleBond,      ColorName::rgbDarkBlue},
-        {BondType::DoubleBond,      ColorName::rgbDarkCyan},
-        {BondType::TripleBond,      ColorName::rgbLightSkyBlue},
+        {BondType::SingleBond,      ColorName::rgbLightGoldenrod1},
+        {BondType::DoubleBond,      ColorName::rgbDarkGoldenrod1},
+        {BondType::TripleBond,      ColorName::rgbDarkMagenta},
         {BondType::DelocalizedBond, ColorName::rgbYellow},
-        {BondType::ImplicitBond,    ColorName::rgbLightBlue1},
-        {BondType::UpBond,          ColorName::rgbLightBlue2},
-        {BondType::DownBond,        ColorName::rgbLightBlue3}
+        {BondType::ImplicitBond,    ColorName::rgbLightGoldenrod2},
+        {BondType::UpBond,          ColorName::rgbLightGoldenrod3},
+        {BondType::DownBond,        ColorName::rgbLightGoldenrod4}
 };
 
 QColor xgd::getColor(const BondType &_bondType) {

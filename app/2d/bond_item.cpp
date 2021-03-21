@@ -17,8 +17,8 @@ void BondItem::setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_typ
     mFrom = _from;
     mTo = _to;
     mType = _type;
-    connect(mFrom, &AtomItem::mouse_move, this, &BondItem::updateBond);
-    connect(mTo, &AtomItem::mouse_move, this, &BondItem::updateBond);
+    connect(mFrom, &AtomItem::sig_mouse_move, this, &BondItem::updateBond);
+    connect(mTo, &AtomItem::sig_mouse_move, this, &BondItem::updateBond);
     updateBond();
 }
 

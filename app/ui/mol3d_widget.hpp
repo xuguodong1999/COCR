@@ -10,10 +10,13 @@ class Mol3DBuilder;
 namespace Qt3DCore {
     class QEntity;
 }
+class WaitHintWidget;
+
 class Mol3DWidget : public QWidget {
 Q_OBJECT
     std::shared_ptr<xgd::JMol> mol;
     Mol3DWindow *window;
+    WaitHintWidget *hintWidget;
     Qt3DCore::QEntity *root;
     Mol3DBuilder *builder;
 public:

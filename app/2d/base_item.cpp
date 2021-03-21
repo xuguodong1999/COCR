@@ -11,7 +11,7 @@ void BaseItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
 
 void BaseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
     QGraphicsItem::mouseMoveEvent(e);
-    emit mouse_move(e->scenePos());
+    emit sig_mouse_move(e->scenePos());
 }
 
 void BaseItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *e) {

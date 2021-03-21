@@ -27,7 +27,7 @@ set(TS_FILES ../resources/${PROJECT_NAME}_zh_CN.ts)
 qt5_create_translation(QM_FILES ../app ${TS_FILES})
 
 qt5_add_big_resources(BIG_RES_FILES ../resources/big_res.qrc)
-set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc)
+set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc ../resources/app.qrc)
 
 include_directories(../openbabel/include ../coordgenlibs/include ../ncnn/include ./)
 

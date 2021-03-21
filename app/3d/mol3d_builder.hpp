@@ -37,9 +37,9 @@ public:
 
 signals:
 
-    void on_mol_build_done();
+    void sig_mol_build_done();
 
-    void on_mol_prepare_done();
+    void sig_mol_prepare_done();
 
 public slots:
 

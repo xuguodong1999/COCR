@@ -89,7 +89,7 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
     if (_random) {
         srand(time(0));
     } else {
-        srand(633);
+        srand(0);
     }
     size_t idx = (_random ? (rand() % fileList.size()) : 0);
     while (idx < fileList.size()) {
@@ -173,14 +173,18 @@ void testMol2D_UI() {
 #include "ui/mol3d_widget.hpp"
 
 void testMol3D_UI() {
-//    auto mol = std::make_shared<xgd::JMolAdapter>();
-//    mol->readAsSMI("CCC");
-    auto mol = getTestMol();
+    auto mol = std::make_shared<xgd::JMolAdapter>();
+//    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
+    mol->readAsSMI("CCC");
+//    auto mol = getTestMol();
     auto widget = new Mol3DWidget(nullptr, mol);
-    widget->resize(960, 640);
+    widget->resize(1080, 720);
     widget->show();
     widget->syncMolToScene();
 }
+
+#include "ui/waithint_widget.h"
+#include <QHBoxLayout>
 
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -193,8 +197,14 @@ int main(int argc, char *argv[]) {
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
 //        loopHwDemo();
-        testMol2D_UI();
-//        testMol3D_UI();
+//        testMol2D_UI();
+        testMol3D_UI();
+
+//        auto w=new QWidget();
+//        w->resize(640,320);
+//        auto wait=new WaitHintWidget(w);
+//        w->show();
+//        wait->startWaitHint();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;

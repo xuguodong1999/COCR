@@ -1,6 +1,7 @@
 #include "jmol.hpp"
-#include <iostream>
 #include <QDebug>
+#include <cmath>
+#include <iostream>
 
 using namespace xgd;
 
@@ -22,6 +23,7 @@ std::shared_ptr<JResidue> xgd::JMol::getResidue(const size_t &_rid) {
 std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_element, const float &_x, const float &_y) {
     auto atom = std::make_shared<JAtom>(atomVec.size(), _element, _x, _y);
     atomVec.push_back(atom);
+    ++atomNum;
     return atom;
 }
 
@@ -36,6 +38,7 @@ std::shared_ptr<JAtom> JMol::addAtom(
 std::shared_ptr<JBond> JMol::addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type) {
     auto bond = std::make_shared<JBond>(bondVec.size(), _a1, _a2, _type);
     bondVec.push_back(bond);
+    ++bondNum;
     return bond;
 }
 
@@ -65,6 +68,7 @@ std::shared_ptr<JAtom> JMol::removeAtom(const size_t &_aid) {
     if (_aid >= atomVec.size())return nullptr;
     auto atom = atomVec[_aid];
     atomVec[_aid] = nullptr;
+    --atomNum;
     return atom;
 }
 
@@ -72,6 +76,7 @@ std::shared_ptr<JBond> JMol::removeBond(const size_t &_bid) {
     if (_bid >= bondVec.size())return nullptr;
     auto bond = bondVec[_bid];
     bondVec[_bid] = nullptr;
+    --bondNum;
     return bond;
 }
 
@@ -90,7 +95,7 @@ size_t JMol::getId() {
     return id;
 }
 
-JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false) {
+JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false), atomNum(0), bondNum(0) {
 
 }
 
@@ -109,6 +114,7 @@ void JMol::loopBondVec(std::function<void(JBond &)> _func) {
 std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
     auto atom = std::make_shared<JAtom>(atomVec.size(), static_cast<ElementType>(_atomicNumber));
     atomVec.push_back(atom);
+    ++atomNum;
     return atom;
 }
 
@@ -195,5 +201,28 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
             _atom.zz = (_atom.zz - dz) * kz + _y;
         });
     }
+}
+
+float JMol::getAvgBondLength() {
+    if (!bondNum) { return 0; }
+    if (!is3DInfoLatest) {
+        generate3D();
+    }
+    float avgBondLength = 0;
+    loopBondVec([&](JBond &bond) {
+        auto from = bond.getFrom(), to = bond.getTo();
+        avgBondLength += std::sqrt(std::pow(from->xx - to->xx, 2) +
+                                   std::pow(from->yy - to->yy, 2) +
+                                   std::pow(from->zz - to->zz, 2));
+    });
+    return avgBondLength / bondNum;
+}
+
+size_t JMol::getBondNum() const {
+    return bondNum;
+}
+
+size_t JMol::getAtomNum() const {
+    return atomNum;
 }
 

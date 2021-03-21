@@ -27,7 +27,7 @@ public:
 
     void setActivatedRadius(const float &_activatedRadius);
 
-    explicit Mol3DWindow(Qt3DCore::QEntity *_rootEntity, QScreen *_screen = nullptr);
+    explicit Mol3DWindow(Qt3DCore::QEntity *_root, QScreen *_screen = nullptr);
 
     ~Mol3DWindow() = default;
 

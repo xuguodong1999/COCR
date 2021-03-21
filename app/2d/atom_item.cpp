@@ -4,7 +4,7 @@
 AtomItem::AtomItem(QGraphicsItem *parent) : BaseItem(parent) {
     mTextItem = new QGraphicsTextItem(this);
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-    connect(this, &BaseItem::mouse_move, [&](const QPointF &) {
+    connect(this, &BaseItem::sig_mouse_move, [&](const QPointF &) {
         auto r = boundingRect();
         auto p = pos();
         mCenter = {p.x() + r.width() / 2, p.y() + r.height() / 2};

@@ -17,7 +17,7 @@ public:
 
 signals:
 
-    void mouse_move(const QPointF &);
+    void sig_mouse_move(const QPointF &);
 };
 
 #endif//_BASE_ITEM_HPP_

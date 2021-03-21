@@ -12,7 +12,7 @@
 namespace xgd {
     class JMol {
     protected:
-        size_t id;
+        size_t id, bondNum, atomNum;
         std::vector<std::shared_ptr<JAtom>> atomVec;
         std::vector<std::shared_ptr<JBond>> bondVec;
         std::vector<std::shared_ptr<JResidue>> residueVec;
@@ -26,6 +26,12 @@ namespace xgd {
 
         void norm3D(const float &_xx, const float &_yy, const float &_zz,
                     const float &_x = 0, const float &_y = 0, const float &_z = 0, bool keepRatio = true);
+
+        size_t getBondNum() const;
+
+        size_t getAtomNum() const;
+
+        float getAvgBondLength();
 
         JMol();
 

@@ -7,9 +7,13 @@
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DExtras/QSphereMesh>
 #include <Qt3DExtras/QPhongMaterial>
-
+#include <Qt3DInput/QMouseHandler>
+#include <Qt3DInput/QMouseDevice>
+#include <Qt3DRender/QObjectPicker>
+#include <Qt3DRender/QPickEvent>
 #include <QDebug>
 #include <cmath>
+
 using xgd::MathUtil;
 using std::fabs;
 
@@ -21,21 +25,22 @@ std::unordered_map<decltype(MultiCylinderEntity::cylinders.size()), std::vector<
 
 MultiCylinderEntity::MultiCylinderEntity(Qt3DCore::QEntity *_root, int _num) : BaseEntity(_root) {
     for (int i = 0; i < _num; i++) {
-        cylinders.emplace_back(entity);
+        cylinders.push_back(std::make_shared<CylinderEntity>(entity));
     }
     setDistance(1);
 }
 
 void MultiCylinderEntity::setColor(const QColor &_color) {
     for (auto &cylinder:cylinders) {
-        cylinder.setColor(_color);
+        cylinder->setColor(_color);
     }
 }
 
 void MultiCylinderEntity::setRindsAndSlices(const int &_rings, const int &_slices) {
     for (auto &cylinder:cylinders) {
-        cylinder.setRindsAndSlices(_rings, _slices);
+        cylinder->setRindsAndSlices(_rings, _slices);
     }
+    connect(mMouseHandler, &Qt3DInput::QMouseHandler::clicked, this, &MultiCylinderEntity::onEntityClicked);
 }
 
 void MultiCylinderEntity::setDistance(const float &_distance) {
@@ -46,7 +51,7 @@ void MultiCylinderEntity::setDistance(const float &_distance) {
     auto &translations = it->second;
     if (translations.size() != cylinders.size()) { return; }
     for (size_t i = 0; i < cylinders.size(); i++) {
-        cylinders[i].setTranslation(_distance * translations[i]);
+        cylinders[i]->setTranslation(_distance * translations[i]);
     }
 }
 
@@ -78,7 +83,7 @@ void MultiCylinderEntity::setDirection(const QVector3D &_from, const QVector3D &
     setTranslation((_from + _to) / 2.0);
     float length = _from.distanceToPoint(_to);
     for (auto &cylinder:cylinders) {
-        cylinder.setLength(length);
+        cylinder->setLength(length);
     }
 }
 
@@ -87,10 +92,22 @@ void MultiCylinderEntity::setTranslation(const QVector3D &_trans) {
     BaseEntity::setTranslation(_trans);
 }
 
+void MultiCylinderEntity::setRadius(const float &_radius) {
+    for (auto &cylinder:cylinders) {
+        cylinder->setRadius(_radius);
+    }
+}
 
-CylinderEntity::CylinderEntity(Qt3DCore::QEntity *_root) : BaseSingleEntity(_root) {
-    cylinder = new Qt3DExtras::QCylinderMesh();
+void MultiCylinderEntity::onEntityClicked() {
+    qDebug() << "bond multi cylinder " << id << " clicked";
+    emit sig_bond_picked(id);
+}
+
+
+CylinderEntity::CylinderEntity(Qt3DCore::QEntity *_root) :
+        BaseSingleEntity(_root), cylinder(new Qt3DExtras::QCylinderMesh()) {
     entity->addComponent(cylinder);
+    connect(mMouseHandler, &Qt3DInput::QMouseHandler::clicked, this, &CylinderEntity::onEntityClicked);
 }
 
 void CylinderEntity::setDirection(const QVector3D &_from, const QVector3D &_to) {
@@ -114,10 +131,20 @@ void CylinderEntity::setRadius(const float &_radius) {
     cylinder->setRadius(_radius);
 }
 
+void CylinderEntity::onEntityClicked() {
+    qDebug() << "bond cylinder " << id << " clicked";
+    emit sig_bond_picked(id);
+}
 
-SphereEntity::SphereEntity(Qt3DCore::QEntity *_root) : BaseSingleEntity(_root) {
-    sphere = new Qt3DExtras::QSphereMesh();
+
+SphereEntity::SphereEntity(Qt3DCore::QEntity *_root) :
+        BaseSingleEntity(_root) {
+    sphere = new Qt3DExtras::QSphereMesh(entity);
     entity->addComponent(sphere);
+    connect(mMouseHandler, &Qt3DInput::QMouseHandler::clicked, this, &SphereEntity::onEntityClicked);
+//    connect(mPicker, &Qt3DRender::QObjectPicker::clicked, [&](Qt3DRender::QPickEvent*e){
+//        qDebug()<<"fuck";
+//    });
 }
 
 void SphereEntity::setRadius(const float &_radius) {
@@ -133,8 +160,13 @@ void SphereEntity::setColor(const QColor &_color) {
     material->setDiffuse(_color);
 }
 
-BaseSingleEntity::BaseSingleEntity(Qt3DCore::QEntity *_root) : BaseEntity(_root) {
-    material = new Qt3DExtras::QPhongMaterial();
+void SphereEntity::onEntityClicked() {
+    qDebug() << "atom sphere " << id << " clicked";
+    emit sig_atom_picked(id);
+}
+
+BaseSingleEntity::BaseSingleEntity(Qt3DCore::QEntity *_root) :
+        BaseEntity(_root), material(new Qt3DExtras::QPhongMaterial()) {
     entity->addComponent(material);
 }
 
@@ -142,10 +174,22 @@ void BaseSingleEntity::setColor(const QColor &_color) {
     material->setDiffuse(_color);
 }
 
-BaseEntity::BaseEntity(Qt3DCore::QEntity *_root) : root(_root) {
+BaseEntity::BaseEntity(Qt3DCore::QEntity *_root) :
+        root(_root),
+        mMouseDevice(new Qt3DInput::QMouseDevice()),
+        mMouseHandler(new Qt3DInput::QMouseHandler()) {
+    mMouseHandler->setSourceDevice(mMouseDevice);
+
     entity = new Qt3DCore::QEntity(root);
-    transform = new Qt3DCore::QTransform();
+    transform = new Qt3DCore::QTransform(root);
+
+    mPicker = new Qt3DRender::QObjectPicker(entity);
+    mPicker->setHoverEnabled(false);
+    mPicker->setDragEnabled(false);
+
     entity->addComponent(transform);
+    entity->addComponent(mPicker);
+//    entity->addComponent(mMouseHandler);
 }
 
 void BaseEntity::setScale(const float &_scale) {
@@ -154,4 +198,8 @@ void BaseEntity::setScale(const float &_scale) {
 
 void BaseEntity::setTranslation(const QVector3D &_trans) {
     transform->setTranslation(_trans);
+}
+
+void BaseEntity::setId(const size_t &_id) {
+    id = _id;
 }
