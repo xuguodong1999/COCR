@@ -49,7 +49,7 @@ void Mol3DBuilder::build() {
         entity->setId(atom.getId());
         entity->setTranslation(getQVector3D(atom));
         entity->setColor(xgd::getColor(atom.getType()));
-        entity->setRadius(avgBondLength / 4);
+        entity->setRadius(atom.getRadius() / atom.getDefaultDadius() * avgBondLength / 3);
         entity->setScale(1);
         entity->setRindsAndSlices(100, 100);
     });
@@ -73,78 +73,97 @@ void Mol3DBuilder::build() {
         }
         size_t from = bond.getFrom()->getId(), to = bond.getTo()->getId();
         std::vector<QVector3D> poses;
-        std::unordered_set<size_t> aids;
-        auto update_pos = [&](const size_t &aid) {
+        std::unordered_set<size_t> aids = {from, to};
+        auto collect_neb_pos = [&](const size_t &aid) {
             auto it = neighborMap.find(aid);
-            if (it != neighborMap.end()) {
+            if (it == neighborMap.end()) { return; }
+            for (auto &neb_id:it->second) {
+                auto nebIt = aids.find(neb_id);
+                if (aids.end() != nebIt) { continue; }
+                aids.insert(neb_id);
+                auto atom = mol->getAtom(neb_id);
+                poses.push_back(getQVector3D(atom));
+            }
+        };
+        collect_neb_pos(from);
+        collect_neb_pos(to);
+        // 对于三键，存在直连原子不足的问题，找邻居的邻居
+        if (poses.size() < 3) {
+            auto collect_neb_2_pos = [&](const size_t &aid) {
+                auto it = neighborMap.find(aid);
+                if (it == neighborMap.end()) { return; }
                 for (auto &neb_id:it->second) {
-                    auto nebIt = aids.find(neb_id);
-                    if (aids.end() == nebIt) {
-                        aids.insert(neb_id);
-                        auto atom = mol->getAtom(neb_id);
+                    auto it2 = neighborMap.find(neb_id);
+                    if (it2 == neighborMap.end()) { continue; }
+                    for (auto &neb_2_id:it2->second) {
+                        auto nebIt = aids.find(neb_2_id);
+                        if (aids.end() != nebIt) { continue; }
+                        aids.insert(neb_2_id);
+                        auto atom = mol->getAtom(neb_2_id);
                         poses.push_back(getQVector3D(atom));
                     }
                 }
-            }
-        };
-        update_pos(from);
-        update_pos(to);
+            };
+            collect_neb_2_pos(from);
+            collect_neb_2_pos(to);
+        }
         if (poses.size() >= 3) {
             normVecMap[bond.getId()] = QVector3D::crossProduct(poses[0] - poses[1], poses[1] - poses[2]);
+            qDebug() << "allow norm";
         }
     });
     float bondRadius = avgBondLength / 40;
-//    mol->loopBondVec([&](JBond &bond) {
-//        auto fromAtom = bond.getFrom(), toAtom = bond.getTo();
-//        QVector3D from = getQVector3D(fromAtom), to = getQVector3D(toAtom);
-//        std::shared_ptr<BaseEntity> baseEntity;
-//        switch (bond.getType()) {
-//            case BondType::SingleBond:
-//            case BondType::DelocalizedBond:
-//            case BondType::DownBond:
-//            case BondType::UpBond:
-//            case BondType::ImplicitBond: {
-//                auto entity = std::make_shared<CylinderEntity>(root);
-//                entity->setDirection(from, to);
-//                entity->setRadius(bondRadius);
-//                baseEntity = entity;
-//                break;
-//            }
-//            case BondType::DoubleBond: {
-//                auto entity = std::make_shared<MultiCylinderEntity>(root, 2);
-//                std::optional<QVector3D> norm = std::nullopt;
-//                auto it = normVecMap.find(bond.getId());
-//                if (it != normVecMap.end()) {
-//                    norm = it->second;
-//                }
-//                entity->setDirection(from, to, norm);
-//                entity->setDistance(bondRadius*2);
-//                entity->setRadius(bondRadius);
-//                baseEntity = entity;
-//                break;
-//            }
-//            case BondType::TripleBond: {
-//                auto entity = std::make_shared<MultiCylinderEntity>(root, 3);
-//                std::optional<QVector3D> norm = std::nullopt;
-//                auto it = normVecMap.find(bond.getId());
-//                if (it != normVecMap.end()) {
-//                    norm = it->second;
-//                }
-//                entity->setDirection(from, to, norm);
-//                entity->setDistance(bondRadius*3);
-//                entity->setRadius(bondRadius);
-//                baseEntity = entity;
-//                break;
-//            }
-//            default: {
-//                exit(-1);
-//            }
-//        }
-//        baseEntity->setRindsAndSlices(100, 100);
-//        baseEntity->setScale(1);
-//        baseEntity->setColor(getColor(bond.getType()));
-//        baseEntity->setId(bond.getId());
-//        bonds[bond.getId()] = baseEntity;
-//    });
+    mol->loopBondVec([&](JBond &bond) {
+        auto fromAtom = bond.getFrom(), toAtom = bond.getTo();
+        QVector3D from = getQVector3D(fromAtom), to = getQVector3D(toAtom);
+        std::shared_ptr<BaseEntity> baseEntity;
+        switch (bond.getType()) {
+            case BondType::SingleBond:
+            case BondType::DelocalizedBond:
+            case BondType::DownBond:
+            case BondType::UpBond:
+            case BondType::ImplicitBond: {
+                auto entity = std::make_shared<CylinderEntity>(root);
+                entity->setDirection(from, to);
+                entity->setRadius(bondRadius);
+                baseEntity = entity;
+                break;
+            }
+            case BondType::DoubleBond: {
+                auto entity = std::make_shared<MultiCylinderEntity>(root, 2);
+                std::optional<QVector3D> norm = std::nullopt;
+                auto it = normVecMap.find(bond.getId());
+                if (it != normVecMap.end()) {
+                    norm = it->second;
+                }
+                entity->setDirection(from, to, norm);
+                entity->setDistance(bondRadius * 2);
+                entity->setRadius(bondRadius);
+                baseEntity = entity;
+                break;
+            }
+            case BondType::TripleBond: {
+                auto entity = std::make_shared<MultiCylinderEntity>(root, 3);
+                std::optional<QVector3D> norm = std::nullopt;
+                auto it = normVecMap.find(bond.getId());
+                if (it != normVecMap.end()) {
+                    norm = it->second;
+                }
+                entity->setDirection(from, to, norm);
+                entity->setDistance(bondRadius * 3);
+                entity->setRadius(bondRadius);
+                baseEntity = entity;
+                break;
+            }
+            default: {
+                exit(-1);
+            }
+        }
+        baseEntity->setRindsAndSlices(100, 100);
+        baseEntity->setScale(1);
+        baseEntity->setColor(getColor(bond.getType()));
+        baseEntity->setId(bond.getId());
+        bonds[bond.getId()] = baseEntity;
+    });
     emit sig_mol_build_done();
 }

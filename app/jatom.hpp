@@ -23,13 +23,19 @@ namespace xgd {
     };
 
     extern std::vector<std::string> ELEMENT_NAME_LIST;
+    extern std::vector<float> ELEMENT_ELECTRON_NEG_LIST;
+    extern std::vector<float> ELEMENT_MASS_LIST;
+    extern std::vector<float> ELEMENT_RADIUS_LIST;
     extern std::unordered_map<std::string, ElementType> STR_ELEMENT_SET;
 
     class JAtom {
         size_t id;
         ElementType type;
         int charge;
+        inline static const float sDefaultRadius = 100;
     public:
+        static float getDefaultDadius();
+
         float x, y, xx, yy, zz;
 
         JAtom(const size_t &_id, const ElementType &_element, const float &_x = 0, const float &_y = 0);
@@ -47,6 +53,12 @@ namespace xgd {
         void set3D(const float &_x, const float &_y, const float &_z);
 
         int getCharge() const;
+
+        float getMass() const;
+
+        float getElectronNeg() const;
+
+        float getRadius() const;
     };
 
     const std::string &convertElementTypeToName(const ElementType &_type);

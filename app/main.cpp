@@ -175,7 +175,8 @@ void testMol2D_UI() {
 void testMol3D_UI() {
     auto mol = std::make_shared<xgd::JMolAdapter>();
 //    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
-    mol->readAsSMI("CCC");
+    mol->readAsSMI("c1([H])c([H])c([H])c([H])c([H])c1([H])");
+//    mol->readAsSMI("C([H])([H])=C([H])-C#N");
 //    auto mol = getTestMol();
     auto widget = new Mol3DWidget(nullptr, mol);
     widget->resize(1080, 720);
@@ -185,6 +186,7 @@ void testMol3D_UI() {
 
 #include "ui/waithint_widget.h"
 #include <QHBoxLayout>
+
 
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

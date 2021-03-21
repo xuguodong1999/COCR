@@ -97,6 +97,8 @@ namespace xgd {
         virtual bool generate2D() = 0;
 
         virtual bool generate3D() = 0;
+
+
     };
 }
 #endif//_XGD_JMOL_HPP_

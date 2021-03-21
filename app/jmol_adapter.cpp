@@ -149,6 +149,8 @@ bool JMolAdapter::runForcefield() {
     try {
         OpenBabel::OBBuilder builder;
         builder.Build(*obMol);
+//        obMol->CorrectForPH();
+        obMol->AddHydrogens(false,true);
     } catch (...) {
         return false;
     }
@@ -162,9 +164,9 @@ bool JMolAdapter::runForcefield() {
         std::cerr << "runOBForceField: setup force field ret false" << std::endl;
     }
     try {
-        pFF->SteepestDescent(100, 1.0e-4);
-        pFF->WeightedRotorSearch(10, 200);
-        pFF->SteepestDescent(100, 1.0e-6);
+        pFF->SteepestDescent(200, 1.0e-4);
+        pFF->WeightedRotorSearch(20, 200);
+        pFF->SteepestDescent(200, 1.0e-6);
         pFF->UpdateCoordinates(*obMol);
     } catch (...) {
         return false;

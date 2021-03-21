@@ -225,4 +225,3 @@ size_t JMol::getBondNum() const {
 size_t JMol::getAtomNum() const {
     return atomNum;
 }
-

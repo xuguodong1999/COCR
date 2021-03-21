@@ -31,7 +31,7 @@ void Mol3DWidget::syncMolToScene() {
     qDebug() << __FUNCTION__;
     static QVector3D viewSize = window->getViewSize() / 1.5;
     QThreadPool::globalInstance()->start([&]() {
-        QThread::msleep(500);
+//        QThread::msleep(500);
         builder->prepare(mol, viewSize);
     });
     window->hide();
