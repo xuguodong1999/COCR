@@ -6,6 +6,8 @@
 
 class BaseItem : public QObject, public QGraphicsItem {
 Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
+    bool isPressed;
 public:
     BaseItem(QGraphicsItem *parent);
 
@@ -18,6 +20,8 @@ public:
 signals:
 
     void sig_mouse_move(const QPointF &);
+
+    void sig_mouse_click(const QPointF &);
 };
 
 #endif//_BASE_ITEM_HPP_

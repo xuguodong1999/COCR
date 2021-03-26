@@ -3,6 +3,13 @@
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QPointLight>
 #include <Qt3DRender/QRenderSettings>
+#include <Qt3DRender/QRayCaster>
+#include <Qt3DRender/QScreenRayCaster>
+#include <Qt3DRender/QObjectPicker>
+#include <Qt3DRender/QPickEvent>
+#include <Qt3DInput/QMouseHandler>
+#include <Qt3DInput/QMouseDevice>
+
 #include <Qt3DExtras/QForwardRenderer>
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DCore/QTransform>
@@ -17,21 +24,48 @@ using xgd::MathUtil;
 
 Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_root, QScreen *_screen)
         : Qt3DWindow(_screen), isPressed(false) {
+    _root->setObjectName("RootEntity");
     auto lightEntity = new Qt3DCore::QEntity(_root);
     auto light = new Qt3DRender::QPointLight(lightEntity);
     light->setColor(Qt::white);
     light->setIntensity(1);
+    light->setObjectName("Light");
 
     lightTrans = new Qt3DCore::QTransform(lightEntity);
+    lightTrans->setObjectName("LightTrans");
     lightEntity->addComponent(light);
     lightEntity->addComponent(lightTrans);
-
+    lightEntity->setObjectName("LightEntity");
+    // 视场粗略大小
     setActivatedRadius(250);
-    setRootEntity(_root);
+    // 背景颜色
     defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
     // 禁用实时渲染
     renderSettings()->setRenderPolicy(
             Qt3DRender::QRenderSettings::OnDemand);
+    // 按三角面片求交
+    auto settings = renderSettings()->pickingSettings();
+    settings->setFaceOrientationPickingMode(Qt3DRender::QPickingSettings::FrontFace);
+    settings->setPickMethod(Qt3DRender::QPickingSettings::PickMethod::TrianglePicking);
+    settings->setPickResultMode(Qt3DRender::QPickingSettings::NearestPriorityPick);
+//    // 选中功能需要的组件
+//    mScreenRayCaster = new Qt3DRender::QScreenRayCaster(_root);
+//    mMouseHandler = new Qt3DInput::QMouseHandler();
+//    mMouseHandler->setSourceDevice(new Qt3DInput::QMouseDevice(_root));
+//    _root->addComponent(mScreenRayCaster);
+//    _root->addComponent(mMouseHandler);
+//    connect(mMouseHandler, &Qt3DInput::QMouseHandler::clicked, [&](Qt3DInput::QMouseEvent *mouse) {
+//        mScreenRayCaster->trigger({mouse->x(), mouse->y()});
+//        qDebug() << QPoint(mouse->x(), mouse->y()) << mScreenRayCaster->position();
+//    });
+//    connect(mScreenRayCaster, &Qt3DRender::QRayCaster::hitsChanged,
+//            [&](const Qt3DRender::QAbstractRayCaster::Hits &hits) {
+//                qDebug() << "hit"<<hits.length()<<"items";
+//                for (auto &hit:hits) {
+//                    qDebug() << hit.entityId() << hit.entity()->objectName() << hit.worldIntersection();
+//                }
+//            });
+    setRootEntity(_root);
 }
 
 bool Mol3DWindow::event(QEvent *event) {
@@ -129,7 +163,7 @@ void Mol3DWindow::setActivatedRadius(const float &_activatedRadius) {
     activatedRadius = _activatedRadius;
     auto cam = camera();
     cam->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.001f,
-                                          std::numeric_limits<float>::max());
+                                          activatedRadius * 100);
     cam->setPosition(activatedRadius * (MathUtil::getOneZ3() + MathUtil::getOneY3() / 2));
     cam->setUpVector(MathUtil::getOneY3());
     cam->setViewCenter(MathUtil::getZero3());

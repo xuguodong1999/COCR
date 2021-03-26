@@ -22,6 +22,7 @@ namespace xgd {
 
 class Mol3DBuilder : public QObject {
 Q_OBJECT
+
     Qt3DCore::QEntity *root;
     std::shared_ptr<xgd::JMol> mol;
     int sphereRings, sphereSlices, cylinderRings, cylinderSlices;
@@ -44,6 +45,9 @@ signals:
 public slots:
 
     void build();
+
+private:
+    void buildAxis(const float &_x = 0, const float &_y = 0, const float &_z = 0, const float &_l = 100);
 };
 
 #endif//_MOL3D_BUILDER_HPP_

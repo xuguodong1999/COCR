@@ -81,7 +81,7 @@ void loopHwDemo() {
 
 void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = {}) {
     auto ocrManager = makeOCRManager(ROOT_DIR + "../resources/model");
-    QDir dir((ROOT_DIR + "/uspto-validation-updated/CLEF").c_str());
+    QDir dir((ROOT_DIR + "/uspto-validation-updated/images").c_str());
     auto fileList = dir.entryInfoList(QDir::Filter(QDir::Files));
     if (!_badExample.empty()) {
         _random = false;
@@ -96,7 +96,7 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
         auto &file = fileList[idx];
         size_t imgIdx = idx;
         idx = (_random ? (rand() % fileList.size()) : idx + 1);
-        if (file.suffix() != "png") continue;
+        if (file.suffix() != "TIF") continue;
         if (!_badExample.empty() && !_badExample.contains(imgIdx)) continue;
         qDebug() << imgIdx << ":" << file.fileName();
         cv::Mat image = cv::imread(file.absoluteFilePath().toStdString(), cv::IMREAD_GRAYSCALE);
@@ -173,11 +173,11 @@ void testMol2D_UI() {
 #include "ui/mol3d_widget.hpp"
 
 void testMol3D_UI() {
-    auto mol = std::make_shared<xgd::JMolAdapter>();
+//    auto mol = std::make_shared<xgd::JMolAdapter>();
 //    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
 //    mol->readAsSMI("c1([H])c([H])c([H])c([H])c([H])c1([H])");
-    mol->readAsSMI("C([H])([H])=C([H])-C#N");
-//    auto mol = getTestMol();
+//    mol->readAsSMI("C([H])([H])=C([H])-C#N");
+    auto mol = getTestMol();
     auto widget = new Mol3DWidget(nullptr, mol);
     widget->resize(1080, 720);
     widget->show();

@@ -7,11 +7,13 @@
 #include <QDebug>
 #include <QThreadPool>
 
-
 Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol) : QWidget(parent), mol(std::move(_mol)) {
     root = new Qt3DCore::QEntity();
+
     builder = new Mol3DBuilder(this, root);
+
     window = new Mol3DWindow(root);
+
     auto l = new QHBoxLayout();
     auto w = QWidget::createWindowContainer(window);
     l->addWidget(w);

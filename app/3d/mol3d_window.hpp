@@ -4,13 +4,20 @@
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DCore/QTransform>
 
+namespace Qt3DRender {
+    class QScreenRayCaster;
+}
+namespace Qt3DInput {
+    class QMouseHandler;
+}
 class Mol3DWindow : public Qt3DExtras::Qt3DWindow {
 Q_OBJECT
     QPoint lastPos;
     bool isPressed;
     float activatedRadius;
     Qt3DCore::QTransform *lightTrans;// 操纵光源的位置
-
+//    Qt3DRender::QScreenRayCaster *mScreenRayCaster;
+//    Qt3DInput::QMouseHandler *mMouseHandler;
     Q_PROPERTY(float activatedRadius READ getActivatedRadius WRITE setActivatedRadius NOTIFY activatedRadiusChanged)
 Q_SIGNALS:
 

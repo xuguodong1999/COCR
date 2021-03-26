@@ -19,6 +19,8 @@ namespace Qt3DExtras {
     class QSphereMesh;
 
     class QCylinderMesh;
+
+    class QConeMesh;
 }
 
 namespace Qt3DRender {
@@ -28,15 +30,18 @@ namespace Qt3DRender {
 }
 
 enum class EntityType {
-    AtomSphere, BondCylinder
+    AtomSphere, BondCylinder, ConeMesh
 };
 
 class BaseEntity : public Qt3DCore::QEntity {
 Q_OBJECT
+
     Qt3DRender::QObjectPicker *mPicker;
-    size_t id;
+    size_t mId;
     EntityType type;
 public:
+    static const size_t sAxisId = std::numeric_limits<size_t>::max();
+
     // 必须指定父节点，不手动管理 BaseEntity类的生命周期
     explicit BaseEntity(QNode *parent);
 
@@ -62,6 +67,8 @@ protected:
     BaseEntity *entity;
     Qt3DCore::QTransform *transform;
 public:
+    virtual void setObjectName(const QString &_name);
+
     BaseWrapper(Qt3DCore::QEntity *_root);
 
     void setScale(const float &_scale);
@@ -72,7 +79,7 @@ public:
 
     virtual void setColor(const QColor &_color) = 0;
 
-    void setId(const size_t &_id);
+    virtual void setId(const size_t &_id);
 };
 
 class SingleWrapper : public BaseWrapper {
@@ -94,8 +101,22 @@ public:
     void setRadius(const float &_radius);
 
     void setRindsAndSlices(const int &_rings, const int &_slices) override;
+};
 
-    void setColor(const QColor &_color) override;
+class ConeWrapper : public SingleWrapper {
+Q_OBJECT
+    Qt3DExtras::QConeMesh *cone;
+public:
+    ConeWrapper(Qt3DCore::QEntity *_root);
+
+    void setRadius(const float &_radius);
+
+    void setDirection(const QVector3D &_from, const QVector3D &_to);
+
+    void setRindsAndSlices(const int &_rings, const int &_slices) override;
+
+private:
+    void setHeight(const float &_height);
 };
 
 class CylinderWrapper : public SingleWrapper {
@@ -136,9 +157,14 @@ public:
 
     void setRadius(const float &_radius);
 
+    void setObjectName(const QString &_name) override;
+
+    void setId(const size_t &_id) override;
 
 private:
     void setTranslation(const QVector3D &_trans);
+
+    void loopMultiWrappers(std::function<void(CylinderWrapper &)> _func);
 };
 
 #endif//_MOL3D_ENTITY_HPP_

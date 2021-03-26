@@ -35,14 +35,12 @@ void Mol3DBuilder::build() {
     qDebug() << __FUNCTION__;
     using namespace xgd;
     // 坐标系
-//    QVector3D offset(-baseSize / 3, baseSize / 3, 0);
-//    getSingleCylinderEntity(offset + zeroP, offset + axisX * 10, 0.2, Qt::blue);
-//    getSingleCylinderEntity(offset + zeroP, offset + axisY * 10, 0.2, Qt::red);
-//    getSingleCylinderEntity(offset + zeroP, offset + axisZ * 10, 0.2, Qt::green);
+    buildAxis(0, 0, 0, 100);
     float avgBondLength = mol->getAvgBondLength();
     if (avgBondLength < 1)avgBondLength = 20;
     // 添加3D原子球
     mol->loopAtomVec([&](xgd::JAtom &atom) {
+//        return;
         auto wrapper = std::make_shared<SphereWrapper>(root);
         atoms[atom.getId()] = wrapper;
 //        qDebug() << getQVector3D(atom);
@@ -52,7 +50,7 @@ void Mol3DBuilder::build() {
         wrapper->setRadius(atom.getRadius() / atom.getDefaultDadius() * avgBondLength / 3);
         wrapper->setScale(1);
         wrapper->setRindsAndSlices(100, 100);
-        wrapper->setId(atom.getId());
+        wrapper->setObjectName(atom.getName().c_str() + QString(":%0").arg(atom.getId()));
     });
     // 统计共轭键的共面原子，计算用于修正双键的中轴旋转角度
     std::unordered_map<size_t, QVector3D> normVecMap;
@@ -112,8 +110,9 @@ void Mol3DBuilder::build() {
             normVecMap[bond.getId()] = QVector3D::crossProduct(poses[0] - poses[1], poses[1] - poses[2]);
         }
     });
-    float bondRadius = avgBondLength / 40;
+    float bondRadius = avgBondLength / 30;
     mol->loopBondVec([&](JBond &bond) {
+//        return;
         auto fromAtom = bond.getFrom(), toAtom = bond.getTo();
         QVector3D from = getQVector3D(fromAtom), to = getQVector3D(toAtom);
         std::shared_ptr<BaseWrapper> wrapper;
@@ -163,7 +162,39 @@ void Mol3DBuilder::build() {
         wrapper->setScale(1);
         wrapper->setColor(getColor(bond.getType()));
         wrapper->setId(bond.getId());
+        wrapper->setObjectName(QString("bond:%0").arg(bond.getId()));
         bonds[bond.getId()] = wrapper;
     });
     emit sig_mol_build_done();
+}
+
+void Mol3DBuilder::buildAxis(const float &_x, const float &_y, const float &_z, const float &_l) {
+    const float capRadius = std::min(4.f, _l / 10), cylinderRadius = 1;
+    float cylinderLength = std::max(10.f, _l * 0.95f);
+    auto make_axis = [&](const QVector3D &_dir, const QColor &_color, const QString &_name) {
+        auto norm = _dir.normalized();
+        auto axis = std::make_shared<CylinderWrapper>(root);
+        axis->setDirection(MathUtil::getZero3(), norm * cylinderLength);
+        axis->setRadius(cylinderRadius);
+        axis->setColor(_color);
+        axis->setObjectName("axis " + _name);
+        axis->setId(BaseEntity::sAxisId);
+
+        auto axisCap = std::make_shared<ConeWrapper>(root);
+        axisCap->setDirection(norm * cylinderLength, norm * _l);
+        axisCap->setRadius(capRadius);
+        axisCap->setColor(_color);
+        axisCap->setObjectName("cap " + _name);
+        axisCap->setId(BaseEntity::sAxisId);
+    };
+    make_axis(MathUtil::getOneX3(), Qt::blue, "X");
+    make_axis(MathUtil::getOneY3(), Qt::red, "Y");
+    make_axis(MathUtil::getOneZ3(), Qt::green, "Z");
+    auto originSphere = std::make_shared<SphereWrapper>(root);
+    originSphere->setTranslation({_x, _y, _z});
+    originSphere->setRindsAndSlices(100, 100);
+    originSphere->setColor(Qt::white);
+    originSphere->setRadius(capRadius);
+    originSphere->setObjectName("point O");
+    originSphere->setId(BaseEntity::sAxisId);
 }

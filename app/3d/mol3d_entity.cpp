@@ -5,14 +5,18 @@
 #include <Qt3DCore/QTransform>
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DExtras/QSphereMesh>
+#include <Qt3DExtras/QConeMesh>
 #include <Qt3DExtras/QPhongMaterial>
-#include <Qt3DInput/QMouseHandler>
-#include <Qt3DInput/QMouseDevice>
+
 #include <Qt3DRender/QObjectPicker>
 #include <Qt3DRender/QPickEvent>
+//
+//#include <Qt3DInput/QMouseHandler>
+//#include <Qt3DInput/QMouseDevice>
+
 #include <QDebug>
 #include <cmath>
-#include <QPickingSettings>
+//#include <QPickingSettings>
 
 using xgd::MathUtil;
 using std::fabs;
@@ -32,16 +36,11 @@ MultiCylinderWrapper::MultiCylinderWrapper(Qt3DCore::QEntity *_root, int _num) :
 }
 
 void MultiCylinderWrapper::setColor(const QColor &_color) {
-    for (auto &cylinder:cylinders) {
-        cylinder->setColor(_color);
-    }
+    loopMultiWrappers([&](CylinderWrapper &c) { c.setColor(_color); });
 }
 
 void MultiCylinderWrapper::setRindsAndSlices(const int &_rings, const int &_slices) {
-    for (auto &cylinder:cylinders) {
-        cylinder->setRindsAndSlices(_rings, _slices);
-    }
-//    connect(mMouseHandler, &Qt3DInput::QMouseHandler::clicked, this, &MultiCylinderWrapper::onEntityClicked);
+    loopMultiWrappers([&](CylinderWrapper &c) { c.setRindsAndSlices(_rings, _slices); });
 }
 
 void MultiCylinderWrapper::setDistance(const float &_distance) {
@@ -83,9 +82,7 @@ void MultiCylinderWrapper::setDirection(const QVector3D &_from, const QVector3D 
     transform->setRotation(rotation);
     setTranslation((_from + _to) / 2.0);
     float length = _from.distanceToPoint(_to);
-    for (auto &cylinder:cylinders) {
-        cylinder->setLength(length);
-    }
+    loopMultiWrappers([&](CylinderWrapper &c) { c.setLength(length); });
 }
 
 
@@ -94,16 +91,30 @@ void MultiCylinderWrapper::setTranslation(const QVector3D &_trans) {
 }
 
 void MultiCylinderWrapper::setRadius(const float &_radius) {
+    loopMultiWrappers([&](CylinderWrapper &c) { c.setRadius(_radius); });
+}
+
+void MultiCylinderWrapper::setObjectName(const QString &_name) {
+    BaseWrapper::setObjectName(_name);
+    loopMultiWrappers([&](CylinderWrapper &c) { c.setObjectName(_name); });
+}
+
+void MultiCylinderWrapper::setId(const size_t &_id) {
+    BaseWrapper::setId(_id);
+    loopMultiWrappers([&](CylinderWrapper &c) { c.setId(_id); });
+}
+
+void MultiCylinderWrapper::loopMultiWrappers(std::function<void(CylinderWrapper &)> _func) {
     for (auto &cylinder:cylinders) {
-        cylinder->setRadius(_radius);
+        if (!cylinder) { continue; }
+        _func(*cylinder);
     }
 }
 
 CylinderWrapper::CylinderWrapper(Qt3DCore::QEntity *_root) :
-        SingleWrapper(_root), cylinder(new Qt3DExtras::QCylinderMesh()) {
+        SingleWrapper(_root), cylinder(new Qt3DExtras::QCylinderMesh(entity)) {
     entity->addComponent(cylinder);
     entity->setType(EntityType::BondCylinder);
-//    connect(mMouseHandler, &Qt3DInput::QMouseHandler::clicked, this, &CylinderWrapper::onEntityClicked);
 }
 
 void CylinderWrapper::setDirection(const QVector3D &_from, const QVector3D &_to) {
@@ -127,15 +138,36 @@ void CylinderWrapper::setRadius(const float &_radius) {
     cylinder->setRadius(_radius);
 }
 
+ConeWrapper::ConeWrapper(Qt3DCore::QEntity *_root) : SingleWrapper(_root), cone(new Qt3DExtras::QConeMesh()) {
+    entity->addComponent(cone);
+    entity->setType(EntityType::ConeMesh);
+}
+
+void ConeWrapper::setRadius(const float &_radius) {
+    cone->setTopRadius(0);
+    cone->setBottomRadius(_radius);
+}
+
+void ConeWrapper::setHeight(const float &_height) {
+    cone->setLength(_height);
+}
+
+void ConeWrapper::setDirection(const QVector3D &_from, const QVector3D &_to) {
+    transform->setRotation(QQuaternion::rotationTo(MathUtil::getOneY3(), _to - _from));
+    transform->setTranslation((_from + _to) / 2.0);
+    float length = _from.distanceToPoint(_to);
+    setHeight(length);
+}
+
+void ConeWrapper::setRindsAndSlices(const int &_rings, const int &_slices) {
+    cone->setRings(_rings);
+    cone->setSlices(_slices);
+}
+
 SphereWrapper::SphereWrapper(Qt3DCore::QEntity *_root) :
-        SingleWrapper(_root) {
-    sphere = new Qt3DExtras::QSphereMesh(entity);
+        SingleWrapper(_root), sphere(new Qt3DExtras::QSphereMesh()) {
     entity->addComponent(sphere);
     entity->setType(EntityType::AtomSphere);
-//    connect(mMouseHandler, &Qt3DInput::QMouseHandler::clicked, this, &SphereWrapper::onEntityClicked);
-//    connect(mPicker, &Qt3DRender::QObjectPicker::pressed, [&](Qt3DRender::QPickEvent *e) {
-//        qDebug() << "fuck";
-//    });
 }
 
 void SphereWrapper::setRadius(const float &_radius) {
@@ -147,9 +179,6 @@ void SphereWrapper::setRindsAndSlices(const int &_rings, const int &_slices) {
     sphere->setSlices(_slices);
 }
 
-void SphereWrapper::setColor(const QColor &_color) {
-    material->setDiffuse(_color);
-}
 
 SingleWrapper::SingleWrapper(Qt3DCore::QEntity *_root) :
         BaseWrapper(_root), material(new Qt3DExtras::QPhongMaterial()) {
@@ -160,9 +189,8 @@ void SingleWrapper::setColor(const QColor &_color) {
     material->setDiffuse(_color);
 }
 
-BaseWrapper::BaseWrapper(Qt3DCore::QEntity *_root) : root(_root) {
+BaseWrapper::BaseWrapper(Qt3DCore::QEntity *_root) : root(_root), transform(new Qt3DCore::QTransform()) {
     entity = new BaseEntity(root);
-    transform = new Qt3DCore::QTransform(entity);
     entity->addComponent(transform);
 }
 
@@ -178,6 +206,11 @@ void BaseWrapper::setId(const size_t &_id) {
     entity->setId(_id);
 }
 
+void BaseWrapper::setObjectName(const QString &_name) {
+    QObject::setObjectName(_name);
+    entity->setObjectName(_name);
+}
+
 BaseEntity::BaseEntity(Qt3DCore::QNode *parent) : Qt3DCore::QEntity(parent) {
     mPicker = new Qt3DRender::QObjectPicker(this);
     mPicker->setHoverEnabled(false);
@@ -185,23 +218,22 @@ BaseEntity::BaseEntity(Qt3DCore::QNode *parent) : Qt3DCore::QEntity(parent) {
     mPicker->setEnabled(true);
     addComponent(mPicker);
     connect(mPicker, &Qt3DRender::QObjectPicker::clicked, this, &BaseEntity::onPicked);
-
-    Qt3DRender::QPickingSettings *settings = new Qt3DRender::QPickingSettings(mPicker);
-    settings->setFaceOrientationPickingMode(Qt3DRender::QPickingSettings::FrontFace);
-    settings->setPickMethod(Qt3DRender::QPickingSettings::TrianglePicking);
-    settings->setPickResultMode(Qt3DRender::QPickingSettings::NearestPick);
 }
 
 void BaseEntity::onPicked(Qt3DRender::QPickEvent *event) {
+    if (mId == sAxisId) {
+        qDebug() << "axis picked";
+        return;
+    }
     switch (type) {
         case EntityType::AtomSphere: {
-            qDebug() << "atom " << id << " picked";
-            emit sig_atom_picked(id);
+            qDebug() << "atom " << mId << " picked";
+            emit sig_atom_picked(mId);
             break;
         }
         case EntityType::BondCylinder: {
-            qDebug() << "bond " << id << " picked";
-            emit sig_bond_picked(id);
+            qDebug() << "bond " << mId << " picked";
+            emit sig_bond_picked(mId);
             break;
         }
         default:
@@ -214,5 +246,5 @@ void BaseEntity::setType(const EntityType &_type) {
 }
 
 void BaseEntity::setId(const size_t &_id) {
-    id = _id;
+    mId = _id;
 }
