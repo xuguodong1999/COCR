@@ -8,6 +8,7 @@
 
 #include <optional>
 #include <memory>
+#include <unordered_map>
 
 namespace Qt3DCore {
     class QTransform;
@@ -40,7 +41,7 @@ Q_OBJECT
     size_t mId;
     EntityType type;
 public:
-    static const size_t sAxisId = std::numeric_limits<size_t>::max();
+    inline static const size_t sAxisId = std::numeric_limits<size_t>::max();
 
     // 必须指定父节点，不手动管理 BaseEntity类的生命周期
     explicit BaseEntity(QNode *parent);

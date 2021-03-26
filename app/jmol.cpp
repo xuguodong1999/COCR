@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <cmath>
 #include <iostream>
+#include <exception>
 
 using namespace xgd;
 

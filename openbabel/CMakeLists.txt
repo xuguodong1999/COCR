@@ -2,8 +2,10 @@ project(openbabel)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+if(NOT ANDROID)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+endif(NOT ANDROID)
 
 # rapidjson, eigen3 and openbabel
 set(OPENBABEL_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
