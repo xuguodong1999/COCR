@@ -173,11 +173,11 @@ void testMol2D_UI() {
 #include "ui/mol3d_widget.hpp"
 
 void testMol3D_UI() {
-//    auto mol = std::make_shared<xgd::JMolAdapter>();
+    auto mol = std::make_shared<xgd::JMolAdapter>();
 //    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
 //    mol->readAsSMI("c1([H])c([H])c([H])c([H])c([H])c1([H])");
-//    mol->readAsSMI("C([H])([H])=C([H])-C#N");
-    auto mol = getTestMol();
+    mol->readAsSMI("C([H])([H])=C([H])-C#N");
+//    auto mol = getTestMol();
     auto widget = new Mol3DWidget(nullptr, mol);
     widget->resize(1080, 720);
     widget->show();

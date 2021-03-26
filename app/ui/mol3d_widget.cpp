@@ -5,6 +5,7 @@
 #include <Qt3DCore/QEntity>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QGesture>
 #include <QThreadPool>
 
 Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol) : QWidget(parent), mol(std::move(_mol)) {
@@ -27,6 +28,7 @@ Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol) : QWi
         hintWidget->hide();
         window->show();
     });
+
 }
 
 void Mol3DWidget::syncMolToScene() {

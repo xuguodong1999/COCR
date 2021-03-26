@@ -140,19 +140,73 @@ void Mol3DWindow::wheelEvent(QWheelEvent *event) {
         k = 0.2;
     }
     if (event->angleDelta().y() > 0) {
-        auto cam = camera();
-        cam->setPosition(cam->position() + k * (cam->viewCenter() - cam->position()));
-        lightTrans->setTranslation(cam->position());
+        zoomOut(k);
     } else {
-        auto cam = camera();
-        cam->setPosition(cam->position() - k * (cam->viewCenter() - cam->position()));
-        lightTrans->setTranslation(cam->position());
+        zoomIn(k);
     }
     Qt3DWindow::wheelEvent(event);
 }
 
+/**
+ * https://www.it610.com/article/1281929365570994176.htm
+ * FIXME: 使用 QGesture 实现
+ */
+static Qt::GestureType dealMultiTouch(QPointF p1, QPointF p2, QPointF p3, QPointF p4) {
+    if (p1 == p2 || p3 == p4) {
+        return Qt::GestureType::CustomGesture;
+    } else {
+        double delta1 = QLineF(p1, p2).length();
+        double delta2 = QLineF(p3, p4).length();
+        double delta = delta1;
+        if (delta1 < delta2) {
+            delta = delta1;
+        } else {
+            delta = delta2;
+        }
+        double x1 = p2.x() - p1.x();
+        double y1 = p2.y() - p1.y();
+        double x2 = p4.x() - p3.x();
+        double y2 = p4.y() - p3.y();
+        double aaa = x1 * x2 + y1 * y2;
+        double bbb = sqrt((pow(x1, 2) + pow(y1, 2)) * (pow(x2, 2) + pow(y2, 2)));
+        double cosA = aaa / bbb;
+        if (cosA < 0) {
+            //通过向量算出两者之间的夹角的余弦值，因为范围是（0，180，所以大于90度，余弦值必定小于0
+            double endL = QLineF(p2, p4).length();
+            double startL = QLineF(p1, p3).length();
+            //然后来判断是放大还是缩小操作算出两指起始点以及终止点之间的距离，如果起始点间的距离大于
+            //终止点间的距离则是缩小，反正放大
+            if (endL > startL) {
+                return Qt::GestureType::PinchGesture;
+            } else {
+                return Qt::GestureType::PanGesture;
+            }
+        }
+    }
+    return Qt::GestureType::CustomGesture;
+}
+
 void Mol3DWindow::touchEvent(QTouchEvent *e) {
-    Qt3DWindow::touchEvent(e);
+    QList touchPoints = e->touchPoints();
+    if (touchPoints.count() == 2) {
+        isPressed = false;
+        QPointF p1 = touchPoints.at(0).startPos();
+        QPointF p2 = touchPoints.at(0).lastPos();
+        QPointF p3 = touchPoints.at(1).startPos();
+        QPointF p4 = touchPoints.at(1).lastPos();
+        switch (dealMultiTouch(p1, p2, p3, p4)) {
+            case Qt::GestureType::PinchGesture:
+                zoomIn(0.025);
+                break;
+            case Qt::GestureType::PanGesture:
+                zoomOut(0.025);
+                break;
+            default:
+                break;
+        }
+    } else {
+        Qt3DWindow::touchEvent(e);
+    }
 }
 
 float Mol3DWindow::getActivatedRadius() const {
@@ -174,5 +228,27 @@ void Mol3DWindow::setActivatedRadius(const float &_activatedRadius) {
 QVector3D Mol3DWindow::getViewSize() const {
     float w = getActivatedRadius();
     return {w, w, w};
+}
+
+void Mol3DWindow::mouseDoubleClickEvent(QMouseEvent *event) {
+    QWindow::mouseDoubleClickEvent(event);
+    float x = event->x();
+    if (x < width() / 2) {
+        zoomIn(0.25);
+    } else {
+        zoomOut(0.25);
+    }
+}
+
+void Mol3DWindow::zoomIn(const float &_k) {
+    zoomOut(-_k);
+}
+
+void Mol3DWindow::zoomOut(const float &_k) {
+    auto cam = camera();
+    auto pos = cam->position() + _k * (cam->viewCenter() - cam->position());
+    if (pos.length() < 10)return;
+    cam->setPosition(pos);
+    lightTrans->setTranslation(cam->position());
 }
 

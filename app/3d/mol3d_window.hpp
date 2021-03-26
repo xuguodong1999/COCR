@@ -25,7 +25,7 @@ Q_SIGNALS:
 
     void forwardOrBackwardPressed(bool isForward);
 
-    void activatedRadiusChanged(const float &newAadius);
+    void activatedRadiusChanged(const float &newRadius);
 
 public:
     QVector3D getViewSize() const;
@@ -49,11 +49,19 @@ protected:
 
     void mouseMoveEvent(QMouseEvent *event) override;
 
+    void mouseDoubleClickEvent(QMouseEvent *) override;
+
     void focusOutEvent(QFocusEvent *event) override;
 
     void keyReleaseEvent(QKeyEvent *event) override;
 
     void wheelEvent(QWheelEvent *event) override;
+
+private:
+    void zoomIn(const float &_k = 0.05);
+
+    void zoomOut(const float &_k = 0.05);
+
 };
 
 #endif//_XGD_MOL3D_WINDOW_HPP_
