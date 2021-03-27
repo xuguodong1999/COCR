@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(jokejoker-project)
+project(leafxy)
 
 # qt-android require app has same name with cmake-top-project
 set(APP_NAME ${PROJECT_NAME})

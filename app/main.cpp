@@ -171,6 +171,7 @@ void testMol2D_UI() {
 }
 
 #include "ui/mol3d_widget.hpp"
+#include <QMainWindow>
 
 void testMol3D_UI() {
     auto mol = std::make_shared<xgd::JMolAdapter>();
@@ -178,10 +179,14 @@ void testMol3D_UI() {
 //    mol->readAsSMI("c1([H])c([H])c([H])c([H])c([H])c1([H])");
     mol->readAsSMI("C([H])([H])=C([H])-C#N");
 //    auto mol = getTestMol();
-    auto widget = new Mol3DWidget(nullptr, mol);
-    widget->resize(1080, 720);
-    widget->show();
-    widget->syncMolToScene();
+//    auto mw = new QMainWindow();
+//    mw->setAttribute(Qt::WA_AcceptTouchEvents);
+//    mw->grabGesture(Qt::PinchGesture);
+    auto w = new Mol3DWidget(nullptr, mol);
+//    mw->setCentralWidget(w);
+    w->resize(1080, 720);
+    w->show();
+    w->syncMolToScene();
 }
 
 #include "ui/waithint_widget.h"
@@ -192,7 +197,9 @@ int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+//    qApp->setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents);
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_NativeWindows);
     try {
 //        testJMol();
 //        loopUsptoBenchMark(false, {});
@@ -201,7 +208,7 @@ int main(int argc, char *argv[]) {
 //        loopHwDemo();
 //        testMol2D_UI();
         testMol3D_UI();
-
+//        (new GestureWidget)->show();
 //        auto w=new QWidget();
 //        w->resize(640,320);
 //        auto wait=new WaitHintWidget(w);

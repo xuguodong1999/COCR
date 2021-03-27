@@ -23,15 +23,21 @@ namespace xgd {
 class Mol3DBuilder : public QObject {
 Q_OBJECT
 
-    Qt3DCore::QEntity *root;
+    Qt3DCore::QEntity *root, *molRoot;
     std::shared_ptr<xgd::JMol> mol;
+    Qt3DCore::QTransform *molRootTrans;
+private:
     int sphereRings, sphereSlices, cylinderRings, cylinderSlices;
     float doubleBondSpaceScale, tripleBondSpaceScale;
 
     std::unordered_map<size_t, std::shared_ptr<SphereWrapper>> atoms;
     std::unordered_map<size_t, std::shared_ptr<BaseWrapper>> bonds;
 public:
-    Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root) : QObject(parent), root(_root) {}
+    Qt3DCore::QTransform *getMolRootTrans() const;
+
+    Qt3DCore::QEntity *getMolRoot() const;
+
+    Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root);
 
     void prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_viewSize,
                  const QVector3D &_blankArea = {5, 5, 5});

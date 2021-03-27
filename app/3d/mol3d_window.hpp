@@ -10,12 +10,24 @@ namespace Qt3DRender {
 namespace Qt3DInput {
     class QMouseHandler;
 }
+class QWidget;
+
+/**
+ * FIXME: QWindow 没有 QGesture 支持，sendEvent 到 QWidget 会报
+ * FIXME: QGestureManager::deliverEvent: could not find the target for gesture 的警告
+ * FIXME: 系 Qt 设计如此，无法在客户端处理掉这个问题。放弃继承 QWindow 重新实现一遍 QGesture 的做法，坑太多
+ * TODO: 在 touchEvent 里面实现几个关键手势即可
+ */
 class Mol3DWindow : public Qt3DExtras::Qt3DWindow {
 Q_OBJECT
+
+private:
+    QWidget *container;
     QPoint lastPos;
     bool isPressed;
     float activatedRadius;
-    Qt3DCore::QTransform *lightTrans;// 操纵光源的位置
+    Qt3DCore::QTransform *lightTrans,// 操纵光源的位置
+    *molRootTrans;
 //    Qt3DRender::QScreenRayCaster *mScreenRayCaster;
 //    Qt3DInput::QMouseHandler *mMouseHandler;
     Q_PROPERTY(float activatedRadius READ getActivatedRadius WRITE setActivatedRadius NOTIFY activatedRadiusChanged)
@@ -28,6 +40,8 @@ Q_SIGNALS:
     void activatedRadiusChanged(const float &newRadius);
 
 public:
+    void setMolRootTrans(Qt3DCore::QTransform *molRootTrans);
+
     QVector3D getViewSize() const;
 
     float getActivatedRadius() const;
@@ -58,9 +72,13 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
 
 private:
-    void zoomIn(const float &_k = 0.05);
+    void zoom(const float &_k = 0.05);
 
-    void zoomOut(const float &_k = 0.05);
+    void translate(const QVector2D &_p);
+
+    void reset();
+
+    void setContainer(QWidget *container);
 
 };
 

@@ -8,18 +8,20 @@
 #include <QGesture>
 #include <QThreadPool>
 
-Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol) : QWidget(parent), mol(std::move(_mol)) {
+Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
+        : GestureWidget(parent), mol(std::move(_mol)) {
     root = new Qt3DCore::QEntity();
 
     builder = new Mol3DBuilder(this, root);
 
     window = new Mol3DWindow(root);
-
+    window->setMolRootTrans(builder->getMolRootTrans());
     auto l = new QHBoxLayout();
     auto w = QWidget::createWindowContainer(window);
     l->addWidget(w);
     l->setMargin(2);
     setLayout(l);
+    window->installEventFilter(this);
     hintWidget = new WaitHintWidget(this);
     hintWidget->hide();
     // prepare 运行在子线程， build 运行在 UI 线程
@@ -28,7 +30,6 @@ Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol) : QWi
         hintWidget->hide();
         window->show();
     });
-
 }
 
 void Mol3DWidget::syncMolToScene() {
@@ -41,3 +42,22 @@ void Mol3DWidget::syncMolToScene() {
     window->hide();
     hintWidget->startWaitHint();
 }
+
+//bool Mol3DWidget::eventFilter(QObject *watched, QEvent *e) {
+//    if (watched == window) {
+//        switch (e->type()) {
+//            case QEvent::TouchBegin:
+//            case QEvent::TouchCancel:
+//            case QEvent::TouchEnd:
+//            case QEvent::TouchUpdate:
+//            case QEvent::Gesture:
+//            case QEvent::GestureOverride:
+//            case QEvent::NativeGesture:
+//                event(e);
+//                return true;
+//            default:
+//                return false;
+//        }
+//    }
+//    return false;
+//}

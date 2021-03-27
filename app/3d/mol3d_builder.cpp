@@ -41,7 +41,7 @@ void Mol3DBuilder::build() {
     // 添加3D原子球
     mol->loopAtomVec([&](xgd::JAtom &atom) {
 //        return;
-        auto wrapper = std::make_shared<SphereWrapper>(root);
+        auto wrapper = std::make_shared<SphereWrapper>(molRoot);
         atoms[atom.getId()] = wrapper;
 //        qDebug() << getQVector3D(atom);
         wrapper->setId(atom.getId());
@@ -122,14 +122,14 @@ void Mol3DBuilder::build() {
             case BondType::DownBond:
             case BondType::UpBond:
             case BondType::ImplicitBond: {
-                auto cWrapper = std::make_shared<CylinderWrapper>(root);
+                auto cWrapper = std::make_shared<CylinderWrapper>(molRoot);
                 cWrapper->setDirection(from, to);
                 cWrapper->setRadius(bondRadius);
                 wrapper = cWrapper;
                 break;
             }
             case BondType::DoubleBond: {
-                auto mcWrapper = std::make_shared<MultiCylinderWrapper>(root, 2);
+                auto mcWrapper = std::make_shared<MultiCylinderWrapper>(molRoot, 2);
                 std::optional<QVector3D> norm = std::nullopt;
                 auto it = normVecMap.find(bond.getId());
                 if (it != normVecMap.end()) {
@@ -142,7 +142,7 @@ void Mol3DBuilder::build() {
                 break;
             }
             case BondType::TripleBond: {
-                auto mcWrapper = std::make_shared<MultiCylinderWrapper>(root, 3);
+                auto mcWrapper = std::make_shared<MultiCylinderWrapper>(molRoot, 3);
                 std::optional<QVector3D> norm = std::nullopt;
                 auto it = normVecMap.find(bond.getId());
                 if (it != normVecMap.end()) {
@@ -197,4 +197,19 @@ void Mol3DBuilder::buildAxis(const float &_x, const float &_y, const float &_z, 
     originSphere->setRadius(capRadius);
     originSphere->setObjectName("point O");
     originSphere->setId(BaseEntity::sAxisId);
+}
+
+Qt3DCore::QEntity *Mol3DBuilder::getMolRoot() const {
+    return molRoot;
+}
+
+Mol3DBuilder::Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root) : QObject(parent), root(_root) {
+    molRoot = new Qt3DCore::QEntity(root);
+    molRootTrans = new Qt3DCore::QTransform(molRoot);
+    molRootTrans->setTranslation({0, 0, 0});
+    molRoot->addComponent(molRootTrans);
+}
+
+Qt3DCore::QTransform *Mol3DBuilder::getMolRootTrans() const {
+    return molRootTrans;
 }

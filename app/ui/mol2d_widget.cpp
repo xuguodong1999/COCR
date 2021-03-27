@@ -5,7 +5,7 @@
 #include <QDebug>
 
 Mol2DWidget::Mol2DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
-        : QGraphicsView(parent), mol(std::move(_mol)) {
+        : GestureView(parent), mol(std::move(_mol)) {
     scene = new QGraphicsScene();
     setScene(scene);
 }

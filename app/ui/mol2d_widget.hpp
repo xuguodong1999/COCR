@@ -2,10 +2,11 @@
 #define _XGD_MOL2D_WIDGET_HPP_
 
 #include "jmol.hpp"
+#include "gesture_widget.hpp"
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
-class Mol2DWidget : public QGraphicsView {
+class Mol2DWidget : public GestureView {
     QGraphicsScene *scene;
     std::shared_ptr<xgd::JMol> mol;
 public:
