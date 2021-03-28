@@ -18,6 +18,7 @@ public:
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *) override;
+
     void keyReleaseEvent(QKeyEvent *event) override;
 };
 

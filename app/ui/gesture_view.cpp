@@ -2,7 +2,8 @@
 #include <QDebug>
 #include <QGuiApplication>
 
-GestureView::GestureView(QWidget *parent) : QGraphicsView(parent), curAngle(0), curX(0), curY(0), curScale(1) ,sumAngle(0),sumScale(1){
+GestureView::GestureView(QWidget *parent) : QGraphicsView(parent), curAngle(0), curX(0), curY(0), curScale(1),
+                                            sumAngle(0), sumScale(1) {
     setAttribute(Qt::WA_AcceptTouchEvents);
     grabGesture(Qt::PinchGesture);
     qDebug() << "GestureView::GestureView";
@@ -21,7 +22,7 @@ bool GestureView::event(QEvent *event) {
 void GestureView::zoom(const float &_k) {
     qDebug() << "GestureView::zoom" << _k;
     QGraphicsView::scale(_k, _k);
-    sumScale*=_k;
+    sumScale *= _k;
 }
 
 void GestureView::translate(const QPointF &_dir) {
@@ -32,7 +33,7 @@ void GestureView::translate(const QPointF &_dir) {
 void GestureView::rotate(const float &_k) {
     qDebug() << "GestureView::rotate" << _k;
     QGraphicsView::rotate(_k);
-    sumAngle+=_k;
+    sumAngle += _k;
 }
 
 bool GestureView::gestureEvent(QGestureEvent *event) {
@@ -112,15 +113,15 @@ void GestureView::reset() {
 //    translate({curX, curY});
 //    rotate(curAngle);
 //    zoom(curScale);
-    QGraphicsView::centerOn(0,0);
+    QGraphicsView::centerOn(0, 0);
     QGraphicsView::rotate(-sumAngle);
-    QGraphicsView::scale(1.f/sumScale,1.f/sumScale);
-    sumAngle=0;
-    sumScale=1;
+    QGraphicsView::scale(1.f / sumScale, 1.f / sumScale);
+    sumAngle = 0;
+    sumScale = 1;
 }
 
 void GestureView::mouseDoubleClickEvent(QMouseEvent *e) {
     reset();
-    QGraphicsView::mouseDoubleClickEvent( e);
+    QGraphicsView::mouseDoubleClickEvent(e);
 }
 

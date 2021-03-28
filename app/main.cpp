@@ -206,8 +206,8 @@ int main(int argc, char *argv[]) {
 //        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
-//        loopHwDemo();
-        testMol2D_UI();
+        loopHwDemo();
+//        testMol2D_UI();
 //        testMol3D_UI();
 //        (new GestureWidget)->show();
 //        auto w=new QWidget();

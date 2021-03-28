@@ -105,7 +105,7 @@ namespace xgd {
     }
 
     cv::Point2f OCRDataItem::getCenter() const {
-        return cv::Point2f(0, 0);
+        return {rect.x + rect.width, rect.y + rect.height};
     }
 
     BondType OCRDataItem::getBondType() const {
