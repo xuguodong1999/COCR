@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QGestureEvent>
-#include <QGraphicsView>
 
 class GestureWidget : public QWidget {
 Q_OBJECT
@@ -14,7 +13,7 @@ public:
 
     virtual void zoom(const float &_k);
 
-    virtual void translateBy(const QPointF &_dir);
+    virtual void translate(const QPointF &_dir);
 
     virtual void rotate(const float &_k);
 
@@ -26,23 +25,5 @@ protected:
 
 };
 
-class GestureView : public QGraphicsView {
-Q_OBJECT
-public:
-    explicit GestureView(QWidget *parent = nullptr);
-
-    bool event(QEvent *event) override;
-
-    virtual void zoom(const float &_k);
-
-    virtual void translateBy(const QPointF &_dir);
-
-    virtual void rotate(const float &_k);
-
-protected:
-    bool gestureEvent(QGestureEvent *event);
-
-    void onPinchGesture(QPinchGesture *gesture);
-};
 
 #endif//_XGD_GESTURE_WIDGET_HPP_

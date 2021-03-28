@@ -8,6 +8,9 @@ Mol2DWidget::Mol2DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
         : GestureView(parent), mol(std::move(_mol)) {
     scene = new QGraphicsScene();
     setScene(scene);
+    setAttribute(Qt::WA_AcceptTouchEvents);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 inline static QString getRichText(const std::string &_text) {
@@ -38,3 +41,6 @@ void Mol2DWidget::syncMolToScene() {
         scene->addItem(bondItem);
     });
 }
+
+
+

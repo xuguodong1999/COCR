@@ -174,9 +174,9 @@ void testMol2D_UI() {
 #include <QMainWindow>
 
 void testMol3D_UI() {
-//    auto mol = getTestMol();
-    auto mol = std::make_shared<xgd::JMolAdapter>();
-    mol->readAsSMI("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+    auto mol = getTestMol();
+//    auto mol = std::make_shared<xgd::JMolAdapter>();
+//    mol->readAsSMI("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
 //    mol->readAsSMI("C([H])([H])=C([H])-C#N");
 //    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
 //    mol->readAsSMI("c1([H])c([H])c([H])c([H])c([H])c1([H])");
@@ -199,17 +199,16 @@ int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-//    qApp->setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents);
+//    qApp->setAttribute(Qt::AA_SynthesizeMouseForUnhandledTouchEvents);
     QApplication app(argc, argv);
-    app.setAttribute(Qt::AA_NativeWindows);
     try {
 //        testJMol();
 //        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
 //        loopHwDemo();
-//        testMol2D_UI();
-        testMol3D_UI();
+        testMol2D_UI();
+//        testMol3D_UI();
 //        (new GestureWidget)->show();
 //        auto w=new QWidget();
 //        w->resize(640,320);

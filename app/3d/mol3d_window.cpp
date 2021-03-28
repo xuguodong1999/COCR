@@ -199,7 +199,9 @@ void Mol3DWindow::touchEvent(QTouchEvent *e) {
         auto d0 = touchPoints[0].lastPos() - touchPoints[0].startPos();
         auto d1 = touchPoints[1].lastPos() - touchPoints[1].startPos();
         if (d0.x() * d1.x() > 0 && d0.y() * d1.y() > 0) {
-            translate(QVector2D((d0 + d1) / 2).normalized());
+            auto dir = QVector2D((d0 + d1) / 2).normalized();
+            dir.setY(-dir.y());
+            translate(dir);
         }
     }
     Qt3DWindow::touchEvent(e);
