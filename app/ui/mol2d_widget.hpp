@@ -16,6 +16,9 @@ public:
 
     void syncMolToScene();
 
+protected:
+    void mouseDoubleClickEvent(QMouseEvent *) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 };
 
 #endif//_XGD_MOL2D_WIDGET_HPP_

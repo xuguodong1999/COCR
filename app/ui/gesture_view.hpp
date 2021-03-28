@@ -6,7 +6,7 @@
 
 class GestureView : public QGraphicsView {
 Q_OBJECT
-    float curAngle, curX, curY, curScale;
+    float curAngle, curX, curY, curScale,sumAngle,sumScale;
     inline static float sTransStep = 100;
 public:
     explicit GestureView(QWidget *parent = nullptr);
@@ -21,13 +21,13 @@ public:
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
-    
+
     bool gestureEvent(QGestureEvent *event);
 
     void onPinchGesture(QPinchGesture *gesture);
 
     void keyReleaseEvent(QKeyEvent *event) override;
-
+    void mouseDoubleClickEvent(QMouseEvent *) override;
     void reset();
 };
 

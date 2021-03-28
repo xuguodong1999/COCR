@@ -42,5 +42,23 @@ void Mol2DWidget::syncMolToScene() {
     });
 }
 
+void Mol2DWidget::mouseDoubleClickEvent(QMouseEvent *e) {
+    syncMolToScene();
+    GestureView::mouseDoubleClickEvent(e);
+}
+
+void Mol2DWidget::keyReleaseEvent(QKeyEvent *event) {
+    switch (event->key()) {
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+        case Qt::Key_Space:
+            syncMolToScene();
+            break;
+        default:
+            break;
+    }
+    GestureView::keyReleaseEvent(event);
+}
+
 
 
