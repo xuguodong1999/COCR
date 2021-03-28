@@ -65,7 +65,7 @@ inline static SimpleGesture handleSimpleTouch(
 }
 
 Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_root, QScreen *_screen)
-        : Qt3DWindow(_screen), isPressed(false), container(nullptr) {
+        : Qt3DWindow(_screen), isPressed(false), container(nullptr), axisRoot(nullptr) {
     _root->setObjectName("RootEntity");
     auto lightEntity = new Qt3DCore::QEntity(_root);
     auto light = new Qt3DRender::QPointLight(lightEntity);
@@ -78,8 +78,8 @@ Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_root, QScreen *_screen)
     lightEntity->addComponent(light);
     lightEntity->addComponent(lightTrans);
     lightEntity->setObjectName("LightEntity");
-    // 视场粗略大小
-    setActivatedRadius(250);
+
+    setActivatedRadius(320);
     // 背景颜色
     defaultFrameGraph()->setClearColor(QColor(QRgb(0x4d4d4f)));
     // 禁用实时渲染
@@ -116,12 +116,16 @@ void Mol3DWindow::mouseMoveEvent(QMouseEvent *event) {
         float w = width(), h = height();
         w = delta.x() / w * 720 / M_PI;
         h = delta.y() / h * 720 / M_PI;
-        auto cam = camera();
-        cam->rotateAboutViewCenter(QQuaternion::fromAxisAndAngle(cam->upVector(), -w));
-        // 用叉积拿到垂直于视线轴和头顶轴的向量
-        cam->rotateAboutViewCenter(QQuaternion::fromAxisAndAngle(
-                QVector3D::crossProduct(cam->viewVector(), cam->upVector()), -h));
-        lightTrans->setTranslation(cam->position());
+        switch (event->buttons()) {
+            case Qt::MouseButton::LeftButton:
+                rotateMolEntity({w, h});
+                break;
+            case Qt::MouseButton::RightButton:
+                rotateCamera({w, h});
+                break;
+            default:
+                break;
+        }
     }
     Qt3DWindow::mouseMoveEvent(event);
 }
@@ -135,23 +139,24 @@ void Mol3DWindow::keyReleaseEvent(QKeyEvent *event) {
     switch (event->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
-            emit spaceOrEnterPressed(false);
-            break;
         case Qt::Key_Space:
-            emit spaceOrEnterPressed(true);
             reset();
             break;
         case Qt::Key_S:
-        case Qt::Key_D:
         case Qt::Key_Down:
+            translate({0, -sTransStep});
+            break;
         case Qt::Key_Left:
-            emit forwardOrBackwardPressed(false);
+        case Qt::Key_A:
+            translate({-sTransStep, 0});
             break;
         case Qt::Key_W:
-        case Qt::Key_A:
         case Qt::Key_Up:
+            translate({0, sTransStep});
+            break;
+        case Qt::Key_D:
         case Qt::Key_Right:
-            emit forwardOrBackwardPressed(true);
+            translate({sTransStep, 0});
             break;
         default:
             break;
@@ -172,12 +177,11 @@ void Mol3DWindow::wheelEvent(QWheelEvent *event) {
     Qt3DWindow::wheelEvent(event);
 }
 
-
 void Mol3DWindow::touchEvent(QTouchEvent *e) {
-    if (container) {
-        // FIXME: 没有用
-        qApp->sendEvent(container, e);
-    }
+//    if (container) {
+//        // FIXME: 没有用
+//        qApp->sendEvent(container, e);
+//    }
     QList touchPoints = e->touchPoints();
     if (touchPoints.count() == 2) {
         isPressed = false;
@@ -210,7 +214,7 @@ void Mol3DWindow::setActivatedRadius(const float &_activatedRadius) {
     auto cam = camera();
     cam->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.001f,
                                           activatedRadius * 100);
-    cam->setPosition(activatedRadius * (MathUtil::getOneZ3() + MathUtil::getOneY3() / 2));
+    cam->setPosition(activatedRadius * (MathUtil::getOneZ3() + MathUtil::getOneY3() / sYOffsetK));
     cam->setUpVector(MathUtil::getOneY3());
     cam->setViewCenter(MathUtil::getZero3());
     lightTrans->setTranslation(cam->position());
@@ -224,26 +228,7 @@ QVector3D Mol3DWindow::getViewSize() const {
 
 void Mol3DWindow::mouseDoubleClickEvent(QMouseEvent *event) {
     Qt3DWindow::mouseDoubleClickEvent(event);
-    bool left = event->x() < width() / 2, up = event->y() < height() / 2;
-    const float k = 20;
-    if (left) {
-        if (up) {
-            translate({-k, k});
-        } else {
-            translate({-k, -k});
-        }
-    } else {
-        if (up) {
-            translate({k, k});
-        } else {
-            translate({k, -k});
-        }
-    }
-//    if (left) {
-//        zoom(-0.25);
-//    } else {
-//        zoom(0.25);
-//    }
+    if (axisRoot) { axisRoot->setEnabled(!axisRoot->isEnabled()); }
 }
 
 
@@ -260,19 +245,51 @@ void Mol3DWindow::setContainer(QWidget *container) {
 }
 
 void Mol3DWindow::translate(const QVector2D &_p) {
-    molRootTrans->setTranslation(_p.toVector3D());
+    molRootTrans->setTranslation(molRootTrans->translation() + _p.toVector3D());
 }
 
 void Mol3DWindow::reset() {
     auto cam = camera();
-    cam->setPosition(activatedRadius * (MathUtil::getOneZ3() + MathUtil::getOneY3() / 2));
+    cam->setPosition(activatedRadius * (MathUtil::getOneZ3() + MathUtil::getOneY3() / sYOffsetK));
     cam->setUpVector(MathUtil::getOneY3());
     cam->setViewCenter(MathUtil::getZero3());
     lightTrans->setTranslation(cam->position());
     molRootTrans->setTranslation({0, 0, 0});
+    molRootTrans->setRotation(QQuaternion::fromAxisAndAngle({0, 0, 0}, 0));
 }
 
 void Mol3DWindow::setMolRootTrans(Qt3DCore::QTransform *molRootTrans) {
     Mol3DWindow::molRootTrans = molRootTrans;
+}
+
+void Mol3DWindow::rotateMolEntity(const QVector2D &_dir) {
+    // 相机不转物体转，以相机为参考标定旋转角度
+    auto cam = camera();
+    auto q1 = QQuaternion::fromAxisAndAngle(cam->upVector(), _dir.x());
+    // 用叉积拿到垂直于视线轴和头顶轴的向量
+    auto q2 = QQuaternion::fromAxisAndAngle(QVector3D::crossProduct(
+            cam->viewVector(), cam->upVector()), _dir.y());
+    // 四元数旋转变换合成
+    molRootTrans->setRotation(q2 * q1 * molRootTrans->rotation());
+}
+
+void Mol3DWindow::rotateCamera(const QVector2D &_dir) {
+    auto cam = camera();
+    cam->rotateAboutViewCenter(QQuaternion::fromAxisAndAngle(cam->upVector(), -_dir.x()));
+    // 用叉积拿到垂直于视线轴和头顶轴的向量
+    cam->rotateAboutViewCenter(QQuaternion::fromAxisAndAngle(
+            QVector3D::crossProduct(cam->viewVector(), cam->upVector()), -_dir.y()));
+    lightTrans->setTranslation(cam->position());
+}
+
+void Mol3DWindow::resizeEvent(QResizeEvent *event) {
+    Qt3DWindow::resizeEvent(event);
+    // 视场粗略大小
+    auto s = event->size();
+    setActivatedRadius(std::min(s.width(), s.height()) / 4);
+}
+
+void Mol3DWindow::setAxisRoot(Qt3DCore::QEntity *axis) {
+    axisRoot = axis;
 }
 

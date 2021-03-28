@@ -23,7 +23,7 @@ namespace xgd {
 class Mol3DBuilder : public QObject {
 Q_OBJECT
 
-    Qt3DCore::QEntity *root, *molRoot;
+    Qt3DCore::QEntity *root, *molRoot, *axisRoot;
     std::shared_ptr<xgd::JMol> mol;
     Qt3DCore::QTransform *molRootTrans;
 private:
@@ -36,6 +36,8 @@ public:
     Qt3DCore::QTransform *getMolRootTrans() const;
 
     Qt3DCore::QEntity *getMolRoot() const;
+
+    Qt3DCore::QEntity *getAxisRoot() const;
 
     Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root);
 

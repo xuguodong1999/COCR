@@ -16,6 +16,7 @@ Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
 
     window = new Mol3DWindow(root);
     window->setMolRootTrans(builder->getMolRootTrans());
+    window->setAxisRoot(builder->getAxisRoot());
     auto l = new QHBoxLayout();
     auto w = QWidget::createWindowContainer(window);
     l->addWidget(w);

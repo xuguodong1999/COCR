@@ -22,12 +22,15 @@ class Mol3DWindow : public Qt3DExtras::Qt3DWindow {
 Q_OBJECT
 
 private:
+    inline static float sTransStep = 10;
+    inline static float sYOffsetK = 10;
     QWidget *container;
     QPoint lastPos;
     bool isPressed;
     float activatedRadius;
     Qt3DCore::QTransform *lightTrans,// 操纵光源的位置
     *molRootTrans;
+    Qt3DCore::QEntity *axisRoot;
 //    Qt3DRender::QScreenRayCaster *mScreenRayCaster;
 //    Qt3DInput::QMouseHandler *mMouseHandler;
     Q_PROPERTY(float activatedRadius READ getActivatedRadius WRITE setActivatedRadius NOTIFY activatedRadiusChanged)
@@ -41,6 +44,8 @@ Q_SIGNALS:
 
 public:
     void setMolRootTrans(Qt3DCore::QTransform *molRootTrans);
+
+    void setAxisRoot(Qt3DCore::QEntity *axis);
 
     QVector3D getViewSize() const;
 
@@ -71,6 +76,8 @@ protected:
 
     void wheelEvent(QWheelEvent *event) override;
 
+    void resizeEvent(QResizeEvent *event) override;
+
 private:
     void zoom(const float &_k = 0.05);
 
@@ -80,6 +87,9 @@ private:
 
     void setContainer(QWidget *container);
 
+    void rotateMolEntity(const QVector2D &_dir);
+
+    void rotateCamera(const QVector2D &_dir);
 };
 
 #endif//_XGD_MOL3D_WINDOW_HPP_

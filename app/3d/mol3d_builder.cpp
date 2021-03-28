@@ -169,19 +169,19 @@ void Mol3DBuilder::build() {
 }
 
 void Mol3DBuilder::buildAxis(const float &_x, const float &_y, const float &_z, const float &_l) {
-    const float capRadius = std::min(4.f, _l / 10), cylinderRadius = 1;
-    float cylinderLength = std::max(10.f, _l * 0.95f);
+    const float capRadius = std::min(1.f, _l / 10), cylinderRadius = 0.3;
+    float cylinderLength = std::max(10.f, _l * 0.28f);
     auto make_axis = [&](const QVector3D &_dir, const QColor &_color, const QString &_name) {
         auto norm = _dir.normalized();
-        auto axis = std::make_shared<CylinderWrapper>(root);
+        auto axis = std::make_shared<CylinderWrapper>(axisRoot);
         axis->setDirection(MathUtil::getZero3(), norm * cylinderLength);
         axis->setRadius(cylinderRadius);
         axis->setColor(_color);
         axis->setObjectName("axis " + _name);
         axis->setId(BaseEntity::sAxisId);
 
-        auto axisCap = std::make_shared<ConeWrapper>(root);
-        axisCap->setDirection(norm * cylinderLength, norm * _l);
+        auto axisCap = std::make_shared<ConeWrapper>(axisRoot);
+        axisCap->setDirection(norm * cylinderLength, norm * _l * 0.3f);
         axisCap->setRadius(capRadius);
         axisCap->setColor(_color);
         axisCap->setObjectName("cap " + _name);
@@ -190,7 +190,7 @@ void Mol3DBuilder::buildAxis(const float &_x, const float &_y, const float &_z, 
     make_axis(MathUtil::getOneX3(), Qt::blue, "X");
     make_axis(MathUtil::getOneY3(), Qt::red, "Y");
     make_axis(MathUtil::getOneZ3(), Qt::green, "Z");
-    auto originSphere = std::make_shared<SphereWrapper>(root);
+    auto originSphere = std::make_shared<SphereWrapper>(axisRoot);
     originSphere->setTranslation({_x, _y, _z});
     originSphere->setRindsAndSlices(100, 100);
     originSphere->setColor(Qt::white);
@@ -205,6 +205,7 @@ Qt3DCore::QEntity *Mol3DBuilder::getMolRoot() const {
 
 Mol3DBuilder::Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root) : QObject(parent), root(_root) {
     molRoot = new Qt3DCore::QEntity(root);
+    axisRoot = new Qt3DCore::QEntity(root);
     molRootTrans = new Qt3DCore::QTransform(molRoot);
     molRootTrans->setTranslation({0, 0, 0});
     molRoot->addComponent(molRootTrans);
@@ -212,4 +213,8 @@ Mol3DBuilder::Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root) : QObject(
 
 Qt3DCore::QTransform *Mol3DBuilder::getMolRootTrans() const {
     return molRootTrans;
+}
+
+Qt3DCore::QEntity *Mol3DBuilder::getAxisRoot() const {
+    return axisRoot;
 }

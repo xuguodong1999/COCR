@@ -154,7 +154,10 @@ bool JMolAdapter::runForcefield() {
     } catch (...) {
         return false;
     }
-
+    if (obMol->NumAtoms() > 30) {// 分子力场太慢了……只给小分子优化，大分子只用几何构造
+        sync3D();
+        return true;
+    }
     auto pFF = static_cast<OpenBabel::OBForceField *>(OpenBabel::OBPlugin::GetPlugin("forcefields", "uff"));
     if (!pFF) {
         return false;

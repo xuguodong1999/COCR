@@ -65,7 +65,7 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
 }
 
 #ifdef Q_OS_LINUX
-std::string ROOT_DIR = "/home/xgd/source/repos/jokejoker/workspace/";
+std::string ROOT_DIR = "/home/xgd/source/repos/leafxy/workspace/";
 #elif defined(Q_OS_WIN)
 std::string ROOT_DIR = "C:/Users/xgd/source/repos/jokejoker/workspace/";
 #endif
@@ -73,7 +73,7 @@ std::string ROOT_DIR = "C:/Users/xgd/source/repos/jokejoker/workspace/";
 void loopHwDemo() {
     auto ocrManager = makeOCRManager(ROOT_DIR + "../resources/model");
     while (true) {
-        auto testImg = cv::imread(ROOT_DIR + "/demo-o1.jpg", cv::IMREAD_GRAYSCALE);
+        auto testImg = cv::imread(ROOT_DIR + "/demo.png", cv::IMREAD_GRAYSCALE);
 //        cv::erode(testImg, testImg, cv::Mat());
         ocrManager.ocr(testImg, true);
     }
@@ -174,11 +174,13 @@ void testMol2D_UI() {
 #include <QMainWindow>
 
 void testMol3D_UI() {
+//    auto mol = getTestMol();
     auto mol = std::make_shared<xgd::JMolAdapter>();
+    mol->readAsSMI("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+//    mol->readAsSMI("C([H])([H])=C([H])-C#N");
 //    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
 //    mol->readAsSMI("c1([H])c([H])c([H])c([H])c([H])c1([H])");
-    mol->readAsSMI("C([H])([H])=C([H])-C#N");
-//    auto mol = getTestMol();
+
 //    auto mw = new QMainWindow();
 //    mw->setAttribute(Qt::WA_AcceptTouchEvents);
 //    mw->grabGesture(Qt::PinchGesture);
