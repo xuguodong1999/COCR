@@ -59,6 +59,7 @@ std::vector<xgd::OCRItem> xgd::OCRManager::convert(const std::vector<DetectorObj
     for (size_t i = 0; i < _objects.size(); i++) {
         const auto &obj = _objects[i];
         auto &item = items[i];
+        item.setUId(i);
         switch (obj.label) {
             case DetectorObjectType::SingleLine :
             case DetectorObjectType::DoubleLine :
@@ -140,5 +141,5 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
         cv::rectangle(canvas, rect, color, 1, cv::LINE_AA);
     }
     cv::imshow("xgd::OCRManager::display", canvas);
-    cv::waitKey(0);
+//    cv::waitKey(0);
 }

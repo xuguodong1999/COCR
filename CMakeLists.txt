@@ -24,7 +24,7 @@ else (ANDROID)
     set(ncnn_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ncnn/lib/cmake/ncnn)
 endif (ANDROID)
 
-# opencv>=4.5.1 for for common image utils, crnn and yolo\
+# opencv>=4.5.1 for for common image utils, crnn and yolo
 set(OPENCV_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/opencv)
 if (MSVC)
     set(OpenCV_DIR ${OPENCV_INSTALL_DIR}/x64/vc16/lib)

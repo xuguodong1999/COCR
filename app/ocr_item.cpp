@@ -333,3 +333,15 @@ cv::Point2f xgd::OCRItem::getCenter() const {
 xgd::BondType xgd::OCRItem::getBondType() const {
     return data->getBondType();
 }
+
+size_t xgd::OCRItem::getUId() const {
+    return uid;
+}
+
+xgd::OCRItem::OCRItem(const size_t &_uid) : uid(_uid) {
+
+}
+
+void xgd::OCRItem::setUId(const size_t &_uid) {
+    uid = _uid;
+}

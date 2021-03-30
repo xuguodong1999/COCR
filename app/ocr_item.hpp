@@ -34,9 +34,17 @@ namespace xgd {
         virtual BondType getBondType() const;
     };
 
-    struct OCRItem {
-        OCRItemType type;
+    class OCRItem {
         std::shared_ptr<OCRDataItem> data;
+        size_t uid;
+    public:
+        OCRItemType type;
+
+        OCRItem(const size_t &_uid = 0);
+
+        void setUId(const size_t &_uid);
+
+        size_t getUId() const;
 
         void setAsLineBond(const BondType &_bt, const cv::Rect2f &_rect, const cv::Mat &_input);
 

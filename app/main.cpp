@@ -1,10 +1,11 @@
 #include <QDir>
 #include <QDebug>
 #include <QWidget>
-#include <QApplication>
+#include "application.hpp"
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <iostream>
+#include <opencv2/highgui.hpp>
 #include "opencv_util.hpp"
 #include "ocr_manager.hpp"
 #include "ncnn_impl/text_recognizer_ncnn_impl.hpp"
@@ -75,7 +76,8 @@ void loopHwDemo() {
     while (true) {
         auto testImg = cv::imread(ROOT_DIR + "/demo.png", cv::IMREAD_GRAYSCALE);
 //        cv::erode(testImg, testImg, cv::Mat());
-        ocrManager.ocr(testImg, true);
+        auto mol = ocrManager.ocr(testImg, true);
+        cv::waitKey(0);
     }
 }
 
@@ -104,7 +106,7 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
         int angle = 2;
         if (rand() % 2)angle = -2;
         image = xgd::rotateCvMat(image, angle);
-        ocrManager.ocr(image, true);
+        auto mol = ocrManager.ocr(image, true);
     }
 }
 
@@ -199,16 +201,15 @@ int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-//    qApp->setAttribute(Qt::AA_SynthesizeMouseForUnhandledTouchEvents);
-    QApplication app(argc, argv);
+    Application app(argc, argv);
     try {
 //        testJMol();
 //        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
-        loopHwDemo();
+//        loopHwDemo();
 //        testMol2D_UI();
-//        testMol3D_UI();
+        testMol3D_UI();
 //        (new GestureWidget)->show();
 //        auto w=new QWidget();
 //        w->resize(640,320);
