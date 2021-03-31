@@ -54,7 +54,7 @@ void LogManager::writeLog(QtMsgType type, const QMessageLogContext &context, con
     // 写入文件
     if (mFile.isOpen()) {
         stream.setDevice(&mFile);
-        stream << outBuffer << endl;
+        stream << outBuffer << "\n";
     }
 
     // 默认的输出，控制台
