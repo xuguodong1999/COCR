@@ -5,7 +5,7 @@
 
 Application::Application(int &argc, char **argv, int flag) : QApplication(argc, argv, flag) {
     qApp->setOrganizationName("leafxy");
-    qApp->setOrganizationDomain("github.io");
+    qApp->setOrganizationDomain("xuguodong1999.github.io");
     qApp->setApplicationName("leafxy app");
 //    getSettings().setValue("test_key1","你好");
     auto logger = LogManager::GetInstance();
