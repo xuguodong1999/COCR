@@ -21,9 +21,9 @@ namespace xgd {
 
         virtual ElementType getElement() const;
 
-        virtual cv::Point2f getFrom() const;
+        virtual const cv::Point2f& getFrom() const;
 
-        virtual cv::Point2f getTo() const;
+        virtual const cv::Point2f& getTo() const;
 
         virtual float getRadius() const;
 
@@ -54,9 +54,9 @@ namespace xgd {
 
         ElementType getElement() const;
 
-        cv::Point2f getFrom() const;
+        const cv::Point2f& getFrom() const;
 
-        cv::Point2f getTo() const;
+        const cv::Point2f& getTo() const;
 
         float getRadius() const;
 

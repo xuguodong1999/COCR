@@ -41,9 +41,9 @@ namespace xgd {
 
         void predFromToForWedge(const cv::Mat &_imgGray);
 
-        cv::Point2f getFrom() const override { return from; }
+        const cv::Point2f& getFrom() const override { return from; }
 
-        cv::Point2f getTo() const override { return to; }
+        const cv::Point2f& getTo() const override { return to; }
 
         BondType getBondType() const override { return bondType; }
     };
@@ -88,11 +88,11 @@ namespace xgd {
         return ElementType::None;
     }
 
-    cv::Point2f OCRDataItem::getFrom() const {
+    const cv::Point2f& OCRDataItem::getFrom() const {
         return cv::Point2f(0, 0);
     }
 
-    cv::Point2f OCRDataItem::getTo() const {
+    const cv::Point2f& OCRDataItem::getTo() const {
         return cv::Point2f(0, 0);
     }
 
@@ -306,11 +306,11 @@ xgd::ElementType xgd::OCRItem::getElement() const {
     return data->getElement();
 }
 
-cv::Point2f xgd::OCRItem::getFrom() const {
+const cv::Point2f& xgd::OCRItem::getFrom() const {
     return data->getFrom();
 }
 
-cv::Point2f xgd::OCRItem::getTo() const {
+const cv::Point2f& xgd::OCRItem::getTo() const {
     return data->getTo();
 }
 
