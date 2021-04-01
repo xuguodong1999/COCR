@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ 生成的包含文件。
-// 供 demo.rc 使用
+// 供 leafxy.rc 使用
 //
 
 // Next default values for new objects

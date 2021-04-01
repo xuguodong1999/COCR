@@ -41,6 +41,12 @@ foreach (SRC_DIR ${SRC_DIR_LIST})
     list(APPEND PROJECT_SOURCES ${PROJECT_SOURCE})
 endforeach (SRC_DIR SRC_DIR_LIST)
 
+if (MSVC)
+    set(WIN_RC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../resources)
+    list(APPEND PROJECT_SOURCES ${WIN_RC_DIR}/leafxy.rc)
+    include_directories(${WIN_RC_DIR})
+endif (MSVC)
+
 # add exe
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${APP_NAME} ${PROJECT_SOURCES})
