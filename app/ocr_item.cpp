@@ -88,12 +88,14 @@ namespace xgd {
         return ElementType::None;
     }
 
+    static cv::Point2f sPts0(0, 0);
+
     const cv::Point2f& OCRDataItem::getFrom() const {
-        return cv::Point2f(0, 0);
+        return sPts0;
     }
 
     const cv::Point2f& OCRDataItem::getTo() const {
-        return cv::Point2f(0, 0);
+        return sPts0;
     }
 
     float OCRDataItem::getRadius() const {
