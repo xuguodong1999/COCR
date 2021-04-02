@@ -1,0 +1,31 @@
+x-special/nautilus-clipboard
+copy
+file:///media/xgd/hjyy-ext4/soso-text
+
+
+python create_lmdb_dataset.py /media/xgd/hjyy-ext4/soso-text/train/JPEGImages /media/xgd/hjyy-ext4/soso-text/train/labels.txt ./data/train
+
+python create_lmdb_dataset.py /media/xgd/hjyy-ext4/soso-text/test/JPEGImages /media/xgd/hjyy-ext4/soso-text/test/labels.txt ./data/test
+
+python train.py --train_data='./data/train' --valid_data='./data/test' --model_top_dir='../workspace' --FeatureExtraction='VGG' --SequenceModeling='BiLSTM' --Prediction='CTC' --Transformation='None' --baiduCTC --sensitive --select_data / --batch_ratio 1  --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=256 --batch_size=256 --workers=2 --num_iter=100000 --valInterval=5000 --exp_name='VGG-BiLSTM-baidu_ctc_mixFont2'
+
+python onnx_export.py  --FeatureExtraction='VGG' --SequenceModeling='BiLSTM' --Prediction='CTC' --Transformation='None' --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty'  --imgH=32 --imgW=3200 --input_channel=1 --output_channel=256 --hidden_size=256 --saved_model='../workspace/VGG-BiLSTM-baidu_ctc_mixFont2/best_accuracy.pth'
+
+~/shared/ncnn20201218/tools/onnx2ncnn crnn_3200_mix.onnx vgg_lstm_57.param vgg_lstm_57.bin
+~/shared/ncnn20201218/tools/onnx2ncnn crnn_3200_mix.onnx vgg_lstm_57.param vgg_lstm_57.bin
+~/shared/ncnn20201218/tools/ncnnoptimize vgg_lstm_57.param vgg_lstm_57.bin vgg_lstm_57_fp16.param vgg_lstm_57_fp16.bin 1
+
+git add  . && git commit -m "xx" && git push
+
+~/shared/ncnn20201218/tools/darknet2ncnn yolo-3l-c8.cfg yolo-3l-c8.weights yolo_3l_c8.param yolo_3l_c8.bin
+
+~/shared/ncnn20201218/tools/ncnnoptimize yolo_3l_c8.param yolo_3l_c8.bin yolo_3l_c8.param yolo_3l_c8.bin 1
+
+rm -Rf .git/refs/original
+rm -Rf .git/logs/
+git gc
+git prune
+
+git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch --ignore-unmatch resources/model/vgg_lstm_57_fp16.bin' --prune-empty --tag-name-filter cat -- --all
+
+python -m onnxsim a.onnx b.onnx

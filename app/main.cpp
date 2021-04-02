@@ -68,7 +68,7 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
 #ifdef Q_OS_LINUX
 std::string ROOT_DIR = "/home/xgd/source/repos/leafxy/workspace/";
 #elif defined(Q_OS_WIN)
-std::string ROOT_DIR = "C:/Users/xgd/source/repos/jokejoker/workspace/";
+std::string ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/workspace/";
 #endif
 
 void loopHwDemo() {

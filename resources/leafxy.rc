@@ -65,10 +65,7 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "CompanyName", "leafxy.github.io"
-            VALUE "FileDescription", "desktop application for ocsr job"
-            VALUE "FileVersion", "0.0.0.1"
-            VALUE "InternalName", "leafxy.exe"
+            VALUE "FileDescription", "leafxy desktop application for OCSR job"
             VALUE "LegalCopyright", "Copyright (C) 2021 徐国栋 171860633@smail.nju.edu.cn"
             VALUE "OriginalFilename", "leafxy.exe"
             VALUE "ProductName", "leafxy app"

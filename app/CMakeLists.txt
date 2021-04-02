@@ -2,13 +2,6 @@ project(app)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# for desktop app, import qt in sub modules
-if (NOT ANDROID)
-    set(QT_COMPONENTS Widgets 3DCore 3DExtras 3DRender 3DInput LinguistTools)
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
-    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
-endif (NOT ANDROID)
-
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -17,16 +10,16 @@ find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
 
 # notice that qm file is generated through cmake job
-set(TS_FILES ../resources/${APP_NAME}_zh_CN.ts)
-qt5_create_translation(QM_FILES ../app ${TS_FILES})
+set(TS_FILES ${RES_ROOT}/${APP_NAME}_zh_CN.ts)
+qt5_create_translation(QM_FILES ${LEAFXY_ROOT}/app ${TS_FILES})
 
 # on all cases, import model through qrc
-qt5_add_big_resources(BIG_RES_FILES ../resources/big_res.qrc)
+qt5_add_big_resources(BIG_RES_FILES ${RES_ROOT}/big_res.qrc)
 
-set(RES_SRCS ${BIG_RES_FILES} ../resources/obdata.qrc ../resources/app.qrc)
+set(RES_SRCS ${BIG_RES_FILES} ${RES_ROOT}/obdata.qrc ${RES_ROOT}/app.qrc)
 
 # include dir
-include_directories(../openbabel/include ../coordgenlibs/include ../ncnn/include ./)
+include_directories(${3RD_LIB_DIR}/openbabel/include ${3RD_LIB_DIR}/coordgenlibs/include ${3RD_LIB_DIR}/ncnn-lib/include ./)
 
 # source dir
 set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./composer)
@@ -42,9 +35,8 @@ foreach (SRC_DIR ${SRC_DIR_LIST})
 endforeach (SRC_DIR SRC_DIR_LIST)
 
 if (MSVC)
-    set(WIN_RC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../resources)
-    list(APPEND PROJECT_SOURCES ${WIN_RC_DIR}/leafxy.rc)
-    include_directories(${WIN_RC_DIR})
+    list(APPEND PROJECT_SOURCES ${RES_ROOT}/leafxy.rc)
+    include_directories(${RES_ROOT})
 endif (MSVC)
 
 # add exe
@@ -57,11 +49,6 @@ else ()
         add_executable(${APP_NAME} ${PROJECT_SOURCES})
     endif ()
 endif ()
-
-# for M_PI macro
-if (MSVC)
-    add_compile_definitions(_USE_MATH_DEFINES)
-endif (MSVC)
 
 # product suffix
 set_target_properties(${APP_NAME} PROPERTIES DEBUG_POSTFIX "d")
