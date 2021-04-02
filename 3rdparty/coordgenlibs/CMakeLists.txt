@@ -1,4 +1,4 @@
-project(coordgen)
+project(coordgen CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -13,7 +13,9 @@ if (MSVC)
     include_directories(${RES_ROOT})
 endif (MSVC)
 
-add_library(${PROJECT_NAME} ${COORDGEN_SRCS})
+#set_source_files_properties(${COORDGEN_SRCS} PROPERTIES LANGUAGE CXX)
+
+add_library(${PROJECT_NAME} SHARED ${COORDGEN_SRCS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 

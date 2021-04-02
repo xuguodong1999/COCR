@@ -13,13 +13,13 @@ namespace ncnn {
 namespace xgd {
     class ObjectDetectorNcnnImpl : public ObjectDetector {
         int numThread;
-    public:
-        void setNumThread(int numThread);
 
     private:
         std::shared_ptr<ncnn::Net> net;
 
     public:
+        void setNumThread(int numThread);
+
         ObjectDetectorNcnnImpl();
 
         bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth);

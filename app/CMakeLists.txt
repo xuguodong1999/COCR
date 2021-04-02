@@ -1,4 +1,4 @@
-project(app)
+project(app CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -19,7 +19,8 @@ qt5_add_big_resources(BIG_RES_FILES ${RES_ROOT}/big_res.qrc)
 set(RES_SRCS ${BIG_RES_FILES} ${RES_ROOT}/obdata.qrc ${RES_ROOT}/app.qrc)
 
 # include dir
-include_directories(${3RD_LIB_DIR}/openbabel/include ${3RD_LIB_DIR}/coordgenlibs/include ${3RD_LIB_DIR}/ncnn-lib/include ./)
+include_directories(${3RD_LIB_DIR}/openbabel/include
+        ${3RD_LIB_DIR}/coordgenlibs/include ${3RD_LIB_DIR}/ncnn-lib/include ./)
 
 # source dir
 set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./composer)
@@ -38,6 +39,8 @@ if (MSVC)
     list(APPEND PROJECT_SOURCES ${RES_ROOT}/leafxy.rc)
     include_directories(${RES_ROOT})
 endif (MSVC)
+
+#set_source_files_properties(${PROJECT_SOURCES} PROPERTIES LANGUAGE CXX)
 
 # add exe
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -59,15 +62,17 @@ target_compile_definitions(${APP_NAME} PRIVATE
 
 # link opencv, patched openbabel and qt here
 target_link_libraries(${APP_NAME} PRIVATE
+        ncnn openbabel coordgen
         Qt${QT_VERSION_MAJOR}::3DCore
         Qt${QT_VERSION_MAJOR}::3DInput
         Qt${QT_VERSION_MAJOR}::3DExtras
         Qt${QT_VERSION_MAJOR}::3DRender
         Qt${QT_VERSION_MAJOR}::Widgets
-        opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
-        ncnn
-        openbabel
-        coordgen)
+        opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
+
+if(NOT BUILD_SHARED_LIBS)
+        target_link_options(${APP_NAME} PRIVATE "/FORCE:MULTIPLE")
+endif(NOT BUILD_SHARED_LIBS)
 
 # on desktop, i prefer to use large yolo weights by opencv_dnn, instead of ncnn
 if (NOT ANDROID)

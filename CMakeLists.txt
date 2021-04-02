@@ -2,13 +2,20 @@ cmake_minimum_required(VERSION 3.16)
 
 project(leafxy)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
 # qt-android require app has same name with cmake-top-project
 set(APP_NAME ${PROJECT_NAME})
 # app linked qt components
 set(QT_COMPONENTS Widgets 3DCore 3DExtras 3DRender 3DInput LinguistTools)
 
-# use this flag to build static exe for msvc
+# use this flag to build static exe for msvc. dont set it to false on unix
+# dont set it unless you known what you are doing
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+if (NOT MSVC)
+    set(BUILD_SHARED_LIBS ON)
+endif (NOT MSVC)
 
 # use these flags to find 3rdparty lib
 set(LEAFXY_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
@@ -29,14 +36,15 @@ if (NOT ANDROID)
 endif (NOT ANDROID)
 
 # ncnn for crnn and yolo
+# use build.sh or build-shared.bat to install ncnn from source
 if (ANDROID)
     set(ncnn_DIR ${ANDROID_LIB_DIR}/ncnn-20210124-android/${CMAKE_ANDROID_ARCH_ABI}/lib/cmake/ncnn)
 else (ANDROID)
-    # use build.sh or build.bat to install ncnn from source
     set(ncnn_DIR ${3RD_LIB_DIR}/ncnn-lib/lib/cmake/ncnn)
 endif (ANDROID)
 
 # opencv>=4.5.1 for for common image utils, crnn and yolo
+# use build.sh or build-shared.bat to install opencv from source
 if (MSVC)
     set(OpenCV_DIR ${3RD_LIB_DIR}/opencv-lib/x64/vc16/lib)
 elseif (APPLE)
@@ -64,6 +72,16 @@ elseif (ANDROID)
 elseif (UNIX)
     set(QT_DIR /home/xgd/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5)
 endif (MSVC)
+
+# override config for static build on msvc only
+if (MSVC AND NOT BUILD_SHARED_LIBS)
+    set(QT_DIR C:/static/qt5.15.2/lib/cmake/Qt5)
+    set(OpenCV_DIR ${3RD_LIB_DIR}/opencv-static-lib/x64/vc16/staticlib)
+    set(ncnn_DIR ${3RD_LIB_DIR}/ncnn-static-lib/lib/cmake/ncnn)
+    # enable CMAKE_MSVC_RUNTIME_LIBRARY
+    cmake_policy(SET CMP0091 NEW)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif (MSVC AND NOT BUILD_SHARED_LIBS)
 
 set(Qt5_DIR ${QT_DIR})
 

@@ -1,6 +1,7 @@
 #include "text_recognizer_ncnn_impl.hpp"
 #include <opencv2/imgproc.hpp>
 #include <ncnn/net.h>
+
 #include <numeric>
 #include <iostream>
 
@@ -81,5 +82,10 @@ cv::Mat xgd::TextRecognizerNcnnImpl::preProcess(const cv::Mat &_src) {
 //    cv::imshow("fuck",srcResized);
 //    cv::waitKey(0);
     return srcResized;
+}
+
+void xgd::TextRecognizerNcnnImpl::setNumThread(int numThread) {
+    TextRecognizerNcnnImpl::numThread = numThread;
+    if (net) { net->opt.num_threads = numThread; }
 }
 

@@ -1,4 +1,4 @@
-project(openbabel)
+project(openbabel CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -9,12 +9,12 @@ include_directories(${OPENBABEL_SRC_DIR}/include ${OPENBABEL_SRC_DIR}/include/in
 
 set(OPENBABEL_SRCS)
 set(SRC_DIR_LIST src src/charges src/depict src/descriptors
-    src/fingerprints src/forcefields src/math src/ops src/stereo 
-    src/formats src/formats/json src/formats/libinchi)
-foreach(SRC_DIR ${SRC_DIR_LIST})
+        src/fingerprints src/forcefields src/math src/ops src/stereo
+        src/formats src/formats/json src/formats/libinchi)
+foreach (SRC_DIR ${SRC_DIR_LIST})
     aux_source_directory(${OPENBABEL_SRC_DIR}/${SRC_DIR} OPENBABEL_SRC)
     list(APPEND OPENBABEL_SRCS ${OPENBABEL_SRC})
-endforeach(SRC_DIR SRC_DIR_LIST)
+endforeach (SRC_DIR SRC_DIR_LIST)
 
 if (MSVC)
     list(APPEND OPENBABEL_SRCS ${RES_ROOT}/3rdparty.rc)
@@ -22,7 +22,10 @@ if (MSVC)
 endif (MSVC)
 
 add_definitions(-DMAKE_OBDLL)
-add_library(${PROJECT_NAME} ${OPENBABEL_SRCS})
+
+#set_source_files_properties(${OPENBABEL_SRCS} PROPERTIES LANGUAGE CXX )
+
+add_library(${PROJECT_NAME} SHARED ${OPENBABEL_SRCS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 

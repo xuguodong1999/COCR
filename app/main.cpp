@@ -66,15 +66,15 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
 }
 
 #ifdef Q_OS_LINUX
-std::string ROOT_DIR = "/home/xgd/source/repos/leafxy/workspace/";
+std::string ROOT_DIR = "/home/xgd/source/repos/leafxy/";
 #elif defined(Q_OS_WIN)
-std::string ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/workspace/";
+std::string ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
 #endif
 
 void loopHwDemo() {
-    auto ocrManager = makeOCRManager(ROOT_DIR + "../resources/model");
+    auto ocrManager = makeOCRManager(ROOT_DIR + "resources/model");
     while (true) {
-        auto testImg = cv::imread(ROOT_DIR + "/demo.png", cv::IMREAD_GRAYSCALE);
+        auto testImg = cv::imread(ROOT_DIR + "testcase/1.jpg", cv::IMREAD_GRAYSCALE);
 //        cv::erode(testImg, testImg, cv::Mat());
         auto mol = ocrManager.ocr(testImg, true);
         cv::waitKey(0);
@@ -82,8 +82,8 @@ void loopHwDemo() {
 }
 
 void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = {}) {
-    auto ocrManager = makeOCRManager(ROOT_DIR + "../resources/model");
-    QDir dir((ROOT_DIR + "/uspto-validation-updated/images").c_str());
+    auto ocrManager = makeOCRManager(ROOT_DIR + "resources/model");
+    QDir dir((ROOT_DIR + "testcase/public/USPTO").c_str());
     auto fileList = dir.entryInfoList(QDir::Filter(QDir::Files));
     if (!_badExample.empty()) {
         _random = false;
@@ -98,15 +98,16 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
         auto &file = fileList[idx];
         size_t imgIdx = idx;
         idx = (_random ? (rand() % fileList.size()) : idx + 1);
-        if (file.suffix() != "TIF") continue;
-        if (!_badExample.empty() && !_badExample.contains(imgIdx)) continue;
+        if (file.suffix() != "TIF" && file.suffix() != "png") { continue; }
+        if (!_badExample.empty() && !_badExample.contains(imgIdx)) { continue; }
         qDebug() << imgIdx << ":" << file.fileName();
         cv::Mat image = cv::imread(file.absoluteFilePath().toStdString(), cv::IMREAD_GRAYSCALE);
 //        cv::erode(image, image, cv::Mat());
         int angle = 2;
-        if (rand() % 2)angle = -2;
+        if (rand() % 2) { angle = -2; }
         image = xgd::rotateCvMat(image, angle);
         auto mol = ocrManager.ocr(image, true);
+        cv::waitKey(0);
     }
 }
 

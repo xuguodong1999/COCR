@@ -3,31 +3,6 @@
 /* The version of Open Babel */
 #define BABEL_VERSION "3.1.1"
 
-/* Version check macro
- Can be used like #if (OB_VERSION >= OB_VERSION_CHECK(2, 2, 99)) */
-#define OB_VERSION_CHECK(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
-
-/* OB_VERSION is (major << 16) + (minor << 8) + patch */
-#define OB_VERSION OB_VERSION_CHECK(3, 1, 1)
-
-//#ifndef OB_EXPORT
-//#define OB_EXPORT Q_DECL_EXPORT
-//#endif
-//
-//#ifndef OB_IMPORT
-//#define OB_IMPORT Q_DECL_IMPORT
-//#endif
-//
-//#ifndef OB_HIDDEN
-//#define OB_HIDDEN Q_DECL_HIDDEN
-//#endif
-
-/* Used to export symbols for DLL / shared library builds */
-#ifndef USING_DYNAMIC_LIBS
-#define USING_DYNAMIC_LIBS
-#endif
-
-
 #define OB_EXPORT Q_DECL_EXPORT
 #define OB_IMPORT Q_DECL_IMPORT
 #define OB_HIDDEN Q_DECL_HIDDEN
@@ -37,27 +12,35 @@
 #ifndef OB_EXTERN
 #define OB_EXTERN OB_EXPORT extern
 #endif
+
 #ifndef OBAPI
 #define OBAPI OB_EXPORT
 #endif
+
 #ifndef OBCOMMON
 #define OBCOMMON OB_EXPORT
 #endif
+
 #ifndef OBCONV
 #define OBCONV OB_EXPORT
 #endif
+
 #ifndef OBERROR
 #define OBERROR OB_EXPORT
 #endif
+
 #ifndef OBFPRT
 #define OBFPRT OB_EXPORT
 #endif
+
 #ifndef OBFPTR
 #define OBFPTR OB_EXPORT
 #endif
+
 #ifndef OBMCDL
 #define OBMCDL OB_EXPORT
 #endif
+
 #ifndef OBDEPICT
 #define OBDEPICT OB_EXPORT
 #endif
@@ -67,30 +50,37 @@
 #ifndef OB_EXTERN
 #define OB_EXTERN OB_IMPORT extern
 #endif
+
 #ifndef OBAPI
 #define OBAPI OB_IMPORT
 #endif
+
 #ifndef OBCOMMON
 #define OBCOMMON OB_IMPORT
 #endif
+
 #ifndef OBCONV
 #define OBCONV OB_IMPORT
 #endif
+
 #ifndef OBERROR
 #define OBERROR OB_IMPORT
 #endif
+
 #ifndef OBFPRT
 #define OBFPRT OB_IMPORT
 #endif
+
 #ifndef OBFPTR
 #define OBFPTR OB_IMPORT
 #endif
+
 #ifndef OBMCDL
 #define OBMCDL OB_IMPORT
-#ifndef OBDEPICT
-#define OBDEPICT OB_IMPORT
 #endif
 
+#ifndef OBDEPICT
+#define OBDEPICT OB_IMPORT
 #endif
 
 #endif
@@ -118,8 +108,6 @@
 #define DEBUG_NEW new
 #endif
 #endif // _MSC_VER
-/* have <conio.h> */
-/* #undef HAVE_CONIO_H */
 
 /* have <sys/time.h> */
 #define HAVE_SYS_TIME_H 0

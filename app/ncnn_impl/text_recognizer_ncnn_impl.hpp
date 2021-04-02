@@ -22,6 +22,8 @@ namespace xgd {
         cv::Mat preProcess(const cv::Mat &_src) override;
 
     public:
+        void setNumThread(int numThread);
+
         TextRecognizerNcnnImpl();
 
         bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words,
