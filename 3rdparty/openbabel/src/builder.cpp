@@ -1429,8 +1429,9 @@ namespace OpenBabel {
         vector3 v2;
         vector<int> nbrs;
         vector<vector3> nbr_pos;
-        FOR_NBORS_OF_ATOM(nbr, mol.GetAtom(pivot[0]))if (nbr->GetIdx() != atom1.GetIdx() &&
-                                                         nbr->GetIdx() != atom2.GetIdx()) {
+        FOR_NBORS_OF_ATOM(nbr, mol.GetAtom(pivot[0]))
+            if (nbr->GetIdx() != atom1.GetIdx() &&
+                nbr->GetIdx() != atom2.GetIdx()) {
                 nbrs.push_back(nbr->GetIdx());
                 nbr_pos.push_back(workMol.GetAtom(nbr->GetIdx())->GetVector());
             }
@@ -1644,7 +1645,8 @@ namespace OpenBabel {
 
             center = mol.GetAtomById(config.center);
             int ringbonds = 0;
-            FOR_BONDS_OF_ATOM(b, center)if (b->IsInRing())
+            FOR_BONDS_OF_ATOM(b, center)
+                if (b->IsInRing())
                     ringbonds++;
 
             if (ringbonds == 3 || (ringbonds == 4 && !OBBuilder::IsSpiroAtom(config.center, mol))) {
@@ -1695,7 +1697,8 @@ namespace OpenBabel {
                 // Try to find two non-ring bonds
                 center = mol.GetAtomById(config.center);
                 vector<unsigned int> idxs;
-                FOR_BONDS_OF_ATOM(b, center)if (!b->IsInRing())
+                FOR_BONDS_OF_ATOM(b, center)
+                    if (!b->IsInRing())
                         idxs.push_back(b->GetNbrAtom(center)->GetIdx());
 
                 if (idxs.size() == 0 && OBBuilder::IsSpiroAtom(config.center, mol))
@@ -1754,14 +1757,17 @@ namespace OpenBabel {
 
             // Invert the coordinates (QUESTION: should I invert relative to the centroid?)
             inversion = true;
-            FOR_ATOMS_OF_MOL(a, mol)if (fragment.BitIsSet(a->GetId()))
+            FOR_ATOMS_OF_MOL(a, mol)
+                if (fragment.BitIsSet(a->GetId()))
                     a->SetVector(-a->GetVector());
 
             // Add neighbouring bonds back onto the fragment
             // TODO: Handle spiro
             std::vector<OBBond *> reconnect;
-            FOR_ATOMS_OF_MOL(a, mol)if (fragment.BitIsSet(a->GetId()))
-                    FOR_BONDS_OF_ATOM(b, &*a)if (!b->IsInRing())
+            FOR_ATOMS_OF_MOL(a, mol)
+                if (fragment.BitIsSet(a->GetId()))
+                    FOR_BONDS_OF_ATOM(b, &*a)
+                        if (!b->IsInRing())
                             reconnect.push_back(&*b);
 
             for (std::vector<OBBond *>::iterator bi = reconnect.begin(); bi != reconnect.end(); ++bi) {

@@ -1628,7 +1628,8 @@ namespace OpenBabel {
             bool hasAtLeastOneDefined = false;
             OBStereoFacade sf(mol, false);
             FOR_ATOMS_OF_MOL (atom, mol) {
-                FOR_BONDS_OF_ATOM (bond, &*atom)if (
+                FOR_BONDS_OF_ATOM (bond, &*atom)
+                    if (
                             std::find(metalloceneBonds.begin(), metalloceneBonds.end(), &*bond) !=
                             metalloceneBonds.end())
                         continue;

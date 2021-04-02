@@ -271,6 +271,7 @@ namespace OpenBabel {
     };
 
 #ifndef SWIG
+
     OBAPI vector3 center_coords(double *, int);
 
 #endif

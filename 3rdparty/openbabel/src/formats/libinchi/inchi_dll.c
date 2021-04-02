@@ -1620,7 +1620,7 @@ int ExtractOneStructure(STRUCT_DATA *sd, INPUT_PARMS *ip, char *szTitle,
     }
 
     at = (inp_ATOM *) inchi_calloc(nNumAtoms, sizeof(at[0]));
-    szCoord = (MOL_COORD *) inchi_calloc (inchi_max(nNumAtoms, 1), sizeof(MOL_COORD));
+    szCoord = (MOL_COORD *) inchi_calloc(inchi_max(nNumAtoms, 1), sizeof(MOL_COORD));
 
     if (!at || !szCoord) {
         MOLFILE_ERR_SET (*err, 0, "Out of RAM");

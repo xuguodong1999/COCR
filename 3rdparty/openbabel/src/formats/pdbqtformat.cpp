@@ -155,11 +155,11 @@ namespace OpenBabel {
                                 unsigned int &atoms_moved);
 
     static bool
-    OutputTree(OBConversion *pConv, OBMol &mol, ostream &ofs, map<unsigned int, branch> &tree, unsigned int depth,
+    OutputTree(OBConversion *pConv, OBMol &mol, ostream &ofs, map<size_t, branch> &tree, unsigned int depth,
                bool moves_many, bool preserve_original_index);
 
     static void
-    ConstructTree(map<unsigned int, branch> &tree, vector<vector<int> > rigid_fragments, unsigned int root_piece,
+    ConstructTree(map<size_t, branch> &tree, vector<vector<int> > rigid_fragments, unsigned int root_piece,
                   const OBMol &mol, bool flexible);
 
     static bool DeleteHydrogens(OBMol &mol);
@@ -397,24 +397,19 @@ namespace OpenBabel {
         if (atom->GetAtomicNum() == OBElements::Hydrogen) {
             element_name_final[0] = 'H';
             element_name_final[1] = 'D';
-        }
-        else if ((atom->GetAtomicNum() == OBElements::Carbon) && (atom->IsAromatic())) {
+        } else if ((atom->GetAtomicNum() == OBElements::Carbon) && (atom->IsAromatic())) {
             element_name_final[0] = 'A';
             element_name_final[1] = ' ';
-        }
-        else if (atom->GetAtomicNum() == OBElements::Oxygen) {
+        } else if (atom->GetAtomicNum() == OBElements::Oxygen) {
             element_name_final[0] = 'O';
             element_name_final[1] = 'A';
-        }
-        else if ((atom->GetAtomicNum() == OBElements::Nitrogen) && (atom->IsHbondAcceptor())) {
+        } else if ((atom->GetAtomicNum() == OBElements::Nitrogen) && (atom->IsHbondAcceptor())) {
             element_name_final[0] = 'N';
             element_name_final[1] = 'A';
-        }
-        else if ((atom->GetAtomicNum() == OBElements::Sulfur) && (atom->IsHbondAcceptor())) {
+        } else if ((atom->GetAtomicNum() == OBElements::Sulfur) && (atom->IsHbondAcceptor())) {
             element_name_final[0] = 'S';
             element_name_final[1] = 'A';
-        }
-        else {
+        } else {
             if (!isalnum(element_name[0])) { element_name_final[0] = ' '; }
             else element_name_final[0] = element_name[0];
             if (!isalnum(element_name[1])) { element_name_final[1] = ' '; }
@@ -497,7 +492,7 @@ namespace OpenBabel {
         return mol.DeleteNonPolarHydrogens();
     }
 
-    bool OutputTree(OBConversion *pConv, OBMol &mol, ostream &ofs, map<unsigned int, branch> &tree, unsigned int depth,
+    bool OutputTree(OBConversion *pConv, OBMol &mol, ostream &ofs, map<size_t, branch> &tree, unsigned int depth,
                     bool moves_many, bool preserve_original_index) {
         if (tree.empty()) { return false; }
         if (depth >= tree.size() - 1) { depth = tree.size() - 1; }
@@ -611,7 +606,7 @@ namespace OpenBabel {
         return true;
     }
 
-    void ConstructTree(map<unsigned int, branch> &tree, vector<vector<int> > rigid_fragments, unsigned int root_piece,
+    void ConstructTree(map<size_t, branch> &tree, vector<vector<int> > rigid_fragments, unsigned int root_piece,
                        const OBMol &mol, bool flexible) {
         unsigned int first_atom = 0;
         unsigned int second_atom = 0;
@@ -653,8 +648,7 @@ namespace OpenBabel {
 
                         (*tree.find(position)).second.children.insert(
                                 tree.size()); //tells the current parent it has an extra child
-                        tree.insert(
-                                pair<unsigned int, branch>(tree.size(), sprog)); //adds the current branch to the tree
+                        tree.insert({tree.size(), sprog}); //adds the current branch to the tree
 
                         rigid_fragments.erase(rigid_fragments.begin() + i);
                         sterile = false;
@@ -966,7 +960,7 @@ namespace OpenBabel {
 
             vector<vector<int> > rigid_fragments; //the vector of all the rigid molecule fragments, using atom indexes
             unsigned int best_root_atom = 1;
-            map<unsigned int, branch> tree;
+            map<size_t, branch> tree;
             unsigned int torsdof = 0;
             unsigned int root_piece = 0;
             unsigned int rotatable_bonds = 0;

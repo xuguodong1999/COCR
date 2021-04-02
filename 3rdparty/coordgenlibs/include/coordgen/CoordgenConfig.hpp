@@ -1,22 +1,16 @@
 #pragma once
+
 #include <QtCore/qglobal.h>
-#ifndef STATIC_COORDGEN
 
-#ifdef WIN32
-#ifdef IN_COORDGEN
-#define EXPORT_COORDGEN Q_DECL_EXPORT
-#else
-#define EXPORT_COORDGEN Q_DECL_EXPORT
-#endif // IN_COORDGEN
-
-#else
-
-#define EXPORT_COORDGEN __attribute__((visibility("default")))
-
-#endif // WIN32
-
-#else
-
+#ifdef LEAFXY_STATIC
 #define EXPORT_COORDGEN
+#else
+#ifdef BUILD_LIBS
+#define EXPORT_COORDGEN Q_DECL_EXPORT
+#else
+#define EXPORT_COORDGEN Q_DECL_IMPORT
+#endif
+#endif
 
-#endif // STATIC_COORDGEN
+
+

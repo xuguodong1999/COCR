@@ -45,10 +45,8 @@ GNU General Public License for more details.
 #define N_PROPERTIES 4
 
 
-
-namespace OpenBabel
-{
-  class OBMol;
+namespace OpenBabel {
+    class OBMol;
 
 /**
 \class  OBSpectrophore spectrophore.h <openbabel/spectrophore.h>
@@ -299,212 +297,217 @@ Spectrophores&tm; are recommended.
 
 @since version 2.3
 */
-   class OBAPI OBSpectrophore
-   {
-      public:
+    class OBAPI OBSpectrophore {
+    public:
 
-         /** Accuracy options
-         */
-         enum AccuracyOption {AngStepSize1,
-                              AngStepSize2,
-                              AngStepSize5,
-                              AngStepSize10,
-                              AngStepSize15,
-                              AngStepSize20,
-                              AngStepSize30,
-                              AngStepSize36,
-                              AngStepSize45,
-                              AngStepSize60};
+        /** Accuracy options
+        */
+        enum AccuracyOption {
+            AngStepSize1,
+            AngStepSize2,
+            AngStepSize5,
+            AngStepSize10,
+            AngStepSize15,
+            AngStepSize20,
+            AngStepSize30,
+            AngStepSize36,
+            AngStepSize45,
+            AngStepSize60
+        };
 
-         /** Normalisation options
-         */
-         enum NormalizationOption {NoNormalization,
-                                   NormalizationTowardsZeroMean,
-                                   NormalizationTowardsUnitStd,
-                                   NormalizationTowardsZeroMeanAndUnitStd};
+        /** Normalisation options
+        */
+        enum NormalizationOption {
+            NoNormalization,
+            NormalizationTowardsZeroMean,
+            NormalizationTowardsUnitStd,
+            NormalizationTowardsZeroMeanAndUnitStd
+        };
 
-         /** Stereo options
-         */
-         enum StereoOption {NoStereoSpecificProbes,
-                            UniqueStereoSpecificProbes,
-                            MirrorStereoSpecificProbes,
-                            AllStereoSpecificProbes};
+        /** Stereo options
+        */
+        enum StereoOption {
+            NoStereoSpecificProbes,
+            UniqueStereoSpecificProbes,
+            MirrorStereoSpecificProbes,
+            AllStereoSpecificProbes
+        };
 
-         //@}
+        //@}
 
-         /** \name Structors */
-         //@{
-         /** Default constructor to create an OBSpectrophore object.
-         */
-         OBSpectrophore(void);
+        /** \name Structors */
+        //@{
+        /** Default constructor to create an OBSpectrophore object.
+        */
+        OBSpectrophore(void);
 
-         /** Copy constructor to create an OBSpectrophore object by taking
-         a copy from another OBSpectrophore object.
+        /** Copy constructor to create an OBSpectrophore object by taking
+        a copy from another OBSpectrophore object.
 
-         \param   sphore A reference to the source OBSpectrophore object
-         */
-         OBSpectrophore(const OBSpectrophore& sphore);
+        \param   sphore A reference to the source OBSpectrophore object
+        */
+        OBSpectrophore(const OBSpectrophore &sphore);
 
-         /** Default destructor object
-         */
-         virtual ~OBSpectrophore(void);
-         //@}
+        /** Default destructor object
+        */
+        virtual ~OBSpectrophore(void);
+        //@}
 
-         /** \name Overloaded operators */
-         //@{
-         /** Assignment operator that assigns a source OBSpectrophore object to
-         the target OBSpectrophore object.
+        /** \name Overloaded operators */
+        //@{
+        /** Assignment operator that assigns a source OBSpectrophore object to
+        the target OBSpectrophore object.
 
-         \param   sphore A reference to the source OBSpectrophore object
-         \return  A reference to the new target OBSpectrophore object
-         */
-         OBSpectrophore& operator=(const OBSpectrophore& sphore);
-         //@}
+        \param   sphore A reference to the source OBSpectrophore object
+        \return  A reference to the new target OBSpectrophore object
+        */
+        OBSpectrophore &operator=(const OBSpectrophore &sphore);
+        //@}
 
-         /** \name Set methods */
-         //@{
-         /** Method to set the resolution at which Spectrophores&tm; will be
-         calculated.
+        /** \name Set methods */
+        //@{
+        /** Method to set the resolution at which Spectrophores&tm; will be
+        calculated.
 
-         Sets the resolution at which Spectrophores&tm; are calculated. The
-         resolution is an arbitrary positive number larger than 0.0, and is used
-         to increase the box size for the calculation of Spectrophores&tm; in
-         all directions. For example, a resolution of 3 means that the box size
-         will be increased by a value of 3 &Aring; in all directions. Smaller
-         values for the resolution have the effect that small differences in the
-         atomic properties will result in more enhanced differences in the
-         resulting Spectrophores&tm;, while larger resolution values will result
-         in the smoothing of local property differences. All values &lt;= 0.0
-         are automatically reset to the default value of 3.0.
+        Sets the resolution at which Spectrophores&tm; are calculated. The
+        resolution is an arbitrary positive number larger than 0.0, and is used
+        to increase the box size for the calculation of Spectrophores&tm; in
+        all directions. For example, a resolution of 3 means that the box size
+        will be increased by a value of 3 &Aring; in all directions. Smaller
+        values for the resolution have the effect that small differences in the
+        atomic properties will result in more enhanced differences in the
+        resulting Spectrophores&tm;, while larger resolution values will result
+        in the smoothing of local property differences. All values &lt;= 0.0
+        are automatically reset to the default value of 3.0.
 
-         \param   r The desired resolution expressed as a double number
-         */
-         void SetResolution(const double r = 3.0);
+        \param   r The desired resolution expressed as a double number
+        */
+        void SetResolution(const double r = 3.0);
 
-         /** Method to set the accuracy at which Spectrophores&tm; will be
-         calculated.
+        /** Method to set the accuracy at which Spectrophores&tm; will be
+        calculated.
 
-         Sets the accuracy by which Spectrophores&tm; are calculated. The
-         accuracy is linked to the angular step increment that is used to
-         calculate Spectrophores&tm;. The accuracy parameter is an enumeration
-         type defined by OBSpectrophore::AccuracyOption. should be a number ranging
-         between 0 and 9 (inclusive), where a value of 9 means a very high
-         accuracy, and 0 means no accuracy at all. Values between 2-6 are a good
-         compromise between accuracy and speed. The following table provides the
-         link between the parameter value and the angular step size:
-         <TABLE>
-         <TR><TD><B>Accuracy</B></TD><TD><B>OBSpectrophore::AccuracyOption parameter</B></TD><TD><B>Minimal angular steps size</B></TD></TR>
-         <TR><TD>Extremely high</TD><TD><CENTER>AngStepSize1</CENTER></TD><TD><CENTER>1º</CENTER></TD></TR>
-         <TR><TD>Extremely high</TD><TD><CENTER>AngStepSize2</CENTER></TD><TD><CENTER>2º</CENTER></TD></TR>
-         <TR><TD>Very High</TD><TD><CENTER>AngStepSize5</CENTER></TD><TD><CENTER>5º</CENTER></TD></TR>
-         <TR><TD>Very high</TD><TD><CENTER>AngStepSize10</CENTER></TD><TD><CENTER>10º</CENTER></TD></TR>
-         <TR><TD>High</TD><TD><CENTER>AngStepSize15</CENTER></TD><TD><CENTER>15º</CENTER></TD></TR>
-         <TR><TD>Default</TD><TD><CENTER>AngStepSize20</CENTER></TD><TD><CENTER>20º</CENTER></TD></TR>
-         <TR><TD>Low</TD><TD><CENTER>AngStepSize30</CENTER></TD><TD><CENTER>30º</CENTER></TD></TR>
-         <TR><TD>Very low</TD><TD><CENTER>AngStepSize36</CENTER></TD><TD><CENTER>36º</CENTER></TD></TR>
-         <TR><TD>Extremely low</TD><TD><CENTER>AngStepSize45</CENTER></TD><TD><CENTER>45º</CENTER></TD></TR>
-         <TR><TD>Extremely low</TD><TD><CENTER>AngStepSize60</CENTER></TD><TD><CENTER>60º</CENTER></TD></TR>
-         </TABLE>
+        Sets the accuracy by which Spectrophores&tm; are calculated. The
+        accuracy is linked to the angular step increment that is used to
+        calculate Spectrophores&tm;. The accuracy parameter is an enumeration
+        type defined by OBSpectrophore::AccuracyOption. should be a number ranging
+        between 0 and 9 (inclusive), where a value of 9 means a very high
+        accuracy, and 0 means no accuracy at all. Values between 2-6 are a good
+        compromise between accuracy and speed. The following table provides the
+        link between the parameter value and the angular step size:
+        <TABLE>
+        <TR><TD><B>Accuracy</B></TD><TD><B>OBSpectrophore::AccuracyOption parameter</B></TD><TD><B>Minimal angular steps size</B></TD></TR>
+        <TR><TD>Extremely high</TD><TD><CENTER>AngStepSize1</CENTER></TD><TD><CENTER>1º</CENTER></TD></TR>
+        <TR><TD>Extremely high</TD><TD><CENTER>AngStepSize2</CENTER></TD><TD><CENTER>2º</CENTER></TD></TR>
+        <TR><TD>Very High</TD><TD><CENTER>AngStepSize5</CENTER></TD><TD><CENTER>5º</CENTER></TD></TR>
+        <TR><TD>Very high</TD><TD><CENTER>AngStepSize10</CENTER></TD><TD><CENTER>10º</CENTER></TD></TR>
+        <TR><TD>High</TD><TD><CENTER>AngStepSize15</CENTER></TD><TD><CENTER>15º</CENTER></TD></TR>
+        <TR><TD>Default</TD><TD><CENTER>AngStepSize20</CENTER></TD><TD><CENTER>20º</CENTER></TD></TR>
+        <TR><TD>Low</TD><TD><CENTER>AngStepSize30</CENTER></TD><TD><CENTER>30º</CENTER></TD></TR>
+        <TR><TD>Very low</TD><TD><CENTER>AngStepSize36</CENTER></TD><TD><CENTER>36º</CENTER></TD></TR>
+        <TR><TD>Extremely low</TD><TD><CENTER>AngStepSize45</CENTER></TD><TD><CENTER>45º</CENTER></TD></TR>
+        <TR><TD>Extremely low</TD><TD><CENTER>AngStepSize60</CENTER></TD><TD><CENTER>60º</CENTER></TD></TR>
+        </TABLE>
 
-         \param  a The desired accuracy expressed as an
-         OBSpectrophore::AccuracyOption enumeration type
-         */
-         void SetAccuracy(const AccuracyOption a = AngStepSize20);
+        \param  a The desired accuracy expressed as an
+        OBSpectrophore::AccuracyOption enumeration type
+        */
+        void SetAccuracy(const AccuracyOption a = AngStepSize20);
 
-         /** Method to set the required stereoselectivity of the resulting
-         Spectrophores&tm;.
+        /** Method to set the required stereoselectivity of the resulting
+        Spectrophores&tm;.
 
-         Sets the stereoselectivity of the generated Spectrophores&tm;. This is
-         achieved by selecting the appropriate probes for the calculation. In
-         the default case that no stereoselectivity is required, only
-         non-stereospecific probes are used in the calculation. Stereospecific
-         differences between enantiomers are only captured in combination with a
-         very high accuracy, hence leading to very long computation times. The
-         following table provides the link between the parameter value and the
-         desired stereochemical treatment:
-         <TABLE>
-         <TR><TD><B>Stereo treatment</B></TD><TD><B>OBSpectrophore::StereoOption parameter</B></TD></TR>
-         <TR><TD>Non-stereospecific probes (default)</TD><TD><CENTER>NoStereoSpecificProbes</CENTER></TD></TR>
-         <TR><TD>Only the mirror stereospecific probes</TD><TD><CENTER>UniqueStereoSpecificProbes</CENTER></TD></TR>
-         <TR><TD>Only the unique stereospecific probes</TD><TD><CENTER>MirrorStereoSpecificProbes</CENTER></TD></TR>
-         <TR><TD>All stereospecific probes (unique and mirror)</TD><TD><CENTER>AllStereoSpecificProbes</CENTER></TD></TR>
-         </TABLE>
+        Sets the stereoselectivity of the generated Spectrophores&tm;. This is
+        achieved by selecting the appropriate probes for the calculation. In
+        the default case that no stereoselectivity is required, only
+        non-stereospecific probes are used in the calculation. Stereospecific
+        differences between enantiomers are only captured in combination with a
+        very high accuracy, hence leading to very long computation times. The
+        following table provides the link between the parameter value and the
+        desired stereochemical treatment:
+        <TABLE>
+        <TR><TD><B>Stereo treatment</B></TD><TD><B>OBSpectrophore::StereoOption parameter</B></TD></TR>
+        <TR><TD>Non-stereospecific probes (default)</TD><TD><CENTER>NoStereoSpecificProbes</CENTER></TD></TR>
+        <TR><TD>Only the mirror stereospecific probes</TD><TD><CENTER>UniqueStereoSpecificProbes</CENTER></TD></TR>
+        <TR><TD>Only the unique stereospecific probes</TD><TD><CENTER>MirrorStereoSpecificProbes</CENTER></TD></TR>
+        <TR><TD>All stereospecific probes (unique and mirror)</TD><TD><CENTER>AllStereoSpecificProbes</CENTER></TD></TR>
+        </TABLE>
 
-         \param   s The desired stereospecificity treatment expressed as an
-         OBSpectrophore::StereoOption enumeration type
-         */
-         void SetStereo(const StereoOption s = NoStereoSpecificProbes);
+        \param   s The desired stereospecificity treatment expressed as an
+        OBSpectrophore::StereoOption enumeration type
+        */
+        void SetStereo(const StereoOption s = NoStereoSpecificProbes);
 
-         /** Method to set the desired normalization treatment of the calculated
-         Spectrophores&tm;.
+        /** Method to set the desired normalization treatment of the calculated
+        Spectrophores&tm;.
 
-         The following table provides the link between the parameter value
-         and the desired normalization treatment:
-         <TABLE>
-         <TR><TD><B>Normalization treatment</B></TD><TD><B>OBSpectrophore::NormalizationOption parameter</B></TD></TR>
-         <TR><TD>No normalisation (default)</TD><TD><CENTER>NoNormalization</CENTER></TD></TR>
-         <TR><TD>Normalization towards zero mean</TD><TD><CENTER>NormalizationTowardsZeroMean</CENTER></TD></TR>
-         <TR><TD>Normalization towards unit standard deviation</TD><TD><CENTER>NormalizationTowardsUnitStd</CENTER></TD></TR>
-         <TR><TD>Normalization towards zero mean and unit standard deviation</TD><TD><CENTER>NormalizationTowardsZeroMeanAndUnitStd</CENTER></TD></TR>
-         </TABLE>
-         </P>
+        The following table provides the link between the parameter value
+        and the desired normalization treatment:
+        <TABLE>
+        <TR><TD><B>Normalization treatment</B></TD><TD><B>OBSpectrophore::NormalizationOption parameter</B></TD></TR>
+        <TR><TD>No normalisation (default)</TD><TD><CENTER>NoNormalization</CENTER></TD></TR>
+        <TR><TD>Normalization towards zero mean</TD><TD><CENTER>NormalizationTowardsZeroMean</CENTER></TD></TR>
+        <TR><TD>Normalization towards unit standard deviation</TD><TD><CENTER>NormalizationTowardsUnitStd</CENTER></TD></TR>
+        <TR><TD>Normalization towards zero mean and unit standard deviation</TD><TD><CENTER>NormalizationTowardsZeroMeanAndUnitStd</CENTER></TD></TR>
+        </TABLE>
+        </P>
 
-         \param   n The desired normalization treatment expressed as an
-         OBSpectrophore::NormalizationOption enumeration type
-         */
-         void SetNormalization(const NormalizationOption n = NoNormalization);
-         //@}
+        \param   n The desired normalization treatment expressed as an
+        OBSpectrophore::NormalizationOption enumeration type
+        */
+        void SetNormalization(const NormalizationOption n = NoNormalization);
+        //@}
 
-         /** \name Get methods */
-         //@{
-         /** Returns the accuracy at which Spectrophores&tm; will be calculated.
+        /** \name Get methods */
+        //@{
+        /** Returns the accuracy at which Spectrophores&tm; will be calculated.
 
-         \return  The accuracy expressed as an OBSpectrophore::AccuracyOption
-                  enumeration type. For a link between the returned value and
-                  the angular step size, see the
-                  OBSpectrophore::SetAccuracy(const OBSpectrophore::AccuracyOption)
-                  method.
-         */
-         AccuracyOption GetAccuracy(void) const;
+        \return  The accuracy expressed as an OBSpectrophore::AccuracyOption
+                 enumeration type. For a link between the returned value and
+                 the angular step size, see the
+                 OBSpectrophore::SetAccuracy(const OBSpectrophore::AccuracyOption)
+                 method.
+        */
+        AccuracyOption GetAccuracy(void) const;
 
-         /** Returns the resolution at which Spectrophores&tm; will be calculated.
+        /** Returns the resolution at which Spectrophores&tm; will be calculated.
 
-         \return  The resolution in &Aring; units
-         */
-         double GetResolution(void) const;
+        \return  The resolution in &Aring; units
+        */
+        double GetResolution(void) const;
 
-         /** Returns the stereoselectivity setting at which Spectrophores&tm;
-         will be calculated.
+        /** Returns the stereoselectivity setting at which Spectrophores&tm;
+        will be calculated.
 
-         \return  The level of stereospecificity expressed as an
-                  OBSpectrophore::StereoOption enumeration type. For a link
-                  between the returned value and the stereoselectivity
-                  treatment, see the
-                  OBSpectrophore::SetStereo(const OBSpectrophore::StereoOption)
-                  method.
-         */
-         StereoOption GetStereo(void) const;
+        \return  The level of stereospecificity expressed as an
+                 OBSpectrophore::StereoOption enumeration type. For a link
+                 between the returned value and the stereoselectivity
+                 treatment, see the
+                 OBSpectrophore::SetStereo(const OBSpectrophore::StereoOption)
+                 method.
+        */
+        StereoOption GetStereo(void) const;
 
-         /** Returns the normalization settings at which Spectrophores&tm; will
-         be calculated.
+        /** Returns the normalization settings at which Spectrophores&tm; will
+        be calculated.
 
-         \return  The normalization treatmet expressed as an
-                  OBSpectrophore::NormalizationOption enumeration type.
-                  For a link between the returned value and the normalization
-                  treatment, see the
-                  OBSpectrophore::SetNormalization(const OBSpectrophore::NormalizationOption)
-                  method.
-         */
-         NormalizationOption GetNormalization(void) const;
+        \return  The normalization treatmet expressed as an
+                 OBSpectrophore::NormalizationOption enumeration type.
+                 For a link between the returned value and the normalization
+                 treatment, see the
+                 OBSpectrophore::SetNormalization(const OBSpectrophore::NormalizationOption)
+                 method.
+        */
+        NormalizationOption GetNormalization(void) const;
 
-         /** Calling this method starts the calculation of the Spectrophore&tm;.
-         After successful calculation, the Spectrophore&tm; is returned as a
-         standard vector of 48 doubles. The 48 doubles are organised into 4 sets
-         of 12 doubles each:-
-         - numbers 01-11: Spectrophore&tm; values calculated from the atomic partial charges;
-         - numbers 13-24: Spectrophore&tm; values calculated from the atomic lipophilicity properties;
-         - numbers 25-36: Spectrophore&tm; values calculated from the atomic shape deviations;
-         - numbers 37-48: Spectrophore&tm; values calculated from the atomic electrophilicity properties;
+        /** Calling this method starts the calculation of the Spectrophore&tm;.
+        After successful calculation, the Spectrophore&tm; is returned as a
+        standard vector of 48 doubles. The 48 doubles are organised into 4 sets
+        of 12 doubles each:-
+        - numbers 01-11: Spectrophore&tm; values calculated from the atomic partial charges;
+        - numbers 13-24: Spectrophore&tm; values calculated from the atomic lipophilicity properties;
+        - numbers 25-36: Spectrophore&tm; values calculated from the atomic shape deviations;
+        - numbers 37-48: Spectrophore&tm; values calculated from the atomic electrophilicity properties;
 
 \code
 OpenBabel::OBConversion obconversion;
@@ -519,85 +522,98 @@ std::ifstream ifs;
 ifs.open(argv[1]);
 while (obconversion.Read(&mol, &ifs))
 {
-   std::vector<double> result = s.GetSpectrophore(&mol);
-   for (unsigned int i(0); i < result.size(); ++i)
-   {
-      if (!(i%12)) std::cerr << std::endl;
-      std::cerr << result[i] << "  ";
-   }
-   std::cerr << std::endl;
-   mol.Clear();
+  std::vector<double> result = s.GetSpectrophore(&mol);
+  for (unsigned int i(0); i < result.size(); ++i)
+  {
+     if (!(i%12)) std::cerr << std::endl;
+     std::cerr << result[i] << "  ";
+  }
+  std::cerr << std::endl;
+  mol.Clear();
 }
 \endcode
 
-         \param   mol Pointer to the OBMol object from which to calculate a
-                  Spectrophore&tm;. For proper functioning, the input molecule
-                  should have all explicit hydrogens assigned and the molecule
-                  should have a three-dimensional conformation assigned. It is
-                  the responsability of the programmer to make sure that the
-                  molecule is in the desired protonation state.
+        \param   mol Pointer to the OBMol object from which to calculate a
+                 Spectrophore&tm;. For proper functioning, the input molecule
+                 should have all explicit hydrogens assigned and the molecule
+                 should have a three-dimensional conformation assigned. It is
+                 the responsability of the programmer to make sure that the
+                 molecule is in the desired protonation state.
 
-         \return  The calculated Spectrophore&tm; as a standard vector of 48
-                  doubles. An empty vector of doubles is returned in case an
-                  error occurred during the calculation. For example, this could
-                  happen in the case that the molecule contains less than three
-                  atoms. It is therefore up to the user to check the size of the
-                  returned vector to capture errors.
-         */
-         std::vector<double> GetSpectrophore(OpenBabel::OBMol* mol);
-         //@}
+        \return  The calculated Spectrophore&tm; as a standard vector of 48
+                 doubles. An empty vector of doubles is returned in case an
+                 error occurred during the calculation. For example, this could
+                 happen in the case that the molecule contains less than three
+                 atoms. It is therefore up to the user to check the size of the
+                 returned vector to capture errors.
+        */
+        std::vector<double> GetSpectrophore(OpenBabel::OBMol *mol);
+        //@}
 
 
-      protected:
+    protected:
 
-         //@{
-         double               _resolution;
-         AccuracyOption       _accuracy;
-         StereoOption         _stereoFlag;
-         NormalizationOption  _normalization;
-         std::vector<int>     _rotationStepList;
-         unsigned int         _nAtoms;
-         double**             _property;
-         double*              _radii;
-         double**             _oricoor;
-         double**             _coor;
-         unsigned int         _beginProbe;
-         unsigned int         _endProbe;
-         unsigned int         _numberOfProbes;
-         std::vector<double>  _spectro;
-         struct
-         {
+        //@{
+        double _resolution;
+        AccuracyOption _accuracy;
+        StereoOption _stereoFlag;
+        NormalizationOption _normalization;
+        std::vector<int> _rotationStepList;
+        unsigned int _nAtoms;
+        double **_property;
+        double *_radii;
+        double **_oricoor;
+        double **_coor;
+        unsigned int _beginProbe;
+        unsigned int _endProbe;
+        unsigned int _numberOfProbes;
+        std::vector<double> _spectro;
+        struct {
             int value[12];
-         }                    _probe[48];
-         struct
-         {
+        } _probe[48];
+        struct {
             double x;
             double y;
             double z;
             double v[N_PROPERTIES];
-         }                    _boxPoint[12];
-         //@}
+        } _boxPoint[12];
+        //@}
 
-         //@{
-         void _getMoleculeData(OpenBabel::OBMol*);
-         void _orient(void);
-         void _getBox(double**);
-         void _setBox(void);
-         void _getEnergies(double**, double*);
-         void _initiateSpectrophore(double*, double*);
-         void _rotateX(double**, double**, const double, const double);
-         void _rotateY(double**, double**, const double, const double);
-         void _rotateZ(double**, double**, const double, const double);
-         void _updateSpectrophore(double*, double*);
-         void _calculateProperties(OpenBabel::OBMol*);
-         void _solveMatrix(double**, double*, unsigned int);
-         void _luDecompose(double**, std::vector<int>&, unsigned int);
-         void _luSolve(double**, std::vector<int>&, double*, unsigned int);
-         void _swapRows(double*, unsigned int, unsigned int);
-         void _swapRows(double**, unsigned int, unsigned int, unsigned int);
-         //@}
+        //@{
+        void _getMoleculeData(OpenBabel::OBMol *);
 
-   };
+        void _orient(void);
+
+        void _getBox(double **);
+
+        void _setBox(void);
+
+        void _getEnergies(double **, double *);
+
+        void _initiateSpectrophore(double *, double *);
+
+        void _rotateX(double **, double **, const double, const double);
+
+        void _rotateY(double **, double **, const double, const double);
+
+        void _rotateZ(double **, double **, const double, const double);
+
+        void _updateSpectrophore(double *, double *);
+
+        void _calculateProperties(OpenBabel::OBMol *);
+
+        void _solveMatrix(double **, double *, unsigned int);
+
+        void _luDecompose(double **, std::vector<int> &, unsigned int);
+
+        void _luSolve(double **, std::vector<int> &, double *, unsigned int);
+
+        void _swapRows(double *, unsigned int, unsigned int);
+
+        void _swapRows(double **, unsigned int, unsigned int, unsigned int);
+        //@}
+
+    };
 
 } // end namespace OpenBabel
 

@@ -21,11 +21,14 @@ if (MSVC)
     include_directories(${RES_ROOT})
 endif (MSVC)
 
-add_definitions(-DMAKE_OBDLL)
+add_definitions(-DBUILD_LIBS)
+if (NOT BUILD_SHARED_LIBS)
+    add_definitions(-DLEAFXY_STATIC)
+endif (NOT BUILD_SHARED_LIBS)
 
 #set_source_files_properties(${OPENBABEL_SRCS} PROPERTIES LANGUAGE CXX )
 
-add_library(${PROJECT_NAME} SHARED ${OPENBABEL_SRCS})
+add_library(${PROJECT_NAME} ${OPENBABEL_SRCS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 

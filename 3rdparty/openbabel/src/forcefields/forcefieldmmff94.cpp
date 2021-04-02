@@ -1435,7 +1435,8 @@ namespace OpenBabel {
                     _mol.GetAtom(*rj)->SetAromatic();
                 }
                 // mark all ring bonds as aromatic
-                FOR_BONDS_OF_MOL (bond, _mol)if ((*ri)->IsMember(&*bond))
+                FOR_BONDS_OF_MOL (bond, _mol)
+                    if ((*ri)->IsMember(&*bond))
                         bond->SetAromatic();
             }
         }
@@ -3851,18 +3852,20 @@ namespace OpenBabel {
                         s_count++;
 
                     if (nbr->GetAtomicNum() == OBElements::Phosphorus || nbr->GetAtomicNum() == OBElements::Sulfur) {
-                        FOR_NBORS_OF_ATOM(nbr2, &*nbr)if ((nbr2->GetAtomicNum() == OBElements::Sulfur ||
-                                                           nbr2->GetAtomicNum() == OBElements::Oxygen) &&
-                                                          (nbr2->GetExplicitDegree() == 1) &&
-                                                          (atom->GetIdx() != nbr2->GetIdx()))
+                        FOR_NBORS_OF_ATOM(nbr2, &*nbr)
+                            if ((nbr2->GetAtomicNum() == OBElements::Sulfur ||
+                                 nbr2->GetAtomicNum() == OBElements::Oxygen) &&
+                                (nbr2->GetExplicitDegree() == 1) &&
+                                (atom->GetIdx() != nbr2->GetIdx()))
                                 atom->SetPartialCharge(-0.5);
                     } else
                         atom->SetPartialCharge(-1.0);
 
                     if (nbr->GetAtomicNum() == OBElements::Carbon)
-                        FOR_NBORS_OF_ATOM(nbr2, &*nbr)if (nbr2->GetAtomicNum() == OBElements::Sulfur &&
-                                                          (nbr2->GetExplicitDegree() == 1) &&
-                                                          (atom->GetIdx() != nbr2->GetIdx()))
+                        FOR_NBORS_OF_ATOM(nbr2, &*nbr)
+                            if (nbr2->GetAtomicNum() == OBElements::Sulfur &&
+                                (nbr2->GetExplicitDegree() == 1) &&
+                                (atom->GetIdx() != nbr2->GetIdx()))
                                 atom->SetPartialCharge(-0.5); // SSMO
 
                     if (s_count >= 2)
@@ -3905,10 +3908,14 @@ namespace OpenBabel {
                         if (n_count) // coverity defensive testing
                             atom->SetPartialCharge(1.0 / n_count); // NIM+
 
-                        FOR_NBORS_OF_ATOM(nbr, &*atom)FOR_NBORS_OF_ATOM(nbr2, &*nbr)if (atoi(nbr2->GetType()) == 56)
+                        FOR_NBORS_OF_ATOM(nbr, &*atom)
+                            FOR_NBORS_OF_ATOM(nbr2, &*nbr)
+                                if (atoi(nbr2->GetType()) == 56)
                                     atom->SetPartialCharge(1.0 / 3.0);
 
-                        FOR_NBORS_OF_ATOM(nbr, &*atom)FOR_NBORS_OF_ATOM(nbr2, &*nbr)if (atoi(nbr2->GetType()) == 55)
+                        FOR_NBORS_OF_ATOM(nbr, &*atom)
+                            FOR_NBORS_OF_ATOM(nbr2, &*nbr)
+                                if (atoi(nbr2->GetType()) == 55)
                                     atom->SetPartialCharge(1.0 / (1.0 + n_count));
                     }
             }
@@ -3947,12 +3954,14 @@ namespace OpenBabel {
 
             // charge sharing
             if (!factor)
-                FOR_NBORS_OF_ATOM (nbr, &*atom)if (nbr->GetPartialCharge() < 0.0)
+                FOR_NBORS_OF_ATOM (nbr, &*atom)
+                    if (nbr->GetPartialCharge() < 0.0)
                         q0a += nbr->GetPartialCharge() / (2.0 * (double) (nbr->GetExplicitDegree()));
 
             // needed for SEYWUO, positive charge sharing?
             if (type == 62)
-                FOR_NBORS_OF_ATOM (nbr, &*atom)if (nbr->GetPartialCharge() > 0.0)
+                FOR_NBORS_OF_ATOM (nbr, &*atom)
+                    if (nbr->GetPartialCharge() > 0.0)
                         q0a -= nbr->GetPartialCharge() / 2.0;
 
             q0b = 0.0;

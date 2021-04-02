@@ -99,10 +99,10 @@ namespace OpenBabel {
             return false;
 
 #ifndef _DEBUG //reloads on every call in debug mode
-        if(!_dataLoaded)
+        if (!_dataLoaded)
 #endif
-        if (!Initialize())
-            return false;
+            if (!Initialize())
+                return false;
 
         vector<OBChemTsfm>::iterator itr;
         for (itr = _transforms.begin(); itr != _transforms.end(); ++itr)

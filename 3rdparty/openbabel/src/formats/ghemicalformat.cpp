@@ -199,7 +199,8 @@ namespace OpenBabel {
         OBMol &mol = *pmol;
 
         // delete dummy atoms
-        FOR_ATOMS_OF_MOL(atom, pmol)if (atom->GetAtomicNum() == 0)
+        FOR_ATOMS_OF_MOL(atom, pmol)
+            if (atom->GetAtomicNum() == 0)
                 mol.DeleteAtom(&*atom);
 
         // Ghemical header -- here "version 1.0" format

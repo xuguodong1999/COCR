@@ -537,8 +537,7 @@ namespace OpenBabel {
             next.Clear();
             for (i = curr.NextBit(-1); i != curr.EndBit(); i = curr.NextBit(i)) {
                 atom = GetAtom(i);
-                FOR_BONDS_OF_ATOM (bond, atom)
-                    if (!used.BitIsSet(bond->GetNbrAtomIdx(atom)))
+                FOR_BONDS_OF_ATOM (bond, atom)if (!used.BitIsSet(bond->GetNbrAtomIdx(atom)))
                         next.SetBitOn(bond->GetNbrAtomIdx(atom));
             }
 

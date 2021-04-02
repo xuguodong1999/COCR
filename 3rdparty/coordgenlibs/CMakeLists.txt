@@ -15,7 +15,12 @@ endif (MSVC)
 
 #set_source_files_properties(${COORDGEN_SRCS} PROPERTIES LANGUAGE CXX)
 
-add_library(${PROJECT_NAME} SHARED ${COORDGEN_SRCS})
+add_definitions(-DBUILD_LIBS)
+if (NOT BUILD_SHARED_LIBS)
+    add_definitions(-DLEAFXY_STATIC)
+endif (NOT BUILD_SHARED_LIBS)
+
+add_library(${PROJECT_NAME} ${COORDGEN_SRCS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 

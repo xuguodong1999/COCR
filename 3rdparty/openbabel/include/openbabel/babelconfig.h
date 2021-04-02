@@ -3,12 +3,18 @@
 /* The version of Open Babel */
 #define BABEL_VERSION "3.1.1"
 
+#ifdef LEAFXY_STATIC
+#define OB_EXPORT
+#define OB_IMPORT
+#define OB_HIDDEN
+#else
 #define OB_EXPORT Q_DECL_EXPORT
 #define OB_IMPORT Q_DECL_IMPORT
 #define OB_HIDDEN Q_DECL_HIDDEN
+#endif
 
 /* Used to export symbols for DLL / shared library builds */
-#if defined(MAKE_OBDLL) // e.g. in src/main.cpp
+#if defined(BUILD_LIBS) // e.g. in src/main.cpp
 #ifndef OB_EXTERN
 #define OB_EXTERN OB_EXPORT extern
 #endif

@@ -739,7 +739,8 @@ namespace OpenBabel {
             // This avoids premature backtracking (see IsPropagationValid)
             FOR_ATOMS_OF_MOL (atom, mol) {
                 int numUnassignedBonds = 0;
-                FOR_BONDS_OF_ATOM (bond, &*atom)if (bondTypes[bond->GetIdx()] == Unassigned)
+                FOR_BONDS_OF_ATOM (bond, &*atom)
+                    if (bondTypes[bond->GetIdx()] == Unassigned)
                         ++numUnassignedBonds;
                 if (!numUnassignedBonds)
                     atomTypes[atom->GetIndex()] = Other;
@@ -779,7 +780,8 @@ namespace OpenBabel {
 
             if (canonical) {
                 // Set all unassigned bonds to single
-                FOR_BONDS_OF_MOL (bond, mol)if (bondTypes[bond->GetIdx()] == Unassigned)
+                FOR_BONDS_OF_MOL (bond, mol)
+                    if (bondTypes[bond->GetIdx()] == Unassigned)
                         bond->SetBondOrder(1);
                 mol->SetAromaticPerceived(false);
 

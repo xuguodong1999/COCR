@@ -1465,7 +1465,8 @@ namespace OpenBabel {
     OBAtom *
     findAtomWithSymmetryClass(OBAtom *atom, unsigned int symClass, const std::vector<unsigned int> &symClasses) {
         OBAtom *ligandAtom = nullptr;
-        FOR_NBORS_OF_ATOM (nbr, atom)if (symClasses.at(nbr->GetIndex()) == symClass)
+        FOR_NBORS_OF_ATOM (nbr, atom)
+            if (symClasses.at(nbr->GetIndex()) == symClass)
                 ligandAtom = &*nbr;
         return ligandAtom;
     }
@@ -2468,7 +2469,8 @@ namespace OpenBabel {
             using namespace std;
             if (!config.specified || (config.specified && config.winding == OBStereo::UnknownWinding)) {
                 // unspecified or specified as unknown
-                FOR_NBORS_OF_ATOM (nbr, center)if (config.from == OBStereo::NoRef)
+                FOR_NBORS_OF_ATOM (nbr, center)
+                    if (config.from == OBStereo::NoRef)
                         config.from = nbr->GetId();
                     else
                         config.refs.push_back(nbr->GetId());

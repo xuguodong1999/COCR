@@ -3,12 +3,10 @@ Using the schrodinger Python modules, read a template .mae file to
 generate the coordgen template C++ files.
 """
 
-import sys
-import os
-import textwrap
 import argparse
+import os
 import subprocess
-
+import textwrap
 from schrodinger import structure
 
 NAME = 'CoordgenTemplates'

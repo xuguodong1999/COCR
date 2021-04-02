@@ -23,15 +23,15 @@ bool xgd::TextRecognizerNcnnImpl::initModel(
 std::pair<std::string, std::vector<float>> xgd::TextRecognizerNcnnImpl::recognize(
         const cv::Mat &_originImage) {
     cv::Mat srcResize = preProcess(_originImage);
-    ncnn::Mat input = ncnn::Mat::from_pixels(
+    ncnn::Mat in = ncnn::Mat::from_pixels(
             srcResize.data, ncnn::Mat::PIXEL_GRAY,
             srcResize.cols, srcResize.rows);
     const float mv[3] = {meanValues, meanValues, meanValues}, nv[3] = {normValues, normValues, normValues};
-    input.substract_mean_normalize(mv, nv);
+    in.substract_mean_normalize(mv, nv);
 
     ncnn::Extractor extractor = net->create_extractor();
     extractor.set_num_threads(numThread);
-    extractor.input("input", input);
+    extractor.input("input", in);
     ncnn::Mat out;
     extractor.extract("out", out);
     return recognize((float *) out.data, out.h, out.w);

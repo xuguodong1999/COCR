@@ -19,8 +19,12 @@ qt5_add_big_resources(BIG_RES_FILES ${RES_ROOT}/big_res.qrc)
 set(RES_SRCS ${BIG_RES_FILES} ${RES_ROOT}/obdata.qrc ${RES_ROOT}/app.qrc)
 
 # include dir
-include_directories(${3RD_LIB_DIR}/openbabel/include
-        ${3RD_LIB_DIR}/coordgenlibs/include ${3RD_LIB_DIR}/ncnn-lib/include ./)
+include_directories(${3RD_LIB_DIR}/openbabel/include ${3RD_LIB_DIR}/coordgenlibs/include ./)
+if (MSVC AND NOT BUILD_SHARED_LIBS)
+    include_directories(${3RD_LIB_DIR}/ncnn-static-lib/include)
+else (MSVC AND NOT BUILD_SHARED_LIBS)
+    include_directories(${3RD_LIB_DIR}/ncnn-lib/include)
+endif (MSVC AND NOT BUILD_SHARED_LIBS)
 
 # source dir
 set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./composer)
@@ -42,6 +46,10 @@ endif (MSVC)
 
 #set_source_files_properties(${PROJECT_SOURCES} PROPERTIES LANGUAGE CXX)
 
+if (NOT BUILD_SHARED_LIBS)
+    add_definitions(-DLEAFXY_STATIC)
+endif (NOT BUILD_SHARED_LIBS)
+
 # add exe
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${APP_NAME} ${PROJECT_SOURCES})
@@ -62,17 +70,13 @@ target_compile_definitions(${APP_NAME} PRIVATE
 
 # link opencv, patched openbabel and qt here
 target_link_libraries(${APP_NAME} PRIVATE
-        ncnn openbabel coordgen
+        openbabel coordgen ncnn
         Qt${QT_VERSION_MAJOR}::3DCore
         Qt${QT_VERSION_MAJOR}::3DInput
         Qt${QT_VERSION_MAJOR}::3DExtras
         Qt${QT_VERSION_MAJOR}::3DRender
         Qt${QT_VERSION_MAJOR}::Widgets
         opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
-
-if(NOT BUILD_SHARED_LIBS)
-        target_link_options(${APP_NAME} PRIVATE "/FORCE:MULTIPLE")
-endif(NOT BUILD_SHARED_LIBS)
 
 # on desktop, i prefer to use large yolo weights by opencv_dnn, instead of ncnn
 if (NOT ANDROID)

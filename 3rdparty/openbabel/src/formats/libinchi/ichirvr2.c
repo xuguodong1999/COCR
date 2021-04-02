@@ -122,7 +122,7 @@ int RestoreAtomConnectionsSetStereo(StrFromINChI *pStruct, int iComponent, int i
     }
     INCHI_HEAPCHK
     /* atoms */
-    pStruct->at = at = (inp_ATOM *) inchi_calloc (num_atoms, sizeof(pStruct->at[0]));
+    pStruct->at = at = (inp_ATOM *) inchi_calloc(num_atoms, sizeof(pStruct->at[0]));
     if (!at) {
         ret = RI_ERR_ALLOC;
         goto exit_function;

@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+
 bool xgd::ObjectDetectorNcnnImpl::initModel(
         const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth) {
     maxWidth = maxHeight = _maxWidth - sizeBase;

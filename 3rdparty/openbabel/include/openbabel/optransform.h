@@ -21,50 +21,50 @@ GNU General Public License for more details.
 #include <openbabel/op.h>
 #include <vector>
 
-namespace OpenBabel
-{
-  class OBMol;
-  /** \class OpTransform optransform.h <openbabel/optransform.h>
-      \brief Applies molecular reactions/transforms (OBChemTsfm class) read from a datafile
-      \since version 2.2
-  */
-class OpTransform : public OBOp
-{
-public:
-  //! constructor. Each instance provides an ID, a datafile and a description.
-  OpTransform(const char* ID, const char* filename, const char* descr)
-    : OBOp(ID, false), _filename(filename), _descr(descr), _dataLoaded(false){}
+namespace OpenBabel {
+    class OBMol;
 
-  ~OpTransform(){}
+    /** \class OpTransform optransform.h <openbabel/optransform.h>
+        \brief Applies molecular reactions/transforms (OBChemTsfm class) read from a datafile
+        \since version 2.2
+    */
+    class OpTransform : public OBOp {
+    public:
+        //! constructor. Each instance provides an ID, a datafile and a description.
+        OpTransform(const char *ID, const char *filename, const char *descr)
+                : OBOp(ID, false), _filename(filename), _descr(descr), _dataLoaded(false) {}
 
-  virtual const char* Description();
+        ~OpTransform() {}
 
-  //!Checks that this op is being applied to the right kind of object(OBMol)
-  virtual bool WorksWith(OBBase* pOb)const{ return dynamic_cast<OBMol*>(pOb)!=nullptr; }
+        virtual const char *Description();
 
-  //! Carries out the transform
-  virtual bool Do(OBBase* pOb, const char* OptionText=nullptr, OpMap* pOptions=nullptr, OBConversion* pConv=nullptr);
+        //!Checks that this op is being applied to the right kind of object(OBMol)
+        virtual bool WorksWith(OBBase *pOb) const { return dynamic_cast<OBMol *>(pOb) != nullptr; }
 
-  virtual OpTransform* MakeInstance(const std::vector<std::string>& textlines)
-{
-  OpTransform* pTransform = new OpTransform(
-    textlines[1].c_str(),textlines[2].c_str(),textlines[3].c_str());
-  pTransform->_textlines = textlines;
-  return pTransform;
-}
+        //! Carries out the transform
+        virtual bool
+        Do(OBBase *pOb, const char *OptionText = nullptr, OpMap *pOptions = nullptr, OBConversion *pConv = nullptr);
 
-private:
-  bool Initialize();
-  void ParseLine(const char *buffer);
+        virtual OpTransform *MakeInstance(const std::vector<std::string> &textlines) {
+            OpTransform *pTransform = new OpTransform(
+                    textlines[1].c_str(), textlines[2].c_str(), textlines[3].c_str());
+            pTransform->_textlines = textlines;
+            return pTransform;
+        }
 
-private:
-  const char* _filename;
-  const char* _descr;
-  std::vector<std::string> _textlines;
+    private:
+        bool Initialize();
 
-  bool _dataLoaded;
-  std::vector<OBChemTsfm> _transforms;
-};
+        void ParseLine(const char *buffer);
+
+    private:
+        const char *_filename;
+        const char *_descr;
+        std::vector<std::string> _textlines;
+
+        bool _dataLoaded;
+        std::vector<OBChemTsfm> _transforms;
+    };
 
 }//namespace
 
