@@ -8,8 +8,10 @@ Application::Application(int &argc, char **argv, int flag) : QApplication(argc, 
     qApp->setOrganizationDomain("xuguodong1999.github.io");
     qApp->setApplicationName("leafxy app");
 //    getSettings().setValue("test_key1","你好");
+#ifndef Q_OS_ANDROID
     auto logger = LogManager::GetInstance();
     logger->init(qApp->applicationDirPath());
+#endif
 //    qDebug() << getSettings().value("test_key1", "默认值");
 }
 

@@ -20,18 +20,18 @@ bool GestureView::event(QEvent *event) {
 }
 
 void GestureView::zoom(const float &_k) {
-    qDebug() << "GestureView::zoom" << _k;
+//    qDebug() << "GestureView::zoom" << _k;
     QGraphicsView::scale(_k, _k);
     sumScale *= _k;
 }
 
 void GestureView::translate(const QPointF &_dir) {
-    qDebug() << "GestureView::translate" << _dir;
+//    qDebug() << "GestureView::translate" << _dir;
     QGraphicsView::translate(_dir.x(), _dir.y());
 }
 
 void GestureView::rotate(const float &_k) {
-    qDebug() << "GestureView::rotate" << _k;
+//    qDebug() << "GestureView::rotate" << _k;
     QGraphicsView::rotate(_k);
     sumAngle += _k;
 }

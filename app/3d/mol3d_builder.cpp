@@ -155,7 +155,8 @@ void Mol3DBuilder::build() {
                 break;
             }
             default: {
-                exit(-1);
+                qDebug() << "unknown bond type in Mol3DBuilder::build";
+                break;
             }
         }
         wrapper->setRindsAndSlices(100, 100);

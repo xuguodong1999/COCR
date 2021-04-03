@@ -119,8 +119,7 @@ namespace OpenBabel {
             cout << "**To support, cite Journal of Cheminformatics, 2011, 3, 8.\n";
             pff = OpenBabel::OBForceField::FindType("mmff94");
             if (!pff) {
-                cout << "!!Cannot find forcefield!" << endl;
-                exit(-1);
+                throw std::runtime_error("OpConfab::Do: !!Cannot find forcefield!");
             }
             DisplayConfig(pConv);
         }

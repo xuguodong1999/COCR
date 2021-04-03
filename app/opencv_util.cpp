@@ -1,5 +1,6 @@
 #include "opencv_util.hpp"
 #include <opencv2/imgproc.hpp>
+#include <QPixmap>
 
 void xgd::cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
                      const cv::Scalar &_color, const int &_thickness, bool _rotate) {
@@ -31,4 +32,37 @@ cv::Mat xgd::rotateCvMat(const cv::Mat &srcImage, double angle) {
                    cv::INTER_CUBIC, cv::BORDER_CONSTANT,
                    cv::Scalar(255, 255, 255));
     return destImage;
+}
+
+
+cv::Mat xgd::convertQImageToMat(const QImage &_img) {
+    cv::Mat mat;
+    if (_img.isNull()) {
+        throw std::runtime_error("you are converting an empty QImage to cv::Mat");
+    }
+    auto dataPtr = const_cast<uchar *>(_img.constBits());
+    int step = _img.bytesPerLine();
+    switch (_img.format()) {
+        case QImage::Format_RGB32:
+        case QImage::Format_ARGB32:
+        case QImage::Format_ARGB32_Premultiplied:
+            mat = cv::Mat(_img.height(), _img.width(), CV_8UC4, dataPtr, step);
+            break;
+        case QImage::Format_RGB888:
+            mat = cv::Mat(_img.height(), _img.width(), CV_8UC3, dataPtr, step);
+            cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
+            break;
+        case QImage::Format_Indexed8:
+        case QImage::Format_Grayscale8:
+            mat = cv::Mat(_img.height(), _img.width(), CV_8UC1, dataPtr, step);
+            break;
+        default: {
+            throw std::runtime_error("you are converting an umImpl QImage to cv::Mat");
+        }
+    }
+    return mat;
+}
+
+cv::Mat xgd::convertQPixmapToMat(const QPixmap &_img) {
+    return xgd::convertQImageToMat(_img.toImage());
 }

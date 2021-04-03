@@ -3,6 +3,7 @@
 
 #include <opencv2/core/types.hpp>
 #include <opencv2/core/mat.hpp>
+#include <QImage>
 
 namespace xgd {
     template<typename _Tp>
@@ -29,5 +30,9 @@ namespace xgd {
                     const cv::Scalar &_color, const int &_thickness = 1, bool _rotate = true);
 
     cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle);
+
+    cv::Mat convertQImageToMat(const QImage &_img);
+
+    cv::Mat convertQPixmapToMat(const QPixmap &_img);
 }
 #endif//_XGD_OPENCV_UTIL_HPP_

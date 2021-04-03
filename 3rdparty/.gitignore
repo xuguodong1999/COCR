@@ -1,1 +1,8 @@
-*-static-*/
+/*
+!.gitignore
+!android
+!coordgenlibs
+!crnn.pytorch
+!ncnn-lib
+!openbabel
+!opencv-lib
