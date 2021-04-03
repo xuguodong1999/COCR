@@ -197,11 +197,12 @@ void testMol3D_UI() {
 }
 
 #include "ui/waithint_widget.h"
+#include "ui/main_widget.hpp"
 #include <QHBoxLayout>
 
 
 int main(int argc, char *argv[]) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) && not defined(Q_OS_ANDROID)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     Application app(argc, argv);
@@ -211,7 +212,7 @@ int main(int argc, char *argv[]) {
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
 //        loopHwDemo();
-        testMol2D_UI();
+//        testMol2D_UI();
 //        testMol3D_UI();
 //        (new GestureWidget)->show();
 //        auto w=new QWidget();
@@ -219,6 +220,7 @@ int main(int argc, char *argv[]) {
 //        auto wait=new WaitHintWidget(w);
 //        w->show();
 //        wait->startWaitHint();
+        (new MainWidget)->show();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;
