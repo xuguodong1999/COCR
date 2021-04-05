@@ -303,7 +303,7 @@ size_t xgd::JAtom::getId() const {
 }
 
 xgd::JAtom::JAtom(const size_t &_id, const ElementType &_element, const float &_x, const float &_y)
-        : id(_id), type(_element), x(_x), y(_y), xx(0), yy(0), zz(0), charge(0) {
+        : id(_id), type(_element), x(_x), y(_y), xx(0), yy(0), zz(0), charge(0), mIsImplicit(false) {
 
 }
 
@@ -332,8 +332,16 @@ float xgd::JAtom::getRadius() const {
     return r;
 }
 
-float xgd::JAtom::getDefaultDadius() {
+float xgd::JAtom::getDefaultRadius() {
     return sDefaultRadius;
+}
+
+bool xgd::JAtom::isImplicit() const {
+    return mIsImplicit;
+}
+
+void xgd::JAtom::setImplicit(bool _isImplicit) {
+    JAtom::mIsImplicit = _isImplicit;
 }
 
 static std::unordered_map<ElementType, ColorName> colorMap = {

@@ -47,7 +47,7 @@ void Mol3DBuilder::build() {
         wrapper->setId(atom.getId());
         wrapper->setTranslation(getQVector3D(atom));
         wrapper->setColor(xgd::getColor(atom.getType()));
-        wrapper->setRadius(atom.getRadius() / atom.getDefaultDadius() * avgBondLength / 3);
+        wrapper->setRadius(atom.getRadius() / atom.getDefaultRadius() * avgBondLength / 3);
         wrapper->setScale(1);
         wrapper->setRindsAndSlices(100, 100);
         wrapper->setObjectName(atom.getName().c_str() + QString(":%0").arg(atom.getId()));

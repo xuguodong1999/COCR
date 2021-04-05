@@ -33,8 +33,13 @@ namespace xgd {
         ElementType type;
         int charge;
         inline static const float sDefaultRadius = 100;
+        bool mIsImplicit;
     public:
-        static float getDefaultDadius();
+        bool isImplicit() const;
+
+        void setImplicit(bool _isImplicit = true);
+
+        static float getDefaultRadius();
 
         float x, y, xx, yy, zz;
 

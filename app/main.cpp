@@ -66,15 +66,18 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
 }
 
 #ifdef Q_OS_LINUX
-std::string ROOT_DIR = "/home/xgd/source/repos/leafxy/";
+const char *ROOT_DIR = "/home/xgd/source/repos/leafxy/";
 #elif defined(Q_OS_WIN)
-std::string ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
+const char* ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
 #endif
 
 [[noreturn]] void loopHwDemo() {
-    auto ocrManager = makeOCRManager(ROOT_DIR + "resources/model");
+    auto ocrManager = makeOCRManager(ROOT_DIR + QString("resources/model").toStdString());
+    std::vector<int> testcases = {1, 2, 3, 4, 5, 6};
+    size_t idx = 0;
     while (true) {
-        QImage image((ROOT_DIR + "testcase/1.jpg").c_str());
+        QImage image((ROOT_DIR + QString("testcase/%1.jpg").arg(testcases[idx++])));
+        idx %= testcases.size();
         auto testImg = xgd::convertQImageToMat(image);
 //        auto testImg = cv::imread(ROOT_DIR + "testcase/1.jpg", cv::IMREAD_GRAYSCALE);
 //        cv::erode(testImg, testImg, cv::Mat());
@@ -84,8 +87,8 @@ std::string ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
 }
 
 void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = {}) {
-    auto ocrManager = makeOCRManager(ROOT_DIR + "resources/model");
-    QDir dir((ROOT_DIR + "testcase/public/USPTO").c_str());
+    auto ocrManager = makeOCRManager(ROOT_DIR + QString("resources/model").toStdString());
+    QDir dir(ROOT_DIR + QString("testcase/public/USPTO"));
     auto fileList = dir.entryInfoList(QDir::Filter(QDir::Files));
     if (!_badExample.empty()) {
         _random = false;
@@ -212,7 +215,7 @@ int main(int argc, char *argv[]) {
 //        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
-//        loopHwDemo();
+        loopHwDemo();
 //        testMol2D_UI();
 //        testMol3D_UI();
 //        (new GestureWidget)->show();
@@ -221,10 +224,10 @@ int main(int argc, char *argv[]) {
 //        auto wait=new WaitHintWidget(w);
 //        w->show();
 //        wait->startWaitHint();
-        (new MainWidget)->show();
+//        (new MainWidget)->show();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
-        return -1;
+        return EXIT_FAILURE;
     }
     return app.exec();
 }

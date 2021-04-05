@@ -10,7 +10,7 @@ namespace xgd {
 
     class GraphComposer {
     public:
-        std::shared_ptr<JMol> compose(const std::vector<OCRItem> &_i1);
+        std::shared_ptr<JMol> compose(const std::vector<OCRItem> &_gid);
     };
 }
 #endif//_XGD_GRAPH_COMPOSER_HPP_
