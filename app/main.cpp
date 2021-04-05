@@ -1,13 +1,23 @@
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+
 #include <QDir>
 #include <QDebug>
 #include <QWidget>
-#include "application.hpp"
-#include <opencv2/imgproc.hpp>
-#include <opencv2/imgcodecs.hpp>
+#include <QHBoxLayout>
+#include <QMainWindow>
+
 #include <iostream>
-#include <opencv2/highgui.hpp>
+
+#include "jmol_adapter.hpp"
 #include "opencv_util.hpp"
 #include "ocr_manager.hpp"
+#include "ui/waithint_widget.h"
+#include "ui/mol2d_widget.hpp"
+#include "ui/mol3d_widget.hpp"
+#include "ui/main_widget.hpp"
+#include "application.hpp"
 #include "ncnn_impl/text_recognizer_ncnn_impl.hpp"
 
 //#undef HAVE_OPENCV_DNN
@@ -82,6 +92,11 @@ const char* ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
 //        auto testImg = cv::imread(ROOT_DIR + "testcase/1.jpg", cv::IMREAD_GRAYSCALE);
 //        cv::erode(testImg, testImg, cv::Mat());
         auto mol = ocrManager.ocr(testImg, true);
+        auto widget = new Mol2DWidget(nullptr, mol);
+        widget->resize(960, 640);
+        widget->show();
+        widget->syncMolToScene();
+        qDebug() << "*****************  result  *****************\n" << mol->writeAsSMI().c_str();
         cv::waitKey(0);
     }
 }
@@ -115,8 +130,6 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
         cv::waitKey(0);
     }
 }
-
-#include "jmol_adapter.hpp"
 
 void testJMol() {
     using namespace xgd;
@@ -168,7 +181,6 @@ std::shared_ptr<xgd::JMol> getTestMol() {
     return mol;
 }
 
-#include "ui/mol2d_widget.hpp"
 
 void testMol2D_UI() {
     auto mol = getTestMol();
@@ -178,8 +190,6 @@ void testMol2D_UI() {
     widget->syncMolToScene();
 }
 
-#include "ui/mol3d_widget.hpp"
-#include <QMainWindow>
 
 void testMol3D_UI() {
     auto mol = getTestMol();
@@ -198,10 +208,6 @@ void testMol3D_UI() {
     w->show();
     w->syncMolToScene();
 }
-
-#include "ui/waithint_widget.h"
-#include "ui/main_widget.hpp"
-#include <QHBoxLayout>
 
 
 int main(int argc, char *argv[]) {

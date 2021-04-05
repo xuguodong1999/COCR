@@ -63,6 +63,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
         kill_common(_bid, to);
         bLength[_bid] = calc_pts_to_pts(_items[_bid].getFrom(), _items[_bid].getTo());
     };
+    // 收集id、计算键长
     for (size_t i = 0; i < _items.size(); i++) {
         switch (_items[i].type) {
             case OCRItemType::Element:
@@ -285,18 +286,73 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
     // <图元id，集合id>
     std::unordered_map<size_t, size_t> itemToNodeMap;
     auto init_atom_node = [&](const size_t &_aid) {
-        itemToNodeMap[_aid] = nodeIdx;
+        itemToNodeMap[_aid] = _aid;
         aNodeMap[_aid] = {};
     };
     auto init_group_node = [&](const size_t &_gid) {
-        itemToNodeMap[_gid] = nodeIdx;
+        itemToNodeMap[_gid] = _gid;
         gNodeMap[_gid] = {};
+    };
+    auto init_bond_side_node = [&](const size_t &_bSideId) {
+        itemToNodeMap[_bSideId] = nodeIdx;
+        bNodeMap[nodeIdx++] = {_bSideId};
+    };
+    auto bind_bond_side_node = [&](const size_t &_bSideId1, const size_t &_bSideId2) {
+        auto it = itemToNodeMap.find(_bSideId1);
+        if (itemToNodeMap.end() == it) { it = itemToNodeMap.find(_bSideId2); }
+        if (itemToNodeMap.end() == it) {
+            init_bond_side_node(_bSideId1);
+            it = itemToNodeMap.find(_bSideId1);
+        }
+        size_t nodeId = it->second;
+        itemToNodeMap[_bSideId1] = itemToNodeMap[_bSideId2] = nodeId;
+        bNodeMap[nodeId].insert(_bSideId1);
+        bNodeMap[nodeId].insert(_bSideId2);
+    };
+    auto bind_bond_node = [&](const size_t &_bSideId, const size_t &_id) {
+        size_t rd = revert_bond_side(_id);
+        auto &item = _items[rd];
+        switch (item.type) {
+            case OCRItemType::Element:
+                itemToNodeMap[_id] = itemToNodeMap[_bSideId] = _id;
+                aNodeMap[_id].insert(_bSideId);
+                break;
+            case OCRItemType::Group:
+                itemToNodeMap[_id] = itemToNodeMap[_bSideId] = _id;
+                gNodeMap[_id].insert(_bSideId);
+                break;
+            case OCRItemType::Line:
+                bind_bond_side_node(_bSideId, _id);
+                break;
+            default:
+                break;
+        }
     };
     for (auto &aid:aIds) { init_atom_node(aid); }
     for (auto &gid:gIds) { init_group_node(gid); }
 
-    // 通过 blackList 保证键端集合互斥
-
+    auto handle_bond_side = [&](const size_t &_bSideId) {
+        auto it = feats.find(_bSideId);
+        if (feats.end() == it) {
+            init_bond_side_node(_bSideId);
+            return;
+        }
+        auto &nebVec = it->second;
+        // 遍历所有潜在邻居
+        for (auto&[nebId, feat]:nebVec) {
+            // 通过 blackList 保证键端集合互斥
+            if (is_valid_pair(_bSideId, nebId)) {
+                kill_common(_bSideId, nebId);
+                bind_bond_node(_bSideId, nebId);
+            }
+        }
+    };
+    for (auto &bid:bIds) {
+        size_t fId = cast_side1(bid);
+        size_t tId = cast_side2(bid);
+        handle_bond_side(fId);
+        handle_bond_side(tId);
+    }
 
     //// ************************************************** ////
     auto mol = std::make_shared<xgd::JMolAdapter>();
@@ -325,7 +381,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
     for (auto&[_, itemSet]:bNodeMap) {
         cv::Point2f pos(0, 0);
         for (auto &bSideId:itemSet) {
-            int type = revert_bond_side(bSideId);
+            int type = get_bond_side_type(bSideId);
             size_t bid = revert_bond_side(bSideId);
             auto &item = _items[bid];
             if (type == 0) {
