@@ -14,7 +14,25 @@ Mol2DWidget::Mol2DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
 }
 
 inline static QString getRichText(const std::string &_text) {
-    return QString("<h1>") + _text.c_str() + QString("</h1>");// just test
+    // TODO: 细化实现
+    QString str = "<h1>";
+    for (auto &c:_text) {
+        switch (c) {
+            case '_':
+                str.append("<sup>㊀</sup>");
+                break;
+            case '+':
+                str.append("<sup>⊕</sup>");
+                break;
+            case '#':
+                str.append("≡");
+                break;
+            default:
+                str.append(c);
+        }
+    }
+    str.append("</h1>");
+    return str;
 }
 
 void Mol2DWidget::syncMolToScene() {
@@ -28,6 +46,18 @@ void Mol2DWidget::syncMolToScene() {
         atomItem->setHTML(getRichText(_atom.getName()));
         atomItem->setPos2D(_atom.x, _atom.y);
         atomItemMap[_atom.getId()] = atomItem;
+        scene->addItem(atomItem);
+    });
+    mol->loopResidueVec([&](xgd::JResidue &_residue) {
+        auto atomItem = new AtomItem();
+        atomItem->setHTML(getRichText(_residue.getRawText()));
+        if (_residue.isLeftToRight()) {
+
+        } else {
+
+        }
+        atomItem->setPos2D(_residue.x, _residue.y);
+        atomItemMap[_residue.getId()] = atomItem;
         scene->addItem(atomItem);
     });
     mol->loopBondVec([&](xgd::JBond &_bond) {

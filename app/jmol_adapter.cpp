@@ -44,7 +44,6 @@ std::shared_ptr<JBond> JMolAdapter::removeBond(const size_t &_bid) {
 std::shared_ptr<JResidue> JMolAdapter::removeResidue(const size_t &_rid) {
     onMolUpdated();
     isOBMolLatest = false;
-    // TODO: handle residue in openbabel
     return JMol::removeResidue(_rid);
 }
 
@@ -53,15 +52,18 @@ std::shared_ptr<JResidue> JMolAdapter::addResidue(
     onMolUpdated();
     checkOBMol();
     // TODO: handle residue in openbabel
-    return JMol::addResidue(_text, _isLeftToRight, _x, _y);
+    auto residue = JMol::addResidue(_text, _isLeftToRight, _x, _y);
+    if (!residue) { return nullptr; }
+    addOBResidue(*residue);
+    return residue;
 }
 
 std::shared_ptr<JResidue> JMolAdapter::addResidue(
         const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z) {
-    onMolUpdated();
-    checkOBMol();
-    // TODO: handle residue in openbabel
-    return JMol::addResidue(_text, _isLeftToRight, _x, _y, _z);
+    auto residue = addResidue(_text, _isLeftToRight, _x, _y);
+    if (!residue) { return nullptr; }
+    residue->set3D(_x, _y, _z);
+    return residue;
 }
 
 std::shared_ptr<JBond> JMolAdapter::addBond(
@@ -103,7 +105,12 @@ std::string JMolAdapter::writeAs(const std::string &_formatSuffix) {
     if (!formatOut || !conv.SetOutFormat(formatOut)) {
         throw std::runtime_error("unknown format suffix: " + _formatSuffix);
     }
-    if (!is3DInfoLatest) {
+    // TODO: 一些不需要运行分子力场的非3D坐标格式
+    static std::unordered_set<std::string> sNo3DWhiteList = {
+            "smi",
+            "can"
+    };
+    if (sNo3DWhiteList.end() == sNo3DWhiteList.find(_formatSuffix) && !is3DInfoLatest) {
         if (!generate3D())
             throw std::runtime_error("fail to generate 3d");
     }
@@ -356,6 +363,14 @@ void JMolAdapter::resetOBMol() {
     loopBondVec([&](JBond &bond) {
         addOBBond(bond);
     });
+}
+
+void JMolAdapter::addOBResidue(JResidue &_residue) {
+    auto obResidue = obMol->NewResidue();
+    obResidue->SetName(_residue.getRawText());
+
+    residueIdMap[_residue.getId()] = obResidue->GetIdx();
+    residueIdMap2[obResidue->GetIdx()] = _residue.getId();
 }
 
 

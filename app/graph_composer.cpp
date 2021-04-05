@@ -305,11 +305,28 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             it = itemToNodeMap.find(_bSideId1);
         }
         size_t nodeId = it->second;
+        if (nodeId < _items.size()) {
+            auto &item = _items[nodeId];
+            switch (item.type) {
+                case OCRItemType::Element:
+                    aNodeMap[nodeId].insert(_bSideId1);
+                    aNodeMap[nodeId].insert(_bSideId2);
+                    break;
+                case OCRItemType::Group:
+                    gNodeMap[nodeId].insert(_bSideId1);
+                    gNodeMap[nodeId].insert(_bSideId2);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            bNodeMap[nodeId].insert(_bSideId1);
+            bNodeMap[nodeId].insert(_bSideId2);
+        }
         itemToNodeMap[_bSideId1] = itemToNodeMap[_bSideId2] = nodeId;
-        bNodeMap[nodeId].insert(_bSideId1);
-        bNodeMap[nodeId].insert(_bSideId2);
     };
     auto bind_bond_node = [&](const size_t &_bSideId, const size_t &_id) {
+        auto it = itemToNodeMap.find(_bSideId);
         size_t rd = revert_bond_side(_id);
         auto &item = _items[rd];
         switch (item.type) {
@@ -353,7 +370,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
         handle_bond_side(fId);
         handle_bond_side(tId);
     }
-
+    //
     //// ************************************************** ////
     auto mol = std::make_shared<xgd::JMolAdapter>();
     std::unordered_map<size_t, std::shared_ptr<xgd::JAtom>> bondSideAtomMap;
@@ -370,11 +387,26 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
     // 添加字串图元
     for (auto&[gid, itemSet]:gNodeMap) {
         auto &item = _items[gid];
+        auto &rect = item.getRect();
         auto pos = item.getCenter();
-        // FIXME: 先指定砹元素代表残基，残基这一块还没有实现
-        auto atom = mol->addAtom(ElementType::At, pos.x, pos.y);
+//        cv::Point2f pos(0, 0);
+//        for (auto &bSideId:itemSet) {
+//            int type = get_bond_side_type(bSideId);
+//            size_t bid = revert_bond_side(bSideId);
+//            auto &item = _items[bid];
+//            if (type == 0) {
+//                pos += item.getFrom();
+//            } else if (type == 1) {
+//                pos += item.getTo();
+//            } else {
+//                qDebug() << "error: type !=0 && type != 1@" << __FILE__ << "@" << __LINE__;
+//            }
+//        }
+//        if (!itemSet.empty()) { pos /= static_cast<float>(itemSet.size()); }
+        bool isLeftToRight = pos.x < rect.x + rect.width / 2;
+        auto residue = mol->addResidue(item.getText(), isLeftToRight, pos.x, pos.y);
         for (auto &bSideId:itemSet) {
-            bondSideAtomMap[bSideId] = atom;
+            bondSideResidueMap[bSideId] = residue;
         }
     }
     // 收集键图元的起始原子和结束原子
@@ -407,18 +439,29 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             return it->second;
         }
     };
+    auto get_side_residue = [&](const size_t &_bSideId) -> std::shared_ptr<xgd::JResidue> {
+        auto it = bondSideResidueMap.find(_bSideId);
+        if (bondSideResidueMap.end() == it) {
+            return nullptr;
+        } else {
+            return it->second;
+        }
+    };
     // 添加键图元
     for (auto &bid:bIds) {
         auto &item = _items[bid];
         size_t fId = cast_side1(bid);
         size_t tId = cast_side2(bid);
         auto from = get_side_atom(fId);
+        if (!from) { from = get_side_residue(fId); }
         auto to = get_side_atom(tId);
+        if (!to) { to = get_side_residue(tId); }
         if (from && to) {
             mol->addBond(from, to, item.getBondType());
         } else {
             qDebug() << "error: not from && to@" << __FILE__ << "@" << __LINE__;
         }
     }
+    mol->set2DInfoLatest();
     return mol;
 }

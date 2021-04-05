@@ -6,10 +6,11 @@
 
 class BondItem;
 
+
 class AtomItem : public BaseItem {
     QGraphicsTextItem *mTextItem;
     QPointF mCenter;
-    bool mLeftToRight;
+    // TODO: 考虑以下用例：一个 StrItem 同时和多个 BondItem 关联，连接点分布在 AtomItem/StrItem 的不同侧？
 
     friend class BondItem;
 

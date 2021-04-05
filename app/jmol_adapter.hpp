@@ -22,8 +22,10 @@ namespace xgd {
         OpenBabel::OBMol *obMol;
         std::unordered_map<decltype(id), unsigned long> atomIdMap;
         std::unordered_map<decltype(id), unsigned long> bondIdMap;
+        std::unordered_map<decltype(id), unsigned long> residueIdMap;
         std::unordered_map<unsigned long, decltype(id)> atomIdMap2;
         std::unordered_map<unsigned long, decltype(id)> bondIdMap2;
+        std::unordered_map<unsigned long, decltype(id)> residueIdMap2;
         bool isOBMolLatest;
 
         bool runForcefield();
@@ -44,6 +46,8 @@ namespace xgd {
         void addOBAtom(JAtom &_atom);
 
         void addOBBond(JBond &_bond);
+
+        void addOBResidue(JResidue &_residue);
 
     public:
         JMolAdapter();

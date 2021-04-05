@@ -11,8 +11,9 @@
 
 namespace xgd {
     class JMol {
+        size_t idBase;
     protected:
-        size_t id, bondNum, atomNum;
+        size_t id, bondNum, atomNum, residueNum;
         std::vector<std::shared_ptr<JAtom>> atomVec;
         std::vector<std::shared_ptr<JBond>> bondVec;
         std::vector<std::shared_ptr<JResidue>> residueVec;
@@ -22,6 +23,8 @@ namespace xgd {
         std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
 
     public:
+        void set2DInfoLatest(bool _is2DInfoLatest = true);
+
         void norm2D(const float &_w, const float &_h, const float &_x = 0, const float &_y = 0, bool keepRatio = true);
 
         void norm3D(const float &_xx, const float &_yy, const float &_zz,
@@ -31,6 +34,8 @@ namespace xgd {
 
         size_t getAtomNum() const;
 
+        size_t getResidueNum() const;
+
         float getAvgBondLength();
 
         JMol();
@@ -38,6 +43,8 @@ namespace xgd {
         void loopAtomVec(std::function<void(JAtom &_atom)> _func);
 
         void loopBondVec(std::function<void(JBond &_bond)> _func);
+
+        void loopResidueVec(std::function<void(JResidue &_residue)> _func);
 
         virtual void display();
 

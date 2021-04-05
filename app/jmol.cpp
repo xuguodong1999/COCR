@@ -22,7 +22,7 @@ std::shared_ptr<JResidue> xgd::JMol::getResidue(const size_t &_rid) {
 }
 
 std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_element, const float &_x, const float &_y) {
-    auto atom = std::make_shared<JAtom>(atomVec.size(), _element, _x, _y);
+    auto atom = std::make_shared<JAtom>(idBase++, _element, _x, _y);
     atomVec.push_back(atom);
     ++atomNum;
     return atom;
@@ -37,7 +37,7 @@ std::shared_ptr<JAtom> JMol::addAtom(
 }
 
 std::shared_ptr<JBond> JMol::addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type) {
-    auto bond = std::make_shared<JBond>(bondVec.size(), _a1, _a2, _type);
+    auto bond = std::make_shared<JBond>(idBase++, _a1, _a2, _type);
     bondVec.push_back(bond);
     ++bondNum;
     return bond;
@@ -52,8 +52,9 @@ std::shared_ptr<JBond> JMol::addBond(const size_t &_aid1, const size_t &_aid2, c
 
 std::shared_ptr<JResidue>
 JMol::addResidue(const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y) {
-    auto residue = std::make_shared<JResidue>(residueVec.size(), _text, _isLeftToRight, _x, _y);
+    auto residue = std::make_shared<JResidue>(idBase++, _text, _isLeftToRight, _x, _y);
     residueVec.push_back(residue);
+    ++residueNum;
     return residue;
 }
 
@@ -85,6 +86,7 @@ std::shared_ptr<JResidue> JMol::removeResidue(const size_t &_rid) {
     if (_rid >= residueVec.size())return nullptr;
     auto residue = residueVec[_rid];
     residueVec[_rid] = nullptr;
+    --residueNum;
     return residue;
 }
 
@@ -96,7 +98,8 @@ size_t JMol::getId() {
     return id;
 }
 
-JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false), atomNum(0), bondNum(0) {
+JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false),
+               atomNum(0), bondNum(0), residueNum(0), idBase(0) {
 
 }
 
@@ -113,7 +116,7 @@ void JMol::loopBondVec(std::function<void(JBond &)> _func) {
 }
 
 std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
-    auto atom = std::make_shared<JAtom>(atomVec.size(), static_cast<ElementType>(_atomicNumber));
+    auto atom = std::make_shared<JAtom>(idBase++, static_cast<ElementType>(_atomicNumber));
     atomVec.push_back(atom);
     ++atomNum;
     return atom;
@@ -226,4 +229,18 @@ size_t JMol::getBondNum() const {
 
 size_t JMol::getAtomNum() const {
     return atomNum;
+}
+
+void JMol::set2DInfoLatest(bool _is2DInfoLatest) {
+    is2DInfoLatest = _is2DInfoLatest;
+}
+
+size_t JMol::getResidueNum() const {
+    return residueNum;
+}
+
+void JMol::loopResidueVec(std::function<void(JResidue &)> _func) {
+    for (auto &residue:residueVec) {
+        if (residue) { _func(*residue); }
+    }
 }

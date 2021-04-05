@@ -36,9 +36,13 @@ QRectF BondItem::boundingRect() const {
 void BondItem::updateBond() {
     using namespace xgd;
     QPainterPath path;
-    float length = MathUtil::getDistance(mFrom->mCenter, mTo->mCenter);
+    QPointF from = mFrom->mCenter, to = mTo->mCenter;
+    // TODO: 考虑多点接入用例，参考 AtomItem 的注释
+//    from.setX(from.x() - mFrom->boundingRect().width() / 2);
+//    to.setX(to.x() - mTo->boundingRect().width() / 2);
+    float length = MathUtil::getDistance(from, to);
     float k = 1.5f * AtomItem::GetCommonSize() / length;
-    QPointF o1 = (1 - k) * mFrom->mCenter + k * mTo->mCenter, o2 = k * mFrom->mCenter + (1 - k) * mTo->mCenter;
+    QPointF o1 = (1 - k) * from + k * to, o2 = k * from + (1 - k) * to;
     switch (mType) {
         case BondType::SingleBond:
             path.moveTo(o1);

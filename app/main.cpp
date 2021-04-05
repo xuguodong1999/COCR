@@ -84,6 +84,7 @@ const char* ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
 [[noreturn]] void loopHwDemo() {
     auto ocrManager = makeOCRManager(ROOT_DIR + QString("resources/model").toStdString());
     std::vector<int> testcases = {1, 2, 3, 4, 5, 6};
+//    std::vector<int> testcases = {3};
     size_t idx = 0;
     while (true) {
         QImage image((ROOT_DIR + QString("testcase/%1.jpg").arg(testcases[idx++])));
