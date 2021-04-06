@@ -10,6 +10,7 @@ namespace xgd {
     class JResidue : public JAtom {
         std::string rawText;
         bool mIsLeftToRight;
+
     public:
         const std::string &getRawText() const;
 

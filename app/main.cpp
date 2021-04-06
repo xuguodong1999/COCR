@@ -78,9 +78,14 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
 #ifdef Q_OS_LINUX
 const char *ROOT_DIR = "/home/xgd/source/repos/leafxy/";
 #elif defined(Q_OS_WIN)
-const char* ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
+const char *ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
 #endif
 
+/**
+ * TODO: 1、实现简易的残基分解用于展示，按照线性->单层嵌套->多层嵌套的顺序完善，围绕 JMolAdapter
+ * TODO: 2、完善 2D UI 显示，重点处理字符串对齐的问题，需求是支持残基显示为原始字符串，不要求展开
+ * TODO: 3、3D UI 对残基的处理，需求是残基显示为大球、点击大球 log 残基信息
+ */
 [[noreturn]] void loopHwDemo() {
     auto ocrManager = makeOCRManager(ROOT_DIR + QString("resources/model").toStdString());
     std::vector<int> testcases = {1, 2, 3, 4, 5, 6};
@@ -97,7 +102,7 @@ const char* ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
         widget->resize(960, 640);
         widget->show();
         widget->syncMolToScene();
-        qDebug() << "*****************  result  *****************\n" << mol->writeAsSMI().c_str();
+//        qDebug() << "*****************  result  *****************\n" << mol->writeAsSMI().c_str();
         cv::waitKey(0);
     }
 }

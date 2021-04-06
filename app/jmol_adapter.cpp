@@ -366,6 +366,7 @@ void JMolAdapter::resetOBMol() {
 }
 
 void JMolAdapter::addOBResidue(JResidue &_residue) {
+    // FIXME: 残基必须完全展开
     auto obResidue = obMol->NewResidue();
     obResidue->SetName(_residue.getRawText());
 

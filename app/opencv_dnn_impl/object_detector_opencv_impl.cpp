@@ -53,14 +53,15 @@ xgd::ObjectDetectorOpenCVImpl::detect(const cv::Mat &_originImage) {
                       nullptr, &maxProb, nullptr, &maxLoc);
             if (maxProb < confThresh) continue;
             const int &label = maxLoc.x;
-            if (!DetectorObject::isValidLabel(label)) continue;
-            float cx = vec.at<float>(j, 0) * input.cols;
-            float cy = vec.at<float>(j, 1) * input.rows;
-            float bw = vec.at<float>(j, 2) * input.cols;
-            float bh = vec.at<float>(j, 3) * input.rows;
-            boxes.emplace_back(cx - bw / 2, cy - bh / 2, bw, bh);
-            labels.push_back(label);
-            confs.push_back(maxProb);
+            if (DetectorObject::isValidLabel(label)) {
+                float cx = vec.at<float>(j, 0) * input.cols;
+                float cy = vec.at<float>(j, 1) * input.rows;
+                float bw = vec.at<float>(j, 2) * input.cols;
+                float bh = vec.at<float>(j, 3) * input.rows;
+                boxes.emplace_back(cx - bw / 2, cy - bh / 2, bw, bh);
+                labels.push_back(label);
+                confs.push_back(maxProb);
+            }
         }
     }
     std::vector<int> selectedBoxIndices;

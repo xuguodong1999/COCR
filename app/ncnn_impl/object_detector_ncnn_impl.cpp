@@ -65,14 +65,16 @@ xgd::ObjectDetectorNcnnImpl::detect(const cv::Mat &_originImage) {
     ex.extract("output", out);
     std::vector<xgd::DetectorObject> objects;
     for (int i = 0; i < out.h; i++) {
-        const auto vec = out.row(i);
-        float x = vec[2] * input.cols;
-        float y = vec[3] * input.rows;
-        float w = vec[4] * input.cols - x;
-        float h = vec[5] * input.rows - y;
-        float prob = vec[1];
+        const float *vec = out.row(i);
         int label = vec[0] - 1;
-        objects.emplace_back(x, y, w, h, label, prob);
+        if (DetectorObject::isValidLabel(label)) {
+            float x = vec[2] * input.cols;
+            float y = vec[3] * input.rows;
+            float w = vec[4] * input.cols - x;
+            float h = vec[5] * input.rows - y;
+            float prob = vec[1];
+            objects.emplace_back(x, y, w, h, label, prob);
+        }
     }
     return {input, objects};
 }
