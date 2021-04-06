@@ -3,6 +3,7 @@
 #include "jmol_adapter.hpp"
 #include <QDebug>
 #include <map>
+#include <stdexcept>
 
 struct pair_hash {
     template<class T1, class T2>

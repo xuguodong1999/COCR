@@ -17,6 +17,10 @@ if (NOT MSVC)
     set(BUILD_SHARED_LIBS ON)
 endif (NOT MSVC)
 
+# use this flag to build openvino exe for msvc. dont set it to false on unix
+# dont set it unless you known what you are doing
+option(WITH_OPENVINO "Build opencv::dnn with openvino" OFF)
+
 # use these flags to find 3rdparty lib
 set(LEAFXY_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 set(RES_ROOT ${LEAFXY_ROOT}/resources)
@@ -45,7 +49,9 @@ endif (ANDROID)
 
 # opencv>=4.5.1 for for common image utils, crnn and yolo
 # use build.sh or build-shared.bat to install opencv from source
-if (MSVC)
+if (MSVC AND WITH_OPENVINO)
+    set(OpenCV_DIR "C:/Program Files (x86)/Intel/openvino_2021/opencv/cmake")
+elseif (MSVC)
     set(OpenCV_DIR ${3RD_LIB_DIR}/opencv-lib/x64/vc16/lib)
 elseif (APPLE)
     set(OpenCV_DIR ${3RD_LIB_DIR}/opencv-lib/lib/cmake/opencv4)
@@ -54,7 +60,7 @@ elseif (ANDROID)
 elseif (UNIX)
     set(OpenCV_DIR ${3RD_LIB_DIR}/opencv-lib/lib/cmake/opencv4)
     # set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
-endif (MSVC)
+endif (MSVC AND WITH_OPENVINO)
 
 # qt for ui
 if (MSVC)
