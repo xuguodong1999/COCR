@@ -38,7 +38,7 @@ namespace xgd {
         bool mIsImplicit;
         std::string name;
     public:
-        bool isSuperAtom()const;
+        bool isSuperAtom() const;
 
         float x, y, xx, yy, zz;
         float x0, y0, x1, y1;

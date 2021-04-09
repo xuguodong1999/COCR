@@ -117,11 +117,21 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
         loopAtomVec([&](JAtom &_atom) {
             _atom.x = (_atom.x - minx) * k + _x;
             _atom.y = (_atom.y - miny) * k + _y;
+
+            _atom.x0 = (_atom.x0 - minx) * k + _x;
+            _atom.y0 = (_atom.y0 - miny) * k + _y;
+            _atom.x1 = (_atom.x1 - minx) * k + _x;
+            _atom.y1 = (_atom.y1 - miny) * k + _y;
         });
     } else {
         loopAtomVec([&](JAtom &_atom) {
             _atom.x = (_atom.x - minx) * kw + _x;
             _atom.y = (_atom.y - miny) * kh + _y;
+
+            _atom.x0 = (_atom.x0 - minx) * kw + _x;
+            _atom.y0 = (_atom.y0 - miny) * kh + _y;
+            _atom.x1 = (_atom.x1 - minx) * kw + _x;
+            _atom.y1 = (_atom.y1 - miny) * kh + _y;
         });
     }
 }

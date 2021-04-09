@@ -382,6 +382,11 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
         auto &item = _items[aid];
         auto pos = item.getCenter();
         auto atom = mol->addAtom(item.getElement(), pos.x, pos.y);
+        auto &rect = item.getRect();
+//        atom->x0 = rect.x;
+//        atom->y0 = rect.y;
+//        atom->x1 = rect.x + rect.width;
+//        atom->y1 = rect.y + rect.height;
         for (auto &bSideId:itemSet) {
             bondSideAtomMap[bSideId] = atom;
         }
@@ -405,7 +410,8 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
 //            }
 //        }
 //        if (!itemSet.empty()) { pos /= static_cast<float>(itemSet.size()); }
-        auto superAtom = mol->addSuperAtom(item.getText(), rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+        auto superAtom = mol->addSuperAtom(item.getText(), rect.x, rect.y,
+                                           rect.x + rect.width, rect.y + rect.height);
         for (auto &bSideId:itemSet) {
             bondSideGroupMap[bSideId] = superAtom;
         }
@@ -461,7 +467,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
                 // 按照字符串计算键端偏移量
                 float width = from->x1 - from->x0;
                 float offset = width ? (item.getFrom().x - from->x0) / width : 0.5;
-                offset1 = (std::max)(1.f, (std::min)(0.f, offset));
+                offset1 = (std::min)(1.f, (std::max)(0.f, offset));
             }
         }
         auto to = get_side_atom(tId);
@@ -471,7 +477,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
                 // 按照字符串计算键端偏移量
                 float width = to->x1 - to->x0;
                 float offset = width ? (item.getTo().x - to->x0) / width : 0.5;
-                offset2 = (std::max)(1.f, (std::min)(0.f, offset));
+                offset2 = (std::min)(1.f, (std::max)(0.f, offset));
             }
         }
         if (from && to) {

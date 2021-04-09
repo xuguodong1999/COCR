@@ -38,14 +38,17 @@ inline static QString getRichText(const std::string &_text) {
 void Mol2DWidget::syncMolToScene() {
     scene->clear();
     if (!mol)return;
-    float delta = std::min(width(), height()) * 0.1;
+    float delta = (std::min)(width(), height()) * 0.1;
     mol->norm2D(width(), height(), delta, delta);
     std::unordered_map<size_t, AtomItem *> atomItemMap;
     mol->loopAtomVec([&](xgd::JAtom &_atom) {
         auto atomItem = new AtomItem();
         atomItem->setHTML(getRichText(_atom.getName()));
-        atomItem->setPos2D(_atom.x, _atom.y);
+        atomItem->setLeftTop(_atom.x0, _atom.y0);
         atomItemMap[_atom.getId()] = atomItem;
+        if(_atom.isImplicit()){
+            atomItem->setVisible(false);
+        }
         scene->addItem(atomItem);
     });
     mol->loopBondVec([&](xgd::JBond &_bond) {
@@ -55,7 +58,8 @@ void Mol2DWidget::syncMolToScene() {
         auto itFrom = atomItemMap.find(from->getId()), itTo = atomItemMap.find(to->getId());
         if (atomItemMap.end() == itFrom) { return; }
         if (atomItemMap.end() == itTo) { return; }
-        bondItem->setBond(itFrom->second, itTo->second, _bond.getType());
+        qDebug() << _bond.getFromOffset() << "," << _bond.getToOffset();
+        bondItem->setBond(itFrom->second, itTo->second, _bond.getType(), _bond.getFromOffset(), _bond.getToOffset());
         scene->addItem(bondItem);
     });
 }

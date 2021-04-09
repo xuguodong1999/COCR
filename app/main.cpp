@@ -85,11 +85,25 @@ const char *ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
  * TODO: 1、实现简易的残基分解用于展示，按照线性->单层嵌套->多层嵌套的顺序完善，围绕 JMolAdapter
  * TODO: 2、完善 2D UI 显示，重点处理字符串对齐的问题，需求是支持残基显示为原始字符串，不要求展开
  * TODO: 3、3D UI 对残基的处理，需求是残基显示为大球、点击大球 log 残基信息
+ * TODO: 4、完善结构综合：【必解】搞定字符串加载化学键、发生重叠的场景
+ * FIXME: 结构综合失败的 case 总结：
+ * 【必解】超原子一段有键，没有生成这个键
+ * 【必解】无意义超原子干扰视线
+ * 【必解】超原子多端接入
+ * 【必解】芳环中的圈
+ * 【必解】上下邻接的单原子图元
+ * 2021-4-9【进度总结】
+ * 结构综合猴版上线、超原子字符串实现、出包脚本完善
+ * 【TODO】
+ * 优化结构综合
+ * 前端 UI 全面铺开
+ * 超原子字符串的动态拆解和回收逻辑
+ * 字符串图元和其他图元的冲突与合并逻辑编写
  */
 [[noreturn]] void loopHwDemo() {
     auto ocrManager = makeOCRManager(ROOT_DIR + QString("resources/model").toStdString());
-    std::vector<int> testcases = {1, 2, 3, 4, 5, 6};
-//    std::vector<int> testcases = {3};
+    std::vector<int> testcases = {1, 2, 3, 4, 5, 6, 7};
+//    std::vector<int> testcases = {7};
     size_t idx = 0;
     while (true) {
         QImage image((ROOT_DIR + QString("testcase/%1.jpg").arg(testcases[idx++])));
@@ -133,6 +147,10 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
         if (rand() % 2) { angle = -2; }
         image = xgd::rotateCvMat(image, angle);
         auto mol = ocrManager.ocr(image, true);
+        auto widget = new Mol2DWidget(nullptr, mol);
+        widget->resize(960, 640);
+        widget->show();
+        widget->syncMolToScene();
         cv::waitKey(0);
     }
 }
@@ -224,10 +242,10 @@ int main(int argc, char *argv[]) {
     Application app(argc, argv);
     try {
 //        testJMol();
-//        loopUsptoBenchMark(false, {});
+        loopUsptoBenchMark(false, {});
 //        loopUsptoBenchMark(true, {});
 //        loopUsptoBenchMark(false, {25, 34, 35, 37, 49});
-        loopHwDemo();
+//        loopHwDemo();
 //        testMol2D_UI();
 //        testMol3D_UI();
 //        (new GestureWidget)->show();

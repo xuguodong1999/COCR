@@ -43,7 +43,7 @@ namespace xgd {
         void setOrder(const int &_order);
 
         JBond(const size_t &_id, std::shared_ptr<JAtom> _from = nullptr, std::shared_ptr<JAtom> _to = nullptr,
-              const BondType &_type = BondType::SingleBond, const float &_offset1 = 0, const float &_offset2 = 0);
+              const BondType &_type = BondType::SingleBond, const float &_offset1 = 0.5, const float &_offset2 = 0.5);
     };
 
     QColor getColor(const BondType &_bondType);

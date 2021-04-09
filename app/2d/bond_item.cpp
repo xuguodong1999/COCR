@@ -13,10 +13,13 @@ BondItem::BondItem(QGraphicsItem *parent)
     setFlags(QGraphicsItem::ItemIsSelectable);
 }
 
-void BondItem::setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_type) {
+void BondItem::setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_type,
+                       const float &_offset1, const float &_offset2) {
     mFrom = _from;
     mTo = _to;
     mType = _type;
+    offset1 = _offset1;
+    offset2 = _offset2;
     connect(mFrom, &AtomItem::sig_mouse_move, this, &BondItem::updateBond);
     connect(mTo, &AtomItem::sig_mouse_move, this, &BondItem::updateBond);
     updateBond();
@@ -35,14 +38,20 @@ QRectF BondItem::boundingRect() const {
 
 void BondItem::updateBond() {
     using namespace xgd;
-    QPainterPath path;
-    QPointF from = mFrom->mCenter, to = mTo->mCenter;
-    // TODO: 考虑多点接入用例，参考 AtomItem 的注释
-//    from.setX(from.x() - mFrom->boundingRect().width() / 2);
-//    to.setX(to.x() - mTo->boundingRect().width() / 2);
+    auto c1 = mFrom->pos(), c2 = mTo->pos();
+    auto r1 = mFrom->boundingRect(), r2 = mTo->boundingRect();
+    QPointF from(c1.x() + r1.width() * offset1, c1.y() + r2.height() / 2),
+            to(c2.x() + r2.width() * offset2, c2.y() + r2.height() / 2);
     float length = MathUtil::getDistance(from, to);
     float k = 1.5f * AtomItem::GetCommonSize() / length;
-    QPointF o1 = (1 - k) * from + k * to, o2 = k * from + (1 - k) * to;
+    QPointF o1 = from, o2 = to;
+    if (mFrom->isVisible()) {
+        o1 = (1 - k) * from + k * to;
+    }
+    if (mTo->isVisible()) {
+        o2 = k * from + (1 - k) * to;
+    }
+    QPainterPath path;
     switch (mType) {
         case BondType::SingleBond:
             path.moveTo(o1);

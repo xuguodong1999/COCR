@@ -9,8 +9,6 @@ class BondItem;
 
 class AtomItem : public BaseItem {
     QGraphicsTextItem *mTextItem;
-    QPointF mCenter;
-    // TODO: 考虑以下用例：一个 StrItem 同时和多个 BondItem 关联，连接点分布在 AtomItem/StrItem 的不同侧？
 
     friend class BondItem;
 
@@ -25,11 +23,11 @@ public:
     QRectF boundingRect() const;
 
     /**
-     * 设置图元中心位置，仅在初始化时调用
+     * 设置图元左边缘中心位置，仅在初始化时调用
      * @param _x
      * @param _y
      */
-    void setPos2D(const qreal &_x, const qreal &_y);
+    void setLeftTop(const qreal &_x, const qreal &_y);
 
     static float GetCommonSize();
 };

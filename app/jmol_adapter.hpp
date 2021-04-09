@@ -66,7 +66,7 @@ namespace xgd {
 
         std::shared_ptr<JBond> addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2,
                                        const BondType &_type = BondType::SingleBond,
-                                       const float &_offset1 = 0, const float &_offset2 = 0) override;
+                                       const float &_offset1 = 0.5, const float &_offset2 = 0.5) override;
 
         std::shared_ptr<JAtom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0) override;
 

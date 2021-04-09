@@ -12,6 +12,7 @@ class BondItem : public BaseItem {
     xgd::BondType mType;
     QGraphicsPathItem *mPathItem;
     AtomItem *mFrom, *mTo;
+    float offset1, offset2;
     inline static float sDoubleBondAngle = 12, sTripleBondAngle = 15;
     inline static int sDelocalizedPart = 5, sDownPart = 8;
 
@@ -20,7 +21,8 @@ class BondItem : public BaseItem {
 public:
     BondItem(QGraphicsItem *parent = nullptr);
 
-    void setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_type = xgd::BondType::SingleBond);
+    void setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_type = xgd::BondType::SingleBond,
+                 const float &_offset1 = 0.5, const float &_offset2 = 0.5);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 

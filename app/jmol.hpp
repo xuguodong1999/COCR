@@ -61,7 +61,7 @@ namespace xgd {
 
         virtual std::shared_ptr<JBond> addBond(
                 std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2,
-                const BondType &_type = BondType::SingleBond, const float &_offset1 = 0, const float &_offset2 = 0);
+                const BondType &_type = BondType::SingleBond, const float &_offset1 = 0.5, const float &_offset2 = 0.5);
 
         std::shared_ptr<JAtom> getAtom(const id_type &_aid);
 
