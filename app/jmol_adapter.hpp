@@ -22,10 +22,8 @@ namespace xgd {
         OpenBabel::OBMol *obMol;
         std::unordered_map<decltype(id), unsigned long> atomIdMap;
         std::unordered_map<decltype(id), unsigned long> bondIdMap;
-        std::unordered_map<decltype(id), unsigned long> residueIdMap;
         std::unordered_map<unsigned long, decltype(id)> atomIdMap2;
         std::unordered_map<unsigned long, decltype(id)> bondIdMap2;
-        std::unordered_map<unsigned long, decltype(id)> residueIdMap2;
         bool isOBMolLatest;
 
         bool runForcefield();
@@ -47,8 +45,6 @@ namespace xgd {
 
         void addOBBond(JBond &_bond);
 
-        void addOBResidue(JResidue &_residue);
-
     public:
         JMolAdapter();
 
@@ -67,19 +63,16 @@ namespace xgd {
 
         std::shared_ptr<JBond> removeBond(const size_t &_bid) override;
 
-        std::shared_ptr<JResidue> removeResidue(const size_t &_rid) override;
-
-        std::shared_ptr<JResidue> addResidue(
-                const std::string &_text, bool _isLeftToRight, const float &_x = 0, const float &_y = 0) override;
-
-        std::shared_ptr<JResidue> addResidue(
-                const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y,
-                const float &_z) override;
 
         std::shared_ptr<JBond> addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2,
-                                       const BondType &_type = BondType::SingleBond) override;
+                                       const BondType &_type = BondType::SingleBond,
+                                       const float &_offset1 = 0, const float &_offset2 = 0) override;
 
         std::shared_ptr<JAtom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0) override;
+
+        std::shared_ptr<JAtom> addSuperAtom(
+                const std::string &_name, const float &_x0 = 0, const float &_y0 = 0,
+                const float &_x1 = 0, const float &_y1 = 0) override;
 
         std::shared_ptr<JAtom> addAtom(
                 const ElementType &_element, const float &_x, const float &_y, const float &_z) override;

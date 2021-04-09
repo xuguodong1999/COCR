@@ -50,9 +50,9 @@ if (NOT BUILD_SHARED_LIBS)
     add_definitions(-DLEAFXY_STATIC)
 endif (NOT BUILD_SHARED_LIBS)
 
-if(WITH_OPENVINO)
+if (WITH_OPENVINO)
     add_definitions(-DWITH_OPENVINO)
-endif(WITH_OPENVINO)
+endif (WITH_OPENVINO)
 
 # add exe
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

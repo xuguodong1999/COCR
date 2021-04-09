@@ -6,25 +6,22 @@
 
 using namespace xgd;
 
-std::shared_ptr<JAtom> xgd::JMol::getAtom(const size_t &_aid) {
-    if (_aid >= atomVec.size())return nullptr;
-    return atomVec[_aid];
+std::shared_ptr<JAtom> xgd::JMol::getAtom(const id_type &_aid) {
+    auto it = atomMap.find(_aid);
+    if (atomMap.end() == it) { return nullptr; }
+    return it->second;
 }
 
-std::shared_ptr<JBond> xgd::JMol::getBond(const size_t &_bid) {
-    if (_bid >= bondVec.size())return nullptr;
-    return bondVec[_bid];
+std::shared_ptr<JBond> xgd::JMol::getBond(const id_type &_bid) {
+    auto it = bondMap.find(_bid);
+    if (bondMap.end() == it) { return nullptr; }
+    return it->second;
 }
 
-std::shared_ptr<JResidue> xgd::JMol::getResidue(const size_t &_rid) {
-    if (_rid >= residueVec.size())return nullptr;
-    return residueVec[_rid];
-}
 
 std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_element, const float &_x, const float &_y) {
     auto atom = std::make_shared<JAtom>(idBase++, _element, _x, _y);
-    atomVec.push_back(atom);
-    ++atomNum;
+    atomMap[atom->getId()] = atom;
     return atom;
 }
 
@@ -36,89 +33,46 @@ std::shared_ptr<JAtom> JMol::addAtom(
     return atom;
 }
 
-std::shared_ptr<JBond> JMol::addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type) {
-    auto bond = std::make_shared<JBond>(idBase++, _a1, _a2, _type);
-    bondVec.push_back(bond);
-    ++bondNum;
-    return bond;
-}
 
-std::shared_ptr<JBond> JMol::addBond(const size_t &_aid1, const size_t &_aid2, const BondType &_type) {
-    auto a1 = getAtom(_aid1), a2 = getAtom(_aid2);
-    if (!a1 || !a2)
-        throw std::runtime_error(std::string("empty from or to in ") + __FUNCTION__);
-    return addBond(a1, a2, _type);
-}
-
-std::shared_ptr<JResidue>
-JMol::addResidue(const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y) {
-    auto residue = std::make_shared<JResidue>(idBase++, _text, _isLeftToRight, _x, _y);
-    residueVec.push_back(residue);
-    ++residueNum;
-    return residue;
-}
-
-std::shared_ptr<JResidue> JMol::addResidue(
-        const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z) {
-    auto residue = addResidue(_text, _isLeftToRight, _x, _y);
-    if (!residue)return nullptr;
-    residue->set3D(_x, _y, _z);
-    return residue;
-}
-
-std::shared_ptr<JAtom> JMol::removeAtom(const size_t &_aid) {
-    if (_aid >= atomVec.size())return nullptr;
-    auto atom = atomVec[_aid];
-    atomVec[_aid] = nullptr;
-    --atomNum;
+std::shared_ptr<JAtom> JMol::removeAtom(const id_type &_aid) {
+    auto atom = getAtom(_aid);
+    if (atom) { atomMap.erase(_aid); }
     return atom;
 }
 
-std::shared_ptr<JBond> JMol::removeBond(const size_t &_bid) {
-    if (_bid >= bondVec.size())return nullptr;
-    auto bond = bondVec[_bid];
-    bondVec[_bid] = nullptr;
-    --bondNum;
+std::shared_ptr<JBond> JMol::removeBond(const id_type &_bid) {
+    auto bond = getBond(_bid);
+    if (bond) { bondMap.erase(_bid); }
     return bond;
 }
 
-std::shared_ptr<JResidue> JMol::removeResidue(const size_t &_rid) {
-    if (_rid >= residueVec.size())return nullptr;
-    auto residue = residueVec[_rid];
-    residueVec[_rid] = nullptr;
-    --residueNum;
-    return residue;
-}
-
-void JMol::setId(const size_t &_id) {
+void JMol::setId(const id_type &_id) {
     id = _id;
 }
 
-size_t JMol::getId() {
+id_type JMol::getId() {
     return id;
 }
 
-JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false),
-               atomNum(0), bondNum(0), residueNum(0), idBase(0) {
+JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false), idBase(0) {
 
 }
 
 void JMol::loopAtomVec(std::function<void(JAtom &)> _func) {
-    for (auto &atom:atomVec) {
-        if (atom)_func(*atom);
+    for (auto &[aid, atom]:atomMap) {
+        if (atom) { _func(*atom); }
     }
 }
 
 void JMol::loopBondVec(std::function<void(JBond &)> _func) {
-    for (auto &bond:bondVec) {
-        if (bond)_func(*bond);
+    for (auto &[bid, bond]:bondMap) {
+        if (bond) { _func(*bond); }
     }
 }
 
 std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
     auto atom = std::make_shared<JAtom>(idBase++, static_cast<ElementType>(_atomicNumber));
-    atomVec.push_back(atom);
-    ++atomNum;
+    atomMap[atom->getId()] = atom;
     return atom;
 }
 
@@ -209,7 +163,7 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
 
 float JMol::getAvgBondLength() {
     qDebug() << __FUNCTION__;
-    if (!bondNum) { return 0; }
+    if (bondMap.empty()) { return 0; }
     if (!is3DInfoLatest) {
         qDebug() << "generate3D=" << generate3D();
     }
@@ -220,27 +174,36 @@ float JMol::getAvgBondLength() {
                                    std::pow(from->yy - to->yy, 2) +
                                    std::pow(from->zz - to->zz, 2));
     });
-    return avgBondLength / bondNum;
+    return avgBondLength / bondMap.size();
 }
 
 size_t JMol::getBondNum() const {
-    return bondNum;
+    return bondMap.size();
 }
 
 size_t JMol::getAtomNum() const {
-    return atomNum;
+    return atomMap.size();
 }
 
 void JMol::set2DInfoLatest(bool _is2DInfoLatest) {
     is2DInfoLatest = _is2DInfoLatest;
 }
 
-size_t JMol::getResidueNum() const {
-    return residueNum;
+
+std::shared_ptr<JBond> JMol::addBond(
+        std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type,
+        const float &_offset1, const float &_offset2) {
+    auto bond = std::make_shared<JBond>(idBase++, _a1, _a2, _type, _offset1, _offset2);
+    bondMap[bond->getId()] = bond;
+    return bond;
 }
 
-void JMol::loopResidueVec(std::function<void(JResidue &)> _func) {
-    for (auto &residue:residueVec) {
-        if (residue) { _func(*residue); }
-    }
+std::shared_ptr<JAtom> JMol::addSuperAtom(
+        const std::string &_name, const float &_x0, const float &_y0,
+        const float &_x1, const float &_y1) {
+    auto atom = std::make_shared<JAtom>(idBase++, _name, _x0, _y0, _x1, _y1);
+    atomMap[atom->getId()] = atom;
+    return atom;
 }
+
+

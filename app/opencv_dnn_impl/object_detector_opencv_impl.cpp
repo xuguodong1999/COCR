@@ -9,8 +9,13 @@ bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const
     try {
         net = cv::dnn::readNetFromDarknet(_cfgFile, _weightsFile);
 #ifdef WITH_OPENVINO
-        net.setPreferableBackend(cv::dnn::DNN_BACKEND_INFERENCE_ENGINE);
-        net.setPreferableTarget(cv::dnn::DNN_TARGET_MYRIAD);
+        try {
+            net.setPreferableBackend(cv::dnn::DNN_BACKEND_INFERENCE_ENGINE);
+            net.setPreferableTarget(cv::dnn::DNN_TARGET_MYRIAD);
+        } catch (...) {
+            net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+            net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+        }
 #else
         net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
         net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);

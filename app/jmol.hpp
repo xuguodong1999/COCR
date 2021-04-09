@@ -3,21 +3,22 @@
 
 #include "jatom.hpp"
 #include "jbond.hpp"
-#include "jresidue.hpp"
 #include <unordered_set>
 #include <vector>
 #include <memory>
 #include <functional>
 
+using id_type = size_t;
 namespace xgd {
     class JMol {
-        size_t idBase;
+        id_type idBase;
     protected:
-        size_t id, bondNum, atomNum, residueNum;
-        std::vector<std::shared_ptr<JAtom>> atomVec;
-        std::vector<std::shared_ptr<JBond>> bondVec;
-        std::vector<std::shared_ptr<JResidue>> residueVec;
+        id_type id;
+        std::unordered_map<id_type, std::shared_ptr<JAtom>> atomMap;
+        std::unordered_map<id_type, std::shared_ptr<JBond>> bondMap;
         bool is3DInfoLatest, is2DInfoLatest;
+
+
         inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
 
         std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
@@ -34,8 +35,6 @@ namespace xgd {
 
         size_t getAtomNum() const;
 
-        size_t getResidueNum() const;
-
         float getAvgBondLength();
 
         JMol();
@@ -44,36 +43,29 @@ namespace xgd {
 
         void loopBondVec(std::function<void(JBond &_bond)> _func);
 
-        void loopResidueVec(std::function<void(JResidue &_residue)> _func);
-
         virtual void display();
 
-        void setId(const size_t &_id);
+        void setId(const id_type &_id);
 
-        size_t getId();
+        id_type getId();
 
         virtual std::shared_ptr<JAtom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0);
+
+        // 水平原始字符串、矩形左上角和右下角坐标、关键接入点
+        virtual std::shared_ptr<JAtom> addSuperAtom(
+                const std::string &_name, const float &_x0 = 0, const float &_y0 = 0,
+                const float &_x1 = 0, const float &_y1 = 0);
 
         virtual std::shared_ptr<JAtom> addAtom(
                 const ElementType &_element, const float &_x, const float &_y, const float &_z);
 
-        virtual std::shared_ptr<JBond> addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2,
-                                               const BondType &_type = BondType::SingleBond);
+        virtual std::shared_ptr<JBond> addBond(
+                std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2,
+                const BondType &_type = BondType::SingleBond, const float &_offset1 = 0, const float &_offset2 = 0);
 
-        std::shared_ptr<JBond> addBond(const size_t &_aid1, const size_t &_aid2,
-                                       const BondType &_type = BondType::SingleBond);
+        std::shared_ptr<JAtom> getAtom(const id_type &_aid);
 
-        virtual std::shared_ptr<JResidue>
-        addResidue(const std::string &_text, bool _isLeftToRight, const float &_x = 0, const float &_y = 0);
-
-        virtual std::shared_ptr<JResidue>
-        addResidue(const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z);
-
-        std::shared_ptr<JAtom> getAtom(const size_t &_aid);
-
-        std::shared_ptr<JBond> getBond(const size_t &_bid);
-
-        std::shared_ptr<JResidue> getResidue(const size_t &_rid);
+        std::shared_ptr<JBond> getBond(const id_type &_bid);
 
         /**
          * 添加使用Mol对象前的回调，设计用作同步适配器和适配者的数据
@@ -83,11 +75,9 @@ namespace xgd {
          */
         virtual void onExtraDataNeeded();
 
-        virtual std::shared_ptr<JAtom> removeAtom(const size_t &_aid);
+        virtual std::shared_ptr<JAtom> removeAtom(const id_type &_aid);
 
-        virtual std::shared_ptr<JBond> removeBond(const size_t &_bid);
-
-        virtual std::shared_ptr<JResidue> removeResidue(const size_t &_rid);
+        virtual std::shared_ptr<JBond> removeBond(const id_type &_bid);
 
         virtual std::string writeAsPDB() = 0;
 

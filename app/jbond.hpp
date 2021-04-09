@@ -18,14 +18,19 @@ namespace xgd {
     };
 
     class JBond {
-        std::shared_ptr<JAtom> from, to;
         size_t id;
+        std::shared_ptr<JAtom> from, to;
+        // 约定：范围[0,1]，表达键端在原子的接入点，用于几何表达层面
+        float offset1, offset2;
         BondType type;
-
     public:
         std::shared_ptr<JAtom> getFrom() const;
 
         std::shared_ptr<JAtom> getTo() const;
+
+        float getFromOffset() const;
+
+        float getToOffset() const;
 
         size_t getId() const;
 
@@ -37,12 +42,8 @@ namespace xgd {
 
         void setOrder(const int &_order);
 
-        size_t fromId() const;
-
-        size_t toId() const;
-
         JBond(const size_t &_id, std::shared_ptr<JAtom> _from = nullptr, std::shared_ptr<JAtom> _to = nullptr,
-              const BondType &_type = BondType::SingleBond);
+              const BondType &_type = BondType::SingleBond, const float &_offset1 = 0, const float &_offset2 = 0);
     };
 
     QColor getColor(const BondType &_bondType);

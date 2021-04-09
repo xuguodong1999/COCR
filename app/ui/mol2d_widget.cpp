@@ -48,18 +48,6 @@ void Mol2DWidget::syncMolToScene() {
         atomItemMap[_atom.getId()] = atomItem;
         scene->addItem(atomItem);
     });
-    mol->loopResidueVec([&](xgd::JResidue &_residue) {
-        auto atomItem = new AtomItem();
-        atomItem->setHTML(getRichText(_residue.getRawText()));
-        if (_residue.isLeftToRight()) {
-
-        } else {
-
-        }
-        atomItem->setPos2D(_residue.x, _residue.y);
-        atomItemMap[_residue.getId()] = atomItem;
-        scene->addItem(atomItem);
-    });
     mol->loopBondVec([&](xgd::JBond &_bond) {
         auto bondItem = new BondItem();
         auto from = _bond.getFrom(), to = _bond.getTo();

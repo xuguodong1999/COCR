@@ -5,8 +5,9 @@
 
 using namespace xgd;
 
-JBond::JBond(const size_t &_id, std::shared_ptr<JAtom> _from, std::shared_ptr<JAtom> _to, const BondType &_type)
-        : id(_id), type(_type), from(std::move(_from)), to(std::move(_to)) {
+JBond::JBond(const size_t &_id, std::shared_ptr<JAtom> _from, std::shared_ptr<JAtom> _to, const BondType &_type,
+             const float &_offset1, const float &_offset2)
+        : id(_id), type(_type), from(std::move(_from)), to(std::move(_to)), offset1(_offset1), offset2(_offset2) {
 }
 
 std::shared_ptr<JAtom> JBond::getFrom() const {
@@ -57,14 +58,12 @@ void JBond::setOrder(const int &_order) {
     }
 }
 
-size_t JBond::fromId() const {
-    if (from)return from->getId();
-    throw std::runtime_error("bond with empty from atom");
+float JBond::getFromOffset() const {
+    return offset1;
 }
 
-size_t JBond::toId() const {
-    if (to)return to->getId();
-    throw std::runtime_error("bond with empty to atom");
+float JBond::getToOffset() const {
+    return offset2;
 }
 
 static std::unordered_map<BondType, ColorName> colorMap = {

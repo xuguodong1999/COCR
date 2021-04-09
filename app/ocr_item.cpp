@@ -85,7 +85,7 @@ namespace xgd {
     OCRDataItem::OCRDataItem(const cv::Rect2f &_rect) : rect(_rect) {}
 
     ElementType OCRDataItem::getElement() const {
-        return ElementType::None;
+        return ElementType::SA;
     }
 
     static cv::Point2f sPts0(0, 0);
@@ -295,7 +295,7 @@ void xgd::OCRItem::setAsCircleBond(const cv::Rect2f &_rect) {
 
 void xgd::OCRItem::setAsText(std::string &_text, const cv::Rect2f &_rect) {
     ElementType eleType = convertNameToElementType(_text);
-    if (eleType != ElementType::None) {
+    if (eleType != ElementType::SA) {
         type = OCRItemType::Element;
         data = std::make_shared<OCRElementDataItem>(eleType, _rect);
     } else {

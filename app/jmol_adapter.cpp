@@ -41,36 +41,12 @@ std::shared_ptr<JBond> JMolAdapter::removeBond(const size_t &_bid) {
     return JMol::removeBond(_bid);
 }
 
-std::shared_ptr<JResidue> JMolAdapter::removeResidue(const size_t &_rid) {
-    onMolUpdated();
-    isOBMolLatest = false;
-    return JMol::removeResidue(_rid);
-}
-
-std::shared_ptr<JResidue> JMolAdapter::addResidue(
-        const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y) {
-    onMolUpdated();
-    checkOBMol();
-    // TODO: handle residue in openbabel
-    auto residue = JMol::addResidue(_text, _isLeftToRight, _x, _y);
-    if (!residue) { return nullptr; }
-    addOBResidue(*residue);
-    return residue;
-}
-
-std::shared_ptr<JResidue> JMolAdapter::addResidue(
-        const std::string &_text, bool _isLeftToRight, const float &_x, const float &_y, const float &_z) {
-    auto residue = addResidue(_text, _isLeftToRight, _x, _y);
-    if (!residue) { return nullptr; }
-    residue->set3D(_x, _y, _z);
-    return residue;
-}
-
 std::shared_ptr<JBond> JMolAdapter::addBond(
-        std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type) {
+        std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type,
+        const float &_offset1, const float &_offset2) {
     onMolUpdated();
     checkOBMol();
-    auto bond = JMol::addBond(_a1, _a2, _type);
+    auto bond = JMol::addBond(_a1, _a2, _type, _offset1, _offset2);
     if (!bond)return nullptr;
     addOBBond(*bond);
     return bond;
@@ -257,8 +233,8 @@ void JMolAdapter::syncNewEntityFromOBMol() {
         auto it = bondIdMap2.find(obBondIter->GetId());
         if (bondIdMap2.end() != it) { continue; }
         onMolUpdated();
-        auto bond = JMol::addBond(atomIdMap2[obBondIter->GetBeginAtom()->GetId()],
-                                  atomIdMap2[obBondIter->GetEndAtom()->GetId()]);
+        auto bond = JMol::addBond(getAtom(atomIdMap2[obBondIter->GetBeginAtom()->GetId()]),
+                                  getAtom(atomIdMap2[obBondIter->GetEndAtom()->GetId()]));
         if (bond) {
             if (5 == obBondIter->GetBondOrder()) {
                 bond->setType(BondType::DelocalizedBond);
@@ -287,7 +263,13 @@ void JMolAdapter::checkOBMol() {
 
 void JMolAdapter::addOBAtom(JAtom &_atom) {
     auto obAtom = obMol->NewAtom();
-    obAtom->SetAtomicNum(_atom.getAtomicNumber());
+    if (ElementType::SA != _atom.getType()) {
+        obAtom->SetAtomicNum(_atom.getAtomicNumber());
+    } else {
+        // FIXME: 选择砹元素作为字符串的代理，这个元素的特点是价态足够、且一般没人写
+        // FIXME: 这样在 3D 渲染的时候，如果没有展开字符串，那么字符串会被显示为一个球
+        obAtom->SetAtomicNum(85);
+    }
     atomIdMap[_atom.getId()] = obAtom->GetId();
     atomIdMap2[obAtom->GetId()] = _atom.getId();
 }
@@ -365,13 +347,14 @@ void JMolAdapter::resetOBMol() {
     });
 }
 
-void JMolAdapter::addOBResidue(JResidue &_residue) {
-    // FIXME: 残基必须完全展开
-    auto obResidue = obMol->NewResidue();
-    obResidue->SetName(_residue.getRawText());
-
-    residueIdMap[_residue.getId()] = obResidue->GetIdx();
-    residueIdMap2[obResidue->GetIdx()] = _residue.getId();
+std::shared_ptr<JAtom>
+JMolAdapter::addSuperAtom(const std::string &_name, const float &_x0, const float &_y0, const float &_x1,
+                          const float &_y1) {
+    onMolUpdated();
+    checkOBMol();
+    auto atom = JMol::addSuperAtom(_name, _x0, _y0, _x1, _y1);
+    if (!atom)return nullptr;
+    addOBAtom(*atom);
+    return atom;
 }
-
 
