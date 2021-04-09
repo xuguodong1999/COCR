@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file compress="9" compress-algo="best">img/waiting.gif</file>
         <file compress="9" compress-algo="best">img/logo.ico</file>
+        <file compress="9" compress-algo="best">img/shutter.svg</file>
     </qresource>
 </RCC>

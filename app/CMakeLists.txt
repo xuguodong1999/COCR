@@ -6,6 +6,8 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+include_directories(${Qt5MultimediaWidgets_INCLUDE_DIRS})
+
 find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
 
@@ -80,6 +82,7 @@ target_link_libraries(${APP_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::3DExtras
         Qt${QT_VERSION_MAJOR}::3DRender
         Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::MultimediaWidgets
         opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
 
 # on desktop, i prefer to use large yolo weights by opencv_dnn, instead of ncnn

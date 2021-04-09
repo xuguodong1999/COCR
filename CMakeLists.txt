@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 # qt-android require app has same name with cmake-top-project
 set(APP_NAME ${PROJECT_NAME})
 # app linked qt components
-set(QT_COMPONENTS Widgets 3DCore 3DExtras 3DRender 3DInput LinguistTools)
+set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput LinguistTools)
 
 # use this flag to build static exe for msvc. dont set it to false on unix
 # dont set it unless you known what you are doing
@@ -42,7 +42,7 @@ endif (NOT ANDROID)
 # ncnn for crnn and yolo
 # use build.sh or build-shared.bat to install ncnn from source
 if (ANDROID)
-    set(ncnn_DIR ${ANDROID_LIB_DIR}/ncnn-20210124-android/${CMAKE_ANDROID_ARCH_ABI}/lib/cmake/ncnn)
+    set(ncnn_DIR ${ANDROID_LIB_DIR}/ncnn-20210322-android/${CMAKE_ANDROID_ARCH_ABI}/lib/cmake/ncnn)
 else (ANDROID)
     set(ncnn_DIR ${3RD_LIB_DIR}/ncnn-lib/lib/cmake/ncnn)
 endif (ANDROID)
