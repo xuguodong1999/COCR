@@ -20,7 +20,7 @@ Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
     auto l = new QHBoxLayout();
     auto w = QWidget::createWindowContainer(window);
     l->addWidget(w);
-    l->setMargin(2);
+    l->setContentsMargins(1, 1, 1, 1);
     setLayout(l);
     window->installEventFilter(this);
     hintWidget = new WaitHintWidget(this);

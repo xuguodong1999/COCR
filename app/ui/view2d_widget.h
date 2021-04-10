@@ -4,15 +4,15 @@
 #include <QWidget>
 
 namespace Ui {
-class View2DWidget;
+    class View2DWidget;
 }
 
-class View2DWidget : public QWidget
-{
-    Q_OBJECT
+class View2DWidget : public QWidget {
+Q_OBJECT
 
 public:
     explicit View2DWidget(QWidget *parent = nullptr);
+
     ~View2DWidget();
 
 private:

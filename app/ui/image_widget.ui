@@ -1,21 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
- <class>ImageWidget</class>
- <widget class="QWidget" name="ImageWidget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>300</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
- </widget>
- <pixmapfunction/>
- <connections/>
+    <class>ImageWidget</class>
+    <widget class="QWidget" name="ImageWidget">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>960</width>
+                <height>640</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Image Loader</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="6,2,1">
+            <item>
+                <widget class="QLabel" name="display_label">
+                    <property name="text">
+                        <string>display</string>
+                    </property>
+                </widget>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="img_layout" stretch="1,2,1">
+                    <property name="spacing">
+                        <number>9</number>
+                    </property>
+                    <property name="leftMargin">
+                        <number>9</number>
+                    </property>
+                    <property name="topMargin">
+                        <number>9</number>
+                    </property>
+                    <property name="rightMargin">
+                        <number>9</number>
+                    </property>
+                    <property name="bottomMargin">
+                        <number>9</number>
+                    </property>
+                    <item>
+                        <widget class="QToolButton" name="ocr_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>OCR</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QToolButton" name="load_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>load from file</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QToolButton" name="reset_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>reset</string>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="proc_layout">
+                    <item>
+                        <widget class="QLabel" name="proc_label">
+                            <property name="text">
+                                <string>process</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QSlider" name="proc_slider">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+        </layout>
+    </widget>
+    <resources/>
+    <connections/>
 </ui>

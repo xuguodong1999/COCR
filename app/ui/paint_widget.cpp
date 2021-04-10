@@ -2,13 +2,11 @@
 #include "ui_paint_widget.h"
 
 PaintWidget::PaintWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::PaintWidget)
-{
+        QWidget(parent),
+        ui(new Ui::PaintWidget) {
     ui->setupUi(this);
 }
 
-PaintWidget::~PaintWidget()
-{
+PaintWidget::~PaintWidget() {
     delete ui;
 }

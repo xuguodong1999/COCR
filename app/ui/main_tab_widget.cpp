@@ -41,6 +41,33 @@ MainTabWidget::MainTabWidget(QWidget *parent) :
     cameraWidget = new CameraWidget();
     l->addWidget(cameraWidget);
     ui->cam_tab->setLayout(l);
+
+    connect(ui->tabWidget, &QTabWidget::currentChanged, [&](int index) {
+        switch (index) {
+            case 0: {
+                break;
+            }
+            case 1: {
+                break;
+            }
+            case 2: {
+                break;
+            }
+            case 3: {
+                break;
+            }
+            case 4: {
+                break;
+            }
+            case 5: {
+                cameraWidget->startCamera();
+                break;
+            }
+        }
+        if (index != 5) {
+            cameraWidget->stopCamera();
+        }
+    });
 }
 
 MainTabWidget::~MainTabWidget() {

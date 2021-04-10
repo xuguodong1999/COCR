@@ -4,15 +4,15 @@
 #include <QWidget>
 
 namespace Ui {
-class WelcomeWidget;
+    class WelcomeWidget;
 }
 
-class WelcomeWidget : public QWidget
-{
-    Q_OBJECT
+class WelcomeWidget : public QWidget {
+Q_OBJECT
 
 public:
     explicit WelcomeWidget(QWidget *parent = nullptr);
+
     ~WelcomeWidget();
 
 private:

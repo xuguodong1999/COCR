@@ -46,7 +46,7 @@ void Mol2DWidget::syncMolToScene() {
         atomItem->setHTML(getRichText(_atom.getName()));
         atomItem->setLeftTop(_atom.x0, _atom.y0);
         atomItemMap[_atom.getId()] = atomItem;
-        if(_atom.isImplicit()){
+        if (_atom.isImplicit()) {
             atomItem->setVisible(false);
         }
         scene->addItem(atomItem);
