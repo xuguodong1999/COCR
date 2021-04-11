@@ -165,14 +165,17 @@ void CameraWidget::displayCaptureError(int id, const QCameraImageCapture::Error 
 
 void CameraWidget::startCamera() {
     if (!m_camera.isNull()) {
-        m_camera->start();
+        if (m_camera->state() != QCamera::ActiveState) {
+            m_camera->start();
+        }
     }
 }
 
 void CameraWidget::stopCamera() {
-    qDebug() << "stop camera";
     if (!m_camera.isNull()) {
-        m_camera->stop();
+        if (m_camera->state() == QCamera::ActiveState) {
+            m_camera->stop();
+        }
     }
 }
 

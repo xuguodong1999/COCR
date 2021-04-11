@@ -257,10 +257,11 @@ int main(int argc, char *argv[]) {
 //        w->show();
 //        wait->startWaitHint();
 //        (new MainWidget)->show();
-        (new MainTabWidget)->show();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }
+    MainTabWidget w;
+    w.show();
     return app.exec();
 }

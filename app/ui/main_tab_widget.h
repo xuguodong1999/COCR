@@ -35,6 +35,8 @@ private:
     View3DWidget *view3DWidget;
     ImageWidget *imageWidget;
     CameraWidget *cameraWidget;
+private slots:
+    void handleTabChange(int index);
 };
 
 #endif // MAIN_TAB_WIDGET_H
