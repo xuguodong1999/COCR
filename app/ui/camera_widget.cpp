@@ -109,9 +109,10 @@ void CameraWidget::setCamera(const QCameraInfo &cameraInfo) {
 
 void CameraWidget::processCapturedImage(int requestId, const QImage &img) {
     Q_UNUSED(requestId);
+    stopCamera();
     displayCapturedImage();
     ui->preview_label->setPixmap(QPixmap::fromImage(img.scaled(
-            ui->preview_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+            ui->preview_label->size() * 0.98, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
     // TODO: emit image here
     QTimer::singleShot(2000, this, &CameraWidget::displayViewfinder);
 }
@@ -197,6 +198,7 @@ void CameraWidget::displayCameraError() {
 }
 
 void CameraWidget::displayViewfinder() {
+    startCamera();
     ui->stacked_widget->setCurrentIndex(0);
 }
 

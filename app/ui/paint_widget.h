@@ -10,6 +10,7 @@ namespace Ui {
     class PaintWidget;
 }
 class SketchWidget;
+
 class PaintWidget : public QWidget {
 Q_OBJECT
 
@@ -33,7 +34,7 @@ protected:
 
 private:
     Ui::PaintWidget *ui;
-    SketchWidget*sketchWidget;
+    SketchWidget *sketchWidget;
     QPen mPen;
     QPoint lastPos;
     QPixmap bufPixmap;
@@ -54,12 +55,16 @@ private:
     };
 
     void updateDotIcon();
+
     void updateColorIcon();
 
 
     void readConfigurations();
+
 private slots:
+
     void increaseColorMode();
+
     void increaseDotSize();
 };
 

@@ -36,6 +36,7 @@ private:
     ImageWidget *imageWidget;
     CameraWidget *cameraWidget;
 private slots:
+
     void handleTabChange(int index);
 };
 

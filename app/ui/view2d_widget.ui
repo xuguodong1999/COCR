@@ -1,202 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>View2DWidget</class>
- <widget class="QWidget" name="View2DWidget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>960</width>
-    <height>640</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>2D Viewer</string>
-  </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,9">
-   <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="2,2,2,10,3">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QToolButton" name="shot_btn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>screenshot</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="reset_btn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>reset</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="hydrogen_btn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>show / hide hydrogen</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="pick_layout" stretch="1,4">
-       <item>
-        <widget class="QLabel" name="pick_label">
-         <property name="text">
-          <string>selected item</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="v3d_ctrl_layout" rowstretch="1,1" columnstretch="2,1">
-         <item row="0" column="0">
-          <widget class="QComboBox" name="comboBox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <item>
-            <property name="text">
-             <string>Erase Bond</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Single Bond</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Double Bond</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Triple Bond</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Up Bond</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Down Bond</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Wave Bond</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="0" column="1" rowspan="2">
-          <widget class="QToolButton" name="toolButton_2">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>apply</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QComboBox" name="comboBox_2">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <item>
-            <property name="text">
-             <string>Erase Atom</string>
-            </property>
-           </item>
-          </widget>
-         </item>
+    <class>View2DWidget</class>
+    <widget class="QWidget" name="View2DWidget">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>960</width>
+                <height>640</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>2D Viewer</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,9">
+            <item>
+                <layout class="QVBoxLayout" name="verticalLayout" stretch="2,2,2,10,3">
+                    <property name="spacing">
+                        <number>0</number>
+                    </property>
+                    <item>
+                        <widget class="QToolButton" name="shot_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>screenshot</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QToolButton" name="reset_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>reset</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QToolButton" name="hydrogen_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>show / hide hydrogen</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <layout class="QVBoxLayout" name="pick_layout" stretch="1,4">
+                            <item>
+                                <widget class="QLabel" name="pick_label">
+                                    <property name="text">
+                                        <string>selected item</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <layout class="QGridLayout" name="v3d_ctrl_layout" rowstretch="1,1" columnstretch="2,1">
+                                    <item row="0" column="0">
+                                        <widget class="QComboBox" name="comboBox">
+                                            <property name="sizePolicy">
+                                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Erase Bond</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Single Bond</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Double Bond</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Triple Bond</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Up Bond</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Down Bond</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Wave Bond</string>
+                                                </property>
+                                            </item>
+                                        </widget>
+                                    </item>
+                                    <item row="0" column="1" rowspan="2">
+                                        <widget class="QToolButton" name="toolButton_2">
+                                            <property name="sizePolicy">
+                                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <property name="text">
+                                                <string>apply</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="1" column="0">
+                                        <widget class="QComboBox" name="comboBox_2">
+                                            <property name="sizePolicy">
+                                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Erase Atom</string>
+                                                </property>
+                                            </item>
+                                        </widget>
+                                    </item>
+                                </layout>
+                            </item>
+                        </layout>
+                    </item>
+                    <item>
+                        <layout class="QVBoxLayout" name="format_layout" stretch="1,2,2">
+                            <item>
+                                <widget class="QLabel" name="format_label">
+                                    <property name="text">
+                                        <string>format</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QComboBox" name="format_box">
+                                    <property name="sizePolicy">
+                                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                            <horstretch>0</horstretch>
+                                            <verstretch>0</verstretch>
+                                        </sizepolicy>
+                                    </property>
+                                    <item>
+                                        <property name="text">
+                                            <string>pdb</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>smi</string>
+                                        </property>
+                                    </item>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QToolButton" name="format_btn">
+                                    <property name="sizePolicy">
+                                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                            <horstretch>0</horstretch>
+                                            <verstretch>0</verstretch>
+                                        </sizepolicy>
+                                    </property>
+                                    <property name="text">
+                                        <string>export</string>
+                                    </property>
+                                </widget>
+                            </item>
+                        </layout>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <widget class="QWidget" name="widget" native="true"/>
+            </item>
         </layout>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="format_layout" stretch="1,2,2">
-       <item>
-        <widget class="QLabel" name="format_label">
-         <property name="text">
-          <string>format</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="format_box">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <item>
-          <property name="text">
-           <string>pdb</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>smi</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="format_btn">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>export</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QWidget" name="widget" native="true"/>
-   </item>
-  </layout>
- </widget>
- <resources/>
- <connections/>
+    </widget>
+    <resources/>
+    <connections/>
 </ui>
