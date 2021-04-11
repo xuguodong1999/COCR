@@ -1,3 +1,4 @@
+#include <QThreadPool>
 #include "main_tab_widget.h"
 #include "ui_main_tab_widget.h"
 #include "welcome_widget.h"
@@ -6,6 +7,7 @@
 #include "view3d_widget.h"
 #include "image_widget.h"
 #include "camera_widget.h"
+#include "ocr_runnable.hpp"
 
 MainTabWidget::MainTabWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::MainTabWidget), welcomeWidget(nullptr), paintWidget(nullptr),
@@ -31,6 +33,12 @@ void MainTabWidget::handleTabChange(int index) {
         paintWidget = new PaintWidget(ui->draw_tab);
         l->addWidget(paintWidget);
         ui->draw_tab->setLayout(l);
+        connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked, [&](const QList<QList<QPointF>> &_script) {
+            qDebug() << "_script.size()=" << _script.size();
+            auto task = new OCRRunnable("/home/xgd/source/repos/leafxy/resources/model");
+            task->bindData(_script);
+            QThreadPool::globalInstance()->start(task);
+        });
     };
     static const auto attach_view2d_widget = [&]() {
         auto l = new QHBoxLayout();

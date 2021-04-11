@@ -21,6 +21,9 @@ PaintWidget::PaintWidget(QWidget *parent) :
     connect(ui->dot_btn, &QToolButton::clicked, this, &PaintWidget::increaseDotSize);
     connect(ui->color_btn, &QToolButton::clicked, this, &PaintWidget::increaseColorMode);
     connect(ui->reset_btn, &QToolButton::clicked, sketchWidget, &SketchWidget::reset);
+    connect(ui->ocr_btn, &QToolButton::clicked, [&]() {
+        emit sig_ocr_btn_clicked(sketchWidget->getScript());
+    });
 }
 
 void PaintWidget::readConfigurations() {
@@ -42,21 +45,6 @@ PaintWidget::~PaintWidget() {
     delete ui;
 }
 
-void PaintWidget::mousePressEvent(QMouseEvent *event) {
-    QWidget::mousePressEvent(event);
-}
-
-void PaintWidget::mouseMoveEvent(QMouseEvent *event) {
-    QWidget::mouseMoveEvent(event);
-}
-
-void PaintWidget::mouseReleaseEvent(QMouseEvent *event) {
-    QWidget::mouseReleaseEvent(event);
-}
-
-void PaintWidget::paintEvent(QPaintEvent *event) {
-    QWidget::paintEvent(event);
-}
 
 void PaintWidget::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
@@ -80,9 +68,6 @@ void PaintWidget::updateDotIcon() {
     ui->dot_btn->setIcon(dotIcon);
 }
 
-void PaintWidget::closeEvent(QCloseEvent *event) {
-    QWidget::closeEvent(event);
-}
 
 void PaintWidget::increaseDotSize() {
     mPenWidthIndex = (mPenWidthIndex + 1) % mPenWidthOptions.size();

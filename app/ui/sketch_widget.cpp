@@ -32,22 +32,22 @@ SketchWidget::SketchWidget(QWidget *parent, QPen *_pen, QColor *_bgColor)
     qRegisterMetaTypeStreamOperators<ui_script_type>("QList<QList<QPointF>>");
     ptsList = leafxyApp->getSettings().value("sketch_widget/last_script", QVariant::fromValue(
             ptsList)).value<ui_script_type>();
-    if (!ptsList.empty()) {
-        QTimer::singleShot(50, [&]() {
-            auto result = QMessageBox::information(
-                    nullptr, "hint", "history drawing found. continue from last drawing?",
-                    QMessageBox::Yes | QMessageBox::No);
-            switch (result) {
-                case QMessageBox::No:
-                    ptsList.clear();
-                    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(ptsList));
-                    sync();
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
+//    if (!ptsList.empty()) {
+//        QTimer::singleShot(50, [&]() {
+//            auto result = QMessageBox::information(
+//                    nullptr, "hint", "history drawing found. continue from last drawing?",
+//                    QMessageBox::Yes | QMessageBox::No);
+//            switch (result) {
+//                case QMessageBox::No:
+//                    ptsList.clear();
+//                    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(ptsList));
+//                    sync();
+//                    break;
+//                default:
+//                    break;
+//            }
+//        });
+//    }
 }
 
 void SketchWidget::paintEvent(QPaintEvent *event) {
@@ -124,5 +124,9 @@ void SketchWidget::reset() {
 }
 
 SketchWidget::~SketchWidget() {
+}
+
+const ui_script_type &SketchWidget::getScript() const {
+    return ptsList;
 }
 

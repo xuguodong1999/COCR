@@ -20,24 +20,13 @@ public:
     ~PaintWidget();
 
 protected:
-    void mousePressEvent(QMouseEvent *event) override;
-
-    void mouseMoveEvent(QMouseEvent *event) override;
-
-    void mouseReleaseEvent(QMouseEvent *event) override;
-
-    void paintEvent(QPaintEvent *event) override;
 
     void resizeEvent(QResizeEvent *event) override;
-
-    void closeEvent(QCloseEvent *event) override;
 
 private:
     Ui::PaintWidget *ui;
     SketchWidget *sketchWidget;
     QPen mPen;
-    QPoint lastPos;
-    QPixmap bufPixmap;
     QPainter painter;
     QColor mBgColor;
 
@@ -54,18 +43,36 @@ private:
             {Qt::darkGray,  Qt::white}
     };
 
+    /**
+     * 更新线条粗细的按钮图标
+     */
     void updateDotIcon();
 
+    /**
+     * 更新颜色模式的按钮图标
+     */
     void updateColorIcon();
 
-
+    /**
+     * 从配置文件读取上一次的配置，用于初始化
+     */
     void readConfigurations();
 
 private slots:
 
+    /**
+     * 切换到下一个颜色模式
+     */
     void increaseColorMode();
 
+    /**
+     * 切换到下一个线条粗细
+     */
     void increaseDotSize();
+
+signals:
+
+    void sig_ocr_btn_clicked(const QList<QList<QPointF>> &_script);
 };
 
 #endif // PAINT_WIDGET_H
