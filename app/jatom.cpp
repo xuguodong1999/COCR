@@ -185,8 +185,8 @@ const ElementType &xgd::JAtom::getType() const {
 }
 
 void xgd::JAtom::set2D(const float &_x, const float &_y) {
-    x = _x;
-    y = _y;
+    x = x0 = x1 = _x;
+    y = y0 = y1 = _y;
 }
 
 void xgd::JAtom::set3D(const float &_x, const float &_y, const float &_z) {

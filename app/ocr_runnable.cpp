@@ -1,7 +1,7 @@
 #include "ocr_runnable.hpp"
 #include <opencv2/opencv_modules.hpp>
 
-#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID)
+#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) && !defined(WITH_MODEL_QRC)
 
 #include "opencv_dnn_impl/object_detector_opencv_impl.hpp"
 //#include "opencv_dnn_impl/text_recognizer_opencv_impl.hpp"// unused, only for performance test
@@ -18,6 +18,8 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
 #include <QDebug>
+#include <QDir>
+#include <QApplication>
 
 class OCRRunnablePrivate {
     cv::Mat image;
@@ -82,12 +84,20 @@ public:
     }
 };
 
-OCRRunnable::OCRRunnable(const QString &_dir) : _p(std::make_shared<OCRRunnablePrivate>()) {
+OCRThread::OCRThread(QObject *_parent, const QString &_dir)
+        : QThread(_parent), _p(std::make_shared<OCRRunnablePrivate>()) {
+    QDir modelDir(_dir);
+    if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
+        modelDir.setPath(QDir::homePath() + "/source/repos/leafxy/resources/model");
+        if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
+            modelDir.setPath(qApp->applicationDirPath());
+        }
+    }
 /// detector
-#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
+#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) && !defined(WITH_MODEL_QRC)
     static xgd::ObjectDetectorOpenCVImpl detector;
-    if (!detector.initModel((_dir + "/yolo-3l-c8.cfg").toStdString(),
-                            (_dir + "/yolo-3l-c8.weights").toStdString())) {
+    if (!detector.initModel((modelDir.absolutePath() + "/yolo-3l-c8.cfg").toStdString(),
+                            (modelDir.absolutePath() + "/yolo-3l-c8.weights").toStdString())) {
         qDebug() << "fail to init opencv detector";
     }
     detector.setConfThresh(0.15);
@@ -95,21 +105,21 @@ OCRRunnable::OCRRunnable(const QString &_dir) : _p(std::make_shared<OCRRunnableP
 #else
     static xgd::ObjectDetectorNcnnImpl detector;
     detector.setNumThread(4);
-    if (!detector.initModel((_dir + "/yolo_3l_c8.bin").toStdString(),
-                            (_dir + "/yolo_3l_c8.param").toStdString(), 1280)) {
+    if (!detector.initModel((modelDir.absolutePath() + "/yolo_3l_c8.bin").toStdString(),
+                            (modelDir.absolutePath() + "/yolo_3l_c8.param").toStdString(), 1280)) {
         qDebug() << "fail to init ncnn detector";
     }
 #endif
     /// recognizer
     static xgd::TextRecognizerNcnnImpl recognizer;
-    if (!recognizer.initModel((_dir + "/vgg_lstm_57_fp16_mixFont.bin").toStdString(),
-                              (_dir + +"/vgg_lstm_57_fp16.param").toStdString(),
+    if (!recognizer.initModel((modelDir.absolutePath() + "/vgg_lstm_57_fp16_mixFont.bin").toStdString(),
+                              (modelDir.absolutePath() + +"/vgg_lstm_57_fp16.param").toStdString(),
                               xgd::TextCorrector::GetAlphabet(), 3200)) {
         qDebug() << "fail to init ncnn recognizer";
     }
 //    /// recognizer by opencv_dnn
 //    static xgd::TextRecognizerOpenCVImpl recognizer;
-//    if (!recognizer.initModel((_dir + +"/crnn_192_mix_sim.onnx").toStdString(),
+//    if (!recognizer.initModel((modelDir.absolutePath()+ +"/crnn_192_mix_sim.onnx").toStdString(),
 //                              xgd::TextCorrector::GetAlphabet(), 192)) {
 //        qDebug() << "fail to init opencv recognizer";
 //    }
@@ -122,29 +132,29 @@ OCRRunnable::OCRRunnable(const QString &_dir) : _p(std::make_shared<OCRRunnableP
     ocrManager = std::make_shared<xgd::OCRManager>(detector, recognizer, corrector, composer);
 }
 
-OCRRunnable::~OCRRunnable() {
+OCRThread::~OCRThread() {
 
 }
 
-void OCRRunnable::run() {
-    mol = ocrManager->ocr(_p->getImage(), true);
+void OCRThread::run() {
+    mol = ocrManager->ocr(_p->getImage(), false);
     if (mol) {
-        qDebug() << QString::fromStdString(mol->writeAsSMI());
+        emit sig_mol_ready();
     }
 }
 
-std::shared_ptr<xgd::JMol> OCRRunnable::getMol() {
+std::shared_ptr<xgd::JMol> OCRThread::getMol() {
     return mol;
 }
 
-void OCRRunnable::bindData(const QList<QList<QPointF>> &_script) {
+void OCRThread::bindData(const QList<QList<QPointF>> &_script) {
     _p->setImage(_script);
 }
 
-void OCRRunnable::bindData(const QImage &_image) {
+void OCRThread::bindData(const QImage &_image) {
     _p->setImage(_image);
 }
 
-void OCRRunnable::bindData(const QPixmap &_pixmap) {
+void OCRThread::bindData(const QPixmap &_pixmap) {
     _p->setImage(_pixmap);
 }

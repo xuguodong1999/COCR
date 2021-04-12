@@ -15,10 +15,23 @@ find_package(ncnn REQUIRED)
 set(TS_FILES ${RES_ROOT}/${APP_NAME}_zh_CN.ts)
 qt5_create_translation(QM_FILES ${LEAFXY_ROOT}/app ${TS_FILES})
 
-# on all cases, import model through qrc
-qt5_add_big_resources(BIG_RES_FILES ${RES_ROOT}/big_res.qrc)
+set(RES_SRCS ${RES_ROOT}/obdata.qrc ${RES_ROOT}/app.qrc)
 
-set(RES_SRCS ${BIG_RES_FILES} ${RES_ROOT}/obdata.qrc ${RES_ROOT}/app.qrc)
+if (NOT BUILD_SHARED_LIBS)
+    add_definitions(-DLEAFXY_STATIC)
+endif (NOT BUILD_SHARED_LIBS)
+
+if (WITH_OPENVINO)
+    add_definitions(-DWITH_OPENVINO)
+endif (WITH_OPENVINO)
+
+if (WITH_MODEL_QRC)
+    add_definitions(-DWITH_MODEL_QRC)
+    qt5_add_big_resources(BIG_RES_FILES ${RES_ROOT}/big_res.qrc)
+    list(APPEND RES_SRCS ${BIG_RES_FILES})
+endif (WITH_MODEL_QRC)
+
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # include dir
 include_directories(${3RD_LIB_DIR}/openbabel/include ${3RD_LIB_DIR}/coordgenlibs/include ./)
@@ -47,16 +60,6 @@ if (MSVC)
 endif (MSVC)
 
 #set_source_files_properties(${PROJECT_SOURCES} PROPERTIES LANGUAGE CXX)
-
-if (NOT BUILD_SHARED_LIBS)
-    add_definitions(-DLEAFXY_STATIC)
-endif (NOT BUILD_SHARED_LIBS)
-
-if (WITH_OPENVINO)
-    add_definitions(-DWITH_OPENVINO)
-endif (WITH_OPENVINO)
-
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # add exe
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

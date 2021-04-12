@@ -1,7 +1,7 @@
 #ifndef _XGD_OCR_RUNNABLE_HPP_
 #define _XGD_OCR_RUNNABLE_HPP_
 
-#include <QRunnable>
+#include <QThread>
 #include <memory>
 #include <QPointF>
 #include <QImage>
@@ -13,13 +13,17 @@ namespace xgd {
 }
 class OCRRunnablePrivate;
 
-class OCRRunnable : public QRunnable {
-//    Q_OBJECT
-
+class OCRThread : public QThread {
+Q_OBJECT
+#ifdef WITH_MODEL_QRC
+    inline static const QString DEFAULT_MODEL_DIR=":/model/";
+#else
+    inline static const QString DEFAULT_MODEL_DIR = "";
+#endif
 public:
-    explicit OCRRunnable(const QString &_dir);
+    explicit OCRThread(QObject *_parent = nullptr, const QString &_dir = DEFAULT_MODEL_DIR);
 
-    ~OCRRunnable();
+    ~OCRThread();
 
     void bindData(const QList<QList<QPointF>> &_script);
 
@@ -27,14 +31,19 @@ public:
 
     void bindData(const QPixmap &_pixmap);
 
-    void run() override;
 
     std::shared_ptr<xgd::JMol> getMol();
+
+protected:
+    void run() override;
 
 private:
     std::shared_ptr<OCRRunnablePrivate> _p;
     std::shared_ptr<xgd::JMol> mol;
     std::shared_ptr<xgd::OCRManager> ocrManager = nullptr;
+signals:
+
+    void sig_mol_ready();
 };
 
 #endif//_XGD_OCR_RUNNABLE_HPP_

@@ -34,8 +34,9 @@ void Mol3DBuilder::prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_vi
 void Mol3DBuilder::build() {
     qDebug() << __FUNCTION__;
     using namespace xgd;
-    // 坐标系
     buildAxis(0, 0, 0, 100);
+    // 坐标系
+    resetMolRoot();
     float avgBondLength = mol->getAvgBondLength();
     if (avgBondLength < 1)avgBondLength = 20;
     // 添加3D原子球
@@ -204,12 +205,10 @@ Qt3DCore::QEntity *Mol3DBuilder::getMolRoot() const {
     return molRoot;
 }
 
-Mol3DBuilder::Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root) : QObject(parent), root(_root) {
-    molRoot = new Qt3DCore::QEntity(root);
+Mol3DBuilder::Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root) : QObject(parent), root(_root), molRoot(nullptr) {
     axisRoot = new Qt3DCore::QEntity(root);
-    molRootTrans = new Qt3DCore::QTransform(molRoot);
-    molRootTrans->setTranslation({0, 0, 0});
-    molRoot->addComponent(molRootTrans);
+    molRootTrans = new Qt3DCore::QTransform();
+    resetMolRoot();
 }
 
 Qt3DCore::QTransform *Mol3DBuilder::getMolRootTrans() const {
@@ -218,4 +217,15 @@ Qt3DCore::QTransform *Mol3DBuilder::getMolRootTrans() const {
 
 Qt3DCore::QEntity *Mol3DBuilder::getAxisRoot() const {
     return axisRoot;
+}
+
+void Mol3DBuilder::resetMolRoot() {
+    if (molRoot) {
+        molRoot->removeComponent(molRootTrans);
+        molRoot->deleteLater();
+    }
+    molRoot = new Qt3DCore::QEntity(root);
+    molRootTrans->setParent(molRoot);
+    molRootTrans->setTranslation({0, 0, 0});
+    molRoot->addComponent(molRootTrans);
 }

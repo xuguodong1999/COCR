@@ -12,14 +12,17 @@ Q_OBJECT
     std::shared_ptr<xgd::JMol> mol;
 
 public:
-    Mol2DWidget(QWidget *parent = nullptr, std::shared_ptr<xgd::JMol> _mol = nullptr);
+    Mol2DWidget(QWidget *parent = nullptr);
 
-    void syncMolToScene();
+    void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *) override;
 
     void keyReleaseEvent(QKeyEvent *event) override;
+
+private:
+    void normalizeMol();
 };
 
 #endif//_XGD_MOL2D_WIDGET_HPP_

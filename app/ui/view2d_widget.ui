@@ -14,8 +14,23 @@
             <string>2D Viewer</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,9">
+            <property name="spacing">
+                <number>0</number>
+            </property>
+            <property name="leftMargin">
+                <number>0</number>
+            </property>
+            <property name="topMargin">
+                <number>0</number>
+            </property>
+            <property name="rightMargin">
+                <number>0</number>
+            </property>
+            <property name="bottomMargin">
+                <number>0</number>
+            </property>
             <item>
-                <layout class="QVBoxLayout" name="verticalLayout" stretch="2,2,2,10,3">
+                <layout class="QVBoxLayout" name="func_layout" stretch="2,2,2,10,3">
                     <property name="spacing">
                         <number>0</number>
                     </property>
@@ -59,63 +74,27 @@
                         </widget>
                     </item>
                     <item>
-                        <layout class="QVBoxLayout" name="pick_layout" stretch="1,4">
+                        <layout class="QVBoxLayout" name="pick_layout" stretch="1,7,2">
+                            <property name="spacing">
+                                <number>0</number>
+                            </property>
                             <item>
                                 <widget class="QLabel" name="pick_label">
                                     <property name="text">
-                                        <string>selected item</string>
+                                        <string>picked item</string>
                                     </property>
                                 </widget>
                             </item>
                             <item>
-                                <layout class="QGridLayout" name="v3d_ctrl_layout" rowstretch="1,1" columnstretch="2,1">
-                                    <item row="0" column="0">
-                                        <widget class="QComboBox" name="comboBox">
-                                            <property name="sizePolicy">
-                                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                                    <horstretch>0</horstretch>
-                                                    <verstretch>0</verstretch>
-                                                </sizepolicy>
-                                            </property>
-                                            <item>
-                                                <property name="text">
-                                                    <string>Erase Bond</string>
-                                                </property>
-                                            </item>
-                                            <item>
-                                                <property name="text">
-                                                    <string>Single Bond</string>
-                                                </property>
-                                            </item>
-                                            <item>
-                                                <property name="text">
-                                                    <string>Double Bond</string>
-                                                </property>
-                                            </item>
-                                            <item>
-                                                <property name="text">
-                                                    <string>Triple Bond</string>
-                                                </property>
-                                            </item>
-                                            <item>
-                                                <property name="text">
-                                                    <string>Up Bond</string>
-                                                </property>
-                                            </item>
-                                            <item>
-                                                <property name="text">
-                                                    <string>Down Bond</string>
-                                                </property>
-                                            </item>
-                                            <item>
-                                                <property name="text">
-                                                    <string>Wave Bond</string>
-                                                </property>
-                                            </item>
-                                        </widget>
-                                    </item>
-                                    <item row="0" column="1" rowspan="2">
-                                        <widget class="QToolButton" name="toolButton_2">
+                                <widget class="QTextEdit" name="pick_edit"/>
+                            </item>
+                            <item>
+                                <layout class="QHBoxLayout" name="expand_layout" stretch="1,1">
+                                    <property name="spacing">
+                                        <number>0</number>
+                                    </property>
+                                    <item>
+                                        <widget class="QToolButton" name="expand_btn">
                                             <property name="sizePolicy">
                                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                                     <horstretch>0</horstretch>
@@ -123,23 +102,21 @@
                                                 </sizepolicy>
                                             </property>
                                             <property name="text">
-                                                <string>apply</string>
+                                                <string>expand this</string>
                                             </property>
                                         </widget>
                                     </item>
-                                    <item row="1" column="0">
-                                        <widget class="QComboBox" name="comboBox_2">
+                                    <item>
+                                        <widget class="QToolButton" name="expand_all_btn">
                                             <property name="sizePolicy">
                                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                                     <horstretch>0</horstretch>
                                                     <verstretch>0</verstretch>
                                                 </sizepolicy>
                                             </property>
-                                            <item>
-                                                <property name="text">
-                                                    <string>Erase Atom</string>
-                                                </property>
-                                            </item>
+                                            <property name="text">
+                                                <string>expand all</string>
+                                            </property>
                                         </widget>
                                     </item>
                                 </layout>
@@ -148,6 +125,9 @@
                     </item>
                     <item>
                         <layout class="QVBoxLayout" name="format_layout" stretch="1,2,2">
+                            <property name="spacing">
+                                <number>0</number>
+                            </property>
                             <item>
                                 <widget class="QLabel" name="format_label">
                                     <property name="text">
@@ -193,7 +173,7 @@
                 </layout>
             </item>
             <item>
-                <widget class="QWidget" name="widget" native="true"/>
+                <widget class="QWidget" name="container" native="true"/>
             </item>
         </layout>
     </widget>

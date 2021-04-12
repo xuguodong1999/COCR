@@ -6,7 +6,9 @@
 namespace Ui {
     class MainTabWidget;
 }
-
+namespace xgd {
+    class JMol;
+}
 class WelcomeWidget;
 
 class PaintWidget;
@@ -18,6 +20,8 @@ class View3DWidget;
 class ImageWidget;
 
 class CameraWidget;
+
+class OCRThread;
 
 class MainTabWidget : public QWidget {
 Q_OBJECT
@@ -35,9 +39,18 @@ private:
     View3DWidget *view3DWidget;
     ImageWidget *imageWidget;
     CameraWidget *cameraWidget;
+    OCRThread *ocrThread;
+    std::shared_ptr<xgd::JMol> mol;
+protected:
+    void resizeEvent(QResizeEvent *e) override;
+
 private slots:
 
     void handleTabChange(int index);
+
+    void syncMolToView3D();
+
+    void syncMolToView2D();
 };
 
 #endif // MAIN_TAB_WIDGET_H

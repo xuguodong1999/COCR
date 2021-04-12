@@ -114,10 +114,10 @@ const char *ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
 //        auto testImg = cv::imread(ROOT_DIR + "testcase/1.jpg", cv::IMREAD_GRAYSCALE);
 //        cv::erode(testImg, testImg, cv::Mat());
         auto mol = ocrManager.ocr(testImg, true);
-        auto widget = new Mol2DWidget(nullptr, mol);
+        auto widget = new Mol2DWidget(nullptr);
         widget->resize(960, 640);
         widget->show();
-        widget->syncMolToScene();
+        widget->syncMolToScene(mol);
 //        qDebug() << "*****************  result  *****************\n" << mol->writeAsSMI().c_str();
         cv::waitKey(0);
     }
@@ -149,28 +149,12 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
         if (rand() % 2) { angle = -2; }
         image = xgd::rotateCvMat(image, angle);
         auto mol = ocrManager.ocr(image, true);
-        auto widget = new Mol2DWidget(nullptr, mol);
+        auto widget = new Mol2DWidget(nullptr);
         widget->resize(960, 640);
         widget->show();
-        widget->syncMolToScene();
+        widget->syncMolToScene(mol);
         cv::waitKey(0);
     }
-}
-
-void testJMol() {
-    using namespace xgd;
-    JMolAdapter mol;
-    mol.readAsSMI("c1ccccc1");
-    std::cout << mol.writeAsPDB() << std::endl;
-    mol.display();
-    std::cout << "********************\n";
-    mol.removeAtom(0);
-    auto b01 = mol.removeBond(0);
-    auto b02 = mol.removeBond(5);
-    auto newAtom = mol.addAtom(ElementType::O);
-    auto b1 = mol.addBond(newAtom, mol.getAtom(1), b01->getType());
-    auto b2 = mol.addBond(newAtom, mol.getAtom(5), b01->getType());
-    mol.display();
 }
 
 std::shared_ptr<xgd::JMol> getTestMol() {
@@ -207,20 +191,41 @@ std::shared_ptr<xgd::JMol> getTestMol() {
     return mol;
 }
 
+void testJMol() {
+    using namespace xgd;
+//    JMolAdapter mol;
+//    mol.readAsSMI("c1ccccc1");
+//    std::cout << mol.writeAsPDB() << std::endl;
+//    mol.display();
+//    std::cout << "********************\n";
+//    mol.removeAtom(0);
+//    auto b01 = mol.removeBond(0);
+//    auto b02 = mol.removeBond(5);
+//    auto newAtom = mol.addAtom(ElementType::O);
+//    auto b1 = mol.addBond(newAtom, mol.getAtom(1), b01->getType());
+//    auto b2 = mol.addBond(newAtom, mol.getAtom(5), b01->getType());
+//    mol.display();
+//    auto mol = getTestMol();
+//    auto mol = std::make_shared<xgd::JMolAdapter>();
+//    mol->readAsSMI("CC(=O)C");
+    auto mol = std::make_shared<xgd::JMolAdapter>();
+    mol->readAsSMI("CCC(=O)CCC");
+    qDebug() << "smi=" << mol->writeAs("smi").c_str();
+}
 
 void testMol2D_UI() {
     auto mol = getTestMol();
-    auto widget = new Mol2DWidget(nullptr, mol);
+    auto widget = new Mol2DWidget(nullptr);
     widget->resize(960, 640);
     widget->show();
-    widget->syncMolToScene();
+    widget->syncMolToScene(mol);
 }
 
 
 void testMol3D_UI() {
-    auto mol = getTestMol();
-//    auto mol = std::make_shared<xgd::JMolAdapter>();
-//    mol->readAsSMI("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+//    auto mol = getTestMol();
+    auto mol = std::make_shared<xgd::JMolAdapter>();
+    mol->readAsSMI("CCC(=O)CCC");
 //    mol->readAsSMI("C([H])([H])=C([H])-C#N");
 //    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
 //    mol->readAsSMI("c1([H])c([H])c([H])c([H])c([H])c1([H])");
@@ -228,11 +233,11 @@ void testMol3D_UI() {
 //    auto mw = new QMainWindow();
 //    mw->setAttribute(Qt::WA_AcceptTouchEvents);
 //    mw->grabGesture(Qt::PinchGesture);
-    auto w = new Mol3DWidget(nullptr, mol);
+    auto w = new Mol3DWidget(nullptr);
 //    mw->setCentralWidget(w);
     w->resize(1080, 720);
     w->show();
-    w->syncMolToScene();
+    w->syncMolToScene(mol);
 }
 
 

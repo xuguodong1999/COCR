@@ -44,6 +44,8 @@ public:
     void prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_viewSize,
                  const QVector3D &_blankArea = {5, 5, 5});
 
+    void resetMolRoot();
+
 signals:
 
     void sig_mol_build_done();

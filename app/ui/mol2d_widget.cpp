@@ -4,8 +4,7 @@
 #include <QGraphicsTextItem>
 #include <QDebug>
 
-Mol2DWidget::Mol2DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
-        : GestureView(parent), mol(std::move(_mol)) {
+Mol2DWidget::Mol2DWidget(QWidget *parent) : GestureView(parent) {
     scene = new QGraphicsScene();
     setScene(scene);
     setAttribute(Qt::WA_AcceptTouchEvents);
@@ -35,7 +34,8 @@ inline static QString getRichText(const std::string &_text) {
     return str;
 }
 
-void Mol2DWidget::syncMolToScene() {
+void Mol2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
+    mol = _mol;
     scene->clear();
     if (!mol)return;
     float delta = (std::min)(width(), height()) * 0.1;
@@ -65,7 +65,7 @@ void Mol2DWidget::syncMolToScene() {
 }
 
 void Mol2DWidget::mouseDoubleClickEvent(QMouseEvent *e) {
-    syncMolToScene();
+    normalizeMol();
     GestureView::mouseDoubleClickEvent(e);
 }
 
@@ -74,12 +74,18 @@ void Mol2DWidget::keyReleaseEvent(QKeyEvent *event) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
         case Qt::Key_Space:
-            syncMolToScene();
+            normalizeMol();
             break;
         default:
             break;
     }
     GestureView::keyReleaseEvent(event);
+}
+
+void Mol2DWidget::normalizeMol() {
+    mol->set2DInfoLatest(false);
+    mol->norm2D(width(), height());
+    syncMolToScene(mol);
 }
 
 

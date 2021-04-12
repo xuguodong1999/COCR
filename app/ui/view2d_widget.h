@@ -6,6 +6,10 @@
 namespace Ui {
     class View2DWidget;
 }
+namespace xgd {
+    class JMol;
+}
+class Mol2DWidget;
 
 class View2DWidget : public QWidget {
 Q_OBJECT
@@ -15,8 +19,11 @@ public:
 
     ~View2DWidget();
 
+    void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
+
 private:
     Ui::View2DWidget *ui;
+    Mol2DWidget *mol2DWidget;
 };
 
 #endif // VIEW2D_WIDGET_H

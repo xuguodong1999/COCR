@@ -140,7 +140,7 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
                   const float &_x, const float &_y, const float &_z, bool keepRatio) {
     qDebug() << __FUNCTION__;
     if (!is3DInfoLatest) {
-        qDebug() << "generate3D=" << generate3D();
+        qDebug() << __FUNCTION__ << "generate3D=" << generate3D();
     }
     float minx, miny, minz, maxx, maxy, maxz;
     minx = miny = minz = std::numeric_limits<float>::max();
@@ -175,7 +175,7 @@ float JMol::getAvgBondLength() {
     qDebug() << __FUNCTION__;
     if (bondMap.empty()) { return 0; }
     if (!is3DInfoLatest) {
-        qDebug() << "generate3D=" << generate3D();
+        qDebug() << __FUNCTION__ << "generate3D=" << generate3D();
     }
     float avgBondLength = 0;
     loopBondVec([&](JBond &bond) {

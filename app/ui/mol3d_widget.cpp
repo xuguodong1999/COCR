@@ -1,4 +1,5 @@
 #include "mol3d_widget.hpp"
+#include "jmol.hpp"
 #include "../3d/mol3d_window.hpp"
 #include "../3d/mol3d_builder.hpp"
 #include "waithint_widget.h"
@@ -8,8 +9,7 @@
 #include <QGesture>
 #include <QThreadPool>
 
-Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
-        : GestureWidget(parent), mol(std::move(_mol)) {
+Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr) {
     root = new Qt3DCore::QEntity();
 
     builder = new Mol3DBuilder(this, root);
@@ -33,7 +33,8 @@ Mol3DWidget::Mol3DWidget(QWidget *parent, std::shared_ptr<xgd::JMol> _mol)
     });
 }
 
-void Mol3DWidget::syncMolToScene() {
+void Mol3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
+    mol = _mol;
     qDebug() << __FUNCTION__;
     static QVector3D viewSize = window->getViewSize() / 1.5;
     QThreadPool::globalInstance()->start([&]() {
@@ -43,6 +44,7 @@ void Mol3DWidget::syncMolToScene() {
     window->hide();
     hintWidget->startWaitHint();
 }
+
 
 //bool Mol3DWidget::eventFilter(QObject *watched, QEvent *e) {
 //    if (watched == window) {

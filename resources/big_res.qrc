@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>big_res.qrc</file>
+        <file>model/vgg_lstm_57_fp16.param</file>
+        <file>model/vgg_lstm_57_fp16_mixFont.bin</file>
+        <file>model/yolo_3l_c8.bin</file>
+        <file>model/yolo_3l_c8.param</file>
     </qresource>
 </RCC>

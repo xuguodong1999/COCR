@@ -14,8 +14,23 @@
             <string>3D Viewer</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,9">
+            <property name="spacing">
+                <number>0</number>
+            </property>
+            <property name="leftMargin">
+                <number>0</number>
+            </property>
+            <property name="topMargin">
+                <number>0</number>
+            </property>
+            <property name="rightMargin">
+                <number>0</number>
+            </property>
+            <property name="bottomMargin">
+                <number>0</number>
+            </property>
             <item>
-                <layout class="QVBoxLayout" name="v3d_ctrl_layout" stretch="2,2,2,10,3">
+                <layout class="QVBoxLayout" name="func_layout" stretch="2,2,2,10,3">
                     <property name="spacing">
                         <number>0</number>
                     </property>
@@ -59,7 +74,10 @@
                         </widget>
                     </item>
                     <item>
-                        <layout class="QVBoxLayout" name="pick_layout" stretch="1,3,1">
+                        <layout class="QVBoxLayout" name="pick_layout" stretch="1,7,2">
+                            <property name="spacing">
+                                <number>0</number>
+                            </property>
                             <item>
                                 <widget class="QLabel" name="pick_label">
                                     <property name="text">
@@ -75,22 +93,45 @@
                                 </widget>
                             </item>
                             <item>
-                                <widget class="QToolButton" name="pick_btn">
-                                    <property name="sizePolicy">
-                                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
+                                <layout class="QHBoxLayout" name="expand_layout" stretch="1,1">
+                                    <property name="spacing">
+                                        <number>0</number>
                                     </property>
-                                    <property name="text">
-                                        <string>try expand</string>
-                                    </property>
-                                </widget>
+                                    <item>
+                                        <widget class="QToolButton" name="pick_btn">
+                                            <property name="sizePolicy">
+                                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <property name="text">
+                                                <string>expand this</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item>
+                                        <widget class="QToolButton" name="toolButton">
+                                            <property name="sizePolicy">
+                                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <property name="text">
+                                                <string>expand all</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                </layout>
                             </item>
                         </layout>
                     </item>
                     <item>
                         <layout class="QVBoxLayout" name="format_layout" stretch="1,2,2">
+                            <property name="spacing">
+                                <number>0</number>
+                            </property>
                             <item>
                                 <widget class="QLabel" name="format_label">
                                     <property name="text">

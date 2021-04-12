@@ -1,7 +1,6 @@
 #ifndef _XGD_MOL3D_WIDGET_HPP_
 #define _XGD_MOL3D_WIDGET_HPP_
 
-#include "jmol.hpp"
 #include "gesture_widget.hpp"
 #include <QWidget>
 
@@ -12,7 +11,9 @@ namespace Qt3DCore {
     class QEntity;
 }
 class WaitHintWidget;
-
+namespace xgd {
+    class JMol;
+}
 // Qt3DWindow 无法生成 QGestureEvent
 class Mol3DWidget : public GestureWidget {
 Q_OBJECT
@@ -22,9 +23,9 @@ Q_OBJECT
     Qt3DCore::QEntity *root;
     Mol3DBuilder *builder;
 public:
-    Mol3DWidget(QWidget *parent = nullptr, std::shared_ptr<xgd::JMol> _mol = nullptr);
+    Mol3DWidget(QWidget *parent = nullptr);
 
-    void syncMolToScene();
+    void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
 
 //    bool eventFilter(QObject *watched, QEvent *e);
 };

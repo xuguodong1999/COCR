@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+#include <QFile>
+
 bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const std::string &_weightsFile) {
     try {
         net = cv::dnn::readNetFromDarknet(_cfgFile, _weightsFile);

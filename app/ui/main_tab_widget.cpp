@@ -8,13 +8,37 @@
 #include "image_widget.h"
 #include "camera_widget.h"
 #include "ocr_runnable.hpp"
+#include "jmol.hpp"
 
 MainTabWidget::MainTabWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::MainTabWidget), welcomeWidget(nullptr), paintWidget(nullptr),
-          view2DWidget(nullptr), view3DWidget(nullptr), imageWidget(nullptr), cameraWidget(nullptr) {
+          view2DWidget(nullptr), view3DWidget(nullptr), imageWidget(nullptr), cameraWidget(nullptr),
+          mol(nullptr), ocrThread(new OCRThread(this)) {
     ui->setupUi(this);
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainTabWidget::handleTabChange);
-    handleTabChange(0);
+    ui->tabWidget->setCurrentIndex(1);
+
+    connect(ocrThread, &OCRThread::sig_mol_ready, this, &MainTabWidget::syncMolToView2D);
+}
+
+void MainTabWidget::syncMolToView3D() {
+    mol = ocrThread->getMol();
+    qDebug() << "*************    *******************";
+    qDebug() << mol->writeAs("mol2").c_str();
+    qDebug() << "*************    *******************";
+    qDebug() << mol->writeAs("smi").c_str();
+    qDebug() << "*************    *******************";
+    view3DWidget->syncMolToScene(mol);
+}
+
+void MainTabWidget::syncMolToView2D() {
+    mol = ocrThread->getMol();
+    qDebug() << "*************    *******************";
+    qDebug() << mol->writeAs("mol2").c_str();
+    qDebug() << "*************    *******************";
+    qDebug() << mol->writeAs("smi").c_str();
+    qDebug() << "*************    *******************";
+    view2DWidget->syncMolToScene(mol);
 }
 
 MainTabWidget::~MainTabWidget() {
@@ -35,9 +59,9 @@ void MainTabWidget::handleTabChange(int index) {
         ui->draw_tab->setLayout(l);
         connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked, [&](const QList<QList<QPointF>> &_script) {
             qDebug() << "_script.size()=" << _script.size();
-            auto task = new OCRRunnable("/home/xgd/source/repos/leafxy/resources/model");
-            task->bindData(_script);
-            QThreadPool::globalInstance()->start(task);
+            ocrThread->bindData(_script);
+            ocrThread->start();
+            ui->tabWidget->setCurrentIndex(2);// 跳转到 View3D
         });
     };
     static const auto attach_view2d_widget = [&]() {
@@ -96,3 +120,11 @@ void MainTabWidget::handleTabChange(int index) {
         cameraWidget->stopCamera();
     }
 }
+
+void MainTabWidget::resizeEvent(QResizeEvent *e) {
+    QWidget::resizeEvent(e);
+    // 保证 TAB 有足够高度
+    setStyleSheet(QString("QTabBar::tab{height:%0}").arg(
+            (std::max)(10, (std::min)(40, static_cast<int>(height() * 0.05)))));
+}
+

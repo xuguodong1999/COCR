@@ -21,6 +21,8 @@ endif (NOT MSVC)
 # dont set it unless you known what you are doing
 option(WITH_OPENVINO "Build opencv::dnn with openvino" OFF)
 
+option(WITH_MODEL_QRC "pack model into qrc" OFF)
+
 # use these flags to find 3rdparty lib
 set(LEAFXY_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 set(RES_ROOT ${LEAFXY_ROOT}/resources)

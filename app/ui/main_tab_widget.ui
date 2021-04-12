@@ -16,6 +16,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
                 <widget class="QTabWidget" name="tabWidget">
+                    <property name="styleSheet">
+                        <string notr="true"/>
+                    </property>
                     <property name="tabPosition">
                         <enum>QTabWidget::South</enum>
                     </property>
