@@ -28,7 +28,7 @@ void SketchWidget::updateRect(const QPoint &p1, const QPoint &p2) {
 Q_DECLARE_METATYPE(ui_script_type)
 
 SketchWidget::SketchWidget(QWidget *parent, QPen *_pen, QColor *_bgColor)
-        : QWidget(parent), mPen(_pen), mBgColor(_bgColor) {
+        : QWidget(parent), mPen(_pen), mBgColor(_bgColor), isLatest(false) {
     qRegisterMetaTypeStreamOperators<ui_script_type>("QList<QList<QPointF>>");
     ptsList = leafxyApp->getSettings().value("sketch_widget/last_script", QVariant::fromValue(
             ptsList)).value<ui_script_type>();
@@ -65,6 +65,7 @@ void SketchWidget::mousePressEvent(QMouseEvent *event) {
     painter.drawLine(lastPos, lastPos);
     updateRect(lastPos, lastPos);
     ptsList.push_back(QList<QPointF>({lastPos}));
+    isLatest = false;
 }
 
 void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
@@ -75,12 +76,14 @@ void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
     updateRect(currentPos, lastPos);
     lastPos = currentPos;
     ptsList.back().push_back(lastPos);
+    isLatest = false;
 }
 
 void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
 //    qDebug() << "SketchWidget::mouseReleaseEvent";
     QWidget::mouseReleaseEvent(event);
     endPenDraw();
+    isLatest = false;
     leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(ptsList));
 }
 
@@ -128,5 +131,13 @@ SketchWidget::~SketchWidget() {
 
 const ui_script_type &SketchWidget::getScript() const {
     return ptsList;
+}
+
+bool SketchWidget::IsLatest() const {
+    return isLatest;
+}
+
+void SketchWidget::setIsLatest(bool isLatest) {
+    SketchWidget::isLatest = isLatest;
 }
 

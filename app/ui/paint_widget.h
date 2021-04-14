@@ -11,6 +11,8 @@ namespace Ui {
 }
 class SketchWidget;
 
+using ui_script_type = QList<QList<QPointF>>;
+
 class PaintWidget : public QWidget {
 Q_OBJECT
 
@@ -18,6 +20,12 @@ public:
     explicit PaintWidget(QWidget *parent = nullptr);
 
     ~PaintWidget();
+
+    bool isLatest() const;
+
+    void setIsLatest(bool isLatest);
+
+    const ui_script_type &getScript() const;
 
 protected:
 
@@ -69,6 +77,7 @@ private slots:
      * 切换到下一个线条粗细
      */
     void increaseDotSize();
+
 
 signals:
 

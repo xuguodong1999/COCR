@@ -21,6 +21,8 @@ public:
 
     void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
 
+    void startWaitHint();
+
 private:
     Ui::View3DWidget *ui;
     Mol3DWidget *mol3DWidget;

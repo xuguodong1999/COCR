@@ -24,6 +24,8 @@ namespace xgd {
         std::unordered_map<decltype(id), unsigned long> bondIdMap;
         std::unordered_map<unsigned long, decltype(id)> atomIdMap2;
         std::unordered_map<unsigned long, decltype(id)> bondIdMap2;
+        //<aid,state>,state=true->explicit H; state=false->implicit H
+        std::unordered_map<decltype(id), bool> hydrogenStateMap;
         bool isOBMolLatest;
 
         bool runForcefield();
@@ -32,10 +34,14 @@ namespace xgd {
 
         void syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _func);
 
+        void syncBonds(std::function<void(JBond &, OpenBabel::OBBond *)> _func);
+
         void sync3D();
 
         // 使用OpenBabel的加氢接口修改OBMol，向JMol同步数据
         void syncNewEntityFromOBMol();
+
+        void syncNewEntityToOBMol();
 
         void checkOBMol();
 
@@ -45,6 +51,7 @@ namespace xgd {
 
         void addOBBond(JBond &_bond);
 
+
     public:
         JMolAdapter();
 
@@ -53,6 +60,10 @@ namespace xgd {
         JMolAdapter(const JMolAdapter &_jMolAdapter);
 
         JMolAdapter(JMolAdapter &&_jMolAdapter);
+
+        std::shared_ptr<JMol> deepClone() const override;
+
+        void display() override;
 
         void onExtraDataNeeded() override;
 

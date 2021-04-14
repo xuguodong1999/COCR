@@ -18,3 +18,7 @@ View3DWidget::~View3DWidget() {
 void View3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
     if (mol3DWidget) { mol3DWidget->syncMolToScene(_mol); }
 }
+
+void View3DWidget::startWaitHint() {
+    mol3DWidget->startWaitHint();
+}

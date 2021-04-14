@@ -27,6 +27,11 @@ public:
 
     void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
 
+    void startWaitHint();
+
+public slots:
+
+    void endWaitHint();
 //    bool eventFilter(QObject *watched, QEvent *e);
 };
 

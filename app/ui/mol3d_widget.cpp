@@ -27,10 +27,7 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr) 
     hintWidget->hide();
     // prepare 运行在子线程， build 运行在 UI 线程
     connect(builder, &Mol3DBuilder::sig_mol_prepare_done, builder, &Mol3DBuilder::build);
-    connect(builder, &Mol3DBuilder::sig_mol_build_done, [&]() {
-        hintWidget->hide();
-        window->show();
-    });
+    connect(builder, &Mol3DBuilder::sig_mol_build_done, this, &Mol3DWidget::endWaitHint);
 }
 
 void Mol3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
@@ -41,8 +38,17 @@ void Mol3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
 //        QThread::msleep(500);
         builder->prepare(mol, viewSize);
     });
+    startWaitHint();
+}
+
+void Mol3DWidget::startWaitHint() {
     window->hide();
     hintWidget->startWaitHint();
+}
+
+void Mol3DWidget::endWaitHint() {
+    hintWidget->hide();
+    window->show();
 }
 
 

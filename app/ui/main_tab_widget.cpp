@@ -8,44 +8,15 @@
 #include "image_widget.h"
 #include "camera_widget.h"
 #include "ocr_runnable.hpp"
+#include "application.hpp"
 #include "jmol.hpp"
+#include <QTimer>
 
 MainTabWidget::MainTabWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::MainTabWidget), welcomeWidget(nullptr), paintWidget(nullptr),
           view2DWidget(nullptr), view3DWidget(nullptr), imageWidget(nullptr), cameraWidget(nullptr),
           mol(nullptr), ocrThread(new OCRThread(this)) {
     ui->setupUi(this);
-    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainTabWidget::handleTabChange);
-    ui->tabWidget->setCurrentIndex(1);
-
-    connect(ocrThread, &OCRThread::sig_mol_ready, this, &MainTabWidget::syncMolToView2D);
-}
-
-void MainTabWidget::syncMolToView3D() {
-    mol = ocrThread->getMol();
-    qDebug() << "*************    *******************";
-    qDebug() << mol->writeAs("mol2").c_str();
-    qDebug() << "*************    *******************";
-    qDebug() << mol->writeAs("smi").c_str();
-    qDebug() << "*************    *******************";
-    view3DWidget->syncMolToScene(mol);
-}
-
-void MainTabWidget::syncMolToView2D() {
-    mol = ocrThread->getMol();
-    qDebug() << "*************    *******************";
-    qDebug() << mol->writeAs("mol2").c_str();
-    qDebug() << "*************    *******************";
-    qDebug() << mol->writeAs("smi").c_str();
-    qDebug() << "*************    *******************";
-    view2DWidget->syncMolToScene(mol);
-}
-
-MainTabWidget::~MainTabWidget() {
-    delete ui;
-}
-
-void MainTabWidget::handleTabChange(int index) {
     static const auto attach_welcome_widget = [&]() {
         auto l = new QHBoxLayout();
         welcomeWidget = new WelcomeWidget(ui->wel_tab);
@@ -57,12 +28,6 @@ void MainTabWidget::handleTabChange(int index) {
         paintWidget = new PaintWidget(ui->draw_tab);
         l->addWidget(paintWidget);
         ui->draw_tab->setLayout(l);
-        connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked, [&](const QList<QList<QPointF>> &_script) {
-            qDebug() << "_script.size()=" << _script.size();
-            ocrThread->bindData(_script);
-            ocrThread->start();
-            ui->tabWidget->setCurrentIndex(2);// 跳转到 View3D
-        });
     };
     static const auto attach_view2d_widget = [&]() {
         auto l = new QHBoxLayout();
@@ -89,29 +54,72 @@ void MainTabWidget::handleTabChange(int index) {
         l->addWidget(cameraWidget);
         ui->cam_tab->setLayout(l);
     };
+    if (!welcomeWidget) { attach_welcome_widget(); }
+    if (!paintWidget) { attach_paint_widget(); }
+    if (!view2DWidget) { attach_view2d_widget(); }
+    if (!view3DWidget) { attach_view3d_widget(); }
+    if (!imageWidget) { attach_image_widget(); }
+    if (!cameraWidget) { attach_camera_widget(); }
+    connect(ui->tabWidget, &QTabWidget::tabBarClicked, this, &MainTabWidget::handleTabChange);
+    connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked, this, &MainTabWidget::doOCR);
+    ui->tabWidget->setCurrentIndex(0);
+    connect(ocrThread, &OCRThread::sig_mol_ready, this, &MainTabWidget::onOcrJobReady);
+    is2DLastUsed = leafxyApp->getSettings().value("main_tab_widget/is_2d_last_used", true).toBool();
+    QTimer::singleShot(100, [&]() {
+        ui->tabWidget->setCurrentIndex(1);
+    });
+}
+
+void MainTabWidget::syncMolToView3D() {
+    mol->addAllHydrogens();
+    view3DWidget->syncMolToScene(mol);
+    is2DLastUsed = false;
+    leafxyApp->getSettings().setValue("main_tab_widget/is_2d_last_used", is2DLastUsed);
+}
+
+void MainTabWidget::syncMolToView2D() {
+    view2DWidget->syncMolToScene(mol);
+    is2DLastUsed = true;
+    leafxyApp->getSettings().setValue("main_tab_widget/is_2d_last_used", is2DLastUsed);
+}
+
+MainTabWidget::~MainTabWidget() {
+    delete ui;
+}
+
+void MainTabWidget::handleTabChange(int index) {
+    qDebug() << "handleTabChange" << index;
     switch (index) {
         case 0: {
-            if (!welcomeWidget) { attach_welcome_widget(); }
             break;
         }
         case 1: {
-            if (!paintWidget) { attach_paint_widget(); }
             break;
         }
         case 2: {
-            if (!view2DWidget) { attach_view2d_widget(); }
+            is2DLastUsed = true;
+            ui->tabWidget->setCurrentIndex(2);
+            if (!paintWidget->isLatest()) {
+                doOCR(paintWidget->getScript());
+            } else {
+                onOcrJobReady();
+            }
             break;
         }
         case 3: {
-            if (!view3DWidget) { attach_view3d_widget(); }
+            is2DLastUsed = false;
+            ui->tabWidget->setCurrentIndex(3);
+            if (!paintWidget->isLatest()) {
+                doOCR(paintWidget->getScript());
+            } else {
+                onOcrJobReady();
+            }
             break;
         }
         case 4: {
-            if (!imageWidget) { attach_image_widget(); }
             break;
         }
         case 5: {
-            if (!cameraWidget) { attach_camera_widget(); }
             cameraWidget->startCamera();
             break;
         }
@@ -126,5 +134,37 @@ void MainTabWidget::resizeEvent(QResizeEvent *e) {
     // 保证 TAB 有足够高度
     setStyleSheet(QString("QTabBar::tab{height:%0}").arg(
             (std::max)(10, (std::min)(40, static_cast<int>(height() * 0.05)))));
+}
+
+void MainTabWidget::onOcrJobReady() {
+    paintWidget->setIsLatest(true);
+    mol = ocrThread->getMol();
+    if (ui->tabWidget->currentIndex() == 2) {
+        syncMolToView2D();
+    } else if (ui->tabWidget->currentIndex() == 3) {
+        syncMolToView3D();
+    }
+}
+
+void MainTabWidget::doOCR(const QList<QList<QPointF>> &_script) {
+    qDebug() << "_script.size()=" << _script.size();
+    if (!paintWidget->isLatest()) {
+        ocrThread->bindData(_script);
+        ocrThread->start();
+        if (is2DLastUsed) {
+            ui->tabWidget->setCurrentIndex(2);
+            view2DWidget->startWaitHint();
+        } else {
+            ui->tabWidget->setCurrentIndex(3);
+            view3DWidget->startWaitHint();
+        }
+    } else {
+        if (is2DLastUsed) {
+            ui->tabWidget->setCurrentIndex(2);
+        } else {
+            ui->tabWidget->setCurrentIndex(3);
+        }
+        onOcrJobReady();
+    }
 }
 

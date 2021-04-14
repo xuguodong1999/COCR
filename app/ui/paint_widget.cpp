@@ -111,3 +111,16 @@ void PaintWidget::updateColorIcon() {
     ui->color_btn->setIconSize(modeBgSize * 0.7);
     ui->color_btn->setIcon(modeIcon);
 }
+
+
+bool PaintWidget::isLatest() const {
+    return sketchWidget->IsLatest();
+}
+
+void PaintWidget::setIsLatest(bool isLatest) {
+    sketchWidget->setIsLatest(isLatest);
+}
+
+const ui_script_type &PaintWidget::getScript() const {
+    return sketchWidget->getScript();
+}

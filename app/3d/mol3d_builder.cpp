@@ -64,15 +64,17 @@ void Mol3DBuilder::build() {
     });
     // 寻找需要共面的共轭键
     mol->loopBondVec([&](JBond &bond) {
+        std::vector<QVector3D> poses;
         switch (bond.getType()) {
             case BondType::DoubleBond:
+                poses = {getQVector3D(bond.getFrom()), getQVector3D(bond.getTo())};
+                break;
             case BondType::TripleBond:
                 break;
             default:
                 return;
         }
         size_t from = bond.getFrom()->getId(), to = bond.getTo()->getId();
-        std::vector<QVector3D> poses;
         std::unordered_set<size_t> aids = {from, to};
         auto collect_neb_pos = [&](const size_t &aid) {
             auto it = neighborMap.find(aid);
@@ -107,7 +109,9 @@ void Mol3DBuilder::build() {
             collect_neb_2_pos(from);
             collect_neb_2_pos(to);
         }
+//        qDebug() << "poses.size()=" << poses.size();
         if (poses.size() >= 3) {
+//            qDebug() << "add with absent neb";
             normVecMap[bond.getId()] = QVector3D::crossProduct(poses[0] - poses[1], poses[1] - poses[2]);
         }
     });

@@ -191,6 +191,23 @@ std::shared_ptr<xgd::JMol> getTestMol() {
     return mol;
 }
 
+std::shared_ptr<xgd::JMol> getTestMol_CC0C() {
+    using namespace xgd;
+    auto mol = std::make_shared<JMolAdapter>();
+
+    auto c0 = mol->addAtom(ElementType::C);
+    auto c1 = mol->addAtom(ElementType::C);
+    auto c2 = mol->addAtom(ElementType::C);
+
+    auto o0 = mol->addAtom(ElementType::O);
+
+
+    auto cc1 = mol->addBond(c0, c1);
+    auto cc2 = mol->addBond(c2, c1);
+    auto oc = mol->addBond(o0, c1, BondType::DoubleBond);
+    return mol;
+}
+
 void testJMol() {
     using namespace xgd;
 //    JMolAdapter mol;
@@ -223,9 +240,10 @@ void testMol2D_UI() {
 
 
 void testMol3D_UI() {
-//    auto mol = getTestMol();
+//    auto mol = getTestMol_CC0C();
+//    std::cout<<mol->writeAsPDB()<<std::endl;
     auto mol = std::make_shared<xgd::JMolAdapter>();
-    mol->readAsSMI("CCC(=O)CCC");
+    mol->readAsSMI("C=C(F)C(=O)CC(Br)=C");
 //    mol->readAsSMI("C([H])([H])=C([H])-C#N");
 //    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
 //    mol->readAsSMI("c1([H])c([H])c([H])c([H])c([H])c1([H])");

@@ -41,6 +41,8 @@ private:
     CameraWidget *cameraWidget;
     OCRThread *ocrThread;
     std::shared_ptr<xgd::JMol> mol;
+    bool is2DLastUsed;
+
 protected:
     void resizeEvent(QResizeEvent *e) override;
 
@@ -51,6 +53,10 @@ private slots:
     void syncMolToView3D();
 
     void syncMolToView2D();
+
+    void onOcrJobReady();
+
+    void doOCR(const QList<QList<QPointF>> &_script);
 };
 
 #endif // MAIN_TAB_WIDGET_H

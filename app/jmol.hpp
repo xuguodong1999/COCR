@@ -11,12 +11,15 @@
 using id_type = size_t;
 namespace xgd {
     class JMol {
-        id_type idBase;
     protected:
         id_type id;
+        id_type idBase;
         std::unordered_map<id_type, std::shared_ptr<JAtom>> atomMap;
         std::unordered_map<id_type, std::shared_ptr<JBond>> bondMap;
-        bool is3DInfoLatest, is2DInfoLatest;
+        bool is3DInfoLatest, is2DInfoLatest, startAddingHydrogens;
+
+
+    protected:
 
 
         inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
@@ -24,6 +27,8 @@ namespace xgd {
         std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
 
     public:
+        void setStartAddingHydrogens(bool startAddingHydrogens = true);
+
         void set2DInfoLatest(bool _is2DInfoLatest = true);
 
         void norm2D(const float &_w, const float &_h, const float &_x = 0, const float &_y = 0, bool keepRatio = true);
@@ -41,9 +46,15 @@ namespace xgd {
 
         void loopAtomVec(std::function<void(JAtom &_atom)> _func);
 
+        void loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<JAtom>)> _func);
+
         void loopBondVec(std::function<void(JBond &_bond)> _func);
 
         virtual void display();
+
+        virtual std::shared_ptr<JMol> deepClone() const = 0;
+
+        void addAllHydrogens();
 
         void setId(const id_type &_id);
 

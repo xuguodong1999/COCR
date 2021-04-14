@@ -29,15 +29,20 @@ namespace xgd {
     extern std::vector<float> ELEMENT_MASS_LIST;
     extern std::vector<float> ELEMENT_RADIUS_LIST;
     extern std::unordered_map<std::string, ElementType> STR_ELEMENT_MAP;
+    extern std::unordered_map<ElementType, int> ELEMENT_COMMON_NEB_NUM_MAP;
 
     class JAtom {
         ElementType type;
         int charge;
+
+    private:
         inline static const float sDefaultRadius = 100;
         id_type id;
         bool mIsImplicit;
         std::string name;
     public:
+        void setCharge(int charge);
+
         bool isSuperAtom() const;
 
         float x, y, xx, yy, zz;

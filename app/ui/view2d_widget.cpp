@@ -19,3 +19,7 @@ View2DWidget::~View2DWidget() {
 void View2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
     if (mol2DWidget) { mol2DWidget->syncMolToScene(_mol); }
 }
+
+void View2DWidget::startWaitHint() {
+
+}
