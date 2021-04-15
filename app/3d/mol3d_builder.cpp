@@ -34,8 +34,8 @@ void Mol3DBuilder::prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_vi
 void Mol3DBuilder::build() {
     qDebug() << __FUNCTION__;
     using namespace xgd;
-    buildAxis(0, 0, 0, 100);
     // 坐标系
+//    buildAxis(0, 0, 0, 100);
     resetMolRoot();
     float avgBondLength = mol->getAvgBondLength();
     if (avgBondLength < 1)avgBondLength = 20;

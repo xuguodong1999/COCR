@@ -1020,12 +1020,6 @@ namespace OpenBabel {
          */
         void PrintVelocities();
 
-        /*! Set the stream for logging (can also be &cout for logging to screen).
-         *  \param pos Stream (when pos is 0, std::cout wil be used).
-         *  \return True if successful.
-         */
-        bool SetLogFile(std::ostream *pos);
-
         /*! Set the log level (OBFF_LOGLVL_NONE, OBFF_LOGLVL_LOW, OBFF_LOGLVL_MEDIUM, OBFF_LOGLVL_HIGH).
          *  Inline if statements for logging are available:
          *  \code
@@ -1056,25 +1050,11 @@ namespace OpenBabel {
          */
         int GetLogLevel() { return _loglvl; }
 
-        /*! Print msg to the logfile.
-         *  \param msg The message to print.
-         */
-        void OBFFLog(std::string msg) {
-            if (!_logos)
-                return;
-
-            *_logos << msg;
-        }
 
         /*! Print msg to the logfile.
          *  \param msg The message to print.
          */
-        void OBFFLog(const char *msg) {
-            if (!_logos)
-                return;
-
-            *_logos << msg;
-        }
+        void OBFFLog(const char *msg);
         //@}
 
         /////////////////////////////////////////////////////////////////////////

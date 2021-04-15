@@ -36,6 +36,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include "rand.h"
 
+#include <QDebug>
+
 using namespace std;
 
 namespace OpenBabel {
@@ -700,11 +702,11 @@ namespace OpenBabel {
 
     void OBForceField::PrintTypes() {
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nA T O M   T Y P E S\n\n");
-            OBFFLog("IDX\tTYPE\tRING\n");
+            OBFFLog("A T O M   T Y P E S");
+            OBFFLog("IDX\tTYPE\tRING");
 
             FOR_ATOMS_OF_MOL (a, _mol) {
-                snprintf(_logbuf, BUFF_SIZE, "%d\t%s\t%s\n", a->GetIdx(), a->GetType(),
+                snprintf(_logbuf, BUFF_SIZE, "%d\t%s\t%s", a->GetIdx(), a->GetType(),
                          (a->IsInRing() ? (a->IsAromatic() ? "AR" : "AL") : "NO"));
                 OBFFLog(_logbuf);
             }
@@ -713,11 +715,11 @@ namespace OpenBabel {
 
     void OBForceField::PrintFormalCharges() {
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nF O R M A L   C H A R G E S\n\n");
-            OBFFLog("IDX\tCHARGE\n");
+            OBFFLog("F O R M A L   C H A R G E S");
+            OBFFLog("IDX\tCHARGE");
 
             FOR_ATOMS_OF_MOL (a, _mol) {
-                snprintf(_logbuf, BUFF_SIZE, "%d\t%f\n", a->GetIdx(), a->GetPartialCharge());
+                snprintf(_logbuf, BUFF_SIZE, "%d\t%f", a->GetIdx(), a->GetPartialCharge());
                 OBFFLog(_logbuf);
             }
         }
@@ -725,11 +727,11 @@ namespace OpenBabel {
 
     void OBForceField::PrintPartialCharges() {
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nP A R T I A L   C H A R G E S\n\n");
-            OBFFLog("IDX\tCHARGE\n");
+            OBFFLog("P A R T I A L   C H A R G E S");
+            OBFFLog("IDX\tCHARGE");
 
             FOR_ATOMS_OF_MOL (a, _mol) {
-                snprintf(_logbuf, BUFF_SIZE, "%d\t%f\n", a->GetIdx(), a->GetPartialCharge());
+                snprintf(_logbuf, BUFF_SIZE, "%d\t%f", a->GetIdx(), a->GetPartialCharge());
                 OBFFLog(_logbuf);
             }
         }
@@ -737,24 +739,15 @@ namespace OpenBabel {
 
     void OBForceField::PrintVelocities() {
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nA T O M   V E L O C I T I E S\n\n");
-            OBFFLog("IDX\tVELOCITY\n");
+            OBFFLog("A T O M   V E L O C I T I E S");
+            OBFFLog("IDX\tVELOCITY");
 
             FOR_ATOMS_OF_MOL (a, _mol) {
-                snprintf(_logbuf, BUFF_SIZE, "%d\t<%8.3f, %8.3f, %8.3f>\n", a->GetIdx(), _velocityPtr[a->GetIdx()],
+                snprintf(_logbuf, BUFF_SIZE, "%d\t<%8.3f, %8.3f, %8.3f>", a->GetIdx(), _velocityPtr[a->GetIdx()],
                          _velocityPtr[a->GetIdx() + 1], _velocityPtr[a->GetIdx() + 2]);
                 OBFFLog(_logbuf);
             }
         }
-    }
-
-    bool OBForceField::SetLogFile(ostream *pos) {
-        if (pos)
-            _logos = pos;
-        else
-            _logos = &cout;
-
-        return true;
     }
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -1129,8 +1122,8 @@ namespace OpenBabel {
         rotamers.Setup(_mol, rl);
 
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nS Y S T E M A T I C   R O T O R   S E A R C H\n\n");
-            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF ROTATABLE BONDS: %lu\n", (unsigned long) rl.Size());
+            OBFFLog("S Y S T E M A T I C   R O T O R   S E A R C H");
+            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF ROTATABLE BONDS: %lu", (unsigned long) rl.Size());
             OBFFLog(_logbuf);
 
             unsigned long int combinations = 1;
@@ -1138,14 +1131,14 @@ namespace OpenBabel {
                  rotor = rl.NextRotor(ri)) {
                 combinations *= rotor->GetResolution().size();
             }
-            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF POSSIBLE ROTAMERS: %lu\n", combinations);
+            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF POSSIBLE ROTAMERS: %lu", combinations);
             OBFFLog(_logbuf);
         }
 
         _current_conformer = 0;
 
         if (!rl.Size()) { // only one conformer
-            IF_OBFF_LOGLVL_LOW OBFFLog("  GENERATED ONLY ONE CONFORMER\n\n");
+            IF_OBFF_LOGLVL_LOW OBFFLog("  GENERATED ONLY ONE CONFORMER");
 
             ConjugateGradients(geomSteps); // final energy minimizatin for best conformation
 
@@ -1164,10 +1157,10 @@ namespace OpenBabel {
         rotamers.ExpandConformerList(_mol, _mol.GetConformers());
 
         IF_OBFF_LOGLVL_LOW {
-            snprintf(_logbuf, BUFF_SIZE, "  GENERATED %d CONFORMERS\n\n", _mol.NumConformers());
+            snprintf(_logbuf, BUFF_SIZE, "  GENERATED %d CONFORMERS", _mol.NumConformers());
             OBFFLog(_logbuf);
-            OBFFLog("CONFORMER     ENERGY\n");
-            OBFFLog("--------------------\n");
+            OBFFLog("CONFORMER     ENERGY");
+            OBFFLog("--------------------");
         }
 
         _energies.clear();
@@ -1188,7 +1181,7 @@ namespace OpenBabel {
             }
 
             IF_OBFF_LOGLVL_LOW {
-                snprintf(_logbuf, BUFF_SIZE, "\n  CONFORMER %d HAS THE LOWEST ENERGY\n\n", best_conformer + 1);
+                snprintf(_logbuf, BUFF_SIZE, "  CONFORMER %d HAS THE LOWEST ENERGY", best_conformer + 1);
                 OBFFLog(_logbuf);
             }
 
@@ -1209,7 +1202,7 @@ namespace OpenBabel {
         _energies.push_back(Energy(false)); // calculate and store energy
 
         IF_OBFF_LOGLVL_LOW {
-            snprintf(_logbuf, BUFF_SIZE, "   %3d   %20.3f\n", (_current_conformer + 1), _energies[_current_conformer]);
+            snprintf(_logbuf, BUFF_SIZE, "   %3d   %20.3f", (_current_conformer + 1), _energies[_current_conformer]);
             OBFFLog(_logbuf);
         }
 
@@ -1390,8 +1383,8 @@ namespace OpenBabel {
         rotamers.Setup(_mol, rl);
 
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nR A N D O M   R O T O R   S E A R C H\n\n");
-            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF ROTATABLE BONDS: %lu\n", (unsigned long) rl.Size());
+            OBFFLog("R A N D O M   R O T O R   S E A R C H");
+            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF ROTATABLE BONDS: %lu", (unsigned long) rl.Size());
             OBFFLog(_logbuf);
 
             unsigned long int combinations = 1;
@@ -1399,14 +1392,14 @@ namespace OpenBabel {
                  rotor = rl.NextRotor(ri)) {
                 combinations *= rotor->GetResolution().size();
             }
-            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF POSSIBLE ROTAMERS: %lu\n", combinations);
+            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF POSSIBLE ROTAMERS: %lu", combinations);
             OBFFLog(_logbuf);
         }
 
         _current_conformer = 0;
 
         if (!rl.Size()) { // only one conformer
-            IF_OBFF_LOGLVL_LOW OBFFLog("  GENERATED ONLY ONE CONFORMER\n\n");
+            IF_OBFF_LOGLVL_LOW OBFFLog("  GENERATED ONLY ONE CONFORMER");
 
             _loglvl = OBFF_LOGLVL_NONE;
             ConjugateGradients(geomSteps); // energy minimization for conformer
@@ -1429,10 +1422,10 @@ namespace OpenBabel {
         rotamers.ExpandConformerList(_mol, _mol.GetConformers());
 
         IF_OBFF_LOGLVL_LOW {
-            snprintf(_logbuf, BUFF_SIZE, "  GENERATED %d CONFORMERS\n\n", _mol.NumConformers());
+            snprintf(_logbuf, BUFF_SIZE, "  GENERATED %d CONFORMERS", _mol.NumConformers());
             OBFFLog(_logbuf);
-            OBFFLog("CONFORMER     ENERGY\n");
-            OBFFLog("--------------------\n");
+            OBFFLog("CONFORMER     ENERGY");
+            OBFFLog("--------------------");
         }
 
         _energies.clear();
@@ -1451,7 +1444,7 @@ namespace OpenBabel {
             }
 
             IF_OBFF_LOGLVL_LOW {
-                snprintf(_logbuf, BUFF_SIZE, "\n  CONFORMER %d HAS THE LOWEST ENERGY\n\n", best_conformer + 1);
+                snprintf(_logbuf, BUFF_SIZE, "  CONFORMER %d HAS THE LOWEST ENERGY", best_conformer + 1);
                 OBFFLog(_logbuf);
             }
 
@@ -1472,7 +1465,7 @@ namespace OpenBabel {
         _energies.push_back(Energy(false)); // calculate and store energy
 
         IF_OBFF_LOGLVL_LOW {
-            snprintf(_logbuf, BUFF_SIZE, "   %3d      %8.3f\n", (_current_conformer + 1),
+            snprintf(_logbuf, BUFF_SIZE, "   %3d      %8.3f", (_current_conformer + 1),
                      _energies[_current_conformer]);
             OBFFLog(_logbuf);
         }
@@ -1564,8 +1557,8 @@ namespace OpenBabel {
         rotamers.Setup(_mol, rl);
 
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nW E I G H T E D   R O T O R   S E A R C H\n\n");
-            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF ROTATABLE BONDS: %lu\n", (unsigned long) rl.Size());
+            OBFFLog("W E I G H T E D   R O T O R   S E A R C H");
+            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF ROTATABLE BONDS: %lu", (unsigned long) rl.Size());
             OBFFLog(_logbuf);
 
             unsigned long int combinations = 1;
@@ -1573,7 +1566,7 @@ namespace OpenBabel {
                  rotor = rl.NextRotor(ri)) {
                 combinations *= rotor->GetResolution().size();
             }
-            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF POSSIBLE ROTAMERS: %lu\n", combinations);
+            snprintf(_logbuf, BUFF_SIZE, "  NUMBER OF POSSIBLE ROTAMERS: %lu", combinations);
             OBFFLog(_logbuf);
         }
 
@@ -1581,7 +1574,7 @@ namespace OpenBabel {
         _energies.clear(); // Wipe any energies from previous conformer generators
 
         if (!rl.Size()) { // only one conformer
-            IF_OBFF_LOGLVL_LOW OBFFLog("  GENERATED ONLY ONE CONFORMER\n\n");
+            IF_OBFF_LOGLVL_LOW OBFFLog("  GENERATED ONLY ONE CONFORMER");
 
             _loglvl = OBFF_LOGLVL_NONE;
             ConjugateGradients(geomSteps); // energy minimization for conformer
@@ -1607,7 +1600,7 @@ namespace OpenBabel {
         // First off, we test out each rotor position. How good (or bad) is it?
         // This lets us pre-weight the search to a useful level
         // So each rotor is considered in isolation
-        IF_OBFF_LOGLVL_LOW OBFFLog("  INITIAL WEIGHTING OF ROTAMERS...\n\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("  INITIAL WEIGHTING OF ROTAMERS...");
 
         rotor = rl.BeginRotor(ri);
         for (unsigned int i = 1; i < rl.Size() + 1; ++i, rotor = rl.NextRotor(ri)) {
@@ -1673,10 +1666,10 @@ namespace OpenBabel {
 
         // Now we actually test some weightings
         IF_OBFF_LOGLVL_LOW {
-            snprintf(_logbuf, BUFF_SIZE, "  GENERATED %d CONFORMERS\n\n", conformers);
+            snprintf(_logbuf, BUFF_SIZE, "  GENERATED %d CONFORMERS", conformers);
             OBFFLog(_logbuf);
-            OBFFLog("CONFORMER     ENERGY\n");
-            OBFFLog("--------------------\n");
+            OBFFLog("CONFORMER     ENERGY");
+            OBFFLog("--------------------");
         }
 
         double defaultRotor = 1.0 / sqrt((double) rl.Size());
@@ -1720,7 +1713,7 @@ namespace OpenBabel {
             _mol.AddConformer(confCoord);
 
             IF_OBFF_LOGLVL_LOW {
-                snprintf(_logbuf, BUFF_SIZE, "   %3d      %8.3f\n", c + 1, currentE);
+                snprintf(_logbuf, BUFF_SIZE, "   %3d      %8.3f", c + 1, currentE);
                 OBFFLog(_logbuf);
             }
 
@@ -1745,14 +1738,14 @@ namespace OpenBabel {
         }
 
         IF_OBFF_LOGLVL_LOW {
-            snprintf(_logbuf, BUFF_SIZE, "\n  LOWEST ENERGY: %8.3f\n\n",
+            snprintf(_logbuf, BUFF_SIZE, "  LOWEST ENERGY: %8.3f",
                      bestE);
             OBFFLog(_logbuf);
         }
 
         // debugging output to see final weightings of each rotor setting
         IF_OBFF_LOGLVL_HIGH {
-            OBFFLog("Final Weights: \n");
+            OBFFLog("Final Weights: ");
             for (unsigned int i = 1; i < rotorWeights.size() - 1; ++i) {
                 snprintf(_logbuf, BUFF_SIZE, " Weight: %d", i);
                 OBFFLog(_logbuf);
@@ -1760,7 +1753,7 @@ namespace OpenBabel {
                     snprintf(_logbuf, BUFF_SIZE, " %8.3f", rotorWeights[i][j]);
                     OBFFLog(_logbuf);
                 }
-                OBFFLog("\n");
+                OBFFLog("");
             }
         }
 
@@ -1786,7 +1779,7 @@ namespace OpenBabel {
 
         bool is15;
 
-        IF_OBFF_LOGLVL_LOW OBFFLog("\nD I S T A N C E   G E O M E T R Y\n\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("D I S T A N C E   G E O M E T R Y");
 
         // Calculate initial distance matrix
         //
@@ -1867,16 +1860,16 @@ namespace OpenBabel {
         // output initial distance matrix
         IF_OBFF_LOGLVL_LOW {
 
-            OBFFLog("INITIAL DISTANCE MATRIX\n\n");
+            OBFFLog("INITIAL DISTANCE MATRIX");
             for (i = 0; i < N; i++) {
                 OBFFLog("[");
                 for (j = 0; j < N; j++) {
                     snprintf(_logbuf, BUFF_SIZE, " %8.4f ", matrix[i][j]);
                     OBFFLog(_logbuf);
                 }
-                OBFFLog("]\n");
+                OBFFLog("]");
             }
-            OBFFLog("\n");
+            OBFFLog("");
         }
 
         // Triangle smoothing
@@ -1949,16 +1942,16 @@ namespace OpenBabel {
         // output result of triangle smoothing
         IF_OBFF_LOGLVL_LOW {
 
-            OBFFLog("TRIANGLE SMOOTHING\n\n");
+            OBFFLog("TRIANGLE SMOOTHING");
             for (i = 0; i < N; i++) {
                 OBFFLog("[");
                 for (j = 0; j < N; j++) {
                     snprintf(_logbuf, BUFF_SIZE, " %8.4f ", matrix[i][j]);
                     OBFFLog(_logbuf);
                 }
-                OBFFLog("]\n");
+                OBFFLog("]");
             }
-            OBFFLog("\n");
+            OBFFLog("");
         }
 
         // Generate random distance matrix between lower and upper limits
@@ -1992,16 +1985,16 @@ namespace OpenBabel {
 
         // output result of triangle smoothing
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("RANDOM DISTANCE MATRIX BETWEEN LIMITS\n\n");
+            OBFFLog("RANDOM DISTANCE MATRIX BETWEEN LIMITS");
             for (i = 0; i < N; i++) {
                 OBFFLog("[");
                 for (j = 0; j < N; j++) {
                     snprintf(_logbuf, BUFF_SIZE, " %8.4f ", matrix[i][j]);
                     OBFFLog(_logbuf);
                 }
-                OBFFLog("]\n");
+                OBFFLog("]");
             }
-            OBFFLog("\n");
+            OBFFLog("");
         }
 
         // Generate metric matrix
@@ -2015,16 +2008,16 @@ namespace OpenBabel {
 
         // output metric matrix
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("METRIC MATRIX\n\n");
+            OBFFLog("METRIC MATRIX");
             for (i = 0; i < N; i++) {
                 OBFFLog("[");
                 for (j = 0; j < N; j++) {
                     snprintf(_logbuf, BUFF_SIZE, " %8.4f ", G[i][j]);
                     OBFFLog(_logbuf);
                 }
-                OBFFLog("]\n");
+                OBFFLog("]");
             }
-            OBFFLog("\n");
+            OBFFLog("");
         }
 
         // Calculate eigenvalues and eigenvectors
@@ -2040,23 +2033,23 @@ namespace OpenBabel {
         // output eigenvalues and eigenvectors
         IF_OBFF_LOGLVL_LOW {
 
-            OBFFLog("EIGENVALUES OF METRIC MATRIX\n\n");
+            OBFFLog("EIGENVALUES OF METRIC MATRIX");
             for (i = 0; i < N; i++) {
                 snprintf(_logbuf, BUFF_SIZE, "%8.4f ", eigenvalues[i]);
                 OBFFLog(_logbuf);
             }
-            OBFFLog("\n");
+            OBFFLog("");
 
-            OBFFLog("EIGENVECTORS OF METRIC MATRIX\n\n");
+            OBFFLog("EIGENVECTORS OF METRIC MATRIX");
             for (i = 0; i < N; i++) {
                 OBFFLog("[");
                 for (j = 0; j < N; j++) {
                     snprintf(_logbuf, BUFF_SIZE, " %8.4f ", eigenvectors[i][j]);
                     OBFFLog(_logbuf);
                 }
-                OBFFLog("]\n");
+                OBFFLog("]");
             }
-            OBFFLog("\n");
+            OBFFLog("");
         }
 
         // Assign coordinates
@@ -2165,7 +2158,7 @@ namespace OpenBabel {
 
         /*
       IF_OBFF_LOGLVL_LOW {
-      snprintf(_logbuf, BUFF_SIZE, "UPDATE VDW PAIRS: %d --> %d (VDW), %d (ELE) \n", i+1,
+      snprintf(_logbuf, BUFF_SIZE, "UPDATE VDW PAIRS: %d --> %d (VDW), %d (ELE) ", i+1,
       _vdwpairs.CountBits(), _elepairs.CountBits());
       OBFFLog(_logbuf);
       }
@@ -2555,11 +2548,11 @@ namespace OpenBabel {
         e_n1 = atom->x() * atom->x() + 2 * (atom->y() * atom->y());
 
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nV A L I D A T E   S T E E P E S T   D E S C E N T\n\n");
-            snprintf(_logbuf, BUFF_SIZE, "STEPS = %d\n\n", steps);
+            OBFFLog("V A L I D A T E   S T E E P E S T   D E S C E N T");
+            snprintf(_logbuf, BUFF_SIZE, "STEPS = %d", steps);
             OBFFLog(_logbuf);
-            OBFFLog("STEP n     E(n)       E(n-1)    \n");
-            OBFFLog("--------------------------------\n");
+            OBFFLog("STEP n     E(n)       E(n-1)    ");
+            OBFFLog("--------------------------------");
         }
 
         for (int i = 1; i <= steps; i++) {
@@ -2569,19 +2562,19 @@ namespace OpenBabel {
             e_n2 = atom->x() * atom->x() + 2 * (atom->y() * atom->y());
 
             IF_OBFF_LOGLVL_LOW {
-                snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f\n", i, e_n2, e_n1);
+                snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f", i, e_n2, e_n1);
                 OBFFLog(_logbuf);
             }
 
             if (IsNear(e_n2, e_n1, 1.0e-7)) {
-                IF_OBFF_LOGLVL_LOW OBFFLog("    STEEPEST DESCENT HAS CONVERGED (DELTA E < 1.0e-7)\n");
+                IF_OBFF_LOGLVL_LOW OBFFLog("    STEEPEST DESCENT HAS CONVERGED (DELTA E < 1.0e-7)");
                 break;
             }
 
             e_n1 = e_n2;
         }
 
-        IF_OBFF_LOGLVL_LOW OBFFLog("\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("");
 
         delete atom;
     }
@@ -2598,11 +2591,11 @@ namespace OpenBabel {
         e_n1 = atom->x() * atom->x() + 2 * (atom->y() * atom->y());
 
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nV A L I D A T E   C O N J U G A T E   G R A D I E N T S\n\n");
-            snprintf(_logbuf, BUFF_SIZE, "STEPS = %d\n\n", steps);
+            OBFFLog("V A L I D A T E   C O N J U G A T E   G R A D I E N T S");
+            snprintf(_logbuf, BUFF_SIZE, "STEPS = %d", steps);
             OBFFLog(_logbuf);
-            OBFFLog("STEP n     E(n)       E(n-1)    \n");
-            OBFFLog("--------------------------------\n");
+            OBFFLog("STEP n     E(n)       E(n-1)    ");
+            OBFFLog("--------------------------------");
         }
 
         for (int i = 1; i <= steps; i++) {
@@ -2614,7 +2607,7 @@ namespace OpenBabel {
                 e_n2 = atom->x() * atom->x() + 2 * (atom->y() * atom->y());
 
                 IF_OBFF_LOGLVL_LOW {
-                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f\n", i, e_n2, e_n1);
+                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f", i, e_n2, e_n1);
                     OBFFLog(_logbuf);
                 }
 
@@ -2634,12 +2627,12 @@ namespace OpenBabel {
                 e_n2 = atom->x() * atom->x() + 2 * (atom->y() * atom->y());
 
                 IF_OBFF_LOGLVL_LOW {
-                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f\n", i, e_n2, e_n1);
+                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f", i, e_n2, e_n1);
                     OBFFLog(_logbuf);
                 }
 
                 if (IsNear(e_n2, e_n1, 1.0e-7)) {
-                    IF_OBFF_LOGLVL_LOW OBFFLog("    CONJUGATE GRADIENTS HAS CONVERGED (DELTA E < 1.0e-7)\n");
+                    IF_OBFF_LOGLVL_LOW OBFFLog("    CONJUGATE GRADIENTS HAS CONVERGED (DELTA E < 1.0e-7)");
                     break;
                 }
 
@@ -2665,12 +2658,12 @@ namespace OpenBabel {
         _e_n1 = Energy() + _constraints.GetConstraintEnergy();
 
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nS T E E P E S T   D E S C E N T\n\n");
-            snprintf(_logbuf, BUFF_SIZE, "STEPS = %d\n\n", steps);
+            OBFFLog("S T E E P E S T   D E S C E N T");
+            snprintf(_logbuf, BUFF_SIZE, "STEPS = %d", steps);
             OBFFLog(_logbuf);
-            OBFFLog("STEP n       E(n)         E(n-1)    \n");
-            OBFFLog("------------------------------------\n");
-            snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f      ----\n", _cstep, _e_n1);
+            OBFFLog("STEP n       E(n)         E(n-1)    ");
+            OBFFLog("------------------------------------");
+            snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f      ----", _cstep, _e_n1);
             OBFFLog(_logbuf);
         }
 
@@ -2743,14 +2736,14 @@ namespace OpenBabel {
 
             IF_OBFF_LOGLVL_LOW {
                 if (_cstep % 10 == 0) {
-                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.5f    %8.5f\n", _cstep, e_n2, _e_n1);
+                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.5f    %8.5f", _cstep, e_n2, _e_n1);
                     OBFFLog(_logbuf);
                 }
             }
 
             if (IsNear(e_n2, _e_n1, _econv)
                 && (maxgrad < _gconv)) { // gradient criteria (0.1) squared
-                IF_OBFF_LOGLVL_LOW OBFFLog("    STEEPEST DESCENT HAS CONVERGED\n");
+                IF_OBFF_LOGLVL_LOW OBFFLog("    STEEPEST DESCENT HAS CONVERGED");
                 return false;
             }
 
@@ -2791,11 +2784,11 @@ namespace OpenBabel {
         _e_n1 = Energy() + _constraints.GetConstraintEnergy();
 
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nC O N J U G A T E   G R A D I E N T S\n\n");
-            snprintf(_logbuf, BUFF_SIZE, "STEPS = %d\n\n", steps);
+            OBFFLog("C O N J U G A T E   G R A D I E N T S");
+            snprintf(_logbuf, BUFF_SIZE, "STEPS = %d", steps);
             OBFFLog(_logbuf);
-            OBFFLog("STEP n     E(n)       E(n-1)    \n");
-            OBFFLog("--------------------------------\n");
+            OBFFLog("STEP n     E(n)       E(n-1)    ");
+            OBFFLog("--------------------------------");
         }
 
         if (_grad1 != nullptr)
@@ -2851,7 +2844,7 @@ namespace OpenBabel {
         e_n2 = Energy() + _constraints.GetConstraintEnergy();
 
         IF_OBFF_LOGLVL_LOW {
-            snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f\n", 1, e_n2, _e_n1);
+            snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f", 1, e_n2, _e_n1);
             OBFFLog(_logbuf);
         }
 
@@ -2949,16 +2942,16 @@ namespace OpenBabel {
             if (IsNear(e_n2, _e_n1, _econv)
                 && (maxgrad < _gconv)) { // gradient criteria (0.1) squared
                 IF_OBFF_LOGLVL_LOW {
-                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f\n", _cstep, e_n2, _e_n1);
+                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f", _cstep, e_n2, _e_n1);
                     OBFFLog(_logbuf);
-                    OBFFLog("    CONJUGATE GRADIENTS HAS CONVERGED\n");
+                    OBFFLog("    CONJUGATE GRADIENTS HAS CONVERGED");
                 }
                 return false;
             }
 
             IF_OBFF_LOGLVL_LOW {
                 if (_cstep % 10 == 0) {
-                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f\n", _cstep, e_n2, _e_n1);
+                    snprintf(_logbuf, BUFF_SIZE, " %4d    %8.3f    %8.3f", _cstep, e_n2, _e_n1);
                     OBFFLog(_logbuf);
                 }
             }
@@ -4324,6 +4317,10 @@ namespace OpenBabel {
         _mol.EndModify();
 
         return grid;
+    }
+
+    void OBForceField::OBFFLog(const char *msg) {
+        qDebug() << "OBForceField::OBFFLog:\t" << msg;
     }
 
     /**

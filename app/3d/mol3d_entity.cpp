@@ -165,7 +165,7 @@ void ConeWrapper::setRindsAndSlices(const int &_rings, const int &_slices) {
 }
 
 SphereWrapper::SphereWrapper(Qt3DCore::QEntity *_root) :
-        SingleWrapper(_root), sphere(new Qt3DExtras::QSphereMesh()) {
+        SingleWrapper(_root), sphere(new Qt3DExtras::QSphereMesh(_root)) {
     entity->addComponent(sphere);
     entity->setType(EntityType::AtomSphere);
 }
@@ -181,7 +181,7 @@ void SphereWrapper::setRindsAndSlices(const int &_rings, const int &_slices) {
 
 
 SingleWrapper::SingleWrapper(Qt3DCore::QEntity *_root) :
-        BaseWrapper(_root), material(new Qt3DExtras::QPhongMaterial()) {
+        BaseWrapper(_root), material(new Qt3DExtras::QPhongMaterial(_root)) {
     entity->addComponent(material);
 }
 
@@ -189,7 +189,7 @@ void SingleWrapper::setColor(const QColor &_color) {
     material->setDiffuse(_color);
 }
 
-BaseWrapper::BaseWrapper(Qt3DCore::QEntity *_root) : root(_root), transform(new Qt3DCore::QTransform()) {
+BaseWrapper::BaseWrapper(Qt3DCore::QEntity *_root) : root(_root), transform(new Qt3DCore::QTransform(_root)) {
     entity = new BaseEntity(root);
     entity->addComponent(transform);
 }
@@ -209,6 +209,10 @@ void BaseWrapper::setId(const size_t &_id) {
 void BaseWrapper::setObjectName(const QString &_name) {
     QObject::setObjectName(_name);
     entity->setObjectName(_name);
+}
+
+BaseWrapper::~BaseWrapper() {
+//    qDebug() << "~BaseWrapper()";
 }
 
 BaseEntity::BaseEntity(Qt3DCore::QNode *parent) : Qt3DCore::QEntity(parent) {
@@ -247,4 +251,8 @@ void BaseEntity::setType(const EntityType &_type) {
 
 void BaseEntity::setId(const size_t &_id) {
     mId = _id;
+}
+
+BaseEntity::~BaseEntity() {
+//    qDebug() << "~BaseEntity()";
 }

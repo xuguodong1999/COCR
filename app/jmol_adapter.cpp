@@ -149,36 +149,31 @@ bool JMolAdapter::runForcefield() {
     qDebug() << __FUNCTION__;
     if (obMol->Empty())return true;
     try {
-//        qDebug() << "add hs1=" << obMol->AddHydrogens(false, true);
         OpenBabel::OBBuilder builder;
-        qDebug() << "build=" << builder.Build(*obMol);
-//        obMol->CorrectForPH();
-//        qDebug() << "add hs2=" << obMol->AddHydrogens(false, true);
+        qDebug() << "builder.Build ret" << builder.Build(*obMol);
+        // FIXME: 适配器的逻辑是手动添加氢原子，不能使用 OpenBabel 的 PH 计算机制
+        // OpenBabel 的 gen3d 工具调用了这个接口，是因为 gen3d 的输入是文件
+        // qDebug() << "obMol->AddHydrogens ret" << obMol->AddHydrogens(false, true);
     } catch (...) {
         return false;
     }
-    if (obMol->NumAtoms() > 30) {// 分子力场太慢了……只给小分子优化，大分子只用几何构造
-        sync3D();
-        return true;
-    }
-    auto pFF = static_cast<OpenBabel::OBForceField *>(OpenBabel::OBPlugin::GetPlugin("forcefields", "mmff94s"));
+    auto pFF = OpenBabel::OBForceField::FindForceField("uff");
     if (!pFF) {
         return false;
     }
-    pFF->SetLogLevel(OBFF_LOGLVL_HIGH);
+    pFF->SetLogLevel(OBFF_LOGLVL_LOW);
     if (!pFF->Setup(*obMol)) {
-        std::cerr << "runOBForceField: setup force field ret false" << std::endl;
+        qDebug() << "pFF->Setup ret false";
     }
     try {
-        pFF->SteepestDescent(200, 1.0e-4);
-        pFF->WeightedRotorSearch(100, 200);
-        pFF->SteepestDescent(200, 1.0e-6);
-        qDebug() << "pff.update=" << pFF->UpdateCoordinates(*obMol);
+        pFF->SteepestDescent(100, 1.0e-4);
+        pFF->WeightedRotorSearch(10, 10);
+        pFF->SteepestDescent(100, 1.0e-6);
+        qDebug() << "pFF->UpdateCoordinates ret" << pFF->UpdateCoordinates(*obMol);
     } catch (...) {
         return false;
     }
     sync3D();
-    qDebug() << writeAsSMI().c_str();
     return true;
 }
 
@@ -293,29 +288,33 @@ void JMolAdapter::checkOBMol() {
 }
 
 void JMolAdapter::addOBAtom(JAtom &_atom) {
-    auto obAtom = obMol->NewAtom();
+    OpenBabel::OBAtom obAtom;
     if (ElementType::SA == _atom.getType()) {
         // FIXME: 选择砹元素作为字符串的代理，这个元素的特点是价态足够、且一般没人写
         // FIXME: 这样在 3D 渲染的时候，如果没有展开字符串，那么字符串会被显示为一个球
-        obAtom->SetAtomicNum(85);
+        obAtom.SetAtomicNum(85);
     } else if (ElementType::H == _atom.getType()) {
-        obAtom->SetAtomicNum(9);
+        obAtom.SetAtomicNum(1);
         hydrogenStateMap[_atom.getId()] = startAddingHydrogens;
     } else {
 //        qDebug() << "_atom.getAtomicNumber()=" << _atom.getAtomicNumber();
-        obAtom->SetAtomicNum(_atom.getAtomicNumber());
+        obAtom.SetAtomicNum(_atom.getAtomicNumber());
 
     }
-    obAtom->SetFormalCharge(_atom.getCharge());
-    atomIdMap[_atom.getId()] = obAtom->GetId();
-    atomIdMap2[obAtom->GetId()] = _atom.getId();
+    obAtom.SetFormalCharge(_atom.getCharge());
+    obAtom.SetId(obMol->NumAtoms());
+    obMol->AddAtom(obAtom, false);
+//    if (ElementType::H == _atom.getType()) {
+//        obMol->GetAtomById(obAtom.GetId())->SetAtomicNum(1);
+//    }
+    atomIdMap[_atom.getId()] = obAtom.GetId();
+    atomIdMap2[obAtom.GetId()] = _atom.getId();
 //    qDebug() << obAtom->GetAtomicMass();
 }
 
 void JMolAdapter::addOBBond(JBond &_bond) {
-    auto obBond = obMol->NewBond();
-    bondIdMap[_bond.getId()] = obBond->GetId();
-    bondIdMap2[obBond->GetId()] = _bond.getId();
+//    auto obBond = obMol->NewBond();
+    OpenBabel::OBBond obBond;
     int obBondOrder;
     switch (_bond.getType()) {
         case BondType::SingleBond:
@@ -328,19 +327,19 @@ void JMolAdapter::addOBBond(JBond &_bond) {
             obBondOrder = 3;
             break;
         case BondType::DelocalizedBond:
-            obBond->SetAromatic(true);
+            obBond.SetAromatic(true);
             obBondOrder = 5;
             break;
         case BondType::UpBond:
-            obBond->SetWedge(true);
+            obBond.SetWedge(true);
             obBondOrder = 1;
             break;
         case BondType::DownBond:
-            obBond->SetHash(true);
+            obBond.SetHash(true);
             obBondOrder = 1;
             break;
         case BondType::ImplicitBond:
-            obBond->SetWedgeOrHash(true);
+            obBond.SetWedgeOrHash(true);
             obBondOrder = 1;
             break;
         default:
@@ -350,19 +349,30 @@ void JMolAdapter::addOBBond(JBond &_bond) {
     if (from) {
         auto obFrom = atomIdMap.find(from->getId());
         if (atomIdMap.end() != obFrom) {
-//            qDebug() << "setBegin" << obMol->GetAtomById(obFrom->second)->GetId();
-            obBond->SetBegin(obMol->GetAtomById(obFrom->second));
+            obBond.SetBegin(obMol->GetAtomById(obFrom->second));
+        } else {
+            throw std::runtime_error("atomIdMap empty for jatom from in addOBBond");
         }
+    } else {
+        throw std::runtime_error("jmol bond from empty");
     }
     auto to = _bond.getTo();
     if (to) {
         auto obTo = atomIdMap.find(to->getId());
         if (atomIdMap.end() != obTo) {
 //            qDebug() << "setEnd" << obMol->GetAtomById(obTo->second)->GetId();
-            obBond->SetEnd(obMol->GetAtomById(obTo->second));
+            obBond.SetEnd(obMol->GetAtomById(obTo->second));
+        } else {
+            throw std::runtime_error("atomIdMap empty for jatom to in addOBBond");
         }
+    } else {
+        throw std::runtime_error("jmol bond to empty");
     }
-    obBond->SetBondOrder(obBondOrder);
+    obBond.SetBondOrder(obBondOrder);
+    obBond.SetId(obMol->NumBonds());
+    obMol->AddBond(obBond);
+    bondIdMap[_bond.getId()] = obBond.GetId();
+    bondIdMap2[obBond.GetId()] = _bond.getId();
 }
 
 void JMolAdapter::onExtraDataNeeded() {

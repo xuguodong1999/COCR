@@ -79,10 +79,10 @@ namespace OpenBabel {
         double energy = 0.0;
 
         IF_OBFF_LOGLVL_HIGH {
-            OBFFLog("\nB O N D   S T R E T C H I N G\n\n");
-            OBFFLog("ATOM TYPES  BOND    BOND       IDEAL       FORCE\n");
-            OBFFLog(" I      J   TYPE   LENGTH     LENGTH     CONSTANT      DELTA      ENERGY\n");
-            OBFFLog("------------------------------------------------------------------------\n");
+            OBFFLog("B O N D   S T R E T C H I N G");
+            OBFFLog("ATOM TYPES  BOND    BOND       IDEAL       FORCE");
+            OBFFLog(" I      J   TYPE   LENGTH     LENGTH     CONSTANT      DELTA      ENERGY");
+            OBFFLog("------------------------------------------------------------------------");
         }
 
         for (i = _bondcalculations.begin(); i != _bondcalculations.end(); ++i) {
@@ -96,7 +96,7 @@ namespace OpenBabel {
             }
 
             IF_OBFF_LOGLVL_HIGH {
-                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s  %4.2f%8.3f   %8.3f     %8.3f   %8.3f   %8.3f\n",
+                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s  %4.2f%8.3f   %8.3f     %8.3f   %8.3f   %8.3f",
                          (*i).a->GetType(), (*i).b->GetType(),
                          (*i).bt, (*i).rab, (*i).r0, (*i).kb, (*i).delta, (*i).energy);
                 OBFFLog(_logbuf);
@@ -104,7 +104,7 @@ namespace OpenBabel {
         }
 
         IF_OBFF_LOGLVL_MEDIUM {
-            snprintf(_logbuf, BUFF_SIZE, "     TOTAL BOND STRETCHING ENERGY = %8.3f %s\n", energy, GetUnit().c_str());
+            snprintf(_logbuf, BUFF_SIZE, "     TOTAL BOND STRETCHING ENERGY = %8.3f %s", energy, GetUnit().c_str());
             OBFFLog(_logbuf);
         }
         return energy;
@@ -203,10 +203,10 @@ namespace OpenBabel {
         double energy = 0.0;
 
         IF_OBFF_LOGLVL_HIGH {
-            OBFFLog("\nA N G L E   B E N D I N G\n\n");
-            OBFFLog("ATOM TYPES       VALENCE     IDEAL      FORCE\n");
-            OBFFLog(" I    J    K      ANGLE      ANGLE     CONSTANT      DELTA      ENERGY\n");
-            OBFFLog("-----------------------------------------------------------------------------\n");
+            OBFFLog("A N G L E   B E N D I N G");
+            OBFFLog("ATOM TYPES       VALENCE     IDEAL      FORCE");
+            OBFFLog(" I    J    K      ANGLE      ANGLE     CONSTANT      DELTA      ENERGY");
+            OBFFLog("-----------------------------------------------------------------------------");
         }
 
         for (i = _anglecalculations.begin(); i != _anglecalculations.end(); ++i) {
@@ -221,7 +221,7 @@ namespace OpenBabel {
             }
 
             IF_OBFF_LOGLVL_HIGH {
-                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s %-5s%8.3f  %8.3f     %8.3f   %8.3f   %8.3f\n",
+                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s %-5s%8.3f  %8.3f     %8.3f   %8.3f   %8.3f",
                          (*i).a->GetType(), (*i).b->GetType(),
                          (*i).c->GetType(), (*i).theta * RAD_TO_DEG, (*i).theta0, (*i).ka, (*i).delta, (*i).energy);
                 OBFFLog(_logbuf);
@@ -229,7 +229,7 @@ namespace OpenBabel {
         }
 
         IF_OBFF_LOGLVL_MEDIUM {
-            snprintf(_logbuf, BUFF_SIZE, "     TOTAL ANGLE BENDING ENERGY = %8.3f %s\n", energy, GetUnit().c_str());
+            snprintf(_logbuf, BUFF_SIZE, "     TOTAL ANGLE BENDING ENERGY = %8.3f %s", energy, GetUnit().c_str());
             OBFFLog(_logbuf);
         }
         return energy;
@@ -287,10 +287,10 @@ namespace OpenBabel {
         double energy = 0.0;
 
         IF_OBFF_LOGLVL_HIGH {
-            OBFFLog("\nT O R S I O N A L\n\n");
-            OBFFLog("----ATOM TYPES-----    FORCE         TORSION\n");
-            OBFFLog(" I    J    K    L     CONSTANT        ANGLE         ENERGY\n");
-            OBFFLog("----------------------------------------------------------------\n");
+            OBFFLog("T O R S I O N A L");
+            OBFFLog("----ATOM TYPES-----    FORCE         TORSION");
+            OBFFLog(" I    J    K    L     CONSTANT        ANGLE         ENERGY");
+            OBFFLog("----------------------------------------------------------------");
         }
 
         for (i = _torsioncalculations.begin(); i != _torsioncalculations.end(); ++i) {
@@ -306,7 +306,7 @@ namespace OpenBabel {
             }
 
             IF_OBFF_LOGLVL_HIGH {
-                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s %-5s %-5s%6.3f       %8.3f     %8.3f\n",
+                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s %-5s %-5s%6.3f       %8.3f     %8.3f",
                          (*i).a->GetType(), (*i).b->GetType(),
                          (*i).c->GetType(), (*i).d->GetType(), (*i).V,
                          (*i).tor * RAD_TO_DEG, (*i).energy);
@@ -315,7 +315,7 @@ namespace OpenBabel {
         }
 
         IF_OBFF_LOGLVL_MEDIUM {
-            snprintf(_logbuf, BUFF_SIZE, "     TOTAL TORSIONAL ENERGY = %8.3f %s\n", energy, GetUnit().c_str());
+            snprintf(_logbuf, BUFF_SIZE, "     TOTAL TORSIONAL ENERGY = %8.3f %s", energy, GetUnit().c_str());
             OBFFLog(_logbuf);
         }
 
@@ -368,10 +368,10 @@ namespace OpenBabel {
         double energy = 0.0;
 
         IF_OBFF_LOGLVL_HIGH {
-            OBFFLog("\nO U T - O F - P L A N E   B E N D I N G\n\n");
-            OBFFLog("ATOM TYPES                 OOP     FORCE \n");
-            OBFFLog(" I    J     K     L       ANGLE   CONSTANT     ENERGY\n");
-            OBFFLog("----------------------------------------------------------\n");
+            OBFFLog("O U T - O F - P L A N E   B E N D I N G");
+            OBFFLog("ATOM TYPES                 OOP     FORCE ");
+            OBFFLog(" I    J     K     L       ANGLE   CONSTANT     ENERGY");
+            OBFFLog("----------------------------------------------------------");
         }
 
         for (i = _oopcalculations.begin(); i != _oopcalculations.end(); ++i) {
@@ -386,7 +386,7 @@ namespace OpenBabel {
             }
 
             IF_OBFF_LOGLVL_HIGH {
-                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s %-5s %-5s%8.3f   %8.3f     %8.3f\n", (*i).a->GetType(),
+                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s %-5s %-5s%8.3f   %8.3f     %8.3f", (*i).a->GetType(),
                          (*i).b->GetType(), (*i).c->GetType(), (*i).d->GetType(),
                          (*i).angle * RAD_TO_DEG, (*i).koop, (*i).energy);
                 OBFFLog(_logbuf);
@@ -394,7 +394,7 @@ namespace OpenBabel {
         }
 
         IF_OBFF_LOGLVL_HIGH {
-            snprintf(_logbuf, BUFF_SIZE, "     TOTAL OUT-OF-PLANE BENDING ENERGY = %8.3f %s\n", energy,
+            snprintf(_logbuf, BUFF_SIZE, "     TOTAL OUT-OF-PLANE BENDING ENERGY = %8.3f %s", energy,
                      GetUnit().c_str());
             OBFFLog(_logbuf);
         }
@@ -453,10 +453,10 @@ namespace OpenBabel {
         double energy = 0.0;
 
         IF_OBFF_LOGLVL_HIGH {
-            OBFFLog("\nV A N   D E R   W A A L S\n\n");
-            OBFFLog("ATOM TYPES\n");
-            OBFFLog(" I    J        Rij       kij       ENERGY\n");
-            OBFFLog("-----------------------------------------\n");
+            OBFFLog("V A N   D E R   W A A L S");
+            OBFFLog("ATOM TYPES");
+            OBFFLog(" I    J        Rij       kij       ENERGY");
+            OBFFLog("-----------------------------------------");
             //          XX   XX     -000.000  -000.000  -000.000  -000.000
         }
 
@@ -476,14 +476,14 @@ namespace OpenBabel {
             }
 
             IF_OBFF_LOGLVL_HIGH {
-                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s %8.3f  %8.3f  %8.3f\n", (*i).a->GetType(), (*i).b->GetType(),
+                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s %8.3f  %8.3f  %8.3f", (*i).a->GetType(), (*i).b->GetType(),
                          (*i).rab, (*i).kab, (*i).energy);
                 OBFFLog(_logbuf);
             }
         }
 
         IF_OBFF_LOGLVL_MEDIUM {
-            snprintf(_logbuf, BUFF_SIZE, "     TOTAL VAN DER WAALS ENERGY = %8.3f %s\n", energy, GetUnit().c_str());
+            snprintf(_logbuf, BUFF_SIZE, "     TOTAL VAN DER WAALS ENERGY = %8.3f %s", energy, GetUnit().c_str());
             OBFFLog(_logbuf);
         }
 
@@ -528,10 +528,10 @@ namespace OpenBabel {
         double energy = 0.0;
 
         IF_OBFF_LOGLVL_HIGH {
-            OBFFLog("\nE L E C T R O S T A T I C   I N T E R A C T I O N S\n\n");
-            OBFFLog("ATOM TYPES\n");
-            OBFFLog(" I    J           Rij   332.17*QiQj  ENERGY\n");
-            OBFFLog("-------------------------------------------\n");
+            OBFFLog("E L E C T R O S T A T I C   I N T E R A C T I O N S");
+            OBFFLog("ATOM TYPES");
+            OBFFLog(" I    J           Rij   332.17*QiQj  ENERGY");
+            OBFFLog("-------------------------------------------");
             //            XX   XX     -000.000  -000.000  -000.000
         }
 
@@ -551,14 +551,14 @@ namespace OpenBabel {
             }
 
             IF_OBFF_LOGLVL_HIGH {
-                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s   %8.3f  %8.3f  %8.3f\n", (*i).a->GetType(), (*i).b->GetType(),
+                snprintf(_logbuf, BUFF_SIZE, "%-5s %-5s   %8.3f  %8.3f  %8.3f", (*i).a->GetType(), (*i).b->GetType(),
                          (*i).rab, (*i).qq, (*i).energy);
                 OBFFLog(_logbuf);
             }
         }
 
         IF_OBFF_LOGLVL_MEDIUM {
-            snprintf(_logbuf, BUFF_SIZE, "     TOTAL ELECTROSTATIC ENERGY = %8.3f %s\n", energy, GetUnit().c_str());
+            snprintf(_logbuf, BUFF_SIZE, "     TOTAL ELECTROSTATIC ENERGY = %8.3f %s", energy, GetUnit().c_str());
             OBFFLog(_logbuf);
         }
 
@@ -616,7 +616,7 @@ namespace OpenBabel {
 
         if (parameterA == nullptr || parameterB == nullptr) {
             IF_OBFF_LOGLVL_LOW {
-                snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR VDW INTERACTION %d-%d (IDX)...\n",
+                snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR VDW INTERACTION %d-%d (IDX)...",
                          a->GetIdx(), b->GetIdx());
                 OBFFLog(_logbuf);
             }
@@ -731,7 +731,7 @@ namespace OpenBabel {
         OBFFOOPCalculationUFF oopcalc;
         OBFFVDWCalculationUFF vdwcalc;
 
-        IF_OBFF_LOGLVL_LOW OBFFLog("\nS E T T I N G   U P   C A L C U L A T I O N S\n\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("S E T T I N G   U P   C A L C U L A T I O N S");
 
         // Clear previous calculations
         _bondcalculations.clear();
@@ -754,7 +754,7 @@ namespace OpenBabel {
 
             // GitHub issue #1794
             if (parameterB == nullptr) {
-                snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...\n",
+                snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...",
                          atom->GetIdx());
                 obErrorLog.ThrowError(__FUNCTION__, _logbuf, obWarning);
                 IF_OBFF_LOGLVL_LOW OBFFLog(_logbuf);
@@ -772,7 +772,7 @@ namespace OpenBabel {
 
                 if (parameterA == nullptr) {
                     IF_OBFF_LOGLVL_LOW {
-                        snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...\n",
+                        snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...",
                                  largestNbr->GetIdx());
                         OBFFLog(_logbuf);
                     }
@@ -786,7 +786,7 @@ namespace OpenBabel {
 
                     if (parameterA == nullptr) {
                         IF_OBFF_LOGLVL_LOW {
-                            snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...\n",
+                            snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...",
                                      current->GetIdx());
                             OBFFLog(_logbuf);
                         }
@@ -835,7 +835,7 @@ namespace OpenBabel {
 
                 if (parameterA == nullptr) {
                     IF_OBFF_LOGLVL_LOW {
-                        snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...\n",
+                        snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...",
                                  largestNbr->GetIdx());
                         OBFFLog(_logbuf);
                     }
@@ -849,7 +849,7 @@ namespace OpenBabel {
 
                     if (parameterA == nullptr) {
                         IF_OBFF_LOGLVL_LOW {
-                            snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...\n",
+                            snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ATOM %d (IDX)...",
                                      current->GetIdx());
                             OBFFLog(_logbuf);
                         }
@@ -889,7 +889,7 @@ namespace OpenBabel {
 
         //
         // Bond Calculations
-        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP BOND CALCULATIONS...\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP BOND CALCULATIONS...");
 
         FOR_BONDS_OF_MOL(bond, _mol) {
             a = bond->GetBeginAtom();
@@ -930,7 +930,7 @@ namespace OpenBabel {
 
             if (parameterA == nullptr || parameterB == nullptr) {
                 IF_OBFF_LOGLVL_LOW {
-                    snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR BOND %d-%d (IDX)...\n",
+                    snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR BOND %d-%d (IDX)...",
                              a->GetIdx(), b->GetIdx());
                     OBFFLog(_logbuf);
                 }
@@ -952,7 +952,7 @@ namespace OpenBabel {
         //
         // Angle Calculations
         //
-        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP ANGLE CALCULATIONS...\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP ANGLE CALCULATIONS...");
 
         double sinT0;
         double rab, rbc, rac;
@@ -991,7 +991,7 @@ namespace OpenBabel {
 
             if (parameterA == nullptr || parameterB == nullptr || parameterC == nullptr) {
                 IF_OBFF_LOGLVL_LOW {
-                    snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ANGLE %d-%d-%d (IDX)...\n",
+                    snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR ANGLE %d-%d-%d (IDX)...",
                              a->GetIdx(), b->GetIdx(), c->GetIdx());
                     OBFFLog(_logbuf);
                 }
@@ -1003,7 +1003,7 @@ namespace OpenBabel {
             if (coordination != parameterB->_ipar[0]) {
                 IF_OBFF_LOGLVL_LOW {
                     snprintf(_logbuf, BUFF_SIZE,
-                             "    CORRECTED COORDINATION FOR ANGLE %d-%d-%d (IDX)... WAS %d NOW %d\n",
+                             "    CORRECTED COORDINATION FOR ANGLE %d-%d-%d (IDX)... WAS %d NOW %d",
                              a->GetIdx(), b->GetIdx(), c->GetIdx(), parameterB->_ipar[0], coordination);
                     OBFFLog(_logbuf);
                 }
@@ -1169,7 +1169,7 @@ namespace OpenBabel {
         //
         // Torsion Calculations
         //
-        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP TORSION CALCULATIONS...\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP TORSION CALCULATIONS...");
 
         double torsiontype;
         double phi0 = 0.0;
@@ -1216,7 +1216,7 @@ namespace OpenBabel {
 
             if (parameterB == nullptr || parameterC == nullptr) {
                 IF_OBFF_LOGLVL_LOW {
-                    snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR TORSION X-%d-%d-X (IDX)...\n",
+                    snprintf(_logbuf, BUFF_SIZE, "    COULD NOT FIND PARAMETERS FOR TORSION X-%d-%d-X (IDX)...",
                              b->GetIdx(), c->GetIdx());
                     OBFFLog(_logbuf);
                 }
@@ -1314,7 +1314,7 @@ namespace OpenBabel {
         //
         // OOP/Inversion Calculations
         //
-        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP OOP CALCULATIONS...\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP OOP CALCULATIONS...");
 
         double phi;
         // The original Rappe paper in JACS isn't very clear about the parameters
@@ -1448,7 +1448,7 @@ namespace OpenBabel {
         //
         // VDW Calculations
         //
-        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP VAN DER WAALS CALCULATIONS...\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP VAN DER WAALS CALCULATIONS...");
 
         FOR_PAIRS_OF_MOL(p, _mol) {
             a = _mol.GetAtom((*p)[0]);
@@ -1502,7 +1502,7 @@ namespace OpenBabel {
         //
         OBAtom *a, *b;
 
-        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP ELECTROSTATIC CALCULATIONS...\n");
+        IF_OBFF_LOGLVL_LOW OBFFLog("SETTING UP ELECTROSTATIC CALCULATIONS...");
 
         OBFFElectrostaticCalculationUFF elecalc;
 
@@ -1728,11 +1728,11 @@ namespace OpenBabel {
         }
 
         IF_OBFF_LOGLVL_LOW {
-            OBFFLog("\nA T O M   T Y P E S\n\n");
-            OBFFLog("IDX\tTYPE\tRING\n");
+            OBFFLog("A T O M   T Y P E S");
+            OBFFLog("IDX\tTYPE\tRING");
 
             FOR_ATOMS_OF_MOL (a, _mol) {
-                snprintf(_logbuf, BUFF_SIZE, "%d\t%s\t%s\n", a->GetIdx(), a->GetType(),
+                snprintf(_logbuf, BUFF_SIZE, "%d\t%s\t%s", a->GetIdx(), a->GetType(),
                          (a->IsInRing() ? (a->IsAromatic() ? "AR" : "AL") : "NO"));
                 OBFFLog(_logbuf);
             }
@@ -1754,7 +1754,7 @@ namespace OpenBabel {
     double OBForceFieldUFF::Energy(bool gradients) {
         double energy;
 
-        IF_OBFF_LOGLVL_MEDIUM OBFFLog("\nE N E R G Y\n\n");
+        IF_OBFF_LOGLVL_MEDIUM OBFFLog("E N E R G Y");
 
         if (gradients) {
             ClearGradients();
@@ -1776,7 +1776,7 @@ namespace OpenBabel {
         // energy += E_Electrostatic(gradients);
 
         IF_OBFF_LOGLVL_MEDIUM {
-            snprintf(_logbuf, BUFF_SIZE, "\nTOTAL ENERGY = %8.5f %s\n", energy, GetUnit().c_str());
+            snprintf(_logbuf, BUFF_SIZE, "TOTAL ENERGY = %8.5f %s", energy, GetUnit().c_str());
             OBFFLog(_logbuf);
         }
 
@@ -1797,9 +1797,9 @@ namespace OpenBabel {
         bool passed = true; // set to false if any component fails
         int coordIdx;
 
-        OBFFLog("\nV A L I D A T E   G R A D I E N T S\n\n");
-        OBFFLog("ATOM IDX      NUMERICAL GRADIENT           ANALYTICAL GRADIENT        REL. ERROR (%)   \n");
-        OBFFLog("----------------------------------------------------------------------------------------\n");
+        OBFFLog("V A L I D A T E   G R A D I E N T S");
+        OBFFLog("ATOM IDX      NUMERICAL GRADIENT           ANALYTICAL GRADIENT        REL. ERROR (%)   ");
+        OBFFLog("----------------------------------------------------------------------------------------");
         //     "XX       (000.000, 000.000, 000.000)  (000.000, 000.000, 000.000)  (00.00, 00.00, 00.00)"
 
         FOR_ATOMS_OF_MOL (a, _mol) {
@@ -1812,7 +1812,7 @@ namespace OpenBabel {
             err = ValidateGradientError(numgrad, anagrad);
 
             snprintf(_logbuf, BUFF_SIZE,
-                     "%2d       (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)\n", a->GetIdx(),
+                     "%2d       (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)", a->GetIdx(),
                      numgrad.x(), numgrad.y(), numgrad.z(),
                      anagrad.x(), anagrad.y(), anagrad.z(), err.x(), err.y(), err.z());
             OBFFLog(_logbuf);
@@ -1825,7 +1825,7 @@ namespace OpenBabel {
             err = ValidateGradientError(numgrad, anagrad);
 
             snprintf(_logbuf, BUFF_SIZE,
-                     "    bond    (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)\n", numgrad.x(),
+                     "    bond    (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)", numgrad.x(),
                      numgrad.y(), numgrad.z(),
                      anagrad.x(), anagrad.y(), anagrad.z(), err.x(), err.y(), err.z());
             OBFFLog(_logbuf);
@@ -1840,7 +1840,7 @@ namespace OpenBabel {
             err = ValidateGradientError(numgrad, anagrad);
 
             snprintf(_logbuf, BUFF_SIZE,
-                     "    angle   (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)\n", numgrad.x(),
+                     "    angle   (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)", numgrad.x(),
                      numgrad.y(), numgrad.z(),
                      anagrad.x(), anagrad.y(), anagrad.z(), err.x(), err.y(), err.z());
             OBFFLog(_logbuf);
@@ -1855,7 +1855,7 @@ namespace OpenBabel {
             err = ValidateGradientError(numgrad, anagrad);
 
             snprintf(_logbuf, BUFF_SIZE,
-                     "    torsion (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)\n", numgrad.x(),
+                     "    torsion (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)", numgrad.x(),
                      numgrad.y(), numgrad.z(),
                      anagrad.x(), anagrad.y(), anagrad.z(), err.x(), err.y(), err.z());
             OBFFLog(_logbuf);
@@ -1871,7 +1871,7 @@ namespace OpenBabel {
             err = ValidateGradientError(numgrad, anagrad);
 
             snprintf(_logbuf, BUFF_SIZE,
-                     "    oop     (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)\n", numgrad.x(),
+                     "    oop     (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)", numgrad.x(),
                      numgrad.y(), numgrad.z(),
                      anagrad.x(), anagrad.y(), anagrad.z(), err.x(), err.y(), err.z());
             OBFFLog(_logbuf);
@@ -1887,7 +1887,7 @@ namespace OpenBabel {
             err = ValidateGradientError(numgrad, anagrad);
 
             snprintf(_logbuf, BUFF_SIZE,
-                     "    vdw     (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)\n", numgrad.x(),
+                     "    vdw     (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)", numgrad.x(),
                      numgrad.y(), numgrad.z(),
                      anagrad.x(), anagrad.y(), anagrad.z(), err.x(), err.y(), err.z());
             OBFFLog(_logbuf);
@@ -1902,7 +1902,7 @@ namespace OpenBabel {
             err = ValidateGradientError(numgrad, anagrad);
 
             snprintf(_logbuf, BUFF_SIZE,
-                     "    electro (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)\n", numgrad.x(),
+                     "    electro (%7.3f, %7.3f, %7.3f)  (%7.3f, %7.3f, %7.3f)  (%5.2f, %5.2f, %5.2f)", numgrad.x(),
                      numgrad.y(), numgrad.z(),
                      anagrad.x(), anagrad.y(), anagrad.z(), err.x(), err.y(), err.z());
             OBFFLog(_logbuf);

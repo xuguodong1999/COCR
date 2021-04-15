@@ -13,7 +13,6 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr) 
     root = new Qt3DCore::QEntity();
 
     builder = new Mol3DBuilder(this, root);
-
     window = new Mol3DWindow(root);
     window->setMolRootTrans(builder->getMolRootTrans());
     window->setAxisRoot(builder->getAxisRoot());

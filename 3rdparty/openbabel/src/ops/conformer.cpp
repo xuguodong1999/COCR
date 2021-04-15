@@ -152,7 +152,6 @@ namespace OpenBabel {
             OBForceField *pFF = OBForceField::FindForceField(ff);
 
             // set some force field variables
-            pFF->SetLogFile(&clog);
             pFF->SetLogLevel(log ? OBFF_LOGLVL_MEDIUM : OBFF_LOGLVL_NONE);
 
             // Add cut-offs for faster conformer searching
