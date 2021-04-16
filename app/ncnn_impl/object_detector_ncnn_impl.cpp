@@ -2,13 +2,23 @@
 
 #include <opencv2/imgproc.hpp>
 #include <ncnn/net.h>
-
-#include <iostream>
-
+#include <ncnn/datareader.h>
+#include <QFile>
+#include <QDebug>
 
 bool xgd::ObjectDetectorNcnnImpl::initModel(
         const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth) {
     maxWidth = maxHeight = _maxWidth - sizeBase;
+    QFile cfgFile(_ncnnParam.c_str()), weightsFile(_ncnnBin.c_str());
+    if (!cfgFile.open(QIODevice::ReadOnly) || !weightsFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "fail in QFile read" << _ncnnBin.c_str() << "and" << _ncnnParam.c_str();
+        return false;
+    }
+    QByteArray cfg = cfgFile.readAll();
+    cfgFile.close();
+    QByteArray weights = weightsFile.readAll();
+    weightsFile.close();
+
     try {
         net = std::make_shared<ncnn::Net>();
         net->opt.num_threads = numThread;
@@ -21,10 +31,21 @@ bool xgd::ObjectDetectorNcnnImpl::initModel(
         net->opt.use_packing_layout = true;
         net->opt.use_shader_pack8 = false;
         net->opt.use_image_storage = false;
-        int ret = net->load_param(_ncnnParam.c_str());
-        if (ret != 0)return false;
-        ret = net->load_model(_ncnnBin.c_str());
-        if (ret != 0)return false;
+        const unsigned char *cfgMem = (const unsigned char *) cfg.data();
+        ncnn::DataReaderFromMemory cfgReader(cfgMem);
+        int ret_param = net->load_param(cfgReader);
+        if (ret_param != 0) {
+            qDebug() << "net->load_param(cfgReader) dies";
+            return false;
+        }
+        const unsigned char *weightsMem = (const unsigned char *) weights.data();
+        ncnn::DataReaderFromMemory weightsReader(weightsMem);
+        int ret_bin = net->load_model(weightsReader);
+        if (ret_bin != 0) {
+            qDebug() << "net->load_model(weightsReader) dies";
+            return false;
+        }
+
         std::vector<cv::Mat> outs;
         std::vector<int> minSize = {1, 32, 32};
         cv::Mat emptyBlob(3, minSize.data(), CV_8UC1);
@@ -39,7 +60,7 @@ bool xgd::ObjectDetectorNcnnImpl::initModel(
         ncnn::Mat out;
         ex.extract("output", out);
     } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        qDebug() << __FUNCTION__ << "catch" << e.what();
         return false;
     }
     return true;

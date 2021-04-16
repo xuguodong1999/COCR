@@ -31,6 +31,10 @@ public:
     }
 
     void setImage(const QList<QList<QPointF>> &_script) {
+        if (_script.empty()) {
+            image = cv::Mat(32, 32, CV_8UC1, WHITE);
+            return;
+        }
         qreal minx, miny, maxx, maxy;
         minx = miny = std::numeric_limits<qreal>::max();
         maxx = maxy = std::numeric_limits<qreal>::lowest();
@@ -137,7 +141,11 @@ OCRThread::~OCRThread() {
 }
 
 void OCRThread::run() {
-    mol = ocrManager->ocr(_p->getImage(), false);
+    try {
+        mol = ocrManager->ocr(_p->getImage(), false);
+    } catch (std::exception &e) {
+        qDebug() << __FUNCTION__ << "catch" << e.what();
+    }
     if (mol) {
         emit sig_mol_ready();
     }

@@ -261,9 +261,10 @@ void testMol3D_UI() {
 
 int main(int argc, char *argv[]) {
     // FIXME: Qt Android 的 QWidget 部分在 HighDpi 下大小混乱
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) && !defined(Q_OS_ANDROID)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) //&& !defined(Q_OS_ANDROID)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+    qApp->setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents);
     Application app(argc, argv);
     try {
 //        testJMol();

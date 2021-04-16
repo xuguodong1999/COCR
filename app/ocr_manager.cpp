@@ -5,7 +5,7 @@
 #include "opencv_util.hpp"
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
-#include <iostream>
+#include <QDebug>
 
 inline static xgd::BondType toBondType(const xgd::DetectorObjectType &_objType) {
     using namespace xgd;
@@ -35,13 +35,23 @@ xgd::OCRManager::OCRManager(xgd::ObjectDetector &_detector, xgd::TextRecognizer 
 }
 
 std::shared_ptr<xgd::JMol> xgd::OCRManager::ocr(cv::Mat &_originInput, bool _debug) {
-    auto[input, objects]=detector.detect(_originInput);
-    auto items = convert(objects, input);
-    objects.clear();
-    if (_debug) {
-        display(items, input);
+    std::vector<OCRItem> items;
+    try {
+        auto[input, objects]=detector.detect(_originInput);
+        items = convert(objects, input);
+        if (_debug) {
+            display(items, input);
+        }
+    } catch (std::exception &e) {
+        qDebug() << __FUNCTION__ << "detector and convert catch" << e.what();
+        return nullptr;
     }
-    return composer.compose(items);
+    try {
+        return composer.compose(items);
+    } catch (std::exception &e) {
+        qDebug() << __FUNCTION__ << "compose catch" << e.what();
+        return nullptr;
+    }
 }
 
 std::vector<xgd::OCRItem> xgd::OCRManager::convert(const std::vector<DetectorObject> &_objects, const cv::Mat &_input) {

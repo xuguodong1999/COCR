@@ -66,10 +66,11 @@ void SketchWidget::mousePressEvent(QMouseEvent *event) {
     updateRect(lastPos, lastPos);
     ptsList.push_back(QList<QPointF>({lastPos}));
     isLatest = false;
+    event->ignore();
 }
 
 void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
-//    qDebug() << "SketchWidget::mouseMoveEvent";
+    qDebug() << "SketchWidget::mouseMoveEvent: " << event->pos();
     QWidget::mouseMoveEvent(event);
     auto currentPos = event->pos();
     painter.drawLine(lastPos, currentPos);
@@ -77,6 +78,7 @@ void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
     lastPos = currentPos;
     ptsList.back().push_back(lastPos);
     isLatest = false;
+    event->ignore();
 }
 
 void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
@@ -85,6 +87,7 @@ void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
     endPenDraw();
     isLatest = false;
     leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(ptsList));
+    event->ignore();
 }
 
 void SketchWidget::resizeEvent(QResizeEvent *event) {

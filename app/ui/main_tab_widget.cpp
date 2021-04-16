@@ -131,9 +131,9 @@ void MainTabWidget::handleTabChange(int index) {
 
 void MainTabWidget::resizeEvent(QResizeEvent *e) {
     QWidget::resizeEvent(e);
-    // 保证 TAB 有足够高度
-    setStyleSheet(QString("QTabBar::tab{height:%0}").arg(
-            (std::max)(10, (std::min)(40, static_cast<int>(height() * 0.05)))));
+//    // 保证 TAB 有足够高度
+//    setStyleSheet(QString("QTabBar::tab{height:%0}").arg(
+//            (std::max)(10, (std::min)(40, static_cast<int>(height() * 0.2)))));
 }
 
 void MainTabWidget::onOcrJobReady() {

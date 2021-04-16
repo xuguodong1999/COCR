@@ -1,16 +1,40 @@
 #include "text_recognizer_ncnn_impl.hpp"
 #include <opencv2/imgproc.hpp>
 #include <ncnn/net.h>
-
+#include <ncnn/datareader.h>
+#include <QFile>
+#include <QDebug>
 #include <numeric>
-#include <iostream>
 
 bool xgd::TextRecognizerNcnnImpl::initModel(
         const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words, const int &_maxWidth) {
-    net = std::make_shared<ncnn::Net>();
-    int ret_param = net->load_param(_ncnnParam.c_str());
-    int ret_bin = net->load_model(_ncnnBin.c_str());
-    if (ret_param != 0 || ret_bin != 0) {
+    QFile cfgFile(_ncnnParam.c_str()), weightsFile(_ncnnBin.c_str());
+    if (!cfgFile.open(QIODevice::ReadOnly) || !weightsFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "fail in QFile read" << _ncnnBin.c_str() << "and" << _ncnnParam.c_str();
+        return false;
+    }
+    QByteArray cfg = cfgFile.readAll();
+    cfgFile.close();
+    QByteArray weights = weightsFile.readAll();
+    weightsFile.close();
+    try {
+        net = std::make_shared<ncnn::Net>();
+        const unsigned char *cfgMem = (const unsigned char *) cfg.data();
+        ncnn::DataReaderFromMemory cfgReader(cfgMem);
+        int ret_param = net->load_param(cfgReader);
+        if (ret_param != 0) {
+            qDebug() << "net->load_param(cfgReader) dies";
+            return false;
+        }
+        const unsigned char *weightsMem = (const unsigned char *) weights.data();
+        ncnn::DataReaderFromMemory weightsReader(weightsMem);
+        int ret_bin = net->load_model(weightsReader);
+        if (ret_bin != 0) {
+            qDebug() << "net->load_model(weightsReader) dies";
+            return false;
+        }
+    } catch (std::exception &e) {
+        qDebug() << __FUNCTION__ << "catch" << e.what();
         return false;
     }
     for (auto &c:_words) {

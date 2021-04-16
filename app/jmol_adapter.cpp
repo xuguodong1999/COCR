@@ -153,7 +153,7 @@ bool JMolAdapter::runForcefield() {
         qDebug() << "builder.Build ret" << builder.Build(*obMol);
         // FIXME: 适配器的逻辑是手动添加氢原子，不能使用 OpenBabel 的 PH 计算机制
         // OpenBabel 的 gen3d 工具调用了这个接口，是因为 gen3d 的输入是文件
-        // qDebug() << "obMol->AddHydrogens ret" << obMol->AddHydrogens(false, true);
+//         qDebug() << "obMol->AddHydrogens ret" << obMol->AddHydrogens(false, true);
     } catch (...) {
         return false;
     }
@@ -167,7 +167,7 @@ bool JMolAdapter::runForcefield() {
     }
     try {
         pFF->SteepestDescent(100, 1.0e-4);
-        pFF->WeightedRotorSearch(10, 10);
+        pFF->WeightedRotorSearch(50, 50);
         pFF->SteepestDescent(100, 1.0e-6);
         qDebug() << "pFF->UpdateCoordinates ret" << pFF->UpdateCoordinates(*obMol);
     } catch (...) {

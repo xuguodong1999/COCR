@@ -9,7 +9,16 @@
 
 bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const std::string &_weightsFile) {
     try {
-        net = cv::dnn::readNetFromDarknet(_cfgFile, _weightsFile);
+        QFile cfgFile(_cfgFile.c_str()), weightsFile(_weightsFile.c_str());
+        if (!cfgFile.open(QIODevice::ReadOnly) || !weightsFile.open(QIODevice::ReadOnly)) {
+            return false;
+        }
+        QByteArray cfg=cfgFile.readAll();
+        cfgFile.close();
+        QByteArray weights=weightsFile.readAll();
+        weightsFile.close();
+        net=cv::dnn::readNetFromDarknet(cfg.data(),cfg.length(),weights.data(),weights.length());
+//        net = cv::dnn::readNetFromDarknet(_cfgFile, _weightsFile);
 #ifdef WITH_OPENVINO
         try {
             net.setPreferableBackend(cv::dnn::DNN_BACKEND_INFERENCE_ENGINE);
