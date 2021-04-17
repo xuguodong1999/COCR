@@ -19,6 +19,7 @@ class Mol3DWidget : public GestureWidget {
 Q_OBJECT
     std::shared_ptr<xgd::JMol> mol;
     Mol3DWindow *window;
+    QWidget *mol3DWindowContainer;
     WaitHintWidget *hintWidget;
     Qt3DCore::QEntity *root;
     Mol3DBuilder *builder;
@@ -28,6 +29,9 @@ public:
     void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
 
     void startWaitHint();
+
+protected:
+    void resizeEvent(QResizeEvent *e) override;
 
 public slots:
 

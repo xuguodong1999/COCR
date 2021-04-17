@@ -24,7 +24,6 @@ Q_OBJECT
 private:
     inline static float sTransStep = 10;
     inline static float sYOffsetK = 10;
-    QWidget *container;
     QPoint lastPos;
     bool isPressed;
     float activatedRadius;
@@ -84,8 +83,6 @@ private:
     void translate(const QVector2D &_p);
 
     void reset();
-
-    void setContainer(QWidget *container);
 
     void rotateMolEntity(const QVector2D &_dir);
 

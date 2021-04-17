@@ -103,8 +103,6 @@ void CameraWidget::setCamera(const QCameraInfo &cameraInfo) {
             &QCamera::lockStatusChanged), this, &CameraWidget::updateLockStatus);
 
     displayViewfinder();
-
-    startCamera();
 }
 
 void CameraWidget::processCapturedImage(int requestId, const QImage &img) {

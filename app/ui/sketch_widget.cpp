@@ -70,7 +70,7 @@ void SketchWidget::mousePressEvent(QMouseEvent *event) {
 }
 
 void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
-    qDebug() << "SketchWidget::mouseMoveEvent: " << event->pos();
+//    qDebug() << "SketchWidget::mouseMoveEvent: " << event->pos();
     QWidget::mouseMoveEvent(event);
     auto currentPos = event->pos();
     painter.drawLine(lastPos, currentPos);

@@ -45,7 +45,9 @@ public:
 
     // 必须指定父节点，不手动管理 BaseEntity类的生命周期
     explicit BaseEntity(QNode *parent);
+
     ~BaseEntity();
+
     void setType(const EntityType &_type);
 
     void setId(const size_t &_id);
@@ -71,7 +73,9 @@ public:
     virtual void setObjectName(const QString &_name);
 
     BaseWrapper(Qt3DCore::QEntity *_root);
+
     ~BaseWrapper();
+
     void setScale(const float &_scale);
 
     void setTranslation(const QVector3D &_trans);

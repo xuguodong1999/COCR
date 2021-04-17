@@ -110,7 +110,7 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
         maxx = std::max(maxx, _atom.x);
         maxy = std::max(maxy, _atom.y);
     });
-    float kw = (_w - _x * 2) / (maxx - minx), kh = (_h - _y * 2) / (maxy - miny);
+    float kw = (_w - _x * 3) / (maxx - minx), kh = (_h - _y * 3) / (maxy - miny);
     if (keepRatio) {
         float k = std::min(kw, kh);
         loopAtomVec([&](JAtom &_atom) {

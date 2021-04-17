@@ -16,12 +16,12 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr) 
     window = new Mol3DWindow(root);
     window->setMolRootTrans(builder->getMolRootTrans());
     window->setAxisRoot(builder->getAxisRoot());
-    auto l = new QHBoxLayout();
-    auto w = QWidget::createWindowContainer(window);
-    l->addWidget(w);
+    auto l = new QHBoxLayout(this);
+    mol3DWindowContainer = QWidget::createWindowContainer(window);
+    mol3DWindowContainer->setParent(this);
+    l->addWidget(mol3DWindowContainer);
     l->setContentsMargins(1, 1, 1, 1);
     setLayout(l);
-    window->installEventFilter(this);
     hintWidget = new WaitHintWidget(this);
     hintWidget->hide();
     // prepare 运行在子线程， build 运行在 UI 线程
@@ -48,6 +48,10 @@ void Mol3DWidget::startWaitHint() {
 void Mol3DWidget::endWaitHint() {
     hintWidget->hide();
     window->show();
+}
+
+void Mol3DWidget::resizeEvent(QResizeEvent *e) {
+    QWidget::resizeEvent(e);
 }
 
 

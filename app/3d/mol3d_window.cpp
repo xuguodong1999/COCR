@@ -65,7 +65,7 @@ inline static SimpleGesture handleSimpleTouch(
 }
 
 Mol3DWindow::Mol3DWindow(Qt3DCore::QEntity *_root, QScreen *_screen)
-        : Qt3DWindow(_screen), isPressed(false), container(nullptr), axisRoot(nullptr) {
+        : Qt3DWindow(_screen), isPressed(false), axisRoot(nullptr) {
     _root->setObjectName("RootEntity");
     auto lightEntity = new Qt3DCore::QEntity(_root);
     auto light = new Qt3DRender::QPointLight(lightEntity);
@@ -178,10 +178,6 @@ void Mol3DWindow::wheelEvent(QWheelEvent *event) {
 }
 
 void Mol3DWindow::touchEvent(QTouchEvent *e) {
-//    if (container) {
-//        // FIXME: 没有用
-//        qApp->sendEvent(container, e);
-//    }
     QList touchPoints = e->touchPoints();
     if (touchPoints.count() == 2) {
         isPressed = false;
@@ -242,9 +238,6 @@ void Mol3DWindow::zoom(const float &_k) {
     lightTrans->setTranslation(cam->position());
 }
 
-void Mol3DWindow::setContainer(QWidget *container) {
-    Mol3DWindow::container = container;
-}
 
 void Mol3DWindow::translate(const QVector2D &_p) {
     molRootTrans->setTranslation(molRootTrans->translation() + _p.toVector3D());

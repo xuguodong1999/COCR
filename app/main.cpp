@@ -264,7 +264,6 @@ int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) //&& !defined(Q_OS_ANDROID)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-    qApp->setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents);
     Application app(argc, argv);
     try {
 //        testJMol();

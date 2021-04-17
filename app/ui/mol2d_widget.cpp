@@ -62,6 +62,8 @@ void Mol2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
         bondItem->setBond(itFrom->second, itTo->second, _bond.getType(), _bond.getFromOffset(), _bond.getToOffset());
         scene->addItem(bondItem);
     });
+    // 图元显示的位置依赖确定的窗体布局
+    update();
 }
 
 void Mol2DWidget::mouseDoubleClickEvent(QMouseEvent *e) {

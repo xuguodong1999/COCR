@@ -13,11 +13,11 @@ bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const
         if (!cfgFile.open(QIODevice::ReadOnly) || !weightsFile.open(QIODevice::ReadOnly)) {
             return false;
         }
-        QByteArray cfg=cfgFile.readAll();
+        QByteArray cfg = cfgFile.readAll();
         cfgFile.close();
-        QByteArray weights=weightsFile.readAll();
+        QByteArray weights = weightsFile.readAll();
         weightsFile.close();
-        net=cv::dnn::readNetFromDarknet(cfg.data(),cfg.length(),weights.data(),weights.length());
+        net = cv::dnn::readNetFromDarknet(cfg.data(), cfg.length(), weights.data(), weights.length());
 //        net = cv::dnn::readNetFromDarknet(_cfgFile, _weightsFile);
 #ifdef WITH_OPENVINO
         try {
