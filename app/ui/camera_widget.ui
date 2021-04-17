@@ -37,7 +37,10 @@
                     <item>
                         <widget class="QLabel" name="camera_label">
                             <property name="text">
-                                <string>instant viewer</string>
+                                <string>instant display</string>
+                            </property>
+                            <property name="alignment">
+                                <set>Qt::AlignCenter</set>
                             </property>
                         </widget>
                     </item>
@@ -117,7 +120,7 @@
                                 <number>0</number>
                             </property>
                             <property name="currentIndex">
-                                <number>1</number>
+                                <number>0</number>
                             </property>
                             <widget class="QWidget" name="viewfinder_page">
                                 <layout class="QGridLayout" name="gridLayout_5">
@@ -208,12 +211,15 @@
                         <number>0</number>
                     </property>
                     <item>
-                        <widget class="QPushButton" name="lock_btn">
+                        <widget class="QToolButton" name="lock_btn">
                             <property name="sizePolicy">
-                                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
+                            </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(114, 159, 207);</string>
                             </property>
                             <property name="text">
                                 <string>Focus</string>
@@ -223,7 +229,7 @@
                     <item>
                         <widget class="QTabWidget" name="ctrl_tab_widget">
                             <property name="currentIndex">
-                                <number>1</number>
+                                <number>0</number>
                             </property>
                             <widget class="QWidget" name="tab_image">
                                 <attribute name="title">
@@ -245,24 +251,10 @@
                                     <property name="spacing">
                                         <number>0</number>
                                     </property>
-                                    <item row="0" column="0">
-                                        <widget class="QPushButton" name="shot_btn">
-                                            <property name="enabled">
-                                                <bool>false</bool>
-                                            </property>
-                                            <property name="sizePolicy">
-                                                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                                                    <horstretch>0</horstretch>
-                                                    <verstretch>0</verstretch>
-                                                </sizepolicy>
-                                            </property>
+                                    <item row="2" column="0">
+                                        <widget class="QLabel" name="exposure_label">
                                             <property name="text">
-                                                <string>Capture Photo</string>
-                                            </property>
-                                            <property name="icon">
-                                                <iconset resource="../../resources/app.qrc">
-                                                    <normaloff>:/img/shutter.svg</normaloff>:/img/shutter.svg
-                                                </iconset>
+                                                <string>Exposure Compensation:</string>
                                             </property>
                                         </widget>
                                     </item>
@@ -279,13 +271,6 @@
                                             </property>
                                         </spacer>
                                     </item>
-                                    <item row="2" column="0">
-                                        <widget class="QLabel" name="exposure_label">
-                                            <property name="text">
-                                                <string>Exposure Compensation:</string>
-                                            </property>
-                                        </widget>
-                                    </item>
                                     <item row="3" column="0">
                                         <widget class="QSlider" name="exposure_slider">
                                             <property name="sizePolicy">
@@ -293,6 +278,29 @@
                                                     <horstretch>0</horstretch>
                                                     <verstretch>0</verstretch>
                                                 </sizepolicy>
+                                            </property>
+                                            <property name="styleSheet">
+                                                <string notr="true">QSlider::handle:horizontal {
+                                                    background: QRadialGradient(cx:0, cy:0, radius: 1, fx:0.5, fy:0.5,
+                                                    stop:0 white, stop:1 green);
+                                                    width: 16px;
+                                                    height: 16px;
+                                                    margin: -5px 6px -5px 6px;
+                                                    border-radius:11px;
+                                                    border: 3px solid black;
+                                                    }
+                                                    QSlider::groove:horizontal {
+                                                    height: 12px;
+                                                    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1,
+                                                    stop:1 #c4c4c4);
+                                                    margin: 2px 0
+                                                    }
+                                                    QSlider {
+                                                    background-color: white;
+                                                    border-style: outset;
+                                                    border-radius: 10px;
+                                                    }
+                                                </string>
                                             </property>
                                             <property name="minimum">
                                                 <number>-4</number>
@@ -308,6 +316,41 @@
                                             </property>
                                             <property name="tickPosition">
                                                 <enum>QSlider::TicksAbove</enum>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                    <item row="0" column="0">
+                                        <widget class="QToolButton" name="shot_btn">
+                                            <property name="enabled">
+                                                <bool>false</bool>
+                                            </property>
+                                            <property name="sizePolicy">
+                                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <property name="styleSheet">
+                                                <string notr="true">background-color: rgb(92, 53, 102);
+                                                    color: rgb(255, 255, 255);
+                                                </string>
+                                            </property>
+                                            <property name="text">
+                                                <string>Capture Photo</string>
+                                            </property>
+                                            <property name="icon">
+                                                <iconset resource="../../resources/app.qrc">
+                                                    <normaloff>:/img/shutter.png</normaloff>:/img/shutter.png
+                                                </iconset>
+                                            </property>
+                                            <property name="iconSize">
+                                                <size>
+                                                    <width>32</width>
+                                                    <height>32</height>
+                                                </size>
+                                            </property>
+                                            <property name="toolButtonStyle">
+                                                <enum>Qt::ToolButtonTextBesideIcon</enum>
                                             </property>
                                         </widget>
                                     </item>
@@ -341,8 +384,19 @@
                                                     <verstretch>0</verstretch>
                                                 </sizepolicy>
                                             </property>
+                                            <property name="editTriggers">
+                                                <set>
+                                                    QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed
+                                                </set>
+                                            </property>
                                             <property name="showDropIndicator" stdset="0">
                                                 <bool>false</bool>
+                                            </property>
+                                            <property name="selectionMode">
+                                                <enum>QAbstractItemView::SingleSelection</enum>
+                                            </property>
+                                            <property name="selectionBehavior">
+                                                <enum>QAbstractItemView::SelectItems</enum>
                                             </property>
                                             <property name="textElideMode">
                                                 <enum>Qt::ElideNone</enum>
@@ -354,6 +408,12 @@
                                                 <bool>true</bool>
                                             </property>
                                             <property name="selectionRectVisible">
+                                                <bool>false</bool>
+                                            </property>
+                                            <property name="itemAlignment">
+                                                <set>Qt::AlignLeading</set>
+                                            </property>
+                                            <property name="sortingEnabled">
                                                 <bool>true</bool>
                                             </property>
                                         </widget>

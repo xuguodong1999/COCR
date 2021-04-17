@@ -1,7 +1,14 @@
 <RCC>
     <qresource prefix="/">
         <file compress="9" compress-algo="best">img/waiting.gif</file>
-        <file compress="9" compress-algo="best">img/logo.ico</file>
-        <file compress="9" compress-algo="best">img/shutter.svg</file>
+        <file compress="9" compress-algo="best">img/logo.png</file>
+        <file compress="9" compress-algo="best">img/clear.png</file>
+        <file compress="9" compress-algo="best">img/draw.png</file>
+        <file compress="9" compress-algo="best">img/filesave.png</file>
+        <file compress="9" compress-algo="best">img/home.png</file>
+        <file compress="9" compress-algo="best">img/ben2d.png</file>
+        <file compress="9" compress-algo="best">img/ben3d.png</file>
+        <file compress="9" compress-algo="best">img/shutter.png</file>
+        <file compress="9" compress-algo="best">img/agree.png</file>
     </qresource>
 </RCC>

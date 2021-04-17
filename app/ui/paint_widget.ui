@@ -15,36 +15,36 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,9">
             <property name="spacing">
-                <number>2</number>
+                <number>0</number>
             </property>
             <property name="leftMargin">
-                <number>2</number>
+                <number>0</number>
             </property>
             <property name="topMargin">
-                <number>2</number>
+                <number>0</number>
             </property>
             <property name="rightMargin">
-                <number>2</number>
+                <number>0</number>
             </property>
             <property name="bottomMargin">
-                <number>2</number>
+                <number>0</number>
             </property>
             <item>
                 <layout class="QVBoxLayout" name="paint_layout">
                     <property name="spacing">
-                        <number>12</number>
+                        <number>2</number>
                     </property>
                     <property name="leftMargin">
-                        <number>12</number>
+                        <number>0</number>
                     </property>
                     <property name="topMargin">
-                        <number>12</number>
+                        <number>0</number>
                     </property>
                     <property name="rightMargin">
-                        <number>12</number>
+                        <number>0</number>
                     </property>
                     <property name="bottomMargin">
-                        <number>12</number>
+                        <number>0</number>
                     </property>
                     <item>
                         <widget class="QToolButton" name="shot_btn">
@@ -54,21 +54,13 @@
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(32, 74, 135);
+                                    color: rgb(255, 255, 255);
+                                </string>
+                            </property>
                             <property name="text">
                                 <string>record</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QToolButton" name="reset_btn">
-                            <property name="sizePolicy">
-                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="text">
-                                <string>reset</string>
                             </property>
                         </widget>
                     </item>
@@ -80,50 +72,15 @@
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(196, 160, 0);
+                                    color: rgb(255, 255, 255);
+                                </string>
+                            </property>
                             <property name="text">
                                 <string>undo</string>
                             </property>
                         </widget>
-                    </item>
-                    <item>
-                        <layout class="QHBoxLayout" name="dot_layout" stretch="9">
-                            <property name="spacing">
-                                <number>6</number>
-                            </property>
-                            <item>
-                                <widget class="QToolButton" name="dot_btn">
-                                    <property name="sizePolicy">
-                                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="text">
-                                        <string/>
-                                    </property>
-                                </widget>
-                            </item>
-                        </layout>
-                    </item>
-                    <item>
-                        <layout class="QHBoxLayout" name="color_layout" stretch="9">
-                            <property name="spacing">
-                                <number>6</number>
-                            </property>
-                            <item>
-                                <widget class="QToolButton" name="color_btn">
-                                    <property name="sizePolicy">
-                                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="text">
-                                        <string/>
-                                    </property>
-                                </widget>
-                            </item>
-                        </layout>
                     </item>
                     <item>
                         <widget class="QToolButton" name="redo_btn">
@@ -133,8 +90,57 @@
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(143, 89, 2);
+                                    color: rgb(255, 255, 255);
+                                </string>
+                            </property>
                             <property name="text">
                                 <string>redo</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QToolButton" name="dot_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string/>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QToolButton" name="color_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string/>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QToolButton" name="reset_btn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(78, 154, 6);
+                                    color: rgb(255, 255, 255);
+                                </string>
+                            </property>
+                            <property name="text">
+                                <string>reset</string>
                             </property>
                         </widget>
                     </item>
@@ -145,6 +151,11 @@
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
+                            </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(92, 53, 102);
+                                    color: rgb(255, 255, 255);
+                                </string>
                             </property>
                             <property name="text">
                                 <string>OCR</string>

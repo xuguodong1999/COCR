@@ -15,7 +15,7 @@
 MainTabWidget::MainTabWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::MainTabWidget), welcomeWidget(nullptr), paintWidget(nullptr),
           view2DWidget(nullptr), view3DWidget(nullptr), imageWidget(nullptr), cameraWidget(nullptr),
-          mol(nullptr), ocrThread(new OCRThread(this)) {
+          mol(nullptr), ocrThread(new OCRThread(this)), isOCRBtnClicked(false) {
     ui->setupUi(this);
     static const auto attach_welcome_widget = [&]() {
         auto l = new QHBoxLayout();
@@ -60,7 +60,7 @@ MainTabWidget::MainTabWidget(QWidget *parent)
     if (!view3DWidget) { attach_view3d_widget(); }
     if (!imageWidget) { attach_image_widget(); }
     if (!cameraWidget) { attach_camera_widget(); }
-    connect(ui->tabWidget, &QTabWidget::tabBarClicked, this, &MainTabWidget::handleTabChange);
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainTabWidget::handleTabChange);
     connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked, this, &MainTabWidget::doOCR);
     ui->tabWidget->setCurrentIndex(0);
     connect(ocrThread, &OCRThread::sig_mol_ready, this, &MainTabWidget::onOcrJobReady);
@@ -97,22 +97,26 @@ void MainTabWidget::handleTabChange(int index) {
             break;
         }
         case 2: {
-            is2DLastUsed = true;
-            ui->tabWidget->setCurrentIndex(2);
-            if (!paintWidget->isLatest()) {
-                doOCR(paintWidget->getScript());
-            } else {
-                onOcrJobReady();
+            if (!isOCRBtnClicked) {
+                is2DLastUsed = true;
+                ui->tabWidget->setCurrentIndex(2);
+                if (!paintWidget->isLatest()) {
+                    doOCR(paintWidget->getScript());
+                } else {
+                    onOcrJobReady();
+                }
             }
             break;
         }
         case 3: {
-            is2DLastUsed = false;
-            ui->tabWidget->setCurrentIndex(3);
-            if (!paintWidget->isLatest()) {
-                doOCR(paintWidget->getScript());
-            } else {
-                onOcrJobReady();
+            if (!isOCRBtnClicked) {
+                is2DLastUsed = false;
+                ui->tabWidget->setCurrentIndex(3);
+                if (!paintWidget->isLatest()) {
+                    doOCR(paintWidget->getScript());
+                } else {
+                    onOcrJobReady();
+                }
             }
             break;
         }
@@ -127,6 +131,7 @@ void MainTabWidget::handleTabChange(int index) {
     if (index != 5 && cameraWidget) {
         cameraWidget->stopCamera();
     }
+    isOCRBtnClicked = false;
 }
 
 void MainTabWidget::resizeEvent(QResizeEvent *e) {
@@ -148,6 +153,7 @@ void MainTabWidget::onOcrJobReady() {
 
 void MainTabWidget::doOCR(const QList<QList<QPointF>> &_script) {
     qDebug() << "_script.size()=" << _script.size();
+    isOCRBtnClicked = true;
     if (!paintWidget->isLatest()) {
         ocrThread->bindData(_script);
         ocrThread->start();

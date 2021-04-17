@@ -4,6 +4,7 @@
 #include "sketch_widget.hpp"
 #include <QDebug>
 #include <QPainterPath>
+#include <cmath>
 
 PaintWidget::PaintWidget(QWidget *parent) :
         QWidget(parent),
@@ -64,7 +65,7 @@ void PaintWidget::updateDotIcon() {
     dotPainter.fillPath(ellipsePath, QBrush(mPen.color()));
 
     QIcon dotIcon(dotPixmap);
-    ui->dot_btn->setIconSize(dotBgSize * 0.7);
+    ui->dot_btn->setIconSize(dotBgSize * 0.85);
     ui->dot_btn->setIcon(dotIcon);
 }
 
@@ -108,7 +109,7 @@ void PaintWidget::updateColorIcon() {
     modePainter.drawPath(strokePath);
 
     QIcon modeIcon(modePixmap);
-    ui->color_btn->setIconSize(modeBgSize * 0.7);
+    ui->color_btn->setIconSize(modeBgSize * 0.85);
     ui->color_btn->setIcon(modeIcon);
 }
 

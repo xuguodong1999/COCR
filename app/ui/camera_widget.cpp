@@ -21,7 +21,7 @@ CameraWidget::CameraWidget(QWidget *parent)
     mDevices = QCameraInfo::availableCameras();
     connect(ui->device_list, &QListWidget::currentItemChanged,
             this, &CameraWidget::setDeviceItem);
-    connect(ui->shot_btn, &QPushButton::clicked, [&]() {
+    connect(ui->shot_btn, &QToolButton::clicked, [&]() {
         if (m_camera.isNull()) { return; }
         if (!m_camera->isAvailable()) { return; }
         m_camera->searchAndLock();
@@ -30,7 +30,7 @@ CameraWidget::CameraWidget(QWidget *parent)
     });
     connect(ui->exposure_slider, &QAbstractSlider::valueChanged,
             this, &CameraWidget::setExposureCompensation);
-    connect(ui->lock_btn, &QPushButton::clicked, this, &CameraWidget::toggleLock);
+    connect(ui->lock_btn, &QToolButton::clicked, this, &CameraWidget::toggleLock);
 
     for (size_t i = 0; i < mDevices.size(); i++) {
         auto &camInfo = mDevices[i];
@@ -110,7 +110,7 @@ void CameraWidget::processCapturedImage(int requestId, const QImage &img) {
     stopCamera();
     displayCapturedImage();
     ui->preview_label->setPixmap(QPixmap::fromImage(img.scaled(
-            ui->preview_label->size() * 0.98, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+            ui->preview_label->size() * 0.8, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
     // TODO: emit image here
     QTimer::singleShot(2000, this, &CameraWidget::displayViewfinder);
 }

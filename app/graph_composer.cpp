@@ -242,39 +242,43 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             return _a.second < _b.second;
         });
     }
+    QString logBuffer = "composer log:\n";
     for (auto&[id, vec]:feats) {
         int type = get_bond_side_type(id);
         if (type == 0) {
             size_t rd = revert_bond_side(id);
             auto &item = _items[rd];
-            qDebug() << "*bond" << rd << item.getText().c_str() << "from:";
+            logBuffer.append(QString("@bond %1 {%2}.from:").arg(rd).arg(item.getText().c_str()));
         } else if (type == 1) {
             size_t rd = revert_bond_side(id);
             auto &item = _items[rd];
-            qDebug() << "*bond" << rd << item.getText().c_str() << "to:";
+            logBuffer.append(QString("@bond %1 {%2}.to:").arg(rd).arg(item.getText().c_str()));
         } else {
             auto &item = _items[id];
-            qDebug() << "*strg" << id << item.getText().c_str();
+            logBuffer.append(QString("@atom %1 {%2}.mode:").arg(id).arg(item.getText().c_str()));
         }
-        QString info;
+        logBuffer.append("\n");
         for (auto&[nebId, feat]:vec) {
             int nebType = get_bond_side_type(nebId);
             if (nebType == 0) {
                 size_t nebRd = revert_bond_side(nebId);
                 auto &item = _items[nebRd];
-                info.append(QString("+bond %0 %1 from: %2; ").arg(nebRd).arg(item.getText().c_str()).arg(feat));
+                logBuffer.append(QString("[bond %0 {%1}.from: %2]\t").arg(
+                        nebRd).arg(item.getText().c_str()).arg(QString::number(feat, 'f', 3)));
             } else if (nebType == 1) {
                 size_t nebRd = revert_bond_side(nebId);
                 auto &item = _items[nebRd];
-                info.append(QString("+bond %0 %1 to: %2; ").arg(nebRd).arg(item.getText().c_str()).arg(feat));
+                logBuffer.append(QString("[bond %0 {%1}.to: %2]\t").arg(
+                        nebRd).arg(item.getText().c_str()).arg(QString::number(feat, 'f', 3)));
             } else {
                 auto &item = _items[nebId];
-                info.append(QString("+strg %0 %1: %2; ").arg(nebId).arg(item.getText().c_str()).arg(feat));
+                logBuffer.append(QString("[atom %0 {%1}.node: %2]\t").arg(
+                        nebId).arg(item.getText().c_str()).arg(QString::number(feat, 'f', 3)));
             }
         }
-        qDebug() << info.toStdString().c_str();
-        qDebug() << "-------------------------------------";
+        logBuffer.append("\n-------------------------------------\n");
     }
+    qDebug() << logBuffer.toStdString().c_str();
     // 构造集合节点
     // <集合id，<{item1,item2,...}, center>>
     // 元素中心集合的特点：单中心，集合item数量上限由元素决定

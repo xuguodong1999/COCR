@@ -17,7 +17,6 @@
 #include "ui/mol2d_widget.hpp"
 #include "ui/mol3d_widget.hpp"
 #include "ui/main_tab_widget.h"
-#include "ui/main_widget.hpp"
 #include "application.hpp"
 #include "ncnn_impl/text_recognizer_ncnn_impl.hpp"
 

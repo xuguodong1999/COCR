@@ -13,30 +13,111 @@
         <property name="windowTitle">
             <string>Image Loader</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout" stretch="6,2,1">
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="0,100,20">
+            <property name="spacing">
+                <number>0</number>
+            </property>
+            <property name="leftMargin">
+                <number>0</number>
+            </property>
+            <property name="topMargin">
+                <number>0</number>
+            </property>
+            <property name="rightMargin">
+                <number>0</number>
+            </property>
+            <property name="bottomMargin">
+                <number>0</number>
+            </property>
+            <item>
+                <layout class="QHBoxLayout" name="proc_layout">
+                    <property name="spacing">
+                        <number>0</number>
+                    </property>
+                    <item>
+                        <widget class="QLabel" name="proc_label">
+                            <property name="font">
+                                <font>
+                                    <pointsize>20</pointsize>
+                                </font>
+                            </property>
+                            <property name="styleSheet">
+                                <string notr="true">color: rgb(255, 255, 255);
+                                    background-color: rgb(136, 138, 133);
+                                    border-radius: 10px;
+                                </string>
+                            </property>
+                            <property name="text">
+                                <string>binaryzation</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QSlider" name="proc_slider">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>16777215</width>
+                                    <height>16777215</height>
+                                </size>
+                            </property>
+                            <property name="styleSheet">
+                                <string notr="true">QSlider::handle:horizontal {
+                                    background: QRadialGradient(cx:0, cy:0, radius: 1, fx:0.5, fy:0.5, stop:0 white,
+                                    stop:1 green);
+                                    width: 16px;
+                                    height: 16px;
+                                    margin: -5px 6px -5px 6px;
+                                    border-radius:11px;
+                                    border: 3px solid black;
+                                    }
+                                    QSlider::groove:horizontal {
+                                    height: 12px;
+                                    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+                                    margin: 2px 0
+                                    }
+                                    QSlider {
+                                    background-color: white;
+                                    border-style: outset;
+                                    border-radius: 10px;
+                                    }
+                                </string>
+                            </property>
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
             <item>
                 <widget class="QLabel" name="display_label">
                     <property name="text">
-                        <string>display</string>
+                        <string/>
                     </property>
                 </widget>
             </item>
             <item>
                 <layout class="QHBoxLayout" name="img_layout" stretch="1,2,1">
                     <property name="spacing">
-                        <number>9</number>
+                        <number>0</number>
                     </property>
                     <property name="leftMargin">
-                        <number>9</number>
+                        <number>0</number>
                     </property>
                     <property name="topMargin">
-                        <number>9</number>
+                        <number>0</number>
                     </property>
                     <property name="rightMargin">
-                        <number>9</number>
+                        <number>0</number>
                     </property>
                     <property name="bottomMargin">
-                        <number>9</number>
+                        <number>0</number>
                     </property>
                     <item>
                         <widget class="QToolButton" name="ocr_btn">
@@ -45,6 +126,11 @@
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
+                            </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(92, 53, 102);
+                                    color: rgb(255, 255, 255);
+                                </string>
                             </property>
                             <property name="text">
                                 <string>OCR</string>
@@ -59,6 +145,11 @@
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(32, 74, 135);
+                                    color: rgb(255, 255, 255);
+                                </string>
+                            </property>
                             <property name="text">
                                 <string>load from file</string>
                             </property>
@@ -72,6 +163,11 @@
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
                             </property>
+                            <property name="styleSheet">
+                                <string notr="true">background-color: rgb(78, 154, 6);
+                                    color: rgb(255, 255, 255);
+                                </string>
+                            </property>
                             <property name="text">
                                 <string>reset</string>
                             </property>
@@ -79,26 +175,10 @@
                     </item>
                 </layout>
             </item>
-            <item>
-                <layout class="QHBoxLayout" name="proc_layout">
-                    <item>
-                        <widget class="QLabel" name="proc_label">
-                            <property name="text">
-                                <string>process</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QSlider" name="proc_slider">
-                            <property name="orientation">
-                                <enum>Qt::Horizontal</enum>
-                            </property>
-                        </widget>
-                    </item>
-                </layout>
-            </item>
         </layout>
     </widget>
-    <resources/>
+    <resources>
+        <include location="../../resources/app.qrc"/>
+    </resources>
     <connections/>
 </ui>

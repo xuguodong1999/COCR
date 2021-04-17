@@ -42,7 +42,7 @@ private:
     OCRThread *ocrThread;
     std::shared_ptr<xgd::JMol> mol;
     bool is2DLastUsed;
-
+    bool isOCRBtnClicked;
 protected:
     void resizeEvent(QResizeEvent *e) override;
 

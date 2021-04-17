@@ -58,7 +58,7 @@ void Mol2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
         auto itFrom = atomItemMap.find(from->getId()), itTo = atomItemMap.find(to->getId());
         if (atomItemMap.end() == itFrom) { return; }
         if (atomItemMap.end() == itTo) { return; }
-        qDebug() << _bond.getFromOffset() << "," << _bond.getToOffset();
+//        qDebug() << _bond.getFromOffset() << "," << _bond.getToOffset();
         bondItem->setBond(itFrom->second, itTo->second, _bond.getType(), _bond.getFromOffset(), _bond.getToOffset());
         scene->addItem(bondItem);
     });

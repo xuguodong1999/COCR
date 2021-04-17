@@ -16,15 +16,31 @@
         <layout class="QVBoxLayout" name="verticalLayout" stretch="10,1">
             <item>
                 <widget class="QLabel" name="gifLabel">
+                    <property name="styleSheet">
+                        <string notr="true">color: rgb(0, 0, 0);
+                            background-color: transparent;
+                        </string>
+                    </property>
                     <property name="text">
-                        <string>put gif here</string>
+                        <string/>
+                    </property>
+                    <property name="alignment">
+                        <set>Qt::AlignCenter</set>
                     </property>
                 </widget>
             </item>
             <item>
                 <widget class="QLabel" name="hintLabel">
+                    <property name="styleSheet">
+                        <string notr="true">color: rgb(255, 255, 255);
+                            background-color: transparent;
+                        </string>
+                    </property>
                     <property name="text">
-                        <string>write hint here</string>
+                        <string>running......</string>
+                    </property>
+                    <property name="alignment">
+                        <set>Qt::AlignCenter</set>
                     </property>
                 </widget>
             </item>
