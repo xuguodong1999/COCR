@@ -35,11 +35,13 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # include dir
 include_directories(${3RD_LIB_DIR}/openbabel/include ${3RD_LIB_DIR}/coordgenlibs/include ./)
-if (MSVC AND NOT BUILD_SHARED_LIBS)
+if (ANDROID)
+    include_directories(${ANDROID_LIB_DIR}/ncnn-20210322-android/${CMAKE_ANDROID_ARCH_ABI}/include)
+elseif (MSVC AND NOT BUILD_SHARED_LIBS)
     include_directories(${3RD_LIB_DIR}/ncnn-static-lib/include)
-else (MSVC AND NOT BUILD_SHARED_LIBS)
+else (ANDROID)
     include_directories(${3RD_LIB_DIR}/ncnn-lib/include)
-endif (MSVC AND NOT BUILD_SHARED_LIBS)
+endif (ANDROID)
 
 # source dir
 set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./composer)
