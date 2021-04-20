@@ -23,6 +23,8 @@ class CameraWidget;
 
 class OCRThread;
 
+class QHBoxLayout;
+
 class MainTabWidget : public QWidget {
 Q_OBJECT
 
@@ -43,20 +45,40 @@ private:
     std::shared_ptr<xgd::JMol> mol;
     bool is2DLastUsed;
     bool isOCRBtnClicked;
+    bool isAgreementChecked;
+
+    void setRecentlyUsedViewer(bool is2D);
+
+    const char *KEY_IS_2D_LAST_USED = "main_tab_widget/is_2d_last_used";
 protected:
     void resizeEvent(QResizeEvent *e) override;
 
 private slots:
 
+    void setAgreementChecked(bool isChecked);
+
     void handleTabChange(int index);
-
-    void syncMolToView3D();
-
-    void syncMolToView2D();
 
     void onOcrJobReady();
 
     void doOCR(const QList<QList<QPointF>> &_script);
+
+private:
+    // 2D、3D 窗体会存在大量图元，采取识别时构造、后台时析构调的策略
+    QHBoxLayout *v2dLayout, *v3dLayout, *camLayout;
+
+    void safeAttach2DWidget();
+
+    void safeDelete2DWidget();
+
+    void safeAttach3DWidget();
+
+    void safeDelete3DWidget();
+
+    // 拍照窗体存在跨平台兼容问题，也是懒加载
+    void safeAttachCamWidget();
+
+    void safeDeleteCamWidget();
 };
 
 #endif // MAIN_TAB_WIDGET_H

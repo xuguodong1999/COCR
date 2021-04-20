@@ -17,14 +17,15 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr) 
     window->setMolRootTrans(builder->getMolRootTrans());
     window->setAxisRoot(builder->getAxisRoot());
     auto l = new QHBoxLayout(this);
-    mol3DWindowContainer = QWidget::createWindowContainer(window);
-    mol3DWindowContainer->setParent(this);
+    mol3DWindowContainer = QWidget::createWindowContainer(window, this);
     l->addWidget(mol3DWindowContainer);
     l->setContentsMargins(0, 0, 0, 0);
     l->setSpacing(0);
     setLayout(l);
+
     hintWidget = new WaitHintWidget(this);
     hintWidget->hide();
+
     // prepare 运行在子线程， build 运行在 UI 线程
     connect(builder, &Mol3DBuilder::sig_mol_prepare_done, builder, &Mol3DBuilder::build);
     connect(builder, &Mol3DBuilder::sig_mol_build_done, this, &Mol3DWidget::endWaitHint);
@@ -42,13 +43,13 @@ void Mol3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
 }
 
 void Mol3DWidget::startWaitHint() {
-    window->hide();
+    mol3DWindowContainer->hide();
     hintWidget->startWaitHint();
 }
 
 void Mol3DWidget::endWaitHint() {
     hintWidget->hide();
-    window->show();
+    mol3DWindowContainer->show();
 }
 
 void Mol3DWidget::resizeEvent(QResizeEvent *e) {

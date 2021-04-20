@@ -142,6 +142,7 @@ OCRThread::~OCRThread() {
 
 void OCRThread::run() {
     try {
+//        QThread::msleep(2000);
         mol = ocrManager->ocr(_p->getImage(), false);
     } catch (std::exception &e) {
         qDebug() << __FUNCTION__ << "catch" << e.what();

@@ -11,77 +11,53 @@
 #include "application.hpp"
 #include "jmol.hpp"
 #include <QTimer>
+#include <QMessageBox>
 
 MainTabWidget::MainTabWidget(QWidget *parent)
-        : QWidget(parent), ui(new Ui::MainTabWidget), welcomeWidget(nullptr), paintWidget(nullptr),
-          view2DWidget(nullptr), view3DWidget(nullptr), imageWidget(nullptr), cameraWidget(nullptr),
-          mol(nullptr), ocrThread(new OCRThread(this)), isOCRBtnClicked(false) {
+        : QWidget(parent), ui(new Ui::MainTabWidget),
+          view2DWidget(nullptr), view3DWidget(nullptr), cameraWidget(nullptr),
+          mol(nullptr), ocrThread(new OCRThread(this)),
+          isOCRBtnClicked(false), isAgreementChecked(false) {
     ui->setupUi(this);
-    static const auto attach_welcome_widget = [&]() {
-        auto l = new QHBoxLayout();
-        welcomeWidget = new WelcomeWidget(ui->wel_tab);
-        l->addWidget(welcomeWidget);
-        ui->wel_tab->setLayout(l);
-    };
-    static const auto attach_paint_widget = [&]() {
-        auto l = new QHBoxLayout();
-        paintWidget = new PaintWidget(ui->draw_tab);
-        l->addWidget(paintWidget);
-        ui->draw_tab->setLayout(l);
-    };
-    static const auto attach_view2d_widget = [&]() {
-        auto l = new QHBoxLayout();
-        view2DWidget = new View2DWidget(ui->v2d_tab);
-        l->addWidget(view2DWidget);
-        ui->v2d_tab->setLayout(l);
-    };
-
-    static const auto attach_view3d_widget = [&]() {
-        auto l = new QHBoxLayout();
-        view3DWidget = new View3DWidget(ui->v3d_tab);
-        l->addWidget(view3DWidget);
-        ui->v3d_tab->setLayout(l);
-    };
-    static const auto attach_image_widget = [&]() {
-        auto l = new QHBoxLayout();
-        imageWidget = new ImageWidget(ui->img_tab);
-        l->addWidget(imageWidget);
-        ui->img_tab->setLayout(l);
-    };
-    static const auto attach_camera_widget = [&]() {
-        auto l = new QHBoxLayout();
-        cameraWidget = new CameraWidget(ui->cam_tab);
-        l->addWidget(cameraWidget);
-        ui->cam_tab->setLayout(l);
-    };
-    if (!welcomeWidget) { attach_welcome_widget(); }
-    if (!paintWidget) { attach_paint_widget(); }
-    if (!view2DWidget) { attach_view2d_widget(); }
-    if (!view3DWidget) { attach_view3d_widget(); }
-    if (!imageWidget) { attach_image_widget(); }
-    if (!cameraWidget) { attach_camera_widget(); }
+    // 欢迎页
+    auto l = new QHBoxLayout(ui->wel_tab);
+    welcomeWidget = new WelcomeWidget(ui->wel_tab);
+    l->addWidget(welcomeWidget);
+    ui->wel_tab->setLayout(l);
+    // 绘图页
+    l = new QHBoxLayout(ui->draw_tab);
+    paintWidget = new PaintWidget(ui->draw_tab);
+    l->addWidget(paintWidget);
+    ui->draw_tab->setLayout(l);
+    // 2D
+    v2dLayout = new QHBoxLayout(ui->v2d_tab);
+    ui->v2d_tab->setLayout(v2dLayout);
+    // 3D
+    v3dLayout = new QHBoxLayout(ui->v3d_tab);
+    ui->v3d_tab->setLayout(v3dLayout);
+    // 图片加载页
+    l = new QHBoxLayout(ui->img_tab);
+    imageWidget = new ImageWidget(ui->img_tab);
+    l->addWidget(imageWidget);
+    ui->img_tab->setLayout(l);
+    // 拍照页
+    camLayout = new QHBoxLayout(ui->cam_tab);
+    ui->cam_tab->setLayout(camLayout);
+    // 用户上一次观看 OCR 结果的偏好
+    is2DLastUsed = leafxyApp->getSettings().value(KEY_IS_2D_LAST_USED, true).toBool();
+    // 页面切换需要根据 mol 数据刷新显示
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainTabWidget::handleTabChange);
+    // 从按钮启动 OCR 任务
     connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked, this, &MainTabWidget::doOCR);
-    ui->tabWidget->setCurrentIndex(0);
+    // OCR 任务完成后告知主窗体
     connect(ocrThread, &OCRThread::sig_mol_ready, this, &MainTabWidget::onOcrJobReady);
-    is2DLastUsed = leafxyApp->getSettings().value("main_tab_widget/is_2d_last_used", true).toBool();
-    QTimer::singleShot(100, [&]() {
-        ui->tabWidget->setCurrentIndex(1);
-    });
+    // 更新协议同意状态
+    setAgreementChecked(welcomeWidget->isAgreed());
+    connect(welcomeWidget, &WelcomeWidget::sig_agree_box_checked, this, &MainTabWidget::setAgreementChecked);
+    // 设置起始页面：欢迎页或者绘图页
+    ui->tabWidget->setCurrentIndex(isAgreementChecked ? 1 : 0);
 }
 
-void MainTabWidget::syncMolToView3D() {
-    mol->addAllHydrogens();
-    view3DWidget->syncMolToScene(mol);
-    is2DLastUsed = false;
-    leafxyApp->getSettings().setValue("main_tab_widget/is_2d_last_used", is2DLastUsed);
-}
-
-void MainTabWidget::syncMolToView2D() {
-    view2DWidget->syncMolToScene(mol);
-    is2DLastUsed = true;
-    leafxyApp->getSettings().setValue("main_tab_widget/is_2d_last_used", is2DLastUsed);
-}
 
 MainTabWidget::~MainTabWidget() {
     delete ui;
@@ -89,17 +65,23 @@ MainTabWidget::~MainTabWidget() {
 
 void MainTabWidget::handleTabChange(int index) {
     qDebug() << "handleTabChange" << index;
+    if (index != 0 && !isAgreementChecked) {
+        QMessageBox::information(nullptr, "Agreement not checked yet",
+                                 "You have to check out agreement to use this software",
+                                 QMessageBox::Ok);
+        ui->tabWidget->setCurrentIndex(0);
+        return;
+    }
     switch (index) {
-        case 0: {
-            break;
-        }
         case 1: {
+            safeDelete2DWidget();
+            safeDelete3DWidget();
+            safeDeleteCamWidget();
             break;
         }
         case 2: {
+            safeAttach2DWidget();
             if (!isOCRBtnClicked) {
-                is2DLastUsed = true;
-                ui->tabWidget->setCurrentIndex(2);
                 if (!paintWidget->isLatest()) {
                     doOCR(paintWidget->getScript());
                 } else {
@@ -109,9 +91,8 @@ void MainTabWidget::handleTabChange(int index) {
             break;
         }
         case 3: {
+            safeAttach3DWidget();
             if (!isOCRBtnClicked) {
-                is2DLastUsed = false;
-                ui->tabWidget->setCurrentIndex(3);
                 if (!paintWidget->isLatest()) {
                     doOCR(paintWidget->getScript());
                 } else {
@@ -124,12 +105,9 @@ void MainTabWidget::handleTabChange(int index) {
             break;
         }
         case 5: {
-            cameraWidget->startCamera();
+            safeAttachCamWidget();
             break;
         }
-    }
-    if (index != 5 && cameraWidget) {
-        cameraWidget->stopCamera();
     }
     isOCRBtnClicked = false;
 }
@@ -145,9 +123,10 @@ void MainTabWidget::onOcrJobReady() {
     paintWidget->setIsLatest(true);
     mol = ocrThread->getMol();
     if (ui->tabWidget->currentIndex() == 2) {
-        syncMolToView2D();
+        view2DWidget->syncMolToScene(mol);
     } else if (ui->tabWidget->currentIndex() == 3) {
-        syncMolToView3D();
+        mol->addAllHydrogens();
+        view3DWidget->syncMolToScene(mol);
     }
 }
 
@@ -172,5 +151,71 @@ void MainTabWidget::doOCR(const QList<QList<QPointF>> &_script) {
         }
         onOcrJobReady();
     }
+}
+
+void MainTabWidget::safeAttach2DWidget() {
+    is2DLastUsed = true;
+    if (!view2DWidget) {
+        view2DWidget = new View2DWidget(ui->v2d_tab);
+        v2dLayout->addWidget(view2DWidget);
+    }
+    view2DWidget->show();
+}
+
+void MainTabWidget::safeDelete2DWidget() {
+    if (view2DWidget) {
+        view2DWidget->hide();
+        v2dLayout->removeWidget(view2DWidget);
+        view2DWidget->setParent(nullptr);
+        delete view2DWidget;
+        view2DWidget = nullptr;
+    }
+}
+
+void MainTabWidget::safeAttach3DWidget() {
+    is2DLastUsed = false;
+    leafxyApp->getSettings().setValue("main_tab_widget/is_2d_last_used", is2DLastUsed);
+    if (!view3DWidget) {
+        view3DWidget = new View3DWidget(ui->v3d_tab);
+        v3dLayout->addWidget(view3DWidget);
+    }
+    view3DWidget->show();
+}
+
+void MainTabWidget::safeDelete3DWidget() {
+    if (view3DWidget) {
+        view3DWidget->hide();
+//        v3dLayout->removeWidget(view3DWidget);
+//        view3DWidget->setParent(nullptr);
+//        delete view3DWidget;
+//        view3DWidget = nullptr;
+    }
+}
+
+void MainTabWidget::safeAttachCamWidget() {
+    if (!cameraWidget) {
+        cameraWidget = new CameraWidget(ui->cam_tab);
+        camLayout->addWidget(cameraWidget);
+    }
+    cameraWidget->show();
+}
+
+void MainTabWidget::safeDeleteCamWidget() {
+    if (cameraWidget) {
+        cameraWidget->hide();
+        camLayout->removeWidget(cameraWidget);
+        cameraWidget->setParent(nullptr);
+        delete cameraWidget;
+        cameraWidget = nullptr;
+    }
+}
+
+void MainTabWidget::setAgreementChecked(bool isChecked) {
+    isAgreementChecked = isChecked;
+}
+
+void MainTabWidget::setRecentlyUsedViewer(bool is2D) {
+    is2DLastUsed = is2D;
+    leafxyApp->getSettings().setValue(KEY_IS_2D_LAST_USED, is2DLastUsed);
 }
 

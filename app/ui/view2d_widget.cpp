@@ -24,5 +24,5 @@ void View2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
 }
 
 void View2DWidget::startWaitHint() {
-
+    mol2DWidget->startWaitHint();
 }

@@ -1,6 +1,8 @@
 #include "mol2d_widget.hpp"
 #include "2d/atom_item.hpp"
 #include "2d/bond_item.hpp"
+#include "waithint_widget.h"
+
 #include <QGraphicsTextItem>
 #include <QDebug>
 
@@ -10,6 +12,8 @@ Mol2DWidget::Mol2DWidget(QWidget *parent) : GestureView(parent) {
     setAttribute(Qt::WA_AcceptTouchEvents);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    hintWidget = new WaitHintWidget(this);
 }
 
 inline static QString getRichText(const std::string &_text) {
@@ -35,6 +39,7 @@ inline static QString getRichText(const std::string &_text) {
 }
 
 void Mol2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
+    endWaitHint();
     mol = _mol;
     scene->clear();
     if (!mol)return;
@@ -88,6 +93,15 @@ void Mol2DWidget::normalizeMol() {
     mol->set2DInfoLatest(false);
     mol->norm2D(width(), height());
     syncMolToScene(mol);
+}
+
+void Mol2DWidget::startWaitHint() {
+    hintWidget->show();
+    hintWidget->startWaitHint();
+}
+
+void Mol2DWidget::endWaitHint() {
+    hintWidget->hide();
 }
 
 
