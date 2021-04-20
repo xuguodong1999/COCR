@@ -8,6 +8,8 @@ View3DWidget::View3DWidget(QWidget *parent)
     auto l = new QHBoxLayout();
     mol3DWidget = new Mol3DWidget(ui->container);
     l->addWidget(mol3DWidget);
+    l->setContentsMargins(0, 0, 0, 0);
+    l->setSpacing(0);
     ui->container->setLayout(l);
 }
 

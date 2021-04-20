@@ -20,7 +20,8 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr) 
     mol3DWindowContainer = QWidget::createWindowContainer(window);
     mol3DWindowContainer->setParent(this);
     l->addWidget(mol3DWindowContainer);
-    l->setContentsMargins(1, 1, 1, 1);
+    l->setContentsMargins(0, 0, 0, 0);
+    l->setSpacing(0);
     setLayout(l);
     hintWidget = new WaitHintWidget(this);
     hintWidget->hide();
