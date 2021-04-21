@@ -16,8 +16,8 @@
 MainTabWidget::MainTabWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::MainTabWidget),
           view2DWidget(nullptr), view3DWidget(nullptr), cameraWidget(nullptr),
-          mol(nullptr), ocrThread(new OCRThread(this)),
-          isOCRBtnClicked(false), isAgreementChecked(false) {
+          mol(nullptr), ocrThread(new OCRThread(this)), lastSource(DataSource::PAINT),
+          isOCRBtnClicked(false), isAgreementChecked(false), isMolLatest(false) {
     ui->setupUi(this);
     // 欢迎页
     auto l = new QHBoxLayout(ui->wel_tab);
@@ -48,7 +48,10 @@ MainTabWidget::MainTabWidget(QWidget *parent)
     // 页面切换需要根据 mol 数据刷新显示
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainTabWidget::handleTabChange);
     // 从按钮启动 OCR 任务
-    connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked, this, &MainTabWidget::doOCR);
+    connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked,
+            this, QOverload<const QList<QList<QPointF>> &>::of(&MainTabWidget::doOCR));
+    connect(imageWidget, &ImageWidget::sig_ocr_btn_clicked,
+            this, QOverload<const QImage &>::of(&MainTabWidget::doOCR));
     // OCR 任务完成后告知主窗体
     connect(ocrThread, &OCRThread::sig_mol_ready, this, &MainTabWidget::onOcrJobReady);
     // 更新协议同意状态
@@ -56,6 +59,9 @@ MainTabWidget::MainTabWidget(QWidget *parent)
     connect(welcomeWidget, &WelcomeWidget::sig_agree_box_checked, this, &MainTabWidget::setAgreementChecked);
     // 设置起始页面：欢迎页或者绘图页
     ui->tabWidget->setCurrentIndex(isAgreementChecked ? 1 : 0);
+    // 设置状态更新避免重复识别
+    connect(paintWidget, &PaintWidget::sig_modified, [&]() { isMolLatest = false; });
+    connect(imageWidget, &ImageWidget::sig_modified, [&]() { isMolLatest = false; });
 }
 
 
@@ -66,46 +72,48 @@ MainTabWidget::~MainTabWidget() {
 void MainTabWidget::handleTabChange(int index) {
     qDebug() << "handleTabChange" << index;
     if (index != 0 && !isAgreementChecked) {
-        QMessageBox::information(nullptr, "Agreement not checked yet",
-                                 "You have to check out agreement to use this software",
-                                 QMessageBox::Ok);
+        QMessageBox::information(
+                this, tr("Agreement not checked yet"),
+                tr("You have to check out agreement to use this software"),
+                QMessageBox::Ok);
         ui->tabWidget->setCurrentIndex(0);
         return;
     }
     switch (index) {
         case 1: {
+            const DataSource currentSource = DataSource::PAINT;
+            if (currentSource != lastSource) { isMolLatest = false; }
             safeDelete2DWidget();
             safeDelete3DWidget();
             safeDeleteCamWidget();
+            lastSource = DataSource::PAINT;
             break;
         }
         case 2: {
             safeAttach2DWidget();
             if (!isOCRBtnClicked) {
-                if (!paintWidget->isLatest()) {
-                    doOCR(paintWidget->getScript());
-                } else {
-                    onOcrJobReady();
-                }
+                isMolLatest ? onOcrJobReady() : doOCR(paintWidget->getScript());
             }
             break;
         }
         case 3: {
             safeAttach3DWidget();
             if (!isOCRBtnClicked) {
-                if (!paintWidget->isLatest()) {
-                    doOCR(paintWidget->getScript());
-                } else {
-                    onOcrJobReady();
-                }
+                isMolLatest ? onOcrJobReady() : doOCR(paintWidget->getScript());
             }
             break;
         }
         case 4: {
+            const DataSource currentSource = DataSource::IMAGE;
+            if (currentSource != lastSource) { isMolLatest = false; }
+            lastSource = DataSource::IMAGE;
             break;
         }
         case 5: {
+            const DataSource currentSource = DataSource::CAMERA;
+            if (currentSource != lastSource) { isMolLatest = false; }
             safeAttachCamWidget();
+            lastSource = DataSource::CAMERA;
             break;
         }
     }
@@ -120,36 +128,31 @@ void MainTabWidget::resizeEvent(QResizeEvent *e) {
 }
 
 void MainTabWidget::onOcrJobReady() {
-    paintWidget->setIsLatest(true);
+    isMolLatest = true;
     mol = ocrThread->getMol();
     if (ui->tabWidget->currentIndex() == 2) {
         view2DWidget->syncMolToScene(mol);
     } else if (ui->tabWidget->currentIndex() == 3) {
-        mol->addAllHydrogens();
         view3DWidget->syncMolToScene(mol);
     }
 }
 
 void MainTabWidget::doOCR(const QList<QList<QPointF>> &_script) {
-    qDebug() << "_script.size()=" << _script.size();
+    qDebug() << __FUNCTION__ << "_script.size()=" << _script.size();
     isOCRBtnClicked = true;
-    if (!paintWidget->isLatest()) {
+    if (is2DLastUsed) {
+        ui->tabWidget->setCurrentIndex(2);
+        view2DWidget->startWaitHint();
+    } else {
+        ui->tabWidget->setCurrentIndex(3);
+        view3DWidget->startWaitHint();
+    }
+
+    if (isMolLatest) {
+        onOcrJobReady();
+    } else {
         ocrThread->bindData(_script);
         ocrThread->start();
-        if (is2DLastUsed) {
-            ui->tabWidget->setCurrentIndex(2);
-            view2DWidget->startWaitHint();
-        } else {
-            ui->tabWidget->setCurrentIndex(3);
-            view3DWidget->startWaitHint();
-        }
-    } else {
-        if (is2DLastUsed) {
-            ui->tabWidget->setCurrentIndex(2);
-        } else {
-            ui->tabWidget->setCurrentIndex(3);
-        }
-        onOcrJobReady();
     }
 }
 
@@ -217,5 +220,24 @@ void MainTabWidget::setAgreementChecked(bool isChecked) {
 void MainTabWidget::setRecentlyUsedViewer(bool is2D) {
     is2DLastUsed = is2D;
     leafxyApp->getSettings().setValue(KEY_IS_2D_LAST_USED, is2DLastUsed);
+}
+
+void MainTabWidget::doOCR(const QImage &_image) {
+    qDebug() << __FUNCTION__ << _image.size();
+    isOCRBtnClicked = true;
+    if (is2DLastUsed) {
+        ui->tabWidget->setCurrentIndex(2);
+        view2DWidget->startWaitHint();
+    } else {
+        ui->tabWidget->setCurrentIndex(3);
+        view3DWidget->startWaitHint();
+    }
+
+    if (isMolLatest) {
+        onOcrJobReady();
+    } else {
+        ocrThread->bindData(_image);
+        ocrThread->start();
+    }
 }
 

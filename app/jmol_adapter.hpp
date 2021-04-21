@@ -19,7 +19,7 @@ namespace xgd {
      * 2、使用 coordgenlibs 实现二维标准化
      */
     class JMolAdapter : public JMol {
-        OpenBabel::OBMol *obMol;
+        std::shared_ptr<OpenBabel::OBMol> obMol;
         std::unordered_map<decltype(id), unsigned long> atomIdMap;
         std::unordered_map<decltype(id), unsigned long> bondIdMap;
         std::unordered_map<unsigned long, decltype(id)> atomIdMap2;
@@ -40,8 +40,6 @@ namespace xgd {
 
         // 使用OpenBabel的加氢接口修改OBMol，向JMol同步数据
         void syncNewEntityFromOBMol();
-
-        void syncNewEntityToOBMol();
 
         void checkOBMol();
 

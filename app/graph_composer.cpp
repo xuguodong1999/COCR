@@ -1,7 +1,9 @@
 #include "graph_composer.hpp"
-#include "composer/handler.hpp"
 #include "jmol_adapter.hpp"
+#include "composer/handler.hpp"
+
 #include <QDebug>
+
 #include <map>
 #include <stdexcept>
 

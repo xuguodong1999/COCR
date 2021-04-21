@@ -192,13 +192,14 @@ void Mol3DWindow::touchEvent(QTouchEvent *e) {
             default:
                 break;
         }
-        auto d0 = touchPoints[0].lastPos() - touchPoints[0].startPos();
-        auto d1 = touchPoints[1].lastPos() - touchPoints[1].startPos();
-        if (d0.x() * d1.x() > 0 && d0.y() * d1.y() > 0) {
-            auto dir = QVector2D((d0 + d1) / 2).normalized();
-            dir.setY(-dir.y());
-            translate(dir);
-        }
+        // FIXME: 优化以后再打开
+//        auto d0 = touchPoints[0].lastPos() - touchPoints[0].startPos();
+//        auto d1 = touchPoints[1].lastPos() - touchPoints[1].startPos();
+//        if (d0.x() * d1.x() > 0 && d0.y() * d1.y() > 0) {
+//            auto dir = QVector2D((d0 + d1) / 2).normalized();
+//            dir.setY(-dir.y());
+//            translate(dir);
+//        }
     }
     Qt3DWindow::touchEvent(e);
 }

@@ -9,7 +9,7 @@
 #include <QGesture>
 #include <QThreadPool>
 
-Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr) {
+Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr), newMol(nullptr) {
     root = new Qt3DCore::QEntity();
 
     builder = new Mol3DBuilder(this, root);
@@ -33,11 +33,13 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr) 
 
 void Mol3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
     mol = _mol;
+    newMol = mol->deepClone();
+    newMol->addAllHydrogens();
     qDebug() << __FUNCTION__;
     static QVector3D viewSize = window->getViewSize() / 1.5;
     QThreadPool::globalInstance()->start([&]() {
 //        QThread::msleep(500);
-        builder->prepare(mol, viewSize);
+        builder->prepare(newMol, viewSize);
     });
     startWaitHint();
 }

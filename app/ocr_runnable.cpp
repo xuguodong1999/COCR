@@ -146,6 +146,7 @@ void OCRThread::run() {
         mol = ocrManager->ocr(_p->getImage(), false);
     } catch (std::exception &e) {
         qDebug() << __FUNCTION__ << "catch" << e.what();
+        mol = nullptr;
     }
     if (mol) {
         emit sig_mol_ready();

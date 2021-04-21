@@ -13,23 +13,23 @@
 using namespace xgd;
 
 
-JMolAdapter::JMolAdapter() : isOBMolLatest(true) {
+JMolAdapter::JMolAdapter() : isOBMolLatest(true), obMol(std::make_shared<OpenBabel::OBMol>()) {
     qDebug() << __FUNCTION__;
-    obMol = new OpenBabel::OBMol();
 }
 
 JMolAdapter::~JMolAdapter() {
     qDebug() << __FUNCTION__;
-    delete obMol;
-    obMol = nullptr;
 }
 
-JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) {
+JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
+        isOBMolLatest(false), obMol(std::make_shared<OpenBabel::OBMol>()) {
     qDebug() << __FUNCTION__ << "const&";
     onMolUpdated();
-    isOBMolLatest = false;
     id = _jMolAdapter.id + 1;
     idBase = _jMolAdapter.idBase;
+    is3DInfoLatest = _jMolAdapter.is3DInfoLatest;
+    is2DInfoLatest = _jMolAdapter.is2DInfoLatest;
+    startAddingHydrogens = _jMolAdapter.startAddingHydrogens;
     const_cast<JMolAdapter &>(_jMolAdapter).loopAtomVec([&](JAtom &_atom) {
         auto atom = std::make_shared<JAtom>(_atom.getId(), ElementType::SA);
         *atom = _atom;
@@ -109,7 +109,7 @@ std::string JMolAdapter::writeAs(const std::string &_formatSuffix) {
         if (!generate3D())
             throw std::runtime_error("fail to generate 3d");
     }
-    return conv.WriteString(obMol);
+    return conv.WriteString(obMol.get());
 }
 
 std::string JMolAdapter::writeAsSMI() {
@@ -132,7 +132,7 @@ void JMolAdapter::readAs(const std::string &_dataBuffer, const std::string &_for
         throw std::runtime_error("unknown readable format suffix: " + _formatSuffix);
     }
     std::stringstream ssm(_dataBuffer);
-    if (!conv.Read(obMol, &ssm)) {
+    if (!conv.Read(obMol.get(), &ssm)) {
         throw std::runtime_error("fail to read buffer as format suffix: " + _formatSuffix);
     }
     syncNewEntityFromOBMol();
@@ -387,8 +387,7 @@ void JMolAdapter::resetOBMol() {
     bondIdMap2.clear();
     atomIdMap2.clear();
     hydrogenStateMap.clear();
-    delete obMol;
-    obMol = new OpenBabel::OBMol();
+    obMol = std::make_shared<OpenBabel::OBMol>();
     onMolUpdated();
     loopAtomVec([&](JAtom &atom) {
         addOBAtom(atom);
@@ -423,9 +422,6 @@ void JMolAdapter::display() {
     });
 }
 
-void JMolAdapter::syncNewEntityToOBMol() {
-    resetOBMol();
-}
 
 std::shared_ptr<JMol> JMolAdapter::deepClone() const {
     auto newMol = std::make_shared<JMolAdapter>(*this);

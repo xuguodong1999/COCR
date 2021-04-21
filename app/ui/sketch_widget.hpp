@@ -21,10 +21,6 @@ using ui_script_type = QList<QList<QPointF>>;
 class SketchWidget : public QWidget {
 Q_OBJECT
 public:
-    bool IsLatest() const;
-
-    void setIsLatest(bool isLatest);
-
     SketchWidget(QWidget *parent, QPen *_pen, QColor *_bgColor);
 
     ~SketchWidget();
@@ -54,11 +50,14 @@ private:
     QPen *mPen;
     QColor *mBgColor;
     ui_script_type ptsList;
-    bool isLatest;
 
 public slots:
 
     void reset();
+
+signals:
+
+    void sig_modified();
 
 private:
 

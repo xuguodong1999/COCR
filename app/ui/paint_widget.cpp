@@ -3,22 +3,21 @@
 #include "application.hpp"
 #include "sketch_widget.hpp"
 #include <QDebug>
+#include <QTimer>
 #include <QPainterPath>
 #include <cmath>
 
-PaintWidget::PaintWidget(QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::PaintWidget) {
+PaintWidget::PaintWidget(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWidget) {
     ui->setupUi(this);
-    auto attach_sketch_board = [&]() {
-        auto l = new QHBoxLayout(ui->container);
-        sketchWidget = new SketchWidget(ui->container, &mPen, &mBgColor);
-        l->addWidget(sketchWidget);
-        ui->container->setLayout(l);
-    };
-    attach_sketch_board();
+
+    auto l = new QHBoxLayout(ui->container);
+    sketchWidget = new SketchWidget(ui->container, &mPen, &mBgColor);
+    l->addWidget(sketchWidget);
+    ui->container->setLayout(l);
 
     readConfigurations();
+
+    connect(sketchWidget, &SketchWidget::sig_modified, [&]() { emit sig_modified(); });
     connect(ui->dot_btn, &QToolButton::clicked, this, &PaintWidget::increaseDotSize);
     connect(ui->color_btn, &QToolButton::clicked, this, &PaintWidget::increaseColorMode);
     connect(ui->reset_btn, &QToolButton::clicked, sketchWidget, &SketchWidget::reset);
@@ -29,9 +28,9 @@ PaintWidget::PaintWidget(QWidget *parent) :
 
 void PaintWidget::readConfigurations() {
     mPenWidthIndex = leafxyApp->getSettings().value(
-            "paint_widget/pen_width_index", DEFAULT_PEN_WIDTH_INDEX).toInt();
+            KEY_PEN_WIDTH_INDEX, DEFAULT_PEN_WIDTH_INDEX).toInt();
     mColorModeIndex = leafxyApp->getSettings().value(
-            "paint_widget/color_mode_index", DEFAULT_COLOR_MODE_INDEX).toInt();
+            KEY_PEN_COLOR_INDEX, DEFAULT_COLOR_MODE_INDEX).toInt();
 
     auto&[bgColor, penColor]=mColorModeOptions[mColorModeIndex];
     mBgColor = bgColor;
@@ -49,8 +48,10 @@ PaintWidget::~PaintWidget() {
 
 void PaintWidget::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
-    updateDotIcon();
-    updateColorIcon();
+    QTimer::singleShot(24, [&]() {
+        updateDotIcon();
+        updateColorIcon();
+    });
 }
 
 void PaintWidget::updateDotIcon() {
@@ -65,14 +66,14 @@ void PaintWidget::updateDotIcon() {
     dotPainter.fillPath(ellipsePath, QBrush(mPen.color()));
 
     QIcon dotIcon(dotPixmap);
-    ui->dot_btn->setIconSize(dotBgSize * 0.85);
+    ui->dot_btn->setIconSize(dotBgSize * 0.8);
     ui->dot_btn->setIcon(dotIcon);
 }
 
 
 void PaintWidget::increaseDotSize() {
     mPenWidthIndex = (mPenWidthIndex + 1) % mPenWidthOptions.size();
-    leafxyApp->getSettings().setValue("paint_widget/pen_width_index", mPenWidthIndex);
+    leafxyApp->getSettings().setValue(KEY_PEN_WIDTH_INDEX, mPenWidthIndex);
 
     mPen.setWidthF(mPenWidthOptions[mPenWidthIndex]);
 
@@ -83,7 +84,7 @@ void PaintWidget::increaseDotSize() {
 
 void PaintWidget::increaseColorMode() {
     mColorModeIndex = (mColorModeIndex + 1) % mColorModeOptions.size();
-    leafxyApp->getSettings().setValue("paint_widget/color_mode_index", mColorModeIndex);
+    leafxyApp->getSettings().setValue(KEY_PEN_COLOR_INDEX, mColorModeIndex);
     auto&[bgColor, penColor]=mColorModeOptions[mColorModeIndex];
     mBgColor = bgColor;
     mPen.setColor(penColor);
@@ -109,18 +110,10 @@ void PaintWidget::updateColorIcon() {
     modePainter.drawPath(strokePath);
 
     QIcon modeIcon(modePixmap);
-    ui->color_btn->setIconSize(modeBgSize * 0.85);
+    ui->color_btn->setIconSize(modeBgSize * 0.8);
     ui->color_btn->setIcon(modeIcon);
 }
 
-
-bool PaintWidget::isLatest() const {
-    return sketchWidget->IsLatest();
-}
-
-void PaintWidget::setIsLatest(bool isLatest) {
-    sketchWidget->setIsLatest(isLatest);
-}
 
 const ui_script_type &PaintWidget::getScript() const {
     return sketchWidget->getScript();

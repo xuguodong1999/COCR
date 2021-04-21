@@ -44,8 +44,13 @@ private:
     OCRThread *ocrThread;
     std::shared_ptr<xgd::JMol> mol;
     bool is2DLastUsed;
+    bool isMolLatest;
     bool isOCRBtnClicked;
     bool isAgreementChecked;
+    bool isFromDraw;
+    enum class DataSource {
+        CAMERA, IMAGE, PAINT
+    } lastSource;
 
     void setRecentlyUsedViewer(bool is2D);
 
@@ -62,6 +67,8 @@ private slots:
     void onOcrJobReady();
 
     void doOCR(const QList<QList<QPointF>> &_script);
+
+    void doOCR(const QImage &_image);
 
 private:
     // 2D、3D 窗体会存在大量图元，采取识别时构造、后台时析构调的策略

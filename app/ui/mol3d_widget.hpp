@@ -17,7 +17,7 @@ namespace xgd {
 // Qt3DWindow 无法生成 QGestureEvent
 class Mol3DWidget : public GestureWidget {
 Q_OBJECT
-    std::shared_ptr<xgd::JMol> mol;
+    std::shared_ptr<xgd::JMol> mol, newMol;
     Mol3DWindow *window;
     QWidget *mol3DWindowContainer;
     WaitHintWidget *hintWidget;

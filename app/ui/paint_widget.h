@@ -15,15 +15,12 @@ using ui_script_type = QList<QList<QPointF>>;
 
 class PaintWidget : public QWidget {
 Q_OBJECT
-
+    const char *KEY_PEN_WIDTH_INDEX = "paint_widget/pen_width_index";
+    const char *KEY_PEN_COLOR_INDEX = "paint_widget/color_mode_index";
 public:
     explicit PaintWidget(QWidget *parent = nullptr);
 
     ~PaintWidget();
-
-    bool isLatest() const;
-
-    void setIsLatest(bool isLatest);
 
     const ui_script_type &getScript() const;
 
@@ -82,6 +79,8 @@ private slots:
 signals:
 
     void sig_ocr_btn_clicked(const QList<QList<QPointF>> &_script);
+
+    void sig_modified();
 };
 
 #endif // PAINT_WIDGET_H
