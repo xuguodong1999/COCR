@@ -44,7 +44,7 @@ MainTabWidget::MainTabWidget(QWidget *parent)
     camLayout = new QHBoxLayout(ui->cam_tab);
     ui->cam_tab->setLayout(camLayout);
     // 用户上一次观看 OCR 结果的偏好
-    is2DLastUsed = leafxyApp->getSettings().value(KEY_IS_2D_LAST_USED, true).toBool();
+    is2DLastUsed = leafxyApp->getSettings().value(KEY_IS_2D_LAST_USED, false).toBool();
     // 页面切换需要根据 mol 数据刷新显示
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainTabWidget::handleTabChange);
     // 从按钮启动 OCR 任务
