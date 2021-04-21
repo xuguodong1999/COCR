@@ -27,9 +27,7 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
     onMolUpdated();
     id = _jMolAdapter.id + 1;
     idBase = _jMolAdapter.idBase;
-    is3DInfoLatest = _jMolAdapter.is3DInfoLatest;
-    is2DInfoLatest = _jMolAdapter.is2DInfoLatest;
-    startAddingHydrogens = _jMolAdapter.startAddingHydrogens;
+    is3DInfoLatest = is2DInfoLatest = startAddingHydrogens = false;
     const_cast<JMolAdapter &>(_jMolAdapter).loopAtomVec([&](JAtom &_atom) {
         auto atom = std::make_shared<JAtom>(_atom.getId(), ElementType::SA);
         *atom = _atom;
@@ -102,8 +100,8 @@ std::string JMolAdapter::writeAs(const std::string &_formatSuffix) {
     }
     // TODO: 一些不需要运行分子力场的非3D坐标格式
     static std::unordered_set<std::string> sNo3DWhiteList = {
-//            "smi",
-//            "can"
+            "smi",
+            "can"
     };
     if (sNo3DWhiteList.end() == sNo3DWhiteList.find(_formatSuffix) && !is3DInfoLatest) {
         if (!generate3D())
