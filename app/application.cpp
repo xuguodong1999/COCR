@@ -2,22 +2,32 @@
 #include "log_manager.hpp"
 #include <QSettings>
 #include <QDebug>
+#include <QTranslator>
 
 Application::Application(int &argc, char **argv, int flag) : QApplication(argc, argv, flag) {
-    qApp->setOrganizationName("leafxy");
-    qApp->setOrganizationDomain("xuguodong1999.github.io");
-    qApp->setApplicationName("leafxy app");
+    setOrganizationName("leafxy");
+    setOrganizationDomain("xuguodong1999.github.io");
+    setApplicationName("leafxy app");
 //    getSettings().setValue("test_key1","你好");
 #ifndef Q_OS_ANDROID
     auto logger = LogManager::GetInstance();
-    logger->init(qApp->applicationDirPath());
+    logger->init(applicationDirPath());
 #endif
-//    qDebug() << getSettings().value("test_key1", "默认值");
+    static QTranslator translator;
+    if (translator.load(qAppName() + "_" + QLocale::system().name())) {
+        if (!installTranslator(&translator)) {
+            qDebug() << __FUNCTION__ << "fail to install translations";
+        } else {
+            qDebug() << __FUNCTION__ << "install translations succeed";
+        }
+    } else {
+        qDebug() << __FUNCTION__ << "no translations";
+    }
 }
 
 QSettings &Application::getSettings() {
     static QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                              qApp->organizationName(), qApp->applicationName());
+                              organizationName(), applicationName());
     return settings;
 }
 

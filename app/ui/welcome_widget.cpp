@@ -4,6 +4,7 @@
 #include <QCheckBox>
 #include <QFile>
 #include <QScrollBar>
+
 WelcomeWidget::WelcomeWidget(QWidget *parent) :
         QWidget(parent),
         ui(new Ui::WelcomeWidget) {
@@ -31,7 +32,7 @@ WelcomeWidget::WelcomeWidget(QWidget *parent) :
     licenseFile.open(QIODevice::ReadOnly);
 
     ui->agree_edit->setText(tr("LEAFXY app and its source code are licensed under GNU GPLv3.")
-                            + licenseFile.readAll());
+                            + "\n\n" + licenseFile.readAll());
     licenseFile.close();
 
     connect(ui->agree_box, &QCheckBox::stateChanged, [&](int status) {

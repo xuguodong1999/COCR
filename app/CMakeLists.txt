@@ -14,6 +14,8 @@ find_package(ncnn REQUIRED)
 # notice that qm file is generated through cmake job
 set(TS_FILES ${RES_ROOT}/${APP_NAME}_zh_CN.ts)
 qt5_create_translation(QM_FILES ${LEAFXY_ROOT}/app ${TS_FILES})
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc
+        "<RCC>\n<qresource prefix=\"/\">\n<file alias=\"leafxy_zh_CN.qm\">leafxy_zh_CN.qm</file>\n</qresource>\n</RCC>")
 
 set(RES_SRCS ${RES_ROOT}/obdata.qrc ${RES_ROOT}/app.qrc)
 
@@ -61,7 +63,7 @@ if (MSVC)
     include_directories(${RES_ROOT})
 endif (MSVC)
 
-#set_source_files_properties(${PROJECT_SOURCES} PROPERTIES LANGUAGE CXX)
+list(APPEND PROJECT_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/translations.qrc)
 
 # add exe
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
