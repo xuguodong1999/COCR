@@ -2,6 +2,7 @@
 #include "jatom.hpp"
 #include "color_types.hpp"
 #include <stdexcept>
+#include <QObject>
 
 using namespace xgd;
 
@@ -64,6 +65,27 @@ float JBond::getFromOffset() const {
 
 float JBond::getToOffset() const {
     return offset2;
+}
+
+QString JBond::getQName() const {
+    switch (type) {
+        case BondType::SingleBond:
+            return QObject::tr("Single");
+        case BondType::DoubleBond:
+            return QObject::tr("Double");
+        case BondType::TripleBond:
+            return QObject::tr("Triple");
+        case BondType::DelocalizedBond:
+            return QObject::tr("Delocalized");
+        case BondType::ImplicitBond:
+            return QObject::tr("Implicit");
+        case BondType::UpBond:
+            return QObject::tr("UpBond");
+        case BondType::DownBond:
+            return QObject::tr("Down");
+        default:
+            return QObject::tr("Unknown");
+    }
 }
 
 static std::unordered_map<BondType, ColorName> colorMap = {

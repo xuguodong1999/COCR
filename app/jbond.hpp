@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <QColor>
-
+#include <QString>
 namespace xgd {
     class JAtom;
 
@@ -35,6 +35,8 @@ namespace xgd {
         size_t getId() const;
 
         BondType getType() const;
+
+        QString getQName()const;
 
         int getBondOrder() const;
 

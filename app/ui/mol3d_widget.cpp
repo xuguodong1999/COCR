@@ -58,6 +58,35 @@ void Mol3DWidget::resizeEvent(QResizeEvent *e) {
     QWidget::resizeEvent(e);
 }
 
+QString Mol3DWidget::makeAtomInto(const size_t &_aid) {
+    QString info = tr("atom ") + QString::number(_aid) + tr(" picked");
+    if (newMol) {
+        auto atom = newMol->getAtom(_aid);
+        if (atom) {
+            info.append("\n" + tr("element: ") + atom->getQName());
+            info.append("\n" + tr("mass: ") + QString::number(atom->getMass(), 'f', 4));
+        }
+    }
+    return info;
+}
+
+QString Mol3DWidget::makeBondInto(const size_t &_bid) {
+    QString info = tr("bond ") + QString::number(_bid) + tr(" picked");
+    if (newMol) {
+        auto bond = newMol->getBond(_bid);
+        if (bond) {
+            info.append("\n" + tr("type: ") + bond->getQName());
+            auto from = bond->getFrom();
+            auto to = bond->getTo();
+            if (from && to) {
+                info.append("\n" + tr("atom 1: ") + from->getQName());
+                info.append("\n" + tr("atom 2: ") + to->getQName());
+            }
+        }
+    }
+    return info;
+}
+
 
 //bool Mol3DWidget::eventFilter(QObject *watched, QEvent *e) {
 //    if (watched == window) {

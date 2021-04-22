@@ -224,6 +224,10 @@ const ElementType &xgd::JAtom::getType() const {
     return type;
 }
 
+QString xgd::JAtom::getQName() const {
+    return getName().c_str();
+}
+
 void xgd::JAtom::set2D(const float &_x, const float &_y) {
     x = x0 = x1 = _x;
     y = y0 = y1 = _y;

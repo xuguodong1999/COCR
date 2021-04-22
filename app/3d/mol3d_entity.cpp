@@ -1,5 +1,5 @@
 #include "mol3d_entity.hpp"
-
+#include "..\ui\view3d_widget.h"
 #include "math_util.hpp"
 
 #include <Qt3DCore/QTransform>
@@ -232,12 +232,16 @@ void BaseEntity::onPicked(Qt3DRender::QPickEvent *event) {
     switch (type) {
         case EntityType::AtomSphere: {
             qDebug() << "atom " << mId << " picked";
-            emit sig_atom_picked(mId);
+            if (view3DWidget) {
+                view3DWidget->onAtomPicked(mId);
+            }
             break;
         }
         case EntityType::BondCylinder: {
             qDebug() << "bond " << mId << " picked";
-            emit sig_bond_picked(mId);
+            if (view3DWidget) {
+                view3DWidget->onBondPicked(mId);
+            }
             break;
         }
         default:
@@ -255,4 +259,8 @@ void BaseEntity::setId(const size_t &_id) {
 
 BaseEntity::~BaseEntity() {
 //    qDebug() << "~BaseEntity()";
+}
+
+void BaseEntity::SetView3DWidget(View3DWidget *_view3DWidget) {
+    view3DWidget = _view3DWidget;
 }

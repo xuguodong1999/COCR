@@ -30,6 +30,10 @@ public:
 
     void startWaitHint();
 
+    QString makeAtomInto(const size_t &_aid);
+
+    QString makeBondInto(const size_t &_bid);
+
 protected:
     void resizeEvent(QResizeEvent *e) override;
 

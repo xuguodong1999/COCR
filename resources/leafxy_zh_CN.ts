@@ -143,6 +143,41 @@
     </message>
 </context>
 <context>
+    <name>Mol3DWidget</name>
+    <message>
+        <source>atom </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> picked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>element: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>mass: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bond </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>atom 1: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>atom 2: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>type: </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PaintWidget</name>
     <message>
         <source>DrawingBoard</source>
@@ -163,6 +198,41 @@
     <message>
         <source>OCR</source>
         <translation>识别</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Single</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Triple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delocalized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Implicit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UpBond</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
