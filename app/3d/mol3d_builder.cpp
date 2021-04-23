@@ -1,6 +1,12 @@
 #include "mol3d_builder.hpp"
+#include "entity_base.hpp"
+#include "wrapper_cone.hpp"
+#include "wrapper_sphere.hpp"
+#include "wrapper_cylinder.hpp"
+#include "wrapper_multi_cylinder.hpp"
 
-#include "jmol.hpp"
+#include "chem/jmol.hpp"
+
 #include "math_util.hpp"
 
 #include <Qt3DCore/QEntity>
@@ -8,8 +14,9 @@
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DExtras/QSphereMesh>
 #include <Qt3DExtras/QPhongMaterial>
-
 #include <QDebug>
+
+#include <optional>
 
 using xgd::MathUtil;
 

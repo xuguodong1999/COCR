@@ -7,9 +7,9 @@
 #include "view3d_widget.h"
 #include "image_widget.h"
 #include "camera_widget.h"
-#include "ocr_runnable.hpp"
+#include "../ocr/ocr_runnable.hpp"
 #include "application.hpp"
-#include "jmol.hpp"
+#include "../chem/jmol.hpp"
 #include <QTimer>
 #include <QMessageBox>
 

@@ -22,8 +22,11 @@ public:
     void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
 
     void startWaitHint();
-    void onAtomPicked(const size_t&_aid);
-    void onBondPicked(const size_t&_bid);
+
+    void onAtomPicked(const size_t &_aid);
+
+    void onBondPicked(const size_t &_bid);
+
 private:
     Ui::View3DWidget *ui;
     Mol3DWidget *mol3DWidget;

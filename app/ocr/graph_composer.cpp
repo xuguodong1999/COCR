@@ -1,6 +1,5 @@
 #include "graph_composer.hpp"
-#include "jmol_adapter.hpp"
-#include "composer/handler.hpp"
+#include "../chem/jmol_adapter.hpp"
 
 #include <QDebug>
 

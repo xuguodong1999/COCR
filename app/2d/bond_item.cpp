@@ -1,6 +1,8 @@
 #include "bond_item.hpp"
-#include "math_util.hpp"
 #include "atom_item.hpp"
+
+#include "../math_util.hpp"
+
 #include <QDebug>
 #include <QPainter>
 #include <cmath>

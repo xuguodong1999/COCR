@@ -1,7 +1,8 @@
-#ifndef _ATOM_ITEM_HPP_
-#define _ATOM_ITEM_HPP_
+#ifndef _2D_ATOM_ITEM_HPP_
+#define _2D_ATOM_ITEM_HPP_
 
 #include "base_item.hpp"
+
 #include <QGraphicsTextItem>
 
 class BondItem;
@@ -32,4 +33,4 @@ public:
     static float GetCommonSize();
 };
 
-#endif//_ATOM_ITEM_HPP_
+#endif//_2D_ATOM_ITEM_HPP_

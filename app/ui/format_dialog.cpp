@@ -2,13 +2,11 @@
 #include "ui_format_dialog.h"
 
 FormatDialog::FormatDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::FormatDialog)
-{
+        QDialog(parent),
+        ui(new Ui::FormatDialog) {
     ui->setupUi(this);
 }
 
-FormatDialog::~FormatDialog()
-{
+FormatDialog::~FormatDialog() {
     delete ui;
 }

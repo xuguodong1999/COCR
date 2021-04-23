@@ -61,6 +61,25 @@
     </message>
 </context>
 <context>
+    <name>FormatDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>copy to clip board</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>back</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ImageWidget</name>
     <message>
         <source>Image Loader</source>

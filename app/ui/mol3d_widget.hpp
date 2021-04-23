@@ -1,7 +1,7 @@
 #ifndef _XGD_MOL3D_WIDGET_HPP_
 #define _XGD_MOL3D_WIDGET_HPP_
 
-#include "gesture_widget.hpp"
+//#include "gesture_widget.hpp"
 #include <QWidget>
 
 class Mol3DWindow;
@@ -15,7 +15,7 @@ namespace xgd {
     class JMol;
 }
 // Qt3DWindow 无法生成 QGestureEvent
-class Mol3DWidget : public GestureWidget {
+class Mol3DWidget : public QWidget {
 Q_OBJECT
     std::shared_ptr<xgd::JMol> mol, newMol;
     Mol3DWindow *window;

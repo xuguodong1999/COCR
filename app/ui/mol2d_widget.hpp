@@ -1,7 +1,7 @@
 #ifndef _XGD_MOL2D_WIDGET_HPP_
 #define _XGD_MOL2D_WIDGET_HPP_
 
-#include "jmol.hpp"
+#include "./chem/jmol.hpp"
 #include "gesture_view.hpp"
 #include <QGraphicsScene>
 #include <QGraphicsView>

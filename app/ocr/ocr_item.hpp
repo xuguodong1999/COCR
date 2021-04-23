@@ -2,8 +2,8 @@
 #define _XGD_OCR_TYPES_HPP_
 
 #include "detector_object.hpp"
-#include "jatom.hpp"
-#include "jbond.hpp"
+#include "../chem/jatom.hpp"
+#include "../chem/jbond.hpp"
 #include <string>
 
 namespace xgd {

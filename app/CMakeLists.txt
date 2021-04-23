@@ -46,7 +46,7 @@ else (ANDROID)
 endif (ANDROID)
 
 # source dir
-set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./composer)
+set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./chem ./ocr)
 if (NOT ANDROID)
     list(APPEND SRC_DIR_LIST ./opencv_dnn_impl)
 endif (NOT ANDROID)

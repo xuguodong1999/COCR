@@ -1,5 +1,5 @@
-#ifndef _BASE_ITEM_HPP_
-#define _BASE_ITEM_HPP_
+#ifndef _2D_BASE_ITEM_HPP_
+#define _2D_BASE_ITEM_HPP_
 
 #include <QGraphicsItem>
 #include <QObject>
@@ -24,4 +24,4 @@ signals:
     void sig_mouse_click(const QPointF &);
 };
 
-#endif//_BASE_ITEM_HPP_
+#endif//_2D_BASE_ITEM_HPP_

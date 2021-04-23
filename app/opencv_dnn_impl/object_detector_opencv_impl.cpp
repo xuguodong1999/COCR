@@ -46,7 +46,7 @@ bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const
         std::cerr << e.what() << std::endl;
         return false;
     }
-    return true;// FIXME: 不返回的话，gcc-Release编译报错
+    return true;
 }
 
 void xgd::ObjectDetectorOpenCVImpl::freeModel() {

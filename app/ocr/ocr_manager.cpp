@@ -1,7 +1,9 @@
 #include "ocr_manager.hpp"
 #include "color_types.hpp"
+
 #include "detector_object.hpp"
-#include "jbond.hpp"
+#include "../chem/jbond.hpp"
+
 #include "opencv_util.hpp"
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>

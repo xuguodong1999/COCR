@@ -1,7 +1,7 @@
 #ifndef _XGD_GRAPH_COMPOSER_HPP_
 #define _XGD_GRAPH_COMPOSER_HPP_
 
-#include "jmol.hpp"
+#include "../chem/jmol.hpp"
 #include "ocr_item.hpp"
 #include <utility>
 #include <vector>

@@ -9,6 +9,7 @@
 #include <functional>
 
 using id_type = size_t;
+
 namespace xgd {
     class JMol {
     protected:
@@ -106,7 +107,7 @@ namespace xgd {
 
         virtual bool generate3D() = 0;
 
-
+        virtual void tryExpand();
     };
 }
 #endif//_XGD_JMOL_HPP_

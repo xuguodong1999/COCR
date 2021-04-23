@@ -1,8 +1,6 @@
 #ifndef _MOL3D_BUILDER_HPP_
 #define _MOL3D_BUILDER_HPP_
 
-#include "mol3d_entity.hpp"
-
 #include <QObject>
 #include <QColor>
 #include <QVector3D>
@@ -11,14 +9,18 @@
 #include <memory>
 
 namespace Qt3DCore {
+    class QTransform;
+
     class QEntity;
 }
-
 
 namespace xgd {
     class JMol;
 }
 
+class SphereWrapper;
+
+class BaseWrapper;
 
 class Mol3DBuilder : public QObject {
 Q_OBJECT

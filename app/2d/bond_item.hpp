@@ -1,8 +1,10 @@
-#ifndef _BOND_ITEM_HPP_
-#define _BOND_ITEM_HPP_
+#ifndef _2D_BOND_ITEM_HPP_
+#define _2D_BOND_ITEM_HPP_
 
 #include "base_item.hpp"
-#include "jbond.hpp"
+
+#include "../chem/jbond.hpp"
+
 #include <QGraphicsPathItem>
 #include <QGraphicsItemGroup>
 
@@ -35,4 +37,4 @@ private slots:
 };
 
 
-#endif//_BOND_ITEM_HPP_
+#endif//_2D_BOND_ITEM_HPP_

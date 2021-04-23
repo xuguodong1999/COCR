@@ -315,4 +315,8 @@ void JMol::setStartAddingHydrogens(bool startAddingHydrogens) {
     JMol::startAddingHydrogens = startAddingHydrogens;
 }
 
+void JMol::tryExpand() {
+
+}
+
 

@@ -1,5 +1,5 @@
 #include "view3d_widget.h"
-#include "../3d/mol3d_entity.hpp"
+#include "../3d/entity_base.hpp"
 #include "ui_view3d_widget.h"
 #include "mol3d_widget.hpp"
 
@@ -15,6 +15,8 @@ View3DWidget::View3DWidget(QWidget *parent)
     l->setContentsMargins(0, 0, 0, 0);
     l->setSpacing(0);
     ui->container->setLayout(l);
+
+
 }
 
 View3DWidget::~View3DWidget() {

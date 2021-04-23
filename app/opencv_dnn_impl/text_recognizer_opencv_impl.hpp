@@ -1,7 +1,7 @@
 #ifndef _XGD_TEXT_RECOGNITION_OPENCV_DNN_IMPL_HPP_
 #define _XGD_TEXT_RECOGNITION_OPENCV_DNN_IMPL_HPP_
 
-#include "text_recognizer.hpp"
+#include "../ocr/text_recognizer.hpp"
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
 #include <string>

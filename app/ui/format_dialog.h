@@ -4,15 +4,15 @@
 #include <QDialog>
 
 namespace Ui {
-class FormatDialog;
+    class FormatDialog;
 }
 
-class FormatDialog : public QDialog
-{
-    Q_OBJECT
+class FormatDialog : public QDialog {
+Q_OBJECT
 
 public:
     explicit FormatDialog(QWidget *parent = nullptr);
+
     ~FormatDialog();
 
 private:

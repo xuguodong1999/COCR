@@ -1,7 +1,7 @@
 #ifndef _XGD_OBJECT_DETECTION_NCNN_IMPL_HPP_
 #define _XGD_OBJECT_DETECTION_NCNN_IMPL_HPP_
 
-#include "object_detector.hpp"
+#include "../ocr/object_detector.hpp"
 #include <string>
 #include <memory>
 #include <vector>
@@ -24,10 +24,10 @@ namespace xgd {
 
         bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth);
 
-        void freeModel();
+        void freeModel()override;
 
         std::pair<cv::Mat, std::vector<DetectorObject>>
-        detect(const cv::Mat &_originImage);
+        detect(const cv::Mat &_originImage)override;
     };
 }
 #endif//_XGD_OBJECT_DETECTION_NCNN_IMPL_HPP_

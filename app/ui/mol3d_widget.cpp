@@ -1,5 +1,5 @@
 #include "mol3d_widget.hpp"
-#include "jmol.hpp"
+#include "../chem/jmol.hpp"
 #include "../3d/mol3d_window.hpp"
 #include "../3d/mol3d_builder.hpp"
 #include "waithint_widget.h"
@@ -9,7 +9,7 @@
 #include <QGesture>
 #include <QThreadPool>
 
-Mol3DWidget::Mol3DWidget(QWidget *parent) : GestureWidget(parent), mol(nullptr), newMol(nullptr) {
+Mol3DWidget::Mol3DWidget(QWidget *parent) : QWidget(parent), mol(nullptr), newMol(nullptr) {
     root = new Qt3DCore::QEntity();
 
     builder = new Mol3DBuilder(this, root);

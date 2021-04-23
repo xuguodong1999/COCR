@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <QColor>
 #include <QString>
+
 using id_type = size_t;
 
 namespace xgd {
@@ -63,7 +64,7 @@ namespace xgd {
 
         id_type getId();
 
-        QString getQName()const;
+        QString getQName() const;
 
         const std::string &getName() const;
 
