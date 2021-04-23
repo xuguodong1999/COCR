@@ -18,6 +18,7 @@ public:
 
 private:
     Ui::ImageWidget *ui;
+
 signals:
 
     void sig_ocr_btn_clicked(const QImage &_image);
@@ -27,6 +28,14 @@ signals:
 public slots:
 
     void clearImage();
+
+private slots:
+
+    void showImage();
+
+    void openImage();
+
+    void binaryImage();
 };
 
 #endif // IMAGE_WIDGET_H

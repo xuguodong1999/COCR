@@ -17,12 +17,13 @@ namespace xgd {
 // Qt3DWindow 无法生成 QGestureEvent
 class Mol3DWidget : public QWidget {
 Q_OBJECT
-    std::shared_ptr<xgd::JMol> mol, newMol;
+    std::shared_ptr<xgd::JMol> mol;
     Mol3DWindow *window;
     QWidget *mol3DWindowContainer;
     WaitHintWidget *hintWidget;
     Qt3DCore::QEntity *root;
     Mol3DBuilder *builder;
+    float minViewWidth;
 public:
     Mol3DWidget(QWidget *parent = nullptr);
 
@@ -30,9 +31,9 @@ public:
 
     void startWaitHint();
 
-    QString makeAtomInto(const size_t &_aid);
+    QString makeAtomInfo(const size_t &_aid);
 
-    QString makeBondInto(const size_t &_bid);
+    QString makeBondInfo(const size_t &_bid);
 
 protected:
     void resizeEvent(QResizeEvent *e) override;

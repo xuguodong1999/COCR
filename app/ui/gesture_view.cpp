@@ -116,6 +116,7 @@ void GestureView::reset() {
     QGraphicsView::centerOn(0, 0);
     QGraphicsView::rotate(-sumAngle);
     QGraphicsView::scale(1.f / sumScale, 1.f / sumScale);
+    setSceneRect(QRectF(0, 0, width(), height()));
     sumAngle = 0;
     sumScale = 1;
 }

@@ -10,13 +10,14 @@
 #include <QWidget>
 #include <QLabel>
 #include <QToolButton>
-
+#include <QStack>
 #include <QPen>
 #include <QPainter>
 #include <QPixmap>
 #include <QPainterPath>
 
-using ui_script_type = QList<QList<QPointF>>;
+using ui_stroke_type = QList<QPointF>;
+using ui_script_type = QList<ui_stroke_type>;
 
 class SketchWidget : public QWidget {
 Q_OBJECT
@@ -49,9 +50,13 @@ private:
     QPainter painter;
     QPen *mPen;
     QColor *mBgColor;
-    ui_script_type ptsList;
-
+    ui_script_type currentScript;
+    QStack<ui_stroke_type> historyStrokeStack;
 public slots:
+
+    void undo();
+
+    void redo();
 
     void reset();
 

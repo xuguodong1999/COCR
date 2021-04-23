@@ -78,6 +78,26 @@
         <source>back</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Copy To Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Success</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FileDialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save success</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ImageWidget</name>
@@ -160,15 +180,32 @@
         <source>You have to check out agreement to use this software</source>
         <translation>使用我们的软件前，你需要阅读并同意用户协议</translation>
     </message>
-</context>
-<context>
-    <name>Mol3DWidget</name>
     <message>
-        <source>atom </source>
+        <source>No Molecule Detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source> picked</source>
+        <source>Nothing detected and it may be a bug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3D Molecule build failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nothing to preview and it may be a bug</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Mol2DWidget</name>
+    <message>
+        <source>atom (global id=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>) picked
+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -180,7 +217,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>bond </source>
+        <source>bond (global id=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>type: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>atom 1: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>atom 2: </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Mol3DWidget</name>
+    <message>
+        <source>element: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>mass: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -193,6 +253,19 @@
     </message>
     <message>
         <source>type: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>atom (global id=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>) picked
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bond (global id=</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -278,7 +351,7 @@
     </message>
     <message>
         <source>copy</source>
-        <translation>复制</translation>
+        <translation type="vanished">复制</translation>
     </message>
     <message>
         <source>format</source>
@@ -286,15 +359,23 @@
     </message>
     <message>
         <source>smi</source>
-        <translation>SMILES 格式</translation>
+        <translation type="vanished">SMILES 格式</translation>
     </message>
     <message>
         <source>pdb</source>
-        <translation>PDB 格式</translation>
+        <translation type="vanished">PDB 格式</translation>
     </message>
     <message>
         <source>export</source>
         <translation>导出</translation>
+    </message>
+    <message>
+        <source>Format algorithm failed on your molecule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No molecule found</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -309,7 +390,7 @@
     </message>
     <message>
         <source>see H</source>
-        <translation>观察氢原子</translation>
+        <translation type="vanished">观察氢原子</translation>
     </message>
     <message>
         <source>selected</source>
@@ -321,7 +402,7 @@
     </message>
     <message>
         <source>copy</source>
-        <translation>复制</translation>
+        <translation type="vanished">复制</translation>
     </message>
     <message>
         <source>format</source>
@@ -329,15 +410,23 @@
     </message>
     <message>
         <source>smi</source>
-        <translation>SMILES 格式</translation>
+        <translation type="vanished">SMILES 格式</translation>
     </message>
     <message>
         <source>pdb</source>
-        <translation>PDB 格式</translation>
+        <translation type="vanished">PDB 格式</translation>
     </message>
     <message>
         <source>export</source>
         <translation>导出</translation>
+    </message>
+    <message>
+        <source>Format algorithm failed on your molecule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No molecule found</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1,4 +1,3 @@
-#include <QThreadPool>
 #include "main_tab_widget.h"
 #include "ui_main_tab_widget.h"
 #include "welcome_widget.h"
@@ -7,16 +6,17 @@
 #include "view3d_widget.h"
 #include "image_widget.h"
 #include "camera_widget.h"
-#include "../ocr/ocr_runnable.hpp"
+#include "ocr/ocr_runnable.hpp"
 #include "application.hpp"
-#include "../chem/jmol.hpp"
+#include "chem/jmol.hpp"
+#include "chem/jmol_manager.hpp"
 #include <QTimer>
 #include <QMessageBox>
 
 MainTabWidget::MainTabWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::MainTabWidget),
           view2DWidget(nullptr), view3DWidget(nullptr), cameraWidget(nullptr),
-          mol(nullptr), ocrThread(new OCRThread(this)), lastSource(DataSource::PAINT),
+          ocrThread(new OCRThread(this)), lastSource(DataSource::PAINT),
           isOCRBtnClicked(false), isAgreementChecked(false), isMolLatest(false) {
     ui->setupUi(this);
     // 欢迎页
@@ -62,6 +62,10 @@ MainTabWidget::MainTabWidget(QWidget *parent)
     // 设置状态更新避免重复识别
     connect(paintWidget, &PaintWidget::sig_modified, [&]() { isMolLatest = false; });
     connect(imageWidget, &ImageWidget::sig_modified, [&]() { isMolLatest = false; });
+    // FIXME: 安卓设备上 QCameraViewFinder 有 bug，据说不支持，最简单的做法是加 Qml
+//#ifdef Q_OS_ANDROID
+    ui->tabWidget->setTabVisible(5, false);
+//#endif
 }
 
 
@@ -129,10 +133,26 @@ void MainTabWidget::resizeEvent(QResizeEvent *e) {
 
 void MainTabWidget::onOcrJobReady() {
     isMolLatest = true;
-    mol = ocrThread->getMol();
+    xgd::JMolManager::GetInstance().setInputMol(ocrThread->getMol());
+    auto mol = xgd::JMolManager::GetInstance().getInputMol();
+    if (!mol) {
+        QMessageBox::information(
+                this, tr("No Molecule Detected"),
+                tr("Nothing detected and it may be a bug"),
+                QMessageBox::Ok);
+        return;
+    }
     if (ui->tabWidget->currentIndex() == 2) {
         view2DWidget->syncMolToScene(mol);
     } else if (ui->tabWidget->currentIndex() == 3) {
+        mol = xgd::JMolManager::GetInstance().getFullHydrogenInputMol();
+        if (!mol) {
+            QMessageBox::information(
+                    this, tr("3D Molecule build failed"),
+                    tr("Nothing to preview and it may be a bug"),
+                    QMessageBox::Ok);
+            return;
+        }
         view3DWidget->syncMolToScene(mol);
     }
 }

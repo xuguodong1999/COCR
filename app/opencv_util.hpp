@@ -34,5 +34,8 @@ namespace xgd {
     cv::Mat convertQImageToMat(const QImage &_img);
 
     cv::Mat convertQPixmapToMat(const QPixmap &_img);
+
+    QImage binaryAlphaImage(cv::Mat &src);
+
 }
 #endif//_XGD_OPENCV_UTIL_HPP_

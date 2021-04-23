@@ -24,6 +24,8 @@ PaintWidget::PaintWidget(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWid
     connect(ui->ocr_btn, &QToolButton::clicked, [&]() {
         emit sig_ocr_btn_clicked(sketchWidget->getScript());
     });
+    connect(ui->undo_btn, &QToolButton::clicked, sketchWidget, &SketchWidget::undo);
+    connect(ui->redo_btn, &QToolButton::clicked, sketchWidget, &SketchWidget::redo);
 }
 
 void PaintWidget::readConfigurations() {

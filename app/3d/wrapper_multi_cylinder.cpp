@@ -7,7 +7,7 @@
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DCore/QTransform>
 
-#include <utility>
+#include <cmath>
 #include <optional>
 
 using xgd::MathUtil;

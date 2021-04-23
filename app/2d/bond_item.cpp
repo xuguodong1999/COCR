@@ -1,7 +1,7 @@
 #include "bond_item.hpp"
 #include "atom_item.hpp"
-
-#include "../math_util.hpp"
+#include "ui/view2d_widget.h"
+#include "math_util.hpp"
 
 #include <QDebug>
 #include <QPainter>
@@ -9,8 +9,8 @@
 
 using xgd::MathUtil;
 
-BondItem::BondItem(QGraphicsItem *parent)
-        : BaseItem(parent), mFrom(nullptr), mTo(nullptr), mType(xgd::BondType::SingleBond) {
+BondItem::BondItem(const xgd::id_type &_bid, QGraphicsItem *parent)
+        : BaseItem(parent), bid(_bid), mFrom(nullptr), mTo(nullptr), mType(xgd::BondType::SingleBond) {
     mPathItem = new QGraphicsPathItem(this);
     setFlags(QGraphicsItem::ItemIsSelectable);
 }
@@ -158,4 +158,12 @@ void BondItem::updateBond() {
         }
     }
     mPathItem->setPath(path);
+}
+
+
+void BondItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
+    BaseItem::mousePressEvent(e);
+    if (view2DWidget) {
+        view2DWidget->onBondPicked(bid);
+    }
 }

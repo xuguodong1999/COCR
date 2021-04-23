@@ -6,29 +6,22 @@
             <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>720</width>
-                <height>480</height>
+                <width>480</width>
+                <height>360</height>
             </rect>
         </property>
         <property name="windowTitle">
             <string>Dialog</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout" stretch="6,1">
-            <property name="spacing">
-                <number>0</number>
-            </property>
-            <property name="leftMargin">
-                <number>0</number>
-            </property>
-            <property name="topMargin">
-                <number>0</number>
-            </property>
-            <property name="rightMargin">
-                <number>0</number>
-            </property>
-            <property name="bottomMargin">
-                <number>0</number>
-            </property>
+        <property name="styleSheet">
+            <string notr="true">QDialog{
+                border-color: rgb(239, 41, 41);
+                border-width: 5px;
+                border-style: solid;
+                }
+            </string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
             <item>
                 <widget class="QTextEdit" name="info_edit">
                     <property name="sizePolicy">
@@ -37,16 +30,16 @@
                             <verstretch>0</verstretch>
                         </sizepolicy>
                     </property>
+                    <property name="inputMethodHints">
+                        <set>Qt::ImhNone</set>
+                    </property>
                     <property name="readOnly">
                         <bool>true</bool>
                     </property>
                 </widget>
             </item>
             <item>
-                <layout class="QGridLayout" name="btn_layout" rowstretch="1,1" columnstretch="1,1">
-                    <property name="spacing">
-                        <number>0</number>
-                    </property>
+                <layout class="QGridLayout" name="gridLayout">
                     <item row="0" column="0" colspan="2">
                         <widget class="QToolButton" name="copy_btn">
                             <property name="sizePolicy">
@@ -94,6 +87,9 @@
                             <property name="styleSheet">
                                 <string notr="true">background-color: rgb(196, 160, 0);
                                     color: rgb(255, 255, 255);
+                                    border-color: rgb(239, 41, 41);
+                                    border-width: 5px;
+                                    border-style: solid;
                                 </string>
                             </property>
                             <property name="text">

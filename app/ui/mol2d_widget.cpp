@@ -2,8 +2,8 @@
 #include "2d/atom_item.hpp"
 #include "2d/bond_item.hpp"
 #include "waithint_widget.h"
+#include "chem/jmol.hpp"
 
-#include <QGraphicsTextItem>
 #include <QDebug>
 
 Mol2DWidget::Mol2DWidget(QWidget *parent) : GestureView(parent) {
@@ -12,7 +12,6 @@ Mol2DWidget::Mol2DWidget(QWidget *parent) : GestureView(parent) {
     setAttribute(Qt::WA_AcceptTouchEvents);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
     hintWidget = new WaitHintWidget(this);
 }
 
@@ -42,12 +41,13 @@ void Mol2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
     endWaitHint();
     mol = _mol;
     scene->clear();
+    reset();
     if (!mol)return;
     float delta = (std::min)(width(), height()) * 0.1;
     mol->norm2D(width(), height(), delta, delta);
     std::unordered_map<size_t, AtomItem *> atomItemMap;
     mol->loopAtomVec([&](xgd::JAtom &_atom) {
-        auto atomItem = new AtomItem();
+        auto atomItem = new AtomItem(_atom.getId());
         atomItem->setHTML(getRichText(_atom.getName()));
         atomItem->setLeftTop(_atom.x0, _atom.y0);
         atomItemMap[_atom.getId()] = atomItem;
@@ -57,7 +57,7 @@ void Mol2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
         scene->addItem(atomItem);
     });
     mol->loopBondVec([&](xgd::JBond &_bond) {
-        auto bondItem = new BondItem();
+        auto bondItem = new BondItem(_bond.getId());
         auto from = _bond.getFrom(), to = _bond.getTo();
         if (!(from && to)) { return; }
         auto itFrom = atomItemMap.find(from->getId()), itTo = atomItemMap.find(to->getId());
@@ -72,20 +72,20 @@ void Mol2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
 }
 
 void Mol2DWidget::mouseDoubleClickEvent(QMouseEvent *e) {
-    normalizeMol();
+//    normalizeMol();
     GestureView::mouseDoubleClickEvent(e);
 }
 
 void Mol2DWidget::keyReleaseEvent(QKeyEvent *event) {
-    switch (event->key()) {
-        case Qt::Key_Enter:
-        case Qt::Key_Return:
-        case Qt::Key_Space:
-            normalizeMol();
-            break;
-        default:
-            break;
-    }
+//    switch (event->key()) {
+//        case Qt::Key_Enter:
+//        case Qt::Key_Return:
+//        case Qt::Key_Space:
+//            normalizeMol();
+//            break;
+//        default:
+//            break;
+//    }
     GestureView::keyReleaseEvent(event);
 }
 
@@ -105,4 +105,32 @@ void Mol2DWidget::endWaitHint() {
 }
 
 
+QString Mol2DWidget::makeAtomInfo(const size_t &_aid) {
+    QString info = tr("atom (global id=") + QString::number(_aid) + tr(") picked\n");
+    if (mol) {
+        auto atom = mol->getAtom(_aid);
+        if (atom) {
+            info.append("\n" + tr("element: ") + atom->getQName());
+            info.append("\n" + tr("mass: ") + QString::number(atom->getMass(), 'f', 4));
+        }
+    }
+    return info;
+}
+
+QString Mol2DWidget::makeBondInfo(const size_t &_bid) {
+    QString info = tr("bond (global id=") + QString::number(_bid) + tr(") picked\n");
+    if (mol) {
+        auto bond = mol->getBond(_bid);
+        if (bond) {
+            info.append("\n" + tr("type: ") + bond->getQName());
+            auto from = bond->getFrom();
+            auto to = bond->getTo();
+            if (from && to) {
+                info.append("\n" + tr("atom 1: ") + from->getQName());
+                info.append("\n" + tr("atom 2: ") + to->getQName());
+            }
+        }
+    }
+    return info;
+}
 

@@ -6,9 +6,6 @@
 namespace Ui {
     class MainTabWidget;
 }
-namespace xgd {
-    class JMol;
-}
 class WelcomeWidget;
 
 class PaintWidget;
@@ -42,7 +39,6 @@ private:
     ImageWidget *imageWidget;
     CameraWidget *cameraWidget;
     OCRThread *ocrThread;
-    std::shared_ptr<xgd::JMol> mol;
     bool is2DLastUsed;
     bool isMolLatest;
     bool isOCRBtnClicked;

@@ -49,7 +49,9 @@ std::shared_ptr<xgd::JMol> xgd::OCRManager::ocr(cv::Mat &_originInput, bool _deb
         return nullptr;
     }
     try {
-        return composer.compose(items);
+        auto mol = composer.compose(items);
+        mol->set2DInfoLatest(false);
+        return mol;
     } catch (std::exception &e) {
         qDebug() << __FUNCTION__ << "compose catch" << e.what();
         return nullptr;

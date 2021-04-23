@@ -22,10 +22,10 @@ namespace xgd {
     public:
         bool initModel(const std::string &_cfgFile, const std::string &_weightsFile);
 
-        void freeModel()override;
+        void freeModel() override;
 
         std::pair<cv::Mat, std::vector<DetectorObject>>
-        detect(const cv::Mat &_originImage)override;
+        detect(const cv::Mat &_originImage) override;
     };
 }
 #endif//_XGD_OBJECT_DETECTION_OPENCV_DNN_IMPL_HPP_

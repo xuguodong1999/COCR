@@ -159,7 +159,7 @@ bool JMolAdapter::runForcefield() {
     if (!pFF) {
         return false;
     }
-    pFF->SetLogLevel(OBFF_LOGLVL_LOW);
+    pFF->SetLogLevel(OBFF_LOGLVL_NONE);
     if (!pFF->Setup(*obMol)) {
         qDebug() << "pFF->Setup ret false";
     }
@@ -302,6 +302,7 @@ void JMolAdapter::addOBAtom(JAtom &_atom) {
     obAtom.SetFormalCharge(_atom.getCharge());
     obAtom.SetId(obMol->NumAtoms());
     obMol->AddAtom(obAtom, false);
+
 //    if (ElementType::H == _atom.getType()) {
 //        obMol->GetAtomById(obAtom.GetId())->SetAtomicNum(1);
 //    }
@@ -424,6 +425,12 @@ void JMolAdapter::display() {
 std::shared_ptr<JMol> JMolAdapter::deepClone() const {
     auto newMol = std::make_shared<JMolAdapter>(*this);
     return newMol;
+}
+
+std::vector<std::string> GetWritableFormats() {
+    std::vector<std::string> result;
+    OpenBabel::OBPlugin::ListAsVector("formats", nullptr, result);
+    return result;
 }
 
 

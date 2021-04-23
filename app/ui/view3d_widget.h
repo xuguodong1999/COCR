@@ -30,6 +30,15 @@ public:
 private:
     Ui::View3DWidget *ui;
     Mol3DWidget *mol3DWidget;
+    std::string currentFormat;
+    int hyBtnClickTimes, expBtnClickTimes;
+private slots:
+
+    void showFormatDialog();
+
+    void switchSuperAtomState();
+
+    void reformatInputState();
 };
 
 #endif // VIEW3D_WIDGET_H

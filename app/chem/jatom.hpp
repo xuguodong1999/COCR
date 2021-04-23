@@ -9,7 +9,6 @@
 #include <QColor>
 #include <QString>
 
-using id_type = size_t;
 
 namespace xgd {
     class JMol;
@@ -31,6 +30,8 @@ namespace xgd {
     extern std::vector<float> ELEMENT_RADIUS_LIST;
     extern std::unordered_map<std::string, ElementType> STR_ELEMENT_MAP;
     extern std::unordered_map<ElementType, int> ELEMENT_COMMON_NEB_NUM_MAP;
+
+    using id_type = size_t;
 
     class JAtom {
         ElementType type;

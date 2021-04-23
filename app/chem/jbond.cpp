@@ -6,7 +6,7 @@
 
 using namespace xgd;
 
-JBond::JBond(const size_t &_id, std::shared_ptr<JAtom> _from, std::shared_ptr<JAtom> _to, const BondType &_type,
+JBond::JBond(const id_type &_id, std::shared_ptr<JAtom> _from, std::shared_ptr<JAtom> _to, const BondType &_type,
              const float &_offset1, const float &_offset2)
         : id(_id), type(_type), from(std::move(_from)), to(std::move(_to)), offset1(_offset1), offset2(_offset2) {
 }
@@ -19,7 +19,7 @@ std::shared_ptr<JAtom> JBond::getTo() const {
     return to;
 }
 
-size_t JBond::getId() const {
+id_type JBond::getId() const {
     return id;
 }
 

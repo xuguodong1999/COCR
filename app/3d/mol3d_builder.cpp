@@ -29,8 +29,7 @@ inline QVector3D getQVector3D(const std::shared_ptr<xgd::JAtom> &_atom) {
 }
 
 
-void Mol3DBuilder::prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_viewSize,
-                           const QVector3D &_blankArea) {
+void Mol3DBuilder::prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_viewSize, const QVector3D &_blankArea) {
     qDebug() << __FUNCTION__;
     mol = std::move(_mol);
     mol->norm3D(_viewSize.x(), _viewSize.y(), _viewSize.z(),

@@ -66,3 +66,19 @@ cv::Mat xgd::convertQImageToMat(const QImage &_img) {
 cv::Mat xgd::convertQPixmapToMat(const QPixmap &_img) {
     return xgd::convertQImageToMat(_img.toImage());
 }
+
+#include <opencv2/highgui.hpp>
+
+QImage xgd::binaryAlphaImage(cv::Mat &src) {
+    cv::Mat result;
+    cv::cvtColor(src, result, cv::COLOR_RGBA2GRAY);
+    cv::adaptiveThreshold(result, result, 255.0,
+                          cv::ADAPTIVE_THRESH_GAUSSIAN_C,
+                          cv::THRESH_BINARY, 21, 10);
+    cv::cvtColor(result, result, cv::COLOR_GRAY2BGRA);
+    const uchar *pSrc = (const uchar *) result.data;
+    // Create QImage with same dimensions as input Mat
+    QImage image(pSrc, result.cols, result.rows, result.step, QImage::Format_ARGB32);
+    return image.copy();
+}
+

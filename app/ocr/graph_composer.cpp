@@ -491,6 +491,5 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             qDebug() << "error: not from && to@" << __FILE__ << "@" << __LINE__;
         }
     }
-    mol->set2DInfoLatest();
     return mol;
 }

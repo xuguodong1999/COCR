@@ -23,3 +23,7 @@ void BaseItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *e) {
     isPressed = false;
     QGraphicsItem::mouseReleaseEvent(e);
 }
+
+void BaseItem::SetView2DWidget(View2DWidget *_view2DWidget) {
+    view2DWidget = _view2DWidget;
+}

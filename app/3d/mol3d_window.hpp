@@ -56,6 +56,8 @@ public:
 
     ~Mol3DWindow() = default;
 
+    void reset();
+
 protected:
     bool event(QEvent *event) override;
 
@@ -82,7 +84,6 @@ private:
 
     void translate(const QVector2D &_p);
 
-    void reset();
 
     void rotateMolEntity(const QVector2D &_dir);
 

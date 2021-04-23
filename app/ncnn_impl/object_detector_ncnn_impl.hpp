@@ -24,10 +24,10 @@ namespace xgd {
 
         bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth);
 
-        void freeModel()override;
+        void freeModel() override;
 
         std::pair<cv::Mat, std::vector<DetectorObject>>
-        detect(const cv::Mat &_originImage)override;
+        detect(const cv::Mat &_originImage) override;
     };
 }
 #endif//_XGD_OBJECT_DETECTION_NCNN_IMPL_HPP_

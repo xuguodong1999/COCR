@@ -30,8 +30,8 @@ Q_DECLARE_METATYPE(ui_script_type)
 SketchWidget::SketchWidget(QWidget *parent, QPen *_pen, QColor *_bgColor)
         : QWidget(parent), mPen(_pen), mBgColor(_bgColor) {
     qRegisterMetaTypeStreamOperators<ui_script_type>("QList<QList<QPointF>>");
-    ptsList = leafxyApp->getSettings().value("sketch_widget/last_script", QVariant::fromValue(
-            ptsList)).value<ui_script_type>();
+    currentScript = leafxyApp->getSettings().value("sketch_widget/last_script", QVariant::fromValue(
+            currentScript)).value<ui_script_type>();
 //    if (!ptsList.empty()) {
 //        QTimer::singleShot(50, [&]() {
 //            auto result = QMessageBox::information(
@@ -60,11 +60,12 @@ void SketchWidget::paintEvent(QPaintEvent *event) {
 void SketchWidget::mousePressEvent(QMouseEvent *event) {
 //    qDebug() << "SketchWidget::mousePressEvent";
     QWidget::mousePressEvent(event);
+    historyStrokeStack.clear();
     lastPos = event->pos();
     beginPenDraw();
     painter.drawLine(lastPos, lastPos);
     updateRect(lastPos, lastPos);
-    ptsList.push_back(QList<QPointF>({lastPos}));
+    currentScript.push_back(QList<QPointF>({lastPos}));
     event->ignore();
 }
 
@@ -75,7 +76,7 @@ void SketchWidget::mouseMoveEvent(QMouseEvent *event) {
     painter.drawLine(lastPos, currentPos);
     updateRect(currentPos, lastPos);
     lastPos = currentPos;
-    ptsList.back().push_back(lastPos);
+    currentScript.back().push_back(lastPos);
     event->ignore();
 }
 
@@ -84,7 +85,7 @@ void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
     QWidget::mouseReleaseEvent(event);
     endPenDraw();
     emit sig_modified();
-    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(ptsList));
+    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
     event->ignore();
 }
 
@@ -96,9 +97,9 @@ void SketchWidget::resizeEvent(QResizeEvent *event) {
 void SketchWidget::sync() {
     bufPixmap = QPixmap(size());
     bufPixmap.fill(*mBgColor);
-    if (!ptsList.empty()) {
+    if (!currentScript.empty()) {
         beginPenDraw();
-        for (auto &pts : ptsList) {
+        for (auto &pts : currentScript) {
             if (pts.size() > 1) {
                 for (size_t i = 1; i < pts.size(); i++) {
                     painter.drawLine(pts[i - 1], pts[i]);
@@ -123,7 +124,7 @@ void SketchWidget::endPenDraw() {
 }
 
 void SketchWidget::reset() {
-    ptsList.clear();
+    currentScript.clear();
     sync();
 }
 
@@ -131,6 +132,22 @@ SketchWidget::~SketchWidget() {
 }
 
 const ui_script_type &SketchWidget::getScript() const {
-    return ptsList;
+    return currentScript;
+}
+
+void SketchWidget::undo() {
+    if (currentScript.empty()) { return; }
+    auto &lastStroke = currentScript.back();
+    historyStrokeStack.push(std::move(lastStroke));
+    currentScript.pop_back();
+    sync();
+}
+
+void SketchWidget::redo() {
+    if (historyStrokeStack.empty()) { return; }
+    auto &lastStroke = historyStrokeStack.back();
+    currentScript.push_back(std::move(lastStroke));
+    historyStrokeStack.pop_back();
+    sync();
 }
 

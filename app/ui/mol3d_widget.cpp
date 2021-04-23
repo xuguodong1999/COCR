@@ -9,7 +9,7 @@
 #include <QGesture>
 #include <QThreadPool>
 
-Mol3DWidget::Mol3DWidget(QWidget *parent) : QWidget(parent), mol(nullptr), newMol(nullptr) {
+Mol3DWidget::Mol3DWidget(QWidget *parent) : QWidget(parent), mol(nullptr), minViewWidth(200) {
     root = new Qt3DCore::QEntity();
 
     builder = new Mol3DBuilder(this, root);
@@ -32,14 +32,13 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : QWidget(parent), mol(nullptr), newMo
 }
 
 void Mol3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
-    mol = _mol;
-    newMol = mol->deepClone();
-    newMol->addAllHydrogens();
+    mol = std::move(_mol);
+    window->reset();
     qDebug() << __FUNCTION__;
-    static QVector3D viewSize = window->getViewSize() / 1.5;
+    minViewWidth = (std::min)(width(), height()) / 6;
     QThreadPool::globalInstance()->start([&]() {
 //        QThread::msleep(500);
-        builder->prepare(newMol, viewSize);
+        builder->prepare(mol, {minViewWidth, minViewWidth, minViewWidth});
     });
     startWaitHint();
 }
@@ -58,10 +57,10 @@ void Mol3DWidget::resizeEvent(QResizeEvent *e) {
     QWidget::resizeEvent(e);
 }
 
-QString Mol3DWidget::makeAtomInto(const size_t &_aid) {
-    QString info = tr("atom ") + QString::number(_aid) + tr(" picked");
-    if (newMol) {
-        auto atom = newMol->getAtom(_aid);
+QString Mol3DWidget::makeAtomInfo(const size_t &_aid) {
+    QString info = tr("atom (global id=") + QString::number(_aid) + tr(") picked\n");
+    if (mol) {
+        auto atom = mol->getAtom(_aid);
         if (atom) {
             info.append("\n" + tr("element: ") + atom->getQName());
             info.append("\n" + tr("mass: ") + QString::number(atom->getMass(), 'f', 4));
@@ -70,10 +69,10 @@ QString Mol3DWidget::makeAtomInto(const size_t &_aid) {
     return info;
 }
 
-QString Mol3DWidget::makeBondInto(const size_t &_bid) {
-    QString info = tr("bond ") + QString::number(_bid) + tr(" picked");
-    if (newMol) {
-        auto bond = newMol->getBond(_bid);
+QString Mol3DWidget::makeBondInfo(const size_t &_bid) {
+    QString info = tr("bond (global id=") + QString::number(_bid) + tr(") picked\n");
+    if (mol) {
+        auto bond = mol->getBond(_bid);
         if (bond) {
             info.append("\n" + tr("type: ") + bond->getQName());
             auto from = bond->getFrom();

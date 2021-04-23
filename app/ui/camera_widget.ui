@@ -384,11 +384,6 @@
                                                     <verstretch>0</verstretch>
                                                 </sizepolicy>
                                             </property>
-                                            <property name="editTriggers">
-                                                <set>
-                                                    QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed
-                                                </set>
-                                            </property>
                                             <property name="showDropIndicator" stdset="0">
                                                 <bool>false</bool>
                                             </property>

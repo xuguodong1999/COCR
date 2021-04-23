@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include <string>
 
 using id_type = size_t;
 
@@ -18,7 +19,7 @@ namespace xgd {
         std::unordered_map<id_type, std::shared_ptr<JAtom>> atomMap;
         std::unordered_map<id_type, std::shared_ptr<JBond>> bondMap;
         bool is3DInfoLatest, is2DInfoLatest, startAddingHydrogens;
-
+        static std::unordered_set<std::string> FORMAT_WRITE_WHITE_LIST;
 
     protected:
 
@@ -28,6 +29,8 @@ namespace xgd {
         std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
 
     public:
+        static bool IsValidWritableFormat(const std::string &_suffix);
+
         void setStartAddingHydrogens(bool startAddingHydrogens = true);
 
         void set2DInfoLatest(bool _is2DInfoLatest = true);
@@ -97,9 +100,9 @@ namespace xgd {
 
         virtual std::string writeAs(const std::string &_formatSuffix) = 0;
 
-        virtual void readAsPDB(const std::string &_pdbBuffer) = 0;
+        virtual void readAsPDB(const std::string &_buffer) = 0;
 
-        virtual void readAsSMI(const std::string &_pdbBuffer) = 0;
+        virtual void readAsSMI(const std::string &_buffer) = 0;
 
         virtual void readAs(const std::string &_dataBuffer, const std::string &_formatSuffix) = 0;
 
@@ -110,4 +113,8 @@ namespace xgd {
         virtual void tryExpand();
     };
 }
+
+// define it in specific impl
+std::vector<std::string> GetWritableFormats();
+
 #endif//_XGD_JMOL_HPP_

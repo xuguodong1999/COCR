@@ -321,7 +321,7 @@ void xgd::JAtom::setId(const id_type &_id) {
     id = _id;
 }
 
-id_type xgd::JAtom::getId() {
+xgd::id_type xgd::JAtom::getId() {
     return id;
 }
 

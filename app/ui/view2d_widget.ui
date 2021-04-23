@@ -139,7 +139,7 @@
                                 </widget>
                             </item>
                             <item>
-                                <layout class="QHBoxLayout" name="expand_layout" stretch="1,1">
+                                <layout class="QHBoxLayout" name="expand_layout" stretch="1">
                                     <property name="spacing">
                                         <number>0</number>
                                     </property>
@@ -158,24 +158,6 @@
                                             </property>
                                             <property name="text">
                                                 <string>expand</string>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QToolButton" name="copy_btn">
-                                            <property name="sizePolicy">
-                                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                                    <horstretch>0</horstretch>
-                                                    <verstretch>0</verstretch>
-                                                </sizepolicy>
-                                            </property>
-                                            <property name="styleSheet">
-                                                <string notr="true">background-color: rgb(143, 89, 2);
-                                                    color: rgb(255, 255, 255);
-                                                </string>
-                                            </property>
-                                            <property name="text">
-                                                <string>copy</string>
                                             </property>
                                         </widget>
                                     </item>
@@ -222,16 +204,6 @@
                                             }
                                         </string>
                                     </property>
-                                    <item>
-                                        <property name="text">
-                                            <string>smi</string>
-                                        </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>pdb</string>
-                                        </property>
-                                    </item>
                                 </widget>
                             </item>
                             <item>
