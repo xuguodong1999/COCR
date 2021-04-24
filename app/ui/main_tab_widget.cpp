@@ -66,6 +66,9 @@ MainTabWidget::MainTabWidget(QWidget *parent)
 //#ifdef Q_OS_ANDROID
     ui->tabWidget->setTabVisible(5, false);
 //#endif
+#ifdef Q_OS_ANDROID
+    ui->tabWidget->setTabVisible(4, false);
+#endif
 }
 
 

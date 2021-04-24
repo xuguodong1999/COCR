@@ -60,8 +60,8 @@ elseif (APPLE)
 elseif (ANDROID)
     set(OpenCV_DIR ${ANDROID_LIB_DIR}/OpenCV-android-sdk/sdk/native/jni)
 elseif (UNIX)
-    set(OpenCV_DIR ${3RD_LIB_DIR}/opencv-lib/lib/cmake/opencv4)
-    # set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
+#    set(OpenCV_DIR ${3RD_LIB_DIR}/opencv-lib/lib/cmake/opencv4)
+     set(OpenCV_DIR /home/xgd/shared/opencv4.5.1/lib/cmake/opencv4)
 endif (MSVC AND WITH_OPENVINO)
 
 # qt for ui

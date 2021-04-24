@@ -20,12 +20,12 @@ namespace xgd {
      */
     class JMolAdapter : public JMol {
         std::shared_ptr<OpenBabel::OBMol> obMol;
-        std::unordered_map<decltype(id), unsigned long> atomIdMap;
-        std::unordered_map<decltype(id), unsigned long> bondIdMap;
-        std::unordered_map<unsigned long, decltype(id)> atomIdMap2;
-        std::unordered_map<unsigned long, decltype(id)> bondIdMap2;
+        std::unordered_map<id_type, unsigned long> atomIdMap;
+        std::unordered_map<id_type, unsigned long> bondIdMap;
+        std::unordered_map<unsigned long, id_type> atomIdMap2;
+        std::unordered_map<unsigned long, id_type> bondIdMap2;
         //<aid,state>,state=true->explicit H; state=false->implicit H
-        std::unordered_map<decltype(id), bool> hydrogenStateMap;
+        std::unordered_map<id_type, bool> hydrogenStateMap;
         bool isOBMolLatest;
 
         bool runForcefield();
@@ -101,6 +101,10 @@ namespace xgd {
         bool generate2D() override;
 
         bool generate3D() override;
+
+        std::vector<std::vector<id_type>> getLSSR() override;
+
+        std::vector<std::vector<id_type>> getSSSR() override;
     };
 }
 

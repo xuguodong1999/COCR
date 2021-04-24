@@ -61,7 +61,7 @@ void ImageWidget::binaryImage() {
     int w = ui->display_label->width(), h = ui->display_label->height();
     if (image->width() > w || image->height() > h) {
         ui->display_label->setPixmap(QPixmap::fromImage(xgd::binaryAlphaImage(cvImage).scaled(
-                w, h, Qt::KeepAspectRatio)));
+                w * 0.7, h * 0.7, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
     } else {
         ui->display_label->setPixmap(QPixmap::fromImage(xgd::binaryAlphaImage(cvImage)));
     }
@@ -72,7 +72,7 @@ void ImageWidget::showImage() {
     int w = ui->display_label->width(), h = ui->display_label->height();
     if (image->width() > w || image->height() > h) {
         ui->display_label->setPixmap(QPixmap::fromImage(image->scaled(
-                w, h, Qt::KeepAspectRatio)));
+                w * 0.7, h * 0.7, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
     } else {
         ui->display_label->setPixmap(QPixmap::fromImage(*image));
     }

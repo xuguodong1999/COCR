@@ -1,7 +1,7 @@
 #include "jmol_adapter.hpp"
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
-#include <openbabel/residue.h>
+#include <openbabel/ring.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/obiter.h>
@@ -425,6 +425,34 @@ void JMolAdapter::display() {
 std::shared_ptr<JMol> JMolAdapter::deepClone() const {
     auto newMol = std::make_shared<JMolAdapter>(*this);
     return newMol;
+}
+
+std::vector<std::vector<id_type>> JMolAdapter::getLSSR() {
+    checkOBMol();
+    const auto &obRingVec = obMol->GetLSSR();
+    decltype(getLSSR()) result(obRingVec.size());
+    for (size_t i = 0; i < obRingVec.size(); i++) {
+        auto &ring = obRingVec[i];
+        result[i].resize(ring->_path.size());
+        for (size_t j = 0; j < ring->_path.size(); j++) {
+            result[i][j] = atomIdMap2[ring->_path[j]];
+        }
+    }
+    return result;
+}
+
+std::vector<std::vector<id_type>> JMolAdapter::getSSSR() {
+    checkOBMol();
+    const auto &obRingVec = obMol->GetSSSR();
+    decltype(getSSSR()) result(obRingVec.size());
+    for (size_t i = 0; i < obRingVec.size(); i++) {
+        auto &ring = obRingVec[i];
+        result[i].resize(ring->_path.size());
+        for (size_t j = 0; j < ring->_path.size(); j++) {
+            result[i][j] = atomIdMap2[ring->_path[j]];
+        }
+    }
+    return result;
 }
 
 std::vector<std::string> GetWritableFormats() {

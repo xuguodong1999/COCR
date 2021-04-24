@@ -491,5 +491,82 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             qDebug() << "error: not from && to@" << __FILE__ << "@" << __LINE__;
         }
     }
+    if (cIds.empty()) {
+        return mol;
+    }
+    // 根据环的存在来修饰化学键
+    // FIXME: 这段代码从 COCR 工程中抄来，我不记得怎么写出这段代码的了
+    auto rings = mol->getSSSR();
+    if (rings.empty()) { return mol; }
+    for (auto &ring:rings) {
+        if (ring.empty()) { continue; }
+        cv::Point2f p(0, 0);
+        for (auto &id:ring) {
+            auto atom = mol->getAtom(id);
+            p.x += atom->x;
+            p.y += atom->y;
+        }
+        p /= static_cast<float>(rings.size());
+        float r = 0;
+        for (auto &id:ring) {
+            auto atom = mol->getAtom(id);
+            r += calc_pts_to_pts(p, cv::Point2f(atom->x, atom->y));
+        }
+        r /= static_cast<float>(rings.size());
+        bool needAromatic = false;
+        for (auto &cid:cIds) {
+            auto &circle = _items[cid];
+            if (r - circle.getRadius() > calc_pts_to_pts(p, circle.getCenter())) {
+                needAromatic = true;
+                break;
+            }
+        }
+        qDebug() << "needAromatic=" << needAromatic;
+        if (!needAromatic) { continue; }
+        std::unordered_set<id_type> aidSet;
+        for (auto &id:ring) { aidSet.insert(id); }
+        qDebug() << "aidSet.size()=" << aidSet.size();
+        std::vector<id_type> cb, cb2;
+        //modify_bond
+        mol->loopBondVec([&](xgd::JBond &bond) {
+            if (aidSet.end() != aidSet.find(bond.getFrom()->getId()) &&
+                aidSet.end() != aidSet.find(bond.getTo()->getId())) {
+                cb.push_back(bond.getId());
+            }
+        });
+        qDebug() << "cb.size()=" << cb.size();
+        size_t start = 0;
+        for (size_t i = 0; i < cb.size(); i++) {
+            if (BondType::DoubleBond == mol->getBond(cb[i])->getType()) {
+                start = i;
+                break;
+            }
+        }
+        qDebug() << "start idx=" << start;
+        id_type target = mol->getBond(cb[start])->getFrom()->getId();
+        cb2.push_back(cb[start]);
+        cb.erase(cb.begin() + start);
+        size_t gard = cb.size();
+        while (!cb.empty() && gard--) {
+            for (size_t i = 0; i < cb.size(); i++) {
+                auto from = mol->getBond(cb[i])->getFrom();
+                auto to = mol->getBond(cb[i])->getTo();
+                if (from->getId() == target) {
+                    cb2.push_back(cb[i]);
+                    target = to->getId();
+                    cb.erase(cb.begin() + i);
+                    break;
+                } else if (to->getId() == target) {
+                    cb2.push_back(cb[i]);
+                    target = from->getId();
+                    cb.erase(cb.begin() + i);
+                    break;
+                }
+            }
+        }
+        for (size_t i = 0; i < cb2.size(); i += 1) {
+            mol->getBond(cb2[i])->setType(BondType::DoubleBond);
+        }
+    }
     return mol;
 }
