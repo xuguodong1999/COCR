@@ -125,6 +125,7 @@ void SketchWidget::endPenDraw() {
 
 void SketchWidget::reset() {
     currentScript.clear();
+    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
     sync();
 }
 

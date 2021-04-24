@@ -26,11 +26,22 @@ int testMolFormat() {
     return 0;
 }
 
+#include <QDebug>
+
+int testReg() {
+    QString fuck = "CCl3";
+    QRegExp reg("[CONPS][(Br)(Cl)(F)(I)]");
+    qDebug() << fuck;
+    qDebug() << fuck.replace(reg, ".");
+    return 0;
+}
+
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 //    return testMolFormat();
+//    return testReg();
     Application app(argc, argv);
     MainTabWidget w;
     w.show();

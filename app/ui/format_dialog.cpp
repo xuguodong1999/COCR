@@ -28,7 +28,6 @@ void FormatDialog::setFormatContent(const QString &_formatContent) {
 
 void FormatDialog::copyAs() {
     QClipboard *clipboard = QApplication::clipboard();
-    QString originalText = clipboard->text();
     clipboard->setText(ui->info_edit->toPlainText());
     QMessageBox::information(
             nullptr, tr("Copy To Clipboard"), tr("Success"), QMessageBox::Yes);

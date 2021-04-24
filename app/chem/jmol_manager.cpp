@@ -21,7 +21,7 @@ JMolManager::mol_type JMolManager::getInputMol() {
 
 JMolManager::mol_type JMolManager::getFullHydrogenInputMol() {
     if (!fullHydrogenInputMol) {
-        fullHydrogenInputMol = inputMol->deepClone();
+        fullHydrogenInputMol = getInputMol()->deepClone();
         fullHydrogenInputMol->addAllHydrogens();
     }
     currentMol = fullHydrogenInputMol;

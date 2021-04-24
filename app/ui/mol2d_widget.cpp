@@ -111,7 +111,9 @@ QString Mol2DWidget::makeAtomInfo(const size_t &_aid) {
         auto atom = mol->getAtom(_aid);
         if (atom) {
             info.append("\n" + tr("element: ") + atom->getQName());
-            info.append("\n" + tr("mass: ") + QString::number(atom->getMass(), 'f', 4));
+            if (xgd::ElementType::SA != atom->getType()) {
+                info.append("\n" + tr("mass: ") + QString::number(atom->getMass(), 'f', 4));
+            }
         }
     }
     return info;

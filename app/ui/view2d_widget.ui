@@ -13,7 +13,7 @@
         <property name="windowTitle">
             <string>2D Viewer</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="200,2,10">
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="200,2,40">
             <property name="spacing">
                 <number>0</number>
             </property>

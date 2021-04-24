@@ -253,11 +253,11 @@ void MainTabWidget::doOCR(const QImage &_image) {
         view3DWidget->startWaitHint();
     }
 
-    if (isMolLatest) {
-        onOcrJobReady();
-    } else {
-        ocrThread->bindData(_image);
-        ocrThread->start();
-    }
+//    if (isMolLatest) {
+//        onOcrJobReady();
+//    } else {
+    ocrThread->bindData(_image);
+    ocrThread->start();
+//    }
 }
 

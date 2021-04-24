@@ -333,3 +333,7 @@ void xgd::JAtom::setCharge(int charge) {
     JAtom::charge = charge;
 }
 
+void xgd::JAtom::setType(const ElementType &_type) {
+    type = _type;
+}
+

@@ -64,39 +64,39 @@
     <name>FormatDialog</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>格式文件对话框</translation>
     </message>
     <message>
         <source>copy to clip board</source>
-        <translation type="unfinished"></translation>
+        <translation>复制到剪切板</translation>
     </message>
     <message>
         <source>save</source>
-        <translation type="unfinished"></translation>
+        <translation>保存到设备</translation>
     </message>
     <message>
         <source>back</source>
-        <translation type="unfinished"></translation>
+        <translation>退出</translation>
     </message>
     <message>
         <source>Copy To Clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>复制到剪切板</translation>
     </message>
     <message>
         <source>Success</source>
-        <translation type="unfinished"></translation>
+        <translation>成功</translation>
     </message>
     <message>
         <source>FileDialog</source>
-        <translation type="unfinished"></translation>
+        <translation>文件对话框</translation>
     </message>
     <message>
         <source>Fail to save</source>
-        <translation type="unfinished"></translation>
+        <translation>保存失败</translation>
     </message>
     <message>
         <source>Save success</source>
-        <translation type="unfinished"></translation>
+        <translation>保存成功</translation>
     </message>
 </context>
 <context>
@@ -182,91 +182,91 @@
     </message>
     <message>
         <source>No Molecule Detected</source>
-        <translation type="unfinished"></translation>
+        <translation>没有检测到分子</translation>
     </message>
     <message>
         <source>Nothing detected and it may be a bug</source>
-        <translation type="unfinished"></translation>
+        <translation>检测失败，可能是一个 Bug</translation>
     </message>
     <message>
         <source>3D Molecule build failed</source>
-        <translation type="unfinished"></translation>
+        <translation>3D 分子生成失败</translation>
     </message>
     <message>
         <source>Nothing to preview and it may be a bug</source>
-        <translation type="unfinished"></translation>
+        <translation>无法预览 3D 球棍模型，可能是一个 Bug</translation>
     </message>
 </context>
 <context>
     <name>Mol2DWidget</name>
     <message>
         <source>atom (global id=</source>
-        <translation type="unfinished"></translation>
+        <translation>原子（全局 id=</translation>
     </message>
     <message>
         <source>) picked
 </source>
-        <translation type="unfinished"></translation>
+        <translation>）选中</translation>
     </message>
     <message>
         <source>element: </source>
-        <translation type="unfinished"></translation>
+        <translation>元素：</translation>
     </message>
     <message>
         <source>mass: </source>
-        <translation type="unfinished"></translation>
+        <translation>质量：</translation>
     </message>
     <message>
         <source>bond (global id=</source>
-        <translation type="unfinished"></translation>
+        <translation>键（全局 id=</translation>
     </message>
     <message>
         <source>type: </source>
-        <translation type="unfinished"></translation>
+        <translation>类型：</translation>
     </message>
     <message>
         <source>atom 1: </source>
-        <translation type="unfinished"></translation>
+        <translation>节点1：</translation>
     </message>
     <message>
         <source>atom 2: </source>
-        <translation type="unfinished"></translation>
+        <translation>节点2：</translation>
     </message>
 </context>
 <context>
     <name>Mol3DWidget</name>
     <message>
         <source>element: </source>
-        <translation type="unfinished"></translation>
+        <translation>元素：</translation>
     </message>
     <message>
         <source>mass: </source>
-        <translation type="unfinished"></translation>
+        <translation>质量：</translation>
     </message>
     <message>
         <source>atom 1: </source>
-        <translation type="unfinished"></translation>
+        <translation>节点1：</translation>
     </message>
     <message>
         <source>atom 2: </source>
-        <translation type="unfinished"></translation>
+        <translation>节点2：</translation>
     </message>
     <message>
         <source>type: </source>
-        <translation type="unfinished"></translation>
+        <translation>类型：</translation>
     </message>
     <message>
         <source>atom (global id=</source>
-        <translation type="unfinished"></translation>
+        <translation>原子（全局 id=</translation>
     </message>
     <message>
         <source>) picked
 </source>
-        <translation type="unfinished"></translation>
+        <translation>）选中</translation>
     </message>
     <message>
         <source>bond (global id=</source>
-        <translation type="unfinished"></translation>
+        <translation>键（全局 id=</translation>
     </message>
 </context>
 <context>
@@ -296,35 +296,35 @@
     <name>QObject</name>
     <message>
         <source>Single</source>
-        <translation type="unfinished"></translation>
+        <translation>单键</translation>
     </message>
     <message>
         <source>Double</source>
-        <translation type="unfinished"></translation>
+        <translation>双键</translation>
     </message>
     <message>
         <source>Triple</source>
-        <translation type="unfinished"></translation>
+        <translation>三键</translation>
     </message>
     <message>
         <source>Delocalized</source>
-        <translation type="unfinished"></translation>
+        <translation>离域键</translation>
     </message>
     <message>
         <source>Implicit</source>
-        <translation type="unfinished"></translation>
+        <translation>未知键型</translation>
     </message>
     <message>
         <source>UpBond</source>
-        <translation type="unfinished"></translation>
+        <translation>实楔形键</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation type="unfinished"></translation>
+        <translation>虚楔形键</translation>
     </message>
     <message>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>未设定键型</translation>
     </message>
 </context>
 <context>
@@ -371,11 +371,23 @@
     </message>
     <message>
         <source>Format algorithm failed on your molecule</source>
-        <translation type="unfinished"></translation>
+        <translation>分子格式算法运行失败</translation>
     </message>
     <message>
         <source>No molecule found</source>
-        <translation type="unfinished"></translation>
+        <translation>没有检测到分子</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <source>The molecule you see has SUPER ATOMS.
+They are represented as element At(85, VIIA).
+You can use &apos;expand&apos; and &apos;see H&apos; button to try again</source>
+        <translation>你看见的分子包含由字符串表达的超原子；
+在格式导出时，它们暂时用卤族元素砹表示；
+你可以使用“展开”和“观察氢原子”按钮来尝试展开这些超原子（不一定成功）</translation>
     </message>
 </context>
 <context>
@@ -422,11 +434,23 @@
     </message>
     <message>
         <source>Format algorithm failed on your molecule</source>
-        <translation type="unfinished"></translation>
+        <translation>分子格式算法运行失败</translation>
     </message>
     <message>
         <source>No molecule found</source>
-        <translation type="unfinished"></translation>
+        <translation>没有检测到分子</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <source>The molecule you see has SUPER ATOMS.
+They are represented as element At(85, VIIA).
+You can use &apos;expand&apos; and &apos;see H&apos; button to try again</source>
+        <translation>你看见的分子包含由字符串表达的超原子；
+在格式导出时，它们暂时用卤族元素砹表示；
+你可以使用“展开”和“观察氢原子”按钮来尝试展开这些超原子（不一定成功）</translation>
     </message>
 </context>
 <context>
@@ -490,7 +514,7 @@
                                             &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px;
                                             margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt; &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
                                         </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>

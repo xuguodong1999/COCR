@@ -1,3 +1,4 @@
+#include <QMessageBox>
 #include "view3d_widget.h"
 #include "chem/jmol_manager.hpp"
 #include "chem/jmol.hpp"
@@ -65,7 +66,22 @@ void View3DWidget::showFormatDialog() {
     formatDialog->setWindowTitle(QString::fromStdString(currentFormat));
     auto mol = xgd::JMolManager::GetInstance().getCurrentMol();
     if (mol) {
+        bool hasSuperAtom = false;
+        mol->loopAtomVec([&](xgd::JAtom &atom) {
+            if (xgd::ElementType::SA == atom.getType()) {
+                hasSuperAtom = true;
+                return;
+            }
+        });
         try {
+            if (hasSuperAtom) {
+                QMessageBox::information(
+                        nullptr, tr("Warning"),
+                        tr("The molecule you see has SUPER ATOMS.\n"
+                           "They are represented as element At(85, VIIA).\n"
+                           "You can use 'expand' and 'see H' button to try again"),
+                        QMessageBox::Yes);
+            }
             QString content = QString::fromStdString(mol->writeAs(currentFormat));
             formatDialog->setFormatContent(content);
         } catch (...) {

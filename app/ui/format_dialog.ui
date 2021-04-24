@@ -15,7 +15,7 @@
         </property>
         <property name="styleSheet">
             <string notr="true">QDialog{
-                border-color: rgb(239, 41, 41);
+                border-color: rgb(239, 41, 241);
                 border-width: 5px;
                 border-style: solid;
                 }
@@ -87,7 +87,7 @@
                             <property name="styleSheet">
                                 <string notr="true">background-color: rgb(196, 160, 0);
                                     color: rgb(255, 255, 255);
-                                    border-color: rgb(239, 41, 41);
+                                    border-color: rgb(39, 41, 41);
                                     border-width: 5px;
                                     border-style: solid;
                                 </string>

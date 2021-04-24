@@ -45,6 +45,8 @@ namespace xgd {
     public:
         void setCharge(int charge);
 
+        void setType(const ElementType &_type);
+
         bool isSuperAtom() const;
 
         float x, y, xx, yy, zz;

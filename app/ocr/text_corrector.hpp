@@ -14,14 +14,15 @@ namespace xgd {
         inline static std::unordered_map<std::string, std::string> c2Map;
         inline static std::unordered_multimap<char, char> ccMap;
         static std::vector<std::string> similarChar;
+
+        const std::string &correct2(const std::string &_text);
+
     public:
         static const std::string &GetAlphabet();
 
         static void InitData();
 
-        std::vector<std::string> correct(const std::string &_text);
-
-        const std::string &correct2(const std::string &_text);
+        std::string correct(const std::string &_text);
     };
 }
 #endif//_XGD_TEXT_CORRECTION_HPP_
