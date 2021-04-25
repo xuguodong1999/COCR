@@ -542,7 +542,15 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
 //        qDebug() << "bondVec1.size()=" << bondVec1.size();
         size_t start = 0;
         for (size_t i = 0; i < bondVec1.size(); i++) {
-            if (BondType::DoubleBond == mol->getBond(bondVec1[i])->getType()) {
+            // 优先从官能团出发搜索
+            auto bond = mol->getBond(bondVec1[i]);
+            if (!bond) { continue; }
+            if (bond->getBondOrder() >= 2) {
+                start = i;
+                break;
+            }
+            if (bond->getFrom()->getType() != ElementType::C ||
+                bond->getTo()->getType() != ElementType::C) {
                 start = i;
                 break;
             }
