@@ -27,7 +27,7 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
     onMolUpdated();
     id = _jMolAdapter.id + 1;
     idBase = _jMolAdapter.idBase;
-    is3DInfoLatest = is2DInfoLatest = startAddingHydrogens = false;
+    is3DInfoLatest = is2DInfoLatest = isValenceDataLatest = false;
     const_cast<JMolAdapter &>(_jMolAdapter).loopAtomVec([&](JAtom &_atom) {
         auto atom = std::make_shared<JAtom>(_atom.getId(), ElementType::SA);
         *atom = _atom;
@@ -293,7 +293,7 @@ void JMolAdapter::addOBAtom(JAtom &_atom) {
         obAtom.SetAtomicNum(85);
     } else if (ElementType::H == _atom.getType()) {
         obAtom.SetAtomicNum(1);
-        hydrogenStateMap[_atom.getId()] = startAddingHydrogens;
+        hydrogenStateMap[_atom.getId()] = isValenceDataLatest;
     } else {
 //        qDebug() << "_atom.getAtomicNumber()=" << _atom.getAtomicNumber();
         obAtom.SetAtomicNum(_atom.getAtomicNumber());
@@ -449,7 +449,7 @@ std::vector<std::vector<id_type>> JMolAdapter::getSSSR() {
         auto &ring = obRingVec[i];
         result[i].resize(ring->_path.size());
         for (size_t j = 0; j < ring->_path.size(); j++) {
-            result[i][j] = atomIdMap2[ring->_path[j]];
+            result[i][j] = atomIdMap2[obMol->GetAtom(ring->_path[j])->GetId()];
         }
     }
     return result;

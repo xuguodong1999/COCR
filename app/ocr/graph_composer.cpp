@@ -495,24 +495,27 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
         return mol;
     }
     // 根据环的存在来修饰化学键
-    // FIXME: 这段代码从 COCR 工程中抄来，我不记得怎么写出这段代码的了
     auto rings = mol->getSSSR();
     if (rings.empty()) { return mol; }
     for (auto &ring:rings) {
         if (ring.empty()) { continue; }
+        // 多边形中心
         cv::Point2f p(0, 0);
         for (auto &id:ring) {
             auto atom = mol->getAtom(id);
             p.x += atom->x;
             p.y += atom->y;
         }
-        p /= static_cast<float>(rings.size());
+        p /= static_cast<float>(ring.size());
+        // 多边形半径
         float r = 0;
         for (auto &id:ring) {
             auto atom = mol->getAtom(id);
             r += calc_pts_to_pts(p, cv::Point2f(atom->x, atom->y));
         }
-        r /= static_cast<float>(rings.size());
+        r /= static_cast<float>(ring.size());
+        // 遍历所有检测到的圈，看有没有圈在这个多边形里
+        // TODO: 这是个一对一的婚配问题，显然可以优化下
         bool needAromatic = false;
         for (auto &cid:cIds) {
             auto &circle = _items[cid];
@@ -521,51 +524,53 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
                 break;
             }
         }
-        qDebug() << "needAromatic=" << needAromatic;
+//        qDebug() << "needAromatic=" << needAromatic;
         if (!needAromatic) { continue; }
+        // 下面一波操作把环上的边按照深度优先遍历的顺序存进 bondVec2
+        // TODO: 这个 O(n^2) 还有 bug 的写法有损形象，有空可以优化下
         std::unordered_set<id_type> aidSet;
         for (auto &id:ring) { aidSet.insert(id); }
-        qDebug() << "aidSet.size()=" << aidSet.size();
-        std::vector<id_type> cb, cb2;
-        //modify_bond
+//        qDebug() << "aidSet.size()=" << aidSet.size();
+        std::vector<id_type> bondVec1, bondVec2;
+        // modify_bond
         mol->loopBondVec([&](xgd::JBond &bond) {
             if (aidSet.end() != aidSet.find(bond.getFrom()->getId()) &&
                 aidSet.end() != aidSet.find(bond.getTo()->getId())) {
-                cb.push_back(bond.getId());
+                bondVec1.push_back(bond.getId());
             }
         });
-        qDebug() << "cb.size()=" << cb.size();
+//        qDebug() << "bondVec1.size()=" << bondVec1.size();
         size_t start = 0;
-        for (size_t i = 0; i < cb.size(); i++) {
-            if (BondType::DoubleBond == mol->getBond(cb[i])->getType()) {
+        for (size_t i = 0; i < bondVec1.size(); i++) {
+            if (BondType::DoubleBond == mol->getBond(bondVec1[i])->getType()) {
                 start = i;
                 break;
             }
         }
-        qDebug() << "start idx=" << start;
-        id_type target = mol->getBond(cb[start])->getFrom()->getId();
-        cb2.push_back(cb[start]);
-        cb.erase(cb.begin() + start);
-        size_t gard = cb.size();
-        while (!cb.empty() && gard--) {
-            for (size_t i = 0; i < cb.size(); i++) {
-                auto from = mol->getBond(cb[i])->getFrom();
-                auto to = mol->getBond(cb[i])->getTo();
+//        qDebug() << "start idx=" << start;
+        id_type target = mol->getBond(bondVec1[start])->getFrom()->getId();
+        bondVec2.push_back(bondVec1[start]);
+        bondVec1.erase(bondVec1.begin() + start);
+        size_t gard = bondVec1.size();
+        while (!bondVec1.empty() && gard--) {
+            for (size_t i = 0; i < bondVec1.size(); i++) {
+                auto from = mol->getBond(bondVec1[i])->getFrom();
+                auto to = mol->getBond(bondVec1[i])->getTo();
                 if (from->getId() == target) {
-                    cb2.push_back(cb[i]);
+                    bondVec2.push_back(bondVec1[i]);
                     target = to->getId();
-                    cb.erase(cb.begin() + i);
+                    bondVec1.erase(bondVec1.begin() + i);
                     break;
                 } else if (to->getId() == target) {
-                    cb2.push_back(cb[i]);
+                    bondVec2.push_back(bondVec1[i]);
                     target = from->getId();
-                    cb.erase(cb.begin() + i);
+                    bondVec1.erase(bondVec1.begin() + i);
                     break;
                 }
             }
         }
-        for (size_t i = 0; i < cb2.size(); i += 1) {
-            mol->getBond(cb2[i])->setType(BondType::DoubleBond);
+        for (size_t i = 0; i < bondVec2.size(); i++) {
+            mol->tryMarkDoubleBond(bondVec2[i]);
         }
     }
     return mol;

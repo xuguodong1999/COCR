@@ -59,6 +59,7 @@ std::shared_ptr<JBond> xgd::JMol::getBond(const id_type &_bid) {
 
 
 std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_element, const float &_x, const float &_y) {
+    isValenceDataLatest = false;
     auto atom = std::make_shared<JAtom>(idBase++, _element, _x, _y);
     atomMap[atom->getId()] = atom;
     return atom;
@@ -74,12 +75,14 @@ std::shared_ptr<JAtom> JMol::addAtom(
 
 
 std::shared_ptr<JAtom> JMol::removeAtom(const id_type &_aid) {
+    isValenceDataLatest = false;
     auto atom = getAtom(_aid);
     if (atom) { atomMap.erase(_aid); }
     return atom;
 }
 
 std::shared_ptr<JBond> JMol::removeBond(const id_type &_bid) {
+    isValenceDataLatest = false;
     auto bond = getBond(_bid);
     if (bond) { bondMap.erase(_bid); }
     return bond;
@@ -93,7 +96,7 @@ id_type JMol::getId() {
     return id;
 }
 
-JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false), startAddingHydrogens(false), idBase(0) {
+JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false), isValenceDataLatest(false), idBase(0) {
 
 }
 
@@ -110,6 +113,7 @@ void JMol::loopBondVec(std::function<void(JBond &)> _func) {
 }
 
 std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
+    isValenceDataLatest = false;
     auto atom = std::make_shared<JAtom>(idBase++, static_cast<ElementType>(_atomicNumber));
     atomMap[atom->getId()] = atom;
     return atom;
@@ -241,6 +245,7 @@ void JMol::set2DInfoLatest(bool _is2DInfoLatest) {
 std::shared_ptr<JBond> JMol::addBond(
         std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type,
         const float &_offset1, const float &_offset2) {
+    isValenceDataLatest = false;
     auto bond = std::make_shared<JBond>(idBase++, _a1, _a2, _type, _offset1, _offset2);
     bondMap[bond->getId()] = bond;
     return bond;
@@ -249,6 +254,7 @@ std::shared_ptr<JBond> JMol::addBond(
 std::shared_ptr<JAtom> JMol::addSuperAtom(
         const std::string &_name, const float &_x0, const float &_y0,
         const float &_x1, const float &_y1) {
+    isValenceDataLatest = false;
     auto atom = std::make_shared<JAtom>(idBase++, _name, _x0, _y0, _x1, _y1);
     atomMap[atom->getId()] = atom;
     return atom;
@@ -256,88 +262,23 @@ std::shared_ptr<JAtom> JMol::addSuperAtom(
 
 
 void JMol::addAllHydrogens() {
-    std::unordered_map<id_type, int> atomTotalBondOrderMap;
-    auto add_bond_order_for_atom = [&](const id_type &_aid, const int &_order) -> void {
-        auto it = atomTotalBondOrderMap.find(_aid);
-        if (atomTotalBondOrderMap.end() == it) {
-            atomTotalBondOrderMap[_aid] = _order;
-        } else {
-            it->second += _order;
-        }
-    };
-    auto get_atom_order = [&](const id_type &_aid) -> int {
-        auto it = atomTotalBondOrderMap.find(_aid);
-        if (atomTotalBondOrderMap.end() == it) {
-            atomTotalBondOrderMap[_aid] = 0;
-            return 0;
-        } else {
-            return it->second;
-        }
-    };
-    // 初始化原子邻接键的键级累加表
-    loopBondVec([&](JBond &_bond) {
-        int order = _bond.getBondOrder();
-        auto from = _bond.getFrom();
-        auto to = _bond.getTo();
-        if (from && to) {
-            add_bond_order_for_atom(from->getId(), order);
-            add_bond_order_for_atom(to->getId(), order);
-        }
-    });
     // 根据原子的键级累加表加氢
     // 情况处理：
     // 1、ELEMENT_COMMON_NEB_NUM_MAP 里没有记录的，一律不加氢
     // 2、硬编码特别处理常用原子带电荷的情况，如铵正离子、碳正离子、碳负离子、氧负离子
     // 3、其它情况按照 ELEMENT_COMMON_NEB_NUM_MAP 的记录默认处理
-    setStartAddingHydrogens(true);
     loopCurrentAtomPtrVec([&](std::shared_ptr<JAtom> _atom) -> void {
-        // 氢原子不加氢
-        if (ElementType::H == _atom->getType()) { return; }
-        auto it = ELEMENT_COMMON_NEB_NUM_MAP.find(_atom->getType());
-        // 常用原子邻接键级表中没有的原子不加氢
-        if (ELEMENT_COMMON_NEB_NUM_MAP.end() == it) { return; }
-        int order = get_atom_order(_atom->getId());
-        int numHs = it->second - order;
-        // 对电荷的特别处理
-        int charge = _atom->getCharge();
-        if (0 != charge) {
-            switch (_atom->getType()) {
-                case ElementType::C: {
-                    if (charge == 1) {// 碳正离子
-                        numHs -= 1;
-                    } else if (charge == -1) {// 碳负离子
-                        numHs -= 1;
-                    }
-                    break;
-                }
-                case ElementType::N: {
-                    if (charge == 1) {// 铵正离子
-                        numHs += 1;
-                    } else {
-                        numHs -= std::floor(charge / 2.0);
-                    }
-                    break;
-                }
-                case ElementType::O: {
-                    if (charge == -1) {
-                        numHs -= 1;
-                    }
-                    break;
-                }
-                default: {
-                    numHs -= std::floor(charge / 2.0);
-                    break;
-                }
-            }
-        }
-//        qDebug() << "numHs=" << numHs;
+        int numHs = getNumHydrogen(_atom->getId());
         if (numHs < 1) { return; }
         while (numHs--) {
             auto h = addAtom(ElementType::H);
             auto bond = addBond(_atom, h);
+            add_bond_order_for_atom(h->getId(), 1);
+            add_bond_order_for_atom(_atom->getId(), 1);
         }
     });
-    setStartAddingHydrogens(false);
+    // 这里我之前有维护好加氢数据
+    isValenceDataLatest = true;
 }
 
 void JMol::loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<JAtom>)> _func) {
@@ -350,9 +291,6 @@ void JMol::loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<JAtom>)> _fu
     }
 }
 
-void JMol::setStartAddingHydrogens(bool startAddingHydrogens) {
-    JMol::startAddingHydrogens = startAddingHydrogens;
-}
 
 //std::unordered_map<std::string,int> sStrategyMap={
 //        {"_O",1},
@@ -462,5 +400,121 @@ void JMol::tryExpand() {
 bool JMol::IsValidWritableFormat(const std::string &_suffix) {
     return FORMAT_WRITE_WHITE_LIST.end() != FORMAT_WRITE_WHITE_LIST.find(_suffix);
 }
+
+void JMol::add_bond_order_for_atom(const id_type &_aid, const int &_order) {
+    auto it = atomTotalBondOrderMap.find(_aid);
+    if (atomTotalBondOrderMap.end() == it) {
+        atomTotalBondOrderMap[_aid] = _order;
+    } else {
+        it->second += _order;
+    }
+}
+
+int JMol::get_atom_order(const id_type &_aid) {
+    auto it = atomTotalBondOrderMap.find(_aid);
+    if (atomTotalBondOrderMap.end() == it) {
+        atomTotalBondOrderMap[_aid] = 0;
+        return 0;
+    } else {
+        return it->second;
+    }
+}
+
+void JMol::updateValenceMap() {
+    atomTotalBondOrderMap.clear();
+    atomDoubleBondNum.clear();
+    // 初始化原子邻接键的键级累加表
+    loopBondVec([&](JBond &_bond) {
+        int order = _bond.getBondOrder();
+        auto from = _bond.getFrom();
+        auto to = _bond.getTo();
+        if (from && to) {
+            add_bond_order_for_atom(from->getId(), order);
+            add_bond_order_for_atom(to->getId(), order);
+        }
+        if (order == 2) {
+            add_db_num_for_atom(from->getId(), 1);
+            add_db_num_for_atom(to->getId(), 1);
+        }
+    });
+    isValenceDataLatest = true;
+}
+
+void JMol::tryMarkDoubleBond(const id_type &_bid) {
+    auto bond = getBond(_bid);
+    if (!bond) { return; }
+    auto from = bond->getFrom(), to = bond->getTo();
+    if (getNumHydrogen(from->getId()) >= 1 && getNumHydrogen(to->getId()) >= 1 &&
+        !getDoubleBondNum(from->getId()) && !getDoubleBondNum(to->getId())) {
+        bond->setType(BondType::DoubleBond);
+        add_bond_order_for_atom(from->getId(), 1);
+        add_bond_order_for_atom(to->getId(), 1);
+        add_db_num_for_atom(from->getId(), 1);
+        add_db_num_for_atom(to->getId(), 1);
+    }
+}
+
+int JMol::getNumHydrogen(const id_type &_aid) {
+    if (!isValenceDataLatest) {
+        updateValenceMap();
+    }
+    auto atom = getAtom(_aid);
+    if (!atom) { return 0; }
+    auto it = ELEMENT_COMMON_NEB_NUM_MAP.find(atom->getType());
+    // 常用原子邻接键级表中没有的原子不加氢
+    if (ELEMENT_COMMON_NEB_NUM_MAP.end() == it) { return 0; }
+    int order = get_atom_order(atom->getId());
+    int numHs = it->second - order;
+    // 对电荷的特别处理
+    int charge = atom->getCharge();
+    if (0 != charge) {
+        switch (atom->getType()) {
+            case ElementType::C: {
+                if (charge == 1) {// 碳正离子
+                    numHs -= 1;
+                } else if (charge == -1) {// 碳负离子
+                    numHs -= 1;
+                }
+                break;
+            }
+            case ElementType::N: {
+                if (charge == 1) {// 铵正离子
+                    numHs += 1;
+                } else {
+                    numHs -= std::floor(charge / 2.0);
+                }
+                break;
+            }
+            case ElementType::O: {
+                if (charge == -1) {
+                    numHs -= 1;
+                }
+                break;
+            }
+            default: {
+                numHs -= std::floor(charge / 2.0);
+                break;
+            }
+        }
+    }
+    qDebug() << atom->getQName() << numHs;
+    return numHs;
+}
+
+void JMol::add_db_num_for_atom(const id_type &_aid, const int &_num) {
+    auto it = atomDoubleBondNum.find(_aid);
+    if (atomDoubleBondNum.end() == it) {
+        atomDoubleBondNum[_aid] = 1;
+    } else {
+        it->second += _num;
+    }
+}
+
+int JMol::getDoubleBondNum(const id_type &_aid) const {
+    auto it = atomDoubleBondNum.find(_aid);
+    if (atomDoubleBondNum.end() == it) { return 0; }
+    return it->second;
+}
+
 
 

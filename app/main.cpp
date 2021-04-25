@@ -40,10 +40,11 @@ int testReg() {
 #include <QDir>
 
 int loopBenchMark() {
-//x-special/nautilus-clipboard
-//copy
-//file:///home/xgd/source/repos/leafxy/testcase/public/CLEF
+#ifdef Q_OS_LINUX
     QString root("/home/xgd/source/repos/leafxy/testcase/public/");
+#elif defined(Q_OS_WIN)
+    QString root("C:/Users/xgd/source/repos/leafxy/testcase/public/");
+#endif
     auto clef = QDir(root + "CLEF").entryInfoList(QDir::Filter(QDir::Files));
     auto jpo = QDir(root + "JPO").entryInfoList(QDir::Filter(QDir::Files));
     auto uob = QDir(root + "UOB").entryInfoList(QDir::Filter(QDir::Files));

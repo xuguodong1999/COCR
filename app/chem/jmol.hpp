@@ -18,20 +18,28 @@ namespace xgd {
         id_type idBase;
         std::unordered_map<id_type, std::shared_ptr<JAtom>> atomMap;
         std::unordered_map<id_type, std::shared_ptr<JBond>> bondMap;
-        bool is3DInfoLatest, is2DInfoLatest, startAddingHydrogens;
+        bool is3DInfoLatest, is2DInfoLatest, isValenceDataLatest;
         static std::unordered_set<std::string> FORMAT_WRITE_WHITE_LIST;
-
-    protected:
-
+        std::unordered_map<id_type, int> atomTotalBondOrderMap, atomDoubleBondNum;
 
         inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
 
         std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
 
+        void add_bond_order_for_atom(const id_type &_aid, const int &_order);
+
+        void add_db_num_for_atom(const id_type &_aid, const int &_num = 1);
+
+        int getDoubleBondNum(const id_type &_aid) const;
+
+        int get_atom_order(const id_type &_aid);
+
+        void updateValenceMap();
+
+        int getNumHydrogen(const id_type &_aid);
+
     public:
         static bool IsValidWritableFormat(const std::string &_suffix);
-
-        void setStartAddingHydrogens(bool startAddingHydrogens = true);
 
         void set2DInfoLatest(bool _is2DInfoLatest = true);
 
@@ -115,6 +123,8 @@ namespace xgd {
         virtual std::vector<std::vector<id_type>> getLSSR() = 0;
 
         virtual std::vector<std::vector<id_type>> getSSSR() = 0;
+
+        void tryMarkDoubleBond(const id_type &_bid);
     };
 }
 
