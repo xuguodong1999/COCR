@@ -120,3 +120,7 @@ void PaintWidget::updateColorIcon() {
 const ui_script_type &PaintWidget::getScript() const {
     return sketchWidget->getScript();
 }
+
+void PaintWidget::saveLastScript() {
+    sketchWidget->saveLastScript();
+}

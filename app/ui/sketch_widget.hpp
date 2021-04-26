@@ -33,6 +33,8 @@ public:
      */
     void sync();
 
+    void saveLastScript();
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
 

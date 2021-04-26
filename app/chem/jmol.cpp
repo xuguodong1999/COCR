@@ -292,13 +292,15 @@ void JMol::loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<JAtom>)> _fu
     }
 }
 
-void JMol::tryExpand() {
+bool JMol::tryExpand() {
+    bool ok = true;
     auto expand = [&](std::shared_ptr<JAtom> atom) {
         if (!atom) { return; }
         if (ElementType::SA != atom->getType()) { return; }
-        xgd::tryExpand(*this, atom);
+        if (!xgd::tryExpand(*this, atom)) { ok = false; }
     };
     loopCurrentAtomPtrVec(expand);
+    return ok;
 }
 
 bool JMol::IsValidWritableFormat(const std::string &_suffix) {

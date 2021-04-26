@@ -2,127 +2,71 @@
 
 using namespace xgd;
 
-std::unordered_map<std::string, int> xgd::SUPER_ATOM_MAP = {
-        {"COOH",1},
-        {"HOOC",1},
+std::unordered_map<std::string, AbbType> xgd::SUPER_ATOM_MAP = {};
 
-        {"COO_",2},
-        {"_OOC",2},
-
-        {"COOEt",3},
-        {"EtOOC",3},
-
-        {"COOMe",3},
-        {"MeOOC",3},
-
-        {"Et",4},
-        {"Me",5},
-};
 /**
- * 处理分类：
- * 1、元素+卤素+数字+电荷类型，采用预定义所有可能的算法
- * 2、烷烃类型，同上
- * 3、硬编码类型
+ * 我在毕设里要达成的目标：基于字符串解析的残基拆解，顺序解析
+ * 1、支持单层括号，支持下标数字，支持化学键符号，支持单电荷
+ * 2、不支持谓词语义（包括左计数和异构符），不支持多电荷
+ * TODO:
+ * 1、电荷解析通过词法分析做
+ * 2、没有分隔符，请使用最长单词试探法
  */
-bool xgd::tryExpand(JMol &_mol, std::shared_ptr<JAtom> _atom) {
-    auto it=SUPER_ATOM_MAP.find(_atom->getName());
-    if(SUPER_ATOM_MAP.end()==it){return false;}
-    switch (it->second) {
-        case 3:{
-            break;
-        }
-        case 2:{
-            break;
-        }
-        case 1:{
-            break;
-        }
-        default:
-            return false;
-    }
+bool xgd::tryExpand(JMol &mol, std::shared_ptr<JAtom> atom) {
     return true;
-//    QString name = atom->getQName();
-//    if (name == "COOH" || name == "HOOC") {
-//        atom->setType(ElementType::C);
-//        atom->setCharge(0);
-//        auto o1 = addAtom(ElementType::O);
-//        auto o2 = addAtom(ElementType::O);
-//        addBond(atom, o1, BondType::SingleBond);
-//        addBond(atom, o2, BondType::DoubleBond);
-//        return;
-//    }
-//    if (name == "COOEt" || name == "EtOOC") {
-//        atom->setType(ElementType::C);
-//        atom->setCharge(0);
-//        auto o1 = addAtom(ElementType::O);
-//        auto o2 = addAtom(ElementType::O);
-//        addBond(atom, o1, BondType::SingleBond);
-//        addBond(atom, o2, BondType::DoubleBond);
-//
-//        auto c1 = addAtom(ElementType::C);
-//        auto c2 = addAtom(ElementType::C);
-//        addBond(c1, o1, BondType::SingleBond);
-//        addBond(c1, c2, BondType::SingleBond);
-//        return;
-//    }
-//    if (name == "COOMe" || name == "MeOOC") {
-//        atom->setType(ElementType::C);
-//        atom->setCharge(0);
-//        auto o1 = addAtom(ElementType::O);
-//        auto o2 = addAtom(ElementType::O);
-//        addBond(atom, o1, BondType::SingleBond);
-//        addBond(atom, o2, BondType::DoubleBond);
-//
-//        auto c1 = addAtom(ElementType::C);
-//        addBond(c1, o1, BondType::SingleBond);
-//        return;
-//    }
-//    if (name == "CHO" || name == "OHC") {
-//        atom->setType(ElementType::C);
-//        atom->setCharge(0);
-//        auto o1 = addAtom(ElementType::O);
-//        addBond(atom, o1, BondType::DoubleBond);
-//        return;
-//    }
-//    if (name == "Me") {
-//        atom->setType(ElementType::C);
-//        atom->setCharge(0);
-//        return;
-//    }
-//    if (name == "Et") {
-//        atom->setType(ElementType::C);
-//        atom->setCharge(0);
-//        auto c1 = addAtom(ElementType::C);
-//        addBond(atom, c1, BondType::SingleBond);
-//        return;
-//    }
-//
-//    decltype(STR_ELEMENT_MAP.end()) it;
-//    for (int i = 0; i <= 4; i++) {
-//        QString reg = "H";
-//        if (i) { reg += QString::number(i); }
-//        name = atom->getQName().replace(reg, "");
-//        it = STR_ELEMENT_MAP.find(name.toStdString());
-//        if (STR_ELEMENT_MAP.end() != it) {
-//            atom->setType(it->second);
-//            atom->setCharge(0);
-//            return;
-//        }
-//    }
-//
-//    name = atom->getQName().replace("+", "");
-//    it = STR_ELEMENT_MAP.find(name.toStdString());
-//    if (STR_ELEMENT_MAP.end() != it) {
-//        atom->setType(it->second);
-//        atom->setCharge(1);
-//        return;
-//    }
-//
-//    name = atom->getQName().replace("_", "");
-//    it = STR_ELEMENT_MAP.find(name.toStdString());
-//    if (STR_ELEMENT_MAP.end() != it) {
-//        atom->setType(it->second);
-//        atom->setCharge(-1);
-//        return;
-//    }
+}
+
+void xgd::initSuperAtomMap() {
+    if (!SUPER_ATOM_MAP.empty()) { return; }
+    // 元素语义
+    for (auto&[str, data]:STR_ELEMENT_MAP) {
+        SUPER_ATOM_MAP[str] = AbbType::Element;
+    }
+    // 数字语义
+    for (int i = 0; i <= 9; i++) {
+        SUPER_ATOM_MAP[std::to_string(i)] = AbbType::Number;
+    }
+    // 电荷语义
+    SUPER_ATOM_MAP["+"] = AbbType::Pos;
+    SUPER_ATOM_MAP["_"] = AbbType::Neg;
+    // 化学键语义
+    SUPER_ATOM_MAP["-"] = AbbType::Single;
+    SUPER_ATOM_MAP["="] = AbbType::Double;
+    SUPER_ATOM_MAP["#"] = AbbType::Triple;
+    // 括号语义
+    SUPER_ATOM_MAP["("] = AbbType::Left;
+    SUPER_ATOM_MAP[")"] = AbbType::Right;
+    // 缩写语义
+    SUPER_ATOM_MAP["Me"] = AbbType::Me;
+    SUPER_ATOM_MAP["Et"] = AbbType::Et;
+    SUPER_ATOM_MAP["Ethyl"] = AbbType::Et;
+    SUPER_ATOM_MAP["iBu"];
+    SUPER_ATOM_MAP["tBu"];
+    SUPER_ATOM_MAP["nBu"];
+    SUPER_ATOM_MAP["Bu"];
+    SUPER_ATOM_MAP["NO2"];
+    SUPER_ATOM_MAP["NO"];
+    SUPER_ATOM_MAP["SO3"];
+    SUPER_ATOM_MAP["Ac"];
+    SUPER_ATOM_MAP["COO"];
+    SUPER_ATOM_MAP["CO2"];
+    SUPER_ATOM_MAP["SOO"];
+    SUPER_ATOM_MAP["SO2"];
+    SUPER_ATOM_MAP["Ph"];
+    SUPER_ATOM_MAP["Bz"];
+    SUPER_ATOM_MAP["THPO"];
+    SUPER_ATOM_MAP["NHZ"];
+    SUPER_ATOM_MAP["Bn"];
+    SUPER_ATOM_MAP["Am"];
+    SUPER_ATOM_MAP["Am"];
+    SUPER_ATOM_MAP["Cbz"];
+    SUPER_ATOM_MAP["Ms"];
+    SUPER_ATOM_MAP["OCN"];
+    SUPER_ATOM_MAP["NCO"];
+    SUPER_ATOM_MAP["NCS"];
+    SUPER_ATOM_MAP["SCN"];
+    SUPER_ATOM_MAP["D"];
+    SUPER_ATOM_MAP["Ace"];
+    SUPER_ATOM_MAP["THP"];
+    // TODO:
 }

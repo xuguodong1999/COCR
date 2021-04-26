@@ -50,7 +50,6 @@ int loopBenchMark() {
     auto uob = QDir(root + "UOB").entryInfoList(QDir::Filter(QDir::Files));
     auto uspto = QDir(root + "USPTO").entryInfoList(QDir::Filter(QDir::Files));
     OCRThread ocrThread;
-    std::unordered_set<std::string> superAtomSet;
     auto loop = [&](const QString &_filePath) {
         QImage image;
         if (image.load(_filePath)) {
@@ -60,23 +59,21 @@ int loopBenchMark() {
             ocrThread.wait();
             auto mol = ocrThread.getMol();
             if (mol) {
-                mol->loopAtomVec([&](xgd::JAtom &atom) {
-                    if (xgd::ElementType::SA == atom.getType()) {
-                        superAtomSet.insert(atom.getName());
-//                        qDebug() << atom.getQName();
-                    }
-                });
+                if (!mol->tryExpand()) {
+
+                }
+                mol->addAllHydrogens();
             }
         }
     };
     for (auto &file:clef) { loop(file.absoluteFilePath()); }
+    qDebug() << "CLEF DONE **************";
     for (auto &file:jpo) { loop(file.absoluteFilePath()); }
+    qDebug() << "JPO DONE **************";
     for (auto &file:uob) { loop(file.absoluteFilePath()); }
+    qDebug() << "UOB DONE **************";
     for (auto &file:uspto) { loop(file.absoluteFilePath()); }
-    qDebug() << "**************";
-    for (auto &sa:superAtomSet) {
-        qDebug() << sa.c_str();
-    }
+    qDebug() << "USPTO DONE **************";
     return 0;
 }
 
@@ -85,7 +82,6 @@ int loopBenchMark() {
  * 【不解 bug】超原子一段有键，没有生成这个键
  * 【不解 bug】无意义超原子干扰视线
  * 【必解 bug】超原子多端接入
- * 【必解 bug】芳环中的圈
  * 【必解 bug】上下邻接的单原子图元
  * 【必解 bug】两个键连原子靠得近
  */

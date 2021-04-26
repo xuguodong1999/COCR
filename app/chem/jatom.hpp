@@ -36,13 +36,16 @@ namespace xgd {
     class JAtom {
         ElementType type;
         int charge;
-
-    private:
         inline static const float sDefaultRadius = 100;
         id_type id;
         bool mIsImplicit;
         std::string name;
+        bool mIsLeftToRight;
     public:
+        void setIsLeftToRight(bool isLeftToRight);
+
+        bool isLeftToRight() const;
+
         void setCharge(int charge);
 
         void setType(const ElementType &_type);

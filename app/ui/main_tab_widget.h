@@ -54,6 +54,8 @@ private:
 protected:
     void resizeEvent(QResizeEvent *e) override;
 
+    void closeEvent(QCloseEvent *e) override;
+
 private slots:
 
     void setAgreementChecked(bool isChecked);

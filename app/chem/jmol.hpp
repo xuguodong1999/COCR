@@ -118,7 +118,7 @@ namespace xgd {
 
         virtual bool generate3D() = 0;
 
-        virtual void tryExpand();
+        virtual bool tryExpand();
 
         virtual std::vector<std::vector<id_type>> getLSSR() = 0;
 

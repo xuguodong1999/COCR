@@ -85,7 +85,6 @@ void SketchWidget::mouseReleaseEvent(QMouseEvent *event) {
     QWidget::mouseReleaseEvent(event);
     endPenDraw();
     emit sig_modified();
-    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
     event->ignore();
 }
 
@@ -150,5 +149,9 @@ void SketchWidget::redo() {
     currentScript.push_back(std::move(lastStroke));
     historyStrokeStack.pop_back();
     sync();
+}
+
+void SketchWidget::saveLastScript() {
+    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
 }
 

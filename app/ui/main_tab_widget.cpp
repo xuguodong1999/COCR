@@ -12,6 +12,7 @@
 #include "chem/jmol_manager.hpp"
 #include <QTimer>
 #include <QMessageBox>
+#include <QCloseEvent>
 
 MainTabWidget::MainTabWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::MainTabWidget),
@@ -163,6 +164,7 @@ void MainTabWidget::onOcrJobReady() {
 void MainTabWidget::doOCR(const QList<QList<QPointF>> &_script) {
     qDebug() << __FUNCTION__ << "_script.size()=" << _script.size();
     isOCRBtnClicked = true;
+    if (paintWidget) { paintWidget->saveLastScript(); }
     if (is2DLastUsed) {
         ui->tabWidget->setCurrentIndex(2);
         view2DWidget->startWaitHint();
@@ -262,5 +264,11 @@ void MainTabWidget::doOCR(const QImage &_image) {
     ocrThread->bindData(_image);
     ocrThread->start();
 //    }
+}
+
+void MainTabWidget::closeEvent(QCloseEvent *e) {
+    qDebug() << __FUNCTION__ << "MainTabWidget";
+    if (paintWidget) { paintWidget->saveLastScript(); }
+    QWidget::closeEvent(e);
 }
 

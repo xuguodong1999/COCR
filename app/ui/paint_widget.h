@@ -24,6 +24,8 @@ public:
 
     const ui_script_type &getScript() const;
 
+    void saveLastScript();
+
 protected:
 
     void resizeEvent(QResizeEvent *event) override;
