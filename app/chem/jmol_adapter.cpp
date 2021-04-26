@@ -7,6 +7,7 @@
 #include <openbabel/obiter.h>
 #include <openbabel/builder.h>
 #include <openbabel/forcefield.h>
+#include <openbabel/generic.h>
 
 #include <coordgen/sketcherMinimizer.h>
 
@@ -291,6 +292,10 @@ void JMolAdapter::addOBAtom(JAtom &_atom) {
         // FIXME: 选择砹元素作为字符串的代理，这个元素的特点是价态足够、且一般没人写
         // FIXME: 这样在 3D 渲染的时候，如果没有展开字符串，那么字符串会被显示为一个球
         obAtom.SetAtomicNum(85);
+//        auto label = new OpenBabel::OBPairData();
+//        label->SetAttribute("UserLabel");
+//        label->SetValue(_atom.getName());
+//        obAtom.SetData(label);
     } else if (ElementType::H == _atom.getType()) {
         obAtom.SetAtomicNum(1);
         hydrogenStateMap[_atom.getId()] = isValenceDataLatest;
