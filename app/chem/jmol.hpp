@@ -12,29 +12,21 @@
 using id_type = size_t;
 
 namespace xgd {
+    class JMol_p;
+
     class JMol {
     protected:
         id_type id;
         id_type idBase;
+        std::shared_ptr<JMol_p> _p;
         std::unordered_map<id_type, std::shared_ptr<JAtom>> atomMap;
         std::unordered_map<id_type, std::shared_ptr<JBond>> bondMap;
-        bool is3DInfoLatest, is2DInfoLatest, isValenceDataLatest;
+        bool is3DInfoLatest, is2DInfoLatest;
         static std::unordered_set<std::string> FORMAT_WRITE_WHITE_LIST;
-        std::unordered_map<id_type, int> atomTotalBondOrderMap, atomDoubleBondNum;
 
         inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
 
         std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
-
-        void add_bond_order_for_atom(const id_type &_aid, const int &_order);
-
-        void add_db_num_for_atom(const id_type &_aid, const int &_num = 1);
-
-        int getDoubleBondNum(const id_type &_aid) const;
-
-        int get_atom_order(const id_type &_aid);
-
-        void updateValenceMap();
 
         int getNumHydrogen(const id_type &_aid);
 

@@ -1,4 +1,5 @@
 #include "jmol_adapter.hpp"
+#include "jmol_p.hpp"
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/ring.h>
@@ -23,12 +24,10 @@ JMolAdapter::~JMolAdapter() {
 }
 
 JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
-        isOBMolLatest(false), obMol(std::make_shared<OpenBabel::OBMol>()) {
+        isOBMolLatest(false), obMol(std::make_shared<OpenBabel::OBMol>()), JMol() {
     qDebug() << __FUNCTION__ << "const&";
-    onMolUpdated();
     id = _jMolAdapter.id + 1;
     idBase = _jMolAdapter.idBase;
-    is3DInfoLatest = is2DInfoLatest = isValenceDataLatest = false;
     const_cast<JMolAdapter &>(_jMolAdapter).loopAtomVec([&](JAtom &_atom) {
         auto atom = std::make_shared<JAtom>(_atom.getId(), ElementType::SA);
         *atom = _atom;
@@ -298,7 +297,6 @@ void JMolAdapter::addOBAtom(JAtom &_atom) {
 //        obAtom.SetData(label);
     } else if (ElementType::H == _atom.getType()) {
         obAtom.SetAtomicNum(1);
-        hydrogenStateMap[_atom.getId()] = isValenceDataLatest;
     } else {
 //        qDebug() << "_atom.getAtomicNumber()=" << _atom.getAtomicNumber();
         obAtom.SetAtomicNum(_atom.getAtomicNumber());
@@ -390,7 +388,6 @@ void JMolAdapter::resetOBMol() {
     atomIdMap.clear();
     bondIdMap2.clear();
     atomIdMap2.clear();
-    hydrogenStateMap.clear();
     obMol = std::make_shared<OpenBabel::OBMol>();
     onMolUpdated();
     loopAtomVec([&](JAtom &atom) {

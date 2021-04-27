@@ -24,8 +24,6 @@ namespace xgd {
         std::unordered_map<id_type, unsigned long> bondIdMap;
         std::unordered_map<unsigned long, id_type> atomIdMap2;
         std::unordered_map<unsigned long, id_type> bondIdMap2;
-        //<aid,state>,state=true->explicit H; state=false->implicit H
-        std::unordered_map<id_type, bool> hydrogenStateMap;
         bool isOBMolLatest;
 
         bool runForcefield();
