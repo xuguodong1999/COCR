@@ -49,7 +49,7 @@ int testInterpreter() {
     xgd::initSuperAtomMap();
     auto mol = std::make_shared<xgd::JMolAdapter>();
     xgd::JMol_p p(*mol);
-    p.interpret("EtOCH2C100H298COOMe");
+//    p.interpret("EtOCH2C100H298COOMe");
     return 0;
 }
 

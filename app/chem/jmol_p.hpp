@@ -12,7 +12,7 @@ namespace xgd {
 
     using atom_t = std::shared_ptr<JAtom>;
 
-    enum class AbbType {
+    enum class TokenType {
         // 空白语义
         None,
         // 数字语义
@@ -48,7 +48,8 @@ namespace xgd {
         // TODO:
         Bn, Cbz, OCN, NCS, Ace, THPO, NHZ, Ms
     };
-    extern std::unordered_map<std::string, AbbType> SUPER_ATOM_MAP;
+
+    extern std::unordered_map<std::string, TokenType> SUPER_ATOM_MAP;
     extern size_t MAX_SUPER_ATOM_LENGTH;
 
     void initSuperAtomMap();
@@ -68,23 +69,21 @@ namespace xgd {
 
         bool tryExpand(const id_type &_aid);
 
+        int getDoubleBondNum(const id_type &_aid) const;
+
         void add_bond_order_for_atom(const id_type &_aid, const int &_order);
 
         void add_db_num_for_atom(const id_type &_aid, const int &_num = 1);
-
-        int getDoubleBondNum(const id_type &_aid) const;
-
-        int get_atom_order(const id_type &_aid);
-
         void updateValenceMap();
-
+        int get_atom_order(const id_type &_aid);
+    private:
         /**
          * 构造缩写表达的超原子，将两侧裸露的原子返回
          * 如果只有一个原子，那么这个原子同时作为两侧
          * @param _abb 缩写枚举
          * @return 两侧的原子
          */
-        std::pair<atom_t, atom_t> makeAbbType(const AbbType &_abb);
+        std::pair<atom_t, atom_t> makeAbbType(const TokenType &_abb);
 
         std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele);
 
@@ -95,8 +94,11 @@ namespace xgd {
 
         std::tuple<atom_t, atom_t, atom_t, atom_t, atom_t, atom_t> makeBenzene();
 
-        std::optional<std::pair<std::queue<AbbType>, std::queue<int>>>
-        interpret(const std::string &inputName);
+        using token_struct = std::tuple<std::vector<TokenType>, std::queue<int>, std::queue<ElementType>>;
+
+        std::optional<token_struct> interpret(const std::string &inputName);
+
+        void extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size_t iEnd,const int&suffix=1);
     };
 
 
