@@ -227,7 +227,7 @@ std::pair<atom_t, atom_t> JMol_p::makeElementType(const ElementType &_ele, atom_
     atom_t a;
     if (a_beg) {
         a_beg->setCharge(0);
-        a_beg->setType(ElementType::C);
+        a_beg->setType(_ele);
         a = a_beg;
     } else {
         a = mol.addAtom(_ele);
