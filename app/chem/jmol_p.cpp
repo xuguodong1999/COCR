@@ -123,41 +123,41 @@ JMol_p::JMol_p(JMol &_mol) : mol(_mol), isValenceDataLatest(false) {
 
 }
 
-std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
+std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb, atom_t a_beg) {
     switch (_abb) {
         case TokenType::Me: {
-            return makeAlkane(1);
+            return makeAlkane(1, a_beg);
         }
         case TokenType::Et: {
-            auto[first, last]= makeAlkane(2);
+            auto[first, last]= makeAlkane(2, a_beg);
             return {first, first};
         }
         case TokenType::iPr: {
-            auto[first, last]=makeAlkane(2);
+            auto[first, last]=makeAlkane(2, a_beg);
             mol.addBond(first, mol.addAtom(ElementType::C));
             return {first, first};
         }
         case TokenType::nPr: {
-            auto[first, last]= makeAlkane(3);
+            auto[first, last]= makeAlkane(3, a_beg);
             return {first, first};
         }
         case TokenType::iBu: {
-            auto[first, last]=makeAlkane(3);
+            auto[first, last]=makeAlkane(3, a_beg);
             mol.addBond(first, mol.addAtom(ElementType::C));
             return {first, first};
         }
         case TokenType::tBu: {
-            auto[first, last]=makeAlkane(2);
+            auto[first, last]=makeAlkane(2, a_beg);
             mol.addBond(first, mol.addAtom(ElementType::C));
             mol.addBond(first, mol.addAtom(ElementType::C));
             return {first, first};
         }
         case TokenType::nBu: {
-            auto[first, last]= makeAlkane(4);
+            auto[first, last]= makeAlkane(4, a_beg);
             return {first, first};
         }
         case TokenType::Am: {
-            auto[first, last]= makeAlkane(5);
+            auto[first, last]= makeAlkane(5, a_beg);
             return {first, first};
         }
         case TokenType::NO2: {
@@ -167,7 +167,7 @@ std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
             break;
         }
         case TokenType::SO3: {
-            auto[s, _]= makeAcyl(ElementType::O, ElementType::S);
+            auto[s, _]= makeAcyl(ElementType::O, ElementType::S, a_beg);
             auto o1 = mol.addAtom(ElementType::O);
             mol.addBond(s, o1, BondType::DoubleBond);
             auto o2 = mol.addAtom(ElementType::O);
@@ -175,43 +175,43 @@ std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
             return {s, o2};
         }
         case TokenType::SO2: {
-            auto[s, _]= makeAcyl(ElementType::O, ElementType::S);
+            auto[s, _]= makeAcyl(ElementType::O, ElementType::S, a_beg);
             auto o = mol.addAtom(ElementType::O);
             mol.addBond(s, o, BondType::DoubleBond);
             return {s, s};
         }
         case TokenType::SO: {
-            return makeAcyl(ElementType::O, ElementType::S);
+            return makeAcyl(ElementType::O, ElementType::S, a_beg);
         }
         case TokenType::CO2: {
-            auto[c, _]= makeAcyl(ElementType::O, ElementType::C);
+            auto[c, _]= makeAcyl(ElementType::O, ElementType::C, a_beg);
             auto o = mol.addAtom(ElementType::O);
             mol.addBond(c, o);
             return {c, o};
         }
         case TokenType::CO: {
-            return makeAcyl(ElementType::O, ElementType::C);
+            return makeAcyl(ElementType::O, ElementType::C, a_beg);
         }
         case TokenType::Ph: {
-            auto c6 = makeBenzene();
+            auto c6 = makeBenzene(a_beg);
             auto c = std::get<0>(c6);
             return {c, c};
         }
         case TokenType::Bn: {
-            auto c6 = makeBenzene();
+            auto c6 = makeBenzene(a_beg);
             auto c = std::get<0>(c6);
             auto C = mol.addAtom(ElementType::C);
             mol.addBond(c, C);
             return {C, C};
         }
         case TokenType::CSO: {
-            auto[c, _]= makeAcyl(ElementType::S, ElementType::C);
+            auto[c, _]= makeAcyl(ElementType::S, ElementType::C, a_beg);
             auto o = mol.addAtom(ElementType::O);
             mol.addBond(c, o);
             return {c, o};
         }
         case TokenType::COS: {
-            auto[c, _]= makeAcyl(ElementType::O, ElementType::C);
+            auto[c, _]= makeAcyl(ElementType::O, ElementType::C, a_beg);
             auto s = mol.addAtom(ElementType::O);
             mol.addBond(c, s);
             return {c, s};
@@ -220,17 +220,31 @@ std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
             break;
         }
     }
-    return {nullptr, nullptr};
+    return {a_beg, a_beg};
 }
 
-std::pair<atom_t, atom_t> JMol_p::makeElementType(const ElementType &_ele) {
-    auto atom = mol.addAtom(_ele);
-    return {atom, atom};
+std::pair<atom_t, atom_t> JMol_p::makeElementType(const ElementType &_ele, atom_t a_beg) {
+    atom_t a;
+    if (a_beg) {
+        a_beg->setCharge(0);
+        a_beg->setType(ElementType::C);
+        a = a_beg;
+    } else {
+        a = mol.addAtom(_ele);
+    }
+    return {a, a};
 }
 
-std::pair<atom_t, atom_t> JMol_p::makeAlkane(const int &_num) {
+std::pair<atom_t, atom_t> JMol_p::makeAlkane(const int &_num, atom_t a_beg) {
     if (_num <= 0) { return {nullptr, nullptr}; }
-    auto first = mol.addAtom(ElementType::C);
+    atom_t first;
+    if (a_beg) {
+        a_beg->setCharge(0);
+        a_beg->setType(ElementType::C);
+        first = a_beg;
+    } else {
+        first = mol.addAtom(ElementType::C);
+    }
     auto last = first;
     for (int i = 1; i < _num; i++) {
         auto next = mol.addAtom(ElementType::C);
@@ -240,9 +254,15 @@ std::pair<atom_t, atom_t> JMol_p::makeAlkane(const int &_num) {
     return {first, last};
 }
 
-std::tuple<atom_t, atom_t, atom_t, atom_t, atom_t, atom_t> JMol_p::makeBenzene() {
+std::tuple<atom_t, atom_t, atom_t, atom_t, atom_t, atom_t> JMol_p::makeBenzene(atom_t a_beg) {
     atom_t atoms[6];
-    atoms[0] = mol.addAtom(ElementType::C);
+    if (a_beg) {
+        a_beg->setCharge(0);
+        a_beg->setType(ElementType::C);
+        atoms[0] = a_beg;
+    } else {
+        atoms[0] = mol.addAtom(ElementType::C);
+    }
     for (int i = 1; i < 6; i++) {
         atoms[i] = mol.addAtom(ElementType::C);
         mol.addBond(atoms[i], atoms[i - 1], i % 2 ? BondType::SingleBond : BondType::DoubleBond);
@@ -251,9 +271,16 @@ std::tuple<atom_t, atom_t, atom_t, atom_t, atom_t, atom_t> JMol_p::makeBenzene()
     return std::make_tuple(atoms[0], atoms[1], atoms[2], atoms[3], atoms[4], atoms[5]);
 }
 
-std::pair<atom_t, atom_t> JMol_p::makeAcyl(const ElementType &_acyl, const ElementType &_root) {
+std::pair<atom_t, atom_t> JMol_p::makeAcyl(const ElementType &_acyl, const ElementType &_root, atom_t a_beg) {
     auto a = mol.addAtom(_acyl);
-    auto c = mol.addAtom(_root);
+    atom_t c;
+    if (a_beg) {
+        a_beg->setType(_root);
+        a_beg->setCharge(0);
+        c = a_beg;
+    } else {
+        c = mol.addAtom(_root);
+    }
     mol.addBond(a, c, BondType::DoubleBond);
     return {c, c};
 }
@@ -317,8 +344,8 @@ void xgd::initSuperAtomMap() {
 
 std::optional<JMol_p::token_struct> JMol_p::interpret(const std::string &inputName) {
     std::vector<TokenType> tokenVec;
-    std::queue<ElementType> eleQueue;
-    std::queue<int> numQue;
+    std::unordered_map<size_t, ElementType> elementMap;
+    std::unordered_map<size_t, int> numberMap;
     size_t it = 0;
     while (it < inputName.length()) {
         size_t offset = (std::min)(inputName.length() - it, MAX_SUPER_ATOM_LENGTH);
@@ -339,33 +366,32 @@ std::optional<JMol_p::token_struct> JMol_p::interpret(const std::string &inputNa
                 ++idx;
             }
             subStr = inputName.substr(it, offset);
-            numQue.push(std::stoi(subStr));
+            numberMap[tokenVec.size() - 1] = std::stoi(subStr);
         } else if (isElementToken(its->second)) {
-            eleQueue.push(STR_ELEMENT_MAP[subStr]);
+            elementMap[tokenVec.size() - 1] = STR_ELEMENT_MAP[subStr];
         }
         it += offset;
 //        std::cout << subStr << std::endl;
     }
     // 这里最好 move 一下，防止编译器没实现这种优化
-    return std::make_tuple(std::move(tokenVec), std::move(numQue), std::move(eleQueue));
+    return std::make_tuple(std::move(tokenVec), std::move(numberMap), std::move(elementMap));
 }
 
-void JMol_p::extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size_t iEnd,const int&suffix) {
+std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
+        token_struct &tokenStruct, size_t iBeg, size_t iEnd, atom_t a_beg, const int &suffix) {
     auto&[tokens, numbers, elements]=tokenStruct;
     // 解析 [iBeg, iEnd]
-    atom_t a_beg = nullptr, a_end = nullptr;
+    atom_t a_end = nullptr, tmp = a_beg;
     BondType lastBond = BondType::SingleBond;
     for (size_t i = iBeg; i <= iEnd; i++) {
         atom_t a1, a2;
         auto &curToken = tokens[i];
         if (isElementToken(curToken)) {
             // 拼接元素
-            auto ele = elements.front();
-            elements.pop();
-            std::tie(a1, a2) = makeElementType(ele);
+            std::tie(a1, a2) = makeElementType(elements[i], tmp);
         } else if (isAbbToken(curToken)) {
             // 拼接缩略词
-            std::tie(a1, a2) = makeAbbType(curToken);
+            std::tie(a1, a2) = makeAbbType(curToken, tmp);
         } else if (isChargeToken(curToken)) {
             // 划归电荷，FIXME: 下面是一个粗糙的实现
             if (a2) {
@@ -374,6 +400,7 @@ void JMol_p::extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size
                 a1->setCharge(curToken == TokenType::Pos ? 1 : -1);
             }
         }
+        tmp = nullptr;
         if (isBondToken(curToken)) {
             lastBond = curToken == TokenType::Triple ? BondType::TripleBond :
                        curToken == TokenType::Double ? BondType::DoubleBond :
@@ -386,7 +413,9 @@ void JMol_p::extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size
             }
             a_end = a2;
         }
+
     }
+    return {a_beg, a_end};
 }
 
 /**
@@ -407,9 +436,9 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
     if (!opt) { return false; }
     auto &tokenStruct = opt.value();
     auto&[tokens, numbers, elements]=tokenStruct;
-    TokenType lastAbb = TokenType::None, curAbb;
+    atom_t a_beg = atom, a_end = atom, a1, a2;
+    bool isFirst = true;
     int number;
-    int lbCount = 0;
     size_t beg = 0, end = 0, iBeg, iEnd;
     while (beg < tokens.size()) {
         auto &token = tokens[beg];
@@ -420,14 +449,30 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
             iBeg = beg + 1;
             iEnd = (end == tokens.size()) ? end - 1 : end - 2;
             // 如果有数字，记下这个数字
-
-            extractNoBracketTokens(tokenStruct, iBeg, iEnd);
+            if (end != tokens.size() && isNumberToken(tokens[end])) {
+                number = numbers[end];
+            } else {
+                number = 1;
+            }
+            std::tie(a1, a2) = extractNoBracketTokens(tokenStruct, iBeg, iEnd, nullptr, number);
+            mol.addBond(a_end, a1);
+            a_end = a2;
             beg = end;
         } else {
-            extractNoBracketTokens(tokenStruct, beg, beg);
-            beg += 1;
+            end = beg + 1;
+            while (end < tokens.size() && !isLeftToken(tokens[end]) && !isRightToken(tokens[end])) { ++end; }
+            iBeg = beg;
+            iEnd = end - 1;
+            std::tie(a1, a2) = extractNoBracketTokens(tokenStruct, iBeg, iEnd,
+                                                      isFirst ? atom : nullptr, 1);
+            if (!isFirst) {
+                mol.addBond(a_end, a1);
+            } else {
+                isFirst = false;
+            }
+            a_end = a2;
+            beg = end;
         }
-
     }
     return true;
 }

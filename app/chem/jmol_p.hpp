@@ -74,8 +74,11 @@ namespace xgd {
         void add_bond_order_for_atom(const id_type &_aid, const int &_order);
 
         void add_db_num_for_atom(const id_type &_aid, const int &_num = 1);
+
         void updateValenceMap();
+
         int get_atom_order(const id_type &_aid);
+
     private:
         /**
          * 构造缩写表达的超原子，将两侧裸露的原子返回
@@ -83,22 +86,26 @@ namespace xgd {
          * @param _abb 缩写枚举
          * @return 两侧的原子
          */
-        std::pair<atom_t, atom_t> makeAbbType(const TokenType &_abb);
+        std::pair<atom_t, atom_t> makeAbbType(const TokenType &_abb, atom_t a_beg = nullptr);
 
-        std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele);
+        std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele, atom_t a_beg = nullptr);
 
-        std::pair<atom_t, atom_t> makeAlkane(const int &_num);
+        std::pair<atom_t, atom_t> makeAlkane(const int &_num, atom_t a_beg = nullptr);
 
         std::pair<atom_t, atom_t> makeAcyl(
-                const ElementType &_acyl = ElementType::O, const ElementType &_root = ElementType::C);
+                const ElementType &_acyl = ElementType::O, const ElementType &_root = ElementType::C,
+                atom_t a_beg = nullptr);
 
-        std::tuple<atom_t, atom_t, atom_t, atom_t, atom_t, atom_t> makeBenzene();
+        std::tuple<atom_t, atom_t, atom_t, atom_t, atom_t, atom_t> makeBenzene(atom_t a_beg = nullptr);
 
-        using token_struct = std::tuple<std::vector<TokenType>, std::queue<int>, std::queue<ElementType>>;
+        using token_struct = std::tuple<std::vector<TokenType>,
+                std::unordered_map<size_t, int>, std::unordered_map<size_t, ElementType>>;
 
         std::optional<token_struct> interpret(const std::string &inputName);
 
-        void extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size_t iEnd,const int&suffix=1);
+        std::pair<atom_t, atom_t>
+        extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size_t iEnd, atom_t a_beg = nullptr,
+                               const int &suffix = 1);
     };
 
 
