@@ -10,8 +10,6 @@
 namespace xgd {
     class JAtom;
 
-    using atom_t = std::shared_ptr<JAtom>;
-
     enum class TokenType {
         // 空白语义
         None,
@@ -55,10 +53,30 @@ namespace xgd {
     void initSuperAtomMap();
 
     class JMol_p {
+        using atom_t = std::shared_ptr<JAtom>;
+
+        using token_struct = std::tuple<std::vector<TokenType>,
+                std::unordered_map<size_t, int>, std::unordered_map<size_t, ElementType>>;
+
         bool isValenceDataLatest;
         std::unordered_map<id_type, int> atomTotalBondOrderMap, atomDoubleBondNum;
         JMol &mol;
+        /**
+         * 在任何地方使用过 last_holder 后，应该调用 clearLastHolder 清除之
+         */
+        atom_t last_holder;
     public:
+        /**
+         * 绑定要求原位修改的起始原子
+         * @param atom
+         */
+        void bindLastHolder(atom_t atom);
+
+        /**
+         * 消除原位修改的语义
+         */
+        void clearLastHolder();
+
         JMol_p(JMol &_mol);
 
         void exceedValence();
@@ -86,26 +104,31 @@ namespace xgd {
          * @param _abb 缩写枚举
          * @return 两侧的原子
          */
-        std::pair<atom_t, atom_t> makeAbbType(const TokenType &_abb, atom_t a_beg = nullptr);
+        std::pair<atom_t, atom_t> makeAbbType(const TokenType &_abb);
 
-        std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele, atom_t a_beg = nullptr);
+        std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele);
 
-        std::pair<atom_t, atom_t> makeAlkane(const int &_num, atom_t a_beg = nullptr);
+        std::pair<atom_t, atom_t> makeAlkane(const int &_num);
 
         std::pair<atom_t, atom_t> makeAcyl(
-                const ElementType &_acyl = ElementType::O, const ElementType &_root = ElementType::C,
-                atom_t a_beg = nullptr);
+                const ElementType &_acyl = ElementType::O, const ElementType &_root = ElementType::C);
 
-        std::tuple<atom_t, atom_t, atom_t, atom_t, atom_t, atom_t> makeBenzene(atom_t a_beg = nullptr);
-
-        using token_struct = std::tuple<std::vector<TokenType>,
-                std::unordered_map<size_t, int>, std::unordered_map<size_t, ElementType>>;
+        std::tuple<atom_t, atom_t, atom_t, atom_t, atom_t, atom_t> makeBenzene();
 
         std::optional<token_struct> interpret(const std::string &inputName);
 
+        /**
+         * 如果挂载前缀，那么返回前缀，不需要调用点关注；
+         * 如果不挂载前缀，那么返回新建子图的两端原子，需要调用点将子图合入原图
+         * @param tokenStruct
+         * @param iBeg
+         * @param iEnd
+         * @param suffix
+         * @param preAtom 如果 preAtom 不为空，那么括号内的所有子图将挂到 preAtom 上；否则顺序连接所有子图
+         * @return
+         */
         std::pair<atom_t, atom_t>
-        extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size_t iEnd, atom_t a_beg = nullptr,
-                               const int &suffix = 1);
+        extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size_t iEnd, int suffix = 1,atom_t preAtom=nullptr);
     };
 
 
