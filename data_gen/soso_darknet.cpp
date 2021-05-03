@@ -76,7 +76,15 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
         }
         if (hwMol) {
             auto idxStr = std::to_string(i);
-            hwMol->dumpAsDarknet(imgPath + idxStr, labelPath + idxStr, _repeatTimes);
+            auto subDir = "/" + std::to_string(i % 100) + "/";
+            if (!std::filesystem::exists(imgPath + subDir)) {
+                std::filesystem::create_directory(imgPath + subDir);
+            }
+            if (!std::filesystem::exists(labelPath + subDir)) {
+                std::filesystem::create_directory(labelPath + subDir);
+            }
+            hwMol->dumpAsDarknet(imgPath + subDir + idxStr,
+                                 labelPath + subDir + idxStr, _repeatTimes);
         }
         if (i % 5000 == 0) {
             std::cout << i << std::endl;

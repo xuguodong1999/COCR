@@ -4,505 +4,558 @@
 <context>
     <name>CameraWidget</name>
     <message>
+        <location filename="../app/ui/camera_widget.ui" line="14"/>
         <source>Camera Viewer</source>
-        <translation>拍照预览</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.ui" line="40"/>
         <source>instant display</source>
-        <translation>实时显示</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.ui" line="225"/>
+        <location filename="../app/ui/camera_widget.cpp" line="145"/>
         <source>Focus</source>
-        <translation>聚焦</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.ui" line="236"/>
         <source>Image</source>
-        <translation>图像</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.ui" line="257"/>
         <source>Exposure Compensation:</source>
-        <translation>曝光补偿</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.ui" line="339"/>
         <source>Capture Photo</source>
-        <translation>拍照</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.ui" line="361"/>
         <source>Device</source>
-        <translation>设备</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.cpp" line="135"/>
+        <location filename="../app/ui/camera_widget.cpp" line="136"/>
         <source>Focusing...</source>
-        <translation>聚焦中</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.cpp" line="140"/>
         <source>Unlock</source>
-        <translation>释放焦点</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.cpp" line="141"/>
         <source>Focused</source>
-        <translation>已聚焦</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.cpp" line="147"/>
         <source>Focus Failed</source>
-        <translation>聚焦失败</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.cpp" line="162"/>
         <source>Image Capture Error</source>
-        <translation>拍照失败</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.cpp" line="195"/>
         <source>Camera Error</source>
-        <translation>相机错误</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/camera_widget.cpp" line="213"/>
         <source>Captured &quot;%1&quot;</source>
-        <translation>已捕捉 &quot;%1&quot;</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>FormatDialog</name>
     <message>
+        <location filename="../app/ui/format_dialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation>格式文件对话框</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/format_dialog.ui" line="57"/>
         <source>copy to clip board</source>
-        <translation>复制到剪切板</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/format_dialog.ui" line="75"/>
         <source>save</source>
-        <translation>保存到设备</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/format_dialog.ui" line="96"/>
         <source>back</source>
-        <translation>退出</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/format_dialog.cpp" line="33"/>
         <source>Copy To Clipboard</source>
-        <translation>复制到剪切板</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/format_dialog.cpp" line="33"/>
         <source>Success</source>
-        <translation>成功</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/format_dialog.cpp" line="53"/>
+        <location filename="../app/ui/format_dialog.cpp" line="58"/>
         <source>FileDialog</source>
-        <translation>文件对话框</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/format_dialog.cpp" line="53"/>
         <source>Fail to save</source>
-        <translation>保存失败</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/format_dialog.cpp" line="58"/>
         <source>Save success</source>
-        <translation>保存成功</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ImageWidget</name>
     <message>
+        <location filename="../app/ui/image_widget.ui" line="14"/>
         <source>Image Loader</source>
-        <translation>图片加载器</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>binaryzation</source>
-        <translation>二值化</translation>
-    </message>
-    <message>
-        <source>OCR</source>
-        <translation>识别</translation>
-    </message>
-    <message>
-        <source>load from file</source>
-        <translation>从文件加载</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/image_widget.ui" line="79"/>
         <source>reset</source>
-        <translation>重置</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/image_widget.ui" line="97"/>
+        <source>binaryzation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/image_widget.ui" line="115"/>
+        <source>load from file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/image_widget.ui" line="133"/>
+        <source>OCR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/image_widget.cpp" line="18"/>
         <source>Empty image</source>
-        <translation>图片为空</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/image_widget.cpp" line="19"/>
+        <location filename="../app/ui/image_widget.cpp" line="53"/>
         <source>You have to load a valid image from your device</source>
-        <translation>你从设备上加载了一张我们无法读取的图片</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/image_widget.cpp" line="40"/>
         <source>Open Image</source>
-        <translation>打开图片</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/image_widget.cpp" line="41"/>
         <source>Image Files (*.png *.jpg *.bmp *.tiff *.webp *.jpeg)</source>
-        <translation>图片格式 (*.png *.jpg *.bmp *.tiff *.webp *.jpeg)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/image_widget.cpp" line="52"/>
         <source>Invalid image</source>
-        <translation>无法解析的图片</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainTabWidget</name>
     <message>
+        <location filename="../app/ui/main_tab_widget.ui" line="14"/>
         <source>leafxy app</source>
-        <translation>leafxy 应用</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.ui" line="80"/>
         <source>home</source>
-        <translation>主页</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.ui" line="90"/>
         <source>draw</source>
-        <translation>手写</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.ui" line="100"/>
         <source>view2d</source>
-        <translation>2D 预览</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.ui" line="110"/>
         <source>view3d</source>
-        <translation>3D 预览</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.ui" line="120"/>
         <source>file</source>
-        <translation>文件</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.ui" line="130"/>
         <source>camera</source>
-        <translation>照相机</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.cpp" line="84"/>
         <source>Agreement not checked yet</source>
-        <translation>没有同意用户协议</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.cpp" line="85"/>
         <source>You have to check out agreement to use this software</source>
-        <translation>使用我们的软件前，你需要阅读并同意用户协议</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.cpp" line="144"/>
         <source>No Molecule Detected</source>
-        <translation>没有检测到分子</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.cpp" line="145"/>
         <source>Nothing detected and it may be a bug</source>
-        <translation>检测失败，可能是一个 Bug</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.cpp" line="155"/>
         <source>3D Molecule build failed</source>
-        <translation>3D 分子生成失败</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/main_tab_widget.cpp" line="156"/>
         <source>Nothing to preview and it may be a bug</source>
-        <translation>无法预览 3D 球棍模型，可能是一个 Bug</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Mol2DWidget</name>
     <message>
+        <location filename="../app/ui/mol2d_widget.cpp" line="109"/>
         <source>atom (global id=</source>
-        <translation>原子（全局 id=</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol2d_widget.cpp" line="109"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="123"/>
         <source>) picked
 </source>
-        <translation>）选中</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol2d_widget.cpp" line="113"/>
         <source>element: </source>
-        <translation>元素：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol2d_widget.cpp" line="115"/>
         <source>mass: </source>
-        <translation>质量：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol2d_widget.cpp" line="123"/>
         <source>bond (global id=</source>
-        <translation>键（全局 id=</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol2d_widget.cpp" line="127"/>
         <source>type: </source>
-        <translation>类型：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol2d_widget.cpp" line="131"/>
         <source>atom 1: </source>
-        <translation>节点1：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol2d_widget.cpp" line="132"/>
         <source>atom 2: </source>
-        <translation>节点2：</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Mol3DWidget</name>
     <message>
-        <source>element: </source>
-        <translation>元素：</translation>
-    </message>
-    <message>
-        <source>mass: </source>
-        <translation>质量：</translation>
-    </message>
-    <message>
-        <source>atom 1: </source>
-        <translation>节点1：</translation>
-    </message>
-    <message>
-        <source>atom 2: </source>
-        <translation>节点2：</translation>
-    </message>
-    <message>
-        <source>type: </source>
-        <translation>类型：</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/mol3d_widget.cpp" line="61"/>
         <source>atom (global id=</source>
-        <translation>原子（全局 id=</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol3d_widget.cpp" line="61"/>
+        <location filename="../app/ui/mol3d_widget.cpp" line="75"/>
         <source>) picked
 </source>
-        <translation>）选中</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/mol3d_widget.cpp" line="65"/>
+        <source>element: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/mol3d_widget.cpp" line="67"/>
+        <source>mass: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/mol3d_widget.cpp" line="75"/>
         <source>bond (global id=</source>
-        <translation>键（全局 id=</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/mol3d_widget.cpp" line="79"/>
+        <source>type: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/mol3d_widget.cpp" line="83"/>
+        <source>atom 1: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/mol3d_widget.cpp" line="84"/>
+        <source>atom 2: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>PaintWidget</name>
     <message>
+        <location filename="../app/ui/paint_widget.ui" line="14"/>
         <source>DrawingBoard</source>
-        <translation>画板</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/paint_widget.ui" line="63"/>
         <source>undo</source>
-        <translation>撤销</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/paint_widget.ui" line="81"/>
         <source>redo</source>
-        <translation>重做</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/paint_widget.ui" line="125"/>
         <source>reset</source>
-        <translation>重置</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/paint_widget.ui" line="143"/>
         <source>OCR</source>
-        <translation>识别</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
+        <location filename="../app/chem/jbond.cpp" line="73"/>
         <source>Single</source>
-        <translation>单键</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/chem/jbond.cpp" line="75"/>
         <source>Double</source>
-        <translation>双键</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/chem/jbond.cpp" line="77"/>
         <source>Triple</source>
-        <translation>三键</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/chem/jbond.cpp" line="79"/>
         <source>Delocalized</source>
-        <translation>离域键</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/chem/jbond.cpp" line="81"/>
         <source>Implicit</source>
-        <translation>未知键型</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/chem/jbond.cpp" line="83"/>
         <source>UpBond</source>
-        <translation>实楔形键</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/chem/jbond.cpp" line="85"/>
         <source>Down</source>
-        <translation>虚楔形键</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/chem/jbond.cpp" line="87"/>
         <source>Unknown</source>
-        <translation>未设定键型</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>View2DWidget</name>
     <message>
+        <location filename="../app/ui/view2d_widget.ui" line="14"/>
         <source>2D Viewer</source>
-        <translation>2D 预览窗口</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/view2d_widget.ui" line="76"/>
         <source>reset</source>
-        <translation>重置</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/view2d_widget.ui" line="94"/>
         <source>see H</source>
-        <translation>观察氢原子</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/view2d_widget.ui" line="118"/>
         <source>selected</source>
-        <translation>已选中的</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/view2d_widget.ui" line="160"/>
         <source>expand</source>
-        <translation>展开</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>copy</source>
-        <translation type="vanished">复制</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/view2d_widget.ui" line="181"/>
         <source>format</source>
-        <translation>格式</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>smi</source>
-        <translation type="vanished">SMILES 格式</translation>
-    </message>
-    <message>
-        <source>pdb</source>
-        <translation type="vanished">PDB 格式</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/view2d_widget.ui" line="223"/>
         <source>export</source>
-        <translation>导出</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Format algorithm failed on your molecule</source>
-        <translation>分子格式算法运行失败</translation>
-    </message>
-    <message>
-        <source>No molecule found</source>
-        <translation>没有检测到分子</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/view2d_widget.cpp" line="71"/>
         <source>Warning</source>
-        <translation>警告</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/view2d_widget.cpp" line="72"/>
         <source>The molecule you see has SUPER ATOMS.
 They are represented as element At(85, VIIA).
 You can use &apos;expand&apos; and &apos;see H&apos; button to try again</source>
-        <translation>你看见的分子包含由字符串表达的超原子；
-在格式导出时，它们暂时用卤族元素砹表示；
-你可以使用“展开”和“观察氢原子”按钮来尝试展开这些超原子（不一定成功）</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/view2d_widget.cpp" line="80"/>
+        <source>Format algorithm failed on your molecule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/view2d_widget.cpp" line="83"/>
+        <source>No molecule found</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>View3DWidget</name>
     <message>
+        <location filename="../app/ui/view3d_widget.ui" line="14"/>
         <source>3D Viewer</source>
-        <translation>3D 预览器</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/view3d_widget.ui" line="72"/>
         <source>reset</source>
-        <translation>重置</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>see H</source>
-        <translation type="vanished">观察氢原子</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/view3d_widget.ui" line="96"/>
         <source>selected</source>
-        <translation>已选中的</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/view3d_widget.ui" line="138"/>
         <source>expand</source>
-        <translation>展开</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>copy</source>
-        <translation type="vanished">复制</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/view3d_widget.ui" line="159"/>
         <source>format</source>
-        <translation>格式</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>smi</source>
-        <translation type="vanished">SMILES 格式</translation>
-    </message>
-    <message>
-        <source>pdb</source>
-        <translation type="vanished">PDB 格式</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/view3d_widget.ui" line="201"/>
         <source>export</source>
-        <translation>导出</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Format algorithm failed on your molecule</source>
-        <translation>分子格式算法运行失败</translation>
-    </message>
-    <message>
-        <source>No molecule found</source>
-        <translation>没有检测到分子</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/view3d_widget.cpp" line="79"/>
         <source>Warning</source>
-        <translation>警告</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/view3d_widget.cpp" line="80"/>
         <source>The molecule you see has SUPER ATOMS.
 They are represented as element At(85, VIIA).
 You can use &apos;expand&apos; and &apos;see H&apos; button to try again</source>
-        <translation>你看见的分子包含由字符串表达的超原子；
-在格式导出时，它们暂时用卤族元素砹表示；
-你可以使用“展开”和“观察氢原子”按钮来尝试展开这些超原子（不一定成功）</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/view3d_widget.cpp" line="88"/>
+        <source>Format algorithm failed on your molecule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/view3d_widget.cpp" line="91"/>
+        <source>No molecule found</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>WaitHintWidget</name>
     <message>
+        <location filename="../app/ui/waithint_widget.ui" line="14"/>
         <source>Form</source>
-        <translation>表单</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/waithint_widget.ui" line="40"/>
         <source>running......</source>
-        <translation>正在运行……</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>WelcomeWidget</name>
     <message>
+        <location filename="../app/ui/welcome_widget.ui" line="14"/>
         <source>Welcome</source>
-        <translation>欢迎页</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/welcome_widget.ui" line="51"/>
         <source>leafxy: a handwritting OCSR toolset</source>
-        <translation>leafxy：手写结构式图像识别应用</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../app/ui/welcome_widget.ui" line="87"/>
         <source>introduction</source>
-        <translation>介绍</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>agreement</source>
-        <translation>用户协议</translation>
-    </message>
-    <message>
-        <source>i agree</source>
-        <translation>我同意</translation>
-    </message>
-    <message>
-        <source>guide</source>
-        <translation>使用指引</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;LEAFXY app is an OCSR (Optical Chemical Structure Recognition) toolset capable of handling handwritten samples.&lt;/p&gt;&lt;p&gt;Honor of its creation belongs to Guodong Xu, an undergraduate of Nanjing University in 2021.&lt;/p&gt;&lt;p&gt;LEAFXY is a proper name. It is not an an acronym for anything.&lt;/p&gt;</source>
-        <translation>&lt;p&gt; leafxy 是一个具备手写支持的化学结构式图像识别工具。&lt;/p&gt;&lt;p&gt;leafxy 的诞生离不开徐国栋本科期间在南京大学计算机科学与技术系的工作。&lt;/p&gt;&lt;p&gt;&quot;leafxy&quot; 是一个专有名词，不是任何其它事物的缩略词。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Before playing with this app, you have to accept GNU GPLv3 license and check the box beside.&lt;/p&gt;&lt;p&gt;Then, you may click the DRAW tab below to open a sketch board.&lt;/p&gt;&lt;p&gt;You can draw chemical structure formulas and click OCR button to recognize your script.&lt;/p&gt;&lt;p&gt;For hello world, draw a N-butane with three continuous line segments, click the purple.&lt;/p&gt;&lt;p&gt;A few moments later, you can see result from VIEW3D tab after a simple molecule dynamic job.&lt;/p&gt;&lt;p&gt;Single, double, triple bonds, solid and hash wedge bonds, wave and circle bonds as well as element or abbreviation strings are supported.&lt;/p&gt;&lt;p&gt;You can switch to VIEW2D tab to see 2d result.&lt;/p&gt;&lt;p&gt;Just double-click white area or click RESET button to reformat 2d result.&lt;/p&gt;&lt;p&gt;Load image from your device is also supported from FILE tab.&lt;/p&gt;&lt;p&gt;CAMERA tab works in a few devices. This feature is still under development.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;在使用这个程序前，你需要理解并同意我们的开源协议，并点击右侧的复选框。&lt;/p&gt;&lt;p&gt;下面，你可以点击屏幕下方第二个标签“手写”来打开一个绘图板。&lt;/p&gt;&lt;p&gt;你可以画一个化学结构式并点击“识别”按钮来获得结果。&lt;/p&gt;&lt;p&gt;从画一个正丁烷开始吧！一笔画出三条折线段，点击紫色的按钮！&lt;/p&gt;&lt;p&gt;一眨眼的功夫，你将在“3D 预览”标签上方的窗口看到一个经分子力场优化的三维球棍模型。&lt;/p&gt;&lt;p&gt;我们支持单、双、三键、虚实楔形键、波浪键、环中圈在内的七种化学键，以及包括所有元素符号、电荷、数字下标、常见缩写在内的长度合理的字符串。&lt;/p&gt;&lt;p&gt;你可以点击屏幕下方的“2D 预览”标签来获得平面结构式。&lt;/p&gt;&lt;p&gt;双击屏幕或点击“重置”按钮来获得标准化的平面结构式。&lt;/p&gt;&lt;p&gt;你也可以点开“文件”标签，从设备加载干净清晰的图片来识别。&lt;/p&gt;&lt;p&gt;照相机功能还在开发中，在某些设备上无法正常工作。&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>LEAFXY app and its source code are licensed under GNU GPLv3.</source>
-        <translation>leafxy 应用和它的源代码以 GNU GPLv3 协议授权给您。</translation>
-    </message>
-    <message>
+        <location filename="../app/ui/welcome_widget.ui" line="112"/>
+        <location filename="../app/ui/welcome_widget.ui" line="267"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
                                             &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot;
                                             /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -514,7 +567,37 @@ You can use &apos;expand&apos; and &apos;see H&apos; button to try again</source
                                             &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px;
                                             margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt; &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
                                         </source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/welcome_widget.ui" line="152"/>
+        <source>agreement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/welcome_widget.ui" line="198"/>
+        <source>i agree</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/welcome_widget.ui" line="242"/>
+        <source>guide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/welcome_widget.cpp" line="14"/>
+        <source>&lt;p&gt;LEAFXY app is an OCSR (Optical Chemical Structure Recognition) toolset capable of handling handwritten samples.&lt;/p&gt;&lt;p&gt;Honor of its creation belongs to Guodong Xu, an undergraduate of Nanjing University in 2021.&lt;/p&gt;&lt;p&gt;LEAFXY is a proper name. It is not an an acronym for anything.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/welcome_widget.cpp" line="19"/>
+        <source>&lt;p&gt;Before playing with this app, you have to accept GNU GPLv3 license and check the box beside.&lt;/p&gt;&lt;p&gt;Then, you may click the DRAW tab below to open a sketch board.&lt;/p&gt;&lt;p&gt;You can draw chemical structure formulas and click OCR button to recognize your script.&lt;/p&gt;&lt;p&gt;For hello world, draw a N-butane with three continuous line segments, click the purple.&lt;/p&gt;&lt;p&gt;A few moments later, you can see result from VIEW3D tab after a simple molecule dynamic job.&lt;/p&gt;&lt;p&gt;Single, double, triple bonds, solid and hash wedge bonds, wave and circle bonds as well as element or abbreviation strings are supported.&lt;/p&gt;&lt;p&gt;You can switch to VIEW2D tab to see 2d result.&lt;/p&gt;&lt;p&gt;Just double-click white area or click RESET button to reformat 2d result.&lt;/p&gt;&lt;p&gt;Load image from your device is also supported from FILE tab.&lt;/p&gt;&lt;p&gt;CAMERA tab works in a few devices. This feature is still under development.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../app/ui/welcome_widget.cpp" line="34"/>
+        <source>LEAFXY app and its source code are licensed under GNU GPLv3.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

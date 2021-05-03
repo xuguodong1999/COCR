@@ -12,7 +12,7 @@
 
 
 extern CRNNDataGenerator crnnDataGenerator;
-
+std::string WORKSPACE0="D:/datasets";
 /**
  * TODO:
  * 1、标准水平长文本
@@ -23,11 +23,11 @@ extern CRNNDataGenerator crnnDataGenerator;
  */
 void generateYoloData() {
     srand(0022);
-    crnnDataGenerator.init(WORKSPACE + "/crnn-text-data");
-//    crnnDataGenerator.display();
+    crnnDataGenerator.init(WORKSPACE0 + "/crnn-text-data");
     SOSODarknet generator;
-    generator.init(WORKSPACE + "/soso-obj-data");
-    generator.display();
+    generator.init(WORKSPACE0 + "/soso-obj-data/train");
+//    generator.display();
+    generator.dump(1000000,5);
 }
 
 #include <QPainter>

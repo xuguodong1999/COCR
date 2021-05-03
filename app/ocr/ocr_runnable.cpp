@@ -95,6 +95,9 @@ OCRThread::OCRThread(QObject *_parent, const QString &_dir)
         modelDir.setPath(QDir::homePath() + "/source/repos/leafxy/resources/model");
         if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
             modelDir.setPath(qApp->applicationDirPath());
+            if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
+                modelDir.setPath("C:/source/repos/leafxy/resources/model");
+            }
         }
     }
 /// detector
