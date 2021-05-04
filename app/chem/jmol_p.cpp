@@ -17,9 +17,10 @@ std::unordered_set<TokenType> TOKEN_BOND_SET = {
         TokenType::Me, TokenType::Et, TokenType::iPr, TokenType::nPr, TokenType::iBu, TokenType::tBu,
         TokenType::nBu, TokenType::Am, TokenType::NO2, TokenType::NO, TokenType::SO3, TokenType::SO2,
         TokenType::SO, TokenType::CO2, TokenType::CO, TokenType::Ph, TokenType::Bz, TokenType::CSO, TokenType::COS,
-        // TODO
-        TokenType::Bn, TokenType::Cbz, TokenType::OCN, TokenType::NCS,
-        TokenType::Ace, TokenType::THPO, TokenType::NHZ, TokenType::Ms
+        TokenType::N2H4, TokenType::N2H5, TokenType::Cbz, TokenType::SCN, TokenType::CN, TokenType::Bn, TokenType::Cbz,
+//        // TODO
+//         TokenType::OCN, TokenType::NCS,
+//        TokenType::Ace, TokenType::THPO, TokenType::NHZ, TokenType::Ms
 };
 
 inline bool isChargeToken(const xgd::TokenType &_abb) {
@@ -127,13 +128,14 @@ JMol_p::JMol_p(JMol &_mol) : mol(_mol), isValenceDataLatest(false), last_holder(
 }
 
 std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
+//    qDebug() << __FUNCTION__ << static_cast<int>(_abb);
     switch (_abb) {
         case TokenType::Me: {
             return makeAlkane(1);
         }
         case TokenType::Et: {
             auto[first, last]= makeAlkane(2);
-            return {first, first};
+            return {first, last};
         }
         case TokenType::iPr: {
             auto[first, last]=makeAlkane(2);
@@ -204,11 +206,18 @@ std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
             return {c, c};
         }
         case TokenType::Bn: {
+            auto C = mol.addAtom(ElementType::C);
             auto c6 = makeBenzene();
             auto c = std::get<0>(c6);
-            auto C = mol.addAtom(ElementType::C);
             mol.addBond(c, C);
             return {C, C};
+        }
+        case TokenType::Bz: {
+            auto[co, _]= makeAcyl();
+            auto c6 = makeBenzene();
+            auto c = std::get<0>(c6);
+            mol.addBond(c, co);
+            return {co, co};
         }
         case TokenType::CSO: {
             auto[c, _]= makeAcyl(ElementType::S, ElementType::C);
@@ -221,6 +230,39 @@ std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
             auto s = mol.addAtom(ElementType::O);
             mol.addBond(c, s);
             return {c, s};
+        }
+        case TokenType::N2H4: {
+            auto[n1, n2]=makeAlkane(2, ElementType::N);
+            return {n1, n2};
+        }
+        case TokenType::N2H5: {
+            auto[n1, _]=makeAlkane(2, ElementType::N);
+            return {n1, n1};
+        }
+        case TokenType::Cbz: {// 苄氧羰基
+            auto[co, _]= makeAcyl();
+            auto c6 = makeBenzene();
+            auto c = std::get<0>(c6);
+            auto o = mol.addAtom(ElementType::O);
+            mol.addBond(c, o);
+            mol.addBond(o, co);
+            return {co, co};
+        }
+        case TokenType::SCN: {
+            auto[s, _]=makeElementType(ElementType::S);
+//            auto[s, _]=makeAlkane(1,ElementType::S);
+            auto c = mol.addAtom(ElementType::C);
+            auto n = mol.addAtom(ElementType::N);
+            mol.addBond(s, c);
+            mol.addBond(c, n, BondType::TripleBond);
+            return {s, s};
+        }
+        case TokenType::CN: {
+            auto[c, _]=makeElementType(ElementType::C);
+//            auto[c, _]=makeAlkane(1,ElementType::C);
+            auto n = mol.addAtom(ElementType::N);
+            mol.addBond(c, n, BondType::TripleBond);
+            return {c, c};
         }
         default: {
             break;
@@ -242,20 +284,20 @@ std::pair<atom_t, atom_t> JMol_p::makeElementType(const ElementType &_ele) {
     return {first, first};
 }
 
-std::pair<atom_t, atom_t> JMol_p::makeAlkane(const int &_num) {
+std::pair<atom_t, atom_t> JMol_p::makeAlkane(const int &_num, const ElementType &_ele) {
     if (_num <= 0) { return {nullptr, nullptr}; }
     atom_t first;
     if (last_holder) {
         last_holder->setCharge(0);
-        last_holder->setType(ElementType::C);
+        last_holder->setType(_ele);
         first = last_holder;
         clearLastHolder();
     } else {
-        first = mol.addAtom(ElementType::C);
+        first = mol.addAtom(_ele);
     }
     auto last = first;
     for (int i = 1; i < _num; i++) {
-        auto next = mol.addAtom(ElementType::C);
+        auto next = mol.addAtom(_ele);
         mol.addBond(last, next);
         last = next;
     }
@@ -317,12 +359,12 @@ void xgd::initSuperAtomMap() {
     SUPER_ATOM_MAP[")"] = TokenType::Right;
     // 缩写语义
     SUPER_ATOM_MAP["Me"] = TokenType::Me;
-    SUPER_ATOM_MAP["Et"] = SUPER_ATOM_MAP["Ethyl"] = TokenType::Et;
-    SUPER_ATOM_MAP["nPr"] = SUPER_ATOM_MAP["Pr"] = TokenType::nPr;
+    SUPER_ATOM_MAP["C2H5"] = SUPER_ATOM_MAP["C2H4"] = SUPER_ATOM_MAP["Et"] = SUPER_ATOM_MAP["Ethyl"] = TokenType::Et;
+    SUPER_ATOM_MAP["C3H6"] = SUPER_ATOM_MAP["C3H7"] = SUPER_ATOM_MAP["nPr"] = SUPER_ATOM_MAP["Pr"] = TokenType::nPr;
     SUPER_ATOM_MAP["iPr"] = TokenType::iPr;
     SUPER_ATOM_MAP["iBu"] = TokenType::iBu;
     SUPER_ATOM_MAP["tBu"] = TokenType::tBu;
-    SUPER_ATOM_MAP["nBu"] = SUPER_ATOM_MAP["Bu"] = TokenType::nBu;
+    SUPER_ATOM_MAP["C4H8"] = SUPER_ATOM_MAP["C4H9"] = SUPER_ATOM_MAP["nBu"] = SUPER_ATOM_MAP["Bu"] = TokenType::nBu;
     SUPER_ATOM_MAP["Am"] = TokenType::Am;// 正戊基
     SUPER_ATOM_MAP["NO2"] = TokenType::NO2;
     SUPER_ATOM_MAP["NO"] = TokenType::NO;
@@ -336,10 +378,15 @@ void xgd::initSuperAtomMap() {
     SUPER_ATOM_MAP["Ph"] = TokenType::Ph;
     SUPER_ATOM_MAP["Bz"] = TokenType::Bz;// 苯酰基
     SUPER_ATOM_MAP["Bn"] = TokenType::Bn;// 苯甲基
-    SUPER_ATOM_MAP["Cbz"] = TokenType::Cbz;// 苯甲氧酰基
+    SUPER_ATOM_MAP["Z"] = SUPER_ATOM_MAP["Cbz"] = TokenType::Cbz;// 苯甲氧酰基
+    SUPER_ATOM_MAP["NC"] = SUPER_ATOM_MAP["CN"] = TokenType::CN;
+    SUPER_ATOM_MAP["SCN"] = TokenType::SCN;
+    // 只支持部分烷基、氨基缩写，TODO: 这个需要写正则
+    SUPER_ATOM_MAP["N2H4"] = TokenType::N2H4;
+    SUPER_ATOM_MAP["N2H5"] = TokenType::N2H5;
     // TODO:
     SUPER_ATOM_MAP["OCN"] = SUPER_ATOM_MAP["NCO"] = TokenType::OCN;
-    SUPER_ATOM_MAP["NCS"] = SUPER_ATOM_MAP["SCN"] = TokenType::NCS;
+    SUPER_ATOM_MAP["NCS"] = TokenType::NCS;
     SUPER_ATOM_MAP["Ace"] = SUPER_ATOM_MAP["Acetyl"] = SUPER_ATOM_MAP["Acyl"] = TokenType::Ace;
     SUPER_ATOM_MAP["THPO"] = TokenType::THPO;
     SUPER_ATOM_MAP["NHZ"] = TokenType::NHZ;
@@ -389,7 +436,7 @@ std::optional<JMol_p::token_struct> JMol_p::interpret(const std::string &inputNa
 
 std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
         token_struct &tokenStruct, size_t iBeg, size_t iEnd, int suffix, atom_t parent) {
-    qDebug() << __FUNCTION__ << "suffix=" << suffix;
+//    qDebug() << __FUNCTION__ << "suffix=" << suffix;
     auto&[tokens, numbers, elements]=tokenStruct;
     atom_t a_beg0 = nullptr, a_end0 = nullptr;
     // 如果有要被挂载的原子，那么不可能原位修改接入原子
@@ -411,7 +458,7 @@ std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
                     auto &nextToken = tokens[i + 1];
                     if (isNumberToken(nextToken)) {
                         number = numbers[i + 1];
-                        qDebug() << "number=" << number;
+//                        qDebug() << "number=" << number;
                         std::tie(a1, a2) = makeElementType(
                                 elements[i], last_ele, number);
                         i += 1;
@@ -420,14 +467,14 @@ std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
                         std::tie(a1, a2) = makeElementType(elements[i]);
                         if (a1 && a1->getCommonNebNum() > 1) {
                             // 如果遇到可续接的原子，更新主原子信息
-                            qDebug() << "bind" << a1->getQName();
+//                            qDebug() << "bind" << a1->getQName();
                             last_ele = a1;
                         }
                     }
                 } else {
                     std::tie(a1, a2) = makeElementType(elements[i]);
                     if (a1 && a1->getCommonNebNum() > 1) {
-                        qDebug() << "bind" << a1->getQName();
+//                        qDebug() << "bind" << a1->getQName();
                         last_ele = a1;
                     }
                 }
@@ -495,6 +542,13 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
     if (!atom) { return false; }
     if (ElementType::SA != atom->getType()) { return false; }
     std::string inputName = atom->getName();
+    qDebug()<<atom->isLeftToRight();
+    if (!atom->isLeftToRight()) {
+        // FIXME: here, simply reverse string, HOOC->COOH, e.g.
+        // THIS IS ABSOLUTELY WRONG FOR MOST CASES. 需要写正则精细操作
+        std::reverse(inputName.begin(), inputName.end());
+    }
+//    qDebug() << __FUNCTION__ << inputName.c_str();
     auto opt = interpret(inputName);
     if (!opt) { return false; }
     auto &tokenStruct = opt.value();
@@ -530,6 +584,7 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
             atom_t preAtom = isHangOn ? a_end : nullptr;
             std::tie(a1, a2) = extractNoBracketTokens(
                     tokenStruct, iBeg, iEnd, number, preAtom);
+            if (!(a1 && a2)) { return false; }
             // 非附着情况，需要手动连接子图和前一个原子
             if (!isHangOn && a_end && a1) {
                 mol.addBond(a_end, a1);
@@ -545,6 +600,7 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
             bool isFirst = last_holder != nullptr;
             std::tie(a1, a2) = extractNoBracketTokens(
                     tokenStruct, iBeg, iEnd, 1, nullptr);
+            if (!(a1 && a2)) { return false; }
             // 如果不是接入点原子，那么需要把新建子图连接到原分子图
             if (!isFirst && a_end && a1) {
                 mol.addBond(a_end, a1);
@@ -553,7 +609,7 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
             beg = end;
         }
     }
-    qDebug() << __FUNCTION__ << "return true";
+//    qDebug() << __FUNCTION__ << "return true";
     return true;
 }
 
@@ -569,7 +625,9 @@ std::pair<atom_t, atom_t> JMol_p::makeElementType(
         const ElementType &_ele, atom_t parent, int num) {
     while (num--) {
         auto atom = mol.addAtom(_ele);
-        mol.addBond(parent, atom, BondType::SingleBond);
+        if (parent && atom) {
+            mol.addBond(parent, atom, BondType::SingleBond);
+        }
     }
     return {parent, parent};
 }

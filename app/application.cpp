@@ -9,11 +9,10 @@ Application::Application(int &argc, char **argv, int flag) : QApplication(argc, 
     setOrganizationName("leafxy");
     setOrganizationDomain("xuguodong1999.github.io");
     setApplicationName("leafxy");
-//    getSettings().setValue("test_key1","你好");
-#ifndef Q_OS_ANDROID
-    auto logger = LogManager::GetInstance();
-    logger->init(applicationDirPath());
-#endif
+//#ifndef Q_OS_ANDROID
+//    auto logger = LogManager::GetInstance();
+//    logger->init(applicationDirPath());
+//#endif
     static QTranslator translator;
     QString qmFile = ":/" + applicationName() + "_" + QLocale::system().name() + ".qm";
     qDebug() << __FUNCTION__ << "qmFile=" << qmFile;

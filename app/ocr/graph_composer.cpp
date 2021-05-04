@@ -236,8 +236,8 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
     // 决策过程
     // Input: 候选关系对 {<id1,id2,distance,(maybe)feature_map>, ......}
     // Output: 实际关系对 {<id1,id2>, ......}
-    qDebug() << "blackList.size()=" << blackList.size();
-    qDebug() << "feats.size()=" << feats.size();
+//    qDebug() << "blackList.size()=" << blackList.size();
+//    qDebug() << "feats.size()=" << feats.size();
     for (auto&[id, vec]:feats) {
         std::sort(vec.begin(), vec.end(), [](const feat_type &_a, const feat_type &_b) -> bool {
             return _a.second < _b.second;
@@ -279,7 +279,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
         }
         logBuffer.append("\n-------------------------------------\n");
     }
-    qDebug() << logBuffer.toStdString().c_str();
+//    qDebug() << logBuffer.toStdString().c_str();
     // 构造集合节点
     // <集合id，<{item1,item2,...}, center>>
     // 元素中心集合的特点：单中心，集合item数量上限由元素决定
@@ -488,6 +488,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
         if (from && to) {
             mol->addBond(from, to, item.getBondType(), offset1, offset2);
             const float dirThresh = 0.6;
+//            qDebug() << offset1 << offset2;
             if (offset1 > dirThresh) {
                 from->setIsLeftToRight(false);
             }

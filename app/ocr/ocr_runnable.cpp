@@ -20,6 +20,8 @@
 #include <QDebug>
 #include <QDir>
 #include <QApplication>
+#include <QDesktopWidget>
+#include <QScreen>
 
 class OCRRunnablePrivate {
     cv::Mat image;
@@ -38,6 +40,7 @@ public:
         qreal minx, miny, maxx, maxy;
         minx = miny = std::numeric_limits<qreal>::max();
         maxx = maxy = std::numeric_limits<qreal>::lowest();
+
         for (auto &pts:_script) {
             for (auto &pt:pts) {
                 minx = (std::min)(minx, pt.x());
@@ -47,14 +50,16 @@ public:
             }
         }
         const int padding = 16;
-        int width = (std::min)(static_cast<int>(maxx - minx), MAX_WIDTH),
-                height = (std::min)(static_cast<int>(maxy - miny ), MAX_WIDTH);
+        float scale = QApplication::desktop()->width() / 720.f;
+        if (scale < 1)scale = 1;
+        if (scale > 2)scale = 2;
+        int width = (std::min)(static_cast<int>(maxx - minx), MAX_WIDTH) / scale,
+                height = (std::min)(static_cast<int>(maxy - miny ), MAX_WIDTH) / scale;
         float kx = static_cast<float>(width) / (maxx - minx);
         float ky = static_cast<float>(height) / (maxy - miny);
         width += padding * 2;
         height += padding * 2;
-        qDebug() << "kx=" << kx;
-        qDebug() << "ky=" << ky;
+        qDebug() << "kx=" << kx << ",ky=" << ky << ",scale=" << scale;
         std::vector<std::vector<cv::Point2f>> ptsVec(_script.size());
         for (size_t i = 0; i < ptsVec.size(); i++) {
             ptsVec[i].resize(_script[i].size());
@@ -66,10 +71,10 @@ public:
         image = cv::Mat(height, width, CV_8UC1, WHITE);
         for (auto &pts:ptsVec) {
             if (pts.size() == 1) {
-                cv::line(image, pts[0], pts[0], BLACK, 3, cv::LINE_AA);
+                cv::line(image, pts[0], pts[0], BLACK, 2, cv::LINE_AA);
             } else if (pts.size() > 1) {
                 for (size_t i = 1; i < pts.size(); i++) {
-                    cv::line(image, pts[i], pts[i - 1], BLACK, 3, cv::LINE_AA);
+                    cv::line(image, pts[i], pts[i - 1], BLACK, 2, cv::LINE_AA);
                 }
             }
         }
@@ -107,7 +112,7 @@ OCRThread::OCRThread(QObject *_parent, const QString &_dir)
                             (modelDir.absolutePath() + "/yolo-3l-c8.weights").toStdString())) {
         qDebug() << "fail to init opencv detector";
     }
-    detector.setConfThresh(0.15);
+    detector.setConfThresh(0.1);
     detector.setIouThresh(0.45);
 #else
     static xgd::ObjectDetectorNcnnImpl detector;

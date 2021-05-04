@@ -90,7 +90,7 @@ std::vector<xgd::OCRItem> xgd::OCRManager::convert(const std::vector<DetectorObj
             }
             case DetectorObjectType::Text : {
                 auto[text, scores]=recognizer.recognize(_input(round_scale(obj.x(), obj.y(), obj.w(), obj.h())));
-                qDebug() << "text=" << text.c_str();
+//                qDebug() << "text=" << text.c_str();
                 text = corrector.correct(text);
                 item.setAsText(text, obj.asRect());
                 break;

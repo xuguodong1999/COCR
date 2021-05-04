@@ -22,6 +22,18 @@ namespace xgd {
 
 std::string xgd::TextCorrector::correct(const std::string &_text) {
     std::string result = _text;
+    for (size_t i = 0; i < result.size(); i++) {
+        auto &c = result[i];
+        if (i > 0) {
+            auto c0 = result[i - 1];
+            if (c0 == '(' && '0' <= c && c <= '9') {
+                c = 'C';// (x -> Cx
+            }
+        }
+//        if (i < result.size() - 1) {
+//            auto c1 = result[i + 1];
+//        }
+    }
     switch (result.length()) {
         case 1:
             break;
@@ -38,6 +50,32 @@ std::string xgd::TextCorrector::correct(const std::string &_text) {
     result = xgd::replaceSubStr(result, "SH", "OO");
     result = xgd::replaceSubStr(result, "HD", "HO");
     result = xgd::replaceSubStr(result, "DH", "OH");
+    result = xgd::replaceSubStr(result, "CL", "Cl");
+    result = xgd::replaceSubStr(result, "CZ", "C2");
+    result = xgd::replaceSubStr(result, "(Z", "C2");
+    result = xgd::replaceSubStr(result, "CbZ", "Cbz");
+    result = xgd::replaceSubStr(result, "CeO", "COO");
+    int lb = 0, rb = 0;
+    for (auto &c:result) {
+        if (c == '(') { ++lb; } else if (c == ')') { ++rb; }
+    }
+    if (lb < rb) {
+        int delta = rb - lb;
+        for (auto &c:result) {
+            if (c == 'C') {
+                c = '(';
+                if (!--delta) { break; }
+            }
+        }
+    }else if (lb > rb) {
+        int delta = lb - rb;
+        for (auto &c:result) {
+            if (c == '(') {
+                c = 'C';
+                if (!--delta) { break; }
+            }
+        }
+    }
     return result;
 }
 

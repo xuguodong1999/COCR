@@ -366,8 +366,12 @@ int JMol::getNumHydrogen(const id_type &_aid) {
             }
         }
     }
-    qDebug() << atom->getQName() << numHs;
+//    qDebug() << atom->getQName() << numHs;
     return numHs;
+}
+
+void JMol::exceedAllData() {
+    is3DInfoLatest = is2DInfoLatest = false;
 }
 
 

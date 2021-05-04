@@ -155,3 +155,7 @@ void SketchWidget::saveLastScript() {
     leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
 }
 
+void SketchWidget::keyPressEvent(QKeyEvent *e) {
+    QWidget::keyPressEvent(e);
+}
+

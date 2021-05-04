@@ -90,6 +90,8 @@ namespace xgd {
          */
         virtual void onExtraDataNeeded();
 
+        virtual void exceedAllData();
+
         virtual std::shared_ptr<JAtom> removeAtom(const id_type &_aid);
 
         virtual std::shared_ptr<JBond> removeBond(const id_type &_bid);

@@ -16,16 +16,16 @@ using namespace xgd;
 
 
 JMolAdapter::JMolAdapter() : isOBMolLatest(true), obMol(std::make_shared<OpenBabel::OBMol>()) {
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
 }
 
 JMolAdapter::~JMolAdapter() {
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
 }
 
 JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
         isOBMolLatest(false), obMol(std::make_shared<OpenBabel::OBMol>()), JMol() {
-    qDebug() << __FUNCTION__ << "const&";
+//    qDebug() << __FUNCTION__ << "const&";
     id = _jMolAdapter.id + 1;
     idBase = _jMolAdapter.idBase;
     const_cast<JMolAdapter &>(_jMolAdapter).loopAtomVec([&](JAtom &_atom) {
@@ -42,7 +42,7 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
 }
 
 JMolAdapter::JMolAdapter(JMolAdapter &&_jMolAdapter) {
-    qDebug() << __FUNCTION__ << "&&";
+//    qDebug() << __FUNCTION__ << "&&";
     obMol = _jMolAdapter.obMol;
 }
 
@@ -101,7 +101,8 @@ std::string JMolAdapter::writeAs(const std::string &_formatSuffix) {
     // TODO: 一些不需要运行分子力场的非3D坐标格式
     static std::unordered_set<std::string> sNo3DWhiteList = {
             "smi",
-            "can"
+            "can",
+            "inchi"
     };
     if (sNo3DWhiteList.end() == sNo3DWhiteList.find(_formatSuffix) && !is3DInfoLatest) {
         if (!generate3D())
@@ -241,7 +242,7 @@ bool JMolAdapter::generate3D() {
 }
 
 void JMolAdapter::syncNewEntityFromOBMol() {
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
     onMolUpdated();
     FOR_ATOMS_OF_MOL(obAtomIter, *obMol) {
         auto obAtom = obAtomIter->GetId();
@@ -383,7 +384,7 @@ void JMolAdapter::onExtraDataNeeded() {
 }
 
 void JMolAdapter::resetOBMol() {
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
     bondIdMap.clear();
     atomIdMap.clear();
     bondIdMap2.clear();
@@ -401,7 +402,7 @@ void JMolAdapter::resetOBMol() {
 std::shared_ptr<JAtom>
 JMolAdapter::addSuperAtom(const std::string &_name, const float &_x0, const float &_y0, const float &_x1,
                           const float &_y1) {
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
     onMolUpdated();
     checkOBMol();
     auto atom = JMol::addSuperAtom(_name, _x0, _y0, _x1, _y1);
@@ -455,6 +456,11 @@ std::vector<std::vector<id_type>> JMolAdapter::getSSSR() {
         }
     }
     return result;
+}
+
+void JMolAdapter::exceedAllData() {
+    JMol::exceedAllData();
+    resetOBMol();
 }
 
 std::vector<std::string> GetWritableFormats() {

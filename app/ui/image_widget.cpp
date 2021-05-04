@@ -45,6 +45,7 @@ void ImageWidget::openImage() {
     }
     image = std::make_shared<QImage>();
     if (image->load(fileName)) {
+        *image = image->convertToFormat(QImage::Format_Grayscale8);
         showImage();
         emit sig_modified();
     } else {

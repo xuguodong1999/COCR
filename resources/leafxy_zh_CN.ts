@@ -159,7 +159,7 @@
     </message>
     <message>
         <location filename="../app/ui/image_widget.cpp" line="19"/>
-        <location filename="../app/ui/image_widget.cpp" line="53"/>
+        <location filename="../app/ui/image_widget.cpp" line="54"/>
         <source>You have to load a valid image from your device</source>
         <translation type="unfinished"></translation>
     </message>
@@ -174,7 +174,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/image_widget.cpp" line="52"/>
+        <location filename="../app/ui/image_widget.cpp" line="53"/>
         <source>Invalid image</source>
         <translation type="unfinished"></translation>
     </message>

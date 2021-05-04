@@ -40,11 +40,17 @@ namespace xgd {
         CO2,
         CO,
         Ph,
+        Bn,
         Bz,
         CSO,
         COS,
+        N2H4,
+        N2H5,
+        Cbz,
+        SCN,
+        CN,
         // TODO:
-        Bn, Cbz, OCN, NCS, Ace, THPO, NHZ, Ms
+          OCN, NCS, Ace, THPO, NHZ, Ms
     };
 
     extern std::unordered_map<std::string, TokenType> SUPER_ATOM_MAP;
@@ -110,7 +116,7 @@ namespace xgd {
 
         std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele, atom_t parent, int num);
 
-        std::pair<atom_t, atom_t> makeAlkane(const int &_num);
+        std::pair<atom_t, atom_t> makeAlkane(const int &_num,const ElementType&_ele=ElementType::C);
 
         std::pair<atom_t, atom_t> makeAcyl(
                 const ElementType &_acyl = ElementType::O, const ElementType &_root = ElementType::C);
