@@ -33,6 +33,8 @@ namespace xgd {
 
     using id_type = size_t;
 
+    class JBond;
+
     class JAtom {
         ElementType type;
         int charge;
@@ -90,7 +92,7 @@ namespace xgd {
 
         float getRadius() const;
 
-        int getCommonNebNum()const;
+        int getCommonNebNum() const;
     };
 
     const std::string &convertElementTypeToName(const ElementType &_type);

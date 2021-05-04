@@ -246,13 +246,13 @@ int xgd::JAtom::getCharge() const {
 
 xgd::JAtom::JAtom(const size_t &_id, const ElementType &_element, const float &_x, const float &_y)
         : id(_id), mIsImplicit(false), type(_element), x(_x), y(_y),
-          x0(_x), y0(_y), x1(_x), y1(_y), xx(0), yy(0), zz(0), charge(0), mIsLeftToRight(true) {
+          x0(_x), y0(_y), x1(_x), y1(_y), xx(0), yy(0), zz(0), charge(0), mIsLeftToRight(false) {
 }
 
 xgd::JAtom::JAtom(const size_t &_id, const std::string &_name,
                   const float &_x0, const float &_y0, const float &_x1, const float &_y1)
         : id(_id), mIsImplicit(false), type(ElementType::SA), x((_x0 + _x1) / 2), y((_y0 + _y1) / 2),
-          x0(_x0), y0(_y0), x1(_x1), y1(_y1), xx(0), yy(0), zz(0), charge(0), name(_name), mIsLeftToRight(true) {
+          x0(_x0), y0(_y0), x1(_x1), y1(_y1), xx(0), yy(0), zz(0), charge(0), name(_name), mIsLeftToRight(false) {
 
 }
 
@@ -342,7 +342,7 @@ bool xgd::JAtom::isLeftToRight() const {
 }
 
 void xgd::JAtom::setIsLeftToRight(bool isLeftToRight) {
-    JAtom::mIsLeftToRight = isLeftToRight;
+    if (!mIsLeftToRight) { mIsLeftToRight = isLeftToRight; }
 }
 
 int xgd::JAtom::getCommonNebNum() const {
@@ -352,4 +352,5 @@ int xgd::JAtom::getCommonNebNum() const {
     }
     return 4;
 }
+
 

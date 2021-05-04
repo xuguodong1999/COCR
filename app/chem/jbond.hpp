@@ -24,6 +24,12 @@ namespace xgd {
     class JBond {
         id_type id;
         std::shared_ptr<JAtom> from, to;
+    public:
+        void setFrom(const std::shared_ptr<JAtom> &from);
+
+        void setTo(const std::shared_ptr<JAtom> &to);
+
+    private:
         // 约定：范围[0,1]，表达键端在原子的接入点，用于几何表达层面
         float offset1, offset2;
         BondType type;

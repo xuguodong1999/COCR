@@ -62,7 +62,7 @@ namespace xgd {
         void display() override;
 
         void exceedAllData() override;
-
+        void rebuildAllData()override;
         void onExtraDataNeeded() override;
 
         JMolAdapter &operator=(const JMolAdapter &) = delete;

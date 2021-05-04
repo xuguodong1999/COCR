@@ -486,15 +486,13 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             }
         }
         if (from && to) {
-            mol->addBond(from, to, item.getBondType(), offset1, offset2);
+            auto bond = mol->addBond(
+                    from, to, item.getBondType(), offset1, offset2);
             const float dirThresh = 0.6;
 //            qDebug() << offset1 << offset2;
-            if (offset1 > dirThresh) {
-                from->setIsLeftToRight(false);
-            }
-            if (offset2 > dirThresh) {
-                to->setIsLeftToRight(false);
-            }
+            from->setIsLeftToRight(offset1 > dirThresh);
+            to->setIsLeftToRight(offset2 > dirThresh);
+
         } else {
             qDebug() << "error: not from && to@" << __FILE__ << "@" << __LINE__;
         }

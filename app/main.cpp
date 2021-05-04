@@ -45,7 +45,6 @@ int loopBenchMark() {
                     ++dir4Expand;
                     return;
                 }
-                mol->exceedAllData();
                 try {
                     mol->addAllHydrogens();
                     auto predict = mol->writeAs("inchi");

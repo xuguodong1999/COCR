@@ -88,6 +88,14 @@ QString JBond::getQName() const {
     }
 }
 
+void JBond::setFrom(const std::shared_ptr<JAtom> &from) {
+    JBond::from = from;
+}
+
+void JBond::setTo(const std::shared_ptr<JAtom> &to) {
+    JBond::to = to;
+}
+
 static std::unordered_map<BondType, ColorName> colorMap = {
         {BondType::SingleBond,      ColorName::rgbLightGoldenrod1},
         {BondType::DoubleBond,      ColorName::rgbDarkGoldenrod1},

@@ -50,7 +50,7 @@ namespace xgd {
         SCN,
         CN,
         // TODO:
-          OCN, NCS, Ace, THPO, NHZ, Ms
+        OCN, NCS, Ace, THPO, NHZ, Ms
     };
 
     extern std::unordered_map<std::string, TokenType> SUPER_ATOM_MAP;
@@ -63,7 +63,7 @@ namespace xgd {
 
         using token_struct = std::tuple<std::vector<TokenType>,
                 std::unordered_map<size_t, int>, std::unordered_map<size_t, ElementType>>;
-
+        bool reverseTokens(token_struct&tokenStruct);
         bool isValenceDataLatest;
         std::unordered_map<id_type, int> atomTotalBondOrderMap, atomDoubleBondNum;
         JMol &mol;
@@ -116,7 +116,7 @@ namespace xgd {
 
         std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele, atom_t parent, int num);
 
-        std::pair<atom_t, atom_t> makeAlkane(const int &_num,const ElementType&_ele=ElementType::C);
+        std::pair<atom_t, atom_t> makeAlkane(const int &_num, const ElementType &_ele = ElementType::C);
 
         std::pair<atom_t, atom_t> makeAcyl(
                 const ElementType &_acyl = ElementType::O, const ElementType &_root = ElementType::C);

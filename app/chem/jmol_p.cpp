@@ -542,16 +542,15 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
     if (!atom) { return false; }
     if (ElementType::SA != atom->getType()) { return false; }
     std::string inputName = atom->getName();
-    qDebug()<<atom->isLeftToRight();
-    if (!atom->isLeftToRight()) {
-        // FIXME: here, simply reverse string, HOOC->COOH, e.g.
-        // THIS IS ABSOLUTELY WRONG FOR MOST CASES. 需要写正则精细操作
-        std::reverse(inputName.begin(), inputName.end());
-    }
 //    qDebug() << __FUNCTION__ << inputName.c_str();
     auto opt = interpret(inputName);
     if (!opt) { return false; }
     auto &tokenStruct = opt.value();
+    qDebug() << atom->isLeftToRight();
+    if (atom->isLeftToRight()) {
+        // reverse tokenStruct here
+        if (!reverseTokens(tokenStruct)) { return false; }
+    }
     auto&[tokens, numbers, elements]=tokenStruct;
     bindLastHolder(atom);// 原位修改起始原子
     atom_t a_end = atom, a1, a2;
@@ -563,10 +562,11 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
         if (isLeftToken(token)) {
             end = beg + 1;
             // 找到第一个右括号
-            while (end < tokens.size() && !isRightToken(tokens[end])) { ++end; }
+            while (end < tokens.size() && !isLeftToken(tokens[end]) && !isRightToken(tokens[end])) { ++end; }
             if (end >= tokens.size()) { return false; }
+            if (!isRightToken(tokens[end - 1])) { return false; }
             iBeg = beg + 1;
-            iEnd = (end == tokens.size()) ? end - 1 : end - 2;
+            iEnd = end - 2;
             // 如果右括号附着有数字，记下这个数字
             if (end + 1 < tokens.size() && isNumberToken(tokens[end + 1])) {
                 end += 1;
@@ -609,6 +609,28 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
             beg = end;
         }
     }
+    // TODO: 解决多点接入问题
+//        if (atom && a_end) {
+//            auto &bonds = atom->getSaBonds();
+//            qDebug() << "bonds.size()=" << bonds.size();
+//            if (bonds.size() > 1) {
+//                std::sort(bonds.begin(), bonds.end(), [](
+//                        const std::pair<float, std::shared_ptr<JBond>> &a,
+//                        const std::pair<float, std::shared_ptr<JBond>> &b) {
+//                    return a.first < b.first;
+//                });
+//                mol.exceedAllData();
+//                if (bonds[1].second->getFrom()->getId() == atom->getId()) {
+//                    bonds[1].second->setFrom(a_end);
+//                } else {
+//                    bonds[1].second->setTo(a_end);
+//                }
+//                mol.rebuildAllData();
+//            }
+//        }
+
+
+
 //    qDebug() << __FUNCTION__ << "return true";
     return true;
 }
@@ -630,4 +652,14 @@ std::pair<atom_t, atom_t> JMol_p::makeElementType(
         }
     }
     return {parent, parent};
+}
+
+bool JMol_p::reverseTokens(JMol_p::token_struct &tokenStruct) {
+    token_struct newStruct;
+    auto&[tokens, numbers, elements]=tokenStruct;
+    auto&[tokens2, numbers2, elements2]=newStruct;
+    // 我们只支持单层括号
+
+    std::swap(newStruct, tokenStruct);
+    return false;
 }

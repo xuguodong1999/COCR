@@ -460,6 +460,15 @@ std::vector<std::vector<id_type>> JMolAdapter::getSSSR() {
 
 void JMolAdapter::exceedAllData() {
     JMol::exceedAllData();
+    bondIdMap.clear();
+    atomIdMap.clear();
+    bondIdMap2.clear();
+    atomIdMap2.clear();
+    obMol = std::make_shared<OpenBabel::OBMol>();
+    onMolUpdated();
+}
+
+void JMolAdapter::rebuildAllData() {
     resetOBMol();
 }
 
