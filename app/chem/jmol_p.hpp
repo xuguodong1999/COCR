@@ -89,13 +89,13 @@ namespace xgd {
 
         int getDoubleBondNum(const id_type &_aid) const;
 
-        void add_bond_order_for_atom(const id_type &_aid, const int &_order);
+        void addBondOrder4Atom(const id_type &_aid, const int &_order);
 
-        void add_db_num_for_atom(const id_type &_aid, const int &_num = 1);
+        void addDoubleBondNum4Atom(const id_type &_aid, const int &_num = 1);
 
         void updateValenceMap();
 
-        int get_atom_order(const id_type &_aid);
+        int getAtomOrder(const id_type &_aid);
 
     private:
         /**
@@ -107,6 +107,8 @@ namespace xgd {
         std::pair<atom_t, atom_t> makeAbbType(const TokenType &_abb);
 
         std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele);
+
+        std::pair<atom_t, atom_t> makeElementType(const ElementType &_ele, atom_t parent, int num);
 
         std::pair<atom_t, atom_t> makeAlkane(const int &_num);
 
@@ -124,11 +126,12 @@ namespace xgd {
          * @param iBeg
          * @param iEnd
          * @param suffix
-         * @param preAtom 如果 preAtom 不为空，那么括号内的所有子图将挂到 preAtom 上；否则顺序连接所有子图
+         * @param parent 如果 parent 不为空，那么括号内的所有子图将挂到 parent 上；否则顺序连接所有子图
          * @return
          */
         std::pair<atom_t, atom_t>
-        extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size_t iEnd, int suffix = 1,atom_t preAtom=nullptr);
+        extractNoBracketTokens(token_struct &tokenStruct, size_t iBeg, size_t iEnd, int suffix = 1,
+                               atom_t parent = nullptr);
     };
 
 

@@ -1,4 +1,5 @@
 #include "jmol_p.hpp"
+#include "jatom.hpp"
 #include <QDebug>
 
 using namespace xgd;
@@ -63,7 +64,7 @@ void JMol_p::confirmValence() {
     isValenceDataLatest = true;
 }
 
-void JMol_p::add_bond_order_for_atom(const id_type &_aid, const int &_order) {
+void JMol_p::addBondOrder4Atom(const id_type &_aid, const int &_order) {
     auto it = atomTotalBondOrderMap.find(_aid);
     if (atomTotalBondOrderMap.end() == it) {
         atomTotalBondOrderMap[_aid] = _order;
@@ -72,7 +73,7 @@ void JMol_p::add_bond_order_for_atom(const id_type &_aid, const int &_order) {
     }
 }
 
-void JMol_p::add_db_num_for_atom(const id_type &_aid, const int &_num) {
+void JMol_p::addDoubleBondNum4Atom(const id_type &_aid, const int &_num) {
     auto it = atomDoubleBondNum.find(_aid);
     if (atomDoubleBondNum.end() == it) {
         atomDoubleBondNum[_aid] = 1;
@@ -87,7 +88,7 @@ int JMol_p::getDoubleBondNum(const id_type &_aid) const {
     return it->second;
 }
 
-int JMol_p::get_atom_order(const id_type &_aid) {
+int JMol_p::getAtomOrder(const id_type &_aid) {
     auto it = atomTotalBondOrderMap.find(_aid);
     if (atomTotalBondOrderMap.end() == it) {
         atomTotalBondOrderMap[_aid] = 0;
@@ -106,12 +107,12 @@ void JMol_p::updateValenceMap() {
         auto from = _bond.getFrom();
         auto to = _bond.getTo();
         if (from && to) {
-            add_bond_order_for_atom(from->getId(), order);
-            add_bond_order_for_atom(to->getId(), order);
+            addBondOrder4Atom(from->getId(), order);
+            addBondOrder4Atom(to->getId(), order);
         }
         if (order == 2) {
-            add_db_num_for_atom(from->getId(), 1);
-            add_db_num_for_atom(to->getId(), 1);
+            addDoubleBondNum4Atom(from->getId(), 1);
+            addDoubleBondNum4Atom(to->getId(), 1);
         }
     });
     isValenceDataLatest = true;
@@ -163,10 +164,13 @@ std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
             return {first, first};
         }
         case TokenType::NO2: {
-            break;
+            auto[n, _]= makeAcyl(ElementType::O, ElementType::N);
+            auto o1 = mol.addAtom(ElementType::O);
+            mol.addBond(n, o1, BondType::SingleBond);
+            return {n, n};
         }
         case TokenType::NO: {
-            break;
+            return makeAcyl(ElementType::O, ElementType::N);
         }
         case TokenType::SO3: {
             auto[s, _]= makeAcyl(ElementType::O, ElementType::S);
@@ -384,62 +388,96 @@ std::optional<JMol_p::token_struct> JMol_p::interpret(const std::string &inputNa
 }
 
 std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
-        token_struct &tokenStruct, size_t iBeg, size_t iEnd, int suffix, atom_t preAtom) {
+        token_struct &tokenStruct, size_t iBeg, size_t iEnd, int suffix, atom_t parent) {
     qDebug() << __FUNCTION__ << "suffix=" << suffix;
     auto&[tokens, numbers, elements]=tokenStruct;
-    atom_t a_beg, a_end = nullptr;
-    if (preAtom) { clearLastHolder(); }
+    atom_t a_beg0 = nullptr, a_end0 = nullptr;
+    // 如果有要被挂载的原子，那么不可能原位修改接入原子
+    if (parent) { clearLastHolder(); }
     while (suffix--) {
-        // 解析 [iBeg, iEnd]
-        a_beg = preAtom ? preAtom : a_end;
-        a_end = nullptr;
+        // 解析 [iBeg, iEnd]，顺序生成 1 个子图，需要维护 a_beg, a_end
+        // 迭代结束后维护 a_beg0, a_end0
         BondType lastBond = BondType::SingleBond;
+        atom_t last_ele, a_beg, a_end;
+        last_ele = a_beg = a_end = nullptr;
         for (size_t i = iBeg; i <= iEnd; i++) {
             atom_t a1, a2;
-            int number=1;
+            int number = 1;
+            bool eleBindHappen = false;
             auto &curToken = tokens[i];
-            if(i+1<=iEnd){
-                auto&nextToken=tokens[i+1];
-                if(isNumberToken(nextToken)){
-                    number=numbers[i+1];
-                }
-            }
             if (isElementToken(curToken)) {
                 // 拼接元素
-                std::tie(a1, a2) = makeElementType(elements[i]);
+                if (i + 1 <= iEnd) {
+                    auto &nextToken = tokens[i + 1];
+                    if (isNumberToken(nextToken)) {
+                        number = numbers[i + 1];
+                        qDebug() << "number=" << number;
+                        std::tie(a1, a2) = makeElementType(
+                                elements[i], last_ele, number);
+                        i += 1;
+                        eleBindHappen = true;
+                    } else {
+                        std::tie(a1, a2) = makeElementType(elements[i]);
+                        if (a1 && a1->getCommonNebNum() > 1) {
+                            // 如果遇到可续接的原子，更新主原子信息
+                            qDebug() << "bind" << a1->getQName();
+                            last_ele = a1;
+                        }
+                    }
+                } else {
+                    std::tie(a1, a2) = makeElementType(elements[i]);
+                    if (a1 && a1->getCommonNebNum() > 1) {
+                        qDebug() << "bind" << a1->getQName();
+                        last_ele = a1;
+                    }
+                }
             } else if (isAbbToken(curToken)) {
                 // 拼接缩略词
 //                qDebug() << __FUNCTION__ << "isAbbToken:" << (int) curToken;
                 std::tie(a1, a2) = makeAbbType(curToken);
             } else if (isChargeToken(curToken)) {
-                // 划归电荷，FIXME: 下面是一个粗糙的实现
-                if (a2) {
-                    a2->setCharge(curToken == TokenType::Pos ? 1 : -1);
-                } else if (a1) {
-                    a1->setCharge(curToken == TokenType::Pos ? 1 : -1);
+                // 向主原子划归电荷，FIXME: 这里是一个粗糙的实现
+                if (last_ele) {
+                    last_ele->setCharge(curToken == TokenType::Pos ? 1 : -1);
                 }
             }
             if (isBondToken(curToken)) {
                 lastBond = curToken == TokenType::Triple ? BondType::TripleBond :
                            curToken == TokenType::Double ? BondType::DoubleBond :
                            BondType::SingleBond;
-            } else if (a1 && a2) {
-                if (!a_beg) { a_beg = a1; }
-                else {
-                    mol.addBond(a_beg, a1);
+            } else if (!eleBindHappen && a1 && a2) {
+                // 没有需要挂载的原子
+                if (!a_beg) {
+                    a_beg = a1;
+                    a_end = a2;
+                } else {
+                    if (a_end && a1) {
+                        mol.addBond(a_end, a1, lastBond);
+                        // 如果遇到了新原子，那么之前遇到的化学键一定使用过了，此处重置
+                        lastBond = BondType::SingleBond;
+                        a_end = a2;
+                    }
                 }
-                if (!preAtom && a_end) {
-                    mol.addBond(a_end, a1, lastBond);
-                    lastBond = BondType::SingleBond;// 如果遇到了新原子，那么之前遇到的化学键一定使用过了，此处重置
-                }
-                a_end = a2;
             }
-
+        }
+        // 如果前缀原子存在，那么把整个子图挂载到前缀原子
+        if (parent && a_beg) {
+            // 默认以单键接入上一个节点
+            mol.addBond(parent, a_beg, BondType::SingleBond);
+        } else if (!a_beg0) {// 第 1 个子图
+            a_beg0 = a_beg;
+            a_end0 = a_end;
+        } else {// 后续子图
+            if (a_end0 && a_beg) {
+                // 默认以单键接入上一个节点
+                mol.addBond(a_end0, a_beg, BondType::SingleBond);
+            }
+            a_end0 = a_end;
         }
     }
-    if (preAtom) { return {preAtom, preAtom}; }
+    if (parent) { return {parent, parent}; }
     else {
-        return {a_beg, a_end};
+        return {a_beg0, a_end0};
     }
 }
 
@@ -467,25 +505,32 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
     size_t beg = 0, end = 0, iBeg, iEnd;
     while (beg < tokens.size()) {
         auto &token = tokens[beg];
+        // 遇到左括号
         if (isLeftToken(token)) {
             end = beg + 1;
-            // find and skip right bracket here
+            // 找到第一个右括号
             while (end < tokens.size() && !isRightToken(tokens[end])) { ++end; }
+            if (end >= tokens.size()) { return false; }
             iBeg = beg + 1;
             iEnd = (end == tokens.size()) ? end - 1 : end - 2;
-            // 如果有数字，记下这个数字
-            if (end != tokens.size() && isNumberToken(tokens[end])) {
+            // 如果右括号附着有数字，记下这个数字
+            if (end + 1 < tokens.size() && isNumberToken(tokens[end + 1])) {
+                end += 1;
+                iEnd += 1;
                 number = numbers[end];
             } else {
                 number = 1;
             }
             bool isHangOn = false;
-            // FIXME: just a simple impl
+            // 是否附着在前一个原子上
             if (number <= 3) {
                 isHangOn = true;
             }
+            // 附着情况，把括号里面的子图重复k次挂在前一个原子上
             atom_t preAtom = isHangOn ? a_end : nullptr;
-            std::tie(a1, a2) = extractNoBracketTokens(tokenStruct, iBeg, iEnd, number, preAtom);
+            std::tie(a1, a2) = extractNoBracketTokens(
+                    tokenStruct, iBeg, iEnd, number, preAtom);
+            // 非附着情况，需要手动连接子图和前一个原子
             if (!isHangOn && a_end && a1) {
                 mol.addBond(a_end, a1);
             }
@@ -493,11 +538,14 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
             beg = end;
         } else {
             end = beg + 1;
+            // 寻找一个最长的连续的不包括括号的字符串
             while (end < tokens.size() && !isLeftToken(tokens[end]) && !isRightToken(tokens[end])) { ++end; }
             iBeg = beg;
             iEnd = end - 1;
             bool isFirst = last_holder != nullptr;
-            std::tie(a1, a2) = extractNoBracketTokens(tokenStruct, iBeg, iEnd, 1, nullptr);
+            std::tie(a1, a2) = extractNoBracketTokens(
+                    tokenStruct, iBeg, iEnd, 1, nullptr);
+            // 如果不是接入点原子，那么需要把新建子图连接到原分子图
             if (!isFirst && a_end && a1) {
                 mol.addBond(a_end, a1);
             }
@@ -515,4 +563,13 @@ void JMol_p::bindLastHolder(JMol_p::atom_t atom) {
 
 void JMol_p::clearLastHolder() {
     last_holder = nullptr;
+}
+
+std::pair<atom_t, atom_t> JMol_p::makeElementType(
+        const ElementType &_ele, atom_t parent, int num) {
+    while (num--) {
+        auto atom = mol.addAtom(_ele);
+        mol.addBond(parent, atom, BondType::SingleBond);
+    }
+    return {parent, parent};
 }

@@ -275,8 +275,8 @@ void JMol::addAllHydrogens() {
         while (numHs--) {
             auto h = addAtom(ElementType::H);
             auto bond = addBond(_atom, h);
-            _p->add_bond_order_for_atom(h->getId(), 1);
-            _p->add_bond_order_for_atom(_atom->getId(), 1);
+            _p->addBondOrder4Atom(h->getId(), 1);
+            _p->addBondOrder4Atom(_atom->getId(), 1);
         }
     });
     // 这里我之前有维护好加氢数据
@@ -316,10 +316,10 @@ void JMol::tryMarkDoubleBond(const id_type &_bid) {
     if (getNumHydrogen(from->getId()) >= 1 && getNumHydrogen(to->getId()) >= 1 &&
         !_p->getDoubleBondNum(from->getId()) && !_p->getDoubleBondNum(to->getId())) {
         bond->setType(BondType::DoubleBond);
-        _p->add_bond_order_for_atom(from->getId(), 1);
-        _p->add_bond_order_for_atom(to->getId(), 1);
-        _p->add_db_num_for_atom(from->getId(), 1);
-        _p->add_db_num_for_atom(to->getId(), 1);
+        _p->addBondOrder4Atom(from->getId(), 1);
+        _p->addBondOrder4Atom(to->getId(), 1);
+        _p->addDoubleBondNum4Atom(from->getId(), 1);
+        _p->addDoubleBondNum4Atom(to->getId(), 1);
     }
 }
 
@@ -332,7 +332,7 @@ int JMol::getNumHydrogen(const id_type &_aid) {
     auto it = ELEMENT_COMMON_NEB_NUM_MAP.find(atom->getType());
     // 常用原子邻接键级表中没有的原子不加氢
     if (ELEMENT_COMMON_NEB_NUM_MAP.end() == it) { return 0; }
-    int order = _p->get_atom_order(atom->getId());
+    int order = _p->getAtomOrder(atom->getId());
     int numHs = it->second - order;
     // 对电荷的特别处理
     int charge = atom->getCharge();

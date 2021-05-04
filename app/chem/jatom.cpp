@@ -345,3 +345,11 @@ void xgd::JAtom::setIsLeftToRight(bool isLeftToRight) {
     JAtom::mIsLeftToRight = isLeftToRight;
 }
 
+int xgd::JAtom::getCommonNebNum() const {
+    auto it = ELEMENT_COMMON_NEB_NUM_MAP.find(type);
+    if (ELEMENT_COMMON_NEB_NUM_MAP.end() != it) {
+        return it->second;
+    }
+    return 4;
+}
+

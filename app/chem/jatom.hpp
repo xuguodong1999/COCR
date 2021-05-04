@@ -89,6 +89,8 @@ namespace xgd {
         float getElectronNeg() const;
 
         float getRadius() const;
+
+        int getCommonNebNum()const;
     };
 
     const std::string &convertElementTypeToName(const ElementType &_type);
