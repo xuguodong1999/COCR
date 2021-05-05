@@ -49,11 +49,16 @@ void Mol2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
     mol->loopAtomVec([&](xgd::JAtom &_atom) {
         auto atomItem = new AtomItem(_atom.getId());
         atomItem->setHTML(getRichText(_atom.getName()));
-        atomItem->setLeftTop(_atom.x0, _atom.y0);
+        if (std::isnan(_atom.x0) || std::isnan(_atom.y0)) {
+            atomItem->setLeftTop(0, 0);
+        } else {
+            atomItem->setLeftTop(_atom.x0, _atom.y0);
+        }
         atomItemMap[_atom.getId()] = atomItem;
         if (_atom.isImplicit()) {
             atomItem->setVisible(false);
         }
+//        qDebug() << __FUNCTION__ << "add atom, implicit=" << _atom.isImplicit();
         scene->addItem(atomItem);
     });
     mol->loopBondVec([&](xgd::JBond &_bond) {

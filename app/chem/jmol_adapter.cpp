@@ -1,5 +1,6 @@
 #include "jmol_adapter.hpp"
 #include "jmol_p.hpp"
+#include "alkane_graph.hpp"
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/ring.h>
@@ -44,12 +45,6 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
                 _bond.getId(), atomMap[_bond.getFrom()->getId()], atomMap[_bond.getTo()->getId()],
                 _bond.getType(), _bond.getFromOffset(), _bond.getToOffset());
         bondMap[bond->getId()] = bond;
-        /**auto pr = people.equal_range("Ann");
-if(pr.first != std::end(people))
-{
-    for (auto iter = pr.first ; iter != pr.second; ++iter)
-        std:cout << iter->first << " is " << iter->second << std::endl;
-}*/
         auto it = saMap.equal_range(bond->getId());
         if (it.first != saMap.end()) {
             for (auto itr = it.first; itr != it.second; ++itr) {
@@ -497,4 +492,43 @@ std::vector<std::string> GetWritableFormats() {
     return result;
 }
 
+
+std::vector<std::shared_ptr<JMol>> JMolAdapter::split() {
+    AlkaneGraph<size_t> graph;
+    std::unordered_map<id_type, size_t> j2gAidMap, g2jMap;
+    std::vector<std::shared_ptr<JMol>> result;
+    size_t gAidIdx = 0;
+    loopAtomVec([&](JAtom &atom) {
+        j2gAidMap[atom.getId()] = gAidIdx++;
+    });
+    loopBondVec([&](JBond &bond) {
+        auto from = bond.getFrom(), to = bond.getTo();
+        if (from && to) {
+            graph.push_back(j2gAidMap[from->getId()], j2gAidMap[to->getId()]);
+        }
+    });
+    for (auto&[jAid, gAid]:j2gAidMap) { g2jMap[gAid] = jAid; }
+    // 保证一个连通片不和其它连通片共享边 or 节点
+    std::vector<std::unordered_set<size_t>> groups = graph.dfsTraceGroup();
+//    for (auto &group:groups) {
+//        auto mol = std::make_shared<JMolAdapter>();
+//        std::unordered_map<size_t, size_t> aidMap;//<old,new>
+//        for (auto &gid:group) {
+//            size_t oldAid = g2jMap[gid];
+//            auto atom = _mol.getAtomById(oldAid);
+//            if (!atom) continue;
+//            auto newAtom = mol->addAtom(atom->getAtomicNumber());
+//            aidMap[oldAid] = newAtom->getId();
+//        }
+//        _mol.safeTraverseBonds([&](const size_t &bid) {
+//            auto bond = _mol.getBondById(bid);
+//            if (!bond)return;
+//            if (notExist(group, bond->getAtomFrom())) return;
+//            mol->addBond(aidMap[bond->getAtomFrom()], aidMap[bond->getAtomTo()],
+//                         bond->getBondType());
+//        });
+//        result.push_back(std::move(mol));
+//    }
+    return result;
+}
 

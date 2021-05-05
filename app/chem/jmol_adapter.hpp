@@ -107,6 +107,7 @@ namespace xgd {
         std::vector<std::vector<id_type>> getLSSR() override;
 
         std::vector<std::vector<id_type>> getSSSR() override;
+        std::vector<std::shared_ptr<JMol>> split()override;
     };
 }
 
