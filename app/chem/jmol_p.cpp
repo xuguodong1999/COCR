@@ -542,16 +542,27 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
     if (!atom) { return false; }
     if (ElementType::SA != atom->getType()) { return false; }
     std::string inputName = atom->getName();
-//    qDebug() << __FUNCTION__ << inputName.c_str();
+    qDebug() << __FUNCTION__ << inputName.c_str();
     auto opt = interpret(inputName);
     if (!opt) { return false; }
     auto &tokenStruct = opt.value();
-    qDebug() << atom->isLeftToRight();
-    if (atom->isLeftToRight()) {
+    qDebug() << "atom->isLeftToRight=" << atom->isLeftToRight();
+    if (!atom->isLeftToRight()) {
         // reverse tokenStruct here
         if (!reverseTokens(tokenStruct)) { return false; }
     }
     auto&[tokens, numbers, elements]=tokenStruct;
+    for (size_t i = 0; i < tokens.size(); i++) {
+        auto &token = tokens[i];
+        if (isElementToken(token)) {
+            qDebug() << "element" << (int) elements[i];
+        } else if (isNumberToken(token)) {
+            qDebug() << "number" << numbers[i];
+        } else {
+            qDebug() << "token" << (int) token;
+        }
+    }
+    qDebug() << "**********";
     bindLastHolder(atom);// 原位修改起始原子
     atom_t a_end = atom, a1, a2;
     int number;
@@ -610,28 +621,25 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
         }
     }
     // TODO: 解决多点接入问题
-//        if (atom && a_end) {
-//            auto &bonds = atom->getSaBonds();
-//            qDebug() << "bonds.size()=" << bonds.size();
-//            if (bonds.size() > 1) {
-//                std::sort(bonds.begin(), bonds.end(), [](
-//                        const std::pair<float, std::shared_ptr<JBond>> &a,
-//                        const std::pair<float, std::shared_ptr<JBond>> &b) {
-//                    return a.first < b.first;
-//                });
-//                mol.exceedAllData();
-//                if (bonds[1].second->getFrom()->getId() == atom->getId()) {
-//                    bonds[1].second->setFrom(a_end);
-//                } else {
-//                    bonds[1].second->setTo(a_end);
-//                }
-//                mol.rebuildAllData();
-//            }
-//        }
-
-
-
-//    qDebug() << __FUNCTION__ << "return true";
+    if (atom && a_end) {
+        auto &bonds = atom->getSaBonds();
+        qDebug() << "bonds.size()=" << bonds.size();
+        if (bonds.size() > 1) {
+            std::sort(bonds.begin(), bonds.end(), [](
+                    const std::pair<float, std::shared_ptr<JBond>> &a,
+                    const std::pair<float, std::shared_ptr<JBond>> &b) {
+                return a.first < b.first;
+            });
+//            mol.exceedAllData();
+            if (bonds[1].second->getFrom()->getId() == atom->getId()) {
+                bonds[1].second->setFrom(a_end);
+            } else {
+                bonds[1].second->setTo(a_end);
+            }
+//            mol.rebuildAllData();
+        }
+    }
+    qDebug() << __FUNCTION__ << "return true";
     return true;
 }
 
@@ -658,38 +666,48 @@ bool JMol_p::reverseTokens(JMol_p::token_struct &tokenStruct) {
     token_struct newStruct;
     auto&[tokens, numbers, elements]=tokenStruct;
     auto&[tokens2, numbers2, elements2]=newStruct;
-    std::unordered_map<size_t, size_t> numberMap, elementMap;
     // 我们只支持单层括号
-    // H3C-COO-(CH3COOEt)-CH2CH3-H2C
-    int numCache = -1;
-    int numBracketHolder = -1;
+    // H3C-COO-(CH3COOEt)3-CH2CH3-H2C
+    // C2H-3HC
+    int numCache = -1, numBraCache = -1;
     for (int i = tokens.size() - 1; i >= 0; i--) {
         auto &curToken = tokens[i];
-        if (i - 1 >= 0) {
-            int j = i - 1;
-            if (isNumberToken(tokens[j])) {
-                numCache = numbers[j];
-            }
-        }
         if (isNumberToken(curToken)) {
-
+            if (i - 1 >= 0 && isRightToken(tokens[i - 1])) {
+                numBraCache = numbers2[i];
+            } else {
+                numCache = numbers[i];
+            }
         } else if (isRightToken(curToken)) {
-            tokens2.push_back(TokenType::Left);
+            tokens2.push_back(TokenType::Left);//TODO: 添加数字
         } else if (isLeftToken(curToken)) {
             tokens2.push_back(TokenType::Right);
-        } else if (!isNumberToken(curToken)){
+            if (numBraCache != -1) {
+                numbers2[tokens2.size()] = numBraCache;
+                tokens2.push_back(TokenType::Number);
+                numBraCache = -1;
+            }
+        } else if (isElementToken(curToken)) {//TODO: 添加数字
+            elements2[tokens2.size()] = elements[i];
+            tokens2.push_back(curToken);
+            if (numCache != -1 && xgd::getCommonNebNum(elements[i]) == 1) {
+                numbers2[tokens2.size()] = numCache;
+                tokens2.push_back(TokenType::Number);
+                numCache = -1;
+            }
+        } else {
             tokens2.push_back(curToken);
         }
     }
-    // 恢复数字、元素记录表
-    for (size_t i = 0; i < tokens2.size(); i++) {
-        auto &curToken = tokens[i];
-        if (isNumberToken(curToken)) {
-            numbers2[i] = numbers[numberMap[i]];
-        } else if (isElementToken(curToken)) {
-            elements2[i] = elements[elementMap[i]];
-        }
+    if (numbers2.size() == numbers.size() &&
+        elements2.size() == elements.size() &&
+        tokens2.size() == tokens.size()) {
+        std::swap(newStruct, tokenStruct);
+        qDebug() << __FUNCTION__ << "ret true";
+        return true;
     }
-    std::swap(newStruct, tokenStruct);
+    qDebug() << __FUNCTION__ << "ret false" << numbers2.size() << numbers.size()
+             << elements2.size() << elements.size()
+             << tokens2.size() << tokens.size();
     return false;
 }

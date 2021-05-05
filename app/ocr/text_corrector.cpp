@@ -67,7 +67,7 @@ std::string xgd::TextCorrector::correct(const std::string &_text) {
                 if (!--delta) { break; }
             }
         }
-    }else if (lb > rb) {
+    } else if (lb > rb) {
         int delta = lb - rb;
         for (auto &c:result) {
             if (c == '(') {

@@ -43,7 +43,15 @@ namespace xgd {
         bool mIsImplicit;
         std::string name;
         bool mIsLeftToRight;
+        std::vector<std::pair<float, std::shared_ptr<JBond>>> saBonds;
     public:
+        void clearSABonds();
+
+        std::vector<std::pair<float, std::shared_ptr<JBond>>> &
+        getSaBonds();
+
+        void insertSuperAtomBonds(std::shared_ptr<JBond> _bond, const float &_offset);
+
         void setIsLeftToRight(bool isLeftToRight);
 
         bool isLeftToRight() const;
@@ -100,5 +108,7 @@ namespace xgd {
     ElementType convertNameToElementType(const std::string &_name);
 
     QColor getColor(const ElementType &_element);
+
+    int getCommonNebNum(const ElementType &_type);
 }
 #endif//_XGD_JATOM_HPP_

@@ -42,7 +42,7 @@ int loopBenchMark() {
             {MOL_COMPARE_FAILED,     0},
     };
     QString imagePath = "D:/leafxy_benchmark/image";
-    QString referencePath = "D:/leafxy_benchmark/ref";
+    QString refPath = "D:/leafxy_benchmark/ref";
     std::vector<QString> subDirName = {"CLEF", "JPO", "UOB", "USPTO"};
     std::unordered_map<QString, QString> imageSuffixMap = {
             {"CLEF",  "png"},
@@ -59,24 +59,25 @@ int loopBenchMark() {
     auto fail_and_exit = [&](const BenchmarkState &state, const QString &message) {
         ++stateMap[state];
         qDebug() << "exit for" << state;
-        qDebug() << message;
+        qDebug() << message.toStdString().c_str();
         exit(-1);
     };
     auto fail_and_continue = [&](const BenchmarkState &state, const QString &message) {
         ++stateMap[state];
         qDebug() << "fail for" << state;
-        qDebug() << message;
+        qDebug() << message.toStdString().c_str();
     };
     auto handle_image = [&](const QString &fileName,
                             const QString &subDirName = "CLEF") -> void {
         QString imageFilePath = imagePath + "/" + subDirName + "/" + fileName;
-        QString refFilePath = imageFilePath.replace(
+        QString refFilePath = refPath + "/" + subDirName + "/" + QString(fileName).replace(
                 "." + imageSuffixMap[subDirName],
                 "." + refSuffixMap[subDirName]);
         QImage image;
         if (!image.load(imageFilePath)) {
             fail_and_exit(IMAGE_FILE_LOAD_FAILED, imageFilePath);
         }
+        qDebug() << imageFilePath.toStdString().c_str();
         image = image.convertToFormat(QImage::Format_Grayscale8);
         QFile f(refFilePath);
         if (!f.open(QIODevice::ReadOnly)) {
@@ -130,7 +131,7 @@ int loopBenchMark() {
         fail_and_continue(MOL_COMPARE_FAILED, debug);
     };
     auto loop_dataset = [&](const QString &subDirName) {
-        auto files = QDir(imgRoot + "/" + subDirName).entryInfoList(
+        auto files = QDir(imagePath + "/" + subDirName).entryInfoList(
                 QDir::Filter(QDir::Files));
         for (auto &file:files) {
             handle_image(file.fileName(), subDirName);

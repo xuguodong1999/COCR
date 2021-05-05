@@ -308,6 +308,14 @@ QColor xgd::getColor(const ElementType &_element) {
     return qColor(it->second);
 }
 
+int xgd::getCommonNebNum(const ElementType &_type) {
+    auto it = ELEMENT_COMMON_NEB_NUM_MAP.find(_type);
+    if (ELEMENT_COMMON_NEB_NUM_MAP.end() != it) {
+        return it->second;
+    }
+    return 4;
+}
+
 
 bool xgd::JAtom::isImplicit() const {
     return mIsImplicit;
@@ -346,11 +354,19 @@ void xgd::JAtom::setIsLeftToRight(bool isLeftToRight) {
 }
 
 int xgd::JAtom::getCommonNebNum() const {
-    auto it = ELEMENT_COMMON_NEB_NUM_MAP.find(type);
-    if (ELEMENT_COMMON_NEB_NUM_MAP.end() != it) {
-        return it->second;
-    }
-    return 4;
+    return xgd::getCommonNebNum(type);
+}
+
+std::vector<std::pair<float, std::shared_ptr<xgd::JBond>>> &xgd::JAtom::getSaBonds() {
+    return saBonds;
+}
+
+void xgd::JAtom::insertSuperAtomBonds(std::shared_ptr<JBond> _bond, const float &_offset) {
+    saBonds.push_back(std::make_pair(_offset, std::move(_bond)));
+}
+
+void xgd::JAtom::clearSABonds() {
+    saBonds.clear();
 }
 
 

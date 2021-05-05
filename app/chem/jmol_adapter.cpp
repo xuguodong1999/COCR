@@ -28,9 +28,15 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
 //    qDebug() << __FUNCTION__ << "const&";
     id = _jMolAdapter.id + 1;
     idBase = _jMolAdapter.idBase;
+    std::unordered_multimap<id_type, std::pair<float, std::shared_ptr<JAtom>>> saMap;
     const_cast<JMolAdapter &>(_jMolAdapter).loopAtomVec([&](JAtom &_atom) {
         auto atom = std::make_shared<JAtom>(_atom.getId(), ElementType::SA);
         *atom = _atom;
+        atom->clearSABonds();
+        auto &sa = _atom.getSaBonds();
+        for (auto&[offset, bond]:sa) {
+            saMap.insert({bond->getId(), {offset, atom}});
+        }
         atomMap[atom->getId()] = atom;
     });
     const_cast<JMolAdapter &>(_jMolAdapter).loopBondVec([&](JBond &_bond) {
@@ -38,6 +44,19 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
                 _bond.getId(), atomMap[_bond.getFrom()->getId()], atomMap[_bond.getTo()->getId()],
                 _bond.getType(), _bond.getFromOffset(), _bond.getToOffset());
         bondMap[bond->getId()] = bond;
+        /**auto pr = people.equal_range("Ann");
+if(pr.first != std::end(people))
+{
+    for (auto iter = pr.first ; iter != pr.second; ++iter)
+        std:cout << iter->first << " is " << iter->second << std::endl;
+}*/
+        auto it = saMap.equal_range(bond->getId());
+        if (it.first != saMap.end()) {
+            for (auto itr = it.first; itr != it.second; ++itr) {
+                auto&[offset, atom]=itr->second;
+                atom->insertSuperAtomBonds(bond, offset);
+            }
+        }
     });
 }
 

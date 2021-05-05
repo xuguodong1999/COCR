@@ -63,7 +63,9 @@ namespace xgd {
 
         using token_struct = std::tuple<std::vector<TokenType>,
                 std::unordered_map<size_t, int>, std::unordered_map<size_t, ElementType>>;
-        bool reverseTokens(token_struct&tokenStruct);
+
+        bool reverseTokens(token_struct &tokenStruct);
+
         bool isValenceDataLatest;
         std::unordered_map<id_type, int> atomTotalBondOrderMap, atomDoubleBondNum;
         JMol &mol;
