@@ -53,9 +53,7 @@ bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
             lastSet.pop_back();
             const auto size = current.size();
             vector<hash_type> tmpSet(size, 0);
-#ifndef __ANDROID__
-#pragma omp parallel for num_threads(thread_num)
-#endif
+#pragma omp parallel for
             for (auto j = 0; j < size; j++) {
                 auto current2 = current;
                 auto &node = current2.at(j);
@@ -133,9 +131,7 @@ void IsomerCounter::calculate_i_from_i_1(const char *save_dir, const int &carbon
                 current = graph(hash_pool[k]);
                 const auto size = current.size();
                 vector<hash_type> tmpSet(size, 0);
-#ifndef __ANDROID__
-#pragma omp parallel for num_threads(thread_num)
-#endif
+#pragma omp parallel for
                 for (auto j = 0; j < size; j++) {
                     auto current2 = current;
                     auto &node = current2.at(j);
@@ -182,9 +178,7 @@ void IsomerCounter::calculate_i_from_i_1(const char *save_dir, const int &carbon
             current = graph(tmp);
             const auto size = current.size();
             vector<hash_type> tmpSet(size, 0);
-#ifndef __ANDROID__
-#pragma omp parallel for num_threads(thread_num)
-#endif
+#pragma omp parallel for
             for (auto j = 0; j < size; j++) {
                 auto current2 = current;
                 auto &node = current2.at(j);
@@ -247,9 +241,7 @@ std::vector<std::string> IsomerCounter::getIsomers(
             lastSet.pop_back();
             const auto size = current.size();
             vector<hash_type> tmpSet(size, 0);
-#ifndef __ANDROID__
-#pragma omp parallel for num_threads(thread_num)
-#endif
+#pragma omp parallel for
             for (auto j = 0; j < size; j++) {
                 auto current2 = current;
                 auto &node = current2.at(j);

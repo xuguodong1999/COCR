@@ -22,6 +22,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QScreen>
+#include <opencv2/highgui.hpp>
 
 class OCRRunnablePrivate {
     cv::Mat image;
@@ -82,6 +83,9 @@ public:
 
     void setImage(const QImage &_image) {
         image = xgd::convertQImageToMat(_image);
+//        cv::erode(image,image, cv::Mat());
+        cv::dilate(image,image, cv::Mat());
+        image = xgd::rotateCvMat(image,2);
     }
 
     void setImage(const QPixmap &_pixmap) {
@@ -112,7 +116,7 @@ OCRThread::OCRThread(QObject *_parent, const QString &_dir)
                             (modelDir.absolutePath() + "/yolo-3l-c8.weights").toStdString())) {
         qDebug() << "fail to init opencv detector";
     }
-    detector.setConfThresh(0.1);
+    detector.setConfThresh(0.25);
     detector.setIouThresh(0.45);
 #else
     static xgd::ObjectDetectorNcnnImpl detector;
@@ -151,7 +155,7 @@ OCRThread::~OCRThread() {
 void OCRThread::run() {
     try {
 //        QThread::msleep(2000);
-        mol = ocrManager->ocr(_p->getImage(), true);
+        mol = ocrManager->ocr(_p->getImage(), false);
     } catch (std::exception &e) {
         qDebug() << __FUNCTION__ << "catch" << e.what();
         mol = nullptr;

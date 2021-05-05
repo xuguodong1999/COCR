@@ -20,8 +20,7 @@ int loopBenchMark() {
     auto uob = QDir(imgRoot + "UOB").entryInfoList(QDir::Filter(QDir::Files));
     auto uspto = QDir(imgRoot + "USPTO").entryInfoList(QDir::Filter(QDir::Files));
     OCRThread ocrThread;
-    int sampleNum, dir4Expand, dir4ImageLoad, dir4Final, dir4TruthFileOpen, die4Exception;
-    sampleNum = dir4Expand = dir4ImageLoad = dir4Final = dir4TruthFileOpen = die4Exception = 0;
+    int sampleNum = 0;
     enum BenchmarkState {
         INCHI_OK = 0,
         IMAGE_FILE_LOAD_FAILED = 1,
@@ -69,6 +68,7 @@ int loopBenchMark() {
     };
     auto handle_image = [&](const QString &fileName,
                             const QString &subDirName = "CLEF") -> void {
+        sampleNum++;
         QString imageFilePath = imagePath + "/" + subDirName + "/" + fileName;
         QString refFilePath = refPath + "/" + subDirName + "/" + QString(fileName).replace(
                 "." + imageSuffixMap[subDirName],
@@ -92,7 +92,6 @@ int loopBenchMark() {
         } catch (std::exception &e) {
             fail_and_exit(REF_MOL_LOAD_FAILED, e.what());
         }
-        ++sampleNum;
         try {
             ocrThread.bindData(image);
             ocrThread.start();
@@ -111,6 +110,7 @@ int loopBenchMark() {
                 fail_and_continue(MOL_PROCESS_FAILED, "expand");
                 return;
             }
+            mol = mol->deepClone();
             mol->addAllHydrogens();
         } catch (std::exception &e) {
             fail_and_continue(MOL_PROCESS_FAILED, e.what());
@@ -120,6 +120,7 @@ int loopBenchMark() {
         auto inchi1 = refMol->writeAs("inchi");
         if (inchi0 == inchi1) {
             ++stateMap[INCHI_OK];
+            qDebug() << stateMap[INCHI_OK] / (float) sampleNum;
             return;
         }
         auto smi0 = mol->writeAsSMI();
@@ -138,10 +139,14 @@ int loopBenchMark() {
         }
         qDebug() << "********" << subDirName << "******** DONE ********";
     };
-    loop_dataset("JPO");
+    loop_dataset("UOB");
+    qDebug() << stateMap[INCHI_OK] / (float) sampleNum;
     return 0;
 }
 
+//  C:/source/repos/leafxy/3rdparty/opencv-lib/x64/vc16/bin\;
+// C:/shared/opencv4.5.1/x64/vc16/bin\;
+//PATH=C:/source/repos/leafxy-clion-release/3rdparty/openbabel\;C:/source/repos/leafxy-clion-release/3rdparty/coordgenlibs\;C:/source/repos/leafxy-clion-debug/3rdparty/openbabel\;C:/source/repos/leafxy-clion-debug/3rdparty/coordgenlibs\;C:/source/repos/leafxy/3rdparty/ncnn-lib/bin\;C:/shared/qt5.15.2/bin\;C:/source/repos/leafxy/3rdparty/opencv-lib/x64/vc16/bin\;
 int loopBenchMarkWrapper() {
     try {
         return loopBenchMark();

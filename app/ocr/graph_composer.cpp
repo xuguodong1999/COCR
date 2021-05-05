@@ -493,7 +493,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             auto bond = mol->addBond(
                     from, to, item.getBondType(), offset1, offset2);
             const float dirThresh = 0.6;
-            qDebug() << offset1 << offset2;
+//            qDebug() << offset1 << offset2;
             from->setIsLeftToRight(offset1 < dirThresh);
             to->setIsLeftToRight(offset2 < dirThresh);
             if (from->isSuperAtom()) {

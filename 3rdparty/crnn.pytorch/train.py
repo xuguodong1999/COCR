@@ -142,7 +142,7 @@ def train(opt):
     iteration = start_iter
 
     while (True):
-        if iteration % 1000 == 0:
+        if iteration % 100 == 0:
             print('itr=', iteration)
         # train part
         image_tensors, labels = train_dataset.get_batch()
@@ -174,7 +174,7 @@ def train(opt):
 
         # validation part
         # To see training progress, we also conduct validation when 'iteration == 0'
-        if (iteration + 1) % opt.valInterval == 0 or iteration == 0:
+        if (iteration + 1) % opt.valInterval == 0:
             elapsed_time = time.time() - start_time
             # for log
             with open(f'{opt.model_top_dir}/{opt.exp_name}/log_train.txt', 'a') as log:
@@ -283,7 +283,6 @@ if __name__ == '__main__':
         opt.exp_name = f'{opt.Transformation}-{opt.FeatureExtraction}-{opt.SequenceModeling}-{opt.Prediction}'
         opt.exp_name += f'-Seed{opt.manualSeed}'
         # print(opt.exp_name)
-
     os.makedirs(f'{opt.model_top_dir}/{opt.exp_name}', exist_ok=True)
 
     """ vocab / character number configuration """

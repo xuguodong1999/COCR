@@ -250,44 +250,44 @@
 <context>
     <name>Mol2DWidget</name>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="109"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="114"/>
         <source>atom (global id=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="109"/>
-        <location filename="../app/ui/mol2d_widget.cpp" line="123"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="114"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="128"/>
         <source>) picked
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="113"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="118"/>
         <source>element: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="115"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="120"/>
         <source>mass: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="123"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="128"/>
         <source>bond (global id=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="127"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="132"/>
         <source>type: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="131"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="136"/>
         <source>atom 1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="132"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="137"/>
         <source>atom 2: </source>
         <translation type="unfinished"></translation>
     </message>

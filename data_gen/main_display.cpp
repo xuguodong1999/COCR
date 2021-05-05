@@ -12,7 +12,8 @@
 
 
 extern CRNNDataGenerator crnnDataGenerator;
-std::string WORKSPACE0="D:/datasets";
+std::string WORKSPACE0 = "D:/datasets";
+
 /**
  * TODO:
  * 1、标准水平长文本
@@ -27,7 +28,7 @@ void generateYoloData() {
     SOSODarknet generator;
     generator.init(WORKSPACE0 + "/soso-obj-data/train");
 //    generator.display();
-    generator.dump(1000000,5);
+    generator.dump(1000000, 5);
 }
 
 #include <QPainter>
@@ -37,12 +38,19 @@ void generateYoloData() {
 #include <QApplication>
 #include "opencv_util.hpp"
 
+#include "isomer.hpp"
+#include "polya.hpp"
 
 int main(int argc, char **argv) {
 //    auto img=cv::imread("/home/xgd/Pictures/2021-02-25 16-59-17 的屏幕截图.png");
 //    cv::resize(img,img,cv::Size(img.cols,img.rows)/2);
 //    cv::imshow("mm",img);
 //    cv::waitKey(0);
+    auto &isomer = IsomerCounter::GetInstance();
+    isomer.calculate(30, "D:/alkane/");
+//    auto &p = PolyaIsomerCounter::GetInstance();
+//    p.count(31);
+    return 0;
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
     HwDataLoader::getInstance();

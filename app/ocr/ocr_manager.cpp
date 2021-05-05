@@ -156,5 +156,4 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
         cv::rectangle(canvas, rect, color, 1, cv::LINE_AA);
     }
     cv::imshow("xgd::OCRManager::display", canvas);
-//    cv::waitKey(0);
 }

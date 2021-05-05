@@ -542,27 +542,27 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
     if (!atom) { return false; }
     if (ElementType::SA != atom->getType()) { return false; }
     std::string inputName = atom->getName();
-    qDebug() << __FUNCTION__ << inputName.c_str();
+//    qDebug() << __FUNCTION__ << inputName.c_str();
     auto opt = interpret(inputName);
     if (!opt) { return false; }
     auto &tokenStruct = opt.value();
-    qDebug() << "atom->isLeftToRight=" << atom->isLeftToRight();
+//    qDebug() << "atom->isLeftToRight=" << atom->isLeftToRight();
     if (!atom->isLeftToRight()) {
         // reverse tokenStruct here
         if (!reverseTokens(tokenStruct)) { return false; }
     }
     auto&[tokens, numbers, elements]=tokenStruct;
-    for (size_t i = 0; i < tokens.size(); i++) {
-        auto &token = tokens[i];
-        if (isElementToken(token)) {
-            qDebug() << "element" << (int) elements[i];
-        } else if (isNumberToken(token)) {
-            qDebug() << "number" << numbers[i];
-        } else {
-            qDebug() << "token" << (int) token;
-        }
-    }
-    qDebug() << "**********";
+//    for (size_t i = 0; i < tokens.size(); i++) {
+//        auto &token = tokens[i];
+//        if (isElementToken(token)) {
+//            qDebug() << "element" << (int) elements[i];
+//        } else if (isNumberToken(token)) {
+//            qDebug() << "number" << numbers[i];
+//        } else {
+//            qDebug() << "token" << (int) token;
+//        }
+//    }
+//    qDebug() << "**********";
     bindLastHolder(atom);// 原位修改起始原子
     atom_t a_end = atom, a1, a2;
     int number;
@@ -623,7 +623,7 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
     // TODO: 解决多点接入问题
     if (atom && a_end) {
         auto &bonds = atom->getSaBonds();
-        qDebug() << "bonds.size()=" << bonds.size();
+//        qDebug() << "bonds.size()=" << bonds.size();
         if (bonds.size() > 1) {
             std::sort(bonds.begin(), bonds.end(), [](
                     const std::pair<float, std::shared_ptr<JBond>> &a,
@@ -639,7 +639,7 @@ bool xgd::JMol_p::tryExpand(const id_type &_aid) {
 //            mol.rebuildAllData();
         }
     }
-    qDebug() << __FUNCTION__ << "return true";
+//    qDebug() << __FUNCTION__ << "return true";
     return true;
 }
 
@@ -703,11 +703,11 @@ bool JMol_p::reverseTokens(JMol_p::token_struct &tokenStruct) {
         elements2.size() == elements.size() &&
         tokens2.size() == tokens.size()) {
         std::swap(newStruct, tokenStruct);
-        qDebug() << __FUNCTION__ << "ret true";
+//        qDebug() << __FUNCTION__ << "ret true";
         return true;
     }
-    qDebug() << __FUNCTION__ << "ret false" << numbers2.size() << numbers.size()
-             << elements2.size() << elements.size()
-             << tokens2.size() << tokens.size();
+//    qDebug() << __FUNCTION__ << "ret false" << numbers2.size() << numbers.size()
+//             << elements2.size() << elements.size()
+//             << tokens2.size() << tokens.size();
     return false;
 }
