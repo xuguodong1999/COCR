@@ -658,8 +658,38 @@ bool JMol_p::reverseTokens(JMol_p::token_struct &tokenStruct) {
     token_struct newStruct;
     auto&[tokens, numbers, elements]=tokenStruct;
     auto&[tokens2, numbers2, elements2]=newStruct;
+    std::unordered_map<size_t, size_t> numberMap, elementMap;
     // 我们只支持单层括号
+    // H3C-COO-(CH3COOEt)-CH2CH3-H2C
+    int numCache = -1;
+    int numBracketHolder = -1;
+    for (int i = tokens.size() - 1; i >= 0; i--) {
+        auto &curToken = tokens[i];
+        if (i - 1 >= 0) {
+            int j = i - 1;
+            if (isNumberToken(tokens[j])) {
+                numCache = numbers[j];
+            }
+        }
+        if (isNumberToken(curToken)) {
 
+        } else if (isRightToken(curToken)) {
+            tokens2.push_back(TokenType::Left);
+        } else if (isLeftToken(curToken)) {
+            tokens2.push_back(TokenType::Right);
+        } else if (!isNumberToken(curToken)){
+            tokens2.push_back(curToken);
+        }
+    }
+    // 恢复数字、元素记录表
+    for (size_t i = 0; i < tokens2.size(); i++) {
+        auto &curToken = tokens[i];
+        if (isNumberToken(curToken)) {
+            numbers2[i] = numbers[numberMap[i]];
+        } else if (isElementToken(curToken)) {
+            elements2[i] = elements[elementMap[i]];
+        }
+    }
     std::swap(newStruct, tokenStruct);
     return false;
 }

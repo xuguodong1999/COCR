@@ -22,75 +22,122 @@ int loopBenchMark() {
     OCRThread ocrThread;
     int sampleNum, dir4Expand, dir4ImageLoad, dir4Final, dir4TruthFileOpen, die4Exception;
     sampleNum = dir4Expand = dir4ImageLoad = dir4Final = dir4TruthFileOpen = die4Exception = 0;
-    auto getDieNum = [&]() -> int {
-        return dir4Expand + dir4ImageLoad + dir4Final + dir4TruthFileOpen + die4Exception;
+    enum BenchmarkState {
+        INCHI_OK = 0,
+        IMAGE_FILE_LOAD_FAILED = 1,
+        REF_FILE_LOAD_FAILED = 2,
+        REF_MOL_LOAD_FAILED = 3,
+
+        MOL_OCR_FAILED = 4,
+        MOL_PROCESS_FAILED = 5,
+        MOL_COMPARE_FAILED = 6,
     };
-    auto logDie = [&]() -> void {
-        qDebug() << "SampleNum";
-        qDebug() << sampleNum;
-        qDebug() << "Expand" << "ImageLoad" << "Final" << "TruthFileOpen" << "Exception";
-        qDebug() << dir4Expand << dir4ImageLoad << dir4Final << dir4TruthFileOpen << die4Exception;
+    std::unordered_map<BenchmarkState, int> stateMap = {
+            {INCHI_OK,               0},
+            {IMAGE_FILE_LOAD_FAILED, 0},
+            {REF_FILE_LOAD_FAILED,   0},
+            {REF_FILE_LOAD_FAILED,   0},
+            {MOL_OCR_FAILED,         0},
+            {MOL_PROCESS_FAILED,     0},
+            {MOL_COMPARE_FAILED,     0},
     };
-    auto loop = [&](const QString &_filePath) {
+    QString imagePath = "D:/leafxy_benchmark/image";
+    QString referencePath = "D:/leafxy_benchmark/ref";
+    std::vector<QString> subDirName = {"CLEF", "JPO", "UOB", "USPTO"};
+    std::unordered_map<QString, QString> imageSuffixMap = {
+            {"CLEF",  "png"},
+            {"JPO",   "png"},
+            {"UOB",   "png"},
+            {"USPTO", "png"},
+    };
+    std::unordered_map<QString, QString> refSuffixMap = {
+            {"CLEF",  "mol"},
+            {"JPO",   "sdf"},
+            {"UOB",   "mol"},
+            {"USPTO", "mol"},
+    };
+    auto fail_and_exit = [&](const BenchmarkState &state, const QString &message) {
+        ++stateMap[state];
+        qDebug() << "exit for" << state;
+        qDebug() << message;
+        exit(-1);
+    };
+    auto fail_and_continue = [&](const BenchmarkState &state, const QString &message) {
+        ++stateMap[state];
+        qDebug() << "fail for" << state;
+        qDebug() << message;
+    };
+    auto handle_image = [&](const QString &fileName,
+                            const QString &subDirName = "CLEF") -> void {
+        QString imageFilePath = imagePath + "/" + subDirName + "/" + fileName;
+        QString refFilePath = imageFilePath.replace(
+                "." + imageSuffixMap[subDirName],
+                "." + refSuffixMap[subDirName]);
         QImage image;
-        if (image.load(_filePath)) {
-            ++sampleNum;
-            image = image.convertToFormat(QImage::Format_Grayscale8);
+        if (!image.load(imageFilePath)) {
+            fail_and_exit(IMAGE_FILE_LOAD_FAILED, imageFilePath);
+        }
+        image = image.convertToFormat(QImage::Format_Grayscale8);
+        QFile f(refFilePath);
+        if (!f.open(QIODevice::ReadOnly)) {
+            fail_and_exit(REF_FILE_LOAD_FAILED, refFilePath);
+        }
+        std::string refBuffer = f.readAll().toStdString();
+        f.close();
+        std::shared_ptr<xgd::JMol> refMol;
+        try {
+            refMol = std::make_shared<xgd::JMolAdapter>();
+            refMol->readAs(refBuffer, refSuffixMap[subDirName].toStdString());
+        } catch (std::exception &e) {
+            fail_and_exit(REF_MOL_LOAD_FAILED, e.what());
+        }
+        ++sampleNum;
+        try {
             ocrThread.bindData(image);
             ocrThread.start();
             ocrThread.wait();
-            auto mol = ocrThread.getMol();
-            if (mol) {
-                if (!mol->tryExpand()) {
-                    ++dir4Expand;
-                    return;
-                }
-                try {
-                    mol->addAllHydrogens();
-                    auto predict = mol->writeAs("inchi");
-//                    QFile f(QString(_filePath).replace("images/USPTO", "reference/USPTO_mol_ref"
-//                    QFile f(QString(_filePath).replace("images/CLEF", "reference/CLEF_mol_ref"
-                    QFile f(QString(_filePath).replace("images/JPO", "reference/JPO_mol_ref"
-                    ).replace("png", "sdf"));
-                    if (!f.open(QIODevice::ReadOnly)) {
-                        ++dir4TruthFileOpen;
-                        qDebug() << "[die] file open:" << f.fileName();
-                    }
-                    auto buffer = f.readAll().toStdString();
-                    f.close();
-                    auto trueMol = std::make_shared<xgd::JMolAdapter>();
-                    trueMol->readAs(buffer, "mol");
-                    auto truth = trueMol->writeAs("inchi");
-                    if (predict != truth) {
-                        ++dir4Final;
-                        qDebug() << "[die] compare:";
-                        qDebug() << "file=" << _filePath;
-                        qDebug() << "smi0=" << mol->writeAsSMI().c_str();
-                        qDebug() << "smi1=" << trueMol->writeAsSMI().c_str();
-                        qDebug() << "inchi0=" << predict.c_str();
-                        qDebug() << "inchi1=" << truth.c_str();
-                    } else {
-                        qDebug() << "[haha] acc=" << 1.0 * (sampleNum - getDieNum()) / sampleNum;
-                    }
-                } catch (std::exception &e) {
-                    ++die4Exception;
-                    qDebug() << "[die] exception:" << e.what();
-                }
-            }
-        } else {
-            qDebug() << "[die] image open:" << _filePath;
-            ++dir4ImageLoad;
+        } catch (std::exception &e) {
+            fail_and_continue(MOL_OCR_FAILED, e.what());
+            return;
         }
+        auto mol = ocrThread.getMol();
+        if (!mol) {
+            fail_and_continue(MOL_OCR_FAILED, "mol == nullptr");
+            return;
+        }
+        try {
+            if (!mol->tryExpand()) {
+                fail_and_continue(MOL_PROCESS_FAILED, "expand");
+                return;
+            }
+            mol->addAllHydrogens();
+        } catch (std::exception &e) {
+            fail_and_continue(MOL_PROCESS_FAILED, e.what());
+            return;
+        }
+        auto inchi0 = mol->writeAs("inchi");
+        auto inchi1 = refMol->writeAs("inchi");
+        if (inchi0 == inchi1) {
+            ++stateMap[INCHI_OK];
+            return;
+        }
+        auto smi0 = mol->writeAsSMI();
+        auto smi1 = refMol->writeAsSMI();
+        QString debug = QString::fromStdString(smi0) + smi1.c_str();
+        debug.replace("\r", "\n");
+        debug.replace("\t", "\n");
+        debug.replace("\n\n", "\n");
+        fail_and_continue(MOL_COMPARE_FAILED, debug);
     };
-//    for (auto &file:clef) { loop(file.absoluteFilePath()); }
-//    qDebug() << "CLEF DONE **************";
-    for (auto &file:jpo) { loop(file.absoluteFilePath()); }
-    qDebug() << "JPO DONE **************";
-//    for (auto &file:uob) { loop(file.absoluteFilePath()); }
-//    qDebug() << "UOB DONE **************";
-//    for (auto &file:uspto) { loop(file.absoluteFilePath()); }
-//    qDebug() << "USPTO DONE **************";
-    logDie();
+    auto loop_dataset = [&](const QString &subDirName) {
+        auto files = QDir(imgRoot + "/" + subDirName).entryInfoList(
+                QDir::Filter(QDir::Files));
+        for (auto &file:files) {
+            handle_image(file.fileName(), subDirName);
+        }
+        qDebug() << "********" << subDirName << "******** DONE ********";
+    };
+    loop_dataset("JPO");
     return 0;
 }
 
