@@ -47,7 +47,8 @@ int main(int argc, char **argv) {
 //    cv::imshow("mm",img);
 //    cv::waitKey(0);
     auto &isomer = IsomerCounter::GetInstance();
-    isomer.calculate(30, "D:/alkane/");
+//    isomer.calculate(30, "D:/alkane/");
+    isomer.calculate_i_from_i_1("D:/alkane/", 29);
 //    auto &p = PolyaIsomerCounter::GetInstance();
 //    p.count(31);
     return 0;

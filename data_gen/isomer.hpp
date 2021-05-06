@@ -46,7 +46,9 @@ private:
     public:
         std::vector<std::vector<hash_type>> mData;
         size_t mSize;
-        const size_t max_size = 1024ULL*1024ULL*512ULL ;// 12G
+        // 536870923ULL for c1-28,1024ULL*1024ULL*512ULL,12G
+        // 1073741824ULL for c29,c30, 24G
+        const size_t max_size = 1073741827ULL;
 
         quick_set() : mSize(0) {
             mData.resize(max_size);
