@@ -46,11 +46,10 @@ int main(int argc, char **argv) {
 //    cv::resize(img,img,cv::Size(img.cols,img.rows)/2);
 //    cv::imshow("mm",img);
 //    cv::waitKey(0);
-    auto &isomer = IsomerCounter::GetInstance();
+//    auto &isomer = IsomerCounter::GetInstance();
 //    isomer.calculate(30, "D:/alkane/");
-    isomer.calculate_i_from_i_1("D:/alkane/", 29);
-//    auto &p = PolyaIsomerCounter::GetInstance();
-//    p.count(31);
+    auto &p = PolyaIsomerCounter::GetInstance();
+    p.count(31);
     return 0;
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);

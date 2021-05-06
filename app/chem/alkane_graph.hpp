@@ -73,7 +73,7 @@ namespace xgd {
                         nodeNum - subTreeSize[current]);// 另一侧会不会更大呢
             };
             dfsWrapper(before, in, after);
-            return std::move(maxSubTreeSize);
+            return maxSubTreeSize;
         }
 
     public:
@@ -116,7 +116,7 @@ namespace xgd {
                     }
                 }
             }
-            return std::move(finalSeq);
+            return finalSeq;
         }
 
         AlkaneGraph() {
