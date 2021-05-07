@@ -55,6 +55,7 @@ std::string xgd::TextCorrector::correct(const std::string &_text) {
     result = xgd::replaceSubStr(result, "(Z", "C2");
     result = xgd::replaceSubStr(result, "CbZ", "Cbz");
     result = xgd::replaceSubStr(result, "CeO", "COO");
+    result = xgd::replaceSubStr(result, "eOO", "_OO");
     int lb = 0, rb = 0;
     for (auto &c:result) {
         if (c == '(') { ++lb; } else if (c == ')') { ++rb; }

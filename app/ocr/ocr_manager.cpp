@@ -118,10 +118,11 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
         cv::Scalar color;
         std::string info;
         switch (item.type) {
-            case OCRItemType::Element: {
-                color = cvColor(ColorName::rgbRed);
-                break;
-            }
+            case OCRItemType::Element:
+//                {
+//                color = cvColor(ColorName::rgbRed);
+//                break;
+//            }
             case OCRItemType::Group: {
                 color = cvColor(ColorName::rgbBlue);
                 break;
@@ -150,6 +151,9 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
             }
         }
         info = item.getText();
+//        if (item.type == OCRItemType::Element || item.type == OCRItemType::Group) {
+//            info = "string";
+//        }
         cv::putText(canvas, info, move_text_box(item.getRect().tl()),
                     1, 1.5, color,
                     2, cv::LINE_AA, false);
