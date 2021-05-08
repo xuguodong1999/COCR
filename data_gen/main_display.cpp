@@ -12,7 +12,7 @@
 
 
 extern CRNNDataGenerator crnnDataGenerator;
-std::string WORKSPACE0 = "D:/datasets";
+std::string WORKSPACE0 = "X:/datasets";
 
 /**
  * TODO:
@@ -27,8 +27,8 @@ void generateYoloData() {
     crnnDataGenerator.init(WORKSPACE0 + "/crnn-text-data");
     SOSODarknet generator;
     generator.init(WORKSPACE0 + "/soso-obj-data/train");
-//    generator.display();
-    generator.dump(1000000, 5);
+    generator.display();
+//    generator.dump(1000000, 5);
 }
 
 #include <QPainter>
@@ -48,9 +48,9 @@ int main(int argc, char **argv) {
 //    cv::waitKey(0);
 //    auto &isomer = IsomerCounter::GetInstance();
 //    isomer.calculate(30, "D:/alkane/");
-    auto &p = PolyaIsomerCounter::GetInstance();
-    p.count(31);
-    return 0;
+//    auto &p = PolyaIsomerCounter::GetInstance();
+//    p.count(31);
+//    return 0;
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
     HwDataLoader::getInstance();
