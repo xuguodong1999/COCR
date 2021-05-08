@@ -85,7 +85,7 @@ public:
         image = xgd::convertQImageToMat(_image);
 //        cv::erode(image,image, cv::Mat());
 //        cv::dilate(image,image, cv::Mat());
-//        image = xgd::rotateCvMat(image,2);
+        image = xgd::rotateCvMat(image,2);
     }
 
     void setImage(const QPixmap &_pixmap) {

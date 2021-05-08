@@ -270,5 +270,6 @@ void MainTabWidget::closeEvent(QCloseEvent *e) {
     qDebug() << __FUNCTION__ << "MainTabWidget";
     if (paintWidget) { paintWidget->saveLastScript(); }
     QWidget::closeEvent(e);
+    exit(0);// 如果分子力场没跑完，这里要强杀线程
 }
 

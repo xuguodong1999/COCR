@@ -119,10 +119,10 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
         std::string info;
         switch (item.type) {
             case OCRItemType::Element:
-//                {
-//                color = cvColor(ColorName::rgbRed);
-//                break;
-//            }
+                {
+                color = cvColor(ColorName::rgbRed);
+                break;
+            }
             case OCRItemType::Group: {
                 color = cvColor(ColorName::rgbBlue);
                 break;
