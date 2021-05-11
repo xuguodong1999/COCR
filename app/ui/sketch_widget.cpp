@@ -141,6 +141,7 @@ void SketchWidget::undo() {
     historyStrokeStack.push(std::move(lastStroke));
     currentScript.pop_back();
     sync();
+    emit sig_modified();
 }
 
 void SketchWidget::redo() {
@@ -149,6 +150,7 @@ void SketchWidget::redo() {
     currentScript.push_back(std::move(lastStroke));
     historyStrokeStack.pop_back();
     sync();
+    emit sig_modified();
 }
 
 void SketchWidget::saveLastScript() {
