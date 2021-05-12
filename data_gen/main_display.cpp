@@ -25,9 +25,10 @@ std::string WORKSPACE0 = "X:/datasets";
 void generateYoloData() {
     srand(0022);
     crnnDataGenerator.init(WORKSPACE0 + "/crnn-text-data");
-    SOSODarknet generator;
-    generator.init(WORKSPACE0 + "/soso-obj-data/train");
-    generator.display();
+    crnnDataGenerator.display();
+//    SOSODarknet generator;
+//    generator.init(WORKSPACE0 + "/soso-obj-data/train");
+//    generator.display();
 //    generator.dump(1000000, 5);
 }
 

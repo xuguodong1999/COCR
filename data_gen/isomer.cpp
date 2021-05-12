@@ -95,7 +95,7 @@ bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
 
 IsomerCounter::IsomerCounter() {
 
-}M
+}
 
 IsomerCounter::~IsomerCounter() {}
 
