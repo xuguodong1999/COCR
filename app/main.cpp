@@ -9,11 +9,12 @@
 
 // TODO: 不考虑子图、添加 NH 支持
 int loopBenchMark() {
+    QString imgRoot, refRoot;
 #ifdef Q_OS_LINUX
-    QString imgRoot("/home/xgd/source/repos/leafxy/testcase/public/");
+    imgRoot = "/home/xgd/source/repos/leafxy/testcase/public/";
 #elif defined(Q_OS_WIN)
-    QString imgRoot("D:/OCSR_Review/assets/images/");
-    QString refRoot("D:/OCSR_Review/assets/reference/");
+    imgRoot = "D:/OCSR_Review/assets/images/";
+    refRoot = "D:/OCSR_Review/assets/reference/";
 #endif
     auto clef = QDir(imgRoot + "CLEF").entryInfoList(QDir::Filter(QDir::Files));
     auto jpo = QDir(imgRoot + "JPO").entryInfoList(QDir::Filter(QDir::Files));

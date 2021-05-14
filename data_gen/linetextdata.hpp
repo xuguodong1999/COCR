@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <functional>
 #include <string>
+#include <vector>
 #include <optional>
 
 class SpliceableText {

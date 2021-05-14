@@ -30,7 +30,7 @@ GNU General Public License for more details.
 
 #include "rand.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <sys/time.h>
 #endif
 
