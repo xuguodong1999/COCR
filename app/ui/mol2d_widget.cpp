@@ -3,9 +3,8 @@
 #include "2d/bond_item.hpp"
 #include "waithint_widget.h"
 #include "chem/jmol.hpp"
-
 #include <QDebug>
-
+#include <cmath>
 Mol2DWidget::Mol2DWidget(QWidget *parent) : GestureView(parent) {
     scene = new QGraphicsScene();
     setScene(scene);
