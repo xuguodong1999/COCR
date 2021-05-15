@@ -242,7 +242,9 @@ std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
         case TokenType::Cbz: {// 苄氧羰基
             auto[co, _]= makeAcyl();
             auto c6 = makeBenzene();
-            auto c = std::get<0>(c6);
+            auto c0 = std::get<0>(c6);
+            auto[c, __]=makeAlkane(1);
+            mol.addBond(c, c0);
             auto o = mol.addAtom(ElementType::O);
             mol.addBond(c, o);
             mol.addBond(o, co);
