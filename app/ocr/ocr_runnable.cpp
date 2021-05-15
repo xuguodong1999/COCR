@@ -85,7 +85,7 @@ public:
         image = xgd::convertQImageToMat(_image);
 //        cv::erode(image,image, cv::Mat());
 //        cv::dilate(image,image, cv::Mat());
-        image = xgd::rotateCvMat(image,2);
+        image = xgd::rotateCvMat(image, 2);
     }
 
     void setImage(const QPixmap &_pixmap) {
@@ -155,7 +155,13 @@ OCRThread::~OCRThread() {
 void OCRThread::run() {
     try {
 //        QThread::msleep(2000);
-        mol = ocrManager->ocr(_p->getImage(), true);
+#ifdef Q_OS_WIN
+//        bool debug = true;
+        bool debug = false;
+#else
+        bool debug = false;
+#endif
+        mol = ocrManager->ocr(_p->getImage(), debug);
     } catch (std::exception &e) {
         qDebug() << __FUNCTION__ << "catch" << e.what();
         mol = nullptr;

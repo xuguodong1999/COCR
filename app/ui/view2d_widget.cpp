@@ -18,6 +18,8 @@ View2DWidget::View2DWidget(QWidget *parent)
     auto formatVec = GetWritableFormats();
     for (auto &format:formatVec) {
         if (std::string::npos != format.find("Read-only")) { continue; }
+        // FIXME: 禁用 inchi 格式
+        if (std::string::npos != format.find("inchi")) { continue; }
         auto suffix = format.substr(0, format.find(" "));
         if (!xgd::JMol::IsValidWritableFormat(suffix)) { continue; }
         ui->format_box->addItem(QString::fromStdString(suffix));

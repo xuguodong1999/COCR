@@ -117,16 +117,14 @@ int loopBenchMark() {
             fail_and_continue(MOL_PROCESS_FAILED, e.what());
             return;
         }
-        auto inchi0 = mol->writeAs("inchi");
-        auto inchi1 = refMol->writeAs("inchi");
-        if (inchi0 == inchi1) {
+        auto smi0 = mol->writeAs("can");
+        auto smi1 = refMol->writeAs("can");
+        if (smi0 == smi1) {
             ++stateMap[INCHI_OK];
             qDebug() << stateMap[INCHI_OK] / (float) sampleNum;
             return;
         }
-        auto smi0 = mol->writeAsSMI();
-        auto smi1 = refMol->writeAsSMI();
-        QString debug = QString::fromStdString(smi0) + smi1.c_str();
+        QString debug = QString::fromStdString(smi0) + " **vs**" + smi1.c_str();
         debug.replace("\r", "\n");
         debug.replace("\t", "\n");
         debug.replace("\n\n", "\n");
@@ -140,14 +138,12 @@ int loopBenchMark() {
         }
         qDebug() << "********" << subDirName << "******** DONE ********";
     };
-    loop_dataset("UOB");
+//    loop_dataset("UOB");
+    loop_dataset("USPTO");
     qDebug() << stateMap[INCHI_OK] / (float) sampleNum;
     return 0;
 }
 
-//  C:/source/repos/leafxy/3rdparty/opencv-lib/x64/vc16/bin\;
-// C:/shared/opencv4.5.1/x64/vc16/bin\;
-//PATH=C:/source/repos/leafxy-clion-release/3rdparty/openbabel\;C:/source/repos/leafxy-clion-release/3rdparty/coordgenlibs\;C:/source/repos/leafxy-clion-debug/3rdparty/openbabel\;C:/source/repos/leafxy-clion-debug/3rdparty/coordgenlibs\;C:/source/repos/leafxy/3rdparty/ncnn-lib/bin\;C:/shared/qt5.15.2/bin\;C:/source/repos/leafxy/3rdparty/opencv-lib/x64/vc16/bin\;
 int loopBenchMarkWrapper() {
     try {
         return loopBenchMark();
@@ -169,7 +165,7 @@ int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-//    return loopBenchMarkWrapper();
+    return loopBenchMarkWrapper();
     Application app(argc, argv);
     MainTabWidget w;
     w.show();

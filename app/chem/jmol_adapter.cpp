@@ -116,13 +116,14 @@ std::string JMolAdapter::writeAs(const std::string &_formatSuffix) {
     static std::unordered_set<std::string> sNo3DWhiteList = {
             "smi",
             "can",
-            "inchi"
+            "inchi",
+            "smiles"
     };
     if (sNo3DWhiteList.end() == sNo3DWhiteList.find(_formatSuffix) && !is3DInfoLatest) {
         if (!generate3D())
             throw std::runtime_error("fail to generate 3d");
     }
-    return conv.WriteString(obMol.get());
+    return conv.WriteString(obMol.get(), true);
 }
 
 std::string JMolAdapter::writeAsSMI() {

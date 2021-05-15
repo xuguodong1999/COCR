@@ -250,44 +250,44 @@
 <context>
     <name>Mol2DWidget</name>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="114"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="113"/>
         <source>atom (global id=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="114"/>
-        <location filename="../app/ui/mol2d_widget.cpp" line="128"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="113"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="127"/>
         <source>) picked
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="118"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="117"/>
         <source>element: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="120"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="119"/>
         <source>mass: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="128"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="127"/>
         <source>bond (global id=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="132"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="131"/>
         <source>type: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="136"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="135"/>
         <source>atom 1: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/mol2d_widget.cpp" line="137"/>
+        <location filename="../app/ui/mol2d_widget.cpp" line="136"/>
         <source>atom 2: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -446,24 +446,24 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/view2d_widget.cpp" line="71"/>
+        <location filename="../app/ui/view2d_widget.cpp" line="73"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/view2d_widget.cpp" line="72"/>
+        <location filename="../app/ui/view2d_widget.cpp" line="74"/>
         <source>The molecule you see has SUPER ATOMS.
 They are represented as element At(85, VIIA).
 You can use &apos;expand&apos; and &apos;see H&apos; button to try again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/view2d_widget.cpp" line="80"/>
+        <location filename="../app/ui/view2d_widget.cpp" line="82"/>
         <source>Format algorithm failed on your molecule</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/view2d_widget.cpp" line="83"/>
+        <location filename="../app/ui/view2d_widget.cpp" line="85"/>
         <source>No molecule found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -501,24 +501,24 @@ You can use &apos;expand&apos; and &apos;see H&apos; button to try again</source
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/view3d_widget.cpp" line="79"/>
+        <location filename="../app/ui/view3d_widget.cpp" line="81"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/view3d_widget.cpp" line="80"/>
+        <location filename="../app/ui/view3d_widget.cpp" line="82"/>
         <source>The molecule you see has SUPER ATOMS.
 They are represented as element At(85, VIIA).
 You can use &apos;expand&apos; and &apos;see H&apos; button to try again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/view3d_widget.cpp" line="88"/>
+        <location filename="../app/ui/view3d_widget.cpp" line="90"/>
         <source>Format algorithm failed on your molecule</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../app/ui/view3d_widget.cpp" line="91"/>
+        <location filename="../app/ui/view3d_widget.cpp" line="93"/>
         <source>No molecule found</source>
         <translation type="unfinished"></translation>
     </message>
