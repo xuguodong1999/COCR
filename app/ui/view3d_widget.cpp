@@ -8,7 +8,7 @@
 #include "format_dialog.h"
 
 View3DWidget::View3DWidget(QWidget *parent)
-        : QWidget(parent), ui(new Ui::View3DWidget) {
+        : QWidget(parent), ui(new Ui::View3DWidget), expBtnClickTimes(0) {
     ui->setupUi(this);
 
     BaseEntity::SetView3DWidget(this);
@@ -66,7 +66,7 @@ void View3DWidget::showFormatDialog() {
     formatDialog->resize(size() * 0.8);
     formatDialog->setModal(true);
     formatDialog->setWindowTitle(QString::fromStdString(currentFormat));
-    auto mol = xgd::JMolManager::GetInstance().getCurrentMol();
+    auto mol = xgd::JMolManager::GetInstance().getFullHydrogenExpandedMol(false);
     if (mol) {
         bool hasSuperAtom = false;
         mol->loopAtomVec([&](xgd::JAtom &atom) {

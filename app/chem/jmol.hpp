@@ -48,7 +48,7 @@ namespace xgd {
 
         JMol();
 
-        virtual std::vector<std::shared_ptr<JMol>> split()=0;
+        virtual std::vector<std::shared_ptr<JMol>> split() = 0;
 
         void loopAtomVec(std::function<void(JAtom &_atom)> _func);
 

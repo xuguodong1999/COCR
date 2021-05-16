@@ -81,6 +81,12 @@ endif ()
 # product suffix
 set_target_properties(${APP_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
+# remove cmd for windows release
+if (MSVC AND WITH_MODEL_QRC)
+    set_target_properties(${APP_NAME} PROPERTIES
+            WIN32_EXECUTABLE YES LINK_FLAGS "/ENTRY:mainCRTStartup")
+endif ()
+
 # for future qml cases
 target_compile_definitions(${APP_NAME} PRIVATE
         $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)

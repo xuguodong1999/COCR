@@ -29,12 +29,14 @@ JMolManager::mol_type JMolManager::getFullHydrogenInputMol() {
 }
 
 
-JMolManager::mol_type JMolManager::getFullHydrogenExpandedMol() {
+JMolManager::mol_type JMolManager::getFullHydrogenExpandedMol(bool _set_current) {
     if (!fullHydrogenExpandedMol) {
         fullHydrogenExpandedMol = getExpandedMol()->deepClone();
         fullHydrogenExpandedMol->addAllHydrogens();
     }
-    currentMol = fullHydrogenExpandedMol;
+    if (_set_current) {
+        currentMol = fullHydrogenExpandedMol;
+    }
     return fullHydrogenExpandedMol;
 }
 

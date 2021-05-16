@@ -118,8 +118,7 @@ void xgd::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat 
         cv::Scalar color;
         std::string info;
         switch (item.type) {
-            case OCRItemType::Element:
-                {
+            case OCRItemType::Element: {
                 color = cvColor(ColorName::rgbRed);
                 break;
             }

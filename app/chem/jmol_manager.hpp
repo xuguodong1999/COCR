@@ -32,7 +32,7 @@ namespace xgd {
 
         mol_type getExpandedMol();
 
-        mol_type getFullHydrogenExpandedMol();
+        mol_type getFullHydrogenExpandedMol(bool _set_current = true);
 
         static JMolManager &GetInstance();
     };

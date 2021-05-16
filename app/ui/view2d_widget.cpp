@@ -58,7 +58,7 @@ void View2DWidget::showFormatDialog() {
     formatDialog->resize(size() * 0.8);
     formatDialog->setModal(true);
     formatDialog->setWindowTitle(QString::fromStdString(currentFormat));
-    auto mol = xgd::JMolManager::GetInstance().getCurrentMol();
+    auto mol = xgd::JMolManager::GetInstance().getFullHydrogenExpandedMol(false);
     if (mol) {
         bool hasSuperAtom = false;
         mol->loopAtomVec([&](xgd::JAtom &atom) {
