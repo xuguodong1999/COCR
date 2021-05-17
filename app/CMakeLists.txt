@@ -48,7 +48,7 @@ else (ANDROID)
 endif (ANDROID)
 
 # source dir
-set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./chem ./ocr)
+set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./chem ./ocr ./hw)
 if (NOT ANDROID)
     list(APPEND SRC_DIR_LIST ./opencv_dnn_impl)
 endif (NOT ANDROID)
@@ -101,6 +101,10 @@ target_link_libraries(${APP_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::MultimediaWidgets
         opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
+
+if (MSVC)
+    target_link_options(${APP_NAME} PRIVATE "/FORCE:MULTIPLE")
+endif (MSVC)
 
 # on desktop, i prefer to use large yolo weights by opencv_dnn, instead of ncnn
 if (NOT ANDROID)

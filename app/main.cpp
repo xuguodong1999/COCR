@@ -161,7 +161,27 @@ int loopBenchMarkWrapper() {
  * 【必解 bug】上下邻接的单原子图元
  * 【必解 bug】两个键连原子靠得近
  */
+
+#include <QFile>
+#include "hw/hw_mol.hpp"
+
 int main(int argc, char *argv[]) {
+//    QFile f("C:/source/repos/leafxy/resources/drugbank.smi");
+//    f.open(QIODevice::ReadOnly);
+//    while (!f.atEnd()) {
+//        QString s = f.readLine();
+//        if (s.contains(".") || s.contains("/") || s.contains("\\")
+//            || s.contains("[") || s.contains("@") || s.contains("P") || s.contains("3") || s.length() > 30) {
+//            continue;
+//        }
+//        auto mol = std::make_shared<xgd::JMolAdapter>();
+//        mol->readAsSMI(s.toStdString());
+//        auto hwMol = std::make_shared<HwMol>(mol);
+//        hwMol->showOnScreen(1);
+//        qDebug() << mol->writeAs("can").c_str();
+//    }
+//    f.close();
+//    return 0;
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
