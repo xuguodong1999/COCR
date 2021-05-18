@@ -82,14 +82,20 @@ public:
     }
 
     void setImage(const QImage &_image) {
-        image = xgd::convertQImageToMat(_image);
-//        cv::erode(image,image, cv::Mat());
-//        cv::dilate(image,image, cv::Mat());
-        image = xgd::rotateCvMat(image, 2);
+        cv::Mat cvMat = xgd::convertQImageToMat(_image);
+        setImage(cvMat);
     }
 
     void setImage(const QPixmap &_pixmap) {
-        image = xgd::convertQPixmapToMat(_pixmap);
+        cv::Mat cvMat = xgd::convertQPixmapToMat(_pixmap);
+        setImage(cvMat);
+    }
+
+    void setImage(cv::Mat &_cvMat) {
+//        cv::erode(image,image, cv::Mat());
+//        cv::dilate(image,image, cv::Mat());
+        image = _cvMat;
+        image = xgd::rotateCvMat(image, 2);
     }
 
     void clearImage() {
@@ -185,4 +191,8 @@ void OCRThread::bindData(const QImage &_image) {
 
 void OCRThread::bindData(const QPixmap &_pixmap) {
     _p->setImage(_pixmap);
+}
+
+void OCRThread::bindData(cv::Mat &_cvMat) {
+    _p->setImage(_cvMat);
 }

@@ -163,25 +163,132 @@ int loopBenchMarkWrapper() {
  */
 
 #include <QFile>
+#include <opencv2/highgui.hpp>
 #include "hw/hw_mol.hpp"
+#include "opencv_util.hpp"
+
+int washDrugbank() {
+    //    QFile f("C:/source/repos/leafxy/resources/drugbank.smi");
+    QFile f("C:/Users/xgd/source/repos/leafxy/resources/drugbank_simple.smi");
+//    QFile fout("C:/Users/xgd/source/repos/leafxy/resources/drugbank_simple.smi");
+//    fout.open(QIODevice::WriteOnly);
+    f.open(QIODevice::ReadOnly);
+    OCRThread ocrThread;
+    float success = 0, all = 0, full = 0;
+    while (!f.atEnd()) {
+        full += 1;
+        QString s = f.readLine().trimmed();
+        if (s.contains(".") || s.contains("/") || s.contains("\\")
+            || s.contains("[") || s.contains("@") || s.contains("3")) {
+            continue;
+        }
+        auto refMol = std::make_shared<xgd::JMolAdapter>();
+        refMol->readAsSMI(s.toStdString());
+        if (refMol->getBondNum() < 1) { continue; }
+        auto refSMI = refMol->writeAs("can");
+        qDebug() << refSMI.c_str();
+//        refMol->readAsSMI(refSMI);
+        auto hwMol = std::make_shared<HwMol>(refMol);
+        auto image = hwMol->showOnScreen(1, true);
+        try {
+            ocrThread.bindData(image[0]);
+            ocrThread.start();
+            ocrThread.wait();
+        } catch (...) {
+            continue;
+        }
+        auto mol = ocrThread.getMol();
+        if (mol) {
+            all += 1;
+            try {
+                mol->tryExpand();
+                mol->addAllHydrogens();
+            } catch (...) {
+                continue;
+            }
+            auto smi = mol->writeAsSMI();
+            auto ss = QString::fromStdString(smi);
+            if (ss.contains("@") || ss.contains("/") || ss.contains("\\") || ss.contains("At")) {
+                continue;
+            }
+            if (smi == refSMI) {
+                success += 1;
+            } else {
+                qDebug() << "ref=" << refSMI.c_str();
+                qDebug() << "smi=" << smi.c_str();
+            }
+//            fout.write(s.toLocal8Bit() + "\n");
+            qDebug() << "acc=" << success / all << ",all=" << all << ",success=" << success << ",full=" << full;
+//            cv::waitKey(0);
+        }
+    }
+    f.close();
+//    fout.close();
+    return 0;
+}
+
+#include <random>
+
+int benchmarkDrugbank() {
+    QFile f("C:/Users/xgd/source/repos/leafxy/resources/drugbank_simple.smi");
+//    QFile f("C:/source/repos/leafxy/resources/drugbank_simple.smi");
+    f.open(QIODevice::ReadOnly);
+    OCRThread ocrThread;
+    float success, all, die_ocr, die_empty_mol;
+    success = all = die_empty_mol = die_ocr = 0;
+    std::vector<QString> smiles;
+    while (!f.atEnd()) {
+        smiles.push_back(f.readLine().trimmed());
+    }
+    f.close();
+    std::shuffle(smiles.begin(), smiles.end(), std::default_random_engine());
+    for (auto &smi:smiles) {
+        auto refMol = std::make_shared<xgd::JMolAdapter>();
+        refMol->readAsSMI(smi.toStdString());
+        std::string refCan = refMol->writeAs("can");
+        auto hwMol = std::make_shared<HwMol>(refMol);
+        auto images = hwMol->showOnScreen(10, false);
+        for (auto &image:images) {
+            try {
+                all += 1;
+                ocrThread.bindData(image);
+                ocrThread.start();
+                ocrThread.wait();
+            } catch (...) {
+                die_ocr += 1;
+                continue;
+            }
+            auto mol = ocrThread.getMol();
+            if (!mol) {
+                die_empty_mol += 1;
+                continue;
+            }
+            try {
+                if (!mol->tryExpand()) { continue; }
+                mol->addAllHydrogens();
+            } catch (...) {
+                continue;
+            }
+            auto can = mol->writeAsSMI();
+            if (can == refCan) {
+                success += 1;
+            } else {
+                qDebug() << "ref=" << refCan.c_str();
+                qDebug() << "smi=" << can.c_str();
+            }
+            qDebug() << "acc=" << success / all <<
+                     ",all=" << all <<
+                     ",success=" << success <<
+                     ",die_ocr=" << die_ocr <<
+                     ",die_empty_mol=" << die_empty_mol;
+        }
+    }
+
+    return 0;
+}
 
 int main(int argc, char *argv[]) {
-//    QFile f("C:/source/repos/leafxy/resources/drugbank.smi");
-//    f.open(QIODevice::ReadOnly);
-//    while (!f.atEnd()) {
-//        QString s = f.readLine();
-//        if (s.contains(".") || s.contains("/") || s.contains("\\")
-//            || s.contains("[") || s.contains("@") || s.contains("P") || s.contains("3") || s.length() > 30) {
-//            continue;
-//        }
-//        auto mol = std::make_shared<xgd::JMolAdapter>();
-//        mol->readAsSMI(s.toStdString());
-//        auto hwMol = std::make_shared<HwMol>(mol);
-//        hwMol->showOnScreen(1);
-//        qDebug() << mol->writeAs("can").c_str();
-//    }
-//    f.close();
-//    return 0;
+    return benchmarkDrugbank();
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif

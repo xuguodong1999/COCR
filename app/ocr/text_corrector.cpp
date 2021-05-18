@@ -36,6 +36,9 @@ std::string xgd::TextCorrector::correct(const std::string &_text) {
     }
     switch (result.length()) {
         case 1:
+            if (result == "D" || result == "0") {
+                result = "O";
+            }
             break;
         case 2:
             return correct2(result);

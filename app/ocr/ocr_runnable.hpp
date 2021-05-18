@@ -5,6 +5,7 @@
 #include <memory>
 #include <QPointF>
 #include <QImage>
+#include <opencv2/core/mat.hpp>
 
 namespace xgd {
     class OCRManager;
@@ -31,6 +32,7 @@ public:
 
     void bindData(const QPixmap &_pixmap);
 
+    void bindData(cv::Mat &_cvMat);
 
     std::shared_ptr<xgd::JMol> getMol();
 

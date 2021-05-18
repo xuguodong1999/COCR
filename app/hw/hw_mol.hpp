@@ -30,7 +30,7 @@ public:
 
     void setHwController(HwController &_hwController) override;
 
-    void showOnScreen(const size_t &_repeatTimes = 1, bool _showBox = false);
+    std::vector<cv::Mat> showOnScreen(const size_t &_repeatTimes = 1, bool _showBox = false);
 
     /**
      * 用 JMol 构造一个几何分子类型

@@ -267,28 +267,30 @@ std::shared_ptr<HwBase> HwMol::clone() const {
     return nullptr;
 }
 
-void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
+std::vector<cv::Mat> HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     reloadHWData(0.1);
-    float k0 = 60.0f / (std::max)(0.01f, avgSize);
+    float k0 = betweenProb(75, 85) / (std::max)(0.01f, avgSize);
     this->mulK(k0, k0);
 //    size_t fixW, fixH;
 //    fixW = fixH = 640;
     auto colorIdx = [](const int &_a) -> ColorName {
         return static_cast<const ColorName>((7 + _a) * 13 % 455);
     };
+    std::vector<cv::Mat> retImg;
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = this;
         target->rotate(randInt() % 360);
         target->setHwController(crude[randInt() % crude.size()]);
         auto bBox = target->getBoundingBox().value();
-        int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        int minWidth = 64 + bBox.width, minHeight = 64 + bBox.height;
         cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
                               getScalar(ColorName::rgbWhite));
         target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
         target->paintTo(img);
 
         auto[resImg0, offset]=resizeCvMatTo(img, minWidth, minHeight);
-        cv::Mat resImg = resImg0;
+        retImg.push_back(resImg0);
+        cv::Mat resImg = resImg0.clone();
         auto&[k, offsetx, offsety]=offset;
         int ow = bBox.width, oh = bBox.height;
         ow = ow * k;
@@ -304,9 +306,9 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
                 cv::rectangle(resImg, bBox, getScalar(
                         colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
         }
-        cv::imshow("MolHwItem::showOnScreen", resImg);
-        cv::waitKey(0);
+//        cv::imshow("MolHwItem::showOnScreen", resImg);
     }
+    return retImg;
 }
 
 void HwMol::moveBy(const cv::Point2f &_offset) {
