@@ -6,7 +6,11 @@
 #include "../chem/jmol.hpp"
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonDocument>
 
 /**
  * 向JMol填充图元
@@ -17,6 +21,8 @@ class HwMol : public HwBase {
     std::shared_ptr<xgd::JMol> mol;
     std::unordered_map<size_t, size_t> hwToAtomMap;
     float avgSize;
+    //<键id,图元下标>
+    std::unordered_map<size_t, size_t> itemBondMap2, itemAtomMap2;
 
     /**
      * @param _explicitCarbonProb 控制碳原子是否显示写出
@@ -30,7 +36,7 @@ public:
 
     void setHwController(HwController &_hwController) override;
 
-    std::vector<cv::Mat> showOnScreen(const size_t &_repeatTimes = 1, bool _showBox = false);
+    std::vector<std::pair<cv::Mat, QJsonObject>> showOnScreen(const size_t &_repeatTimes = 1, bool _showBox = false);
 
     /**
      * 用 JMol 构造一个几何分子类型

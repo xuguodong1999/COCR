@@ -3,10 +3,10 @@
 
 using namespace std;
 #ifdef WIN32
-//string WORKSPACE("C:/source/repos/leafxy/workspace/");
-//string META_DATA_DIR("C:/source/repos/leafxy/resources/");
-string WORKSPACE("C:/Users/xgd/source/repos/leafxy/workspace/");
-string META_DATA_DIR("C:/Users/xgd/source/repos/leafxy/resources/");
+string WORKSPACE("C:/source/repos/leafxy/workspace/");
+string META_DATA_DIR("C:/source/repos/leafxy/resources/");
+//string WORKSPACE("C:/Users/xgd/source/repos/leafxy/workspace/");
+//string META_DATA_DIR("C:/Users/xgd/source/repos/leafxy/resources/");
 #else
 string WORKSPACE("/home/xgd/source/repos/leafxy/workspace/");
 string META_DATA_DIR("/home/xgd/source/repos/leafxy/resources/");

@@ -166,6 +166,9 @@ int loopBenchMarkWrapper() {
 #include <opencv2/highgui.hpp>
 #include "hw/hw_mol.hpp"
 #include "opencv_util.hpp"
+#include <random>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 int washDrugbank() {
     //    QFile f("C:/source/repos/leafxy/resources/drugbank.smi");
@@ -191,7 +194,7 @@ int washDrugbank() {
         auto hwMol = std::make_shared<HwMol>(refMol);
         auto image = hwMol->showOnScreen(1, true);
         try {
-            ocrThread.bindData(image[0]);
+            ocrThread.bindData(image[0].first);
             ocrThread.start();
             ocrThread.wait();
         } catch (...) {
@@ -227,12 +230,16 @@ int washDrugbank() {
     return 0;
 }
 
-#include <random>
 
 int benchmarkDrugbank() {
-    QFile f("C:/Users/xgd/source/repos/leafxy/resources/drugbank_simple.smi");
-//    QFile f("C:/source/repos/leafxy/resources/drugbank_simple.smi");
+    QString E2E_DIR = "D:/Gitlab-leafxy/e2e/";
+//    QFile f("C:/Users/xgd/source/repos/leafxy/resources/drugbank_simple.smi");
+    QFile f("C:/source/repos/leafxy/resources/drugbank_simple.smi");
     f.open(QIODevice::ReadOnly);
+//    QFile tFile("D:/Gitlab-leafxy/e2e/data.txt");
+//    tFile.open(QIODevice::WriteOnly);
+    QJsonDocument d;
+    QJsonArray arr;
     OCRThread ocrThread;
     float success, all, die_ocr, die_empty_mol;
     success = all = die_empty_mol = die_ocr = 0;
@@ -241,38 +248,55 @@ int benchmarkDrugbank() {
         smiles.push_back(f.readLine().trimmed());
     }
     f.close();
-    std::shuffle(smiles.begin(), smiles.end(), std::default_random_engine());
+//    std::shuffle(smiles.begin(), smiles.end(), std::default_random_engine());
+    float sub_all = 0, sub_ok = 0;
+    int idx = 0;
     for (auto &smi:smiles) {
+        sub_all += 1;
+//        if (sub_all >= 20) { break; }
         auto refMol = std::make_shared<xgd::JMolAdapter>();
         refMol->readAsSMI(smi.toStdString());
         std::string refCan = refMol->writeAs("can");
         auto hwMol = std::make_shared<HwMol>(refMol);
-        auto images = hwMol->showOnScreen(10, false);
-        for (auto &image:images) {
+        auto images = hwMol->showOnScreen(13, false);
+        float sub_success = 0;
+        std::vector<size_t> okVec, dieVec;
+        for (size_t i = 0; i < images.size(); i++) {
+            auto &[image, jsonObj] = images[i];
             try {
                 all += 1;
-                ocrThread.bindData(image);
+                cv::Mat tmp = image.clone();
+                ocrThread.bindData(tmp);
                 ocrThread.start();
                 ocrThread.wait();
             } catch (...) {
                 die_ocr += 1;
+                dieVec.push_back(i);
                 continue;
             }
             auto mol = ocrThread.getMol();
             if (!mol) {
                 die_empty_mol += 1;
+                dieVec.push_back(i);
                 continue;
             }
             try {
-                if (!mol->tryExpand()) { continue; }
+                if (!mol->tryExpand()) {
+                    dieVec.push_back(i);
+                    continue;
+                }
                 mol->addAllHydrogens();
             } catch (...) {
+                dieVec.push_back(i);
                 continue;
             }
             auto can = mol->writeAsSMI();
             if (can == refCan) {
                 success += 1;
+                sub_success += 1;
+                okVec.push_back(i);
             } else {
+                dieVec.push_back(i);
                 qDebug() << "ref=" << refCan.c_str();
                 qDebug() << "smi=" << can.c_str();
             }
@@ -282,12 +306,102 @@ int benchmarkDrugbank() {
                      ",die_ocr=" << die_ocr <<
                      ",die_empty_mol=" << die_empty_mol;
         }
+        if (sub_success >= 5) {
+            sub_ok += 1;
+            qDebug() << "sub_acc=" << sub_ok / sub_all << ",sub_all=" << sub_all;
+        }
+//        tFile.write(("smi:" + QString::fromStdString(refCan).trimmed() + "\n").toLocal8Bit());
+        int num = 0;
+        for (size_t j = 0; j < okVec.size(); j++) {
+            if (num == 5) { break; }
+            std::string filename = QString::number(idx++, 16).toStdString();
+            cv::imwrite(E2E_DIR.toStdString() + "JPEGImages/" + filename + ".jpg", images[okVec[j]].first,
+                        {cv::IMWRITE_JPEG_QUALITY, 50});
+            auto &obj = images[okVec[j]].second;
+            obj.insert("smi", QString::fromStdString(refCan).trimmed());
+            obj.insert("file", "JPEGImages/" + QString::fromStdString(filename + ".jpg"));
+            arr.push_back(std::move(obj));
+            ++num;
+        }
+        for (size_t j = 0; j < dieVec.size(); j++) {
+            if (num == 5) { break; }
+            std::string filename = QString::number(idx++, 16).toStdString();
+            cv::imwrite(E2E_DIR.toStdString() + "JPEGImages/" + filename + ".jpg", images[dieVec[j]].first,
+                        {cv::IMWRITE_JPEG_QUALITY, 50});
+            auto &obj = images[dieVec[j]].second;
+            obj.insert("smi", QString::fromStdString(refCan).trimmed());
+            obj.insert("file", "JPEGImages/" + QString::fromStdString(filename + ".jpg"));
+            arr.push_back(std::move(obj));
+            ++num;
+        }
+        qDebug() << "sub_success=" << sub_success;
     }
+    d.setArray(arr);
+    QFile fuck(E2E_DIR + "data.json");
+    fuck.open(QIODevice::WriteOnly);
+    fuck.write(d.toJson(QJsonDocument::Compact));
+    fuck.close();
+    return 0;
+}
 
+#include "hw/timer.hpp"
+#include <rapidjson/document.h>
+
+int benchmarkE2E() {
+    QString E2E_DIR = "D:/Gitlab-leafxy/e2e/";
+    QFile f(E2E_DIR + "data.json");
+    f.open(QIODevice::ReadOnly);
+    auto buf = f.readAll();
+    f.close();
+    rapidjson::Document d;
+    d.Parse(buf.data());
+    auto arr = d.GetArray();
+    OCRThread ocrThread;
+    float sample_num(0), correct_num(0);
+    Timer timer;
+    timer.start(true);
+//    qDebug() << "arr.size=" << arr.size();
+    for (auto val = arr.begin(); val != arr.end(); val++) {
+        auto obj = val->GetObject();
+        auto groundTruth = obj["smi"].GetString();
+        auto file = obj["file"].GetString();
+        std::string filepath = (E2E_DIR + file).toStdString();
+        try {
+            cv::Mat image = cv::imread(filepath);
+            sample_num += 1;
+            ocrThread.bindData(image);
+            ocrThread.start();
+            ocrThread.wait();
+        } catch (...) {
+            timer.display_duration();
+            continue;
+        }
+        auto mol = ocrThread.getMol();
+        if (!mol) {
+            timer.display_duration();
+            continue;
+        }
+        try {
+            mol->tryExpand();
+            mol->addAllHydrogens();
+        } catch (...) {
+            timer.display_duration();
+            continue;
+        }
+        auto smi = mol->writeAsSMI();
+        if (smi == groundTruth) {
+            correct_num += 1;
+            timer.display_duration();
+            qDebug() << "N=" << sample_num << ",T=" << correct_num << ",acc=" << correct_num / sample_num;
+        }
+    }
+    timer.stop(true);
+    f.close();
     return 0;
 }
 
 int main(int argc, char *argv[]) {
+//    return benchmarkE2E();
     return benchmarkDrugbank();
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);

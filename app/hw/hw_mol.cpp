@@ -18,7 +18,9 @@ using namespace std;
 
 void HwMol::paintTo(cv::Mat &canvas) const {
     for (auto &sym:mData) {
-        sym->paintTo(canvas);
+        if (sym->ShouldShow()) {
+            sym->paintTo(canvas);
+        }
     }
 }
 
@@ -64,6 +66,9 @@ std::optional<cv::Rect2f> HwMol::getBoundingBox() const {
 }
 
 float HwMol::reloadHWData(const float &_explicitCarbonProb) {
+    itemBondMap2.clear();
+    itemAtomMap2.clear();
+
     mol->generate2D();
     float avgBondLength = mol->getAvgBondLength2D();
 
@@ -83,17 +88,18 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         } else {
             explicitAtomMap[atom.getId()] = true;
         }
+        itemAtomMap2[atom.getId()] = mData.size();
         if (explicitAtomMap[atom.getId()]) {
-            mData.push_back(std::move(sym));
-            hwToAtomMap[mData.size() - 1] = atom.getId();// 记录映射用于字符转字符串时的化合价评估
+            hwToAtomMap[mData.size()] = atom.getId();// 记录映射用于字符转字符串时的化合价评估
+        } else {
+            sym->setShouldShow(false);
         }
+        mData.push_back(std::move(sym));
     });
 
     // 统计单折线
     //<键id，键id>
     std::unordered_map<size_t, size_t> lineBondMap;
-    //<键id,图元下标>
-    std::unordered_map<size_t, size_t> itemBondMap;
     // <原子id,这个原子关联的键>
     std::unordered_map<size_t, std::unordered_set<size_t>> atomBondMap;
     mol->loopBondVec([&](xgd::JBond &bond) {
@@ -116,6 +122,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     }
     atomBondMap.clear();
 //    // 添加键坐标
+    std::unordered_map<size_t, size_t> itemBondMap;
     mol->loopBondVec([&](xgd::JBond &bond) {
         xgd::BondType bondType = bond.getType();
         auto sym = HwBond::GetHwBond(bondType);
@@ -132,6 +139,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         if (bondType == xgd::BondType::SingleBond) {
             itemBondMap[bond.getId()] = mData.size();
         }
+        itemBondMap2[bond.getId()] = mData.size();
         mData.push_back(std::move(sym));
     });
 
@@ -267,16 +275,16 @@ std::shared_ptr<HwBase> HwMol::clone() const {
     return nullptr;
 }
 
-std::vector<cv::Mat> HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
+std::vector<std::pair<cv::Mat, QJsonObject>> HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     reloadHWData(0.1);
-    float k0 = betweenProb(75, 85) / (std::max)(0.01f, avgSize);
+    float k0 = betweenProb(65, 75) / (std::max)(0.01f, avgSize);
     this->mulK(k0, k0);
 //    size_t fixW, fixH;
 //    fixW = fixH = 640;
     auto colorIdx = [](const int &_a) -> ColorName {
         return static_cast<const ColorName>((7 + _a) * 13 % 455);
     };
-    std::vector<cv::Mat> retImg;
+    std::vector<std::pair<cv::Mat, QJsonObject>> retImg(_repeatTimes);
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = this;
         target->rotate(randInt() % 360);
@@ -289,24 +297,55 @@ std::vector<cv::Mat> HwMol::showOnScreen(const size_t &_repeatTimes, bool _showB
         target->paintTo(img);
 
         auto[resImg0, offset]=resizeCvMatTo(img, minWidth, minHeight);
-        retImg.push_back(resImg0);
-        cv::Mat resImg = resImg0.clone();
-        auto&[k, offsetx, offsety]=offset;
+        retImg[i].first = resImg0;
+        float k, offsetx, offsety;
+        std::tie(k, offsetx, offsety) = offset;
+
         int ow = bBox.width, oh = bBox.height;
         ow = ow * k;
         oh = oh * k;
-        for (auto &sym:target->mData) {
-//            std::cout << fullLabels[sym->getItemType()] << std::endl;
+
+        auto &obj0 = retImg[i].second;
+        QJsonArray atomArr, bondArr;
+        mol->loopAtomVec([&](xgd::JAtom &atom) {
+            QJsonObject obj;
+            obj.insert("id", (int) atom.getId());
+            obj.insert("element", atom.getQName());
+            auto &sym = target->mData.at(itemAtomMap2[atom.getId()]);
             auto bBox = sym->getBoundingBox().value();
-            bBox.x = bBox.x * k + offsetx;
-            bBox.y = bBox.y * k + offsety;
-            bBox.width *= k;
-            bBox.height *= k;
-            if (_showBox)
-                cv::rectangle(resImg, bBox, getScalar(
-                        colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
-        }
-//        cv::imshow("MolHwItem::showOnScreen", resImg);
+            if (sym->ShouldShow()) {
+                auto &sym = target->mData.at(itemAtomMap2[atom.getId()]);
+                auto bBox = sym->getBoundingBox().value();
+                obj.insert("x", bBox.x * k + offsetx);
+                obj.insert("y", bBox.y * k + offsety);
+                obj.insert("w", bBox.width * k);
+                obj.insert("h", bBox.height * k);
+            } else {
+                // 隐式碳原子
+                auto pts = getRectCenter2D(bBox);
+                obj.insert("x", pts.x * k + offsetx);
+                obj.insert("y", pts.y * k + offsety);
+                obj.insert("w", 0);
+                obj.insert("h", 0);
+            }
+            atomArr.push_back(std::move(obj));
+        });
+        mol->loopBondVec([&](xgd::JBond &bond) {
+            QJsonObject obj;
+            obj.insert("id", (int) bond.getId());
+            obj.insert("order", bond.getBondOrder());
+            obj.insert("from", (int) bond.getFrom()->getId());
+            obj.insert("to", (int) bond.getTo()->getId());
+            auto &sym = target->mData.at(itemBondMap2[bond.getId()]);
+            auto bBox = sym->getBoundingBox().value();
+            obj.insert("x", bBox.x * k + offsetx);
+            obj.insert("y", bBox.y * k + offsety);
+            obj.insert("w", bBox.width * k);
+            obj.insert("h", bBox.height * k);
+            bondArr.push_back(std::move(obj));
+        });
+        obj0.insert("atoms", atomArr);
+        obj0.insert("bonds", bondArr);
     }
     return retImg;
 }

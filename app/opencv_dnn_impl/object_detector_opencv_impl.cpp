@@ -30,6 +30,8 @@ bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const
 #else
         net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
         net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+//        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+//        net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 #endif// !WITH_OPENVINO
         auto outLayers = net.getUnconnectedOutLayers();
         auto layersNames = net.getLayerNames();

@@ -28,8 +28,10 @@ public:
 
 class HwBase {
 protected:
-    bool keepDirection;
+    bool keepDirection, shouldShow;
 public:
+    void setShouldShow(bool show);
+    bool ShouldShow()const;
     HwBase();
 
     virtual std::shared_ptr<HwBase> clone() const = 0;

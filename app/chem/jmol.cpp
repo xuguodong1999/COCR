@@ -230,6 +230,7 @@ float JMol::getAvgBondLength() {
     });
     return avgBondLength / bondMap.size();
 }
+
 float JMol::getAvgBondLength2D() {
     float avgBondLength = 0;
     loopBondVec([&](JBond &bond) {
@@ -239,6 +240,7 @@ float JMol::getAvgBondLength2D() {
     });
     return avgBondLength / bondMap.size();
 }
+
 size_t JMol::getBondNum() const {
     return bondMap.size();
 }

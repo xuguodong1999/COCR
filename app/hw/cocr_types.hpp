@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-using ElementType=xgd::ElementType;
+
+using ElementType = xgd::ElementType;
 using hash_type = uint64_t;
 using node_type = unsigned char;
 

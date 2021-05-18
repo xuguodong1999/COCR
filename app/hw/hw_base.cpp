@@ -75,7 +75,15 @@ bool HwBase::isDirectionKept() const {
     return keepDirection;
 }
 
-HwBase::HwBase() : keepDirection(false) {
+HwBase::HwBase() : keepDirection(false), shouldShow(true) {
+}
+
+void HwBase::setShouldShow(bool show) {
+    shouldShow = show;
+}
+
+bool HwBase::ShouldShow() const {
+    return shouldShow;
 }
 
 void HwBase::setKeepDirection(bool _keepDirection) {

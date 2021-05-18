@@ -45,7 +45,9 @@ namespace xgd {
         size_t getAtomNum() const;
 
         float getAvgBondLength();
+
         float getAvgBondLength2D();
+
         JMol();
 
         virtual std::vector<std::shared_ptr<JMol>> split() = 0;
