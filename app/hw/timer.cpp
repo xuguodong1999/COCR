@@ -15,14 +15,16 @@ void Timer::start(bool _display) {
     }
 }
 
-void Timer::display_duration() {
+float Timer::display_duration() {
     end_stamp = system_clock::now();
     auto duration = duration_cast<microseconds>(
             end_stamp - last_stamp);
+    float delta = duration.count() * milliseconds::period::num / milliseconds::period::den;
     cout << "Timer mid: [takes "
-         << duration.count() * milliseconds::period::num / milliseconds::period::den
+         << delta
          << " ms]" << ::endl;
     last_stamp = end_stamp;
+    return delta;
 }
 
 void Timer::stop(bool _display_duration) {

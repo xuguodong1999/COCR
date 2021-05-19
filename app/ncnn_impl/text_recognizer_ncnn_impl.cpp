@@ -94,7 +94,7 @@ std::pair<std::string, std::vector<float>> xgd::TextRecognizerNcnnImpl::recogniz
     return {strRes, scores};
 }
 
-xgd::TextRecognizerNcnnImpl::TextRecognizerNcnnImpl() : numThread(4) {
+xgd::TextRecognizerNcnnImpl::TextRecognizerNcnnImpl() : numThread(16) {
 
 }
 

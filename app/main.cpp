@@ -138,8 +138,9 @@ int loopBenchMark() {
         }
         qDebug() << "********" << subDirName << "******** DONE ********";
     };
-//    loop_dataset("UOB");
-    loop_dataset("USPTO");
+    loop_dataset("UOB");
+//    loop_dataset("JPO");
+//    loop_dataset("USPTO");
     qDebug() << stateMap[INCHI_OK] / (float) sampleNum;
     return 0;
 }
@@ -258,7 +259,7 @@ int benchmarkDrugbank() {
         refMol->readAsSMI(smi.toStdString());
         std::string refCan = refMol->writeAs("can");
         auto hwMol = std::make_shared<HwMol>(refMol);
-        auto images = hwMol->showOnScreen(13, false);
+        auto images = hwMol->showOnScreen(10, false);
         float sub_success = 0;
         std::vector<size_t> okVec, dieVec;
         for (size_t i = 0; i < images.size(); i++) {
@@ -314,23 +315,23 @@ int benchmarkDrugbank() {
         int num = 0;
         for (size_t j = 0; j < okVec.size(); j++) {
             if (num == 5) { break; }
-            std::string filename = QString::number(idx++, 16).toStdString();
+            std::string filename = QString::number(idx++, 36).toStdString();
             cv::imwrite(E2E_DIR.toStdString() + "JPEGImages/" + filename + ".jpg", images[okVec[j]].first,
                         {cv::IMWRITE_JPEG_QUALITY, 50});
             auto &obj = images[okVec[j]].second;
             obj.insert("smi", QString::fromStdString(refCan).trimmed());
-            obj.insert("file", "JPEGImages/" + QString::fromStdString(filename + ".jpg"));
+            obj.insert("image", "" + QString::fromStdString(filename + ".jpg"));
             arr.push_back(std::move(obj));
             ++num;
         }
         for (size_t j = 0; j < dieVec.size(); j++) {
             if (num == 5) { break; }
-            std::string filename = QString::number(idx++, 16).toStdString();
+            std::string filename = QString::number(idx++, 36).toStdString();
             cv::imwrite(E2E_DIR.toStdString() + "JPEGImages/" + filename + ".jpg", images[dieVec[j]].first,
                         {cv::IMWRITE_JPEG_QUALITY, 50});
             auto &obj = images[dieVec[j]].second;
             obj.insert("smi", QString::fromStdString(refCan).trimmed());
-            obj.insert("file", "JPEGImages/" + QString::fromStdString(filename + ".jpg"));
+            obj.insert("image", "" + QString::fromStdString(filename + ".jpg"));
             arr.push_back(std::move(obj));
             ++num;
         }
@@ -347,6 +348,54 @@ int benchmarkDrugbank() {
 #include "hw/timer.hpp"
 #include <rapidjson/document.h>
 
+int stateE2E() {
+    QString E2E_DIR = "D:/Gitlab-leafxy/e2e/";
+    QFile f(E2E_DIR + "data.json");
+    f.open(QIODevice::ReadOnly);
+    auto buf = f.readAll();
+    f.close();
+    rapidjson::Document d;
+    d.Parse(buf.data());
+    auto arr = d.GetArray();
+    std::unordered_map<std::string, int> eleCounter;
+    std::vector<int> bondCounter = {0, 0, 0, 0, 0};
+    int countC = 0;
+    for (auto val = arr.begin(); val != arr.end(); val++) {
+        auto obj = val->GetObject();
+        auto groundTruth = obj["smi"].GetString();
+        auto mol = std::make_shared<xgd::JMolAdapter>();
+        mol->readAsSMI(groundTruth);
+        mol->loopAtomVec([&](xgd::JAtom &atom) {
+            auto it = eleCounter.find(atom.getName());
+            if (eleCounter.end() == it) {
+                eleCounter[atom.getName()] = 1;
+            } else {
+                ++it->second;
+            }
+        });
+        mol->loopBondVec([&](xgd::JBond &bond) {
+            ++bondCounter[bond.getBondOrder()];
+        });
+        auto atoms = obj["atoms"].GetArray();
+        for (auto atom = atoms.begin(); atom != atoms.end(); atom++) {
+            auto obj = atom->GetObject();
+            if (obj["element"].GetString() == std::string("C") && obj["h"].GetDouble() > 0.0001 &&
+                obj["w"].GetDouble() > 0.0001) {
+                ++countC;
+            }
+        }
+    }
+    std::cout << "cc=" << countC << std::endl;
+    for (auto &c:bondCounter) {
+        std::cout << c << ",";
+    }
+    std::cout << std::endl;
+    for (auto&[name, num]:eleCounter) {
+        std::cout << name << "," << num << std::endl;
+    }
+    return 0;
+}
+
 int benchmarkE2E() {
     QString E2E_DIR = "D:/Gitlab-leafxy/e2e/";
     QFile f(E2E_DIR + "data.json");
@@ -360,49 +409,75 @@ int benchmarkE2E() {
     float sample_num(0), correct_num(0);
     Timer timer;
     timer.start(true);
+    std::vector<float> times, spaces;
+    std::vector<std::string> failedCases;
 //    qDebug() << "arr.size=" << arr.size();
     for (auto val = arr.begin(); val != arr.end(); val++) {
         auto obj = val->GetObject();
         auto groundTruth = obj["smi"].GetString();
-        auto file = obj["file"].GetString();
-        std::string filepath = (E2E_DIR + file).toStdString();
+        auto file = obj["image"].GetString();
+        std::string filepath = (E2E_DIR + "JPEGImages/" + file).toStdString();
         try {
             cv::Mat image = cv::imread(filepath);
+            spaces.push_back(std::sqrt(image.rows * image.cols));
             sample_num += 1;
             ocrThread.bindData(image);
             ocrThread.start();
             ocrThread.wait();
         } catch (...) {
-            timer.display_duration();
+            times.push_back(timer.display_duration());
+            failedCases.push_back(file);
             continue;
         }
         auto mol = ocrThread.getMol();
         if (!mol) {
-            timer.display_duration();
+            times.push_back(timer.display_duration());
+            failedCases.push_back(file);
             continue;
         }
         try {
             mol->tryExpand();
             mol->addAllHydrogens();
         } catch (...) {
-            timer.display_duration();
+            times.push_back(timer.display_duration());
+            failedCases.push_back(file);
             continue;
         }
         auto smi = mol->writeAsSMI();
         if (smi == groundTruth) {
             correct_num += 1;
-            timer.display_duration();
-            qDebug() << "N=" << sample_num << ",T=" << correct_num << ",acc=" << correct_num / sample_num;
+            times.push_back(timer.display_duration());
+            std::cout << "N=" << sample_num << ",T=" << correct_num << ",acc=" << correct_num / sample_num << "\n";
+        } else {
+            times.push_back(timer.display_duration());
+            failedCases.push_back(file);
         }
     }
     timer.stop(true);
     f.close();
+    std::cout << std::endl << "times=[";
+    for (auto &time:times) {
+        std::cout << time << ",";
+    }
+    std::cout << "]" << std::endl;
+    std::cout << std::endl << "spaces=[";
+    for (auto &space:spaces) {
+        std::cout << space << ",";
+    }
+    std::cout << "]" << std::endl;
+    std::cout << std::endl << "failed cases=[";
+    for (auto &caseName:failedCases) {
+        std::cout << "\"" << caseName << "\",";
+    }
+    std::cout << "]" << std::endl;
     return 0;
 }
 
 int main(int argc, char *argv[]) {
+//    return stateE2E();
 //    return benchmarkE2E();
-    return benchmarkDrugbank();
+//    return benchmarkDrugbank();
+    return loopBenchMarkWrapper();
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif

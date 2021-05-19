@@ -95,6 +95,7 @@ public:
 //        cv::erode(image,image, cv::Mat());
 //        cv::dilate(image,image, cv::Mat());
         image = _cvMat;
+        copyMakeBorder(image, image, 32, 32, 32, 32, cv::BORDER_CONSTANT, 255);
         image = xgd::rotateCvMat(image, 2);
     }
 

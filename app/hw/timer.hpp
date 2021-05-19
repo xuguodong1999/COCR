@@ -13,7 +13,7 @@ class Timer {
 public:
     void start(bool _display = false);
 
-    void display_duration();
+    float display_duration();
 
     void stop(bool _display_duration = true);
 };
