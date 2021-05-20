@@ -41,16 +41,21 @@ int loopBenchMark() {
             {MOL_PROCESS_FAILED,     0},
             {MOL_COMPARE_FAILED,     0},
     };
+#ifdef Q_OS_WIN
     QString imagePath = "D:/leafxy_benchmark/image";
     QString refPath = "D:/leafxy_benchmark/ref";
-    std::vector<QString> subDirName = {"CLEF", "JPO", "UOB", "USPTO"};
-    std::unordered_map<QString, QString> imageSuffixMap = {
+#else
+    QString imagePath = "/media/xgd/数据盘/leafxy_benchmark/image";
+    QString refPath = "/media/xgd/数据盘/leafxy_benchmark/ref";
+#endif
+    std::vector <QString> subDirName = {"CLEF", "JPO", "UOB", "USPTO"};
+    std::unordered_map <QString, QString> imageSuffixMap = {
             {"CLEF",  "png"},
             {"JPO",   "png"},
             {"UOB",   "png"},
             {"USPTO", "png"},
     };
-    std::unordered_map<QString, QString> refSuffixMap = {
+    std::unordered_map <QString, QString> refSuffixMap = {
             {"CLEF",  "mol"},
             {"JPO",   "sdf"},
             {"UOB",   "mol"},
@@ -86,7 +91,7 @@ int loopBenchMark() {
         }
         std::string refBuffer = f.readAll().toStdString();
         f.close();
-        std::shared_ptr<xgd::JMol> refMol;
+        std::shared_ptr <xgd::JMol> refMol;
         try {
             refMol = std::make_shared<xgd::JMolAdapter>();
             refMol->readAs(refBuffer, refSuffixMap[subDirName].toStdString());
@@ -244,7 +249,7 @@ int benchmarkDrugbank() {
     OCRThread ocrThread;
     float success, all, die_ocr, die_empty_mol;
     success = all = die_empty_mol = die_ocr = 0;
-    std::vector<QString> smiles;
+    std::vector <QString> smiles;
     while (!f.atEnd()) {
         smiles.push_back(f.readLine().trimmed());
     }
@@ -261,7 +266,7 @@ int benchmarkDrugbank() {
         auto hwMol = std::make_shared<HwMol>(refMol);
         auto images = hwMol->showOnScreen(10, false);
         float sub_success = 0;
-        std::vector<size_t> okVec, dieVec;
+        std::vector <size_t> okVec, dieVec;
         for (size_t i = 0; i < images.size(); i++) {
             auto &[image, jsonObj] = images[i];
             try {
@@ -410,7 +415,7 @@ int benchmarkE2E() {
     Timer timer;
     timer.start(true);
     std::vector<float> times, spaces;
-    std::vector<std::string> failedCases;
+    std::vector <std::string> failedCases;
 //    qDebug() << "arr.size=" << arr.size();
     for (auto val = arr.begin(); val != arr.end(); val++) {
         auto obj = val->GetObject();
