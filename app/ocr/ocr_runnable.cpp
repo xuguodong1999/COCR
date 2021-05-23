@@ -1,7 +1,7 @@
 #include "ocr_runnable.hpp"
 #include <opencv2/opencv_modules.hpp>
 
-#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) && !defined(WITH_MODEL_QRC)
+#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)// && !defined(WITH_MODEL_QRC)
 
 #include "opencv_dnn_impl/object_detector_opencv_impl.hpp"
 //#include "opencv_dnn_impl/text_recognizer_opencv_impl.hpp"// unused, only for performance test
@@ -112,12 +112,12 @@ OCRThread::OCRThread(QObject *_parent, const QString &_dir)
         if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
             modelDir.setPath(qApp->applicationDirPath());
             if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
-                modelDir.setPath("C:/source/repos/leafxy/resources/model");
+                modelDir.setPath("C:/source/leafxy/resources/model");
             }
         }
     }
 /// detector
-#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) && !defined(WITH_MODEL_QRC)
+#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)// && !defined(WITH_MODEL_QRC)
     static xgd::ObjectDetectorOpenCVImpl detector;
     if (!detector.initModel((modelDir.absolutePath() + "/yolo-3l-c8.cfg").toStdString(),
                             (modelDir.absolutePath() + "/yolo-3l-c8.weights").toStdString())) {

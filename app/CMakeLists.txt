@@ -29,7 +29,11 @@ endif (WITH_OPENVINO)
 
 if (WITH_MODEL_QRC)
     add_definitions(-DWITH_MODEL_QRC)
-    qt5_add_big_resources(BIG_RES_FILES ${RES_ROOT}/big_res.qrc)
+    if (MSVC)
+        qt5_add_big_resources(BIG_RES_FILES ${RES_ROOT}/big_res_win.qrc)
+    else (MSVC)
+        qt5_add_big_resources(BIG_RES_FILES ${RES_ROOT}/big_res.qrc)
+    endif (MSVC)
     list(APPEND RES_SRCS ${BIG_RES_FILES})
 endif (WITH_MODEL_QRC)
 
