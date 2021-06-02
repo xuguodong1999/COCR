@@ -7,8 +7,6 @@
 #include "opencv_util.hpp"
 #include "std_util.hpp"
 
-#include <opencv2/opencv.hpp>
-
 #include <filesystem>
 #include <fstream>
 #include <iomanip>

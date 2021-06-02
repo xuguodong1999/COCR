@@ -1,7 +1,7 @@
 #include "opencv_util.hpp"
 #include "std_util.hpp"
-#include <opencv2/opencv.hpp>
-
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 
 std::pair<cv::Mat, std::tuple<float, float, float>>
 resizeCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
