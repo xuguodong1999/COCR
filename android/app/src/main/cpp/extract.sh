@@ -1,1 +1,0 @@
-7z x 3rdparty.7z

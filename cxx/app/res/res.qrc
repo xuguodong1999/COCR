@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file compress="9" compress-algo="best">simfang.subset.ttf</file>
+        <file compress="9" compress-algo="best">soso17-yolov4-tiny-3l.cfg</file>
+    </qresource>
+</RCC>

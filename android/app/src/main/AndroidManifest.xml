@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.xgd.axxlab">
+    package="com.xgd.cocr">
 
     <application
         android:allowBackup="true"
@@ -9,40 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings">
-
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetectActivity" />
-        <activity
-            android:name=".DialogActivity"
-            android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity android:name=".MediaActivity">
-            <intent-filter>
-                <action android:name="com.xgd.axxlab.OPEN_MEDIA" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.xgd.axxlab.CATEGORY_OPEN_MEDIA" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ScribbleActivity">
-            <intent-filter>
-                <action android:name="com.xgd.axxlab.OPEN_SCRIBBLE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.xgd.axxlab.CATEGORY_OPEN_SCRIBBLE" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity2"></activity>
     </application>
 
 </manifest>

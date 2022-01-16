@@ -6,6 +6,7 @@
 #include <opencv2/core/types.hpp>
 
 #include <set>
+#include <random>
 
 /**
  * randomization controller
@@ -20,10 +21,25 @@ public:
     static float sSubOffsetKx;  // (-1,1)*50
     static float sSubOffsetKy;  // (-1,1)*50
     static float sAngleK;       // [0,1)*30
-    static vector<string> sElementData;
     static std::set<string> bsSet, aeSet, btSet;
     static std::set<int> acSet;
 
+    struct NoiseParm {
+        float mean, stddev;//gaussian
+        NoiseParm() : mean(0), stddev(0.1) {}
+    };
+
+    inline static NoiseParm noiseParm;
+    inline static float revertColorProb = 0.5;
+
+    inline static float getGaussianNoiseMean() {
+        return noiseParm.mean;
+    }
+
+    inline static float getGaussianNoiseStddev() {
+        return rand() / float(RAND_MAX) * noiseParm.stddev;
+//        return noiseParm.stddev;
+    }
 
     struct ShapeAttr {
         //color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0)
@@ -32,7 +48,7 @@ public:
         int shift;
         cv::Scalar color;
 
-        ShapeAttr() : color(cvBlack), thickness(3), lineType(cv::LINE_AA), shift(0) {}
+        ShapeAttr() : color(cvBlack), thickness(2), lineType(cv::LINE_AA), shift(0) {}
     };
 
     static void update_shape_attr() {
@@ -45,8 +61,10 @@ public:
         return shapeAttr.shift;
     }
 
+    inline static std::vector<int> thicknessVec = {2};
+
     static const int get_shape_thickness() {
-        return shapeAttr.thickness;
+        return thicknessVec[rand() % thicknessVec.size()];
     }
 
     static const int get_shape_lineType() {

@@ -144,7 +144,7 @@ const cv::Rect2f CircleBond::getBoundingBox() const {
 void CircleBond::updateShapes() {
     BondItem::updateShapes();
     if (mUseHWChar) {
-        auto circle = CouchItem::GetShape("circle");
+        auto circle = CouchLoader::GetShape("circle");
         circle.castToCircle(center, r, r);
         shapes.push_back(std::move(circle));
     }
@@ -166,7 +166,7 @@ const cv::Rect2f SingleBond::getBoundingBox() const {
 void SingleBond::updateShapes() {
     BondItem::updateShapes();
     if (mUseHWChar) {
-        auto line = CouchItem::GetShape("line");
+        auto line = CouchLoader::GetShape("line");
         line.castToLine(from, to);
         shapes.push_back(std::move(line));
     }
@@ -311,9 +311,9 @@ void DoubleBond::updateShapes() {
     if (mUseHWChar) {
         auto length = distance(from, to);
         auto offset = vecT * length * intervalK;
-        auto line1 = CouchItem::GetShape("line");
+        auto line1 = CouchLoader::GetShape("line");
         line1.castToLine(from + offset / 2, to + offset / 2);
-        auto line2 = CouchItem::GetShape("line");
+        auto line2 = CouchLoader::GetShape("line");
         line2.castToLine(from - offset / 2, to - offset / 2);
         shapes.push_back(std::move(line1));
         shapes.push_back(std::move(line2));
@@ -370,11 +370,11 @@ void TripleBond::updateShapes() {
     if (mUseHWChar) {
         auto length = distance(from, to);
         auto offset = vecT * length * intervalK;
-        auto line1 = CouchItem::GetShape("line");
+        auto line1 = CouchLoader::GetShape("line");
         line1.castToLine(from + offset / 2, to + offset / 2);
-        auto line2 = CouchItem::GetShape("line");
+        auto line2 = CouchLoader::GetShape("line");
         line2.castToLine(from, to);
-        auto line3 = CouchItem::GetShape("line");
+        auto line3 = CouchLoader::GetShape("line");
         line3.castToLine(from - offset / 2, to - offset / 2);
         shapes.push_back(std::move(line1));
         shapes.push_back(std::move(line2));
@@ -431,7 +431,7 @@ void SolidWedgeBond::updateShapes() {
         dy /= numOfSplit;
         float x = to1.x, y = to1.y;
         for (float i = 0; i <= 1.0; i += 1.0 / numOfSplit) {
-            auto line = CouchItem::GetShape("line");
+            auto line = CouchLoader::GetShape("line");
             line.castToLine(from, cv::Point2f(x, y));
             shapes.push_back(std::move(line));
             x += dx;
@@ -518,7 +518,7 @@ void DashWedgeBond::updateShapes() {
         x1 = x2 = from.x;
         y1 = y2 = from.y;
         for (float i = 0; i <= 1.0; i += 1.0 / numOfSplit) {
-            auto line = CouchItem::GetShape("line");
+            auto line = CouchLoader::GetShape("line");
             line.castToLine(cv::Point2f(x1, y1), cv::Point2f(x2, y2));
             shapes.push_back(std::move(line));
             x1 += d[0];

@@ -1,1 +1,0 @@
-# 禁止将 QString 向其它类型转换，避免 MSVC DEBUG 触发异常

@@ -4,11 +4,12 @@
 #include "config.hpp"
 #include "shapeitem.hpp"
 #include "shapegroup.hpp"
+#include "mol.hpp"
 #include <string>
 #include <vector>
 #include <map>
 
-class MolItem : public ShapeInterface {
+class MolItem : public ShapeInterface, public JMol {
     vector<shared_ptr<ShapeGroup>> symbols;
 //    OpenBabel::OBMol obMol;
 //    std::map<int, OpenBabel::OBAtom *> aidMap;
@@ -20,19 +21,21 @@ class MolItem : public ShapeInterface {
 
     void mulK(float kx, float ky) override;
 
+    void addAtomItem(int id, float x, float y,
+                     const string &element, int charge);
+
+    void addBondItem(int from, int to,
+                     const string &type = "Single",
+                     const string &stereo = "None");
+
+    void reloadSymbols();
+
 public:
     MolItem();
 
     ~MolItem();
 
     void paintTo(cv::Mat &canvas) override;
-
-    void addAtom(int id, float x, float y,
-                 const string &element, int charge);
-
-    void addBond(int from, int to,
-                 const string &type = "Single",
-                 const string &stereo = "None");
 
     void run(const string &taskName = "log");
 

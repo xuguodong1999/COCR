@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/cocr_app/">
-        <file compress="9" compress-algo="best" alias="part.simhei.ttf">part.simhei.ttf</file>
-    </qresource>
-</RCC>
