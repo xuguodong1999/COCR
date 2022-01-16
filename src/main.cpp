@@ -1,83 +1,39 @@
-#include "openbabel_util.hpp"
-#include "qt_mainwindow.hpp"
-#include "yolo_opencv.hpp"
-
-#include <QDir>
-#include <QDebug>
-#include <QMessageBox>
-#include <QTranslator>
-#include <QApplication>
+#include "cocr.h"
+#include "mainwindow.h"
 #include <QFontDatabase>
+#include <QApplication>
 
-extern std::shared_ptr<MolUtil> molUtil;
-extern std::shared_ptr<YoloDetector> yoloDetector;
+using namespace std;
 
-bool release(const QString &_qrcTopDir, const QString &_targetDir);
+inline void seeEmptyClassSize();
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     qApp->setAttribute(Qt::AA_SynthesizeMouseForUnhandledTouchEvents);
     QApplication a(argc, argv);
-    QFontDatabase::addApplicationFont(":/simfang.subset.ttf");
-    qApp->setFont(QFont("simfang"));
-    QTranslator translator;
-    if(translator.load(QLocale(), "COCR", "_", ":/")) {
-        a.installTranslator( &translator );
-    }
-    QString obdataDir = qApp->applicationDirPath() + "/obdata";
-    if (!release(":/obdata", obdataDir)) {
-        QMessageBox::information(
-                nullptr, "Warning", "Fail to release openbabel data", QMessageBox::Yes);
-    }
-#ifdef Q_OS_WIN64
-    _putenv(("BABEL_DATADIR=" + obdataDir).toLocal8Bit().data());
-#elif defined(Q_OS_LINUX)
-    putenv(("BABEL_DATADIR=" + obdataDir).toLocal8Bit().data());
-#endif
-    try {
-        molUtil = std::make_shared<MolUtilOpenBabelImpl>();
-        yoloDetector = std::make_shared<YoloOpenCVImpl>();
-        yoloDetector->init(":/model/yolo-3l.cfg", ":/model/yolo-3l.weights");
-        (new MainWindow)->showMaximized();
-        return a.exec();
-    } catch (std::exception &e) {
-        qDebug() << e.what();
-    }
-    return 0;
+    QFontDatabase::addApplicationFont(":/lang/simhei.subset.ttf");
+    qApp->setFont(QFont("simhei"));
+    (new MainWindow)->show();
+    LogLine("enter event loop...");
+    return a.exec();
 }
 
-bool release(const QString &_qrcTopDir, const QString &_targetDir) {
-    QDir qrcTopDir(_qrcTopDir);
-    if (!qrcTopDir.exists()) {
-        return false;
-    }
-    QDir targetDir(_targetDir);
-    if (!targetDir.exists()) {
-        if (!targetDir.mkpath(_targetDir)) {
-            return false;
-        }
-    }
-    QFileInfoList fileInfoList = qrcTopDir.entryInfoList();
-    while (!fileInfoList.isEmpty()) {
-        QFileInfo tempFileInfo = fileInfoList.last();
-        if (tempFileInfo.isFile()) {
-            const QString newFilePath = _targetDir + "/" + tempFileInfo.fileName();
-            if (!QFile::exists(newFilePath)) {
-                QFile::copy(tempFileInfo.absoluteFilePath(), newFilePath);
-            }
-            if (!QFile::exists(newFilePath)) {
-                return false;
-            }
-            fileInfoList.removeLast();
-        } else if (tempFileInfo.isDir()) {
-            if (tempFileInfo.fileName() != "." && tempFileInfo.fileName() != "..") {
-                QDir subDir(tempFileInfo.filePath());
-                fileInfoList.removeLast();
-                fileInfoList.append(subDir.entryInfoList());
-            }
-        } else {
-            fileInfoList.removeLast();
-        }
-    }
-    return true;
+void test() {
+    //    QImage img;
+//    img.load("D:/0.ico");
+//    img=img.convertToFormat(QImage::Format_RGBA64);
+//    for(int y = 0; y < img.height(); y++){
+//        for(int x = 0; x < img.width(); x++){
+//            if(img.pixel(x,y)==qRgb(255,0,0)){
+//                img.setPixelColor(x,y,QColor(0,0,0,0));
+//            }
+//        }
+//    }
+//    img.scaled(512,512).save("D:/fuck.ico","ico",9);
+//    auto &cd = cocr::ChemistryData::GetInstance();
+//    for (auto &entry:cd.updateValence()) {
+//        for (auto &val:entry.second) {
+//            cout << val << endl;
+//        }
+//    }
 }
