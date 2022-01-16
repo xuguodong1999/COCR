@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>model/vgg_lstm_57_fp16.param</file>
+        <file>model/vgg_lstm_57_fp16_mixFont.bin</file>
+        <file>model/yolo-3l-c8.cfg</file>
+        <file>model/yolo-3l-c8.weights</file>
+    </qresource>
+</RCC>
