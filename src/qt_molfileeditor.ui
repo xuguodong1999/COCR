@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>MolFileEditor</class>
+    <widget class="QWidget" name="MolFileEditor">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>400</width>
+                <height>300</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Mol Format FileDialog</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="10,1">
+            <item>
+                <widget class="QTextEdit" name="textEdit">
+                    <property name="font">
+                        <font>
+                            <family>Arial</family>
+                            <pointsize>13</pointsize>
+                        </font>
+                    </property>
+                </widget>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1">
+                    <item>
+                        <widget class="QToolButton" name="copyBtn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="font">
+                                <font>
+                                    <family>Arial</family>
+                                    <pointsize>14</pointsize>
+                                    <weight>50</weight>
+                                    <italic>true</italic>
+                                    <bold>false</bold>
+                                </font>
+                            </property>
+                            <property name="text">
+                                <string>COPY TO CLIPBOARD</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QToolButton" name="saveBtn">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="font">
+                                <font>
+                                    <family>Arial</family>
+                                    <pointsize>14</pointsize>
+                                    <weight>50</weight>
+                                    <italic>true</italic>
+                                    <bold>false</bold>
+                                </font>
+                            </property>
+                            <property name="text">
+                                <string>SAVE AS</string>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+        </layout>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>

@@ -1,1 +1,0 @@
-#include "qt_application.hpp"
