@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/cocr_app/big/">
+        <file>big.qrc</file>
+    </qresource>
+</RCC>

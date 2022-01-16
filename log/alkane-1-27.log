@@ -1,0 +1,53 @@
+(base) xgd@k2004:~/source/COCR/cpp/alkane-kubuntu$ ./alkane_c
+c-2: 1
+Timer: [takes 0 ms]
+c-3: 1
+Timer: [takes 0 ms]
+c-4: 2
+Timer: [takes 0 ms]
+c-5: 3
+Timer: [takes 0 ms]
+c-6: 5
+Timer: [takes 0 ms]
+c-7: 9
+Timer: [takes 0 ms]
+c-8: 18
+Timer: [takes 0 ms]
+c-9: 35
+Timer: [takes 0 ms]
+c-10: 75
+Timer: [takes 1 ms]
+c-11: 159
+Timer: [takes 1 ms]
+c-12: 355
+Timer: [takes 4 ms]
+c-13: 802
+Timer: [takes 8 ms]
+c-14: 1858
+Timer: [takes 23 ms]
+c-15: 4347
+Timer: [takes 49 ms]
+c-16: 10359
+Timer: [takes 160 ms]
+c-17: 24894
+Timer: [takes 362 ms]
+c-18: 60523
+Timer: [takes 1153 ms]
+c-19: 148284
+Timer: [takes 2630 ms]
+c-20: 366319
+Timer: [takes 8623 ms]
+c-21: 910726
+Timer: [takes 21616 ms]
+c-22: 2278658
+Timer: [takes 69910 ms]
+c-23: 5731580
+Timer: [takes 163260 ms]
+c-24: 14490245
+Timer: [takes 497873 ms]
+c-25: 36797588
+Timer: [takes 1165997 ms]
+c-26: 93839412
+Timer: [takes 3760257 ms]
+c-27: 240215803
+Timer: [takes 9157052 ms]

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/main_add_media"
+        android:title="@string/media" />
+    <item
+        android:id="@+id/main_add_scribble"
+        android:title="@string/scribble" />
+    <item
+        android:id="@+id/main_add_website"
+        android:title="@string/website" />
+    <item
+        android:id="@+id/main_add_phone"
+        android:title="@string/phone" />
+</menu>

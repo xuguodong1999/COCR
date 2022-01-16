@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>img/app.ico</file>
-        <file>img/author.ico</file>
-        <file>img/cocr.png</file>
-    </qresource>
-</RCC>

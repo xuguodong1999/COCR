@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>weights/enetb0.cfg</file>
-        <file>weights/enetb0.weights</file>
-        <file>weights/mv2-fdeep.json</file>
-    </qresource>
-</RCC>

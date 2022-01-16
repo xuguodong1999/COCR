@@ -1,4 +1,0 @@
-certifi==2020.6.20
-PySide2==5.15.0
-shiboken2==5.15.0
-wincertstore==0.2

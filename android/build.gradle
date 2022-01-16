@@ -1,0 +1,41 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/'
+        }
+        maven {
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/google/'
+        }
+//        mavenLocal()
+//        mavenCentral()
+//        google()
+//        jcenter()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.0.1"
+    }
+}
+
+allprojects {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        buildDir = "D:/build-${rootProject.name}/${project.name}"
+    }
+    repositories {
+        maven {
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/'
+        }
+        maven {
+            url 'https://mirrors.cloud.tencent.com/nexus/repository/google/'
+        }
+//        mavenLocal()
+//        mavenCentral()
+//        google()
+//        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
