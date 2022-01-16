@@ -10,92 +10,57 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        ndk {
+            abiFilters 'armeabi-v7a'//,"arm64-v8a","x86","x86_64"
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++17"
             }
         }
-        ndk {
-            abiFilters 'armeabi-v7a'
-//            abiFilters 'arm64-v8a'
-//            abiFilters 'x86'
-//            abiFilters 'x86_64'
-        }
     }
 
     buildTypes {
-        debug {
-            jniDebuggable true
-            renderscriptDebuggable true
-        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    configurations {
-       extractForNativeBuild
     }
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
+            // 可以用 SDK Manager 下载 3.10.2，版本号必须和环境变量里的一致
+            version "3.16.3"
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-        externalNativeBuild {
-            cmake {
-                arguments "-DANDROID_STL=c++_shared"
-            }
-        }
     }
-
+    ndkVersion '21.0.6113669'
     aaptOptions {
-        noCompress "weights", "tflite", "h5df", "dat", "bin", "param", "h5", "pth"
+        noCompress 'weights', 'h5', 'parm', 'bin', 'rcc'
     }
 }
 
 dependencies {
-    extractForNativeBuild('org.pytorch:pytorch_android:1.6.0')
-
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.20'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    implementation 'org.openscience.cdk:cdk-builder3d:2.3'
+    implementation 'org.openscience.cdk:cdk-pdb:2.3'
+    implementation 'com.google.android.exoplayer:exoplayer:2.12.1'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
-
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.20'
-
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.9.5'
-
-    implementation 'org.pytorch:pytorch_android:1.6.0'
-    implementation 'org.pytorch:pytorch_android_torchvision:1.6.0'
-}
-
-task extractAARForNativeBuild {
-    doLast {
-        configurations.extractForNativeBuild.files.each {
-            def file = it.absoluteFile
-            copy {
-                from zipTree(file)
-                into "$buildDir/$file.name"
-                include "headers/**"
-                include "jni/**"
-            }
-        }
-    }
-}
-
-tasks.whenTaskAdded { task ->
-  if (task.name.contains('externalNativeBuild')) {
-    task.dependsOn(extractAARForNativeBuild)
-  }
 }
