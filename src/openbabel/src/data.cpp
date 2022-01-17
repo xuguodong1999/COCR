@@ -31,10 +31,6 @@ GNU General Public License for more details.
 #include <openbabel/oberror.h>
 #include <openbabel/elements.h>
 
-// data headers with default parameters
-#include "types.h"
-#include "resdata.h"
-#include "atomizationenergies.h"
 
 #if !HAVE_STRNCASECMP
 extern "C" int strncasecmp(const char *s1, const char *s2, size_t n);
@@ -55,7 +51,7 @@ namespace OpenBabel
     _envvar = "BABEL_DATADIR";
     _filename = "atomization-energies.txt";
     _subdir = "data";
-    _dataptr = AtomicHeatOfFormationData;
+    _dataptr = nullptr;
     Init();
   }
 
@@ -251,7 +247,7 @@ namespace OpenBabel
     _envvar = "BABEL_DATADIR";
     _filename = "types.txt";
     _subdir = "data";
-    _dataptr = TypesData;
+    _dataptr = nullptr;
     _linecount = 0;
     _from = _to = -1;
   }
@@ -435,7 +431,7 @@ namespace OpenBabel
     _envvar = "BABEL_DATADIR";
     _filename = "resdata.txt";
     _subdir = "data";
-    _dataptr = ResidueData;
+    _dataptr = nullptr;
   }
 
   bool OBResidueData::AssignBonds(OBMol &mol)

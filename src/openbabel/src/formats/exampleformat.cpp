@@ -32,6 +32,7 @@ as an example.
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
+#include <openbabel/mol.h>
 
 using namespace std;
 namespace OpenBabel

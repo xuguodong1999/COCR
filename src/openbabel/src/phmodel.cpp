@@ -28,8 +28,6 @@ GNU General Public License for more details.
 
 #include <cstdlib>
 
-// private data header with default parameters
-#include "phmodeldata.h"
 
 #ifdef WIN32
 #pragma warning (disable : 4786)
@@ -50,7 +48,7 @@ namespace OpenBabel
     _envvar = "BABEL_DATADIR";
     _filename = "phmodel.txt";
     _subdir = "data";
-    _dataptr = PhModelData;
+    _dataptr = nullptr;
   }
 
   OBPhModel::~OBPhModel()

@@ -18,6 +18,10 @@ GNU General Public License for more details.
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/locale.h>
+#include <openbabel/bond.h>
+#include <openbabel/obiter.h>
+#include <openbabel/oberror.h>
+#include <openbabel/data.h>
 #include "forcefieldmm2.h"
 
 using namespace std;
