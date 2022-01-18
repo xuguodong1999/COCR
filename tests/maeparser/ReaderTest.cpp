@@ -5,9 +5,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "MaeBlock.hpp"
-#include "MaeConstants.hpp"
-#include "Reader.hpp"
+#include <maeparser/MaeBlock.hpp>
+#include <maeparser/MaeConstants.hpp>
+#include <maeparser/Reader.hpp>
 #include "TestCommon.hpp"
 
 using namespace schrodinger::mae;

@@ -1,4 +1,4 @@
-# cmake .. -G "Ninja" -DOpenCV_DIR= -DQt5_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -Dncnn_DIR=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR=~/shared/boost/lib/cmake/Boost-1.77.0 -DOpenCV_DIR=~/shared/opencv4/lib/cmake/opencv4
+# cmake .. -G "Ninja" -DOpenCV_DIR=~/shared/opencv4/lib/cmake/opencv4 -DQt5_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -Dncnn_DIR=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR=~/shared/boost/lib/cmake/Boost-1.77.0
 
 cmake_minimum_required(VERSION 3.16)
 project(COCR LANGUAGES CXX)
@@ -42,3 +42,4 @@ endif (OPENMP_FOUND)
 #set(QT_DIR ${Qt5_DIR} CACHE INTERNAL "")
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)

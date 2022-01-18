@@ -7,7 +7,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "Buffer.hpp"
+#include <maeparser/Buffer.hpp>
 
 using namespace schrodinger;
 

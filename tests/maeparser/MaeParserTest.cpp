@@ -3,10 +3,10 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "Buffer.hpp"
-#include "MaeBlock.hpp"
-#include "MaeConstants.hpp"
-#include "MaeParser.hpp"
+#include <maeparser/Buffer.hpp>
+#include <maeparser/MaeBlock.hpp>
+#include <maeparser/MaeConstants.hpp>
+#include <maeparser/MaeParser.hpp>
 
 using namespace schrodinger;
 using namespace schrodinger::mae;
