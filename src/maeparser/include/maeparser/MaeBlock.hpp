@@ -1,12 +1,12 @@
 #pragma once
 
-#include <boost/dynamic_bitset.hpp>
 #include <cassert>
 #include <cstring>
 #include <map>
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <memory>
 
 #include "maeparser/MaeParserConfig.hpp"
 
@@ -225,7 +225,7 @@ namespace schrodinger::mae {
     class IndexedProperty {
     private:
         std::vector<T> m_data;
-        boost::dynamic_bitset<> *m_is_null;
+        std::vector<bool> *m_is_null;
 
     public:
         // Prevent copying.
@@ -239,10 +239,10 @@ namespace schrodinger::mae {
          * Construct an IndexedProperty from a reference to a vector of data.
          * This swaps out the data of the input vector.
          *
-         * The optional boost::dynamic_bitset is owned by the created object.
+         * The optional std::vector<bool> is owned by the created object.
          */
         explicit IndexedProperty<T>(std::vector<T> &data,
-                                    boost::dynamic_bitset<> *is_null = nullptr)
+                                    std::vector<bool> *is_null = nullptr)
                 : m_data(), m_is_null(is_null) {
             m_data.swap(data);
         }
@@ -258,7 +258,9 @@ namespace schrodinger::mae {
         size_type size() const { return m_data.size(); }
 
         bool hasUndefinedValues() const {
-            return (m_is_null != NULL && m_is_null->any());
+            if (m_is_null) return false;
+            // equivalent to bitset::any
+            return std::any_of(m_is_null->begin(), m_is_null->end(), [](const bool &bit) { return bit; });
         }
 
         bool isDefined(size_type index) const {
@@ -267,26 +269,26 @@ namespace schrodinger::mae {
                 assert(index < m_data.size());
                 return true;
             } else {
-                return !m_is_null->test(index);
+                return !m_is_null->at(index);
             }
         }
 
         void undefine(size_type index) {
             if (m_is_null == NULL) {
-                m_is_null = new boost::dynamic_bitset<>(m_data.size());
+                m_is_null = new std::vector<bool>(m_data.size());
             }
-            m_is_null->set(index);
+            m_is_null->at(index) = true;
         }
 
         inline T &operator[](size_type index) {
-            if (m_is_null && m_is_null->test(index)) {
+            if (m_is_null && m_is_null->at(index)) {
                 throw std::runtime_error("Indexed property value undefined.");
             }
             return m_data[index];
         }
 
         inline const T &operator[](size_type index) const {
-            if (m_is_null && m_is_null->test(index)) {
+            if (m_is_null && m_is_null->at(index)) {
                 throw std::runtime_error("Indexed property value undefined.");
             }
             return m_data[index];
@@ -297,7 +299,7 @@ namespace schrodinger::mae {
         inline const T &at(size_type index) const { return operator[](index); }
 
         inline const T &at(size_type index, const T &default_) const {
-            if (m_is_null && m_is_null->test(index)) {
+            if (m_is_null && m_is_null->at(index)) {
                 return default_;
             }
             return m_data[index];
@@ -305,14 +307,14 @@ namespace schrodinger::mae {
 
         void set(size_type index, const T &value) {
             m_data[index] = value;
-            if (m_is_null != NULL && m_is_null->test(index)) {
-                m_is_null->reset(index);
+            if (m_is_null != NULL && m_is_null->at(index)) {
+                m_is_null->at(index) = false;
             }
         }
 
         const std::vector<T> &data() const { return m_data; }
 
-        const boost::dynamic_bitset<> *nullIndices() const { return m_is_null; }
+        const std::vector<bool> *nullIndices() const { return m_is_null; }
     };
 
     using IndexedRealProperty = IndexedProperty<double>;

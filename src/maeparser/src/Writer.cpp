@@ -1,20 +1,26 @@
 #include "maeparser/Writer.hpp"
 
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/iostreams/device/file.hpp>
+//#include <boost/algorithm/string/predicate.hpp>
+//#include <boost/iostreams/device/file.hpp>
 
-#include <boost/iostreams/filter/gzip.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
+//#include <boost/iostreams/filter/gzip.hpp>
+//#include <boost/iostreams/filtering_stream.hpp>
 
+#include <fstream>
+#include <sstream>
 #include <iostream>
 #include <utility>
 
 #include "maeparser/MaeBlock.hpp"
 
 using namespace std;
-using boost::algorithm::ends_with;
-using boost::iostreams::file_sink;
-using boost::iostreams::filtering_ostream;
+//using boost::algorithm::ends_with;
+//using boost::iostreams::file_sink;
+//using boost::iostreams::filtering_ostream;
+
+inline bool ends_with(const std::string &s, const std::string &suffix) {
+    return 0 == s.compare(s.size() - suffix.size(), suffix.size(), suffix);
+}
 
 namespace schrodinger::mae {
 
@@ -26,11 +32,11 @@ namespace schrodinger::mae {
         const auto ios_mode = std::ios_base::out | std::ios_base::binary;
 
         if (ends_with(fname, ".maegz") || ends_with(fname, ".mae.gz")) {
-            auto *gzip_stream = new filtering_ostream();
-            gzip_stream->push(boost::iostreams::gzip_compressor());
-            gzip_stream->push(file_sink(fname, ios_mode));
-            m_out.reset(static_cast<ostream *>(gzip_stream));
-//            throw std::runtime_error("gz not supported for no boost integration");
+//            auto *gzip_stream = new filtering_ostream();
+//            gzip_stream->push(boost::iostreams::gzip_compressor());
+//            gzip_stream->push(file_sink(fname, ios_mode));
+//            m_out.reset(static_cast<ostream *>(gzip_stream));
+            throw std::runtime_error("to avoid link against boost::iostreams, no longer support maegz");
         } else {
             auto *file_stream = new ofstream(fname, ios_mode);
             m_out.reset(static_cast<ostream *>(file_stream));

@@ -35,7 +35,6 @@ GNU General Public License for more details.
 
 using namespace std;
 using namespace schrodinger::mae;
-using boost::dynamic_bitset;
 namespace OpenBabel
 {
 
@@ -46,7 +45,8 @@ public:
   MAEFormat()
 	{
 		OBConversion::RegisterFormat("mae", this);
-		OBConversion::RegisterFormat("maegz", this);
+        // to avoid link against boost::iostreams, no longer support maegz
+		// OBConversion::RegisterFormat("maegz", this);
 	}
 
 	virtual const char* Description() override //required
@@ -115,7 +115,7 @@ int MAEFormat::SkipObjects(int n, OBConversion* pConv)
 
 void MAEFormat::setupReader(OBConversion* pConv)
 {
-    if(m_in_filename == pConv->GetInFilename() && 
+    if(m_in_filename == pConv->GetInFilename() &&
             pConv->GetInStream()->tellg() == m_in_location) return;
     m_in_filename = pConv->GetInFilename();
 

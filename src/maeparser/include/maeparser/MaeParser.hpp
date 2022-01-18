@@ -6,7 +6,6 @@
 #include <stdexcept>
 #include <string>
 
-#include <boost/dynamic_bitset.hpp>
 #include <utility>
 
 #include "maeparser/Buffer.hpp"
@@ -178,7 +177,7 @@ namespace schrodinger::mae {
     public:
         std::string m_name;
         std::vector<T> m_values;
-        boost::dynamic_bitset<> *m_is_null;
+        std::vector<bool> *m_is_null;
 
     public:
         explicit IndexedValueCollector(std::string name, size_t size)
@@ -216,10 +215,9 @@ namespace schrodinger::mae {
                 } else {
                     ++buffer.current;
                     if (m_is_null == nullptr) {
-                        m_is_null =
-                                new boost::dynamic_bitset<>(m_values.capacity());
+                        m_is_null = new std::vector<bool>(m_values.capacity());
                     }
-                    m_is_null->set(m_values.size());
+                    m_is_null->at(m_values.size()) = true;
                     m_values.push_back(T());
                     return;
                 }

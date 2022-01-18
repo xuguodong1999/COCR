@@ -635,7 +635,7 @@ namespace schrodinger {
             size_t prop_count = m_property_names.size();
             size_t col_count = prop_count + 1;
             size_t value_count = col_count * m_rows;
-            boost::dynamic_bitset<> *is_null = nullptr;
+            std::vector<bool> *is_null = nullptr;
             for (int prop_indx = 1; iter != m_property_names.end();
                  ++iter, ++prop_indx) {
                 char type = (*iter)[0];
@@ -650,9 +650,9 @@ namespace schrodinger {
                             getData(ix, &data, &len);
                             if (data[0] == '<' && data[1] == '>') {
                                 if (is_null == nullptr) {
-                                    is_null = new boost::dynamic_bitset<>(m_rows);
+                                    is_null = new std::vector<bool>(m_rows);
                                 }
-                                is_null->set(bvalues.size());
+                                is_null->at(bvalues.size()) = true;
                                 bvalues.push_back(false);
                             } else if (data[0] == '1') {
                                 bvalues.push_back(true);
@@ -674,9 +674,9 @@ namespace schrodinger {
                             getData(ix, &data, &len);
                             if (data[0] == '<' && data[1] == '>') {
                                 if (is_null == nullptr) {
-                                    is_null = new boost::dynamic_bitset<>(m_rows);
+                                    is_null = new std::vector<bool>(m_rows);
                                 }
-                                is_null->set(ivalues.size());
+                                is_null->at(ivalues.size()) = true;
                                 ivalues.push_back(0);
                             } else {
                                 long int value = simple_strtol(data, data + len);
@@ -695,9 +695,9 @@ namespace schrodinger {
                             getData(ix, &data, &len);
                             if (data[0] == '<' && data[1] == '>') {
                                 if (is_null == nullptr) {
-                                    is_null = new boost::dynamic_bitset<>(m_rows);
+                                    is_null = new std::vector<bool>(m_rows);
                                 }
-                                is_null->set(dvalues.size());
+                                is_null->at(dvalues.size()) = true;
                                 dvalues.push_back(0);
                             } else {
                                 double value = 0;
@@ -722,9 +722,9 @@ namespace schrodinger {
                             getData(ix, &data, &len);
                             if (data[0] == '<' && data[1] == '>') {
                                 if (is_null == nullptr) {
-                                    is_null = new boost::dynamic_bitset<>(m_rows);
+                                    is_null = new std::vector<bool>(m_rows);
                                 }
-                                is_null->set(svalues.size());
+                                is_null->at(svalues.size()) = true;
                                 svalues.emplace_back();
                             } else {
                                 if (data[0] != '"') { // Check for quote wrapping

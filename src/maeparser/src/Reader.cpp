@@ -1,17 +1,22 @@
 #include "maeparser/Reader.hpp"
 
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/iostreams/device/file.hpp>
+//#include <boost/algorithm/string/predicate.hpp>
+//#include <boost/iostreams/device/file.hpp>
 
-#include <boost/iostreams/filter/gzip.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
+//#include <boost/iostreams/filter/gzip.hpp>
+//#include <boost/iostreams/filtering_stream.hpp>
 
+#include <fstream>
 #include <iostream>
 #include <utility>
 
-using boost::algorithm::ends_with;
-using boost::iostreams::file_source;
-using boost::iostreams::filtering_istream;
+//using boost::algorithm::ends_with;
+//using boost::iostreams::file_source;
+//using boost::iostreams::filtering_istream;
+
+inline bool ends_with(const std::string &s, const std::string &suffix) {
+    return 0 == s.compare(s.size() - suffix.size(), suffix.size(), suffix);
+}
 
 namespace schrodinger::mae {
 
@@ -28,11 +33,11 @@ namespace schrodinger::mae {
 
         std::shared_ptr<std::istream> stream;
         if (ends_with(fname, ".maegz") || ends_with(fname, ".mae.gz")) {
-            auto *gzip_stream = new filtering_istream();
-            gzip_stream->push(boost::iostreams::gzip_decompressor());
-            gzip_stream->push(file_source(fname, ios_mode));
-            stream.reset(static_cast<std::istream *>(gzip_stream));
-//            throw std::runtime_error("gz not supported for no boost integration");
+//            auto *gzip_stream = new filtering_istream();
+//            gzip_stream->push(boost::iostreams::gzip_decompressor());
+//            gzip_stream->push(file_source(fname, ios_mode));
+//            stream.reset(static_cast<std::istream *>(gzip_stream));
+            throw std::runtime_error("to avoid link against boost::iostreams, no longer support maegz");
         } else {
             auto *file_stream = new std::ifstream(fname, ios_mode);
             stream.reset(static_cast<std::istream *>(file_stream));
