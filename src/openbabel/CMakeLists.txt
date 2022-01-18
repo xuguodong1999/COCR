@@ -6,11 +6,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/inchi)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../maeparser/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../global_header)
 
-add_definitions(-DWITH_INCHI)
-add_definitions(-DWITH_JSON)
-add_definitions(-DWITH_COORDGEN)
-add_definitions(-DHAVE_EIGEN)
-add_definitions(-DHAVE_EIGEN3)
 add_definitions(-DMAKE_OBDLL)
 
 set(PROJECT_SOURCE_DIR_LIST
@@ -61,4 +56,4 @@ endforeach ()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COMPONENT_TARGETS} coordgenlibs maeparser)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE COORDGENLIBS_LIBRARY)
+target_compile_definitions(${PROJECT_NAME} PRIVATE OPENBABEL_LIBRARY)

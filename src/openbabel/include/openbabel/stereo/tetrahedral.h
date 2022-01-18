@@ -55,7 +55,7 @@ namespace OpenBabel {
  * @sa OBStereo OBStereoBase OBTetraNonPlanarStereo OBStereoFacade
  * @since version 2.3
  */
-class OBAPI OBTetrahedralStereo : public OBTetraNonPlanarStereo
+class OB_EXPORT OBTetrahedralStereo : public OBTetraNonPlanarStereo
 {
   public:
 #ifndef SWIG
@@ -81,7 +81,7 @@ class OBAPI OBTetrahedralStereo : public OBTetraNonPlanarStereo
      * Only @p center is specific for OBTetrahedralStereo::Config. The other
      * data members occur in all OBTetraNonPlanarStereo derived classes.
      */
-    struct OBAPI Config
+    struct OB_EXPORT Config
     {
       /**
        * Default constructor. Initializes the @p from/torards and @p center to
@@ -272,7 +272,7 @@ namespace std {
  * OBTetrahedralStereo(center = 0, viewTowards = 4, refs = 1 2 3, anti-clockwise)
  * @endcode
  */
-OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBTetrahedralStereo &ts);
+OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBTetrahedralStereo &ts);
 /**
  * @code
  * OBTetrahedralStereo::Config cfg;
@@ -288,7 +288,7 @@ OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBTetrahedralStereo &ts
  * OBTetrahedralStereo::Config(center = 0, viewTowards = 4, refs = 1 2 3, anti-clockwise)
  * @endcode
  */
-OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBTetrahedralStereo::Config &cfg);
+OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBTetrahedralStereo::Config &cfg);
 
 ///@}
 

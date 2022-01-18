@@ -39,7 +39,7 @@ namespace OpenBabel
   class OBRandom; // class introduction in rand.h
 
   // class introduction in matrix3x3.cpp
-  class OBAPI matrix3x3
+  class OB_EXPORT matrix3x3
     {
       //! Elements of the matrix
       /*! This array holds the matrix. The first index refers to the
@@ -272,20 +272,20 @@ namespace OpenBabel
       ;
 
       //! Matrix-vector multiplication
-      friend OBAPI vector3 operator *(const matrix3x3 &,const vector3 &);
+      friend OB_EXPORT vector3 operator *(const matrix3x3 &, const vector3 &);
 
       //! Matrix-matrix multiplication
-      friend OBAPI matrix3x3 operator *(const matrix3x3 &,const matrix3x3 &);
+      friend OB_EXPORT matrix3x3 operator *(const matrix3x3 &, const matrix3x3 &);
 
       //! Output a text representation of a matrix
-      friend OBAPI std::ostream& operator<< ( std::ostream&, const matrix3x3 & ) ;
+      friend OB_EXPORT std::ostream& operator<< (std::ostream&, const matrix3x3 & ) ;
 
       //! Eigenvalue calculation
       static void jacobi(unsigned int n, double *a, double *d, double *v);
     };
 
 #ifndef SWIG
-  OBAPI vector3 center_coords(double*,int);
+  OB_EXPORT vector3 center_coords(double*, int);
 #endif
 }
 

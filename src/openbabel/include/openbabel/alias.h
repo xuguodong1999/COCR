@@ -17,18 +17,12 @@ GNU General Public License for more details.
 
 #include <vector>
 #include <openbabel/generic.h>
-#include <openbabel/shared_ptr.h>
+#include <memory>
 
 namespace OpenBabel
 {
   class OBSmartsPattern;
   class OBMol;
-
-// This macro is used in DLL builds. If it has not
-// been set in babelconfig.h, define it as nothing.
-#ifndef OBCOMMON
-  #define OBCOMMON
-#endif
 
 const unsigned int AliasDataType = 0x7883;
 
@@ -49,7 +43,7 @@ information or as a hint for an alternative representation, for example to
 a chemical drawing program. The _expandedatoms vector would then contains
 the ids of the atoms to which the alias is an alternative.
 */
-class OBCOMMON AliasData : public OBGenericData
+class OB_EXPORT AliasData : public OBGenericData
 {
 protected:
   std::string _alias;

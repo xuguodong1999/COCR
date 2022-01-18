@@ -36,7 +36,7 @@ namespace OpenBabel
   \return The size of the smallest ring, or 0
   **/
 
-  OBAPI unsigned int OBBondGetSmallestRingSize(OBBond *bond, unsigned int bound);
+  OB_EXPORT unsigned int OBBondGetSmallestRingSize(OBBond *bond, unsigned int bound);
 
   /**
    \brief Return the typical valence of an atom of a particular element
@@ -52,7 +52,7 @@ namespace OpenBabel
    \return A value for the typical valence
    **/
   	
-  OBAPI unsigned int GetTypicalValence(unsigned int element, unsigned int bosum, int charge);
+  OB_EXPORT unsigned int GetTypicalValence(unsigned int element, unsigned int bosum, int charge);
     /**
    \brief Assign implicit hydrogens to an OBAtom based on typical valences
 
@@ -61,7 +61,7 @@ namespace OpenBabel
    exactly how many hydrogens are present, and do not require this function.
    **/
   
-  OBAPI void OBAtomAssignTypicalImplicitHydrogens(OBAtom* atom);
+  OB_EXPORT void OBAtomAssignTypicalImplicitHydrogens(OBAtom * atom);
 
 } // end namespace OpenBabel
 

@@ -52,7 +52,7 @@ namespace OpenBabel {
    * @see OBConformerSearch OBConformerFilters
    * @since 2.3
    */
-  class OBAPI OBConformerFilter
+  class OB_EXPORT OBConformerFilter
   {
     public:
       /**
@@ -77,7 +77,7 @@ namespace OpenBabel {
    * @see OBConformerSearch OBConformerFilter
    * @since 2.3
    */
-  class OBAPI OBConformerFilters : public OBConformerFilter
+  class OB_EXPORT OBConformerFilters : public OBConformerFilter
   {
     public:
       /**
@@ -110,7 +110,7 @@ namespace OpenBabel {
    * the specified distance.
    * @since 2.3
    */
-  class OBAPI OBStericConformerFilter : public OBConformerFilter
+  class OB_EXPORT OBStericConformerFilter : public OBConformerFilter
   {
     public:
       OBStericConformerFilter ();
@@ -141,7 +141,7 @@ namespace OpenBabel {
    * conformers.
    * @since 2.3
    */
-  class OBAPI OBConformerScore
+  class OB_EXPORT OBConformerScore
   {
     public:
       /**
@@ -176,7 +176,7 @@ namespace OpenBabel {
    * the closest conformer. This results in a diverse set of conformers.
    * @since 2.3
    */
-  class OBAPI OBRMSDConformerScore : public OBConformerScore
+  class OB_EXPORT OBRMSDConformerScore : public OBConformerScore
   {
     public:
       Preferred GetPreferred() { return HighScore; }
@@ -190,7 +190,7 @@ namespace OpenBabel {
    * @brief A lowest energy conformer scoring class.
    * @since 2.3
    */
-  class OBAPI OBEnergyConformerScore : public OBConformerScore
+  class OB_EXPORT OBEnergyConformerScore : public OBConformerScore
   {
     public:
       OBEnergyConformerScore () {
@@ -215,7 +215,7 @@ namespace OpenBabel {
    * @brief A lowest energy conformer scoring class (after minimization)
    * @since 2.4
    */
-  class OBAPI OBMinimizingEnergyConformerScore : public OBConformerScore
+  class OB_EXPORT OBMinimizingEnergyConformerScore : public OBConformerScore
   {
     public:
       OBMinimizingEnergyConformerScore () {
@@ -244,7 +244,7 @@ namespace OpenBabel {
    * "reasonable" and avoids steric clashes.
    * @since 2.4
    */
-  class OBAPI OBMinimizingRMSDConformerScore : public OBConformerScore
+  class OB_EXPORT OBMinimizingRMSDConformerScore : public OBConformerScore
   {
     public:
       Preferred GetPreferred() { return HighScore; }
@@ -265,7 +265,7 @@ namespace OpenBabel {
    * See @ref ConformerSearching
    * @since 2.3
    */
-  class OBAPI OBConformerSearch
+  class OB_EXPORT OBConformerSearch
   {
     public:
       OBConformerSearch();

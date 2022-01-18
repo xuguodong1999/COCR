@@ -46,7 +46,7 @@ class OBBase;
 class OBConversion; //used only as pointer
 
 //! \return the version of the Open Babel library for feature-detection (e.g. "2.3.1")
-  OBAPI std::string OBReleaseVersion();
+  OB_EXPORT std::string OBReleaseVersion();
 
   //! \brief Classification of data stored via OBGenericData class and subclasses.
   //!
@@ -185,7 +185,7 @@ class OBConversion; //used only as pointer
   //! \brief Base class for generic data
   // Class introduction in generic.cpp
   // This base class declaration  has no dependence on mol.h
-  class OBAPI OBGenericData
+  class OB_EXPORT OBGenericData
   {
   protected:
     std::string  _attr;  //!< attribute tag (e.g., "UnitCell", "Comment" or "Author")
@@ -236,7 +236,7 @@ class OBConversion; //used only as pointer
 
   //! Base Class
   // introduction in base.cpp
-  class OBAPI OBBase
+  class OB_EXPORT OBBase
     {
     public:
       virtual ~OBBase()

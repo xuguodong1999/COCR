@@ -90,7 +90,7 @@ const double GAS_CONSTANT = 8.31446261815324e-3 / KCAL_TO_KJ;  //!< kcal mol^-1 
 
   //! \class OBFFParameter forcefield.h <openbabel/forcefield.h>
   //! \brief Internal class for OBForceField to hold forcefield parameters
-  class OBFPRT OBFFParameter {
+  class OB_EXPORT OBFFParameter {
   public:
     //! Used to store integer atom types
     int         a, b, c, d;
@@ -134,7 +134,7 @@ const double GAS_CONSTANT = 8.31446261815324e-3 / KCAL_TO_KJ;  //!< kcal mol^-1 
 
   //! \class OBFFCalculation2 forcefield.h <openbabel/forcefield.h>
   //! \brief Internal class for OBForceField to hold energy and gradient calculations on specific force fields
-  class OBFPRT OBFFCalculation2
+  class OB_EXPORT OBFFCalculation2
   {
   public:
     //! Used to store the energy for this OBFFCalculation
@@ -165,7 +165,7 @@ const double GAS_CONSTANT = 8.31446261815324e-3 / KCAL_TO_KJ;  //!< kcal mol^-1 
 
   //! \class OBFFCalculation3 forcefield.h <openbabel/forcefield.h>
   //! \brief Internal class for OBForceField to hold energy and gradient calculations on specific force fields
-  class OBFPRT OBFFCalculation3: public OBFFCalculation2
+  class OB_EXPORT OBFFCalculation3: public OBFFCalculation2
   {
   public:
     //! Used to store the atoms for this OBFFCalculation
@@ -196,7 +196,7 @@ const double GAS_CONSTANT = 8.31446261815324e-3 / KCAL_TO_KJ;  //!< kcal mol^-1 
 
   //! \class OBFFCalculation4 forcefield.h <openbabel/forcefield.h>
   //! \brief Internal class for OBForceField to hold energy and gradient calculations on specific force fields
-  class OBFPRT OBFFCalculation4: public OBFFCalculation3
+  class OB_EXPORT OBFFCalculation4: public OBFFCalculation3
   {
   public:
     //! Used to store the atoms for this OBFFCalculation
@@ -230,7 +230,7 @@ const double GAS_CONSTANT = 8.31446261815324e-3 / KCAL_TO_KJ;  //!< kcal mol^-1 
   //! \class OBFFConstraint forcefield.h <openbabel/forcefield.h>
   //! \brief Internal class for OBForceField to hold constraints
   //! \since version 2.2
-  class OBFPRT OBFFConstraint
+  class OB_EXPORT OBFFConstraint
   {
   public:
     //! Used to store the contraint energy for this OBFFConstraint
@@ -274,7 +274,7 @@ const double GAS_CONSTANT = 8.31446261815324e-3 / KCAL_TO_KJ;  //!< kcal mol^-1 
   //! \class OBFFConstraints forcefield.h <openbabel/forcefield.h>
   //! \brief Internal class for OBForceField to handle constraints
   //! \since version 2.2
-  class OBFPRT OBFFConstraints
+  class OB_EXPORT OBFFConstraints
   {
   public:
     //! Constructor
@@ -412,7 +412,7 @@ const double GAS_CONSTANT = 8.31446261815324e-3 / KCAL_TO_KJ;  //!< kcal mol^-1 
 
   // Class OBForceField
   // class introduction in forcefield.cpp
-  class OBFPRT OBForceField : public OBPlugin
+  class OB_EXPORT OBForceField : public OBPlugin
   {
     MAKE_PLUGIN(OBForceField)
 
@@ -1188,10 +1188,8 @@ const double GAS_CONSTANT = 8.31446261815324e-3 / KCAL_TO_KJ;  //!< kcal mol^-1 
      */
     int FastRotorSearch(bool permute = true);
 
-#ifdef HAVE_EIGEN
     //! \since version 2.4
     int DiverseConfGen(double rmsd, unsigned int nconfs = 0, double energy_gap = 50, bool verbose = false);
-#endif
 
     /////////////////////////////////////////////////////////////////////////
     // Energy Minimization                                                 //

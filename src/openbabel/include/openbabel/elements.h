@@ -52,33 +52,33 @@ namespace OpenBabel
   namespace OBElements {
 
     //! \return the element symbol matching the atomic number passed
-    OBAPI const char* GetSymbol(unsigned int atomic_number);
+    OB_EXPORT const char* GetSymbol(unsigned int atomic_number);
     //! \return the name of this element
-    OBAPI const char* GetName(unsigned int atomic_number);
+    OB_EXPORT const char* GetName(unsigned int atomic_number);
     //! \return the average atomic mass for this element.
     //! For exact isotope masses, use GetExactMass()
-    OBAPI double GetMass(unsigned int atomic_number);
+    OB_EXPORT double GetMass(unsigned int atomic_number);
     //! \return the exact mass of the specified isotope
     //!         or by default (i.e. "isotope 0") the mass of the most abundant isotope
-    OBAPI double GetExactMass(unsigned int atomic_number, unsigned int isotope=0);
+    OB_EXPORT double GetExactMass(unsigned int atomic_number, unsigned int isotope=0);
     //  //! \return the atomic number matching the element symbol
-    OBAPI unsigned int GetAtomicNum(const char* ptr);
+    OB_EXPORT unsigned int GetAtomicNum(const char* ptr);
     //! \return the Allred-Rochow electronegativity for this element
-    OBAPI double GetAllredRochowElectroNeg(unsigned int atomic_number);
+    OB_EXPORT double GetAllredRochowElectroNeg(unsigned int atomic_number);
     //! \return the covalent radius (in Angstrom) for this atomic number
-    OBAPI double GetCovalentRad(unsigned int atomic_number);
+    OB_EXPORT double GetCovalentRad(unsigned int atomic_number);
     //! \return the van der Waals radius (in Angstrom) for this atomic number
-    OBAPI double GetVdwRad(unsigned int atomic_number);
+    OB_EXPORT double GetVdwRad(unsigned int atomic_number);
     //! \return the electron affinity (in eV) for this element
-    OBAPI double GetElectronAffinity(unsigned int atomic_number);
+    OB_EXPORT double GetElectronAffinity(unsigned int atomic_number);
     //! \return the ionization potential (in eV) for this element
-    OBAPI double GetIonization(unsigned int atomic_number);
+    OB_EXPORT double GetIonization(unsigned int atomic_number);
     //! \return the maximum expected number of bonds to this element
-    OBAPI unsigned int GetMaxBonds(unsigned int atomic_number);
+    OB_EXPORT unsigned int GetMaxBonds(unsigned int atomic_number);
     //! \return the Pauling electronegativity for this element
-    OBAPI double GetElectroNeg(unsigned int atomic_number);
+    OB_EXPORT double GetElectroNeg(unsigned int atomic_number);
     //! Sets the red, green, and blue color values for this element
-    OBAPI void GetRGB(unsigned int atomic_number, double *r, double *g, double *b);
+    OB_EXPORT void GetRGB(unsigned int atomic_number, double *r, double *g, double *b);
     //! The atomic numbers of the elements
     const unsigned int Dummy = 0;
     const unsigned int Hydrogen = 1;

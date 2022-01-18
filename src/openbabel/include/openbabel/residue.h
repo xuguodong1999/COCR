@@ -27,10 +27,6 @@ obtained in part or whole from RasMol2 by Roger Sayle.
 
 #include <openbabel/babelconfig.h>
 
-#ifndef OB_EXTERN
-#  define OB_EXTERN extern
-#endif
-
 #include <vector>
 #include <string>
 
@@ -49,7 +45,7 @@ namespace OpenBabel {
 
   // Class OBResidue
   // class introduction in residue.cpp
- class OBAPI OBResidue : public OBBase
+ class OB_EXPORT OBResidue : public OBBase
   {
   public:
 

@@ -45,12 +45,6 @@ namespace OpenBabel {
   class OBReaction;
 #endif
 
-// This macro is used in DLL builds. If it has not
-// been set in babelconfig.h, define it as nothing.
-#ifndef OBCOMMON
-  #define OBCOMMON
-#endif
-
 /** \class OBMoleculeFormat obmolecformat.h <openbabel/obmolecformat.h>
     \brief An OBFormat convenience subclass for conversion to/from OBMol data
 
@@ -67,7 +61,7 @@ namespace OpenBabel {
 
 //////////////////////////////////////////////////////////////////////
 
-class OBCOMMON OBMoleculeFormat : public OBFormat
+class OB_EXPORT OBMoleculeFormat : public OBFormat
 {
 public:
 

@@ -23,10 +23,6 @@ General Public License for more details.
 #include <streambuf>
 #include <climits>
 
-#ifndef OBCONV
-#define OBCONV
-#endif
-
 namespace OpenBabel
 {
 
@@ -166,7 +162,7 @@ namespace OpenBabel
 //*********************************************
 /// \class LineEndingExtractor lineend.h <openbabel/lineend.h>
   /// \brief Replaces CRLF (DOS) and CR (Mac OS 9) line endings by LF (POSIX)
-class OBCONV LineEndingExtractor
+class OB_EXPORT LineEndingExtractor
 {
 public:
   int operator()( std::istream& src )

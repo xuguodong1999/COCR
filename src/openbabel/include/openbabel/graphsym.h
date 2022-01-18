@@ -25,10 +25,6 @@ GNU General Public License for more details.
 #include <openbabel/stereo/stereo.h>
 #include <vector>
 
-#ifndef OB_EXTERN
-#  define OB_EXTERN extern
-#endif
-
 namespace OpenBabel {
 
   class OBBitVec;
@@ -43,7 +39,7 @@ namespace OpenBabel {
    * @brief Handle and perceive graph symmtery for canonical numbering .
    * @since version 2.3
    */
-  class OBAPI OBGraphSym {
+  class OB_EXPORT OBGraphSym {
 
     public:
       //! Constructor

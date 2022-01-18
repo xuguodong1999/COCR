@@ -46,9 +46,9 @@ namespace OpenBabel {
    * @see @ref canonical_code_algorithm
    * @since 2.3
    */
-  void OBAPI CanonicalLabels(OBMol *mol, const std::vector<unsigned int> &symmetry_classes,
-      std::vector<unsigned int> &canonical_labels, const OBBitVec &mask = OBBitVec(),
-      int maxSeconds = 5, bool onlyOne = false);
+  void OB_EXPORT CanonicalLabels(OBMol *mol, const std::vector<unsigned int> &symmetry_classes,
+                                  std::vector<unsigned int> &canonical_labels, const OBBitVec &mask = OBBitVec(),
+                                  int maxSeconds = 5, bool onlyOne = false);
 
 } // namespace OpenBabel
 

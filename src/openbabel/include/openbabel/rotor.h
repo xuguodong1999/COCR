@@ -48,7 +48,7 @@ namespace OpenBabel
   //! defining the dihedral angle. The rule can either define a set of possible
   //! dihedral angles in degrees and/or a "delta" (i.e., all multiples of delta will
   //! be considered)
-  class OBAPI OBRotorRule
+  class OB_EXPORT OBRotorRule
   {
     int                 _ref[4]; //!< Reference atoms specifying the dihedral angle (as integers), numbered from 1 inside the SMARTS pattern
     double              _delta;  //!< (optional) the resolution of a dihedral step in degrees
@@ -98,7 +98,7 @@ namespace OpenBabel
   //! Use to automatically evaluate potentially rotatable bonds to generate
   //! lists of dihedral angles to consider.
   //! e.g., rotamer/conformer energy calculations
-  class OBAPI OBRotorRules : public OBGlobalDataBase
+  class OB_EXPORT OBRotorRules : public OBGlobalDataBase
   {
     bool                       _quiet;  //!< Control debugging output from GetRotorIncrements()
     std::vector<OBRotorRule*>  _vr;     //!< Database of specific OBRotorRules defined by SMARTS patterns
@@ -132,7 +132,7 @@ namespace OpenBabel
    * @class OBRotor rotor.h <openbabel/rotor.h>
    * @brief A single rotatable OBBond as part of rotamer searching
    */
-  class OBAPI OBRotor
+  class OB_EXPORT OBRotor
   {
     int _idx; //!< the index in an OBRotorList
     std::vector<int> _rotatoms; //!< the atoms to rotate
@@ -456,7 +456,7 @@ namespace OpenBabel
    * @class OBRotorList rotor.h <openbabel/rotor.h>
    * @brief Given an OBMol, set up a list of possibly rotatable torsions,
    */
-  class OBAPI OBRotorList
+  class OB_EXPORT OBRotorList
   {
     bool _quiet;                    //!< Control debugging output
     bool _removesym;                //!< Control removal of symmetric rotations
@@ -704,7 +704,7 @@ namespace OpenBabel
 
   //! \class OBRotorKeys rotor.h <openbabel/rotor.h>
   //! \brief A class to generate all possible rotorKeys
-  class OBAPI OBRotorKeys
+  class OB_EXPORT OBRotorKeys
   {
       /**
       \brief A class to generate all possible rotorKeys

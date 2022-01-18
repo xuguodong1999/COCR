@@ -45,40 +45,9 @@ int OBPlugin::AllPluginsLoaded = 0;
 
 void OBPlugin::LoadAllPlugins()
 {
-  int count = 0;
-#if  defined(USING_DYNAMIC_LIBS)
-  // Depending on availability, look successively in
-  // FORMATFILE_DIR, executable directory or current directory
-  string TargetDir;
-
-#ifdef FORMATFILE_DIR
-  TargetDir="FORMATFILE_DIR";
-#endif
-
-  DLHandler::getConvDirectory(TargetDir);
-
-  vector<string> files;
-  if(!DLHandler::findFiles(files,DLHandler::getFormatFilePattern(),TargetDir)) {
-    obErrorLog.ThrowError(__FUNCTION__, "Unable to find OpenBabel plugins. Try setting the BABEL_LIBDIR environment variable.", obError);
-    return;
-  }
-
-  vector<string>::iterator itr;
-  for(itr=files.begin();itr!=files.end();++itr) {
-    if(DLHandler::openLib(*itr))
-      count++;
-  }
-  if(!count) {
-    string error = "No valid OpenBabel plugs found in "+TargetDir;
-    obErrorLog.ThrowError(__FUNCTION__, error, obError);
-    return;
-  }
-#else
-  count = 1; // Avoid calling this function several times
-#endif //USING_DYNAMIC_LIBS
-
+  // Avoid calling this function several times
   // Status have to be updated now
-  AllPluginsLoaded = count;
+  AllPluginsLoaded = 1;
 
   // Make instances for plugin classes defined in the data file.
   // This is hook for OBDefine, but does nothing if it is not loaded
@@ -352,18 +321,14 @@ std::vector<std::string> EnableStaticPlugins()
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&thePubChemFormat)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theXMLFormat)->GetID());
 #endif
-#ifdef HAVE_STATIC_INCHI
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theInChIFormat)->GetID());
-#endif
 #ifdef HAVE_RPC_XDR_H
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theXTCFormat)->GetID());
 #endif
-#ifdef HAVE_REGEX_H
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theGAMESSUKInputFormat)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theGAMESSUKOutputFormat)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theOrcaOutputFormat)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theOrcaInputFormat)->GetID());
-#endif
 
   // descriptors
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theCanSmiles)->GetID());
@@ -420,25 +385,17 @@ std::vector<std::string> EnableStaticPlugins()
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theOpReadConformers)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theOpSort)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theOpExtraOut)->GetID());
-#ifdef HAVE_EIGEN
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theOpConformer)->GetID());
-#endif
-#ifdef HAVE_STATIC_INCHI
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theOpUnique)->GetID());
-#endif
 
   // charges
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theGasteigerCharges)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theMMFF94Charges)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theNoCharges)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theFromFileCharges)->GetID());
-#ifdef HAVE_EIGEN
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theQEqCharges)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theQTPIECharges)->GetID());
-#endif
-#ifdef HAVE_EIGEN3
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&theEQEqCharges)->GetID());
-#endif
 
   return plugin_ids;
 }

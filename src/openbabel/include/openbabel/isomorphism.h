@@ -74,7 +74,7 @@ namespace OpenBabel {
    * Automorphism searches can be done using the MapAll method but an additional
    * FindAutomorphisms() function is provided for convenience.
    */
-  class OBAPI OBIsomorphismMapper
+  class OB_EXPORT OBIsomorphismMapper
   {
     public:
       /**
@@ -222,8 +222,8 @@ namespace OpenBabel {
    *
    * @since version 2.3
    */
-  OBAPI bool FindAutomorphisms(OBMol *mol, std::vector<OBIsomorphismMapper::Mapping> &aut, const std::vector<unsigned int> &symmetry_classes,
-      const OBBitVec &mask = OBBitVec(), std::size_t maxMemory = 3000000);
+  OB_EXPORT bool FindAutomorphisms(OBMol * mol, std::vector<OBIsomorphismMapper::Mapping> & aut, const std::vector<unsigned int> &symmetry_classes,
+                                    const OBBitVec &mask = OBBitVec(), std::size_t maxMemory = 3000000);
   /**
    * Find the automorphisms of a molecule by using an OBIsomorphismMapper. This
    * function will first find the graph invariants (i.e. symmetry_classes) using
@@ -232,8 +232,8 @@ namespace OpenBabel {
    *
    * @since version 2.3
    */
-  OBAPI bool FindAutomorphisms(OBMol *mol, std::vector<OBIsomorphismMapper::Mapping> &aut, const OBBitVec &mask = OBBitVec(),
-      std::size_t maxMemory = 3000000);
+  OB_EXPORT bool FindAutomorphisms(OBMol * mol, std::vector<OBIsomorphismMapper::Mapping> & aut, const OBBitVec &mask = OBBitVec(),
+                                    std::size_t maxMemory = 3000000);
 
   /**
    * Find the automorphisms of a molecule by using an OBIsomorphismMapper. This
@@ -246,8 +246,8 @@ namespace OpenBabel {
    * @see  @ref MapGeneric
    * @since version 2.3
    */
-  OBAPI void FindAutomorphisms(OBIsomorphismMapper::Functor &functor, OBMol *mol,
-      const std::vector<unsigned int> &symmetry_classes, const OBBitVec &mask = OBBitVec());
+  OB_EXPORT void FindAutomorphisms(OBIsomorphismMapper::Functor &functor, OBMol *mol,
+                                   const std::vector<unsigned int> &symmetry_classes, const OBBitVec &mask = OBBitVec());
 
   /**
    * @page substructure Substructure Search

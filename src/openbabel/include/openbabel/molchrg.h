@@ -32,7 +32,7 @@ namespace OpenBabel
 
 //! \class GasteigerState molchrg.h <openbabel/molchrg.h>
 //! \brief Helper class for OBGastChrg which stores the Gasteiger states of a given atom
-class OBAPI GasteigerState
+class OB_EXPORT GasteigerState
 {
 public:
     GasteigerState();
@@ -54,7 +54,7 @@ public:
 };
 
 // class introduction in molchrg.cpp
-class OBAPI OBGastChrg
+class OB_EXPORT OBGastChrg
 {
   std::vector <GasteigerState*> _gsv; //!< vector of internal GasteigerState (for each atom)
 

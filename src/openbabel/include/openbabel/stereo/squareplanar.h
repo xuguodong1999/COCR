@@ -45,7 +45,7 @@ namespace OpenBabel {
  * to get more information. Like all stereo classes, errors,
  * warnings or info is reported using OBMessageHandler.
  */
-class OBAPI OBSquarePlanarStereo : public OBTetraPlanarStereo
+class OB_EXPORT OBSquarePlanarStereo : public OBTetraPlanarStereo
 {
   public:
     /**
@@ -68,7 +68,7 @@ class OBAPI OBSquarePlanarStereo : public OBTetraPlanarStereo
      * data members occur in all OBTetraPlanarStereo derived classes.
      */
 #ifndef SWIG
-    struct OBAPI Config
+    struct OB_EXPORT Config
     {
       /**
        * Default constructor. Initializes @p center to OBStereo::NoRef
@@ -288,7 +288,7 @@ namespace std {
  * OBSquarePlanarStereo(center = 0, refs = 1 2 3 4, shape = U)
  * @endcode
  */
-OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBSquarePlanarStereo &ct);
+OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBSquarePlanarStereo &ct);
 /**
  * @code
  * OBSquarePlanarStereo::Config cfg;
@@ -302,7 +302,7 @@ OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBSquarePlanarStereo &c
  * OBSquarePlanarStereo::Config(center = 0, refs = 1 2 3 4, shape = U)
  * @endcode
  */
-OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBSquarePlanarStereo::Config &cfg);
+OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBSquarePlanarStereo::Config &cfg);
 
 ///@}
 

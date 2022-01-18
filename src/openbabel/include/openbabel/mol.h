@@ -24,20 +24,6 @@ GNU General Public License for more details.
 
 #include <openbabel/babelconfig.h>
 
-#ifndef OB_EXTERN
-#  define OB_EXTERN extern
-#endif
-#ifndef THREAD_LOCAL
-#ifdef SWIG
-# define THREAD_LOCAL
-# elif (__cplusplus >= 201103L)
-//this is required for correct multi-threading
-#  define THREAD_LOCAL thread_local
-# else
-#  define THREAD_LOCAL
-# endif
-#endif
-
 #include <math.h>
 #include <float.h>
 
@@ -118,7 +104,7 @@ namespace OpenBabel
 enum HydrogenType { AllHydrogen, PolarHydrogen, NonPolarHydrogen };
 
   // class introduction in mol.cpp
- class OBAPI OBMol: public OBBase
+ class OB_EXPORT OBMol: public OBBase
   {
   protected:
     int                           _flags;	//!< bitfield of flags
@@ -715,15 +701,15 @@ enum HydrogenType { AllHydrogen, PolarHydrogen, NonPolarHydrogen };
   // Utility function prototypes
   //tokenize and Trim declarations moved to base.h
   // Deprecated -- use OBMessageHandler class instead (docs in obutil.cpp)
-  OBAPI void ThrowError(char *str);
+  OB_EXPORT void ThrowError(char *str);
   // Deprecated -- use OBMessageHandler class instead (docs in obutil.cpp)
-  OBAPI void ThrowError(std::string &str);
+  OB_EXPORT void ThrowError(std::string &str);
   //! Convert Cartesian XYZ to a set of OBInternalCoord coordinates
-  OBAPI void CartesianToInternal(std::vector<OBInternalCoord*>&,OBMol&);
+  OB_EXPORT void CartesianToInternal(std::vector<OBInternalCoord*>&, OBMol&);
   //! Convert set of OBInternalCoord coordinates into Cartesian XYZ
-  OBAPI void InternalToCartesian(std::vector<OBInternalCoord*>&,OBMol&);
+  OB_EXPORT void InternalToCartesian(std::vector<OBInternalCoord*>&, OBMol&);
   // Replace the last extension in str with a new one (docs in obutil.cpp)
-  OBAPI std::string NewExtension(std::string&,char*);
+  OB_EXPORT std::string NewExtension(std::string&, char*);
 
   //! \brief Nested namespace for max_value templates
   namespace detail {
@@ -771,10 +757,10 @@ enum HydrogenType { AllHydrogen, PolarHydrogen, NonPolarHydrogen };
 #ifndef __KCC
   extern "C"
   {
-    OBAPI void  get_rmat(double*,double*,double*,int);
-    OBAPI void  ob_make_rmat(double mat[3][3],double rmat[9]);
-    OBAPI void  qtrfit (double *r,double *f,int size,double u[3][3]);
-    OBAPI double superimpose(double*,double*,int);
+    OB_EXPORT void  get_rmat(double*, double*, double*, int);
+    OB_EXPORT void  ob_make_rmat(double mat[3][3], double rmat[9]);
+    OB_EXPORT void  qtrfit (double *r, double *f, int size, double u[3][3]);
+    OB_EXPORT double superimpose(double*, double*, int);
   }
 #else
   OBAPI void get_rmat(double*,double*,double*,int);

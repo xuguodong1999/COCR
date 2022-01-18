@@ -38,7 +38,7 @@ namespace OpenBabel
   // more detailed descriptions and documentation in obiter.cpp
 
   //! \brief Iterate over all atoms in an OBMol
-  class OBAPI OBMolAtomIter {
+  class OB_EXPORT OBMolAtomIter {
     std::vector<OBAtom*>::iterator _i;
     OBMol *_parent;
     OBAtom *_ptr;
@@ -64,7 +64,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all atoms in an OBMol in a depth-first search (DFS)
-  class OBAPI OBMolAtomDFSIter {
+  class OB_EXPORT OBMolAtomDFSIter {
     OBMol               *_parent;
     OBAtom              *_ptr;
     OBBitVec             _notVisited;
@@ -99,7 +99,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all atoms in an OBMol in a breadth-first search (BFS)
-  class OBAPI OBMolAtomBFSIter {
+  class OB_EXPORT OBMolAtomBFSIter {
     OBMol               *_parent;
     OBAtom              *_ptr;
     OBBitVec             _notVisited;
@@ -130,7 +130,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all bonds in an OBMol in a breadth-first search (BFS)
-  class OBAPI OBMolBondBFSIter {
+  class OB_EXPORT OBMolBondBFSIter {
     OBMol               *_parent;
     OBBond              *_ptr;
     OBBitVec             _notVisited;
@@ -161,7 +161,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all bonds in an OBMol
-  class OBAPI OBMolBondIter {
+  class OB_EXPORT OBMolBondIter {
     std::vector<OBBond*>::iterator _i;
     OBMol *_parent;
     OBBond *_ptr;
@@ -187,7 +187,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all neighboring atoms to an OBAtom
-  class OBAPI OBAtomAtomIter {
+  class OB_EXPORT OBAtomAtomIter {
     std::vector<OBBond*>::iterator _i;
     OBAtom *_parent;
     OBAtom *_ptr;
@@ -213,7 +213,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all bonds on an OBAtom
-  class OBAPI OBAtomBondIter {
+  class OB_EXPORT OBAtomBondIter {
     std::vector<OBBond*>::iterator _i;
     OBAtom *_parent;
     OBBond *_ptr;
@@ -239,7 +239,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all residues in an OBMol
-  class OBAPI OBResidueIter {
+  class OB_EXPORT OBResidueIter {
     std::vector<OBResidue*>::iterator _i;
     OBResidue *_ptr;
     OBMol *_parent;
@@ -265,7 +265,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all atoms in an OBResidue
-  class OBAPI OBResidueAtomIter {
+  class OB_EXPORT OBResidueAtomIter {
     std::vector<OBAtom*>::iterator _i;
     OBResidue *_parent;
     OBAtom    *_ptr;
@@ -291,7 +291,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all angles in an OBMol
-  class OBAPI OBMolAngleIter {
+  class OB_EXPORT OBMolAngleIter {
     OBMol     *_parent;
     std::vector<std::vector<unsigned int> > _vangle;
     std::vector<std::vector<unsigned int> >::iterator _i;
@@ -315,7 +315,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all torsions in an OBMol
-  class OBAPI OBMolTorsionIter {
+  class OB_EXPORT OBMolTorsionIter {
     OBMol *_parent;
     std::vector<std::vector<unsigned int> > _vtorsion;
     std::vector<std::vector<unsigned int> >::iterator _i;
@@ -339,7 +339,7 @@ namespace OpenBabel
   };
 
   //! \brief Iterate over all pairs of atoms (>1-4) in an OBMol
-  class OBAPI OBMolPairIter {
+  class OB_EXPORT OBMolPairIter {
     std::vector<OBAtom*>::iterator _i;
     std::vector<OBAtom*>::iterator _j;
     OBMol *_parent;
@@ -369,7 +369,7 @@ namespace OpenBabel
   class OBRingData;
 
   //! \brief Iterate over all rings in an OBMol
-  class OBAPI OBMolRingIter {
+  class OB_EXPORT OBMolRingIter {
     std::vector<OBRing*>::iterator _i;
     OBRing *_ptr;
     OBMol *_parent;

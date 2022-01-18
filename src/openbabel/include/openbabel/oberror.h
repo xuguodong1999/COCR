@@ -28,10 +28,6 @@ General Public License for more details.
 #include <vector>
 #include <deque>
 
-#ifndef OBERROR
-#define OBERROR
-#endif
-
 namespace OpenBabel
 {
 
@@ -49,7 +45,7 @@ namespace OpenBabel
   /** \class OBError oberror.h <openbabel/oberror.h>
       \brief Customizable error handling and logging -- store a message,
       including the method yielding the error, causes, etc. **/
-  class OBERROR OBError
+  class OB_EXPORT OBError
     {
     public:
 
@@ -103,7 +99,7 @@ namespace OpenBabel
 
   //! \brief Handle error messages, warnings, debugging information and the like
   // More documentation in oberror.cpp
-  class OBERROR OBMessageHandler
+  class OB_EXPORT OBMessageHandler
     {
     protected:
       //! Count of messages at each message level
@@ -184,7 +180,7 @@ namespace OpenBabel
     };
 
   //! Global OBMessageHandler error handler
-  OBERROR extern  OBMessageHandler obErrorLog;
+  OB_EXPORT extern  OBMessageHandler obErrorLog;
 
   //! \class obLogBuf oberror.h <openbabel/oberror.h>
   //! \brief A minimal streambuf derivative to wrap calls to cerr into calls to OBMessageHandler as needed
@@ -198,7 +194,7 @@ namespace OpenBabel
       obErrorLog.StopErrorWrap(); // return to default behavior
       \endcode
   **/
-  class OBERROR obLogBuf : public std::stringbuf
+  class OB_EXPORT obLogBuf : public std::stringbuf
     {
     public:
       //! Close the output buffer, flush, and call OBMessageHandler::ThrowError()

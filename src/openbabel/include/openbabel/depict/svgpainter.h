@@ -27,7 +27,7 @@ namespace OpenBabel
 {
   typedef std::pair<OBColor,OBColor> ColorGradient;
 
-  class OBDEPICT SVGPainter : public OBPainter
+  class OB_EXPORT SVGPainter : public OBPainter
   {
     public:
       SVGPainter();

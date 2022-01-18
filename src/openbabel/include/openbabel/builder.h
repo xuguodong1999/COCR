@@ -39,7 +39,7 @@ namespace OpenBabel
 
   //! \class OBBuilder builder.h <openbabel/builder.h>
   //! \brief Class to build 3D structures
-  class OBAPI OBBuilder {
+  class OB_EXPORT OBBuilder {
     public:
 
       OBBuilder(): _keeprings(false) {}

@@ -24,10 +24,6 @@ GNU General Public License for more details.
 
 #include <openbabel/babelconfig.h>
 
-#ifndef OB_EXTERN
-#  define OB_EXTERN extern
-#endif
-
 #include <openbabel/base.h>
 #include <openbabel/atom.h>
 
@@ -55,7 +51,7 @@ namespace OpenBabel
   else     UnsetFlag(X);
 
 
-  class OBAPI OBBond: public OBBase
+  class OB_EXPORT OBBond: public OBBase
   {
     protected:
       unsigned int                _idx;   //!< Unique edge index used by GetIdx() and SetIdx()

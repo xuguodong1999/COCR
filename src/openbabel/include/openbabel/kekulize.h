@@ -38,7 +38,7 @@ namespace OpenBabel
    \return Whether kekulization was successful
    **/
   
-  OBAPI bool OBKekulize(OBMol *mol);
+  OB_EXPORT bool OBKekulize(OBMol *mol);
 }
 
 #endif //OB_KEKULIZE_H

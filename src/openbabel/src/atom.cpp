@@ -45,7 +45,7 @@ using namespace std;
 
 namespace OpenBabel
 {
-  OB_EXTERN OBChainsParser chainsparser;
+    OB_EXPORT extern OBChainsParser chainsparser;
   /** \class OBAtom atom.h <openbabel/atom.h>
       \brief Atom class
 
@@ -104,10 +104,10 @@ namespace OpenBabel
       \endcode
   */
 
-  extern THREAD_LOCAL OBAromaticTyper  aromtyper;
-  extern THREAD_LOCAL OBAtomTyper      atomtyper;
-  extern THREAD_LOCAL OBPhModel        phmodel;
-  OB_EXTERN OBTypeTable      ttab;
+  extern thread_local OBAromaticTyper  aromtyper;
+  extern thread_local OBAtomTyper      atomtyper;
+  extern thread_local OBPhModel        phmodel;
+  OB_EXPORT extern OBTypeTable      ttab;
 
   //
   // OBAtom member functions

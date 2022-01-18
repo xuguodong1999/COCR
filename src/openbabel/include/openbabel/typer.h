@@ -21,7 +21,6 @@ GNU General Public License for more details.
 #define OB_TYPER_H
 
 #include <openbabel/babelconfig.h>
-#include <openbabel/mol.h>  //needed for THREAD_LOCAL definition
 
 #include <vector>
 #include <string>
@@ -36,7 +35,7 @@ namespace OpenBabel
   class OBSmartsPattern;
 
 // class introduction in typer.cpp
-class OBAPI OBAtomTyper : public OBGlobalDataBase
+class OB_EXPORT OBAtomTyper : public OBGlobalDataBase
 {
   std::vector<std::pair<OBSmartsPattern*,int> >            _vinthyb; //!< internal hybridization rules
   std::vector<std::pair<OBSmartsPattern*,std::string> >    _vexttyp; //!< external atom type rules
@@ -59,18 +58,12 @@ public:
     void AssignTypes(OBMol&);
 };
 
-#ifndef THREAD_LOCAL
-# define THREAD_LOCAL
-#endif
-#ifndef OB_EXTERN
-#error OB_EXTERN
-#endif
 //! Global OBAtomTyper for marking internal valence, hybridization,
 //!  and atom types (for internal and external use)
-THREAD_LOCAL OB_EXTERN OBAtomTyper      atomtyper;
+thread_local OB_EXPORT extern OBAtomTyper atomtyper;
 
 // class introduction in typer.cpp
-class OBAPI OBAromaticTyper
+class OB_EXPORT OBAromaticTyper
 {
 public:
     OBAromaticTyper() {};
@@ -81,10 +74,10 @@ public:
 };
 
 //! Global OBAromaticTyper for detecting aromatic atoms and bonds
-THREAD_LOCAL OB_EXTERN OBAromaticTyper  aromtyper;
+thread_local OB_EXPORT extern OBAromaticTyper aromtyper;
 
 // class introduction in typer.cpp
-class OBAPI OBRingTyper : public OBGlobalDataBase
+class OB_EXPORT OBRingTyper : public OBGlobalDataBase
 {
   std::vector<std::pair<OBSmartsPattern*,std::string> >    _ringtyp; //!< ring type rules
 

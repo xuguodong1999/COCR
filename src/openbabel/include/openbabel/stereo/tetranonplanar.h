@@ -88,7 +88,7 @@ namespace OpenBabel {
    *
    * @since version 2.3
    */
-  class OBAPI OBTetraNonPlanarStereo : public OBStereoBase
+  class OB_EXPORT OBTetraNonPlanarStereo : public OBStereoBase
   {
     public:
       /**

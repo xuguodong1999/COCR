@@ -29,7 +29,7 @@ namespace OpenBabel
 class OBMol; //Forward declaration; used only as pointer.
 
 // Documentation is down below
-class OBAPI OBChargeModel : public OBPlugin
+class OB_EXPORT OBChargeModel : public OBPlugin
 {
   MAKE_PLUGIN(OBChargeModel)
 

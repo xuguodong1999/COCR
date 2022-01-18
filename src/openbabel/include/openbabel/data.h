@@ -45,7 +45,7 @@ namespace OpenBabel
       - Tries the subdirectory corresponding to this version, then the main directory
       -# Reverts to the compiled-in default data
   **/
-  class OBAPI OBGlobalDataBase
+  class OB_EXPORT OBGlobalDataBase
     {
     protected:
       bool         _init;		//!< Whether the data been read already
@@ -80,7 +80,7 @@ namespace OpenBabel
       use these you need to perform
       Gaussian G2/G3/G4 or CBS-QB3 calculations.
   **/
-  class OBAPI OBAtomHOF
+  class OB_EXPORT OBAtomHOF
   {
   private:
       std::string _element,_method,_desc,_unit;
@@ -146,7 +146,7 @@ namespace OpenBabel
       single atom calculations with Gaussian and the appropriate method and
       experimental data from Curtiss et al., J. Chem. Phys. 106 (1997) 1063-1079.
   */
-  class OBAPI OBAtomicHeatOfFormationTable : public OBGlobalDataBase
+  class OB_EXPORT OBAtomicHeatOfFormationTable : public OBGlobalDataBase
   {
     std::vector<OBAtomHOF> _atomhof;
 
@@ -183,7 +183,7 @@ namespace OpenBabel
     };
 
   // class introduction in data.cpp
-  class OBAPI OBTypeTable : public OBGlobalDataBase
+  class OB_EXPORT OBTypeTable : public OBGlobalDataBase
     {
       int             _linecount;
       unsigned int    _ncols,_nrows;
@@ -222,14 +222,14 @@ namespace OpenBabel
 
   //! Global OBTypeTable for translating between different atom types
   //! (e.g., Sybyl <-> MM2)
-  OB_EXTERN  OBTypeTable      ttab;
+  OB_EXPORT extern  OBTypeTable      ttab;
 
   /** \class OBResidueData data.h <openbabel/data.h>
       \brief Table of common biomolecule residues (for PDB or other files).
 
       Can assign atom types and bond orders for arbitrary residues
   **/
-  class OBAPI OBResidueData : public OBGlobalDataBase
+  class OB_EXPORT OBResidueData : public OBGlobalDataBase
     {
       int                                               _resnum;
       std::vector<std::string>                          _resname;
@@ -267,7 +267,7 @@ namespace OpenBabel
     };
 
   //! Global OBResidueData biomolecule residue database
-  OB_EXTERN  OBResidueData    resdat;
+  OB_EXPORT extern  OBResidueData    resdat;
 
 
 } // end namespace OpenBabel

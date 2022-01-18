@@ -31,7 +31,7 @@ namespace OpenBabel
 class OBBase; //Forward declaration; used only as pointer.
 
 // Class introduction in descriptor.cpp
-class OBAPI OBDescriptor : public OBPlugin
+class OB_EXPORT OBDescriptor : public OBPlugin
 {
   MAKE_PLUGIN(OBDescriptor)
 

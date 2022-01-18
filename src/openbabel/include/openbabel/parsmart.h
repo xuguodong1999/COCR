@@ -151,7 +151,7 @@ namespace OpenBabel
 
   // class introduction in parsmart.cpp
   //! \brief SMARTS (SMiles ARbitrary Target Specification) substructure searching
-  class OBAPI OBSmartsPattern
+  class OB_EXPORT OBSmartsPattern
   {
   protected:
     OBSmartsPrivate                *_d;        //!< Internal data storage for future expansion
@@ -335,7 +335,7 @@ namespace OpenBabel
   //! \class OBSmartsMatcher parsmart.h <openbabel/parsmart.h>
   //! \brief Internal class: performs matching; a wrapper around previous
   //! C matching code to make it thread safe.
-  class OBAPI OBSmartsMatcher
+  class OB_EXPORT OBSmartsMatcher
   {
   protected:
 	  //recursive smarts cache
@@ -367,7 +367,7 @@ namespace OpenBabel
   //! \class OBSSMatch parsmart.h <openbabel/parsmart.h>
   //! \brief Internal class: performs fast, exhaustive matching used to find
   //! just a single match in match() using recursion and explicit stack handling.
-  class OBAPI OBSSMatch
+  class OB_EXPORT OBSSMatch
   {
   protected:
     bool        *_uatoms;
@@ -381,8 +381,8 @@ namespace OpenBabel
     void Match(std::vector<std::vector<int> > &v, int bidx=-1);
   };
 
-  OBAPI void SmartsLexReplace(std::string &,
-                              std::vector<std::pair<std::string,std::string> > &);
+  OB_EXPORT void SmartsLexReplace(std::string &,
+                                  std::vector<std::pair<std::string,std::string> > &);
 
 } // end namespace OpenBabel
 

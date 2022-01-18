@@ -106,13 +106,13 @@ namespace OpenBabel
     this->normalize();
   }
 
-  OBAPI ostream& operator<< ( ostream& co, const vector3& v )
+  OB_EXPORT ostream& operator<< (ostream& co, const vector3& v )
   {
     co << "< " << v.x() << ", " << v.y() << ", " << v.z() << " >" ;
     return co ;
   }
 
-  OBAPI int vector3::operator== ( const vector3& other ) const
+  OB_EXPORT int vector3::operator== (const vector3& other ) const
   {
     return ( ( x() == other.x() ) &&
              ( y() == other.y() ) &&
@@ -160,7 +160,7 @@ namespace OpenBabel
     return(*this);
   }
 
-  OBAPI vector3 cross ( const vector3& v1, const vector3& v2 )
+  OB_EXPORT vector3 cross (const vector3& v1, const vector3& v2 )
   {
     vector3 vv ;
 
@@ -191,7 +191,7 @@ namespace OpenBabel
 
   @returns the angle in degrees (0-360)
   */
-  OBAPI double vectorAngle ( const vector3& v1, const vector3& v2 )
+  OB_EXPORT double vectorAngle (const vector3& v1, const vector3& v2 )
   {
     double dp;
 
@@ -219,8 +219,8 @@ namespace OpenBabel
     (look from C to B and rotate D over A), you get the same answer.
   */
 
-  OBAPI double CalcTorsionAngle(const vector3 &a, const vector3 &b,
-                                const vector3 &c, const vector3 &d)
+  OB_EXPORT double CalcTorsionAngle(const vector3 &a, const vector3 &b,
+                                    const vector3 &c, const vector3 &d)
   {
 
     double torsion;

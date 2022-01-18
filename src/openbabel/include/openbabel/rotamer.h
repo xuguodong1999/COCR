@@ -32,7 +32,7 @@ namespace OpenBabel
 
   //! \brief Supports a set of rotamer coordinate sets for some number of potentially rotatable bonds
   // Further class introduction in rotamer.cpp
- class OBAPI OBRotamerList : public OBGenericData
+ class OB_EXPORT OBRotamerList : public OBGenericData
   {
     //! Number of atoms in the base coordinate set (i.e., OBMol::NumAtoms())
     unsigned int                         _NBaseCoords;

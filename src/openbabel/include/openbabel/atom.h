@@ -23,10 +23,6 @@ GNU General Public License for more details.
 
 #include <openbabel/babelconfig.h>
 
-#ifndef OB_EXTERN
-#  define OB_EXTERN extern
-#endif
-
 #include <vector>
 #include <string>
 
@@ -68,7 +64,7 @@ namespace OpenBabel
   // Class OBAtom
   // class introduction in atom.cpp
  #define OBATOM_TYPE_LEN 6
- class OBAPI OBAtom: public OBBase
+ class OB_EXPORT OBAtom: public OBBase
     {
     protected:
       unsigned char                 _ele;       //!< atomic number (type unsigned char to minimize space -- allows for 0..255 elements)

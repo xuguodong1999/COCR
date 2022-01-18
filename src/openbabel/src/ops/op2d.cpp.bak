@@ -32,10 +32,6 @@ This code calls C++ routines in RDKit which are
 #include <GraphMol/conformer.h>
 #include <GraphMol/molops.h>
 
-#ifndef OBERROR
- #define OBERROR
-#endif
-
 namespace OpenBabel
 {
   class Op2D : public OBOp //was OBERROR when with OpenBabelDLL

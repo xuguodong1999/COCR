@@ -32,7 +32,7 @@ namespace OpenBabel
       \since version 2.2
       \sa SpaceGroup
   */
-  class OBAPI transform3d: private matrix3x3, private vector3
+  class OB_EXPORT transform3d: private matrix3x3, private vector3
     {
     public:
       transform3d(void): matrix3x3(), vector3()

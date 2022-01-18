@@ -25,7 +25,7 @@ GNU General Public License for more details.
 namespace OpenBabel
 {
 
-  OBERROR extern OBMessageHandler obErrorLog;
+  OB_EXPORT extern OBMessageHandler obErrorLog;
 
   /*! \class OBBitVec bitvec.h <openbabel/bitvec.h>
     \brief Fast and efficient bitstring class

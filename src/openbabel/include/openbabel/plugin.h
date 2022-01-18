@@ -15,12 +15,9 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_PLUGIN_H
-#define OB_PLUGIN_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
-#include <openbabel/dlhandler.h>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -28,17 +25,13 @@ General Public License for more details.
 #include <sstream>
 #include <cstring>
 
-#ifndef OBERROR
- #define OBERROR
-#endif
-
 namespace OpenBabel
 {
 ///@addtogroup plugins Plugins
 ///@{
 
 /// @brief Case insensitive string comparison for PluginMapType key.
-struct OBERROR CharPtrLess : public std::binary_function<const char*,const char*, bool>
+struct OB_EXPORT CharPtrLess : public std::binary_function<const char*,const char*, bool>
 {
   bool operator()(const char* p1,const char* p2) const
   { return strcasecmp(p1,p2)<0; }
@@ -49,7 +42,7 @@ struct OBERROR CharPtrLess : public std::binary_function<const char*,const char*
     \since version 2.2
     \sa plugin.h
  */
-class OBERROR OBPlugin
+class OB_EXPORT OBPlugin
 {
 public:
 
@@ -365,13 +358,9 @@ public:
 */
 /*\@}*/
 
-#ifndef SWIG // Skipped by SWIG (for the moment)
-
-#ifndef USING_DYNAMIC_LIBS
-
 #define OB_STATIC_PLUGIN(className,instanceName) \
   class className; \
-  OBAPI OB_EXTERN className instanceName;
+  OB_EXPORT extern className instanceName;
 
   // formats
   OB_STATIC_PLUGIN(ABINITFormat, theABINITFormat)
@@ -500,13 +489,9 @@ public:
   OB_STATIC_PLUGIN(PubChemFormat, thePubChemFormat)
   OB_STATIC_PLUGIN(XMLFormat, theXMLFormat)
 #endif
-#ifdef HAVE_STATIC_INCHI
   OB_STATIC_PLUGIN(InChIFormat, theInChIFormat)
-#endif
-#ifdef HAVE_REGEX_H
   OB_STATIC_PLUGIN(GAMESSUKInputFormat, theGAMESSUKInputFormat)
   OB_STATIC_PLUGIN(GAMESSUKOutputFormat, theGAMESSUKOutputFormat)
-#endif
 #ifdef HAVE_RPC_XDR_H
   OB_STATIC_PLUGIN(XTCFormat, theXTCFormat)
 #endif
@@ -567,31 +552,17 @@ public:
   OB_STATIC_PLUGIN(OpReadConformers, theOpReadConformers)
   OB_STATIC_PLUGIN(OpSort, theOpSort)
   OB_STATIC_PLUGIN(OpExtraOut, theOpExtraOut)
-#ifdef HAVE_STATIC_INCHI
   OB_STATIC_PLUGIN(OpUnique, theOpUnique)
-#endif
-#ifdef HAVE_EIGEN
   OB_STATIC_PLUGIN(OpConformer, theOpConformer)
-#endif
 
   // charges
   OB_STATIC_PLUGIN(GasteigerCharges, theGasteigerCharges)
   OB_STATIC_PLUGIN(MMFF94Charges, theMMFF94Charges)
   OB_STATIC_PLUGIN(NoCharges, theNoCharges)
   OB_STATIC_PLUGIN(FromFileCharges, theFromFileCharges)
-#ifdef HAVE_EIGEN
   OB_STATIC_PLUGIN(QEqCharges, theQEqCharges)
   OB_STATIC_PLUGIN(QTPIECharges, theQTPIECharges)
-#endif
-#ifdef HAVE_EIGEN3
   OB_STATIC_PLUGIN(EQEqCharges, theEQEqCharges)
-#endif
-  OBAPI std::vector<std::string> EnableStaticPlugins();
-
-#endif // USING_DYNAMIC_LIBS
-
-#endif // SWIG
+  OB_EXPORT std::vector<std::string> EnableStaticPlugins();
 
 } // end namespce
-
-#endif

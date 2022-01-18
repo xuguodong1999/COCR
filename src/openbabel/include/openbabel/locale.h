@@ -22,17 +22,13 @@ GNU General Public License for more details.
 #include <locale>
 #include <openbabel/babelconfig.h>
 
-#ifndef OBERROR
-#define OBERROR
-#endif
-
 namespace OpenBabel
 {
   class OBLocalePrivate;
 
   // more detailed descriptions and documentation in locale.cpp
   //! \brief Handle the locale for numeric data parsing
-  class OBERROR OBLocale {
+  class OB_EXPORT OBLocale {
   public:
 
     OBLocale();
@@ -47,7 +43,7 @@ namespace OpenBabel
 
   //global definitions
   //! Global OBLocale for setting and restoring locale information
-  OBERROR extern  OBLocale   obLocale;
+  OB_EXPORT extern  OBLocale   obLocale;
 
 } // namespace OpenBabel
 #endif // OB_LOCALE_H

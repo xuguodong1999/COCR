@@ -24,10 +24,6 @@ GNU General Public License for more details.
 #include <openbabel/babelconfig.h>
 #include <stddef.h>
 
-#ifndef OB_EXTERN
-#  define OB_EXTERN extern
-#endif
-
 namespace OpenBabel
 {
 
@@ -58,7 +54,7 @@ namespace OpenBabel
 
       \warning Does not detect if NULL pointers are used. You should be careful.
    **/
-  class OBAPI OBInternalCoord
+  class OB_EXPORT OBInternalCoord
   {
   public:
     //class members

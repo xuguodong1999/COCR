@@ -41,7 +41,7 @@ namespace OpenBabel
 
   /// @brief Base class for file formats.
   // class introduction in obconversion.cpp
-class OBCONV OBFormat : public OBPlugin
+class OB_EXPORT OBFormat : public OBPlugin
   {
     //Macro to include functions to handle plugin operations
     MAKE_PLUGIN(OBFormat);

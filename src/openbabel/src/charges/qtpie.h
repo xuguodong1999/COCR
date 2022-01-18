@@ -15,16 +15,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef __QTPIE__H__
-#define __QTPIE__H__
-
+#pragma once
 #include <openbabel/chargemodel.h>
 #include <openbabel/mol.h>
 
 #include <math.h>
 
-#ifdef HAVE_EIGEN
 
 #include <Eigen/LU>
 #include <Eigen/SVD>
@@ -74,5 +70,3 @@ private:
   void ParseParamFile();
 };
 }; //namespace OpenBabel
-#endif //HAVE_EIGEN
-#endif //__QTPIE_H__

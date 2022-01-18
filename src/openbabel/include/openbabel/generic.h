@@ -42,7 +42,7 @@ namespace OpenBabel
 
   //! \class OBCommentData generic.h <openbabel/generic.h>
   //! \brief Used to store a comment string (can be multiple lines long)
- class OBAPI OBCommentData : public OBGenericData
+ class OB_EXPORT OBCommentData : public OBGenericData
   {
   protected:
     std::string _data;
@@ -66,7 +66,7 @@ namespace OpenBabel
   //! \class OBExternalBond generic.h <openbabel/generic.h>
   //! \brief Used to store information on an external bond
   //! (e.g., SMILES fragments)
-  class OBAPI OBExternalBond
+  class OB_EXPORT OBExternalBond
   {
     int     _idx;
     OBAtom *_atom;
@@ -87,7 +87,7 @@ namespace OpenBabel
 
   //! \class OBExternalBondData generic.h <openbabel/generic.h>
   //! \brief Used to store information on external bonds (e.g., in SMILES fragments)
- class OBAPI OBExternalBondData : public OBGenericData
+ class OB_EXPORT OBExternalBondData : public OBGenericData
   {
   protected:
     std::vector<OBExternalBond> _vexbnd;
@@ -109,7 +109,7 @@ namespace OpenBabel
   //!
   //! Ideal for arbitrary text descriptors for molecules, atoms, bonds, residues,
   //!  e.g. in QSAR.
- class OBAPI OBPairData : public OBGenericData
+ class OB_EXPORT OBPairData : public OBGenericData
   {
   protected:
     std::string _value; //!< The data for this key/value pair
@@ -150,7 +150,7 @@ namespace OpenBabel
   //! \class OBSetData generic.h <openbabel/generic.h>
   //! \brief Used to store arbitrary attribute/set relationships.
   //! Should be used to store a set of OBGenericData based on an attribute.
- class OBAPI OBSetData : public OBGenericData
+ class OB_EXPORT OBSetData : public OBGenericData
   {
   protected:
     std::vector<OBGenericData *> _vdata;
@@ -233,7 +233,7 @@ namespace OpenBabel
   //! \class OBVirtualBond generic.h <openbabel/generic.h>
   //! \brief Used to temporarily store bonds that reference
   //! an atom that has not yet been added to a molecule
- class OBAPI OBVirtualBond : public OBGenericData
+ class OB_EXPORT OBVirtualBond : public OBGenericData
   {
   protected:
     unsigned int _bgn;
@@ -252,7 +252,7 @@ namespace OpenBabel
 
   //! \class OBRingData generic.h <openbabel/generic.h>
   //! \brief Used to store the SSSR set (filled in by OBMol::GetSSSR())
- class OBAPI OBRingData : public OBGenericData
+ class OB_EXPORT OBRingData : public OBGenericData
   {
   protected:
     std::vector<OBRing*> _vr;
@@ -294,7 +294,7 @@ namespace OpenBabel
   //! \brief Used for storing information about periodic boundary conditions
   //!   with conversion to/from translation vectors and
   //!  (a, b, c, alpha, beta, gamma)
- class OBAPI OBUnitCell: public OBGenericData
+ class OB_EXPORT OBUnitCell: public OBGenericData
   {
   public:
     enum LatticeType { Undefined,
@@ -524,7 +524,7 @@ namespace OpenBabel
   //!
   //! Supplements the support for multiple coordinate sets in OBMol, e.g.,
   //! OBMol::GetConformer()
- class OBAPI OBConformerData: public OBGenericData
+ class OB_EXPORT OBConformerData: public OBGenericData
   {
   protected:
     //! Dimensionalities of conformers
@@ -572,7 +572,7 @@ namespace OpenBabel
   //! \brief Used to hold the point-group and/or space-group symmetry
   //! \todo Add support for translation between symbol notations.
   //!        Add symmetry perception routines.
- class OBAPI OBSymmetryData: public OBGenericData
+ class OB_EXPORT OBSymmetryData: public OBGenericData
   {
   protected:
     std::string _spaceGroup;
@@ -597,7 +597,7 @@ namespace OpenBabel
   //! \class OBTorsion generic.h <openbabel/generic.h>
   //! \brief Used to hold the torsion data for a single rotatable bond
   //! and all four atoms around it
-  class OBAPI OBTorsion
+  class OB_EXPORT OBTorsion
   {
     friend class OBMol;
     friend class OBTorsionData;
@@ -654,7 +654,7 @@ namespace OpenBabel
   //! \brief Used to hold torsions as generic data for OBMol.
   //!
   //! Filled by OBMol::FindTorsions()
- class OBAPI OBTorsionData : public OBGenericData
+ class OB_EXPORT OBTorsionData : public OBGenericData
   {
     friend class OBMol;
 
@@ -694,7 +694,7 @@ namespace OpenBabel
 
   //! \class OBAngle generic.h <openbabel/generic.h>
   //! \brief Used to hold the 3 atoms in an angle and the angle itself
-  class OBAPI OBAngle
+  class OB_EXPORT OBAngle
   {
     friend class OBMol;
     friend class OBAngleData;
@@ -747,7 +747,7 @@ namespace OpenBabel
 
   //! \class OBAngleData generic.h <openbabel/generic.h>
   //! \brief Used to hold all angles in a molecule as generic data for OBMol
- class OBAPI OBAngleData : public OBGenericData
+ class OB_EXPORT OBAngleData : public OBGenericData
   {
     friend class OBMol;
 
@@ -811,7 +811,7 @@ namespace OpenBabel
 
   //! \class OBVibrationData generic.h <openbabel/generic.h>
   //! \brief Used to hold the normal modes of a molecule, etc.
- class OBAPI OBVibrationData: public OBGenericData
+ class OB_EXPORT OBVibrationData: public OBGenericData
   {
   protected:
     //! Normal modes in 1/sqrt(a.u.)
@@ -856,7 +856,7 @@ namespace OpenBabel
 
   //! \class OBDOSData generic.h <openbabel/generic.h>
   //! \brief Used to hold density of states information
- class OBAPI OBDOSData: public OBGenericData
+ class OB_EXPORT OBDOSData: public OBGenericData
   {
   protected:
     //! Fermi energy (eV) as shown in _vEnergies
@@ -897,7 +897,7 @@ namespace OpenBabel
   //! \class OBOrbital generic.h <openbabel/generic.h>
   //! \brief Used to store energy, occupation, and orbital symmetry of a particular orbital
   //! \sa OBOrbitalData
-  class OBAPI OBOrbital
+  class OB_EXPORT OBOrbital
   {
     friend class OBOrbitalData;
   protected:
@@ -915,7 +915,7 @@ namespace OpenBabel
 
   //! \class OBOrbitalData generic.h <openbabel/generic.h>
   //! \brief Used to hold information about orbital energies
-  class OBAPI OBOrbitalData: public OBGenericData
+  class OB_EXPORT OBOrbitalData: public OBGenericData
   {
   public:
     OBOrbitalData(): OBGenericData("OrbitalData", OBGenericDataType::ElectronicData),
@@ -960,7 +960,7 @@ namespace OpenBabel
 
   //! \class OBElectronicTransitionData generic.h <openbabel/generic.h>
   //! \brief Used to hold information about electronic transitions
- class OBAPI OBElectronicTransitionData: public OBGenericData
+ class OB_EXPORT OBElectronicTransitionData: public OBGenericData
   {
   protected:
     //! Wavelengths (nm)
@@ -1007,7 +1007,7 @@ namespace OpenBabel
 
   //! \class OBRotationData generic.h <openbabel/generic.h>
   //! \brief Used to hold the rotational constants and symmetry numbers
- class OBAPI OBRotationData: public OBGenericData
+ class OB_EXPORT OBRotationData: public OBGenericData
  {
  public:
    enum RType{UNKNOWN, ASYMMETRIC, SYMMETRIC, LINEAR};
@@ -1037,7 +1037,7 @@ namespace OpenBabel
   //! \class OBVectorData generic.h <openbabel/generic.h>
   //! \brief Used to hold a 3D vector item (e.g., a dipole moment)
   //! \since version 2.2
- class OBAPI OBVectorData: public OBGenericData
+ class OB_EXPORT OBVectorData: public OBGenericData
  {
  public:
    OBVectorData(): OBGenericData("VectorData", OBGenericDataType::VectorData){}
@@ -1058,7 +1058,7 @@ namespace OpenBabel
    //! \class OBMatrixData generic.h <openbabel/generic.h>
    //! \brief Used to hold a 3x3 matrix item (e.g., a quadrupole moment)
    //! \since version 2.2
-  class OBAPI OBMatrixData: public OBGenericData
+  class OB_EXPORT OBMatrixData: public OBGenericData
   {
   public:
     OBMatrixData(): OBGenericData("MatrixData", OBGenericDataType::MatrixData){}
@@ -1077,7 +1077,7 @@ namespace OpenBabel
   //! \class OBFreeGridPoint generic.h <openbabel/generic.h>
   //! \brief Helper class for OBFreeGrid
   //! Can hold a random coordinate and associated value.
-  class OBAPI OBFreeGridPoint
+  class OB_EXPORT OBFreeGridPoint
   {
   protected:
     double _x,_y,_z,_V;
@@ -1102,7 +1102,7 @@ namespace OpenBabel
   //! \class OBFreeGrid generic.h <openbabel/generic.h>
   //! \brief Handle double precision floating point data with coordinates not on a grid
   //! Can hold array of random coordinates and associated values.
-  class OBAPI OBFreeGrid: public OBGenericData
+  class OB_EXPORT OBFreeGrid: public OBGenericData
   {
   protected:
     std::vector<OBFreeGridPoint*> _points;  //!< coordinates with accompanying float values
@@ -1153,7 +1153,7 @@ namespace OpenBabel
 
   };
   
-  class OBAPI OBPcharge: public OBGenericData
+  class OB_EXPORT OBPcharge: public OBGenericData
   {
   protected:
     std::vector<double> _PartialCharge;

@@ -23,9 +23,6 @@ GNU General Public License for more details.
 #include <string>
 #include <vector>
 #include <sstream>
-#ifndef OBDEPICT
-  #define OBDEPICT
-#endif
 
 namespace OpenBabel
 {
@@ -34,7 +31,7 @@ namespace OpenBabel
    * @brief Color class used by OBDepict.
    * @since version 2.3
    */
-  struct OBDEPICT OBColor
+  struct OB_EXPORT OBColor
   {
   public:
     OBColor()
@@ -113,7 +110,7 @@ namespace OpenBabel
    * @brief Font metrics class used by OBDepict.
    * @since version 2.3
    */
-  struct OBDEPICT OBFontMetrics
+  struct OB_EXPORT OBFontMetrics
   {
     int    fontSize;
     double ascent, descent;
@@ -125,7 +122,7 @@ namespace OpenBabel
    * @brief Abstract painter base class used by OBDepict.
    * @since version 2.3
    */
-  class OBDEPICT OBPainter
+  class OB_EXPORT OBPainter
   {
     public:
       /**

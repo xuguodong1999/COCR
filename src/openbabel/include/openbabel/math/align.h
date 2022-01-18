@@ -61,7 +61,7 @@ namespace OpenBabel
    *
    * @since version 2.3
    */
-  class OBAPI OBAlign {
+  class OB_EXPORT OBAlign {
   public:
     ///@name Constructors
     //@{

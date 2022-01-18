@@ -46,7 +46,7 @@ namespace OpenBabel
       For more on Roger's original talk, see:
       http://www.daylight.com/meetings/mug96/sayle/sayle.html
    */
-  class OBAPI OBChainsParser
+  class OB_EXPORT OBChainsParser
   {
     public:
 
@@ -283,7 +283,7 @@ namespace OpenBabel
     };
 
     //! Global OBChainsParser for detecting macromolecular chains and residues
-    OB_EXTERN  OBChainsParser   chainsparser;
+    OB_EXPORT extern  OBChainsParser   chainsparser;
 
 }
 #endif // OB_CHAINS_H

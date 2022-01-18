@@ -55,7 +55,7 @@ namespace OpenBabel
    *
    * @since version 3.0
    */
-  class OBAPI OBReactionFacade
+  class OB_EXPORT OBReactionFacade
   {
   public:
     /**

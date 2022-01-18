@@ -41,7 +41,7 @@ namespace OpenBabel
   class matrix3x3; // declared in math/matrix3x3.h
 
   // class introduction in vector3.cpp
-  class OBAPI vector3
+  class OB_EXPORT vector3
   {
   private :
     double _vx, _vy, _vz ;
@@ -308,36 +308,36 @@ namespace OpenBabel
   };
 
   //! Prints a representation of the vector as a row vector of the form "<0.1,1,2>"
-  OBAPI std::ostream& operator<< ( std::ostream&, const vector3& );
+  OB_EXPORT std::ostream& operator<< (std::ostream&, const vector3& );
 
   //  Sum, Difference, Scalar Product
   //! Vector addition
-  inline OBAPI vector3 operator+ ( const vector3& v1, const vector3& v2)
+  inline OB_EXPORT vector3 operator+ (const vector3& v1, const vector3& v2)
   {
     return vector3(v1.x()+v2.x(), v1.y()+v2.y(), v1.z()+v2.z());
   }
   //! Vector subtraction
-  inline OBAPI vector3 operator- ( const vector3& v1, const vector3& v2)
+  inline OB_EXPORT vector3 operator- (const vector3& v1, const vector3& v2)
   {
     return vector3(v1.x()-v2.x(), v1.y()-v2.y(), v1.z()-v2.z());
   }
   //! Unary minus
-  inline OBAPI vector3 operator- ( const vector3& v)
+  inline OB_EXPORT vector3 operator- (const vector3& v)
   {
     return vector3(-v.x(), -v.y(), -v.z());
   }
   //! Multiplication with a scalar
-  inline OBAPI vector3 operator* ( const double& c, const vector3& v)
+  inline OB_EXPORT vector3 operator* (const double& c, const vector3& v)
     {
       return vector3( c*v.x(), c*v.y(), c*v.z());
     }
   //! Multiplication with a scalar
-  inline OBAPI vector3 operator* ( const vector3& v, const double& c)
+  inline OB_EXPORT vector3 operator* (const vector3& v, const double& c)
     {
       return vector3( c*v.x(), c*v.y(), c*v.z());
     }
   //! Division by a scalar
-  inline OBAPI vector3 operator/ ( const vector3& v, const double& c)
+  inline OB_EXPORT vector3 operator/ (const vector3& v, const double& c)
   {
     return vector3( v.x()/c, v.y()/c, v.z()/c);
   }
@@ -349,42 +349,42 @@ namespace OpenBabel
   //     friend vector3 operator *(const vector3 &v,const matrix3x3 &m);
 
   //! Multiplication of matrix and vector
-  OBAPI vector3 operator *(const matrix3x3 &m, const vector3 &v);
+  OB_EXPORT vector3 operator *(const matrix3x3 &m, const vector3 &v);
 
   //! Dot product of two vectors
-  inline OBAPI double dot ( const vector3& v1, const vector3& v2 )
+  inline OB_EXPORT double dot (const vector3& v1, const vector3& v2 )
   {
     return v1.x()*v2.x() + v1.y()*v2.y() + v1.z()*v2.z() ;
   }
   //! Cross product of two vectors
-  OBAPI vector3 cross ( const vector3&, const vector3& );
+  OB_EXPORT vector3 cross (const vector3&, const vector3& );
 
   //! Calculate the angle between vectors (in degrees)
-  OBAPI double vectorAngle ( const vector3& v1, const vector3& v2 );
+  OB_EXPORT double vectorAngle (const vector3& v1, const vector3& v2 );
 
   //! Calculate the torsion angle between vectors (in degrees)
-  OBAPI double CalcTorsionAngle(const vector3 &a, const vector3 &b,
-                                        const vector3 &c, const vector3 &d);
+  OB_EXPORT double CalcTorsionAngle(const vector3 &a, const vector3 &b,
+                                    const vector3 &c, const vector3 &d);
 
   //! Calculate the signed distance of point a to the plane determined by b,c,d
-  OBAPI double Point2PlaneSigned(vector3 a, vector3 b, vector3 c, vector3 d);
+  OB_EXPORT double Point2PlaneSigned(vector3 a, vector3 b, vector3 c, vector3 d);
   //! Calculate the distance of point a to the plane determined by b,c,d
-  OBAPI double Point2Plane(vector3 a, vector3 b, vector3 c, vector3 d);
+  OB_EXPORT double Point2Plane(vector3 a, vector3 b, vector3 c, vector3 d);
   //! Calculate the angle between point a and the plane determined by b,c,d
-  OBAPI double Point2PlaneAngle(const vector3 a, const vector3 b, const vector3 c, const vector3 d);
+  OB_EXPORT double Point2PlaneAngle(const vector3 a, const vector3 b, const vector3 c, const vector3 d);
 
   //! Calculate the distance of a point a to a line determined by b and c
-  OBAPI double Point2Line(const vector3& a, const vector3& b, const vector3& c);
+  OB_EXPORT double Point2Line(const vector3& a, const vector3& b, const vector3& c);
 
   //  The global constant vector3 objects
   //! The zero vector: <0.0, 0.0, 0.0>
-  extern OBAPI const vector3 VZero;
+  extern OB_EXPORT const vector3 VZero;
   //! The x unit vector: <1.0, 0.0, 0.0>
-  extern OBAPI const vector3 VX;
+  extern OB_EXPORT const vector3 VX;
   //! The y unit vector: <0.0, 1.0, 0.0>
-  extern OBAPI const vector3 VY;
+  extern OB_EXPORT const vector3 VY;
   //! The z unit vector: <0.0, 0.0, 1.0>
-  extern OBAPI const vector3 VZ;
+  extern OB_EXPORT const vector3 VZ;
 
 }
 

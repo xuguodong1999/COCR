@@ -27,7 +27,7 @@ namespace OpenBabel
 {
 
 // class introduction in phmodel.cpp
-class OBAPI OBChemTsfm
+class OB_EXPORT OBChemTsfm
 {
     std::vector<int>                            _vadel;
     std::vector<std::pair<int,int> >            _vele;
@@ -104,7 +104,7 @@ public:
  *  The transformations are all applied (if needed at the specified pH value) in
  *  the same order they are found in data/phmodel.txt.
  */
-class OBAPI OBPhModel : public OBGlobalDataBase
+class OB_EXPORT OBPhModel : public OBGlobalDataBase
 {
     std::vector<OBChemTsfm*>                            _vtsfm;
     std::vector<double>                                 _vpKa;

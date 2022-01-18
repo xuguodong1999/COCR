@@ -30,7 +30,7 @@ namespace OpenBabel
   class OBBase;
 
 // Class introduction below
-class OBAPI OBOp : public OBPlugin
+class OB_EXPORT OBOp : public OBPlugin
 {
   MAKE_PLUGIN(OBOp);
 

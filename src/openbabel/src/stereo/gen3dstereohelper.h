@@ -39,7 +39,7 @@ namespace OpenBabel {
    * coordinates. This class also keeps track of unspecified stereochemistry
    * to ensure this information is not lost when calling StereoFrom3D().
    */
-  class OBAPI OBGen3DStereoHelper
+  class OB_EXPORT OBGen3DStereoHelper
   {
     public:
       /**

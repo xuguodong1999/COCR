@@ -7111,7 +7111,7 @@ namespace OpenBabel {
   //****************************************************************************
   //Group redraw - generate 2D coordinates  for chemical group
   //****************************************************************************
-  int OBMCDL groupRedraw(OBMol * pmol, int bondN, int atomN, bool atomNInGroup) {
+  int OB_EXPORT groupRedraw(OBMol * pmol, int bondN, int atomN, bool atomNInGroup) {
     /*
       bondN - index of acyclic bond in pmol (zero-based).
       atomN - index of atom attached to bond bondN to start redraw from it (1-based)

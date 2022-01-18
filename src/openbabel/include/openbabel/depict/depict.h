@@ -29,16 +29,12 @@ namespace OpenBabel
   class OBPainter;
   class OBDepictPrivate;
 
-  #ifndef OBDEPICT
-    #define OBDEPICT
-  #endif
-
   /**
    * @class OBDepict depict.h <openbabel/depict/depict.h>
    * @brief 2D depiction of molecules using OBPainter.
    * @since version 2.3
    */
-  class OBDEPICT OBDepict
+  class OB_EXPORT OBDepict
   {
     public:
       enum AtomLabelType {

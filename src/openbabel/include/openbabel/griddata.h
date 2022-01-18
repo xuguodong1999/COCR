@@ -36,7 +36,7 @@ namespace OpenBabel {
 
   // Class to store values for generic (non axis aligned) grids like Gaussian cube files
   // Class introduction in griddata.cpp
-  class OBAPI OBGridData : public OBGenericData
+  class OB_EXPORT OBGridData : public OBGenericData
   {
   public:
     /// Constructor.

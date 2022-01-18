@@ -18,12 +18,6 @@ GNU General Public License for more details.
 #include <fstream>
 #include <string>
 
-// This macro is used in DLL builds. If it has not
-// been set in babelconfig.h, define it as nothing.
-#ifndef OBCOMMON
-  #define OBCOMMON
-#endif
-
 using namespace std;
 namespace OpenBabel
 {

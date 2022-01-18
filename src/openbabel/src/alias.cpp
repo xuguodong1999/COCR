@@ -25,7 +25,7 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/parsmart.h>
 #include <openbabel/mcdlutil.h>
-#include <openbabel/shared_ptr.h>
+#include <memory>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 

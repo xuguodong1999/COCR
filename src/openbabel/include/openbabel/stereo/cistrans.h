@@ -72,7 +72,7 @@ namespace OpenBabel {
  *
  * @since version 2.3
  */
-class OBAPI OBCisTransStereo : public OBTetraPlanarStereo
+class OB_EXPORT OBCisTransStereo : public OBTetraPlanarStereo
 {
   public:
     /**
@@ -96,7 +96,7 @@ class OBAPI OBCisTransStereo : public OBTetraPlanarStereo
      * data members occur in all OBTetraPlanarStereo derived classes.
      */
 #ifndef SWIG
-    struct OBAPI Config
+    struct OB_EXPORT Config
     {
       /**
        * Default constructor. Initializes @p begin and @p end to OBStereo::NoRef
@@ -350,7 +350,7 @@ namespace std {
  * OBCisTransStereo(begin = 0, end = 1, refs = 2 3 4 5, shape = U)
  * @endcode
  */
-OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBCisTransStereo &ct);
+OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBCisTransStereo &ct);
 /**
  * @code
  * OBCisTransStereo::Config cfg;
@@ -365,7 +365,7 @@ OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBCisTransStereo &ct);
  * OBCisTransStereo::Config(begin = 0, end = 1, refs = 2 3 4 5, shape = U)
  * @endcode
  */
-OBAPI ostream& operator<<(ostream &out, const OpenBabel::OBCisTransStereo::Config &cfg);
+OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBCisTransStereo::Config &cfg);
 
 ///@}
 

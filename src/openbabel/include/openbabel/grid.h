@@ -41,7 +41,7 @@ namespace OpenBabel
 
   //! \class OBGrid grid.h <openbabel/grid.h>
   //! \brief A base grid class
- class OBAPI OBGrid: public OBBase
+ class OB_EXPORT OBGrid: public OBBase
   {
   protected:
     double _xmin,_xmax,_ymin,_ymax,_zmin,_zmax; //!< the min/max axes in XYZ axes (i.e., the box)
@@ -98,7 +98,7 @@ namespace OpenBabel
   //! of some function -- typically around a molecule. Typically you will want
   //! to use OBGridData which uses OBFloatGrid to store its data.
   //! \sa OBGridData
- class OBAPI OBFloatGrid: public OBGrid
+ class OB_EXPORT OBFloatGrid: public OBGrid
   {
   protected:
     std::vector<double> _values;   //!< floating point values
@@ -295,7 +295,7 @@ namespace OpenBabel
   //! \class OBProxGrid grid.h <openbabel/grid.h>
   //! \brief A grid for determining the proximity of a given point to atoms in an OBMol
   //! \deprecated May be removed in the future, since docking is not a key feature
- class OBAPI OBProxGrid: public OBGrid
+ class OB_EXPORT OBProxGrid: public OBGrid
   {
   protected:
     int _gridtype;
@@ -337,7 +337,7 @@ namespace OpenBabel
   //! \class OBScoreGrid grid.h <openbabel/grid.h>
   //! \brief A base class for scoring docking interactions between multiple molecules
   //! \deprecated Will disappear in future versions. Use your own code.
-  class OBAPI OBScoreGrid
+  class OB_EXPORT OBScoreGrid
   {
   protected:
     score_t gridtype;

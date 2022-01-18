@@ -46,7 +46,7 @@ namespace OpenBabel
 {
 
   // class introduction in obutil.cpp
-  class OBAPI OBStopwatch
+  class OB_EXPORT OBStopwatch
   {
 #if HAVE_CLOCK_T
     clock_t start; //!< the start of timing
@@ -95,7 +95,7 @@ namespace OpenBabel
 
   //! \class OBSqrtTbl obutil.h <openbabel/obutil.h>
   //! \brief Square Root lookup table - given a distance squared returns distance
-  class OBAPI OBSqrtTbl
+  class OB_EXPORT OBSqrtTbl
   {
     double _max,_incr,*_tbl;
   public:
@@ -152,8 +152,8 @@ namespace OpenBabel
   //***RMS helper methods***/
 #ifndef __KCC
   extern "C" {
-  OBAPI void  rotate_coords(double*,double m[3][3],unsigned);
-  OBAPI double calc_rms(double*,double*,unsigned int);
+  OB_EXPORT void  rotate_coords(double*, double m[3][3], unsigned);
+  OB_EXPORT double calc_rms(double*, double*, unsigned int);
   }
 #else
   OBAPI void  rotate_coords(double*,double m[3][3],unsigned);
@@ -164,45 +164,45 @@ namespace OpenBabel
   //! \name  String conversion utilities
   //@{
   // Documentation in obutil.cpp
-  OBAPI void ToUpper(std::string&);
-  OBAPI void ToUpper(char*);
-  OBAPI void ToLower(std::string&);
-  OBAPI void ToLower(char *);
-  OBAPI void InvertCase(std::string&, int);
-  OBAPI void InvertCase(char *);
+  OB_EXPORT void ToUpper(std::string&);
+  OB_EXPORT void ToUpper(char*);
+  OB_EXPORT void ToLower(std::string&);
+  OB_EXPORT void ToLower(char *);
+  OB_EXPORT void InvertCase(std::string&, int);
+  OB_EXPORT void InvertCase(char *);
   //! "Clean" the supplied atom type
-  OBAPI void CleanAtomType(char*);
+  OB_EXPORT void CleanAtomType(char*);
   //@}
 
   //! Comparison -- returns true if first parameter less than second
   //! \return True if @p a < @p b, False otherwise.
-  OBAPI bool OBCompareInt(const int &a,const int &b);
+  OB_EXPORT bool OBCompareInt(const int &a, const int &b);
   //! Comparison -- returns true if first parameter less than second
   //! \return True if @p a < @p b, False otherwise.
-  OBAPI bool OBCompareUnsigned(const unsigned int &a,const unsigned int &b);
+  OB_EXPORT bool OBCompareUnsigned(const unsigned int &a, const unsigned int &b);
   /*! "Safe" comparison for floats/doubles: returns fabs(a - b) < epsilon
    * This function really doesn't make any sense w.r.t. floating-point
    * representation, so you should never use it. It is provided only for
    * backwards compatibility.
    * \deprecated Use IsApprox() instead
    */
-  OBAPI bool IsNear(const double &, const double &, const double epsilon=2e-6);
+  OB_EXPORT bool IsNear(const double &, const double &, const double epsilon=2e-6);
   /*! "Safe" comparison for floats/doubles: true if a is less than epsilon
    * This function really doesn't make any sense w.r.t. floating-point
    * representation, so you should never use it. It is provided only for
    * backwards compatibility.
    * \deprecated
    */
-  OBAPI bool IsNearZero(const double &, const double epsilon=2e-6);
-  OBAPI bool IsNan(const double &);
+  OB_EXPORT bool IsNearZero(const double &, const double epsilon=2e-6);
+  OB_EXPORT bool IsNan(const double &);
   /**
    * \return true if \a a is much smaller than \a b. More precisely:
    * @code
    return( fabs(a) <= precision * fabs(b) );
    * @endcode
    */
-  OBAPI inline bool IsNegligible(const double & a, const double & b,
-                                 const double precision = 1e-11)
+  OB_EXPORT inline bool IsNegligible(const double & a, const double & b,
+                                     const double precision = 1e-11)
   {
     return( fabs(a) <= precision * fabs(b) );
   }
@@ -223,24 +223,24 @@ namespace OpenBabel
    IsApprox( x, 0.0 )
    * @endcode
    */
-  OBAPI inline bool IsApprox(const double & a, const double & b,
-                             const double precision = 1e-11)
+  OB_EXPORT inline bool IsApprox(const double & a, const double & b,
+                                 const double precision = 1e-11)
   {
     return( fabs(a - b) <= precision * std::min<const double>( fabs(a), fabs(b) ) );
   }
   //! Same as IsApprox(), but only for positive numbers. Faster.
-  OBAPI inline bool IsApprox_pos(const double &a, const double &b,
-                                 const double precision = 1e-11)
+  OB_EXPORT inline bool IsApprox_pos(const double &a, const double &b,
+                                     const double precision = 1e-11)
   {
     return( fabs(a - b) <= precision * std::min<const double>( a, b ) );
   }
   /*! \brief Tests whether its argument can be squared without triggering
     an overflow or underflow.
   */
-  OBAPI bool CanBeSquared(const double &);
+  OB_EXPORT bool CanBeSquared(const double &);
 
-  OBAPI bool SafeOpen(std::ifstream &fs, const char *filename);
-  OBAPI bool SafeOpen(std::ofstream &fs, const char *filename);
+  OB_EXPORT bool SafeOpen(std::ifstream &fs, const char *filename);
+  OB_EXPORT bool SafeOpen(std::ofstream &fs, const char *filename);
 #endif
   // (end part to be skipped by SWIG)
 

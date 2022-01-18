@@ -54,7 +54,7 @@ namespace OpenBabel
       are considered to be zero.
       Streamlined, corrected and documented by kshepherd1@users.sourceforge.net
   */
-  class OBERROR OBBitVec
+  class OB_EXPORT OBBitVec
     {
     public:
       typedef std::vector<uint32_t> word_vector;
@@ -215,26 +215,26 @@ namespace OpenBabel
         { return BitIsSet(bit_offset); }
 
       /// Or operator
-      friend OBERROR OBBitVec operator| (const OBBitVec & bv1, const OBBitVec & bv2);
+      friend OB_EXPORT OBBitVec operator| (const OBBitVec & bv1, const OBBitVec & bv2);
       /// And operator
-      friend OBERROR OBBitVec operator& (const OBBitVec & bv1,const OBBitVec & bv2);
+      friend OB_EXPORT OBBitVec operator& (const OBBitVec & bv1,const OBBitVec & bv2);
       /// Exclusive-or operator
-      friend OBERROR OBBitVec operator^ (const OBBitVec & bv1,const OBBitVec & bv2);
+      friend OB_EXPORT OBBitVec operator^ (const OBBitVec & bv1,const OBBitVec & bv2);
       /// Minus operator
-      friend OBERROR OBBitVec operator- (const OBBitVec & bv1,const OBBitVec & bv2);
+      friend OB_EXPORT OBBitVec operator- (const OBBitVec & bv1,const OBBitVec & bv2);
       /// Equivalency operator
-      friend OBERROR bool operator== (const OBBitVec & bv1,const OBBitVec & bv2);
+      friend OB_EXPORT bool operator== (const OBBitVec & bv1,const OBBitVec & bv2);
       /// Smaller-than operator
-      friend OBERROR bool operator< (const OBBitVec & bv1, const OBBitVec & bv2);
+      friend OB_EXPORT bool operator< (const OBBitVec & bv1, const OBBitVec & bv2);
 
       /// Input from a stream
-      friend OBERROR std::istream& operator>> ( std::istream & is, OBBitVec & bv );
+      friend OB_EXPORT std::istream& operator>> ( std::istream & is, OBBitVec & bv );
       /// Output to a stream
-      friend OBERROR std::ostream& operator<< ( std::ostream & os, const OBBitVec & bv ) ;
+      friend OB_EXPORT std::ostream& operator<< ( std::ostream & os, const OBBitVec & bv ) ;
     };
 
   /// The Tanimoto coefficient, which may be regarded as the proportion of the "on-bits" which are shared.
-  OBERROR double Tanimoto(const OBBitVec & bv1, const OBBitVec & bv2);
+  OB_EXPORT double Tanimoto(const OBBitVec & bv1, const OBBitVec & bv2);
 
   } // end namespace OpenBabel
 

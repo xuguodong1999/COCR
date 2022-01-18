@@ -37,26 +37,17 @@ GNU General Public License for more details.
 #include <openbabel/format.h>
 #include <openbabel/lineend.h>
 
-// These macros are used in DLL builds. If they have not
-// been set in babelconfig.h, define them as nothing.
-#ifndef OBCONV
-	#define OBCONV
-#endif
-#ifndef OBDLL
-	#define OBDLL
-#endif
-
 namespace OpenBabel {
 
   // Needed to preserve deprecated API
   typedef OBPlugin::PluginIterator Formatpos;
 
-  OBERROR extern  OBMessageHandler obErrorLog;
+  OB_EXPORT extern  OBMessageHandler obErrorLog;
 
   //*************************************************
   /// @brief Class to convert from one format to another.
   // Class introduction in obconversion.cpp
-  class OBCONV OBConversion
+  class OB_EXPORT OBConversion
     {
       /// @nosubgrouping
     public:

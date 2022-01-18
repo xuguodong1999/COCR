@@ -72,7 +72,7 @@ namespace OpenBabel {
    * @sa OBStereoBase OBStereoFacade
    * @since version 2.3
    */
-  struct OBAPI OBStereo
+  struct OB_EXPORT OBStereo
   {
     /**
      * The various types of stereochemistry
@@ -318,7 +318,7 @@ namespace OpenBabel {
    * @sa OBStereo OBStereoFacade
    * @since version 2.3
    */
-  class OBAPI OBStereoBase : public OBGenericData
+  class OB_EXPORT OBStereoBase : public OBGenericData
   {
     public:
       /**
@@ -381,7 +381,7 @@ namespace OpenBabel {
    * @sa OBStereo OBStereoBase
    * @since version 2.3
    */
-  class OBAPI OBStereoFacade
+  class OB_EXPORT OBStereoFacade
   {
     public:
       /**
@@ -503,7 +503,7 @@ namespace OpenBabel {
    * @sa StereoFrom3D StereoFrom2D StereoFrom0D
    * @since version 2.3
    */
-  OBAPI void PerceiveStereo(OBMol *mol, bool force = false);
+  OB_EXPORT void PerceiveStereo(OBMol *mol, bool force = false);
   /**
    * Convert the 2D depiction of molecule @p mol to OBStereo objects.
    * This function makes use of the lower level functions
@@ -535,8 +535,8 @@ namespace OpenBabel {
    * @sa StereoFrom3D StereoFrom0D PerceiveStereo
    * @since version 2.3
    */
-  OBAPI void StereoFrom2D(OBMol *mol,
-    std::map<OBBond*, enum OBStereo::BondDirection> *updown = nullptr, bool force = false);
+  OB_EXPORT void StereoFrom2D(OBMol *mol,
+                              std::map<OBBond*, enum OBStereo::BondDirection> *updown = nullptr, bool force = false);
   /**
    * Convert the 3D coordinates of molecule @p mol to OBStereo objects. This
    * function makes use of the lower level functions TetrahedralFrom3D(),
@@ -553,7 +553,7 @@ namespace OpenBabel {
    * @sa StereoFrom3D StereoFrom0D PerceiveStereo
    * @since version 2.3
    */
-  OBAPI void StereoFrom3D(OBMol *mol, bool force = false);
+  OB_EXPORT void StereoFrom3D(OBMol *mol, bool force = false);
   /**
    * Add missing OBStereo objects. Unlike StereoFrom3D() and StereoFrom2D(), this
    * method only adds objects for previously unidentified objects since we
@@ -569,7 +569,7 @@ namespace OpenBabel {
    * @sa StereoFrom3D StereoFrom2D PerceiveStereo
    * @since version 2.3
    */
-  OBAPI void StereoFrom0D(OBMol *mol);
+  OB_EXPORT void StereoFrom0D(OBMol *mol);
   ///@}
 
   ///@name Low level functions
@@ -612,8 +612,8 @@ namespace OpenBabel {
    * @sa StereoFrom3D FindStereogenicUnits
    * @since version 2.3
    */
-  OBAPI std::vector<OBTetrahedralStereo*> TetrahedralFrom3D(OBMol *mol,
-      const OBStereoUnitSet &stereoUnits, bool addToMol = true);
+  OB_EXPORT std::vector<OBTetrahedralStereo*> TetrahedralFrom3D(OBMol *mol,
+                                                                 const OBStereoUnitSet &stereoUnits, bool addToMol = true);
   /**
    * Get a vector with all OBTetrahedralStereo objects for the molecule. This
    * function is used by StereoFrom2D() with the @p addToMol parameter is set
@@ -658,8 +658,8 @@ namespace OpenBabel {
    * @sa StereoFrom2D FindStereogenicUnits
    * @since version 2.3
    */
-  OBAPI std::vector<OBTetrahedralStereo*> TetrahedralFrom2D(OBMol *mol,
-      const OBStereoUnitSet &stereoUnits, bool addToMol = true);
+  OB_EXPORT std::vector<OBTetrahedralStereo*> TetrahedralFrom2D(OBMol *mol,
+                                                                 const OBStereoUnitSet &stereoUnits, bool addToMol = true);
   /**
    * Get a vector with all OBTetrahedralStereo objects for the molecule. This
    * function is used by StereoFrom0D() with the @p addToMol parameter is set
@@ -679,8 +679,8 @@ namespace OpenBabel {
    * @sa StereoFrom0D FindStereogenicUnits
    * @since version 2.3
    */
-  OBAPI std::vector<OBTetrahedralStereo*> TetrahedralFrom0D(OBMol *mol,
-      const OBStereoUnitSet &stereoUnits, bool addToMol = true);
+  OB_EXPORT std::vector<OBTetrahedralStereo*> TetrahedralFrom0D(OBMol *mol,
+                                                                 const OBStereoUnitSet &stereoUnits, bool addToMol = true);
 
   /**
    * Get a vector with all OBCisTransStereo objects for the molecule. This
@@ -718,8 +718,8 @@ namespace OpenBabel {
    * @sa StereoFrom3D FindStereogenicUnits
    * @since version 2.3
    */
-  OBAPI std::vector<OBCisTransStereo*> CisTransFrom3D(OBMol *mol,
-      const OBStereoUnitSet &stereoUnits, bool addToMol = true);
+  OB_EXPORT std::vector<OBCisTransStereo*> CisTransFrom3D(OBMol *mol,
+                                                           const OBStereoUnitSet &stereoUnits, bool addToMol = true);
   /**
    * Get a vector with all OBCisTransStereo objects for the molecule. This
    * function is used by StereoFrom2D() with the @p addToMol parameter is set
@@ -750,9 +750,9 @@ namespace OpenBabel {
    * @sa StereoFrom2D FindStereogenicUnits
    * @since version 2.3
    */
-  OBAPI std::vector<OBCisTransStereo*> CisTransFrom2D(OBMol *mol,
-      const OBStereoUnitSet &stereoUnits,
-      const std::map<OBBond*, enum OBStereo::BondDirection> *updown = nullptr, bool addToMol = true);
+  OB_EXPORT std::vector<OBCisTransStereo*> CisTransFrom2D(OBMol *mol,
+                                                           const OBStereoUnitSet &stereoUnits,
+                                                           const std::map<OBBond*, enum OBStereo::BondDirection> *updown = nullptr, bool addToMol = true);
   /**
    * Convert a molecule's OBTetrahedralStereo objects to a series of hash or
    * wedge bonds. Note that the molecule itself is not modified; the result
@@ -779,9 +779,9 @@ namespace OpenBabel {
    * @return True or False depending on whether the conversion was successful
    * @since version 2.3
    */
-  OBAPI bool TetStereoToWedgeHash(OBMol &mol,
-      std::map<OBBond*, enum OBStereo::BondDirection> &updown,
-      std::map<OBBond*, OBStereo::Ref> &from);
+  OB_EXPORT bool TetStereoToWedgeHash(OBMol & mol,
+                                       std::map<OBBond*, enum OBStereo::BondDirection> &updown,
+                                       std::map<OBBond*, OBStereo::Ref> &from);
   /**
    * Return a set of double bonds corresponding to the OBCisTransStereo objects
    * for which the stereochemistry is undefined.
@@ -793,7 +793,7 @@ namespace OpenBabel {
    * @return A set of bonds with unspecified cis/trans stereochemistry
    * @since version 2.3
    */
-  OBAPI std::set<OBBond*> GetUnspecifiedCisTrans(OBMol& mol);
+  OB_EXPORT std::set<OBBond*> GetUnspecifiedCisTrans(OBMol& mol);
   /**
    * Convert any reference to @p atomId in a stereo object to an OBStereo::ImplicitRef.
    * This function is called from OBMol::DeleteHydrogens()
@@ -805,7 +805,7 @@ namespace OpenBabel {
    * @param atomId The Id of the atom to be converted to an OBStereo::ImplicitRef
    * @since version 2.3
    */
-  OBAPI void StereoRefToImplicit(OBMol& mol, OBStereo::Ref atomId);
+  OB_EXPORT void StereoRefToImplicit(OBMol & mol, OBStereo::Ref atomId);
   /**
    * Convert any reference to an OBStereo::ImplicitRef attached to @p centerId
    * in a stereo object to an explicit reference to @p newId.
@@ -819,7 +819,7 @@ namespace OpenBabel {
    * @param newId The Id of the atom which was previously an OBStereo::ImplicitRef
    * @since version 2.4
    */
-  OBAPI void ImplicitRefToStereo(OBMol& mol, OBStereo::Ref centerId, OBStereo::Ref newId);
+  OB_EXPORT void ImplicitRefToStereo(OBMol & mol, OBStereo::Ref centerId, OBStereo::Ref newId);
   /**
    * Get a vector with all OBCisTransStereo objects for the molecule. This
    * function is used by StereoFrom0D() with the @p addToMol parameter is set
@@ -839,9 +839,9 @@ namespace OpenBabel {
    * @sa StereoFrom0D FindStereogenicUnits
    * @since version 2.3
    */
-  OBAPI std::vector<OBCisTransStereo*> CisTransFrom0D(OBMol *mol,
-      const OBStereoUnitSet &stereoUnits,
-      bool addToMol = true);
+  OB_EXPORT std::vector<OBCisTransStereo*> CisTransFrom0D(OBMol *mol,
+                                                           const OBStereoUnitSet &stereoUnits,
+                                                           bool addToMol = true);
   ///@}
 
 
@@ -927,8 +927,8 @@ namespace OpenBabel {
      Comput. Sci. 1993, 33, 812-825
      @endverbatim
    */
-  OBAPI OBStereoUnitSet FindStereogenicUnits(OBMol *mol,
-      const std::vector<unsigned int> &symClasses);
+  OB_EXPORT OBStereoUnitSet FindStereogenicUnits(OBMol *mol,
+                                                  const std::vector<unsigned int> &symClasses);
   /**
    * @brief Find the stereogenic units in a molecule making use of the automorphisms.
    *
@@ -1005,9 +1005,9 @@ namespace OpenBabel {
      Tetrahedron: Asymmetry, 1994, Vol. 5, No. 5, 835-861
      @endverbatim
    */
-  OBAPI OBStereoUnitSet FindStereogenicUnits(OBMol *mol,
-      const std::vector<unsigned int> &symClasses,
-      const Automorphisms &automorphisms);
+  OB_EXPORT OBStereoUnitSet FindStereogenicUnits(OBMol *mol,
+                                                  const std::vector<unsigned int> &symClasses,
+                                                  const Automorphisms &automorphisms);
   ///@}
 
   /**

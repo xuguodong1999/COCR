@@ -113,7 +113,6 @@ bool OpGen3D::Do(OBBase* pOb, const char* OptionText, OpMap* pOptions, OBConvers
       useDistGeom = true;
     }
 
-#ifdef HAVE_EIGEN
     OBDistanceGeometry dg;
     if (useDistGeom) {
       // use the bond lengths and angles if we ran the builder
@@ -121,7 +120,6 @@ bool OpGen3D::Do(OBBase* pOb, const char* OptionText, OpMap* pOptions, OBConvers
         continue;
       speed = 3;
     }
-#endif
 
     // rule-based builder worked
     molCopy.SetDimension(3);

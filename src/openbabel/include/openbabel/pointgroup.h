@@ -35,7 +35,7 @@ namespace OpenBabel
       to yield symmetry identifiers. In the future, this should provide
       optimized symmetry-derived coordinates as well.
   */
-  class OBAPI OBPointGroup
+  class OB_EXPORT OBPointGroup
     {
     public:
       OBPointGroup();

@@ -37,7 +37,7 @@ namespace OpenBabel
   class vector3;
 
   // class introduction in ring.cpp
-  class OBAPI OBRing
+  class OB_EXPORT OBRing
   {
     OBMol *_parent; //!< parent molecule for this ring
   public:
@@ -109,13 +109,13 @@ namespace OpenBabel
 
   //! Comparison function for rings, used by OBRingSearch::SortRings()
   //! \return true if a.size() > b.size()
-  OBAPI bool CompareRingSize(const OBRing *,const OBRing *);
+  OB_EXPORT bool CompareRingSize(const OBRing *, const OBRing *);
 
 
   /** \class OBRingSearch ring.h <openbabel/ring.h>
       \brief Internal class to facilitate OBMol::FindSSSR()
   **/
-  class OBAPI OBRingSearch
+  class OB_EXPORT OBRingSearch
   {
     std::vector<OBBond*> _bonds; //!< the internal list of closure bonds (deprecated)
     std::vector<OBRing*> _rlist; //!< the internal list of rings
@@ -162,7 +162,7 @@ namespace OpenBabel
       \brief Internal class for OBRing search algorithms to create a search tree
       of OBAtom objects
   **/
-  class OBAPI OBRTree
+  class OB_EXPORT OBRTree
   {
     OBAtom  *_atom; //!< Atom represented by this node in the tree
     OBRTree *_prv;  //!< Previous (parent) entry in an OBRing tree

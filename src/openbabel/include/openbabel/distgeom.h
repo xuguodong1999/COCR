@@ -17,19 +17,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#ifndef OB_DISTGEOM_H
-#define OB_DISTGEOM_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 
 #include <iostream>
-
-#ifndef OBAPI
-  #define OBAPI
-#endif
-
-#ifdef HAVE_EIGEN
 
 #include <Eigen/Core>
 #include <LBFGS.h>
@@ -62,7 +55,7 @@ namespace OpenBabel {
     }
   };
 
-  class OBAPI OBDistanceGeometry {
+  class OB_EXPORT OBDistanceGeometry {
     friend class DistgeomFunc;
   public:
     OBDistanceGeometry();
@@ -171,9 +164,6 @@ namespace OpenBabel {
   };
 }
 
-#endif
-
-#endif
 
 //! \file distgeom.h
 //! \brief Distance Geometry generation and sampling

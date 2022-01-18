@@ -32,7 +32,7 @@ namespace OpenBabel
       \since version 2.2
       \sa transform3d
   */
-  class OBAPI SpaceGroup
+  class OB_EXPORT SpaceGroup
     {
       public:
         SpaceGroup();

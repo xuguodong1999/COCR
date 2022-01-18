@@ -16,15 +16,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#ifndef __EQEQ__H_
-#define __EQEQ__H_
-
 #include <openbabel/chargemodel.h>
 #include <openbabel/mol.h>
 
 #include <math.h>
 
-#ifdef HAVE_EIGEN3
 
 #include <Eigen/LU>
 #include <Eigen/SVD>
@@ -64,5 +60,3 @@ private:
 };
 
 }; //namespace OpenBabel
-#endif //HAVE_EIGEN3
-#endif //__EQEQ_H__

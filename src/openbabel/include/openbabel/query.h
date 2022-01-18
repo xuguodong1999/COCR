@@ -51,7 +51,7 @@ namespace OpenBabel {
    * @sa OBQuery OBQueryBond OBIsomorphismMapper
    * @since version 2.3
    */
-  class OBAPI OBQueryAtom
+  class OB_EXPORT OBQueryAtom
   {
     public:
       friend class OBQuery;
@@ -133,7 +133,7 @@ namespace OpenBabel {
    * @sa OBQuery OBQueryAtom OBIsomorphismMapper
    * @since version 2.3
    */
-  class OBAPI OBQueryBond
+  class OB_EXPORT OBQueryBond
   {
     public:
       friend class OBQuery;
@@ -194,7 +194,7 @@ namespace OpenBabel {
    * See @ref substructure for more information.
    * @since version 2.3
    */
-  class OBAPI OBQuery
+  class OB_EXPORT OBQuery
   {
     public:
       ~OBQuery();
@@ -265,7 +265,7 @@ namespace OpenBabel {
    * @return A pointer to an OBQuery object for the smiles string. This pointer should be deleted.
    * @since version 2.3
    */
-  OBAPI OBQuery* CompileMoleculeQuery(OBMol *mol, const OBBitVec &mask = OBBitVec());
+  OB_EXPORT OBQuery* CompileMoleculeQuery(OBMol *mol, const OBBitVec &mask = OBBitVec());
 
   /**
    * Create an OBQuery object from a smiles string. 
@@ -274,7 +274,7 @@ namespace OpenBabel {
    * @return A pointer to an OBQuery object for the smiles string. This pointer should be deleted.
    * @since version 2.3
    */
-  OBAPI OBQuery* CompileSmilesQuery(const std::string &smiles, const OBBitVec &mask = OBBitVec());
+  OB_EXPORT OBQuery* CompileSmilesQuery(const std::string &smiles, const OBBitVec &mask = OBBitVec());
 
   ///@}
 }

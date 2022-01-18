@@ -299,7 +299,7 @@ Spectrophores&tm; are recommended.
 
 @since version 2.3
 */
-   class OBAPI OBSpectrophore
+   class OB_EXPORT OBSpectrophore
    {
       public:
 
