@@ -1,19 +1,17 @@
-#define BOOST_TEST_MODULE Test_Coordgen
-
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 #include <unordered_set>
 
-#include "../CoordgenFragmenter.h"
-#include "../sketcherMinimizer.h"
-#include "../sketcherMinimizerMaths.h"
-#include "../sketcherMinimizerStretchInteraction.h"
-#include "../sketcherMinimizerBendInteraction.h"
-#include "../sketcherMaeReading.h"
+#include <coordgenlibs/CoordgenFragmenter.h>
+#include <coordgenlibs/sketcherMinimizer.h>
+#include <coordgenlibs/sketcherMinimizerMaths.h>
+#include <coordgenlibs/sketcherMinimizerStretchInteraction.h>
+#include <coordgenlibs/sketcherMinimizerBendInteraction.h>
+#include <coordgenlibs/sketcherMaeReading.h>
 #include "coordgenBasicSMILES.h"
 
-#include "maeparser/MaeConstants.hpp"
-#include "maeparser/Reader.hpp"
+#include <maeparser/MaeConstants.hpp>
+#include <maeparser/Reader.hpp>
 
 using std::unordered_set;
 using namespace schrodinger;
@@ -141,7 +139,7 @@ BOOST_AUTO_TEST_CASE(TemplateTest)
     // Do the structures in the templates file get the same coordinates that
     // were supplied in the templates file?
 
-    const boost::filesystem::path source_dir(SOURCE_DIR);
+    const boost::filesystem::path source_dir(TEST_SAMPLES_PATH);
     const std::string templates_file = (source_dir / "templates.mae").string();
 
     // Known issues. See issue #52

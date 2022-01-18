@@ -1,9 +1,7 @@
-#define BOOST_TEST_MODULE Test_smilesparser
-
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "../sketcherMinimizer.h"
+#include <coordgenlibs/sketcherMinimizer.h>
 #include "coordgenBasicSMILES.h"
 
 using namespace schrodinger;

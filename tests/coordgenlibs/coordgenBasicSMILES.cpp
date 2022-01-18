@@ -1,10 +1,4 @@
-/*
- * A very, very basic SMILES-like parser. No aromaticity,
- * or zero-order bonds. No chirality/stereochemistry
- *
- * Do not use this as a basis for real SMILES parsers. It just lets
- * us sidestep using a full chemistry toolkit when writing tests.
- */
+#include "coordgenBasicSMILES.h"
 
 #include <algorithm>
 #include <iostream>
@@ -13,7 +7,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../sketcherMinimizerMolecule.h"
+#include <coordgenlibs/sketcherMinimizerMolecule.h>
+#include <coordgenlibs/sketcherMinimizerBond.h>
+#include <coordgenlibs/sketcherMinimizerAtom.h>
 
 namespace schrodinger
 {

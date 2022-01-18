@@ -1,3 +1,3 @@
-#define BOOST_TEST_MODULE mae_reader_test
+#define BOOST_TEST_MODULE MaeparserTest
 
 #include <boost/test/unit_test.hpp>
