@@ -97,8 +97,8 @@ namespace OpenBabel
 
   void OBBuilder::LoadFragments()  {
     // open data/fragments.txt
-    ifstream ifs;
-    if (OpenDatafile(ifs, "rigid-fragments-index.txt").length() == 0) {
+    istringstream ifs;
+    if (!OpenDatafile2(ifs,  "rigid-fragments-index.txt")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open ring-fragments-index.txt", obError);
       return;
     }
@@ -114,7 +114,7 @@ namespace OpenBabel
       _rigid_fragments_index[smiles] = index;
     }
 
-    if (OpenDatafile(ifs, "ring-fragments.txt").length() == 0) {
+    if (!OpenDatafile2(ifs,  "ring-fragments.txt")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open ring-fragments.txt", obError);
       return;
     }
@@ -171,8 +171,8 @@ namespace OpenBabel
       return coords;
     }
 
-    ifstream ifs;
-    if (OpenDatafile(ifs, "rigid-fragments.txt").length() == 0) {
+    istringstream ifs;
+    if (!OpenDatafile2(ifs, "rigid-fragments.txt")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open rigid-fragments.txt", obError);
       return coords;
     }

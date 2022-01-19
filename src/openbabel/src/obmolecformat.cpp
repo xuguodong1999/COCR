@@ -18,9 +18,7 @@ GNU General Public License for more details.
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
-#ifdef HAVE_SHARED_POINTER
-  #include <openbabel/reaction.h>
-#endif
+#include <openbabel/reaction.h>
 
 #include <algorithm>
 #include <iterator> // Required for MSVC2015 use of std::back_inserter
@@ -175,12 +173,10 @@ namespace OpenBabel
           ret = pFormat->WriteMolecule(pmol,pConv);
     }
 
-#ifdef HAVE_SHARED_POINTER
     //If sent a OBReaction* (rather than a OBMol*) output the consituent molecules
     OBReaction* pReact = dynamic_cast<OBReaction*> (pOb);
     if(pReact)
       ret = OutputMolsFromReaction(pReact, pConv, pFormat);
-#endif
     delete pOb;
     return ret;
   }
@@ -420,14 +416,13 @@ namespace OpenBabel
   }
 
   ///////////////////////////////////////////////////////////////////
-#ifdef HAVE_SHARED_POINTER
   bool OBMoleculeFormat::OutputMolsFromReaction
     (OBReaction* pReact, OBConversion* pConv, OBFormat* pFormat)
   {
     //Output all the constituent molecules of the reaction
 
     //Collect the molecules first, just for convenience
-    vector<obsharedptr<OBMol> > mols;
+    vector<std::shared_ptr<OBMol> > mols;
     for(int i=0;i<pReact->NumReactants();i++)
       mols.push_back(pReact->GetReactant(i));
     for(int i=0;i<pReact->NumProducts();i++)
@@ -461,7 +456,6 @@ namespace OpenBabel
     }
     return ok;
   }
-#endif
   //////////////////////////////////////////////////////////////////
   /** Attempts to read the index file datafilename.obindx successively
       from the following directories:
@@ -501,14 +495,12 @@ namespace OpenBabel
 
     NameIndexType::iterator itr;
 
-    ifstream indexstream;
-    OpenDatafile(indexstream, datafilename + ".obindx");
-    if(!indexstream)
+    istringstream indexstream;
+    if(!OpenDatafile2(indexstream, (datafilename + ".obindx").c_str()))
       {
         //Need to prepare the index
-        ifstream datastream;
-        string datafilepath = OpenDatafile(datastream, datafilename);
-        if(!datastream)
+        istringstream datastream;
+        if(!OpenDatafile2(datastream, datafilename.c_str()))
           {
             obErrorLog.ThrowError(__FUNCTION__,
                                   datafilename + " was not found or could not be opened",  obError);
@@ -528,9 +520,9 @@ namespace OpenBabel
             pos = datastream.tellg();
           }
         obErrorLog.ThrowError(__FUNCTION__,
-                              "Prepared an index for " + datafilepath, obAuditMsg);
+                              "Prepared an index for " + datafilename, obAuditMsg);
         //Save index to file
-        ofstream dofs((datafilepath + ".obindx").c_str(), ios_base::out|ios_base::binary);
+        ofstream dofs((datafilename + ".obindx").c_str(), ios_base::out|ios_base::binary);
         if(!dofs) return false;
 
         strncpy(header.filename,datafilename.c_str(), sizeof(header.filename));

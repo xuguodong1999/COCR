@@ -54,11 +54,8 @@ namespace OpenBabel
   //!Read and discard all characters from input stream up to, and including, a string
   OB_EXPORT std::istream& ignore(std::istream& ifs, const std::string& txt);
 
-  //! Opens a datafile in a directory where OpenBabel expects to find it.
-  // full documentation in tokenst.cpp
-  OB_EXPORT std::string OpenDatafile(std::ifstream& fs,
-                                 const std::string& filename,
-                                 const std::string& envvar = "BABEL_DATADIR");
+  //! Opens a datafile from qrc where OpenBabel expects to find it.
+  OB_EXPORT bool OpenDatafile2(std::istringstream& stream, const char* filename);
 
   // Used by other code for reading files
 #ifdef WIN32

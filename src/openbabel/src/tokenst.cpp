@@ -25,6 +25,10 @@ GNU General Public License for more details.
 #include <cstring>
 #include <openbabel/tokenst.h>
 
+#include <QFile>
+#include <QString>
+#include <QIODevice>
+
 using namespace std;
 
 namespace OpenBabel
@@ -169,72 +173,33 @@ namespace OpenBabel
   }
 
 
-    /** Opens the filestream with the first file called @p filename
-     found by looking
-     successively in the following directories:
-     - the current directory
-     - in a subdirectory (of the directory below) with the version of
-     OpenBabel as its name
-     - the parent directory specified by the environment variable
-     named @p envvar
-     or "BABEL_DATADIR" if @p envvar is not specified, or the compiled-in
-     macro BABEL_DATADIR if the environment variable is not set
+    /** Opens the filestream with the first file called @p filename from qrc file system
+     * if no file found in :/openbabel/data/, retry current dir again
 
-     \param ifs        Stream to load
+     \param stream     Stream to load
      \param filename   Name of the data file to load
-     \param envvar     Name of the environment variable
 
-     \return the name of the file that was opened. This includes the path
-     unless it is in current directory
-
-  **/
-  std::string OpenDatafile(std::ifstream& ifs, const std::string& filename,
-                           const std::string& envvar)
-  {
-    ios_base::openmode imode = ios_base::in;
-    #ifdef ALL_READS_BINARY //Makes unix files compatible with VC++6
-      imode = ios_base::in|ios_base::binary;
-    #endif
-
-    // check the current directory
-    ifs.close();
-    ifs.clear();
-    ifs.open(filename.c_str(),imode);
-    if(ifs)
-      return filename;
-
-    string file;
-    const char* datadir = getenv(envvar.c_str());
-    if(!datadir)
-      datadir = BABEL_DATADIR;
-
-    // check the subdirectory for this version number
-    file = datadir;
-    file += FILE_SEP_CHAR;
-    file += BABEL_VERSION;
-    file += FILE_SEP_CHAR + filename;
-
-    ifs.clear();
-    ifs.open(file.c_str(),imode);
-    if(ifs)
-      return file;
-
-    // couldn't find it with the version built in, so try the parent
-    file = datadir;
-    file += FILE_SEP_CHAR;
-    file += filename;
-
-    ifs.clear();
-    ifs.open(file.c_str(),imode);
-
-    if (ifs)
-      return file;
-
-    ifs.clear();
-    ifs.close();
-    return(""); // error
+     \return whether file contents all loaded successfully
+     **/
+  bool OpenDatafile2(std::istringstream& stream, const char* filename) {
+      QString filePath = QString(":/openbabel/data/").append(filename);
+      QFile file(filePath);
+      if(!file.open(QIODevice::ReadOnly)) {
+          file.setFileName(filename);
+          if(!file.open(QIODevice::ReadOnly)) {
+              return false;
+          }
+      }
+      try {
+          stream.clear();
+          stream.str(file.readAll().toStdString());
+      } catch (...) {
+          file.close();
+          return false;
+      }
+      file.close();
+      return true;
   }
-
 
 } // end namespace OpenBabel
 

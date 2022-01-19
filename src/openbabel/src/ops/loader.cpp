@@ -55,12 +55,10 @@ public:
   OBDefine(const char* ID, const char* filename)
     : OBLoader(ID, false), _filename(filename)
   {
-    ifstream ifs;
-    bool filefound = !OpenDatafile(ifs, filename).empty();
-    if(!ifs)
+    istringstream ifs;
+    if(!OpenDatafile2(ifs, filename))
     {
-      if(filefound)
-        obErrorLog.ThrowError(__FUNCTION__,string(filename) + " found but could not be opened", obError);
+      obErrorLog.ThrowError(__FUNCTION__,string(filename) + " found but could not be opened", obError);
       return;
     }
 

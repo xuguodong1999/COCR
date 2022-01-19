@@ -41,9 +41,7 @@ namespace OpenBabel {
 
   class OBMol;
   class OBDescriptor;
-#ifdef HAVE_SHARED_POINTER
   class OBReaction;
-#endif
 
 /** \class OBMoleculeFormat obmolecformat.h <openbabel/obmolecformat.h>
     \brief An OBFormat convenience subclass for conversion to/from OBMol data
@@ -129,21 +127,11 @@ public:
   static OBMol* MakeCombinedMolecule(OBMol* pFirst, OBMol* pSecond);
   //@}
 
-#ifdef HAVE_SHARED_POINTER
   //!When sent an OBReaction object, output all the constituent molecules
   static bool OutputMolsFromReaction
     (OBReaction* pReact, OBConversion* pConv, OBFormat* pFormat);
-#endif
 
-#ifdef _MSC_VER
-  typedef std::tr1::unordered_map<std::string, unsigned> NameIndexType;
-#elif defined(_LIBCPP_VERSION)
   typedef std::unordered_map<std::string, unsigned> NameIndexType;
-#elif (__GNUC__ == 4 && __GNUC_MINOR__ >= 1 && !defined(__APPLE_CC__)) || defined (USE_BOOST)
-  typedef std::tr1::unordered_map<std::string, unsigned> NameIndexType;
-#else
-  typedef std::map<std::string, unsigned> NameIndexType;
-#endif
 
   // documentation in obmolecformat.cpp
   static bool   ReadNameIndex(NameIndexType& index, const std::string& datafilename,

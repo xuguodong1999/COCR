@@ -35,13 +35,7 @@ GNU General Public License for more details.
 #endif
 
 using namespace std;
-#ifndef NO_UNORDERED_MAP
-  #ifdef _LIBCPP_VERSION
-    using std::unordered_map;
-  #else
-    using std::tr1::unordered_map;
-  #endif
-#endif
+
 namespace OpenBabel
 {
 

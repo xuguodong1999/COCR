@@ -858,8 +858,8 @@ namespace OpenBabel
     OBFFParameter parameter;
 
     // open data/ghemical.prm
-    ifstream ifs;
-    if (OpenDatafile(ifs, "ghemical.prm").length() == 0) {
+    istringstream ifs;
+    if (!OpenDatafile2(ifs,"ghemical.prm")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open ghemical.prm", obError);
       return false;
     }
@@ -942,9 +942,6 @@ namespace OpenBabel
       }
     }
 
-    if (ifs)
-      ifs.close();
-
     // return the locale to the original one
     obLocale.RestoreLocale();
 
@@ -964,8 +961,8 @@ namespace OpenBabel
     _mol.SetAtomTypesPerceived();
 
     // open data/ghemical.prm
-    ifstream ifs;
-    if (OpenDatafile(ifs, "ghemical.prm").length() == 0) {
+    istringstream ifs;
+    if (!OpenDatafile2(ifs,"ghemical.prm")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open ghemical.prm", obError);
       return false;
     }
@@ -1025,9 +1022,6 @@ namespace OpenBabel
     //    cout << "ATOMTYPE " << atoi(a->GetType()) << endl;
     //  else
     //    cout << "ATOMTYPE " << a->GetType() << endl;
-
-    if (ifs)
-      ifs.close();
 
     // return the locale to the original one
     obLocale.RestoreLocale();

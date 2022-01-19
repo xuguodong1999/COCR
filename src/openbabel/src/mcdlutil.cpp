@@ -5098,22 +5098,16 @@ namespace OpenBabel {
   std::vector<TEditedMolecule *> TemplateRedraw::queryData;
 
   bool TemplateRedraw::loadTemplates() {
-    std::ifstream ifs;
-    string filename("templates.sdf");//("e:\\templates.sdf");
+    std::istringstream ifs;
+    std::string filename("templates.sdf");
     TEditedMolecule sm;
     TEditedMolecule * em;
     int i,na1,na2;
     bool test;
     bool result=false;
 
-    try {
-      OpenDatafile(ifs, filename);
-    } catch (exception &ex) {
-      return result;
-    };
-
     //Read into a vector of OBMol
-    if (ifs) {
+    if (OpenDatafile2(ifs, filename.c_str())) {
       OBConversion conv(&ifs);
       conv.SetInFormat("sdf");
 

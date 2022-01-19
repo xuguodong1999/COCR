@@ -526,8 +526,8 @@ namespace OpenBabel
     OBFFParameter parameter;
 
     // open data/mm2.prm
-    ifstream ifs;
-    if (OpenDatafile(ifs, "mm2.prm").length() == 0) {
+    istringstream ifs;
+    if (!OpenDatafile2(ifs, "mm2.prm")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open mm2.prm", obError);
       return false;
     }
@@ -670,9 +670,6 @@ namespace OpenBabel
         continue;
       }
     }
-
-    if (ifs)
-      ifs.close();
 
     // return the locale to the original one
     obLocale.RestoreLocale();

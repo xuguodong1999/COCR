@@ -115,8 +115,8 @@ QTPIECharges theQTPIECharges("qtpie"); //Global instance
     char buffer[BUFF_SIZE];
 
     // open data/qeq.txt
-    ifstream ifs;
-    if (OpenDatafile(ifs, "qeq.txt").length() == 0) {
+    istringstream ifs;
+    if (!OpenDatafile2(ifs, "qeq.txt")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open qeq.txt", obError);
       return;
     }

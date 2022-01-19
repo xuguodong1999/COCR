@@ -40,9 +40,7 @@ bool OpTransform::Initialize()
 {
   _dataLoaded=true;
   _transforms.clear();
-  ifstream ifs;
-  if(ifs.is_open())
-    ifs.close();
+  istringstream ifs;
   char charBuffer[BUFF_SIZE];
 
   // Set the locale for number parsing to avoid locale issues: PR#1785463
@@ -55,8 +53,8 @@ bool OpTransform::Initialize()
       ParseLine(_filename);
       return true;
     }
-    OpenDatafile(ifs, _filename);
-    if(!ifs)
+
+    if (!OpenDatafile2(ifs,_filename))
     {
       obErrorLog.ThrowError(__FUNCTION__," Could not open " + string(_filename), obError);
       return false;

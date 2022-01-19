@@ -810,8 +810,8 @@ OBText* CDXReader::WriteTree(const string& filename, unsigned wtoptions)
 ///////////////////////////////////////////////////////////////////////
 bool CDXReader::ParseEnums(map<CDXTag, string>& enummap, const string& filename)
 {
-  ifstream ihs;
-  if(OpenDatafile(ihs, filename).empty())
+  istringstream ihs;
+  if(!OpenDatafile2(ihs, filename.c_str()))
   {
     obErrorLog.ThrowError(__FUNCTION__, 
       filename + " needs to be in the *data* directory when displaying the tree.\n" , obError);

@@ -24,7 +24,6 @@ GNU General Public License for more details.
 #include "openbabel/reaction.h"
 
 using namespace std;
-//using std::tr1::shared_ptr;
 
 namespace OpenBabel
 {

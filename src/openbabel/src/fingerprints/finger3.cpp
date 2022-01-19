@@ -159,10 +159,9 @@ public:
   bool ReadPatternFile(string& ver)
   {
     //Reads three types of file. See below
-    ifstream ifs;
-	  stringstream errorMsg;
-
-    if (OpenDatafile(ifs, _patternsfile).length() == 0)
+    stringstream errorMsg;
+    istringstream ifs;
+    if (!OpenDatafile2(ifs, _patternsfile.c_str()))
     {
       errorMsg << "Cannot open " << _patternsfile << endl;
       obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
@@ -238,8 +237,6 @@ public:
       }
     }while(getline(ifs,line));
 
-    if (ifs)
-      ifs.close();
     return true;
   }
 

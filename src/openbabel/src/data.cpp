@@ -666,7 +666,7 @@ namespace OpenBabel
       return;
     _init = true;
 
-    ifstream ifs;
+    istringstream ifs;
     char charBuffer[BUFF_SIZE];
 
     // Set the locale for number parsing to avoid locale issues: PR#1785463
@@ -674,13 +674,8 @@ namespace OpenBabel
 
     // Check return value from OpenDatafile
     // Suggestion from Zhiguo Liu
-    string fn_open = OpenDatafile(ifs, _filename, _envvar);
-    
-    // Check _subdir directory
-    if (fn_open == "")
-      string fn_open = OpenDatafile(ifs, _filename, _subdir);
 
-    if (fn_open != "" && (ifs))
+    if (OpenDatafile2(ifs, _filename.c_str()))
       {
         while(ifs.getline(charBuffer,BUFF_SIZE))
           ParseLine(charBuffer);
@@ -712,9 +707,6 @@ namespace OpenBabel
 
     // return the locale to the original one
     obLocale.RestoreLocale();
-
-    if (ifs)
-      ifs.close();
 
     if (GetSize() == 0)
       {

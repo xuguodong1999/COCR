@@ -1614,8 +1614,8 @@ namespace OpenBabel {
     OBFFParameter parameter;
 
     // open data/UFF.prm
-    ifstream ifs;
-    if (OpenDatafile(ifs, "UFF.prm").length() == 0) {
+    istringstream ifs;
+    if (!OpenDatafile2(ifs, "UFF.prm")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open UFF.prm", obError);
       return false;
     }
@@ -1680,9 +1680,6 @@ namespace OpenBabel {
       }
     }
 
-    if (ifs)
-      ifs.close();
-
     // return the locale to the original one
     obLocale.RestoreLocale();
 
@@ -1702,8 +1699,8 @@ namespace OpenBabel {
     _mol.SetAtomTypesPerceived();
 
     // open data/UFF.prm
-    ifstream ifs;
-    if (OpenDatafile(ifs, "UFF.prm").length() == 0) {
+    istringstream ifs;
+    if (!OpenDatafile2(ifs, "UFF.prm")) {
       obErrorLog.ThrowError(__FUNCTION__, "Cannot open UFF.prm", obError);
       return false;
     }
@@ -1770,9 +1767,6 @@ namespace OpenBabel {
       }
 
     }
-
-    if (ifs)
-      ifs.close();
 
     // Free memory
     for (i = _vexttyp.begin();i != _vexttyp.end();++i) {

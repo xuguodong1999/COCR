@@ -222,8 +222,8 @@ bool AliasData::FromNameLookup(OBMol& mol, const unsigned int atomindex)
 bool AliasData::LoadFile(SuperAtomTable& table)
 {
   //In table: key=alias left-form; value=pair<alias right-form, SMILES>
-  ifstream ifs;
-  if (OpenDatafile(ifs, "superatom.txt").length() == 0)
+  istringstream ifs;
+  if (!OpenDatafile2(ifs, "superatom.txt"))
   {
     obErrorLog.ThrowError(__FUNCTION__, "Cannot open superatom.txt", obError);
     return false;
@@ -246,12 +246,11 @@ bool AliasData::LoadFile(SuperAtomTable& table)
   }
   return true;
 }
-#ifdef HAVE_SHARED_POINTER
 bool AliasData::LoadFile(SmartsTable& smtable)
 {
   //Re-parse the datafile. Seems simpler than trying to extract from the map.
-  ifstream ifs;
-  if (OpenDatafile(ifs, "superatom.txt").length() == 0)
+  istringstream ifs;
+  if (!OpenDatafile2(ifs,  "superatom.txt"))
   {
     obErrorLog.ThrowError(__FUNCTION__, "Cannot open superatom.txt", obError);
     return false;
@@ -281,7 +280,7 @@ bool AliasData::LoadFile(SmartsTable& smtable)
         //OBSmartsPattern objects are not copyable without complications,
         //so reference semantics used.
 
-        obsharedptr<OBSmartsPattern> psp(new OBSmartsPattern);
+        std::shared_ptr<OBSmartsPattern> psp(new OBSmartsPattern);
         psp->Init(ssmarts.str());
         smtable.push_back(make_pair(vec[0], psp));
       }
@@ -289,7 +288,6 @@ bool AliasData::LoadFile(SmartsTable& smtable)
   }
   return true;
 }
-#endif
 
 void AliasData::AddExpandedAtom(int id) { _expandedatoms.push_back(id); };
 
@@ -336,7 +334,6 @@ void AliasData::RevertToAliasForm(OBMol& mol)
   }while(acted);
 }
 
-#ifdef HAVE_SHARED_POINTER
 bool AliasData::AddAliases(OBMol* pmol)
 {
   static SmartsTable smtable;
@@ -412,7 +409,6 @@ bool OpGenAlias::Do(OBBase* pOb, const char* OptionText, OpMap* pmap, OBConversi
     return false;
   return AliasData::AddAliases(pmol);
 }
-#endif // HAVE_SHARED_POINTER
 
 }//namespace
 
