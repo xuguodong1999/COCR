@@ -1,8 +1,8 @@
 #include "maeparser/MaeBlock.hpp"
+#include "maeparser/MaeParser.hpp"
+
 #include <cmath>
 #include <utility>
-
-#include "maeparser/MaeParser.hpp"
 
 using namespace std;
 

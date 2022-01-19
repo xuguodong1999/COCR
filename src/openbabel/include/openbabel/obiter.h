@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_OBITER_H
-#define OB_OBITER_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/bitvec.h>
@@ -26,7 +24,6 @@ GNU General Public License for more details.
 #include <vector>
 #include <stack>
 #include <queue>
-
 
 namespace OpenBabel
 {
@@ -410,7 +407,6 @@ namespace OpenBabel
 #define FOR_PAIRS_OF_MOL(p,m)     for( OpenBabel::OBMolPairIter     p(m); p; ++p )
 
 } // namespace OpenBabel
-#endif // OB_OBITER_H
 
 //! \file obiter.h
 //! \brief STL-style iterators for Open Babel.

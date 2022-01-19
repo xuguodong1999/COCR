@@ -18,21 +18,16 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_MOL_H
-#define OB_MOL_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
+#include <openbabel/base.h>
 
-#include <math.h>
-#include <float.h>
-
+#include <cmath>
+#include <cfloat>
 #include <vector>
 #include <string>
 #include <map>
-
-#include <openbabel/base.h>
-
 
 namespace OpenBabel
 {
@@ -773,7 +768,6 @@ enum HydrogenType { AllHydrogen, PolarHydrogen, NonPolarHydrogen };
 
 } // end namespace OpenBabel
 
-#endif // OB_MOL_H
 
 //! \file mol.h
 //! \brief Handle molecules. Declarations of OBMol, OBAtom, OBBond, OBResidue.

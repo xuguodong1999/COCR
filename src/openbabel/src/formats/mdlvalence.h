@@ -15,7 +15,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
+#pragma once
+#include <cmath>
 /* Return the implicit MDL valence for element "elem" with charge "q".  */
 static unsigned int MDLValence(unsigned int elem, int q, unsigned int val)
 {
@@ -404,7 +405,7 @@ static unsigned int HYDValence(unsigned int elem, int q, unsigned int val)
 {
   int impval = 0;
   if (elem == 6) {  // C
-    impval = 4 - abs(q);
+    impval = 4 - std::abs(q);
   } else if (elem == 7 || elem == 15) {  // N or P
     impval = 3 + q;
   } else if (elem == 8 || elem == 16) {  // O or S
@@ -418,4 +419,3 @@ static unsigned int HYDValence(unsigned int elem, int q, unsigned int val)
   }
   return impval;  
 }
-

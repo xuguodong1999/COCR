@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_POINTGROUP_H
-#define OB_POINTGROUP_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
@@ -85,8 +83,6 @@ namespace OpenBabel
     }; // class OBPointGroup
 
 }// namespace OpenBabel
-
-#endif   // OB_POINT_GROUP_H
 
 //! \file pointgroup.h
 //! \brief Brute-force point group detection

@@ -14,14 +14,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
-
 
 const double AAU = 0.5291772108;  // �ngstr�m per bohr (CODATA 2002)
 

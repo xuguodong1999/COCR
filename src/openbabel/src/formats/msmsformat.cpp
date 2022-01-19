@@ -26,13 +26,9 @@
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/obmolecformat.h>
-#include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/elements.h>
-
-
 #include <openbabel/obiter.h>
-#include <openbabel/data.h>
 
 #include <iostream>
 

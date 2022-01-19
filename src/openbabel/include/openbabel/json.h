@@ -15,9 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OPENBABEL_JSON_H
-#define OPENBABEL_JSON_H
+#pragma once
 
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
@@ -26,16 +24,10 @@ GNU General Public License for more details.
 #include <rapidjson/writer.h>
 #include <rapidjson/prettywriter.h>
 
-
-// These should already be defined by CMake
-#if defined(OPTIMIZE_NATIVE)
-  #if !defined(RAPIDJSON_SSE42) && defined(__SSE4_2__)
-    #define RAPIDJSON_SSE42
-  #elif !defined(RAPIDJSON_SSE2) && defined(__SSE2__)
-    #define RAPIDJSON_SSE2
-  #elif!defined(RAPIDJSON_NEON) &&  defined(__ARM_NEON)
-    #define RAPIDJSON_NEON
-  #endif
+#if !defined(RAPIDJSON_SSE42) && defined(__SSE4_2__)
+#define RAPIDJSON_SSE42
+#elif !defined(RAPIDJSON_SSE2) && defined(__SSE2__)
+#define RAPIDJSON_SSE2
+#elif!defined(RAPIDJSON_NEON) && defined(__ARM_NEON)
+#define RAPIDJSON_NEON
 #endif
-
-#endif //OPENBABEL_JSON_H

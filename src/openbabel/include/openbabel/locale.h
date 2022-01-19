@@ -15,12 +15,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
+#pragma once
 
-#ifndef OB_LOCALE_H
-#define OB_LOCALE_H
-
-#include <locale>
 #include <openbabel/babelconfig.h>
+#include <locale>
 
 namespace OpenBabel
 {
@@ -46,7 +44,6 @@ namespace OpenBabel
   OB_EXPORT extern  OBLocale   obLocale;
 
 } // namespace OpenBabel
-#endif // OB_LOCALE_H
 
 //! \file locale.h
 //! \brief Handle internal numeric locale issues -- parse data in "C"

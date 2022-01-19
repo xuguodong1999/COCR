@@ -16,12 +16,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_MATRIX_H
-#define OB_MATRIX_H
+#pragma once
 #include <openbabel/babelconfig.h>
 #include <vector>
-#include <math.h>
+#include <cmath>
 
 namespace OpenBabel
 {
@@ -52,8 +50,6 @@ bool convert_matrix_ff_f(double **src, double  *dst, int rows, int cols);
 bool convert_matrix_f_ff(double  *src, double **dst, int rows, int cols);
 
 }
-
-#endif // OB_MATRIX_H
 
 //! \file matrix.h
 //! \brief Operations on arbitrary-sized matrix.

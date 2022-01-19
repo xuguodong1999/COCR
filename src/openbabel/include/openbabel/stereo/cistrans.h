@@ -21,8 +21,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-#ifndef OB_CISTRANS_H
-#define OB_CISTRANS_H
+#pragma once
 
 #include <openbabel/stereo/tetraplanar.h>
 #include <vector>
@@ -372,7 +371,6 @@ OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBCisTransStereo::C
 } // namespace std
 #endif // Not SWIG
 
-#endif
 
 //! \file cistrans.h
 //! \brief Store and convert cis/trans double-bond stereochemistry

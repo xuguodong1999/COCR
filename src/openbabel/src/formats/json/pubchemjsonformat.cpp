@@ -14,9 +14,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#include <map>
-#include <algorithm>
-#include <openbabel/babelconfig.h>
 #include <openbabel/json.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
@@ -29,7 +26,8 @@ GNU General Public License for more details.
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/stereo/squareplanar.h>
-
+#include <map>
+#include <algorithm>
 using namespace std;
 namespace OpenBabel
 {

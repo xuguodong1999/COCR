@@ -1,5 +1,4 @@
-#ifndef OB_CAIROPAINTER_H
-#define OB_CAIROPAINTER_H
+#pragma once
 
 #include <openbabel/depict/painter.h>
 #include "cairo.h"
@@ -61,5 +60,3 @@ namespace OpenBabel
   };
 
 }
-
-#endif

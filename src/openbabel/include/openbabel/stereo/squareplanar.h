@@ -21,9 +21,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-#ifndef OB_SQUAREPLANAR_H
-#define OB_SQUAREPLANAR_H
-
+#pragma once
 #include <openbabel/stereo/tetraplanar.h>
 #include <vector>
 
@@ -308,8 +306,6 @@ OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBSquarePlanarStere
 
 } // namespace std
 #endif // Not SWIG
-
-#endif
 
 //! \file squareplanar.h
 //! \brief Store and convert square-planar stereochemistry

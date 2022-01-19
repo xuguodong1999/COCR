@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_PHMODEL_H
-#define OB_PHMODEL_H
+#pragma once
 
 #include <openbabel/parsmart.h>
 #include <openbabel/data.h>
@@ -125,8 +123,5 @@ public:
 
 } //namespace OpenBabel
 
-#endif // OB_PHMODEL_H
-
 //! \file phmodel.h
 //! \brief Read pH rules and assign charges.
-

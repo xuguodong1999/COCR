@@ -30,7 +30,6 @@ For XML formats, extra support for the parsing is provided, see pubchem.cpp
 as an example.
 */
 
-#include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/math/align.h>
 #include <algorithm>
@@ -225,4 +224,3 @@ bool ConfabReport::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 }
 
 } //namespace OpenBabel
-

@@ -21,8 +21,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-#ifndef OB_QUERY_H
-#define OB_QUERY_H
+#pragma once
 
 #include <openbabel/bond.h> // TODO: Move OBBond code out of this header
 #include <openbabel/bitvec.h>
@@ -278,8 +277,6 @@ namespace OpenBabel {
 
   ///@}
 }
-
-#endif
 
 /// @file query.h
 /// @brief OBQuery, OBQueryAtom & OBQueryBond classes.

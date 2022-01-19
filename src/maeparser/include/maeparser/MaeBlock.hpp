@@ -1,5 +1,7 @@
 #pragma once
 
+#include "maeparser/MaeParserConfig.hpp"
+
 #include <cassert>
 #include <cstring>
 #include <map>
@@ -7,8 +9,6 @@
 #include <string>
 #include <utility>
 #include <memory>
-
-#include "maeparser/MaeParserConfig.hpp"
 
 namespace schrodinger::mae {
     using BoolProperty = uint8_t;

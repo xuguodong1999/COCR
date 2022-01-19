@@ -23,9 +23,6 @@ GNU General Public License for more details.
 #include <openbabel/depict/commandpainter.h>
 
 using namespace std;
-
-
-
 namespace OpenBabel
 {
 
@@ -150,4 +147,3 @@ bool PainterFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 }
 
 } //namespace OpenBabel
-

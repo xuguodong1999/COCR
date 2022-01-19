@@ -17,9 +17,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_CONFORMERSEARCH_H
-#define OB_CONFORMERSEARCH_H
+#pragma once
 
 #include <openbabel/mol.h>
 #include <openbabel/rotor.h>
@@ -573,8 +571,6 @@ namespace OpenBabel {
 
   ///@}
 };
-
-#endif
 
 /// @file conformersearch.h
 /// @brief Conformer searching using genetic algorithm

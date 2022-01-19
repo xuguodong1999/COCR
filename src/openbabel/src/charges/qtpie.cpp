@@ -25,12 +25,6 @@ GNU General Public License for more details.
 
 using namespace std;
 
-#if defined(_MSC_VER) && _MSC_VER < 1800
-// Older MSVC doesn't have error function erf, use local implementation
-#include <openbabel/math/erf.h>
-using temperf::erf;
-#endif
-
 namespace OpenBabel
 {
 
@@ -401,7 +395,6 @@ bool QTPIECharges::solver(Eigen::MatrixXd A, Eigen::VectorXd b, Eigen::VectorXd 
   }
 
 }//namespace
-
 
 //! \file qtpie.cpp
 //! \brief Assign QTPIE partial charges.

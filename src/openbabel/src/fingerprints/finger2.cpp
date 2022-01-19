@@ -16,17 +16,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#include <openbabel/babelconfig.h>
 #include <openbabel/oberror.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/fingerprint.h>
+#include <openbabel/elements.h>
+
 #include <set>
 #include <vector>
 #include <algorithm>
-#include <openbabel/elements.h>
-
 using namespace std;
 namespace OpenBabel
 {

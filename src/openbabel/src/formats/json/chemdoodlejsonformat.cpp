@@ -14,8 +14,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#include <map>
-#include <openbabel/babelconfig.h>
 #include <openbabel/json.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
@@ -27,7 +25,7 @@ GNU General Public License for more details.
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/stereo/tetrahedral.h>
-
+#include <map>
 using namespace std;
 namespace OpenBabel
 {
@@ -551,4 +549,3 @@ class ChemDoodleJSONFormat : public OBMoleculeFormat
   }
   
 }
-

@@ -16,20 +16,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
+#include "rand.h"
 #include <openbabel/conformersearch.h>
 #include <openbabel/math/align.h>
 #include <openbabel/forcefield.h>
 #include <openbabel/elements.h>
 #include <openbabel/bond.h>
-#include "rand.h"
 #include <algorithm>
 
-#if defined(_MSC_VER) && (_MSC_VER < 1800)
- #define OB_ISNAN _isnan
-#else
- #define OB_ISNAN std::isnan
-#endif
+#define OB_ISNAN std::isnan
 
 namespace OpenBabel {
 

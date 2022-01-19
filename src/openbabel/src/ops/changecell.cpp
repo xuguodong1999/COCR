@@ -16,15 +16,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-#include <iostream>
-#include<openbabel/op.h>
-#include<openbabel/mol.h>
+#include <openbabel/op.h>
+#include <openbabel/mol.h>
 #include <openbabel/oberror.h>
 #include <openbabel/generic.h>
 #include <openbabel/obiter.h>
 #include <openbabel/atom.h>
 #include <cstdlib>
-
+#include <iostream>
 namespace OpenBabel
 {
 
@@ -169,5 +168,3 @@ bool OpChangeCell::Do(OBBase* pOb, const char* OptionText, OpMap* pOptions, OBCo
   return true;
 }
 }//namespace
-
-

@@ -21,8 +21,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-#ifndef OB_STEREO_H
-#define OB_STEREO_H
+#pragma once
 
 #include <openbabel/base.h> // OBGenericData
 #include <openbabel/isomorphism.h> // Automorphisms
@@ -1161,8 +1160,5 @@ namespace OpenBabel {
 
   ///@}  addtogroup
 }
-
-#endif
-
 //! \file stereo.h
 //! \brief Process molecular stereochemistry information.

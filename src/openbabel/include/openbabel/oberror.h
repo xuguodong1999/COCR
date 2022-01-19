@@ -16,9 +16,7 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_ERROR_H
-#define OB_ERROR_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
@@ -211,8 +209,6 @@ namespace OpenBabel
     };
 
 } // end namespace OpenBabel
-
-#endif
 
 //! \file oberror.h
 //! \brief Handle error messages, warnings, notices, etc.

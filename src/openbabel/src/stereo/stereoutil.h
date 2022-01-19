@@ -1,3 +1,4 @@
+#pragma once
 #include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/mol.h>

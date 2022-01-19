@@ -510,4 +510,3 @@ bool convert_matrix_ff_f(double **src, double *dst, int rows, int cols)
 
 //! \file matrix.cpp
 //! \brief Operations on arbitrary-sized matrix.
-

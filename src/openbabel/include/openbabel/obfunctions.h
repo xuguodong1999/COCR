@@ -15,9 +15,7 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_FUNCTIONS_H
-#define OB_FUNCTIONS_H
+#pragma once
 
 #include <openbabel/atom.h>
 
@@ -64,8 +62,6 @@ namespace OpenBabel
   OB_EXPORT void OBAtomAssignTypicalImplicitHydrogens(OBAtom * atom);
 
 } // end namespace OpenBabel
-
-#endif
 
 //! \file obfunctions.h
 //! \brief A collection of global functions

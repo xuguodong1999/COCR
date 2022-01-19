@@ -13,8 +13,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#ifndef OB_KEKULIZE_H
-#define OB_KEKULIZE_H
+#pragma once
 
 namespace OpenBabel
 {  /** 
@@ -40,8 +39,6 @@ namespace OpenBabel
   
   OB_EXPORT bool OBKekulize(OBMol *mol);
 }
-
-#endif //OB_KEKULIZE_H
 
 //! \file kekulize.h
 //! \brief Functions relating to kekulization

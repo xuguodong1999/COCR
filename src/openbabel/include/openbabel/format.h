@@ -16,8 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#ifndef OB_FORMAT_H
-#define OB_FORMAT_H
+#pragma once
 #include <openbabel/babelconfig.h>
 #include <openbabel/plugin.h>
 #include <typeinfo>
@@ -168,7 +167,5 @@ private:
 */};
 
 }//namespace
-#endif
-
 //! \file format.h
 //! \brief Declarations for OBFormat

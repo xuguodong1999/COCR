@@ -11,12 +11,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_ALIAS_H
-#define OB_ALIAS_H
+#pragma once
+#include <openbabel/generic.h>
 
 #include <vector>
-#include <openbabel/generic.h>
 #include <memory>
 
 namespace OpenBabel
@@ -113,8 +111,6 @@ private:
   static bool LoadFile(SmartsTable& smtable);
 };
 } //namespace
-
-#endif // OB_ALIAS_H
 
 //! \file alias.h
 //! \brief OBGenericData class to for atom alias data (e.g., in 2D drawing programs for "COOH")

@@ -17,7 +17,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/bitvec.h>
 #include <openbabel/oberror.h>
 #include <cstdlib>
@@ -674,4 +673,3 @@ namespace OpenBabel
 
 //! \file bitvec.cpp
 //! \brief Fast and efficient bitstring class
-

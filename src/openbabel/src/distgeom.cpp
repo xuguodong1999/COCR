@@ -16,31 +16,27 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
+#include "rand.h"
+#include "stereo/gen3dstereohelper.h"
 #include <openbabel/distgeom.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/ring.h>
 #include <openbabel/obiter.h>
-#include <openbabel/builder.h>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
-#include "rand.h"
-#include <LBFGS.h>
-#include "stereo/gen3dstereohelper.h"
-
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/obconversion.h>
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <cmath>
 #include <Eigen/Core>
 #include <Eigen/Eigenvalues>
+#include <LBFGS.h>
 
 using namespace std;
 

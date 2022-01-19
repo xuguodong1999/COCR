@@ -1,14 +1,14 @@
 #include "maeparser/Reader.hpp"
 
+#include <fstream>
+#include <iostream>
+#include <utility>
+
 //#include <boost/algorithm/string/predicate.hpp>
 //#include <boost/iostreams/device/file.hpp>
 
 //#include <boost/iostreams/filter/gzip.hpp>
 //#include <boost/iostreams/filtering_stream.hpp>
-
-#include <fstream>
-#include <iostream>
-#include <utility>
 
 //using boost::algorithm::ends_with;
 //using boost::iostreams::file_source;

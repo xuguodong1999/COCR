@@ -23,12 +23,7 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 #include <cstdlib>
-
-#ifdef _MSC_VER
-#include <regex>
-#else
 #include <regex.h>
-#endif
 
 #include <iomanip>
 

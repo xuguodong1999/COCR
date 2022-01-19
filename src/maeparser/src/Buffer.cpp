@@ -1,8 +1,8 @@
+#include "maeparser/Buffer.hpp"
+
 #include <cerrno>
 #include <cstring>
 #include <stdexcept>
-
-#include "maeparser/Buffer.hpp"
 
 namespace schrodinger {
 

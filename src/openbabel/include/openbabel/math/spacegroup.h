@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_SPACE_GROUP_H
-#define OB_SPACE_GROUP_H
+#pragma once
 
 #include <openbabel/math/transform3d.h>
 #include <string>
@@ -92,10 +90,7 @@ namespace OpenBabel
         unsigned int m_OriginAlternative;
         std::list<transform3d*> m_transforms;
     };
-
 }
-
-#endif // OB_SPACE_GROUP_H
 
 //! \file spacegroup.h
 //! \brief Handle Crystallographic Space Groups

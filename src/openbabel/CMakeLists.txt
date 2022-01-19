@@ -4,6 +4,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/inchi)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../maeparser/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../coordgenlibs/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../global_header)
 
 add_definitions(-DMAKE_OBDLL)

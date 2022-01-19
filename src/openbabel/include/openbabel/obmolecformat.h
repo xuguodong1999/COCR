@@ -15,23 +15,9 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
+#pragma once
 
-#ifndef OB_MOLECULEFORMAT_H
-#define OB_MOLECULEFORMAT_H
-
-#ifdef _MSC_VER
-  #include <unordered_map>
-#endif
-
-#include <ciso646>  // detect std::lib
-#ifdef _LIBCPP_VERSION
-  #include <unordered_map>
-#elif __GNUC__ == 4 && __GNUC_MINOR__ >= 1
-  #include <tr1/unordered_map>
-#elif defined(USE_BOOST)
-  #include <boost/tr1/unordered_map.hpp>
-#endif
-
+#include <unordered_map>
 #include <openbabel/babelconfig.h>
 #include <openbabel/obconversion.h>
 #include <typeinfo>
@@ -155,7 +141,5 @@ private:
 };
 
 }
-#endif //OB_MOLECULEFORMAT_H
-
 //! \file obmolecformat.h
 //! \brief Subclass of OBFormat for conversion of OBMol.

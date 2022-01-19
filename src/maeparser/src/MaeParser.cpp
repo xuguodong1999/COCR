@@ -1,7 +1,7 @@
-#include <cstdio>
-
 #include "maeparser/MaeBlock.hpp"
 #include "maeparser/MaeParser.hpp"
+
+#include <cstdio>
 
 #define WHITESPACE ' ' : case '\n' : case '\r' : case '\t'
 

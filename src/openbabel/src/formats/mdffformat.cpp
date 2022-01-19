@@ -13,7 +13,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
@@ -21,18 +20,11 @@ GNU General Public License for more details.
 #include <openbabel/generic.h>
 #include <openbabel/obiter.h>
 
-
-#include <limits.h>
 #include <locale> // For isalpha(int)
 #include <map>
 #include <stdexcept>
 #include <cstdlib>
 #include <algorithm>
-
-#ifdef _MSC_VER
-#define INFINITY (DBL_MAX+DBL_MAX)
-#define NAN (INFINITY-INFINITY)
-#endif
 
 using namespace std;
 namespace OpenBabel {
@@ -513,5 +505,3 @@ namespace OpenBabel {
   }
 
 } //namespace OpenBabel
-
-

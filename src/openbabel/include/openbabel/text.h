@@ -15,9 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_TEXT_H
-#define OB_TEXT_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/base.h>
@@ -86,7 +84,6 @@ public:
 };
 
 }//namespace
-#endif //OB_TEXT_H
 
 //! \file text.h
 //! \brief Handle generic non-chemical text processing

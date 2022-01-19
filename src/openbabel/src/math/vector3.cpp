@@ -17,15 +17,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
+#include "../rand.h"
 #include <openbabel/babelconfig.h>
+#include <openbabel/math/vector3.h>
+#include <openbabel/obutil.h>
 
 #include <iostream>
-#include <float.h>
-
-#include <openbabel/math/vector3.h>
-#include "../rand.h"
-#include <openbabel/obutil.h>
 
 using namespace std;
 

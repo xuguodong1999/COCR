@@ -440,4 +440,3 @@ namespace OpenBabel
   }
 
 } //namespace OpenBabel
-

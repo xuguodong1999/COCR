@@ -15,12 +15,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include <openbabel/babelconfig.h>
-
-#include <vector>
-#include <climits> // UINT_MAX
-
 #include <openbabel/math/align.h>
 #include <openbabel/atom.h>
 #include <openbabel/oberror.h>
@@ -30,9 +24,11 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 
 #include <Eigen/Core>
-#include <Eigen/Geometry>
 #include <Eigen/SVD>
 #include <Eigen/LU>
+
+#include <vector>
+#include <climits> // UINT_MAX
 
 using namespace std;
 

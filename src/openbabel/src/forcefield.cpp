@@ -17,12 +17,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 ***********************************************************************/
+#include "rand.h"
 #include <openbabel/babelconfig.h>
-
-#include <set>
-
 #include <openbabel/forcefield.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
@@ -34,8 +31,7 @@ GNU General Public License for more details.
 #include <openbabel/grid.h>
 #include <openbabel/griddata.h>
 #include <openbabel/elements.h>
-#include "rand.h"
-
+#include <set>
 using namespace std;
 
 namespace OpenBabel

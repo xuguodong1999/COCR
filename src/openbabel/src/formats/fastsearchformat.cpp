@@ -11,12 +11,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
-
-#include <sstream>
-#include <iostream>
-#include <fstream>
-
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/fingerprint.h>
@@ -24,9 +18,11 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/bond.h>
 #include <openbabel/obutil.h>
+
+#include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <algorithm>
-
 
 using namespace std;
 namespace OpenBabel {

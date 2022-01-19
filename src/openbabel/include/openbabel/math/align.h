@@ -15,9 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_ALIGN_H
-#define OB_ALIGN_H
+#pragma once
 
 #include <openbabel/mol.h>
 #include <openbabel/math/vector3.h>
@@ -202,8 +200,5 @@ namespace OpenBabel
     std::vector<unsigned int> _newidx;
   };
 }
-
-#endif // OB_ALIGN_H
-
 /// @file align.h
 /// @brief Perform a least-squares alignment of two molecules or two vectors of vector3 objects

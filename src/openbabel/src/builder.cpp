@@ -17,10 +17,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
-
 #include <openbabel/builder.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
@@ -30,9 +27,7 @@ GNU General Public License for more details.
 #include <openbabel/rotor.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/locale.h>
-#include <openbabel/distgeom.h>
 #include <openbabel/elements.h>
-
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/stereo/tetrahedral.h>

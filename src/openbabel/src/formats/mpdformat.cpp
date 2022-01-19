@@ -18,11 +18,9 @@ GNU General Public License for more details.
 // Output format is #Origatomtype;#layer-#frequency-#atomtype;#l-#f-#aty;...<tab>Next atom<newline>next molecule
 
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
-#include <openbabel/elements.h>
 #include <openbabel/data.h>
 #include <cstdlib>
 

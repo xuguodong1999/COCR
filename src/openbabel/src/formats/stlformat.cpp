@@ -23,33 +23,20 @@
 // $Date$
 // $Revision$
 //
-
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/elements.h>
-
 #include <openbabel/obconversion.h>
 #include <openbabel/obmolecformat.h>
-
 #include <openbabel/obiter.h>
-#include <openbabel/data.h>
 
 #include <iostream>
-
-#include <stdlib.h>
-#include <math.h>
-
-// uint8_t and uint16_t are not defined for earlier versions of msvc
-#if defined(_MSC_VER) && _MSC_VER <= 1600
-  typedef unsigned __int8 uint8_t;
-  typedef unsigned __int16 uint16_t;
-#endif
+#include <cstdlib>
+#include <cmath>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
-
 
 using namespace std;
 

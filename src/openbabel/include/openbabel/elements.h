@@ -13,8 +13,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#ifndef OB_ELEMENTS_H
-#define OB_ELEMENTS_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
@@ -319,8 +318,6 @@ namespace OpenBabel
     const unsigned int Og = 118;
   }
 }
-
-#endif //OB_ELEMENTS_H
 
 //! \file elements.h
 //! \brief Functions relating to elements

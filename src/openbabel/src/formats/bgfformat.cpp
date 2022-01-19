@@ -13,7 +13,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
@@ -22,7 +21,6 @@ GNU General Public License for more details.
 #include <openbabel/data.h>
 #include <openbabel/generic.h>
 #include <cstdlib>
-
 
 using namespace std;
 namespace OpenBabel

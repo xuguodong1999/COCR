@@ -15,14 +15,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_REACT_H
-#define OB_REACT_H
-
+#pragma once
+#include <openbabel/base.h>
 #include <vector>
 #include <memory>
-#include <openbabel/base.h>
-
 
 namespace OpenBabel
 {
@@ -124,7 +120,6 @@ public:
 
 
 } //namespace OpenBabel
-#endif
 
 //! \file reaction.h
 //! \brief Handle chemical reactions (i.e., lists of reagents and products).

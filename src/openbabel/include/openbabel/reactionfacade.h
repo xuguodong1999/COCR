@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_REACTIONFACADE_H
-#define OB_REACTIONFACADE_H
+#pragma once
 
 namespace OpenBabel
 {
@@ -198,7 +196,6 @@ namespace OpenBabel
     OBReactionFacadePrivate *d;
   };
 } // namespace OpenBabel
-#endif // OB_REACTIONFACADE_H
 
 //! \file reactionfacade.h
 //! \brief A facade class to help interrogate and manipulate reactions

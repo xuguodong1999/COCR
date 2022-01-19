@@ -13,16 +13,14 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
-#include <string>
-#include <algorithm>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
-#include <openbabel/elements.h>
-
 #include <openbabel/obconversion.h>
 #include <openbabel/reactionfacade.h>
 #include <openbabel/obmolecformat.h>
+
+#include <string>
+#include <algorithm>
 
 using namespace std;
 

@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_TOKENST_H
-#define OB_TOKENST_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
@@ -66,7 +64,6 @@ namespace OpenBabel
 
 
 }//namespace
-#endif
 
 //! \file tokenst.h
 //! \brief Tokenize strings, open data files

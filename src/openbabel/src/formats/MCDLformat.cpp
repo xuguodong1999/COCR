@@ -1535,4 +1535,3 @@ bool MCDLFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 }
 
 } //namespace OpenBabel
-

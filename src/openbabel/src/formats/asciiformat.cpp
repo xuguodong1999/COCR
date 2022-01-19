@@ -21,15 +21,12 @@ GNU General Public License for more details.
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/obiter.h>
-#include <openbabel/elements.h>
 #include <openbabel/op.h>
 #include <openbabel/depict/depict.h>
 #include <openbabel/depict/asciipainter.h>
 #include <cstdlib>
 
 using namespace std;
-
-
 
 namespace OpenBabel
 {
@@ -180,4 +177,3 @@ bool ASCIIFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 }
 
 } //namespace OpenBabel
-

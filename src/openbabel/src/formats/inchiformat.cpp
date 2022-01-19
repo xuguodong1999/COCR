@@ -21,18 +21,16 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <openbabel/obiter.h>
 #include <openbabel/obconversion.h>
-#include <openbabel/obmolecformat.h>
 #include <openbabel/generic.h>
+#include <openbabel/inchiformat.h>
+#include <openbabel/stereo/tetrahedral.h>
+#include <openbabel/stereo/cistrans.h>
+#include <openbabel/elements.h>
 
 #include "inchi_api.h"
 #include <sstream>
 #include <set>
 #include <vector>
-#include <iterator>
-#include <openbabel/inchiformat.h>
-#include <openbabel/stereo/tetrahedral.h>
-#include <openbabel/stereo/cistrans.h>
-#include <openbabel/elements.h>
 
 using namespace std;
 namespace OpenBabel
@@ -863,4 +861,3 @@ bool InChIKeyFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 
 
 }//namespace OpenBabel
-

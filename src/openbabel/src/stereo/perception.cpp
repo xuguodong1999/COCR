@@ -21,8 +21,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-
-
+#include "stereoutil.h"
 #include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/mol.h>
@@ -38,9 +37,6 @@
 #include <openbabel/oberror.h>
 #include <openbabel/elements.h>
 #include <cassert>
-
-#include "stereoutil.h"
-
 #include <cmath>
 #include <limits>
 #include <set>
@@ -3039,5 +3035,4 @@ namespace OpenBabel {
       }
     }
   }
-
 }

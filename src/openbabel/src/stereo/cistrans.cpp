@@ -404,4 +404,3 @@ namespace std {
   }
 
 } // namespace std
-

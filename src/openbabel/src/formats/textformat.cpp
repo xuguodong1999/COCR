@@ -92,4 +92,3 @@ TextFormat theTextFormat;
 
 
 } //namespace OpenBabel
-

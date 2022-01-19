@@ -19,12 +19,11 @@ GNU General Public License for more details.
  */
 
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/elements.h>
 #include <openbabel/obmolecformat.h>
-#include <stdio.h>
+#include <cstdio>
 #include <cstdlib>
 
 using namespace std;
@@ -176,4 +175,3 @@ namespace OpenBabel
   }
 
 } //namespace OpenBabel
-

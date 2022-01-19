@@ -22,7 +22,6 @@
   02110-1301, USA.
  **********************************************************************/
 #include <openbabel/stereo/tetraplanar.h>
-#include <cassert>
 
 namespace OpenBabel {
 
@@ -87,4 +86,3 @@ namespace OpenBabel {
   */
 
 }
-

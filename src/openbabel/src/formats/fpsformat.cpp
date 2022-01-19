@@ -11,18 +11,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
+#include <openbabel/obmolecformat.h>
+#include <openbabel/mol.h>
+#include <openbabel/atom.h>
+#include <openbabel/fingerprint.h>
 
 #include <vector>
 #include <string>
 #include <iomanip>
 #include <ctime>
-
-#include <openbabel/obmolecformat.h>
-#include <openbabel/mol.h>
-#include <openbabel/atom.h>
-#include <openbabel/elements.h>
-
-#include <openbabel/fingerprint.h>
 #include <cstdlib>
 
 using namespace std;
@@ -184,4 +181,3 @@ string FPSFormat::getTimeStr()
   return string(timestr);
 }
 }//namespace
-

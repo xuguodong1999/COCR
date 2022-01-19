@@ -15,16 +15,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_DESCRIPTOR_H
-#define OB_DESCRIPTOR_H
+#pragma once
+#include <openbabel/babelconfig.h>
+#include <openbabel/plugin.h>
 
 #include <string>
 #include <sstream>
 #include <limits>
-
-#include <openbabel/babelconfig.h>
-#include <openbabel/plugin.h>
 
 namespace OpenBabel
 {
@@ -124,7 +121,6 @@ static bool DoComparison(char ch1, char ch2, T& val, T& filterval)
 }
 
 }//namespace
-#endif
 
 //! \file descriptor.h
 //! \brief Base class for molecular descriptors

@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#ifndef OB_DEPICT_H
-#define OB_DEPICT_H
-
+#pragma once
 #include <openbabel/babelconfig.h>
 #include <openbabel/math/vector3.h>
 
@@ -112,8 +110,6 @@ namespace OpenBabel
   };
 
 }
-
-#endif
 
 /// @file depict.h
 /// @brief 2D depiction of molecules using OBPainter.

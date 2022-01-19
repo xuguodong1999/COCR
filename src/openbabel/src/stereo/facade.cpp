@@ -203,9 +203,4 @@ namespace OpenBabel {
   {
     return GetCisTransStereo(id);
   }
-
-
-
-
 }
-

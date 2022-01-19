@@ -17,7 +17,6 @@ GNU General Public License for more details.
 ***********************************************************************/
 
 #include <openbabel/babelconfig.h>
-#include <openbabel/oberror.h>
 #include <openbabel/descriptor.h>
 
 using namespace std;

@@ -16,21 +16,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_BITVEC_H
-#define OB_BITVEC_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
 #include <vector>
 #include <string>
-
-#if defined(_MSC_VER) && _MSC_VER <= 1600
-  // Assuming 32bit integer
-  typedef unsigned uint32_t;
-#else
-  #include <inttypes.h>
-#endif
+#include <cinttypes>
 
 // Use uint32_t
 #define SETWORD 32
@@ -237,8 +229,6 @@ namespace OpenBabel
   OB_EXPORT double Tanimoto(const OBBitVec & bv1, const OBBitVec & bv2);
 
   } // end namespace OpenBabel
-
-#endif // OB_BITVEC_H
 
 //! \file bitvec.h
 //! \brief Fast and efficient bitstring class

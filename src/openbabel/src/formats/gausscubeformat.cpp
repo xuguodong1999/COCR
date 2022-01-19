@@ -21,19 +21,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include <sstream>
-#include <cstdlib>
-
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/obiter.h>
-#include <openbabel/elements.h>
-
 #include <openbabel/griddata.h>
+#include <sstream>
+#include <cstdlib>
 
 using namespace std;
 

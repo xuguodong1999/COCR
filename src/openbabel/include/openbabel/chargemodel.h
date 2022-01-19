@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_CHARGEMODEL_H
-#define OB_CHARGEMODEL_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/plugin.h>
@@ -122,7 +120,6 @@ additional charge models, including the EEM method.
   */
 
 }//namespace
-#endif
 
 //! \file chargemodel.h
 //! \brief Base class for molecular partial charge models

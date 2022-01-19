@@ -16,14 +16,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
+#include "../stereo/gen3dstereohelper.h"
 #include <openbabel/op.h>
 #include <openbabel/mol.h>
 #include <openbabel/builder.h>
 #include <openbabel/distgeom.h>
 #include <openbabel/forcefield.h>
 #include <openbabel/oberror.h>
-#include "../stereo/gen3dstereohelper.h"
 
 #include <cstdlib> // needed for strtol and gcc 4.8
 

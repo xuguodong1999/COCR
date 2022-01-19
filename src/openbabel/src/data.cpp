@@ -16,11 +16,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifdef WIN32
-#pragma warning (disable : 4786)
-#endif
-#include <cstdlib>
 #include <openbabel/babelconfig.h>
 #include <openbabel/data.h>
 #include <openbabel/data_utilities.h>
@@ -30,12 +25,7 @@ GNU General Public License for more details.
 #include <openbabel/locale.h>
 #include <openbabel/oberror.h>
 #include <openbabel/elements.h>
-
-
-#if !HAVE_STRNCASECMP
-extern "C" int strncasecmp(const char *s1, const char *s2, size_t n);
-#endif
-
+#include <cstdlib>
 using namespace std;
 
 namespace OpenBabel
@@ -47,10 +37,7 @@ namespace OpenBabel
   OBAtomicHeatOfFormationTable::OBAtomicHeatOfFormationTable(void)
   {
     _init = false;
-    _dir = BABEL_DATADIR;
-    _envvar = "BABEL_DATADIR";
     _filename = "atomization-energies.txt";
-    _subdir = "data";
     _dataptr = nullptr;
     Init();
   }
@@ -243,10 +230,7 @@ namespace OpenBabel
   OBTypeTable::OBTypeTable()
   {
     _init = false;
-    _dir = BABEL_DATADIR;
-    _envvar = "BABEL_DATADIR";
     _filename = "types.txt";
-    _subdir = "data";
     _dataptr = nullptr;
     _linecount = 0;
     _from = _to = -1;
@@ -427,10 +411,7 @@ namespace OpenBabel
   OBResidueData::OBResidueData()
   {
     _init = false;
-    _dir = BABEL_DATADIR;
-    _envvar = "BABEL_DATADIR";
     _filename = "resdata.txt";
-    _subdir = "data";
     _dataptr = nullptr;
   }
 

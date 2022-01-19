@@ -30,7 +30,7 @@ GNU General Public License for more details.
 	 on query enables ones to remove substitutors attachment for atom, which are sterically hidden on templates
   if the file will not be found, predefined templates will be used
 */
-
+#pragma once
 
 namespace OpenBabel {
 

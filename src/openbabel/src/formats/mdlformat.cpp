@@ -16,17 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
-
-#ifdef _WIN32
-#pragma warning (disable : 4786)
-#endif
-
-#include <ctime>
-#include <vector>
-#include <iomanip>
-#include <map>
-#include <algorithm>
+#include "mdlvalence.h"
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
@@ -40,7 +30,11 @@ GNU General Public License for more details.
 #include <openbabel/tokenst.h>
 #include <openbabel/kekulize.h>
 
-#include "mdlvalence.h"
+#include <ctime>
+#include <vector>
+#include <iomanip>
+#include <map>
+#include <algorithm>
 
 using namespace std;
 namespace OpenBabel

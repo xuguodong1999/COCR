@@ -15,11 +15,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
@@ -28,10 +23,9 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <openbabel/obiter.h>
 #include <openbabel/generic.h>
-#include <cstdlib>
-
 #include <openbabel/math/spacegroup.h>
 
+#include <cstdlib>
 #include <sstream>
 #include <vector>
 #include <list>
@@ -40,14 +34,8 @@ GNU General Public License for more details.
 
 #define NOCHARGE FLT_MAX
 
-#ifdef _MSC_VER
- #pragma warning( disable : 4503 )
- // The decorated name was longer than the compiler limit (4096), and was truncated.
- // This is due to the use of templates specialized on templates repeatedly.
- // The correctness of the program, however, is unaffected by the truncated name,
- // but if you get link time errors on a truncated symbol, it will be more difficult
- // to determine the type of the symbol in the error. Debugging will also be more difficult;
- // the debugger will also have difficultly mapping symbol name to type name.
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
 #endif
 
 using namespace std;

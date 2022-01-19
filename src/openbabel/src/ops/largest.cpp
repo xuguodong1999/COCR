@@ -15,12 +15,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
+#include "deferred.h"
 #include <openbabel/op.h>
 #include <openbabel/mol.h>
 #include <openbabel/descriptor.h>
 #include <openbabel/obconversion.h>
-#include "deferred.h"
 #include <sstream>
 #include <algorithm>
 

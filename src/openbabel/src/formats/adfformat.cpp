@@ -25,13 +25,6 @@
 // $Revision$
 //
 
-// STD
-#include <fstream>
-#include <string>
-#include <vector>
-#include <sstream>
-#include <cstring>
-
 #include <openbabel/obconversion.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
@@ -40,10 +33,12 @@
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
-#include <cstdlib>
-
-
 #include <openbabel/griddata.h>
+#include <string>
+#include <vector>
+#include <sstream>
+#include <cstring>
+#include <cstdlib>
 
 #define EV_TO_KCAL_PER_MOL 23.060538
 

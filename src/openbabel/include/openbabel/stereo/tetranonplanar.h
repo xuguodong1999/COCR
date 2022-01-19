@@ -21,9 +21,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-#ifndef OB_TETRANONPLANAR_H
-#define OB_TETRANONPLANAR_H
-
+#pragma once
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/oberror.h>
 
@@ -224,12 +222,7 @@ namespace OpenBabel {
         OBStereo::Permutate(cfg.refs, 1, 2);
       }
  };
-
   ///@} // addtogroup
-
 }
-
-#endif
-
 /// @file tetranonplanar.h
 /// @brief Base class for handling and storing non-planar stereochemistry with 4 reference atom ids.

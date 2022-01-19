@@ -11,11 +11,14 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
+#pragma once
 #include <openbabel/babelconfig.h>
 #include <openbabel/op.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/query.h>
+#include <openbabel/parsmart.h>
+
 #include <vector>
 #include <string>
 

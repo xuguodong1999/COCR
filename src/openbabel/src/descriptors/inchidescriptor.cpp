@@ -103,4 +103,3 @@ InChIFilter keyInChIFilter("InChIKey",true);
 //**********************************************
 
 }//namespace
-

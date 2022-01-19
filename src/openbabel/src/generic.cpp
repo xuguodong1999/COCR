@@ -18,10 +18,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
-#include <string>
-#include <set>
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
@@ -33,7 +29,8 @@ GNU General Public License for more details.
 
 // needed for msvc to have at least one reference to AtomClass, AliasData in openbabel library
 #include <openbabel/alias.h>
-
+#include <string>
+#include <set>
 using namespace std;
 
 namespace OpenBabel

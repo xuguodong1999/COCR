@@ -16,9 +16,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_BUILDER_H
-#define OB_BUILDER_H
+#pragma once
+#include <openbabel/stereo/stereo.h>
 
 #include <vector>
 #include <string>
@@ -26,8 +25,6 @@ GNU General Public License for more details.
 
 #include <list>
 #include <set>
-
-#include <openbabel/stereo/stereo.h>
 
 namespace OpenBabel
 {
@@ -184,8 +181,6 @@ namespace OpenBabel
   }; // class OBBuilder
 
 }// namespace OpenBabel
-
-#endif   // OB_BUILDER_H
 
 //! \file builder.h
 //! \brief Class to build 3D structures

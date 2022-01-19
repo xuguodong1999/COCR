@@ -15,11 +15,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_CONV_H
-#define OB_CONV_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
+#include <openbabel/oberror.h>
+#include <openbabel/format.h>
+#include <openbabel/lineend.h>
 
 #include <iostream>
 #include <fstream>
@@ -27,15 +28,9 @@ GNU General Public License for more details.
 #include <cassert>
 
 #include <string>
+#include <cstring>
 #include <vector>
 #include <map>
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
-
-#include <openbabel/oberror.h>
-#include <openbabel/format.h>
-#include <openbabel/lineend.h>
 
 namespace OpenBabel {
 
@@ -411,9 +406,6 @@ protected:
     };
 
 } //namespace OpenBabel
-#endif //OB_CONV_H
 
 //! \file
 //! \brief Handle file conversions. Declaration of OBFormat, OBConversion.
-
-

@@ -94,6 +94,4 @@ namespace OpenBabel {
     result[j] = refs.at(i);
     return result;
   }
-
 }
-

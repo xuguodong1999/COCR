@@ -17,8 +17,6 @@ GNU General Public License for more details.
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
-#include <openbabel/elements.h>
-
 
 using namespace std;
 namespace OpenBabel

@@ -1,3 +1,4 @@
+#pragma once
 #include <openbabel/babelconfig.h>
 #include <openbabel/op.h>
 #include <openbabel/obconversion.h>
@@ -98,4 +99,3 @@ private:
 };
 
 } //namespace
-

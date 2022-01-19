@@ -25,20 +25,15 @@ obtained in part or whole from RasMol2 by Roger Sayle.
 ///////////////////////////////////////////////////////////////////////////////
 // File Includes
 ///////////////////////////////////////////////////////////////////////////////
-
-#include <cstring>
-
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/residue.h>
 #include <openbabel/atom.h>
 #include <openbabel/oberror.h>
 #include <openbabel/bitvec.h>
 #include <openbabel/bond.h>
 #include <openbabel/elements.h>
-#include <cstring>
 #include <cstdlib>
-
+#include <cstring>
 using namespace std;
 
 namespace OpenBabel

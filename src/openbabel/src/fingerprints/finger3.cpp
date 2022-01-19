@@ -19,12 +19,10 @@ GNU General Public License for more details.
 #include <openbabel/mol.h>
 #include <openbabel/parsmart.h>
 #include <openbabel/oberror.h>
-#include <sstream>
-#include <fstream>
-#include <map>
-#include <string>
-
 #include <openbabel/fingerprint.h>
+
+#include <sstream>
+#include <string>
 
 using namespace std;
 namespace OpenBabel

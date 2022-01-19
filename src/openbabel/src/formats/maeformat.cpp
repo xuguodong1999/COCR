@@ -18,20 +18,18 @@ GNU General Public License for more details.
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 
-#include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/obiter.h>
-#include <openbabel/elements.h>
 #include <openbabel/generic.h>
-
-#include <iostream>
-#include <map>
 
 #include <maeparser/MaeConstants.hpp>
 #include <maeparser/Reader.hpp>
 #include <maeparser/Writer.hpp>
+
+#include <iostream>
+#include <map>
 
 using namespace std;
 using namespace schrodinger::mae;

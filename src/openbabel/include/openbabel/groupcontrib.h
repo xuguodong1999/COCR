@@ -19,18 +19,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
+#pragma once
 
-#ifndef OB_GROUPCONTRIB_H
-#define OB_GROUPCONTRIB_H
-
+#include <openbabel/babelconfig.h>
 #include <openbabel/parsmart.h>
 #include <openbabel/descriptor.h>
-
-// This macro is used in DLL builds. If it has not
-// been set in babelconfig.h, define it as nothing.
-#ifndef OBDESC
-	#define OBDESC
-#endif
 
 namespace OpenBabel
 {
@@ -41,7 +34,7 @@ namespace OpenBabel
       This is the base class for calculations that use the JOELib2 contribution
       algorithm.
     */
-class OBDESC OBGroupContrib : public OBDescriptor
+class OB_EXPORT OBGroupContrib : public OBDescriptor
 {
 public:
 
@@ -85,8 +78,6 @@ use:
         cout << "logP  " << pDesc->Predict(&mol) << endl;
 */
 } // end namespace OpenBabel
-
-#endif // OB_GROUPCONTRIB_H
 
 //! \file groupcontrib.h
 //! \brief Handle group contribution algorithms.

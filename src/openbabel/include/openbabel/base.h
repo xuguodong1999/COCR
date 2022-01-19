@@ -16,26 +16,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_BASE_H
-#define OB_BASE_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
+#include <openbabel/tokenst.h>
 
 #include <vector>
 #include <map>
 #include <string>
 #include <iostream>
-#include <openbabel/tokenst.h>
-
-#ifdef UNUSED
-#elif (__GNUC__ == 4)
-# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
-#elif defined(__LCLINT__)
-# define UNUSED(x) /*@unused@*/ x
-#else
-# define UNUSED(x) x
-#endif
 
 namespace OpenBabel
 {
@@ -283,7 +272,7 @@ class OBConversion; //used only as pointer
       //! \brief  Base type does nothing
       //! Made virtual around r3535 to simplify code which passes around OBBase*.
       //Currently no title data member in base class.
-      virtual const char  *GetTitle(bool UNUSED(replaceNewlines) = true) const { return "";}
+      virtual const char  *GetTitle(bool replaceNewlines = true) const { return "";}
       virtual void  SetTitle(const char *) {}
 
       //! \name Generic data handling methods (via OBGenericData)
@@ -341,8 +330,6 @@ class OBConversion; //used only as pointer
     };
 
 } //namespace OpenBabel
-
-#endif // OB_BASE_H
 
 //! \file base.h
 //! \brief Base classes to build a graph

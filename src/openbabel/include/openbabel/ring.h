@@ -16,17 +16,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_RING_H
-#define OB_RING_H
-
-#include <deque>
-#include <algorithm>
+#pragma once
 
 // TODO: Make this work as a free-standing header
 // Currently only used in ring.cpp which imports mol.h beforehand
 #include <openbabel/bitvec.h>
 #include <openbabel/typer.h>
+
+#include <deque>
+#include <algorithm>
 
 namespace OpenBabel
 {
@@ -178,8 +176,6 @@ namespace OpenBabel
   };
 
 } // end namespace OpenBabel
-
-#endif // OB_RING_H
 
 //! \file ring.h
 //! \brief Deal with rings, find smallest set of smallest rings (SSSR).

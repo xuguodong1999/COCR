@@ -16,17 +16,14 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
-
 #include <openbabel/math/spacegroup.h>
 #include <openbabel/data.h>
 #include <openbabel/obutil.h>
+
 #include <iostream>
 #include <map>
 #include <set>
 #include <vector>
-#include <locale>
-
 #include <cstdarg>
 #include <cstdlib>
 
@@ -66,10 +63,7 @@ namespace OpenBabel
   SpaceGroups::SpaceGroups()
   {
     sgbi.assign(230, list<const SpaceGroup*>());
-    _dir = BABEL_DATADIR;
-    _envvar = "BABEL_DATADIR";
     _filename = "space-groups.txt";
-    _subdir = "data";
     _dataptr = nullptr;
   }
 

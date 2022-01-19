@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#ifndef OB_PAINTER_H
-#define OB_PAINTER_H
-
+#pragma once
 #include <openbabel/babelconfig.h>
 #include <string>
 #include <vector>
@@ -196,8 +194,5 @@ namespace OpenBabel
   };
 
 }
-
-#endif
-
 //! \file painter.h
 //! \brief Base class for graphical 2D depiction classes (e.g., "paint" to SVG)

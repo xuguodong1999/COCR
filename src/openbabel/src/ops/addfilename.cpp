@@ -15,12 +15,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <string>
-#include <openbabel/babelconfig.h>
 #include <openbabel/op.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/base.h>
 
+#include <string>
 namespace OpenBabel
 {
 

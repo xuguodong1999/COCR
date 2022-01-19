@@ -18,12 +18,9 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_BOND_H
-#define OB_BOND_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/base.h>
 #include <openbabel/atom.h>
 
@@ -259,8 +256,6 @@ namespace OpenBabel
   typedef std::vector<OBBond*>::iterator OBBondIterator;
 
 }// namespace OpenBabel
-
-#endif   // OB_BOND_H
 
 //! @file bond.h
 //! @brief Handle bonds

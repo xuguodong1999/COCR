@@ -15,8 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#ifndef OB_ASCIIPAINTER_H
-#define OB_ASCIIPAINTER_H
+#pragma once
 
 #include <openbabel/depict/painter.h>
 
@@ -61,5 +60,3 @@ namespace OpenBabel
   };
 
 }
-
-#endif

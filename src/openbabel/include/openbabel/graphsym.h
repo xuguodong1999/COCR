@@ -17,9 +17,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_GRAPHSYM_H
-#define OB_GRAPHSYM_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/stereo/stereo.h>
@@ -71,8 +69,6 @@ namespace OpenBabel {
   };
 
 } // namespace OpenBabel
-
-#endif // OB_GRAPHSYM_H
 
 //! \file graphsym.h
 //! \brief Handle and perceive graph symmtery for canonical numbering

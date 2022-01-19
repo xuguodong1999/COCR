@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_PATTY_H
-#define OB_PATTY_H
+#pragma once
 
 #include <openbabel/parsmart.h>
 
@@ -82,8 +80,6 @@ public :
 };
 
 } // end namespace OpenBabel
-
-#endif // OB_PATTY_H
 
 //! \file patty.h
 //! \brief Programmable atom typer. (abbreviated P.At.Ty.)

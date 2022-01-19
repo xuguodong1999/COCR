@@ -17,7 +17,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
@@ -27,11 +26,6 @@ GNU General Public License for more details.
 #include <openbabel/phmodel.h>
 
 #include <cstdlib>
-
-
-#ifdef WIN32
-#pragma warning (disable : 4786)
-#endif
 
 using namespace std;
 
@@ -44,10 +38,7 @@ namespace OpenBabel
   OBPhModel::OBPhModel()
   {
     _init = false;
-    _dir = BABEL_DATADIR;
-    _envvar = "BABEL_DATADIR";
     _filename = "phmodel.txt";
-    _subdir = "data";
     _dataptr = nullptr;
   }
 

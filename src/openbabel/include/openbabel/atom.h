@@ -17,18 +17,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_ATOM_H
-#define OB_ATOM_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
-
-#include <vector>
-#include <string>
-
 #include <openbabel/base.h>
 #include <openbabel/residue.h>
 #include <openbabel/math/vector3.h>
+
+#include <vector>
+#include <string>
 
 namespace OpenBabel
 {
@@ -451,8 +448,6 @@ namespace OpenBabel
     }; // class OBAtom
 
 }// namespace OpenBabel
-
-#endif   // OB_ATOM_H
 
 //! \file atom.h
 //! \brief Handle atoms

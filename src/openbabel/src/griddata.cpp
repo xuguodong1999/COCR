@@ -19,16 +19,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include <openbabel/babelconfig.h>
-
 #include <openbabel/griddata.h>
 #include <openbabel/mol.h>
 #include <openbabel/grid.h>
 
 #include <vector>
 #include <algorithm>
-#include <limits>
 
 using namespace std;
 

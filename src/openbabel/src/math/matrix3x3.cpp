@@ -18,7 +18,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/math/matrix3x3.h>
 #include <openbabel/obutil.h>
 
@@ -676,4 +675,3 @@ namespace OpenBabel
 
 //! \file matrix3x3.cpp
 //! \brief Handle 3D rotation matrix.
-

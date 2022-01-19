@@ -15,13 +15,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#ifndef OB_SVGPAINTER_H
-#define OB_SVGPAINTER_H
-
+#pragma once
 #include <openbabel/babelconfig.h>
+#include <openbabel/depict/painter.h>
+
 #include <iostream>
 #include <set>
-#include <openbabel/depict/painter.h>
 
 namespace OpenBabel
 {
@@ -79,8 +78,5 @@ namespace OpenBabel
   };
 
 }
-
-#endif
-
 //! \file svgpainter.h
 //! \brief Generate 2D depictions in the SVG vector graphics format.

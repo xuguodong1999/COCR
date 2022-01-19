@@ -17,15 +17,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_CHAINS_H
-#define OB_CHAINS_H
-
-#define MaxMonoAtom 20
-#define MaxMonoBond 20
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <vector>
+
+#define MaxMonoAtom 20
+#define MaxMonoBond 20
 
 namespace OpenBabel
 {
@@ -286,7 +284,6 @@ namespace OpenBabel
     OB_EXPORT extern  OBChainsParser   chainsparser;
 
 }
-#endif // OB_CHAINS_H
 
 //! \file chains.h
 //! \brief Parse for macromolecule chains and residues.

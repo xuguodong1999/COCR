@@ -11,8 +11,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
@@ -21,12 +19,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
-
-#include <limits>
-#include <locale> // For isalpha(int)
 #include <functional>
 #include <iostream>
-#include <algorithm>
 #include <cstdlib>
 
 #define EV_TO_KCAL_PER_MOL 23.060538
@@ -777,4 +771,3 @@ namespace OpenBabel {
   }
 
 } //namespace OpenBabel
-

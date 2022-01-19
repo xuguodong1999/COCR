@@ -10,14 +10,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <algorithm>
-#include <iterator>
-#include <openbabel/babelconfig.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/mol.h>
+#include <iostream>
+#include <string>
+#include <algorithm>
 
 #include <zlib.h>
 
@@ -444,4 +441,3 @@ conv.Write(&mol, ofs);
 
 */
 } //namespace OpenBabel
-

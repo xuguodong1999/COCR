@@ -12,9 +12,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-#include <cstdlib>
-#include <sstream>
-#include <string>
 #include <openbabel/alias.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/op.h>
@@ -25,11 +22,12 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/parsmart.h>
 #include <openbabel/mcdlutil.h>
-#include <memory>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
-#define MARK_UNUSED(x) (void)(x)
+#include <memory>
+#include <cstdlib>
+#include <string>
 
 using namespace std;
 namespace OpenBabel
@@ -400,9 +398,6 @@ OpGenAlias theOpGenAlias("genalias"); //Global instance
 /////////////////////////////////////////////////////////////////
 bool OpGenAlias::Do(OBBase* pOb, const char* OptionText, OpMap* pmap, OBConversion*)
 {
-  // Mark variables as unused to avoid warnings
-  MARK_UNUSED(OptionText);
-  MARK_UNUSED(pmap);
 
   OBMol* pmol = dynamic_cast<OBMol*>(pOb);
   if(!pmol)

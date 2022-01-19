@@ -2,7 +2,6 @@
 #include <openbabel/mol.h>
 #include <openbabel/oberror.h>
 #include <algorithm> // std::rotate
-#include <cassert>
 
 namespace OpenBabel {
 
@@ -280,4 +279,3 @@ namespace std {
   }
 
 } // namespace std
-

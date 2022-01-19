@@ -26,6 +26,7 @@ GNU General Public License for more details.
  * - Various tables & misc. functions
  *
  */
+#include "forcefieldmmff94.h"
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/obconversion.h>
@@ -41,7 +42,6 @@ GNU General Public License for more details.
 #endif
 
 #include <iomanip>
-#include "forcefieldmmff94.h"
 
 using namespace std;
 

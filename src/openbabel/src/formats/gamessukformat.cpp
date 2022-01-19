@@ -10,7 +10,6 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
@@ -23,12 +22,7 @@
 
 #include <algorithm>
 #include <cmath>
-
-#ifdef _MSC_VER
-#include <regex>
-#else
 #include <regex.h>
-#endif
 
 using namespace std;
 
@@ -824,9 +818,7 @@ namespace OpenBabel
         }
       }
       mol.EndModify();
-#ifndef _MSC_VER
       regfree(myregex);
-#endif
       return true;
     } // End ReadInitalCartesian
 

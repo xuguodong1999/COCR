@@ -17,12 +17,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_INTERNALCOORD_H
-#define OB_INTERNALCOORD_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
-#include <stddef.h>
+#include <cstddef>
 
 namespace OpenBabel
 {
@@ -73,8 +71,6 @@ namespace OpenBabel
   };
 
 } // end namespace
-
-#endif // OB_INTERNALCOORD_H
 
 //! \file internalcoord.h
 //! \brief Declaration of OBInternalCoord class, conversion between Cartesian

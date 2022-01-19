@@ -21,30 +21,20 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-
 #include <openbabel/graphsym.h>
-#include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/ring.h>
 #include <openbabel/obiter.h>
 #include <openbabel/generic.h>
-
-#include <openbabel/stereo/cistrans.h>
-#include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/elements.h>
 
 #include <iterator> // std::istream_iterator
-#include <cassert>
 #include <algorithm>
 #include <cmath>
 #include <limits>
-
-#include "stereo/stereoutil.h"
-
 using namespace std;
-
 
 // debug function
 template<typename T>

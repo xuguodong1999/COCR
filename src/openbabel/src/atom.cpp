@@ -18,7 +18,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/mol.h>
@@ -32,16 +31,9 @@ GNU General Public License for more details.
 #include <openbabel/chains.h>
 #include <openbabel/obutil.h>
 #include <openbabel/residue.h>
-#include <openbabel/chains.h>
-
 #include <openbabel/math/matrix3x3.h>
 
-#if !HAVE_STRNCASECMP
-extern "C" int strncasecmp(const char *s1, const char *s2, size_t n);
-#endif
-
 using namespace std;
-
 
 namespace OpenBabel
 {

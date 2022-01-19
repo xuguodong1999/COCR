@@ -1,17 +1,16 @@
 #include "maeparser/Writer.hpp"
-
-//#include <boost/algorithm/string/predicate.hpp>
-//#include <boost/iostreams/device/file.hpp>
-
-//#include <boost/iostreams/filter/gzip.hpp>
-//#include <boost/iostreams/filtering_stream.hpp>
+#include "maeparser/MaeBlock.hpp"
 
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <utility>
 
-#include "maeparser/MaeBlock.hpp"
+//#include <boost/algorithm/string/predicate.hpp>
+//#include <boost/iostreams/device/file.hpp>
+
+//#include <boost/iostreams/filter/gzip.hpp>
+//#include <boost/iostreams/filtering_stream.hpp>
 
 using namespace std;
 //using boost::algorithm::ends_with;

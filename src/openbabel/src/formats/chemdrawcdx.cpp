@@ -12,13 +12,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
-#include <openbabel/elements.h>
 #include <openbabel/reactionfacade.h>
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/obfunctions.h>
@@ -29,62 +27,13 @@ GNU General Public License for more details.
 #include "chemdrawcdx.h"
 
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <map>
 #include <list>
 
-
-#if !defined(__CYGWIN__)
-static inline unsigned short bswap_16(unsigned short x) {
-  return (x>>8) | (x<<8);
-}
-
-static inline unsigned int bswap_32(unsigned int x) {
-  return (bswap_16(x&0xffff)<<16) | (bswap_16(x>>16));
-}
-
-static inline unsigned long long bswap_64(unsigned long long x) {
-  return (((unsigned long long)bswap_32(x&0xffffffffull))<<32) | (bswap_32(x>>32));
-}
-#endif
-
-// Macs -- need to use Apple macros to deal with Universal binaries correctly
-#ifdef __APPLE__
-#include <machine/endian.h>
-#if BYTE_ORDER == BIG_ENDIAN
-#    define READ_INT16(stream,data) \
-(stream).read ((char*)&data, sizeof(data)); \
-data = bswap_16 (data);
-#    define READ_INT32(stream,data) \
-(stream).read ((char*)&data, sizeof(data)); \
-data = bswap_32 (data);
-#else BYTE_ORDER == LITTLE_ENDIAN
-#    define READ_INT16(stream,data) \
+#define READ_INT16(stream,data) \
 (stream).read ((char*)&data, sizeof(data));
-#    define READ_INT32(stream,data) \
+#define READ_INT32(stream,data) \
 (stream).read ((char*)&data, sizeof(data));
-#endif
-#else
-
-// Non-Apple systems
-// defined in babelconfig.h by autoconf (portable to Solaris, BSD, Linux)
-#ifdef WORDS_BIGENDIAN
-#    define READ_INT16(stream,data) \
-(stream).read ((char*)&data, sizeof(data)); \
-data = bswap_16 (data);
-#    define READ_INT32(stream,data) \
-(stream).read ((char*)&data, sizeof(data)); \
-data = bswap_32 (data);
-#else
-#    define READ_INT16(stream,data) \
-(stream).read ((char*)&data, sizeof(data));
-#    define READ_INT32(stream,data) \
-(stream).read ((char*)&data, sizeof(data));
-#endif
-// end endian / bigendian issues (on non-Mac systems)
-#endif
-// end Apple/non-Apple systems
 
 using namespace std;
 namespace OpenBabel

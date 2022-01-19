@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef RAND_H
-#define RAND_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
@@ -90,8 +88,6 @@ namespace OpenBabel
   };
 
 } // end namespace OpenBabel
-
-#endif // RAND_H
 
 //! \file rand.h
 //! \brief Pseudo random number generator

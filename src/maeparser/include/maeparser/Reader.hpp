@@ -1,13 +1,13 @@
 #pragma once
 
-#include <cstdio>
-#include <memory>
-#include <string>
-
 #include "maeparser/Buffer.hpp"
 #include "maeparser/MaeBlock.hpp"
 #include "maeparser/MaeParser.hpp"
 #include "maeparser/MaeParserConfig.hpp"
+
+#include <cstdio>
+#include <memory>
+#include <string>
 
 namespace schrodinger::mae {
 

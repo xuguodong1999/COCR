@@ -28,12 +28,7 @@ GNU General Public License for more details.
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/stereo/cistrans.h>
 
-#ifndef WIN32
 #include <cmath>
-#endif
-#ifdef __MINGW32__
-#include <cmath>
-#endif
 
 using namespace std;
 

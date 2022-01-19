@@ -21,7 +21,6 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-
 #include "gen3dstereohelper.h"
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/stereo/tetrahedral.h>

@@ -15,9 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_BONDTYPER_H
-#define OB_BONDTYPER_H
+#pragma once
 
 #include <openbabel/parsmart.h>
 #include <openbabel/data.h>
@@ -50,8 +48,5 @@ public:
 };
 
 }
-
-#endif // OB_BONDTYPER_H
-
 //! \file bondtyper.h
 //! \brief Bond typer to perceive connectivity and bond orders/types.

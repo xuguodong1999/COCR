@@ -15,15 +15,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
-#include <iostream>
-#include<openbabel/op.h>
-#include<openbabel/mol.h>
-#include<openbabel/math/align.h> // ** This requires Eigen to be installed **
-#include<openbabel/obconversion.h>
-#include <openbabel/parsmart.h>
-#include <openbabel/generic.h>
 #include "opisomorph.h"
+#include <openbabel/babelconfig.h>
+#include <openbabel/op.h>
+#include <openbabel/mol.h>
+#include <openbabel/math/align.h> // ** This requires Eigen to be installed **
+#include <openbabel/obconversion.h>
+#include <openbabel/generic.h>
+
+#include <iostream>
 
 //#define DEPICTION2D     0x100 // Should have the same value as in format.h!!
 

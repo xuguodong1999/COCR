@@ -15,14 +15,12 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_OP_H
-#define OB_OP_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
+#include <openbabel/plugin.h>
 #include <string>
 #include <map>
-#include <openbabel/plugin.h>
 
 namespace OpenBabel
 {
@@ -138,8 +136,6 @@ pOp->Do(mol);
   */
 
 }//namespace
-
-#endif
 
 //! \file op.h
 //! \brief Base plugin class for operations on molecules

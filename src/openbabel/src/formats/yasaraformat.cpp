@@ -24,20 +24,12 @@ GNU General Public License for more details.
 
 ***********************************************************/
 #include <openbabel/babelconfig.h>
-
-/* Adapt on some 64bit machines! */
-typedef int int32;
-typedef unsigned int uint32;
-typedef short int16;
-typedef unsigned short uint16;
-
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/elements.h>
 #include <openbabel/bond.h>
 #include <cstdlib>
-
 
 #define mem_alloc malloc
 #define mem_free free
@@ -47,6 +39,12 @@ typedef unsigned short uint16;
 #define STR_____ 0x20202020
 #define FMTOA 0.00001
 #define ATOFM 100000.
+
+/* Adapt on some 64bit machines! */
+typedef int int32;
+typedef unsigned int uint32;
+typedef short int16;
+typedef unsigned short uint16;
 
 using namespace std;
 

@@ -21,8 +21,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-#ifndef OB_TETRAHEDRAL_H
-#define OB_TETRAHEDRAL_H
+#pragma once
 
 #include <openbabel/stereo/tetranonplanar.h>
 
@@ -294,8 +293,6 @@ OB_EXPORT ostream& operator<<(ostream &out, const OpenBabel::OBTetrahedralStereo
 
 } // namespace std
 #endif // SWIG
-
-#endif
 
 //! \file tetrahedral.h
 //! \brief Handle general non-planar tetrahedral stereochemistry

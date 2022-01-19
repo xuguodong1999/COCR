@@ -12,11 +12,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_XML_H
-#define OB_XML_H
-
-#include <typeinfo>
+#pragma once
 
 #include <openbabel/obconversion.h>
 #include <openbabel/obmolecformat.h>
@@ -254,5 +250,3 @@ namespace OpenBabel
 //! \file
 //! \brief Declaration of XMLConversion,
 //!  declaration and definition of XMLBaseFormat and XMLMoleculeFormat
-
-#endif

@@ -13,8 +13,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#ifndef OB_KINETICS_H
-#define OB_KINETICS_H
+#pragma once
 
 #include <openbabel/generic.h>
 
@@ -165,8 +164,6 @@ public:
 };
 
 } //namespace OpenBabel
-
-#endif //OB_KINETICS_H
 
 //! \file kinetics.h
 //! \brief OBRateData and OBNasaThermoData classes

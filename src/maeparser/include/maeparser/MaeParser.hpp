@@ -1,16 +1,15 @@
 #pragma once
 
+#include "maeparser/Buffer.hpp"
+#include "maeparser/MaeBlock.hpp"
+#include "maeparser/MaeParserConfig.hpp"
+
 #include <cerrno>
 #include <cstdio>
 #include <map>
 #include <stdexcept>
 #include <string>
-
 #include <utility>
-
-#include "maeparser/Buffer.hpp"
-#include "maeparser/MaeBlock.hpp"
-#include "maeparser/MaeParserConfig.hpp"
 
 #define MAEPARSER_EXCEPTION_BUFFER_SIZE 256
 

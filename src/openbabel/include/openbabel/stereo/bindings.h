@@ -1,3 +1,4 @@
+#pragma once
 #include <openbabel/stereo/stereo.h>
 
 namespace OpenBabel {

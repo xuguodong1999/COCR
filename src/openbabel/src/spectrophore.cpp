@@ -21,7 +21,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
 #include <openbabel/spectrophore.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
@@ -1955,4 +1954,3 @@ OBSpectrophore::_swapRows(double* _pMatrix, unsigned int i, unsigned int j)
 
 //! \file spectrophore.cpp
 //! \brief Spectrophore(TM) calculator. Implementation of OBSpectrophore.
-

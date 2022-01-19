@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/bond.h>
 #include <openbabel/ring.h>
@@ -29,13 +27,10 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 
 #include <set>
-#include <assert.h>
-
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
-
 
 using namespace std;
 namespace OpenBabel
@@ -800,10 +795,7 @@ namespace OpenBabel
   {
     _quiet=false;
     _init = false;
-    _dir = BABEL_DATADIR;
-    _envvar = "BABEL_DATADIR";
     _filename = "torlib.txt";
-    _subdir = "data";
     _dataptr = nullptr;
   }
 

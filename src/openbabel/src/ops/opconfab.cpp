@@ -18,14 +18,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#include <openbabel/babelconfig.h>
-#include <iostream>
-#include<openbabel/op.h>
-#include<openbabel/mol.h>
-#include<openbabel/forcefield.h>
+#include <openbabel/op.h>
+#include <openbabel/mol.h>
+#include <openbabel/forcefield.h>
 #include <openbabel/obconversion.h>
-#include<openbabel/generic.h>
+#include <openbabel/generic.h>
 #include <cstdlib>
+#include <iostream>
 
 #define CONFAB_VER "1.1.0"
 
@@ -186,4 +185,3 @@ namespace OpenBabel
   }
 
 }//namespace
-

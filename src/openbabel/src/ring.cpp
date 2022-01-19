@@ -19,7 +19,6 @@ GNU General Public License for more details.
 ***********************************************************************/
 
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/mol.h> // implements some OBMol methods
 #include <openbabel/ring.h>
 #include <openbabel/bond.h>

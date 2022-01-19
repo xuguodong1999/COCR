@@ -27,10 +27,6 @@ GNU General Public License for more details.
 
 #include <cstring>
 
-#ifdef HAVE_CONIO_H
-#include <conio.h>
-#endif
-
 using namespace std;
 namespace OpenBabel
 {

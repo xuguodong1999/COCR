@@ -18,9 +18,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_GRIDDATA_H
-#define OB_GRIDDATA_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/math/vector3.h>
@@ -127,8 +125,6 @@ namespace OpenBabel {
   };
 
 } // end namespace
-
-#endif /*OBGRIDDATA_H_*/
 
 //! \file griddata.h
 //! \brief OBGenericData class to connect numeric grids (e.g., orbitals, electrostatic potential) to molecules

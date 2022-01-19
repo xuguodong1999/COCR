@@ -99,4 +99,3 @@ CopyFormat theCopyFormat;
 
 
 } //namespace OpenBabel
-

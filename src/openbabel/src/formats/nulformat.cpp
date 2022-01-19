@@ -37,4 +37,3 @@ public:
 NulFormat theNulFormat;
 
 } //namespace OpenBabel
-

@@ -17,17 +17,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include <openbabel/babelconfig.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/pointgroup.h>
 #include <openbabel/obiter.h>
-#include <iostream>
 
 #include <string>
-#include <math.h>
+#include <cmath>
 #include <cstring>
 #include <algorithm>
 

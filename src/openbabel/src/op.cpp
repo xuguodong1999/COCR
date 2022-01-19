@@ -16,10 +16,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#include <openbabel/babelconfig.h>
-#include <openbabel/op.h>
-
-using namespace std;
 namespace OpenBabel
 {
 #if defined(__CYGWIN__) || defined(__MINGW32__)

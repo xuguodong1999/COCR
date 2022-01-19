@@ -21,10 +21,9 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-#ifndef OB_TETRAPLANAR_H
-#define OB_TETRAPLANAR_H
+#pragma once
 
-#include "stereo.h"
+#include <openbabel/stereo/stereo.h>
 #include <algorithm> // std::rotate
 
 namespace OpenBabel {
@@ -133,8 +132,5 @@ namespace OpenBabel {
   };
 
 }
-
-#endif
-
 /// @file tetraplanar.h
 /// @brief Base class for handling and storing planar stereochemistry with 4 reference atoms.

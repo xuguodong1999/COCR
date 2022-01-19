@@ -17,16 +17,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_GRID_H
-#define OB_GRID_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/math/vector3.h>
 #include <openbabel/base.h>
-
-// Necessary evil for 2.x series -- should use OBMol* below
-#include <openbabel/mol.h>
 
 #include <iosfwd>
 #include <algorithm>
@@ -369,8 +364,6 @@ namespace OpenBabel
   };
 
 } // end namespace OpenBabel
-
-#endif // OB_GRID_H
 
 //! \file grid.h
 //! \brief Handle grids of values.

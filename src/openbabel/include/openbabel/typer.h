@@ -16,17 +16,14 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_TYPER_H
-#define OB_TYPER_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
+#include <openbabel/parsmart.h>
+#include <openbabel/data.h>
 
 #include <vector>
 #include <string>
-
-#include <openbabel/parsmart.h>
-#include <openbabel/data.h>
 
 namespace OpenBabel
 {
@@ -95,8 +92,6 @@ public:
 
 
 } //namespace OpenBabel
-
-#endif // OB_TYPER_H
 
 //! \file typer.h
 //! \brief Open Babel atom and aromaticity typer.

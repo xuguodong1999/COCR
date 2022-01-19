@@ -17,14 +17,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_MATRIX3x3_H
-#define OB_MATRIX3x3_H
-
-#include <ostream>
+#pragma once
 
 #include <openbabel/math/vector3.h> // includes rand.h, which includes <math.h>
 #include <openbabel/oberror.h>
+
+#include <ostream>
 
 #ifndef RAD_TO_DEG
 #define RAD_TO_DEG (180.0/M_PI)
@@ -288,8 +286,6 @@ namespace OpenBabel
   OB_EXPORT vector3 center_coords(double*, int);
 #endif
 }
-
-#endif // OB_MATRIX3x3_H
 
 //! \file matrix3x3.h
 //! \brief Handle 3D Rotation matrix.

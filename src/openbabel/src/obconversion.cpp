@@ -18,42 +18,17 @@ GNU General Public License for more details.
 ***********************************************************************/
 // Definition of OBConversion routines
 #include <openbabel/babelconfig.h>
+#include <openbabel/obconversion.h>
+#include <openbabel/locale.h>
 
-#ifdef _WIN32
-	#pragma warning (disable : 4786)
-
-	//using 'this' in base class initializer
-	#pragma warning (disable : 4355)
-
-	#ifdef GUI
-		#undef DATADIR
-		#include "stdafx.h" //(includes<windows.h>
-	#endif
-#endif
+#include "zipstream.h"
 
 #include <iosfwd>
-#include <fstream>
 #include <sstream>
 #include <string>
 #include <map>
-#include <locale>
 #include <limits>
-#include <typeinfo>
-#include <iterator>
-
-#include <stdlib.h>
-
-#include <openbabel/obconversion.h>
-//#include <openbabel/mol.h>
-#include <openbabel/locale.h>
-
-#ifdef HAVE_LIBZ
-#include "zipstream.h"
-#endif
-
-#if !HAVE_STRNCASECMP
-extern "C" int strncasecmp(const char *s1, const char *s2, size_t n);
-#endif
+#include <cstdlib>
 
 #ifndef BUFF_SIZE
 #define BUFF_SIZE 32768
@@ -349,14 +324,12 @@ namespace OpenBabel {
               ownedInStreams.push_back(pIn);
           pInput = pIn; //simplest case
 
-  #ifdef HAVE_LIBZ
           if(IsOption("zin", GENOPTIONS) || inFormatGzip)
           {
             zlib_stream::zip_istream *zIn = new zlib_stream::zip_istream(*pInput);
             ownedInStreams.push_back(zIn);
             pInput = zIn;
           }
-  #endif
           //always transform newlines if input isn't binary/xml
           if(pInFormat && !(pInFormat->Flags() & (READBINARY | READXML)) &&
               pIn != &std::cin) //avoid filtering stdin as well
@@ -389,8 +362,6 @@ namespace OpenBabel {
         ownedOutStreams.push_back(pOut);
       pOutput = pOut;
 
-#ifdef HAVE_LIBZ
-
       if (IsOption("z", GENOPTIONS) || outFormatGzip)
       {
         zlib_stream::zip_ostream *zOut = new zlib_stream::zip_ostream(*pOutput, true);
@@ -398,7 +369,6 @@ namespace OpenBabel {
         ownedOutStreams.insert(ownedOutStreams.begin(),zOut);
         pOutput = zOut;
       }
-#endif
     }
   }
 
@@ -460,12 +430,10 @@ namespace OpenBabel {
     StreamState savedIn, savedOut;
     if (is)
     {
-#ifdef HAVE_LIBZ
       if(!inFormatGzip && pInFormat && zlib_stream::isGZip(*is))
       {
         inFormatGzip = true;
       }
-#endif
       savedIn.pushInput(*this);
       SetInStream(is, false);
     }
@@ -825,12 +793,10 @@ namespace OpenBabel {
   {
     if(pin) {
       //for backwards compatibility, attempt to detect a gzip file
-#ifdef HAVE_LIBZ
 		if(!inFormatGzip && pInFormat && zlib_stream::isGZip(*pin))
       {
         inFormatGzip = true;
       }
-#endif
       SetInStream(pin, false);
     }
 
@@ -1093,13 +1059,11 @@ namespace OpenBabel {
         obErrorLog.ThrowError(__FUNCTION__,"Cannot read from " + filePath, obError);
         return false;
     }
-#ifdef HAVE_LIBZ
     if(!inFormatGzip && pInFormat && zlib_stream::isGZip(*ifs))
     {
       //for backwards compat, attempt to autodetect gzip
       inFormatGzip = true;
     }
-#endif
 
     SetInStream(ifs, true);
     return Read(pOb);
@@ -1153,10 +1117,8 @@ namespace OpenBabel {
       "-f <#> Start import at molecule # specified\n"
       "-l <#> End import at molecule # specified\n"
       "-e Continue with next object after error, if possible\n"
-      #ifdef HAVE_LIBZ
       "-z Compress the output with gzip\n"
       "-zin Decompress the input with gzip\n"
-      #endif
       "-k Attempt to translate keywords\n";
       // -t All input files describe a single molecule
   }
@@ -1195,7 +1157,6 @@ namespace OpenBabel {
         if(posdot == string::npos)
           posdot = InFile.size();
         else {
-#ifdef HAVE_LIBZ
           if (InFile.substr(posdot) == ".gz")
             {
               InFile.erase(posdot);
@@ -1203,7 +1164,6 @@ namespace OpenBabel {
               if (posdot == string::npos)
                 posdot = InFile.size();
             }
-#endif
         }
 
         string::size_type posname= InFile.find_last_of("\\/");
@@ -1460,13 +1420,11 @@ namespace OpenBabel {
                     //Output is put in a temporary stream and written to a file
                     //with an augmenting name only when it contains a valid object.
                     int Indx=1;
-#ifdef HAVE_LIBZ
                     if(pInFormat && zlib_stream::isGZip(*pIs))
                     {
                       //for backwards compat, attempt to autodetect gzip
                       inFormatGzip = true;
                     }
-#endif
                     SetInStream(pIs, false);
 
 

@@ -16,15 +16,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_ROTAMER_H
-#define OB_ROTAMER_H
-
-#include <vector>
-#include <map>
-
+#pragma once
 #include <openbabel/rotor.h>
 #include <openbabel/generic.h>
+#include <vector>
+#include <map>
 
 namespace OpenBabel
 {
@@ -145,8 +141,6 @@ namespace OpenBabel
   int Swab(int);
 
 }
-
-#endif // OB_ROTAMER_H
 
 //! \file rotamer.h
 //! \brief Handle rotamer list data.

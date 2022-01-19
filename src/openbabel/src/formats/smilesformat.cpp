@@ -18,18 +18,16 @@ GNU General Public License for more details.
 // This code uses the old OpenEye SMILES parser
 // but replaces the SMILES export with Craig James canonical smiles
 // (For regular SMILES, the canonical order is not computed and ignored)
+#include "smilesvalence.h"
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
-
-
 #include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/stereo/squareplanar.h>
@@ -40,7 +38,6 @@ GNU General Public License for more details.
 #include <openbabel/kekulize.h>
 #include <openbabel/canon.h>
 
-#include "smilesvalence.h"
 
 #include <limits>
 #include <iostream>

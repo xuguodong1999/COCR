@@ -16,22 +16,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_ROTOR_H
-#define OB_ROTOR_H
+#pragma once
 
 #include <openbabel/parsmart.h>
 #include <openbabel/typer.h>
 #include <openbabel/bitvec.h>
-
-#ifdef UNUSED
-#elif (__GNUC__ == 4)
-# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
-#elif defined(__LCLINT__)
-# define UNUSED(x) /*@unused@*/ x
-#else
-# define UNUSED(x) x
-#endif
 
 namespace OpenBabel
 {
@@ -425,7 +414,7 @@ namespace OpenBabel
     ///@name Deprecated
     ///@{
     /** @deprecated Has no effect. */
-    void SetDelta(double UNUSED(d)) {}
+    void SetDelta(double d) {}
     /** @deprecated Has no effect. */
     double GetDelta() { return 10.0; }
     /** @deprecated */
@@ -441,7 +430,7 @@ namespace OpenBabel
     /** @deprecated Bad name, see GetTorsionValues() */
     std::vector<double> &GetResolution() { return _torsionAngles; }
     /** @deprecated */
-    void SetNumCoords(int UNUSED(nc)) {}
+    void SetNumCoords(int nc) {}
     ///@}
 
     ; // Added to workaround https://github.com/swig/swig/issues/1636
@@ -821,8 +810,6 @@ namespace OpenBabel
 
 
 } // end namespace OpenBabel
-
-#endif // OB_ROTOR_H
 
 //! \file rotor.h
 //! \brief Rotate torsional according to rotor rules.

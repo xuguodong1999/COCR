@@ -15,17 +15,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_FINGERPRINT_H
-#define OB_FINGERPRINT_H
-
+#pragma once
+#include <openbabel/plugin.h>
 #include <list>
 #include <map>
 #include <set>
 #include <vector>
 #include <string>
-
-#include <openbabel/plugin.h>
 
 namespace OpenBabel
 {
@@ -223,7 +219,6 @@ private:
 };
 
 } //namespace OpenBabel
-#endif
 
 //! \file fingerprint.h
 //! \brief Declaration of OBFingerprint base class and fastsearch classes

@@ -2187,4 +2187,3 @@ bool NMReadWLN(const char *ptr, OpenBabel::OBMol* mol)
   mol->SetDimension(0);
   return NMOBSanitizeMol(mol);
 }
-

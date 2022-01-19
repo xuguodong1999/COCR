@@ -17,12 +17,9 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_VECTOR_H
-#define OB_VECTOR_H
-
+#pragma once
 #include <ostream>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 #include <openbabel/babelconfig.h>
@@ -385,10 +382,6 @@ namespace OpenBabel
   extern OB_EXPORT const vector3 VY;
   //! The z unit vector: <0.0, 0.0, 1.0>
   extern OB_EXPORT const vector3 VZ;
-
 }
-
-#endif // OB_VECTOR_H
-
 //! \file
 //! \brief Handle 3D coordinates.

@@ -16,18 +16,16 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
-
-#include <algorithm>
-#include <vector>
-#include <string>
-#include <limits>
-#include <cstring>
 #include <openbabel/tokenst.h>
 
 #include <QFile>
 #include <QString>
 #include <QIODevice>
+
+#include <vector>
+#include <string>
+#include <limits>
+#include <cstring>
 
 using namespace std;
 

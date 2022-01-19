@@ -18,8 +18,6 @@ GNU General Public License for more details.
 ***********************************************************************/
 
 #include <openbabel/babelconfig.h>
-
-#include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/forcefield.h>
 #include <openbabel/rotamer.h>
@@ -30,10 +28,9 @@ GNU General Public License for more details.
 #include <openbabel/math/vector3.h>
 #include <openbabel/elements.h>
 
-#include <float.h> // For DBL_MAX
+#include <cfloat> // For DBL_MAX
 #include <algorithm> // For min
-#include <limits.h> // For UINTS_MAX with certain old GCC4
-
+#include <climits> // For UINTS_MAX with certain old GCC4
 #include <iomanip> // For setprecision
 
 namespace OpenBabel

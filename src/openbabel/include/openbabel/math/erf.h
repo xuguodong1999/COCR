@@ -1,9 +1,8 @@
 //From http://www.digitalmars.com/archives/cplusplus/3634.html (Jan 2004)
 //Author Steve Strand. No intellectual propery rights claimed.
-#ifndef OB_ERF_H
-#define OB_ERF_H
+#pragma once
 
-#include <math.h>
+#include <cmath>
 
 /// @cond
 // Hide this from doxygen -- internal only code
@@ -74,7 +73,6 @@ inline double erfc(double x)
 /// @endcond
 
 }//namespace
-#endif // OB_ERF_H
 
 /// @file erf.h
 /// @brief Error function

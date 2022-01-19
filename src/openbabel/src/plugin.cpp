@@ -15,10 +15,8 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 ***********************************************************************/
-
 #include <openbabel/babelconfig.h>
 #include <openbabel/plugin.h>
-#include <openbabel/oberror.h>
 
 #include <iterator>
 
@@ -282,9 +280,7 @@ std::vector<std::string> EnableStaticPlugins()
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&thePCModelFormat)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&thePDBFormat)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&thePDBQTFormat)->GetID());
-#ifdef HAVE_LIBZ
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&thePNGFormat)->GetID());
-#endif
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&thePointCloudFormat)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&thePovrayFormat)->GetID());
   plugin_ids.push_back(reinterpret_cast<OBPlugin*>(&thePQRFormat)->GetID());

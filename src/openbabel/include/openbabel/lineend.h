@@ -16,9 +16,7 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_LINEEND_H
-#define OB_LINEEND_H
+#pragma once
 
 #include <streambuf>
 #include <climits>
@@ -204,6 +202,5 @@ public:
 
 } //namespace
 
-#endif //OB_LINEEND_H
 //! \file lineend.h
 //! \brief Translate line endings automatically (UNIX, Classic Mac, DOS)

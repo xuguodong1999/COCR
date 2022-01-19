@@ -21,8 +21,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
  **********************************************************************/
-#ifndef OB_ISOMORPHISM_H
-#define OB_ISOMORPHISM_H
+#pragma once
 
 #include <openbabel/bitvec.h>
 
@@ -366,8 +365,6 @@ namespace OpenBabel {
   ///@}
 
 }
-
-#endif
 
 /// @file isomorphism.h
 /// @brief OBIsomorphismMapper class for finding isomorphisms.

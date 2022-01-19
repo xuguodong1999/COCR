@@ -14,25 +14,22 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include "openbabel/babelconfig.h"
+#include <openbabel/mol.h>
+#include <openbabel/atom.h>
+#include <openbabel/elements.h>
+#include <openbabel/obiter.h>
+#include <openbabel/oberror.h>
+#include <openbabel/obconversion.h>
+#include <openbabel/reaction.h>
+#include <openbabel/kinetics.h>
+#include <openbabel/obmolecformat.h>
+
 
 #include <string>
 #include <iomanip>
 #include <map>
 #include <set>
 #include <iterator>
-#include <locale>
-
-#include <openbabel/mol.h>
-#include <openbabel/atom.h>
-#include <openbabel/elements.h>
-#include <openbabel/obiter.h>
-
-#include "openbabel/oberror.h"
-#include "openbabel/obconversion.h"
-#include "openbabel/reaction.h"
-#include "openbabel/kinetics.h"
-#include "openbabel/obmolecformat.h"
-
 #include <cstdlib>
 
 using namespace std;

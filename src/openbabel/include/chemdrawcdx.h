@@ -14,9 +14,7 @@ again youself."
 
 	Description:	Constants defined by the CDX file format Specification
 ***********************************************************************/
-
-#ifndef _H_CDXConstants
-#define _H_CDXConstants
+#pragma once
 
 // ------------------------------------------------------------
 // An ANSI replacement for four-byte character constants.
@@ -929,5 +927,3 @@ enum CDXCharSet
 	kCDXCharSetMacIcelandic = 10079,
 	kCDXCharSetMacTurkish = 10081
 };
-
-#endif // _H_CDXConstants

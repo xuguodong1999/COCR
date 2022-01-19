@@ -18,7 +18,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/grid.h>
@@ -512,4 +511,3 @@ namespace OpenBabel
 
 //! \file grid.cpp
 //! \brief Handle grids of values.
-

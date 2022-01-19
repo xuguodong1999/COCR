@@ -25,15 +25,14 @@ GNU General Public License for more details.
 #include <openbabel/depict/depict.h>
 #include <openbabel/depict/painter.h>
 #include <openbabel/elements.h>
-#include <algorithm> // std::reverse
-#include <iterator> // std::istream_iterator
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/obiter.h>
 #include <openbabel/obfunctions.h>
 
 #include <cmath>
-
+#include <algorithm> // std::reverse
+#include <iterator> // std::istream_iterator
 #include <iostream>
 using namespace std;
 

@@ -14,11 +14,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
+#pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/phmodel.h>
 #include <openbabel/mol.h>
 #include <openbabel/op.h>
+
 #include <vector>
 
 namespace OpenBabel

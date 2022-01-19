@@ -1,5 +1,7 @@
 #pragma once
 
+#include "maeparser/MaeParserConfig.hpp"
+
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -12,8 +14,6 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
-
-#include "maeparser/MaeParserConfig.hpp"
 
 namespace schrodinger {
 

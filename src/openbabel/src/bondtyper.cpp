@@ -16,7 +16,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-#include <cstdlib>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
@@ -24,7 +23,7 @@ GNU General Public License for more details.
 #include <openbabel/bondtyper.h>
 #include <openbabel/elements.h>
 
-
+#include <cstdlib>
 using namespace std;
 
 namespace OpenBabel
@@ -48,10 +47,7 @@ namespace OpenBabel
   OBBondTyper::OBBondTyper()
   {
     _init = false;
-    _dir = BABEL_DATADIR;
-    _envvar = "BABEL_DATADIR";
     _filename = "bondtyp.txt";
-    _subdir = "data";
     _dataptr = nullptr;
   }
 

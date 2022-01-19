@@ -17,10 +17,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-#include <openbabel/babelconfig.h>
-#include <iostream>
-#include<openbabel/op.h>
-#include<openbabel/mol.h>
+#include <openbabel/op.h>
+#include <openbabel/mol.h>
 #include <openbabel/mcdlutil.h>
 #include <openbabel/stereo/stereo.h>
 

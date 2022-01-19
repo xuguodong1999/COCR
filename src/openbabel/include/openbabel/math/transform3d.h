@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_TRANSFORM_3D_H
-#define OB_TRANSFORM_3D_H
+#pragma once
 
 #include <openbabel/math/matrix3x3.h>
 #include <list>
@@ -73,10 +71,6 @@ namespace OpenBabel
 	};
 
   typedef std::list<transform3d*>::const_iterator transform3dIterator;
-
 }
-
-#endif // OB_TRANSFORM_3D_H
-
 //! \file transform3d.h
 //! \brief Handle 3D transformations in space groups.

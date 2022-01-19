@@ -21,16 +21,12 @@ GNU General Public License for more details.
 Global arrays Residue, ElemDesc and function GetResidueNumber were
 obtained in part or whole from RasMol2 by Roger Sayle.
 ***********************************************************************/
-
-#ifndef OB_RESIDUE_H
-#define OB_RESIDUE_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
-
+#include <openbabel/base.h>
 #include <vector>
 #include <string>
-
-#include <openbabel/base.h>
 
 namespace OpenBabel {
 
@@ -387,8 +383,6 @@ namespace OpenBabel {
   }
 
 } // end namespace OpenBabel
-
-#endif
 
 //! \file residue.h
 //! \brief Defines for residue properties, names, etc.

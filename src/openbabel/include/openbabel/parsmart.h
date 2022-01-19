@@ -16,14 +16,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_PARSMART_H
-#define OB_PARSMART_H
-
+#pragma once
+#include <openbabel/babelconfig.h>
 #include <string>
 #include <vector>
-
-#include <openbabel/babelconfig.h>
 
 /*==========================*/
 /*  SMARTS Data Structures  */
@@ -385,8 +381,6 @@ namespace OpenBabel
                                   std::vector<std::pair<std::string,std::string> > &);
 
 } // end namespace OpenBabel
-
-#endif // OB_PARSMART_H
 
 //! \file parsmart.h
 //! \brief Daylight SMARTS parser.

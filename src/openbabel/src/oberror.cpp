@@ -16,14 +16,11 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 ***********************************************************************/
-
-#include <openbabel/babelconfig.h>
+#include <openbabel/oberror.h>
 
 #include <iostream>
 #include <string>
 #include <algorithm>
-
-#include <openbabel/oberror.h>
 
 using namespace std;
 

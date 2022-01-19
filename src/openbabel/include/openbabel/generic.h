@@ -16,19 +16,16 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_GENERIC_H
-#define OB_GENERIC_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
+#include <openbabel/math/spacegroup.h>
+#include <openbabel/obutil.h>
+#include <openbabel/base.h>
 
 #include <string>
 #include <vector>
 #include <map>
-
-#include <openbabel/math/spacegroup.h>
-#include <openbabel/obutil.h>
-#include <openbabel/base.h>
 
 namespace OpenBabel
 {
@@ -1181,8 +1178,6 @@ namespace OpenBabel
   typedef std::vector<OBGenericData*>::iterator OBDataIterator;
 
 } //end namespace OpenBabel
-
-#endif // OB_GENERIC_H
 
 //! \file generic.h
 //! \brief Handle generic data classes. Custom data for atoms, bonds, etc.

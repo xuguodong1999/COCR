@@ -16,16 +16,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
 #pragma once
 
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 
-#include <iostream>
-
 #include <Eigen/Core>
 #include <LBFGS.h>
+
+#include <iostream>
 
 namespace OpenBabel {
 
@@ -163,7 +162,6 @@ namespace OpenBabel {
       double operator() (const Eigen::VectorXd& x, Eigen::VectorXd& grad);
   };
 }
-
 
 //! \file distgeom.h
 //! \brief Distance Geometry generation and sampling

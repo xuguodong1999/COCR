@@ -24,14 +24,12 @@ This allows options to have parameters, e.g. --ff Ghemical
 Compile with tools/obabel.cpp rather than tools/babel.cpp
 
 *******************************************************************************/
-
-#include <openbabel/babelconfig.h>
+#include <openbabel/op.h>
+#include <openbabel/mol.h>
+#include <openbabel/forcefield.h>
+#include <openbabel/generic.h>
 #include <iostream>
 #include <cstdlib>
-#include<openbabel/op.h>
-#include<openbabel/mol.h>
-#include<openbabel/forcefield.h>
-#include<openbabel/generic.h>
 
 namespace OpenBabel
 {

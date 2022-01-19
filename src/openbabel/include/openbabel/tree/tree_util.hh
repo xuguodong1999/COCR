@@ -20,11 +20,10 @@
 
 */
 
-#ifndef tree_util_hh_
-#define tree_util_hh_
+#pragma once
 
+#include <openbabel/tree/tree.hh>
 #include <iostream>
-#include "tree.hh"
 
 namespace kptree {
 
@@ -84,5 +83,3 @@ void print_subtree_bracketed(const tree<T>& t, typename tree<T>::iterator iRoot,
 	}
 
 };
-
-#endif

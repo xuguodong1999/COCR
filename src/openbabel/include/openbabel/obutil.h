@@ -16,27 +16,14 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_UTIL_H
-#define OB_UTIL_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
 #include <string>
 #include <iosfwd>
-
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else
-#include <time.h>
-#endif
-#endif
-
-#include <math.h>
+#include <ctime>
+#include <cmath>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -48,17 +35,10 @@ namespace OpenBabel
   // class introduction in obutil.cpp
   class OB_EXPORT OBStopwatch
   {
-#if HAVE_CLOCK_T
     clock_t start; //!< the start of timing
     clock_t stop;  //!< the current time
-#else
-    timeval start; //!< the start of timing
-    timeval stop;  //!< the current time
-#endif
 
   public:
-#if HAVE_CLOCK_T
-
     //! Mark the start of "stopwatch" timing
     void  Start()
     {
@@ -70,20 +50,6 @@ namespace OpenBabel
       stop= clock();
       return((stop - start) / (double) CLOCKS_PER_SEC);
     }
-#else
-    //! Mark the start of "stopwatch" timing
-    void Start()
-    {
-      gettimeofday(&start, nullptr);
-    }
-    //! \return The time since calling OBStopwatch::Start() in seconds.
-    double Lap()
-    {
-      gettimeofday(&stop, nullptr);
-      return((stop.tv_sec - start.tv_sec)
-             + (stop.tv_usec - start.tv_usec)/1000000.0);
-    }
-#endif
 
     //! \return The time since calling OBStopwatch::Start() in seconds.
     double Elapsed()
@@ -319,8 +285,6 @@ namespace OpenBabel
     };
 
 } // end namespace OpenBabel
-
-#endif // OBUTIL_H
 
 //! \file obutil.h
 //! \brief Various utility methods.

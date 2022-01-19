@@ -16,15 +16,10 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
  ***********************************************************************/
-
 #include <openbabel/babelconfig.h>
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 
- // This include is not necessary for VS2017
-#if defined(_MSC_VER) && _MSC_VER <= 1910
-#include <rpc/types.h>
-#endif
 #include <rpc/xdr.h>
 #include <vector>
 

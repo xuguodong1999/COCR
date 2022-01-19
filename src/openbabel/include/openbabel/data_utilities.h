@@ -16,9 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_DATA_UTILITIES_H
-#define OB_DATA_UTILITIES_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
@@ -69,8 +67,6 @@ namespace OpenBabel {
                                         double            *ZPVE);
 
 }
-
-#endif //DATA_UTILITIES_H
 
 //! \file data_utilities.h
 //! \brief Data related tools and utilities

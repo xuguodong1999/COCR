@@ -15,17 +15,9 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include <stdlib.h>
-#include <string.h>
 #include <openbabel/locale.h>
-
-#if HAVE_XLOCALE_H
-#include <xlocale.h>
-#endif
-#if HAVE_LOCALE_H
-#include <locale.h>
-#endif
+#include <cstdlib>
+#include <cstring>
 
 namespace OpenBabel
 {

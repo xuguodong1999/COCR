@@ -18,7 +18,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/babelconfig.h>
-
 #include <openbabel/mol.h>
 #include <openbabel/bond.h>
 #include <openbabel/ring.h>
@@ -32,7 +31,6 @@ GNU General Public License for more details.
 #include <openbabel/math/matrix3x3.h>
 #include <openbabel/obfunctions.h>
 #include <openbabel/elements.h>
-
 #include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/stereo/cistrans.h>
 

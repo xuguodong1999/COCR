@@ -21,11 +21,8 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/data.h>
 
-
-
 #include <vector>
 #include <map>
-
 #include <sstream>
 #include <cstdlib>
 

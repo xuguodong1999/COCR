@@ -16,13 +16,11 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#ifndef OB_DATA_H
-#define OB_DATA_H
+#pragma once
 
 #include <openbabel/babelconfig.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <vector>
@@ -51,9 +49,6 @@ namespace OpenBabel
       bool         _init;		//!< Whether the data been read already
       const char  *_dataptr;//!< Default data table if file is unreadable
       std::string  _filename;//!< File to search for
-      std::string  _dir;		//!< Data directory for file if _envvar fails
-      std::string  _subdir;	//!< Subdirectory (if using environment variable)
-      std::string  _envvar;	//!< Environment variable to check first
 
     public:
       //! Constructor
@@ -64,10 +59,6 @@ namespace OpenBabel
       void  Init();
       //! \return the size of the database (for error checking)
       virtual size_t GetSize()                 { return 0;}
-      //! Set the directory before calling Init()
-      void  SetReadDirectory(char *dir)            { _dir = dir;    }
-      //! Set the environment variable to use before calling Init()
-      void  SetEnvironmentVariable(char *var)      { _envvar = var; }
       //! Specified by particular table classes (parses an individual data line)
       virtual void ParseLine(const char*)          {}
     };
@@ -271,8 +262,6 @@ namespace OpenBabel
 
 
 } // end namespace OpenBabel
-
-#endif //DATA_H
 
 //! \file data.h
 //! \brief Global data and resource file parsers.
