@@ -17,7 +17,7 @@ class OCRRunnablePrivate;
 class OCRThread : public QThread {
 Q_OBJECT
 #ifdef WITH_MODEL_QRC
-    inline static const QString DEFAULT_MODEL_DIR=":/model/";
+    inline static const QString DEFAULT_MODEL_DIR="qrc:/models/";
 #else
     inline static const QString DEFAULT_MODEL_DIR = "";
 #endif

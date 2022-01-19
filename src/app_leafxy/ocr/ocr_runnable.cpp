@@ -42,8 +42,8 @@ public:
         minx = miny = std::numeric_limits<qreal>::max();
         maxx = maxy = std::numeric_limits<qreal>::lowest();
 
-        for (auto &pts:_script) {
-            for (auto &pt:pts) {
+        for (auto &pts: _script) {
+            for (auto &pt: pts) {
                 minx = (std::min)(minx, pt.x());
                 miny = (std::min)(miny, pt.y());
                 maxx = (std::max)(maxx, pt.x());
@@ -70,7 +70,7 @@ public:
             }
         }
         image = cv::Mat(height, width, CV_8UC1, WHITE);
-        for (auto &pts:ptsVec) {
+        for (auto &pts: ptsVec) {
             if (pts.size() == 1) {
                 cv::line(image, pts[0], pts[0], BLACK, 2, cv::LINE_AA);
             } else if (pts.size() > 1) {
@@ -106,21 +106,16 @@ public:
 
 OCRThread::OCRThread(QObject *_parent, const QString &_dir)
         : QThread(_parent), _p(std::make_shared<OCRRunnablePrivate>()) {
-    QDir modelDir(_dir);
-    if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
-        modelDir.setPath(QDir::homePath() + "/source/repos/leafxy/resources/model");
-        if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
-            modelDir.setPath(qApp->applicationDirPath());
-            if (!modelDir.exists("vgg_lstm_57_fp16.param")) {
-                modelDir.setPath("C:/source/leafxy/resources/model");
-            }
-        }
-    }
+    const char *ncnnTextModel = ":/models/ncnn/text_57/vgg_lstm_57_fp16_mixFont.bin";
+    const char *ncnnTextModelCfg = ":/models/ncnn/text_57/vgg_lstm_57_fp16.param";
+    const char *ncnnDetModel = ":/models/ncnn/det_8/yolo_3l_c8.bin";
+    const char *ncnnDetModelCfg = ":/models/ncnn/det_8/yolo_3l_c8.param";
+    const char *ocvDetModel = ":/models/darknet/det_8/yolo-3l-c8.weights";
+    const char *ocvDetModelCfg = ":/models/darknet/det_8/yolo-3l-c8.cfg";
 /// detector
 #if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)// && !defined(WITH_MODEL_QRC)
     static xgd::ObjectDetectorOpenCVImpl detector;
-    if (!detector.initModel((modelDir.absolutePath() + "/yolo-3l-c8.cfg").toStdString(),
-                            (modelDir.absolutePath() + "/yolo-3l-c8.weights").toStdString())) {
+    if (!detector.initModel(ocvDetModelCfg, ocvDetModel)) {
         qDebug() << "fail to init opencv detector";
     }
     detector.setConfThresh(0.25);
@@ -128,15 +123,13 @@ OCRThread::OCRThread(QObject *_parent, const QString &_dir)
 #else
     static xgd::ObjectDetectorNcnnImpl detector;
     detector.setNumThread(4);
-    if (!detector.initModel((modelDir.absolutePath() + "/yolo_3l_c8.bin").toStdString(),
-                            (modelDir.absolutePath() + "/yolo_3l_c8.param").toStdString(), 1280)) {
+    if (!detector.initModel(ncnnDetModel, ncnnTextModelCfg, 1280)) {
         qDebug() << "fail to init ncnn detector";
     }
 #endif
     /// recognizer
     static xgd::TextRecognizerNcnnImpl recognizer;
-    if (!recognizer.initModel((modelDir.absolutePath() + "/vgg_lstm_57_fp16_mixFont.bin").toStdString(),
-                              (modelDir.absolutePath() + +"/vgg_lstm_57_fp16.param").toStdString(),
+    if (!recognizer.initModel(ncnnTextModel, ncnnTextModelCfg,
                               xgd::TextCorrector::GetAlphabet(), 3200)) {
         qDebug() << "fail to init ncnn recognizer";
     }
@@ -163,8 +156,8 @@ void OCRThread::run() {
     try {
 //        QThread::msleep(2000);
 #ifdef Q_OS_WIN
-//        bool debug = true;
-        bool debug = false;
+        //        bool debug = true;
+                bool debug = false;
 #else
         bool debug = false;
 #endif

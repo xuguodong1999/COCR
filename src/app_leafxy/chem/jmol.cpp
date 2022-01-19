@@ -27,7 +27,7 @@ std::unordered_set<std::string>xgd::JMol::FORMAT_WRITE_WHITE_LIST = {
 //        "gukout",
         "gzmat", "hin", "inchi", "inchikey", "inp", "jin", "k", "lmpdat",
 //        "lpmd",
-        "mcdl", "mcif", "MDFF", "mdl", "ml2", "mmcif", "mmd", "mmod", "mna", "mol", "mol2", "mold", "molden",
+        "mae", "mcdl", "mcif", "MDFF", "mdl", "ml2", "mmcif", "mmd", "mmod", "mna", "mol", "mol2", "mold", "molden",
         "molf", "molreport", "mop", "mopcrt", "mopin", "mp", "mpc", "mpd", "mpqcin", "msms",
 //        "nul",
         "nw", "orcainp", "outmol", "paint", "pcjson", "pcm", "pdb", "pdbqt", "pointcloud", "POSCAR", "POSFF",

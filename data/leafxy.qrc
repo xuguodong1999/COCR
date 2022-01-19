@@ -10,7 +10,6 @@
         <file compress="9" compress-algo="best">img/ben3d.png</file>
         <file compress="9" compress-algo="best">img/shutter.png</file>
         <file compress="9" compress-algo="best">img/agree.png</file>
-        <file compress="9" compress-algo="best">license/leafxy</file>
-        <file compress="9" compress-algo="best">simfang.subset.ttf</file>
+        <file compress="9" compress-algo="best">fonts/simfang.subset.ttf</file>
     </qresource>
 </RCC>

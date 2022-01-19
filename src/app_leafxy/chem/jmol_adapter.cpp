@@ -11,8 +11,8 @@
 #include <openbabel/forcefield.h>
 #include <openbabel/generic.h>
 
-#include <coordgen/sketcherMinimizer.h>
-
+#include <coordgenlibs/sketcherMinimizer.h>
+#include <QDebug>
 using namespace xgd;
 
 

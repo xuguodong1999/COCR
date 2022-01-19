@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>models/ncnn/text_57/vgg_lstm_57_fp16.param</file>
+        <file>models/ncnn/text_57/vgg_lstm_57_fp16_mixFont.bin</file>
+        <file>models/ncnn/det_8/yolo_3l_c8.bin</file>
+        <file>models/ncnn/det_8/yolo_3l_c8.param</file>
+    </qresource>
+</RCC>

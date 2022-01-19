@@ -28,12 +28,7 @@ WelcomeWidget::WelcomeWidget(QWidget *parent) :
             "<p>Load image from your device is also supported from FILE tab.</p>"
             "<p>CAMERA tab works in a few devices. This feature is still under development.</p>"));
 
-    QFile licenseFile(":/license/leafxy");
-    licenseFile.open(QIODevice::ReadOnly);
-
-    ui->agree_edit->setText(tr("LEAFXY app and its source code are licensed under GNU GPLv3.")
-                            + "\n\n" + licenseFile.readAll());
-    licenseFile.close();
+    ui->agree_edit->setText(tr("LEAFXY app and its source code are licensed under GNU GPLv3."));
 
     connect(ui->agree_box, &QCheckBox::stateChanged, [&](int status) {
         bool checked = (status == Qt::Checked);

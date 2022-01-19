@@ -1,4 +1,9 @@
-project(openbabel LANGUAGES CXX)
+project(openbabel LANGUAGES C CXX)
+
+set(QT_COMPONENTS Core)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
+
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -28,10 +33,6 @@ foreach (PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR_LIST})
     list(APPEND PROJECT_SOURCE ${PROJECT_SOURCES})
 endforeach ()
 
-set(QT_COMPONENTS Core)
-find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
-
 # generate openbabel qrc
 set(DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../data)
 set(OPENBABEL_DATA_DIR ${DATA_DIR}/openbabel)
@@ -44,7 +45,7 @@ foreach (OPENBABEL_DATA ${OPENBABEL_DATA_LIST})
             "<file compress=\"9\" compress-algo=\"best\">${OPENBABEL_DATA_RELATIVE_PATH}</file>\n")
 endforeach ()
 string(APPEND OPENBABEL_QRC "</qresource>\n</RCC>")
-set(OPENBABEL_DATA_QRC_FILE ${OPENBABEL_DATA_DIR}/../openbabel_data.qrc)
+set(OPENBABEL_DATA_QRC_FILE ${OPENBABEL_DATA_DIR}/../openbabel.qrc)
 file(WRITE ${OPENBABEL_DATA_QRC_FILE} ${OPENBABEL_QRC})
 
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE} ${OPENBABEL_DATA_QRC_FILE})

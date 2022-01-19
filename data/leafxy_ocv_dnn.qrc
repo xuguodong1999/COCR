@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>models/ncnn/text_57/vgg_lstm_57_fp16.param</file>
+        <file>models/ncnn/text_57/vgg_lstm_57_fp16_mixFont.bin</file>
+        <file>models/darknet/det_8/yolo-3l-c8.cfg</file>
+        <file>models/darknet/det_8/yolo-3l-c8.weights</file>
+    </qresource>
+</RCC>
