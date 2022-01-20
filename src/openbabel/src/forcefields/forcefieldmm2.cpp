@@ -502,8 +502,8 @@ namespace OpenBabel
     {
       _mol = src._mol;
       _init = src._init;
-      return *this;
     }
+    return *this;
   }
 
   bool OBForceFieldMM2::Setup(OBMol &mol)

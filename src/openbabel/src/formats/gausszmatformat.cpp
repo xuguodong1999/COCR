@@ -24,11 +24,31 @@ GNU General Public License for more details.
 
 #include <cstdlib>
 
-//Possible replacement for strcasestr. See end of file
+#ifdef _MSC_VER
+#define strcasestr _strcasestr
+//Possible replacement for strcasestr.
 const char *_strcasestr(const char *s, const char *pattern);
 
-#ifndef strcasestr
-#define strcasestr _strcasestr
+//*****************************************************************************
+// Adapted from the ht://Dig package   <http://www.htdig.org/>
+// Copyright (c) 1999, 2000, 2001 The ht://Dig Group
+// For copyright details, see the file COPYING in your distribution
+// or the GNU General Public License version 2 or later
+// <http://www.gnu.org/copyleft/gpl.html>
+
+const char *
+_strcasestr(const char *s, const char *pattern)
+{
+    int		length = strlen(pattern);
+
+    while (*s)
+    {
+        if (strncasecmp(s, pattern, length) == 0)
+            return s;
+        s++;
+    }
+    return nullptr;
+}
 #endif
 
 using namespace std;
@@ -394,24 +414,3 @@ namespace OpenBabel
   }
 
 } //namespace OpenBabel
-
-//*****************************************************************************
-// Adapted from the ht://Dig package   <http://www.htdig.org/>
-// Copyright (c) 1999, 2000, 2001 The ht://Dig Group
-// For copyright details, see the file COPYING in your distribution
-// or the GNU General Public License version 2 or later
-// <http://www.gnu.org/copyleft/gpl.html>
-
-const char *
-_strcasestr(const char *s, const char *pattern)
-{
-    int		length = strlen(pattern);
-
-    while (*s)
-    {
-	if (strncasecmp(s, pattern, length) == 0)
-	    return s;
-	s++;
-    }
-    return nullptr;
-}

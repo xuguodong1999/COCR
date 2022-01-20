@@ -22,7 +22,11 @@
 
 #include <algorithm>
 #include <cmath>
+#ifdef _MSC_VER
+#include <regex>
+#else
 #include <regex.h>
+#endif
 
 using namespace std;
 
@@ -790,8 +794,21 @@ namespace OpenBabel
     // Create regex for the coords
     //                     ------label--------   -------charge-------- < seems enough for a match
     string pattern(" *\\* *[a-zA-Z]{1,2}[0-9]* *[0-9]{1,3}\\.[0-9]{1}");
-    regex_t *myregex = new regex_t;
-    bool iok = regcomp(myregex, pattern.c_str(), REG_EXTENDED | REG_NOSUB)==0;
+      bool iok;
+#ifdef _MSC_VER
+      std::regex myregex;
+      try {
+          myregex.assign(pattern,
+                         std::regex_constants::extended |
+                         std::regex_constants::nosubs);
+          iok = true;
+      } catch (std::regex_error ex) {
+          iok = false;
+      }
+#else
+      regex_t *myregex = new regex_t;
+    iok = regcomp(myregex, pattern.c_str(), REG_EXTENDED | REG_NOSUB)==0;
+#endif
     if (!iok) cerr << "Error compiling regex in GUK OUTPUT!\n";
 
     // Read in the coordinates - we process them directly rather
@@ -801,7 +818,11 @@ namespace OpenBabel
 
       // End of geometry block
       if (strstr(buffer, "*************************") != nullptr) break;
-        if (regexec(myregex, buffer, 0, nullptr, 0) == 0) {
+#ifdef _MSC_VER
+        if (std::regex_search(buffer, myregex)) {
+#else
+            if (regexec(myregex, buffer, 0, nullptr, 0) == 0) {
+#endif
           //cerr << "Got Coord line: " << buffer << endl;
           OBAtom *atom = mol.NewAtom();
           tokenize(tokens,buffer," ");
@@ -818,7 +839,9 @@ namespace OpenBabel
         }
       }
       mol.EndModify();
+#ifndef _MSC_VER
       regfree(myregex);
+#endif
       return true;
     } // End ReadInitalCartesian
 

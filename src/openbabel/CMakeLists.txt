@@ -27,6 +27,9 @@ set(PROJECT_SOURCE_DIR_LIST
         src/math
         src/ops
         src/stereo)
+if (UNIX)
+    list(APPEND PROJECT_SOURCE_DIR_LIST src/formats/xtc src/formats/png)
+endif ()
 set(PROJECT_SOURCE)
 foreach (PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR_LIST})
     aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_SOURCE_DIR} PROJECT_SOURCES)

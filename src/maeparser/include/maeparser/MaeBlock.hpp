@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 #include <memory>
+#include <vector>
 
 namespace schrodinger::mae {
     using BoolProperty = uint8_t;

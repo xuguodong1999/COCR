@@ -660,16 +660,16 @@ namespace OpenBabel
            no atom numbers < 0 or > Natoms */
         if (NBond.end() != find_if(NBond.begin(),
                                    NBond.end(),
-                                   bind2nd(less_equal<int>(), 0)) ||
+                                   bind(less_equal<int>(), placeholders::_1, 0)) ||
             NBond.end() != find_if(NBond.begin(),
                                    NBond.end(),
-                                   bind2nd(greater<int>(), MxBond)) ||
+                                   bind(greater<int>(), placeholders::_1, MxBond)) ||
             IBond.end() != find_if(IBond.begin(),
                                    IBond.end(),
-                                   bind2nd(less<int>(), 0)) ||
+                                   bind(less<int>(), placeholders::_1, 0)) ||
             IBond.end() != find_if(IBond.begin(),
                                    IBond.end(),
-                                   bind2nd(greater<int>(), Natoms)))
+                                   bind(greater<int>(), placeholders::_1, Natoms)))
           {
             error_msg << "Invalid connectivity : check the \"NBond\" and/or"
                       << " \"IBond\" section(s).";

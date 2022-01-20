@@ -519,7 +519,7 @@ namespace OpenBabel
 
         /* ---- Add a pigment - statement for start-atom of bond ---- */
         bond_type = bond->GetBeginAtom() -> GetType();
-        bond_type.erase(remove_if(bond_type.begin(), bond_type.end(), bind1st(equal_to<char>(), '.')), bond_type.end());
+        bond_type.erase(remove_if(bond_type.begin(), bond_type.end(), bind(equal_to<char>(), '.', placeholders::_1)), bond_type.end());
         ofs << "\t    pigment{color Color_"
             << bond_type
             << "}" << endl;
@@ -580,7 +580,7 @@ namespace OpenBabel
 
         /* ---- Add a pigment - statement for end-atom of bond i ---- */
         bond_type = bond->GetEndAtom() -> GetType();
-        bond_type.erase(remove_if(bond_type.begin(), bond_type.end(), bind1st(equal_to<char>(), '.')), bond_type.end());
+        bond_type.erase(remove_if(bond_type.begin(), bond_type.end(), bind(equal_to<char>(), '.', placeholders::_1)), bond_type.end());
 
         ofs << "\t    pigment{color Color_"
             << bond_type

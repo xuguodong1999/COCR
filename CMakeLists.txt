@@ -1,4 +1,5 @@
 # cmake .. -G "Ninja" -DOpenCV_DIR=~/shared/opencv4/lib/cmake/opencv4 -DQt5_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -Dncnn_DIR=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR=~/shared/boost/lib/cmake/Boost-1.77.0
+# cmake .. -G "Ninja" -DOpenCV_DIR=C:/Library/Shared/opencv4/x64/vc16/lib -DQt5_DIR=C:/Library/Shared/qt-5.15.2/lib/cmake/Qt5 -Dncnn_DIR=C:/Library/Shared/ncnn/lib/cmake/ncnn -DBoost_DIR=C:/Library/Shared/boost/lib/cmake/Boost-1.77.0 -DVulkan_LIBRARY=C:/Library/Shared/vulkan/Lib/vulkan-1.lib -DVulkan_INCLUDE_DIR=C:/Library/Shared/vulkan/Include
 
 cmake_minimum_required(VERSION 3.16)
 project(COCR LANGUAGES CXX)
@@ -14,6 +15,13 @@ if (OPENMP_FOUND)
 else (OPENMP_FOUND)
     message(WARNING "openmp not found. Acceleration for alkane generation disabled.")
 endif (OPENMP_FOUND)
+
+if (MSVC)
+    set(Boost_USE_STATIC_LIBS OFF CACHE INTERNAL "")
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_definitions(_USE_MATH_DEFINES) # for M_PI macro
+endif ()
 
 #set(LIB_NAME_LIST Qt5 OpenCV Boost ncnn)
 #set(MY_LIB_DIR /home/xgd/shared)

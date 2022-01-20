@@ -23,7 +23,11 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 #include <cstdlib>
+#ifdef _MSC_VER
+#include <regex>
+#else
 #include <regex.h>
+#endif
 
 #include <iomanip>
 
@@ -691,7 +695,27 @@ namespace OpenBabel
 
 // small function to avoid wrong parsing
 // if there is no whitespace between the numbers in the column structure
-  string OrcaOutputFormat::checkColumns(string checkBuffer)
+#ifdef _MSC_VER
+    string OrcaOutputFormat::checkColumns(string checkBuffer)
+    {
+        string pattern ("[0-9]-");
+        std::regex myregex;
+        std::smatch pm;
+        try {
+            myregex.assign(pattern,
+                           std::regex_constants::extended);
+            //iok = true;
+        } catch (std::regex_error ex) {
+            return (checkBuffer); // do nothing
+            //iok = false;
+        }
+        while (std::regex_search (checkBuffer,pm,myregex)) {
+            checkBuffer.insert(pm.position(0)+1, " ");
+        }
+        return (checkBuffer);
+    }
+#else
+    string OrcaOutputFormat::checkColumns(string checkBuffer)
   {
       string pattern ("[0-9]-");
       regmatch_t pm;
@@ -704,4 +728,5 @@ namespace OpenBabel
       }
       return (checkBuffer);
   }
+#endif
 } //namespace OpenBabel

@@ -121,12 +121,14 @@ public:
   /// @param inchi The inchi string
   static bool EditInchi(std::string& inchi, std::string& spec);
 
+  template<class Arg1, class Arg2, class Result>
+  struct binary_function {};
   ///Compare std::strings with embedded numbers so that
   // "a6b" (or "a06b") is less than "a15b"
   // and "CH4" is less than "C2H6"
   // and "CH4" is less than "ClH" (hydrogen chloride)
   struct InchiLess
-    : public std::binary_function<const std::string&, const std::string&, bool>
+    : public binary_function<const std::string&, const std::string&, bool>
   {
     bool operator()(const std::string& s1, const std::string& s2) const
     {

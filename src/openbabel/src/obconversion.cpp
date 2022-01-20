@@ -20,9 +20,9 @@ GNU General Public License for more details.
 #include <openbabel/babelconfig.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/locale.h>
-
+#ifdef UNIX
 #include "zipstream.h"
-
+#endif
 #include <iosfwd>
 #include <sstream>
 #include <string>
@@ -323,13 +323,14 @@ namespace OpenBabel {
           if(takeOwnership)
               ownedInStreams.push_back(pIn);
           pInput = pIn; //simplest case
-
+#ifdef UNIX
           if(IsOption("zin", GENOPTIONS) || inFormatGzip)
           {
             zlib_stream::zip_istream *zIn = new zlib_stream::zip_istream(*pInput);
             ownedInStreams.push_back(zIn);
             pInput = zIn;
           }
+#endif
           //always transform newlines if input isn't binary/xml
           if(pInFormat && !(pInFormat->Flags() & (READBINARY | READXML)) &&
               pIn != &std::cin) //avoid filtering stdin as well
@@ -361,7 +362,7 @@ namespace OpenBabel {
       if (takeOwnership)
         ownedOutStreams.push_back(pOut);
       pOutput = pOut;
-
+#ifdef UNIX
       if (IsOption("z", GENOPTIONS) || outFormatGzip)
       {
         zlib_stream::zip_ostream *zOut = new zlib_stream::zip_ostream(*pOutput, true);
@@ -369,6 +370,7 @@ namespace OpenBabel {
         ownedOutStreams.insert(ownedOutStreams.begin(),zOut);
         pOutput = zOut;
       }
+#endif
     }
   }
 
@@ -430,10 +432,12 @@ namespace OpenBabel {
     StreamState savedIn, savedOut;
     if (is)
     {
+#ifdef UNIX
       if(!inFormatGzip && pInFormat && zlib_stream::isGZip(*is))
       {
         inFormatGzip = true;
       }
+#endif
       savedIn.pushInput(*this);
       SetInStream(is, false);
     }
@@ -792,11 +796,13 @@ namespace OpenBabel {
   bool	OBConversion::Read(OBBase* pOb, std::istream* pin)
   {
     if(pin) {
+#ifdef UNIX
       //for backwards compatibility, attempt to detect a gzip file
 		if(!inFormatGzip && pInFormat && zlib_stream::isGZip(*pin))
       {
         inFormatGzip = true;
       }
+#endif
       SetInStream(pin, false);
     }
 
@@ -1059,12 +1065,13 @@ namespace OpenBabel {
         obErrorLog.ThrowError(__FUNCTION__,"Cannot read from " + filePath, obError);
         return false;
     }
+#ifdef UNIX
     if(!inFormatGzip && pInFormat && zlib_stream::isGZip(*ifs))
     {
       //for backwards compat, attempt to autodetect gzip
       inFormatGzip = true;
     }
-
+#endif
     SetInStream(ifs, true);
     return Read(pOb);
   }
@@ -1420,11 +1427,13 @@ namespace OpenBabel {
                     //Output is put in a temporary stream and written to a file
                     //with an augmenting name only when it contains a valid object.
                     int Indx=1;
+#ifdef UNIX
                     if(pInFormat && zlib_stream::isGZip(*pIs))
                     {
                       //for backwards compat, attempt to autodetect gzip
                       inFormatGzip = true;
                     }
+#endif
                     SetInStream(pIs, false);
 
 

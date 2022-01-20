@@ -801,8 +801,7 @@ namespace OpenBabel
                 tokenize(vs,buffer);
 
               }
-            if (CM5_q.size() == mol.NumAtoms() and
-                HPA_q.size() == mol.NumAtoms())
+            if (CM5_q.size() == mol.NumAtoms() && HPA_q.size() == mol.NumAtoms())
             {
                 Hirshfeld->AddPartialCharge(HPA_q);
                 Hirshfeld->SetAttribute("Hirshfeld charges");

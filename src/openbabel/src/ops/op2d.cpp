@@ -23,6 +23,7 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <coordgenlibs/sketcherMinimizer.h>
 #include <iostream>
+#include <unordered_map>
 namespace OpenBabel
 {
   class Op2D : public OBOp //was OBERROR when with OpenBabelDLL

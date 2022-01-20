@@ -24,14 +24,18 @@ General Public License for more details.
 #include <map>
 #include <sstream>
 #include <cstring>
-
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#endif
 namespace OpenBabel
 {
+template<class Arg1, class Arg2, class Result>
+struct binary_function {};
 ///@addtogroup plugins Plugins
 ///@{
 
 /// @brief Case insensitive string comparison for PluginMapType key.
-struct OB_EXPORT CharPtrLess : public std::binary_function<const char*,const char*, bool>
+struct OB_EXPORT CharPtrLess : public binary_function<const char*,const char*, bool>
 {
   bool operator()(const char* p1,const char* p2) const
   { return strcasecmp(p1,p2)<0; }
@@ -450,7 +454,9 @@ public:
   OB_STATIC_PLUGIN(PCModelFormat, thePCModelFormat)
   OB_STATIC_PLUGIN(PDBFormat, thePDBFormat)
   OB_STATIC_PLUGIN(PDBQTFormat, thePDBQTFormat)
+#ifdef UNIX
   OB_STATIC_PLUGIN(PNGFormat, thePNGFormat)
+#endif
   OB_STATIC_PLUGIN(PointCloudFormat, thePointCloudFormat)
   OB_STATIC_PLUGIN(PovrayFormat, thePovrayFormat)
   OB_STATIC_PLUGIN(PQRFormat, thePQRFormat)

@@ -38,7 +38,7 @@ endif ()
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # source dir
-set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./chem ./ocr ./hw)
+set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./chem ./ocr)
 if (NOT ANDROID)
     list(APPEND SRC_DIR_LIST ./opencv_dnn_impl)
 endif ()
