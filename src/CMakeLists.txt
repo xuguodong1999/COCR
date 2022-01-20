@@ -2,7 +2,7 @@
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/coordgenlibs)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/maeparser)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/openbabel)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/app_leafxy)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/leafxy)
 
 add_dependencies(coordgenlibs maeparser)
 add_dependencies(openbabel maeparser)
