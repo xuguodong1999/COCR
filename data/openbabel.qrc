@@ -19,6 +19,7 @@
 <file compress="9" compress-algo="best">openbabel/data/gaff.prm</file>
 <file compress="9" compress-algo="best">openbabel/data/ghemical.prm</file>
 <file compress="9" compress-algo="best">openbabel/data/logp.txt</file>
+<file compress="9" compress-algo="best">openbabel/data/mm2.prm</file>
 <file compress="9" compress-algo="best">openbabel/data/mmff94.ff</file>
 <file compress="9" compress-algo="best">openbabel/data/mmff94s.ff</file>
 <file compress="9" compress-algo="best">openbabel/data/mmffang.par</file>
