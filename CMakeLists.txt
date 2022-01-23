@@ -1,10 +1,12 @@
-# cmake .. -G "Ninja" -DOpenCV_DIR=~/shared/opencv4/lib/cmake/opencv4 -DQt5_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -Dncnn_DIR=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR=~/shared/boost/lib/cmake/Boost-1.77.0
-# cmake .. -G "Ninja" -DOpenCV_DIR=C:/Library/Shared/opencv4/x64/vc16/lib -DQt5_DIR=C:/Library/Shared/qt-5.15.2/lib/cmake/Qt5 -Dncnn_DIR=C:/Library/Shared/ncnn/lib/cmake/ncnn -DBoost_DIR=C:/Library/Shared/boost/lib/cmake/Boost-1.77.0 -DVulkan_LIBRARY=C:/Library/Shared/vulkan/Lib/vulkan-1.lib -DVulkan_INCLUDE_DIR=C:/Library/Shared/vulkan/Include
+# cmake .. -G "Ninja" -DOpenCV_DIR=~/shared/opencv4/lib/cmake/opencv4 -DQt5_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -Dncnn_DIR=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR=~/shared/boost/lib/cmake/Boost-1.77.0 -DBUILD_TESTS=ON
+# cmake .. -G "Ninja" -DOpenCV_DIR=C:/Library/Shared/opencv4/x64/vc16/lib -DQt5_DIR=C:/Library/Shared/qt-5.15.2/lib/cmake/Qt5 -Dncnn_DIR=C:/Library/Shared/ncnn/lib/cmake/ncnn -DBoost_DIR=C:/Library/Shared/boost/lib/cmake/Boost-1.77.0 -DVulkan_LIBRARY=C:/Library/Shared/vulkan/Lib/vulkan-1.lib -DVulkan_INCLUDE_DIR=C:/Library/Shared/vulkan/Include -DBUILD_TESTS=ON
 
 cmake_minimum_required(VERSION 3.16)
 project(COCR LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
 
 # always need openmp
 find_package(OpenMP)
@@ -50,4 +52,6 @@ endif ()
 #set(QT_DIR ${Qt5_DIR} CACHE INTERNAL "")
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
+if(BUILD_TESTS)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
+endif()
