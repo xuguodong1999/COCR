@@ -1,18 +1,13 @@
 project(openbabel LANGUAGES C CXX)
 
+set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include/inchi)
+
 set(QT_COMPONENTS Core)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
-
-set(CMAKE_AUTORCC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/inchi)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../maeparser/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../coordgenlibs/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../global_header)
-
-add_definitions(-DMAKE_OBDLL)
 
 set(PROJECT_SOURCE_DIR_LIST
         src

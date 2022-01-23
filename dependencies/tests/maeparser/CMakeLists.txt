@@ -1,7 +1,6 @@
-project(CoordgenlibsTest LANGUAGES CXX)
+project(MaeparserTest LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/coordgenlibs/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/maeparser/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 
 set(QT_COMPONENTS Core)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -24,7 +23,7 @@ foreach (QT_COMPONENT ${QT_COMPONENTS})
     list(APPEND QT_COMPONENT_TARGETS Qt${QT_VERSION_MAJOR}::${QT_COMPONENT})
 endforeach ()
 
-target_link_libraries(${PROJECT_NAME} ${QT_COMPONENT_TARGETS} ${Boost_LIBRARIES} coordgenlibs maeparser)
+target_link_libraries(${PROJECT_NAME} ${QT_COMPONENT_TARGETS} ${Boost_LIBRARIES} maeparser)
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

@@ -1,6 +1,12 @@
 project(leafxy LANGUAGES CXX)
 
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include_directories(${ncnn_DIR}/../../../include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../dependencies/include)
+
 set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -8,14 +14,6 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS LinguistTools REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
-
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../coordgenlibs/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../openbabel/include)
-include_directories(${ncnn_DIR}/../../../include)
 
 set(DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../data)
 # notice that qm file is generated through cmake job

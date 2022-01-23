@@ -1,6 +1,6 @@
 project(RxCppTest LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/global_header)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})

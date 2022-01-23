@@ -1,6 +1,6 @@
 project(RxQtTest LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/global_header)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 
 set(CMAKE_AUTOMOC ON)
 set(QT_COMPONENTS Test)
