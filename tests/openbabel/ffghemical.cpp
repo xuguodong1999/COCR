@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(ffghemical)
       conv.Read(&mol);
       if (mol.Empty())
         continue;
-      BOOST_REQUIRE(rifs.getline(buffer,BUFF_SIZE)));
+      BOOST_REQUIRE(rifs.getline(buffer,BUFF_SIZE));
 
       BOOST_REQUIRE(pFF->Setup(mol));
 

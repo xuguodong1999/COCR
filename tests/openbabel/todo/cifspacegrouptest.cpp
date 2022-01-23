@@ -30,7 +30,7 @@ using namespace OpenBabel;
 
 std::string static GetFilename(const std::string &filename)
 {
-  string path = TEST_SAMPLES_PATH + std::string("/") + filename;
+  string path = TEST_SAMPLES_PATH + std::string("/files/") + filename;
   return path;
 }
 

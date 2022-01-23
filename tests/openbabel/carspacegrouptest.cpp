@@ -29,7 +29,7 @@ using namespace OpenBabel;
 
 std::string static GetFilename(const std::string &filename)
 {
-  string path = TEST_SAMPLES_PATH + std::string("/") + filename;
+  string path = TEST_SAMPLES_PATH + std::string("/files/") + filename;
   return path;
 }
 
@@ -72,7 +72,7 @@ void testDefaultSpaceGroup()
   conv.SetInFormat("car");
   conv.ReadFile(&mol, GetFilename("monoclinic.car"));
   OBUnitCell* pUC = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
-  BOOST_REQUIRE_EQUAL( pUC->GetSpaceGroupName(), "");
+  BOOST_REQUIRE( pUC->GetSpaceGroupName() == "");
 }
 
 BOOST_AUTO_TEST_CASE(carspacegrouptest)
