@@ -15,12 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/forcefield.h>
@@ -30,7 +25,7 @@ GNU General Public License for more details.
 using namespace std;
 using namespace OpenBabel;
 
-int phmodel(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(phmodel)
 {
   int defaultchoice = 1;
   

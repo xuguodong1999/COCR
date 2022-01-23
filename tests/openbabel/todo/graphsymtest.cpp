@@ -1,5 +1,4 @@
-#include "obtest.h"
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/stereo/tetrahedral.h>
@@ -24,11 +23,11 @@ void genericGraphSymTest(const std::string &smiles)
   // read a smiles string
   OBMol mol1, mol2;
   OBConversion conv;
-  OB_REQUIRE( conv.SetInFormat("smi") );
-  OB_REQUIRE( conv.SetOutFormat("can") );
+  BOOST_REQUIRE( conv.SetInFormat("smi") );
+  BOOST_REQUIRE( conv.SetOutFormat("can") );
   cout << "smiles: " << smiles << endl;
   // read a smiles string
-  OB_REQUIRE( conv.ReadString(&mol1, smiles) );
+  BOOST_REQUIRE( conv.ReadString(&mol1, smiles) );
 
 
   std::vector<unsigned int> canlbls1, canlbls2;
@@ -43,7 +42,7 @@ void genericGraphSymTest(const std::string &smiles)
   std::string canSmiles = conv.WriteString(&mol1);
   cout << "canSmiles: " << canSmiles;
   // read can smiles in again
-  OB_REQUIRE( conv.ReadString(&mol2, canSmiles) );
+  BOOST_REQUIRE( conv.ReadString(&mol2, canSmiles) );
 
   OBGraphSym gs2(&mol2);
   gs2.GetSymmetry(symclasses2);
@@ -60,7 +59,7 @@ void genericGraphSymTest(const std::string &smiles)
   std::vector<unsigned int>::iterator end2 = std::unique(symclassesCopy2.begin(), symclassesCopy2.end());
   unsigned int unique2 = end2 - symclassesCopy2.begin();
 
-  OB_ASSERT( unique1 == unique2 );
+  BOOST_REQUIRE( unique1 == unique2 );
   if (unique1 != unique2)
     cout << unique1 << " == " << unique2 << endl;
 
@@ -76,11 +75,11 @@ void genericGraphSymTest(const std::string &smiles)
     if (!a2)
       continue;
 
-    OB_ASSERT( a1->GetAtomicNum() == a2->GetAtomicNum() );
-    OB_ASSERT( a1->GetExplicitDegree() == a2->GetExplicitDegree() );
-    OB_ASSERT( a1->GetHvyDegree() == a2->GetHvyDegree() );
-    OB_ASSERT( a1->GetHeteroDegree() == a2->GetHeteroDegree() );
-    OB_ASSERT( a1->GetImplicitHCount() == a2->GetImplicitHCount() );
+    BOOST_REQUIRE( a1->GetAtomicNum() == a2->GetAtomicNum() );
+    BOOST_REQUIRE( a1->GetExplicitDegree() == a2->GetExplicitDegree() );
+    BOOST_REQUIRE( a1->GetHvyDegree() == a2->GetHvyDegree() );
+    BOOST_REQUIRE( a1->GetHeteroDegree() == a2->GetHeteroDegree() );
+    BOOST_REQUIRE( a1->GetImplicitHCount() == a2->GetImplicitHCount() );
   }
 
   cout << "." << endl << endl;
@@ -93,9 +92,9 @@ void countGraphSymClassesTest(const std::string &filename, int numberOfClasses)
   OBMol mol;
   OBConversion conv;
   OBFormat *format = conv.FormatFromExt(file.c_str());
-  OB_REQUIRE( format );
-  OB_REQUIRE( conv.SetInFormat(format) );
-  OB_REQUIRE( conv.ReadFile(&mol, file) );
+  BOOST_REQUIRE( format );
+  BOOST_REQUIRE( conv.SetInFormat(format) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, file) );
 
   OBGraphSym graphSym(&mol);
   std::vector<unsigned int> symmetry_classes;
@@ -107,13 +106,13 @@ void countGraphSymClassesTest(const std::string &filename, int numberOfClasses)
   std::vector<unsigned int>::iterator end = std::unique(symmetry_classes.begin(), symmetry_classes.end());
   unsigned int n = end - symmetry_classes.begin();
 
-  OB_ASSERT( n == numberOfClasses);
+  BOOST_REQUIRE( n == numberOfClasses);
   if (n != numberOfClasses) {
     cout << n << " == " << numberOfClasses << endl;
   }
 }
 
-int graphsymtest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(graphsymtest)
 {
   int defaultchoice = 1;
   

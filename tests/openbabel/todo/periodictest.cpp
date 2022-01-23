@@ -16,8 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
@@ -88,8 +87,8 @@ PeriodicTester::PeriodicTester() {
   tmol.GetBond(atom_list[0], atom_list[1])->SetBondOrder(2);
 
   tmol.EndModify();
-  OB_COMPARE( tmol.NumAtoms(), 4);
-  OB_COMPARE( tmol.NumBonds(), 3);
+  BOOST_REQUIRE_EQUAL( tmol.NumAtoms(), 4);
+  BOOST_REQUIRE_EQUAL( tmol.NumBonds(), 3);
 }
 
 
@@ -101,7 +100,7 @@ void PeriodicTester::TestLengths(double a, double b, double c) {
   for (int i=0; i<3; ++i) {
     OBAtom* a1 = atom_list[i];
     OBAtom* a2 = atom_list[i+1];
-    OB_ASSERT( near( a1->GetDistance(a2), expected[i] ) );
+    BOOST_REQUIRE( near( a1->GetDistance(a2), expected[i] ) );
   }
 }
 
@@ -114,14 +113,14 @@ void PeriodicTester::TestAngles(double a, double b) {
     OBAtom* a1 = atom_list[i];
     OBAtom* a2 = atom_list[i+1];
     OBAtom* a3 = atom_list[i+2];
-    OB_ASSERT( near( a1->GetAngle(a2, a3), expected[i] ) );
+    BOOST_REQUIRE( near( a1->GetAngle(a2, a3), expected[i] ) );
   }
 }
 
 
 void PeriodicTester::TestTorsion(double a) {
   double torsion = tmol.GetTorsion(atom_list[0], atom_list[1], atom_list[2], atom_list[3]);
-  OB_ASSERT( near( torsion, a ) );
+  BOOST_REQUIRE( near( torsion, a ) );
 }
 
 
@@ -201,7 +200,7 @@ void testPeriodicCIFWrite() {
     C2     Br3       2.00000  1_554   S\n\
 ";
 
-  OB_COMPARE(expected_cif_bonds, bond_section);
+  BOOST_REQUIRE_EQUAL(expected_cif_bonds, bond_section);
 }
 
 
@@ -228,7 +227,7 @@ void testPeriodicNoncubic() {
 
 
 
-int periodictest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(periodictest)
 {
   int defaultchoice = 1;
 

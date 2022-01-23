@@ -1,4 +1,4 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/ring.h>
@@ -65,7 +65,7 @@ bool doShuffleTestMolecule(OBMol &mol)
     mol.RenumberAtoms(atoms);
     // get rings
     std::vector< std::vector<unsigned long> > rings = getIdRingPaths(mol);
-    OB_ASSERT( rings.size() == ref.size() );
+    BOOST_REQUIRE( rings.size() == ref.size() );
     if (rings.size() == ref.size()) {
       for (unsigned int j = 0; j < rings.size(); ++j) {
         bool found = false;
@@ -75,7 +75,7 @@ bool doShuffleTestMolecule(OBMol &mol)
             break;
           }
         }
-        OB_ASSERT( found );
+        BOOST_REQUIRE( found );
       }
     }
   }
@@ -91,12 +91,12 @@ bool doShuffleTestMultiFile(const std::string &filename)
   OBMol mol;
   OBConversion conv;
   OBFormat *format = conv.FormatFromExt(file.c_str());
-  OB_REQUIRE( format );
-  OB_REQUIRE( conv.SetInFormat(format) );
+  BOOST_REQUIRE( format );
+  BOOST_REQUIRE( conv.SetInFormat(format) );
 
   std::ifstream ifs;
   ifs.open(file.c_str());
-  OB_REQUIRE( ifs );
+  BOOST_REQUIRE( ifs );
  
   bool result = true;
   while (conv.Read(&mol, &ifs)) {
@@ -147,13 +147,13 @@ bool verifyLSSR(const std::string &filename, const LSSR &ref)
   OBMol mol;
   OBConversion conv;
   OBFormat *format = conv.FormatFromExt(file.c_str());
-  OB_REQUIRE( format );
-  OB_REQUIRE( conv.SetInFormat(format) );
+  BOOST_REQUIRE( format );
+  BOOST_REQUIRE( conv.SetInFormat(format) );
 
   std::ifstream ifs;
   ifs.open(file.c_str());
-  OB_REQUIRE( ifs );
-  OB_REQUIRE( conv.Read(&mol, &ifs) );
+  BOOST_REQUIRE( ifs );
+  BOOST_REQUIRE( conv.Read(&mol, &ifs) );
 
   std::vector<int> ringSizeCount(20, 0); 
   std::vector<OBRing*> lssr = mol.GetLSSR();
@@ -173,13 +173,13 @@ bool verifyLSSR(const std::string &filename, const LSSR &ref)
   bool fail = false;
   for (unsigned int i = 0; i < ref.size_count.size(); ++i) {
     const LSSR::Size_Count &size_count = ref.size_count[i];
-    OB_ASSERT( ringSizeCount[size_count.ringSize] == size_count.ringCount );
+    BOOST_REQUIRE( ringSizeCount[size_count.ringSize] == size_count.ringCount );
   }
 
   return true;
 }
 
-int lssrtest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(lssrtest)
 {
   int defaultchoice = 1;
   
@@ -200,37 +200,37 @@ int lssrtest(int argc, char* argv[])
 
   switch(choice) {
   case 1:
-    OB_ASSERT( doShuffleTestMultiFile("aromatics.smi") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("aromatics.smi") );
     break;
   case 2:
-    OB_ASSERT( doShuffleTestMultiFile("nci.smi") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("nci.smi") );
     break;
   case 3:
-    OB_ASSERT( doShuffleTestMultiFile("attype.00.smi") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("attype.00.smi") );
     break;
   case 4:    
-    OB_ASSERT( doShuffleTestMultiFile("rings/tetrahedron.mdl") );
-    OB_ASSERT( doShuffleTestMultiFile("rings/cubane.mdl") );
-    OB_ASSERT( doShuffleTestMultiFile("rings/cubane2.mdl") );
-    OB_ASSERT( doShuffleTestMultiFile("rings/octahedron.mdl") );
-    OB_ASSERT( doShuffleTestMultiFile("rings/bridged1.mdl") );
-    OB_ASSERT( doShuffleTestMultiFile("rings/fullerene20.mdl") );
-    OB_ASSERT( doShuffleTestMultiFile("rings/fullerene60.mdl") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("rings/tetrahedron.mdl") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("rings/cubane.mdl") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("rings/cubane2.mdl") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("rings/octahedron.mdl") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("rings/bridged1.mdl") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("rings/fullerene20.mdl") );
+    BOOST_REQUIRE( doShuffleTestMultiFile("rings/fullerene60.mdl") );
     break;
   case 5:
     // 4x 3-ring, 1x 5-ring
-    OB_ASSERT( verifyLSSR("rings/tetrahedron.mdl", LSSR(LSSR::Size_Count(3, 4), LSSR::Size_Count(5, 1))) );
+    BOOST_REQUIRE( verifyLSSR("rings/tetrahedron.mdl", LSSR(LSSR::Size_Count(3, 4), LSSR::Size_Count(5, 1))) );
     // 6x 4-ring, 1x 6-ring
-    OB_ASSERT( verifyLSSR("rings/cubane.mdl", LSSR(LSSR::Size_Count(4, 6), LSSR::Size_Count(6, 1))) );
-    OB_ASSERT( verifyLSSR("rings/cubane2.mdl", LSSR(LSSR::Size_Count(4, 6), LSSR::Size_Count(6, 1))) );
+    BOOST_REQUIRE( verifyLSSR("rings/cubane.mdl", LSSR(LSSR::Size_Count(4, 6), LSSR::Size_Count(6, 1))) );
+    BOOST_REQUIRE( verifyLSSR("rings/cubane2.mdl", LSSR(LSSR::Size_Count(4, 6), LSSR::Size_Count(6, 1))) );
     // 8x 3-ring
-    OB_ASSERT( verifyLSSR("rings/octahedron.mdl", LSSR(LSSR::Size_Count(3, 8))) );
+    BOOST_REQUIRE( verifyLSSR("rings/octahedron.mdl", LSSR(LSSR::Size_Count(3, 8))) );
     // 3x 6-ring
-    OB_ASSERT( verifyLSSR("rings/bridged1.mdl", LSSR(LSSR::Size_Count(6, 3))) );
+    BOOST_REQUIRE( verifyLSSR("rings/bridged1.mdl", LSSR(LSSR::Size_Count(6, 3))) );
     // 12x 5-ring
-    OB_ASSERT( verifyLSSR("rings/fullerene20.mdl", LSSR(LSSR::Size_Count(5, 12))) );
+    BOOST_REQUIRE( verifyLSSR("rings/fullerene20.mdl", LSSR(LSSR::Size_Count(5, 12))) );
     // 12x 5-ring, 20x 6-ring
-    OB_ASSERT( verifyLSSR("rings/fullerene60.mdl", LSSR(LSSR::Size_Count(5, 12), LSSR::Size_Count(6, 20))) );
+    BOOST_REQUIRE( verifyLSSR("rings/fullerene60.mdl", LSSR(LSSR::Size_Count(5, 12), LSSR::Size_Count(6, 20))) );
     break;
   default:
     cout << "Test number " << choice << " does not exist!\n";

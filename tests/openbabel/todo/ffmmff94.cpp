@@ -15,12 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 
 #include <fstream>
@@ -61,7 +56,7 @@ void GenerateEnergies(string molecules_file, string results_file, string method,
     }
 
   OBForceField* pFF = OBForceField::FindForceField(method);
-  OB_REQUIRE(pFF != nullptr);
+  BOOST_REQUIRE(pFF != nullptr);
 
   pFF->SetLogFile(&cout);
   pFF->SetLogLevel(OBFF_LOGLVL_NONE);
@@ -116,7 +111,7 @@ void TestFile(string filename, string results_file, string method, double epsilo
     }
 
   OBForceField* pFF = OBForceField::FindForceField(method);
-  OB_REQUIRE(pFF != nullptr);
+  BOOST_REQUIRE(pFF != nullptr);
 
   pFF->SetLogFile(&cout);
   pFF->SetLogLevel(OBFF_LOGLVL_NONE);
@@ -163,7 +158,7 @@ void TestFile(string filename, string results_file, string method, double epsilo
     }
 } // end TestFile
 
-int ffmmff94(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(ffmmff94)
 {
   int defaultchoice = 1;
 

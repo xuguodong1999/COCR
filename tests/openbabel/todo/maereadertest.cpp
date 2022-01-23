@@ -15,8 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
@@ -42,14 +41,14 @@ void testMaeReader()
   conv.ReadFile(&mol, OBTestUtil::GetFilename("maereader.maegz"));
   string maegz_smi = conv.WriteString(&mol);
 
-  OB_ASSERT(mae_smi == maegz_smi);
+  BOOST_REQUIRE(mae_smi == maegz_smi);
 
   // Erase any potential newlines
   mae_smi.erase(remove(mae_smi.begin(), mae_smi.end(), '\n'), mae_smi.end());
   mae_smi.erase(remove(mae_smi.begin(), mae_smi.end(), '\r'), mae_smi.end());
 
   const string known_smi = "C([N+](=O)[O-])[N+](=O)[O-]\t2:Acids";
-  OB_COMPARE(mae_smi, known_smi);
+  BOOST_REQUIRE_EQUAL(mae_smi, known_smi);
 }
 
 
@@ -71,16 +70,16 @@ void testMaeWriter()
   conv.SetInFormat("mae");
   conv.ReadString(&mae_mol, mae_txt);
 
-  OB_COMPARE(mae_mol.NumAtoms(), 39);
+  BOOST_REQUIRE_EQUAL(mae_mol.NumAtoms(), 39);
 
   // Verify that reading from sequential strings works
   conv.ReadString(&mae_mol, mae_file_txt);
-  OB_COMPARE(mae_mol.NumAtoms(), 9);
+  BOOST_REQUIRE_EQUAL(mae_mol.NumAtoms(), 9);
 
 
 }
 
-int maereadertest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(maereadertest)
 {
   int defaultchoice = 1;
 

@@ -15,12 +15,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 
 #include <fstream>
@@ -30,83 +25,36 @@ GNU General Public License for more details.
 #include <openbabel/obconversion.h>
 #include <openbabel/forcefield.h>
 #include <openbabel/obutil.h>
-
+#include <fstream>
 using namespace std;
 using namespace OpenBabel;
 
-#ifdef TESTDATADIR
-  string etestdatadir = TESTDATADIR;
-  string eresults_file = etestdatadir + "ghemicalresults.txt";
-  string emolecules_file = etestdatadir + "forcefield.sdf";
-#else
-  string eresults_file = "files/ghemicalresults.txt";
-  string emolecules_file = "files/forcefield.sdf";
-#endif
+void PGenerateEnergies(const string& emolecules_file, const string& eresults_file);
 
-void PGenerateEnergies();
-
-int ffghemical(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(ffghemical)
 {
-  int defaultchoice = 1;
-  
-  int choice = defaultchoice;
+  string eresults_file = TEST_SAMPLES_PATH + std::string("files/ghemicalresults.txt");
+  string emolecules_file = TEST_SAMPLES_PATH + std::string("files/forcefield.sdf");
 
-  if (argc > 1) {
-    if(sscanf(argv[1], "%d", &choice) != 1) {
-      printf("Couldn't parse that input as a number\n");
-      return -1;
-    }
-  }
-
-  // Define location of file formats for testing
-  #ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-  #endif
-
-  if (choice == 99)
-    {
-      PGenerateEnergies();
-      return 0;
-    }
-
-  cout << "# Testing Ghemical Force Field..." << endl;
+  // PGenerateEnergies(emolecules_file, eresults_file);
 
   std::ifstream mifs;
-  if (!SafeOpen(mifs, emolecules_file.c_str()))
-    {
-      cout << "Bail out! Cannot read file " << emolecules_file << endl;
-      return -1; // test failed
-    }
+  BOOST_REQUIRE(SafeOpen(mifs, emolecules_file.c_str()));
 
   std::ifstream rifs;
-  if (!SafeOpen(rifs, eresults_file.c_str()))
-    {
-      cout << "Bail out! Cannot read file " << eresults_file << endl;
-      return -1; // test failed
-    }
+  BOOST_REQUIRE(SafeOpen(rifs, eresults_file.c_str()));
 
   char buffer[BUFF_SIZE];
   vector<string> vs;
   OBMol mol;
-  OBConversion conv(&mifs, &cout);
-  unsigned int currentTest = 0;
+  OBConversion conv(&mifs, &cerr);
 
-  if(! conv.SetInAndOutFormats("SDF","SDF"))
-    {
-      cout << "Bail out! SDF format is not loaded" << endl;
-      return -1; // test failed
-    }
+  BOOST_REQUIRE(conv.SetInAndOutFormats("SDF","SDF"));
     
   OBForceField* pFF = OBForceField::FindForceField("Ghemical");
+  BOOST_REQUIRE(pFF);
 
-  if (pFF == nullptr) {
-    cerr << "Bail out! Cannot load force field!" << endl;
-    return -1; // test failed
-  }
-
-  pFF->SetLogFile(&cout);
+  pFF->SetLogFile(&cerr);
   pFF->SetLogLevel(OBFF_LOGLVL_NONE);
 
   double energy;
@@ -116,74 +64,35 @@ int ffghemical(int argc, char* argv[])
       conv.Read(&mol);
       if (mol.Empty())
         continue;
-      if (!rifs.getline(buffer,BUFF_SIZE))
-        {
-          cout << "Bail out! error reading reference data" << endl;
-          return -1; // test failed
-        }
-        
-      if (!pFF->Setup(mol)) {
-        cout << "Bail out! could not setup force field on " << mol.GetTitle() << endl;
-        return -1; // test failed
-      }
+      BOOST_REQUIRE(rifs.getline(buffer,BUFF_SIZE)));
+
+      BOOST_REQUIRE(pFF->Setup(mol));
 
       // compare the calculated energy to our reference data
       energy = pFF->Energy(false);
-      if ( fabs(atof(buffer) - energy ) > 1.0e-3)
-        {
-          cout << "not ok " << ++currentTest << " # calculated energy incorrect "
-               << " for molecule " << mol.GetTitle() << "\n";
-          cout << "# Expected " << buffer << " found " <<
-            energy << "\n";
-        }
-      else
-        cout << "ok " << ++currentTest << " # energy \n";
-
-      // check that gradients validate too
-      if (!pFF->ValidateGradients())
-        {
-          cout << "not ok " << ++currentTest << " # gradients do not validate "
-               << " for molecule " << mol.GetTitle() << "\n";
-        }
-      else
-        cout << "ok " << ++currentTest << " # gradients \n";
+      BOOST_REQUIRE_CLOSE(atof(buffer), energy, 1.0e-3);
+      BOOST_REQUIRE(pFF->ValidateGradients());
     }
-
-  // return number of tests run
-  cout << "1.." << currentTest << endl;
-
-  // Passed tests
-  return 0;
 }
 
-void PGenerateEnergies()
+void PGenerateEnergies(const string& emolecules_file, const string& eresults_file)
 {
   std::ifstream ifs;
-  if (!SafeOpen(ifs, emolecules_file.c_str()))
-    return;
+  BOOST_REQUIRE(SafeOpen(ifs, emolecules_file.c_str()));
 
   std::ofstream ofs;
-  if (!SafeOpen(ofs, eresults_file.c_str()))
-    return;
+  BOOST_REQUIRE(SafeOpen(ofs, eresults_file.c_str()));
 
   OBMol mol;
-  OBConversion conv(&ifs, &cout);
+  OBConversion conv(&ifs, &cerr);
   char buffer[BUFF_SIZE];
-  
-  if(! conv.SetInAndOutFormats("SDF","SDF"))
-    {
-      cerr << "SDF format is not loaded" << endl;
-      return;
-    }
+
+  BOOST_REQUIRE(conv.SetInAndOutFormats("SDF","SDF"));
 
   OBForceField* pFF = OBForceField::FindForceField("Ghemical");
+  BOOST_REQUIRE(pFF);
 
-  if (pFF == nullptr) {
-    cerr << "Cannot load force field!" << endl;
-    return;
-  }
-
-  pFF->SetLogFile(&cout);
+  pFF->SetLogFile(&cerr);
   pFF->SetLogLevel(OBFF_LOGLVL_NONE);
 
   for (;ifs;)
@@ -192,17 +101,9 @@ void PGenerateEnergies()
       conv.Read(&mol);
       if (mol.Empty())
         continue;
-
-      if (!pFF->Setup(mol)) {
-        cerr << "Could not setup force field on molecule: " << mol.GetTitle() << endl;
-        return;
-      }
-      
+      BOOST_REQUIRE(pFF->Setup(mol));
       // Don't compute gradients
       sprintf(buffer, "%15.5f\n", pFF->Energy(false));
       ofs << buffer;
     }
-
-	cerr << " Ghemical force field energies written successfully" << endl;
-  return;
 }

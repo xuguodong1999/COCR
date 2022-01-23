@@ -16,8 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
@@ -31,7 +30,7 @@ using namespace OpenBabel;
 
 std::string static GetFilename(const std::string &filename)
 {
-  string path = TESTDATADIR + filename;
+  string path = TEST_SAMPLES_PATH + std::string("/") + filename;
   return path;
 }
 
@@ -47,8 +46,8 @@ void testSpaceGroupUniqueTransformations()
 
   const SpaceGroup* pSG = pUC->GetSpaceGroup();
 
-  OB_ASSERT(pSG != nullptr && pSG->IsValid());
-  OB_ASSERT( pSG->GetId() == 64 );
+  BOOST_REQUIRE(pSG != nullptr && pSG->IsValid());
+  BOOST_REQUIRE( pSG->GetId() == 64 );
 }
 
 void testSpaceGroupClean()
@@ -61,13 +60,13 @@ void testSpaceGroupClean()
   conv.ReadFile(&mol, GetFilename("test02.cif"));
   OBUnitCell* pUC = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
   const SpaceGroup* pSG = pUC->GetSpaceGroup();
-  OB_ASSERT(pSG != nullptr && pSG->IsValid());
+  BOOST_REQUIRE(pSG != nullptr && pSG->IsValid());
 
-  OB_ASSERT( pSG->GetId() == 166 );
+  BOOST_REQUIRE( pSG->GetId() == 166 );
 
   string pdb = conv.WriteString(&mol);
 
-  OB_ASSERT(pdb.find("H -3 m") != string::npos);
+  BOOST_REQUIRE(pdb.find("H -3 m") != string::npos);
 }
 
 void testSpaceGroupTransformations()
@@ -130,8 +129,8 @@ void testSpaceGroupTransformations()
     t = group.NextTransform(ti);
   }
 
-  OB_ASSERT( trans_exp.size() == trans_got.size() );
-  OB_ASSERT( equal(trans_exp.begin(), trans_exp.end(), trans_got.begin()) );
+  BOOST_REQUIRE( trans_exp.size() == trans_got.size() );
+  BOOST_REQUIRE( equal(trans_exp.begin(), trans_exp.end(), trans_got.begin()) );
 }
 
 void testDecayToP1()
@@ -143,13 +142,13 @@ void testDecayToP1()
   conv.ReadFile(&mol, GetFilename("test03.cif"));
   OBUnitCell* pUC = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
   const SpaceGroup* pSG = pUC->GetSpaceGroup();
-  OB_ASSERT(pSG != nullptr && pSG->IsValid());
+  BOOST_REQUIRE(pSG != nullptr && pSG->IsValid());
 
   // Check also for errors and warnings
   string summary = obErrorLog.GetMessageSummary();
-  OB_ASSERT( summary.find("2 warnings") != string::npos);
+  BOOST_REQUIRE( summary.find("2 warnings") != string::npos);
 
-  OB_ASSERT( pSG->GetId() == 1 );
+  BOOST_REQUIRE( pSG->GetId() == 1 );
 }
 
 void testAlternativeOrigin()
@@ -163,9 +162,9 @@ void testAlternativeOrigin()
   const SpaceGroup* pSG = pUC->GetSpaceGroup();
 
   string summary = obErrorLog.GetMessageSummary();
-  OB_ASSERT( summary.find("warning") == string::npos);
-  OB_ASSERT(pSG != nullptr && pSG->IsValid());
-  OB_ASSERT( pSG->GetOriginAlternative() == 1);
+  BOOST_REQUIRE( summary.find("warning") == string::npos);
+  BOOST_REQUIRE(pSG != nullptr && pSG->IsValid());
+  BOOST_REQUIRE( pSG->GetOriginAlternative() == 1);
 }
 
 void testPdbOutAlternativeOrigin()
@@ -179,12 +178,12 @@ void testPdbOutAlternativeOrigin()
 
   string pdb = conv.WriteString(&mol);
   // ending space is needed to check that there is no origin set
-  OB_ASSERT(pdb.find("P 4/n b m ") != string::npos);
+  BOOST_REQUIRE(pdb.find("P 4/n b m ") != string::npos);
 
   conv.AddOption("o", OBConversion::OUTOPTIONS);
   pdb = conv.WriteString(&mol);
 
-  OB_ASSERT(pdb.find("P 4/n b m:1") != string::npos);
+  BOOST_REQUIRE(pdb.find("P 4/n b m:1") != string::npos);
 }
 
 void testPdbOutHexagonalAlternativeOrigin()
@@ -200,7 +199,7 @@ void testPdbOutHexagonalAlternativeOrigin()
   conv.AddOption("o", OBConversion::OUTOPTIONS);
   pdb = conv.WriteString(&mol);
 
-  OB_ASSERT(pdb.find("H -3 m") != string::npos);
+  BOOST_REQUIRE(pdb.find("H -3 m") != string::npos);
 
   // Test with missing Hall name in the CIF
   // https://github.com/openbabel/openbabel/pull/1578
@@ -209,7 +208,7 @@ void testPdbOutHexagonalAlternativeOrigin()
 
   pdb = conv.WriteString(&mol_nohall);
 
-  OB_ASSERT(pdb.find("H -3 m") != string::npos);
+  BOOST_REQUIRE(pdb.find("H -3 m") != string::npos);
 }
 
 void testPdbOutAlternativeOriginSilicon()
@@ -225,7 +224,7 @@ void testPdbOutAlternativeOriginSilicon()
   conv.AddOption("o", OBConversion::OUTOPTIONS);
   pdb = conv.WriteString(&mol);
 
-  OB_ASSERT(pdb.find("F d 3 m:1") != string::npos);
+  BOOST_REQUIRE(pdb.find("F d 3 m:1") != string::npos);
 }
 
 void testPdbOutHexagonalAlternativeOrigin2()
@@ -241,7 +240,7 @@ void testPdbOutHexagonalAlternativeOrigin2()
   conv.AddOption("o", OBConversion::OUTOPTIONS);
   pdb = conv.WriteString(&mol);
 
-  OB_ASSERT(pdb.find("H -3 m") != string::npos);
+  BOOST_REQUIRE(pdb.find("H -3 m") != string::npos);
 }
 
 void testPdbRemSpacesHMName()
@@ -257,7 +256,7 @@ void testPdbRemSpacesHMName()
   conv.AddOption("o", OBConversion::OUTOPTIONS);
   pdb = conv.WriteString(&mol);
 
-  OB_ASSERT(pdb.find("I41/amd:2") != string::npos);
+  BOOST_REQUIRE(pdb.find("I41/amd:2") != string::npos);
 }
 
 void testPdbOccupancies()
@@ -273,17 +272,17 @@ void testPdbOccupancies()
   conv.AddOption("o", OBConversion::OUTOPTIONS);
   pdb = conv.WriteString(&mol);
 
-  OB_ASSERT(pdb.find("HETATM    1 NA   UNL     1       0.325   0.000   4.425  0.36") != string::npos);
-  OB_ASSERT(pdb.find("HETATM   17  O   UNL     8       1.954   8.956   3.035  1.00") != string::npos);
+  BOOST_REQUIRE(pdb.find("HETATM    1 NA   UNL     1       0.325   0.000   4.425  0.36") != string::npos);
+  BOOST_REQUIRE(pdb.find("HETATM   17  O   UNL     8       1.954   8.956   3.035  1.00") != string::npos);
 
   OBMol mol_pdb;
   conv.SetInFormat("pdb");
   conv.ReadFile(&mol_pdb, GetFilename("test09.pdb"));
 
   pdb = conv.WriteString(&mol_pdb);
-  OB_ASSERT(pdb.find("HETATM    1 NA   UNL     1       0.325   0.000   4.425  0.36") != string::npos);
-  OB_ASSERT(pdb.find("HETATM    2 NA   UNL     1       0.002   8.956   1.393  0.10") != string::npos);
-  OB_ASSERT(pdb.find("HETATM   17  O   UNL     8       1.954   8.956   3.035  1.00") != string::npos);
+  BOOST_REQUIRE(pdb.find("HETATM    1 NA   UNL     1       0.325   0.000   4.425  0.36") != string::npos);
+  BOOST_REQUIRE(pdb.find("HETATM    2 NA   UNL     1       0.002   8.956   1.393  0.10") != string::npos);
+  BOOST_REQUIRE(pdb.find("HETATM   17  O   UNL     8       1.954   8.956   3.035  1.00") != string::npos);
 }
 
 void testCIFMolecules()
@@ -297,7 +296,7 @@ void testCIFMolecules()
 
   string smi = conv.WriteString(&mol);
   // never, never disconnected fragments from a molecule
-  OB_ASSERT(smi.find(".") == string::npos);
+  BOOST_REQUIRE(smi.find(".") == string::npos);
 }
 
 void testCIFOutputFormat()
@@ -312,73 +311,22 @@ void testCIFOutputFormat()
   string cif = conv.WriteString(&mol);
 
   string ref = "    H0       H      -71.99400 -128.76240   56.30360    1.000";
-  OB_ASSERT(cif.find(ref) != string::npos);
+  BOOST_REQUIRE(cif.find(ref) != string::npos);
 }
 
-int cifspacegrouptest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(cifspacegrouptest)
 {
-  int defaultchoice = 1;
-
-  int choice = defaultchoice;
-
-  if (argc > 1) {
-    if(sscanf(argv[1], "%d", &choice) != 1) {
-      printf("Couldn't parse that input as a number\n");
-      return -1;
-    }
-  }
-
-  // Define location of file formats for testing
-  #ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-  #endif
-
-  switch(choice) {
-  case 1:
     testSpaceGroupUniqueTransformations();
-    break;
-  case 2:
     testSpaceGroupClean();
-    break;
-  case 3:
     testSpaceGroupTransformations();
-    break;
-  case 4:
     testDecayToP1();
-    break;
-  case 5:
     testAlternativeOrigin();
-    break;
-  case 6:
     testPdbOutAlternativeOrigin();
-    break;
-  case 7:
     testPdbOutHexagonalAlternativeOrigin();
-    break;
-  case 8:
     testPdbOutAlternativeOriginSilicon();
-    break;
-  case 9:
     testPdbOutHexagonalAlternativeOrigin2();
-    break;
-  case 10:
     testPdbRemSpacesHMName();
-  break;
-  case 11:
     testPdbOccupancies();
-  break;
-  case 12:
     testCIFMolecules();
-  break;
-  case 13:
     testCIFOutputFormat();
-  break;
-  default:
-    cout << "Test number " << choice << " does not exist!\n";
-    return -1;
-  }
-
-  return(0);
 }

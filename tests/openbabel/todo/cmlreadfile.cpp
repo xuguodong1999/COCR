@@ -15,17 +15,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <cstdlib>
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 
 using namespace std;
@@ -34,36 +29,12 @@ using namespace OpenBabel;
 string cmlfile = "../cmltest/cs2a.cml";
 string cmlfile_multi = "3d.head.2.cml";
 
-int cmlreadfile(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(cmlreadfile)
 {
-  int defaultchoice = 1;
-  
-  int choice = defaultchoice;
-
-  if (argc > 1) {
-    if(sscanf(argv[1], "%d", &choice) != 1) {
-      printf("Couldn't parse that input as a number\n");
-      return -1;
-    }
-  }
-
-  #ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-  #endif
-
-  cout << "# Unit tests for OBMol \n";
-
-  cout << "ok 1\n"; // for loading tests
-
   OBConversion obconv_first;
-  if(!obconv_first.SetInFormat("CML"))
-  {
-    cout << "Bail out! Fail format isn't loaded!" << endl;
-    return -1;
-  }
-
+  BOOST_ASSERT(obconv_first.SetInFormat("CML"));
+  string cmlfile = "../cmltest/cs2a.cml";
+  string cmlfile_multi = "3d.head.2.cml";
   // Test using ReadFile to read from CML
   OpenBabel::OBMol obmol_first;
   if (obconv_first.ReadFile(&obmol_first, TESTDATADIR + cmlfile))

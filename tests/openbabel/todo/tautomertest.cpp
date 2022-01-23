@@ -1,4 +1,4 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/tautomer.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
@@ -31,7 +31,7 @@ void testEnumerateTautomers(const std::string &smiles, int numTautomers)
   Functor functor;
   EnumerateTautomers(&mol, functor);
 
-  OB_COMPARE( functor.numTautomers, numTautomers );
+  BOOST_REQUIRE_EQUAL( functor.numTautomers, numTautomers );
 }
 
 /**
@@ -77,7 +77,7 @@ void testCanonicalTautomers(const std::string &smiles)
 
   canonicalTautomers.erase(std::unique(canonicalTautomers.begin(), canonicalTautomers.end()), canonicalTautomers.end());
 
-  OB_COMPARE(canonicalTautomers.size(), unsigned(1));
+  BOOST_REQUIRE_EQUAL(canonicalTautomers.size(), unsigned(1));
 }
 
 /**
@@ -97,11 +97,11 @@ void testVerifyCanonicalTautomer(const std::string &smiles, const std::string &e
 
   std::string experimental = conv.WriteString(&mol, true);
 
-  OB_COMPARE(expected, experimental);
+  BOOST_REQUIRE_EQUAL(expected, experimental);
 }
 
 
-int tautomertest(int argc, char* argv[]) {
+BOOST_AUTO_TEST_CASE(tautomertest) {
   // Define location of file formats for testing
 #ifdef FORMATDIR
     char env[BUFF_SIZE];

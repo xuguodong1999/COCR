@@ -5,22 +5,17 @@ This file is part of the Open Babel project.
 For more information, see <http://openbabel.org/>
 
 Some portions Copyright (C) 2005-2006 Geoffrey R. Hutchison
- 
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
- 
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 
 #include <fstream>
@@ -45,7 +40,7 @@ using namespace OpenBabel;
 
 void GenerateFormalChargeReference();
 
-int formalcharge(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(formalcharge)
 {
   int defaultchoice = 1;
   

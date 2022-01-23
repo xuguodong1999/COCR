@@ -1,4 +1,4 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 
@@ -19,7 +19,7 @@ void compareJSON(OBMol &mol1, OBMol &mol2)
   for (std::size_t i = 0; i < mol1.NumAtoms(); ++i) {
     std::string json1 = mol1.GetAtom(i+1)->JSON();
     std::string json2 = mol2.GetAtom(i+1)->JSON();
-    OB_COMPARE(json1.substr(0, json1.find(", flags")) + " }", json2.substr(0, json2.find(", flags")) + " }");
+    BOOST_REQUIRE_EQUAL(json1.substr(0, json1.find(", flags")) + " }", json2.substr(0, json2.find(", flags")) + " }");
   }
 }
 */
@@ -30,14 +30,14 @@ void test_parser(const std::string &smiles)
   std::cout << "Testing: " << smiles << std::endl;
   OBConversion obConv, smileyConv;
 
-  OB_REQUIRE(obConv.SetInFormat("smi"));
-  OB_REQUIRE(obConv.SetOutFormat("smi"));
-  OB_REQUIRE(smileyConv.SetInFormat("smy"));
+  BOOST_REQUIRE(obConv.SetInFormat("smi"));
+  BOOST_REQUIRE(obConv.SetOutFormat("smi"));
+  BOOST_REQUIRE(smileyConv.SetInFormat("smy"));
 
   OBMol obMol, smileyMol;
 
-  OB_REQUIRE(obConv.ReadString(&obMol, smiles));
-  OB_REQUIRE(smileyConv.ReadString(&smileyMol, smiles));
+  BOOST_REQUIRE(obConv.ReadString(&obMol, smiles));
+  BOOST_REQUIRE(smileyConv.ReadString(&smileyMol, smiles));
 
   std::string obCanSmiles = obConv.WriteString(&obMol, true);
   std::string smileyCanSmiles = obConv.WriteString(&smileyMol, true);
@@ -51,7 +51,7 @@ void test_parser(const std::string &smiles)
   compareJSON(obMol, smileyMol);
   */
 
-  OB_COMPARE(obCanSmiles, smileyCanSmiles);
+  BOOST_REQUIRE_EQUAL(obCanSmiles, smileyCanSmiles);
 }
 
 int main()

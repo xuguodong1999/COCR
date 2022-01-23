@@ -1,4 +1,4 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
@@ -13,40 +13,40 @@ using namespace OpenBabel;
 void test_MakeRefs()
 {
   OBStereo::Refs refs = OBStereo::MakeRefs(1, 3, 5);
-  OB_ASSERT( refs.size() == 3 );
-  OB_ASSERT( refs[0] == 1 );
-  OB_ASSERT( refs[1] == 3 );
-  OB_ASSERT( refs[2] == 5 );
+  BOOST_REQUIRE( refs.size() == 3 );
+  BOOST_REQUIRE( refs[0] == 1 );
+  BOOST_REQUIRE( refs[1] == 3 );
+  BOOST_REQUIRE( refs[2] == 5 );
 
   refs = OBStereo::MakeRefs(1, 3, 5, 7);
-  OB_ASSERT( refs.size() == 4 );
-  OB_ASSERT( refs[0] == 1 );
-  OB_ASSERT( refs[1] == 3 );
-  OB_ASSERT( refs[2] == 5 );
-  OB_ASSERT( refs[3] == 7 );
+  BOOST_REQUIRE( refs.size() == 4 );
+  BOOST_REQUIRE( refs[0] == 1 );
+  BOOST_REQUIRE( refs[1] == 3 );
+  BOOST_REQUIRE( refs[2] == 5 );
+  BOOST_REQUIRE( refs[3] == 7 );
 }
 
 void test_ContainsSameRefs()
 {
-  OB_ASSERT( OBStereo::ContainsSameRefs(OBStereo::MakeRefs(1, 2, 3),
+  BOOST_REQUIRE( OBStereo::ContainsSameRefs(OBStereo::MakeRefs(1, 2, 3),
                                         OBStereo::MakeRefs(2, 3, 1)) );
 
-  OB_ASSERT( !OBStereo::ContainsSameRefs(OBStereo::MakeRefs(1, 2, 3),
+  BOOST_REQUIRE( !OBStereo::ContainsSameRefs(OBStereo::MakeRefs(1, 2, 3),
                                          OBStereo::MakeRefs(2, 7, 1)) );
 
   // different sizes
-  OB_ASSERT( !OBStereo::ContainsSameRefs(OBStereo::MakeRefs(1, 2, 3),
+  BOOST_REQUIRE( !OBStereo::ContainsSameRefs(OBStereo::MakeRefs(1, 2, 3),
                                         OBStereo::MakeRefs(2, 3, 1, 4)) );
 }
 
 void test_NumInversions()
 {
-  OB_ASSERT( OBStereo::NumInversions(OBStereo::MakeRefs(1, 2, 3)) == 0 );
-  OB_ASSERT( OBStereo::NumInversions(OBStereo::MakeRefs(1, 3, 2)) == 1 );
-  OB_ASSERT( OBStereo::NumInversions(OBStereo::MakeRefs(2, 1, 3)) == 1 );
-  OB_ASSERT( OBStereo::NumInversions(OBStereo::MakeRefs(2, 3, 1)) == 2 );
-  OB_ASSERT( OBStereo::NumInversions(OBStereo::MakeRefs(3, 1, 2)) == 2 );
-  OB_ASSERT( OBStereo::NumInversions(OBStereo::MakeRefs(3, 2, 1)) == 3 );
+  BOOST_REQUIRE( OBStereo::NumInversions(OBStereo::MakeRefs(1, 2, 3)) == 0 );
+  BOOST_REQUIRE( OBStereo::NumInversions(OBStereo::MakeRefs(1, 3, 2)) == 1 );
+  BOOST_REQUIRE( OBStereo::NumInversions(OBStereo::MakeRefs(2, 1, 3)) == 1 );
+  BOOST_REQUIRE( OBStereo::NumInversions(OBStereo::MakeRefs(2, 3, 1)) == 2 );
+  BOOST_REQUIRE( OBStereo::NumInversions(OBStereo::MakeRefs(3, 1, 2)) == 2 );
+  BOOST_REQUIRE( OBStereo::NumInversions(OBStereo::MakeRefs(3, 2, 1)) == 3 );
 }
 
 void test_Permutate()
@@ -54,9 +54,9 @@ void test_Permutate()
   OBStereo::Refs refs = OBStereo::MakeRefs(1, 2, 3);
   OBStereo::Permutate(refs, 1, 2);
 
-  OB_ASSERT( refs[0] == 1 );
-  OB_ASSERT( refs[1] == 3 );
-  OB_ASSERT( refs[2] == 2 );
+  BOOST_REQUIRE( refs[0] == 1 );
+  BOOST_REQUIRE( refs[1] == 3 );
+  BOOST_REQUIRE( refs[2] == 2 );
 
   // test out of range indexes for crashes
   OBStereo::Permutate(refs, -1, 1);
@@ -70,13 +70,13 @@ void test_Permutated()
   OBStereo::Refs refs = OBStereo::MakeRefs(1, 2, 3);
   OBStereo::Refs mutant = OBStereo::Permutated(refs, 1, 2);
 
-  OB_ASSERT( refs[0] == 1 );
-  OB_ASSERT( refs[1] == 2 );
-  OB_ASSERT( refs[2] == 3 );
+  BOOST_REQUIRE( refs[0] == 1 );
+  BOOST_REQUIRE( refs[1] == 2 );
+  BOOST_REQUIRE( refs[2] == 3 );
 
-  OB_ASSERT( mutant[0] == 1 );
-  OB_ASSERT( mutant[1] == 3 );
-  OB_ASSERT( mutant[2] == 2 );
+  BOOST_REQUIRE( mutant[0] == 1 );
+  BOOST_REQUIRE( mutant[1] == 3 );
+  BOOST_REQUIRE( mutant[2] == 2 );
 
 }
 
@@ -109,8 +109,8 @@ bool doStereoPerception(OBMol &mol, int numTetrahedral, int numCisTrans)
     }
   }
 
-  OB_COMPARE(tetrahedralCount, numTetrahedral);
-  OB_COMPARE(cistransCount, numCisTrans);
+  BOOST_REQUIRE_EQUAL(tetrahedralCount, numTetrahedral);
+  BOOST_REQUIRE_EQUAL(cistransCount, numCisTrans);
 
   return (tetrahedralCount == numTetrahedral) && (cistransCount == numCisTrans);
 }
@@ -139,8 +139,8 @@ bool doStereoPerception2(OBMol &mol, int numTetrahedral, int numCisTrans)
     }
   }
 
-  OB_COMPARE(tetrahedralCount, numTetrahedral);
-  OB_COMPARE(cistransCount, numCisTrans);
+  BOOST_REQUIRE_EQUAL(tetrahedralCount, numTetrahedral);
+  BOOST_REQUIRE_EQUAL(cistransCount, numCisTrans);
 
   return (tetrahedralCount == numTetrahedral) && (cistransCount == numCisTrans);
 }
@@ -190,14 +190,14 @@ bool doStereoPerception3(OBMol &mol, const OBStereoUnitSet &refUnits = OBStereoU
     OpenBabel::OBGraphSym graphsym(&mol);
     int nclasses = graphsym.GetSymmetry(symmetry_classes);
     cout << "nclasses = " << nclasses << endl;
-    OB_ASSERT( nclasses == 7 );
+    BOOST_REQUIRE( nclasses == 7 );
 
     Automorphisms G;
     FindAutomorphisms(&mol, G, symmetry_classes);
     cout << "G.size " << G.size() << endl;
     std::vector<OpenBabel::OBStereoUnit> units = FindStereogenicUnits(&mol, symmetry_classes, G);
 
-    OB_COMPARE(units.size(), refUnits.size());
+    BOOST_REQUIRE_EQUAL(units.size(), refUnits.size());
 
     for (unsigned int i = 0; i < units.size(); ++i) {
       bool foundUnit = false;
@@ -206,7 +206,7 @@ bool doStereoPerception3(OBMol &mol, const OBStereoUnitSet &refUnits = OBStereoU
           if (units[i].id == refUnits[j].id)
             foundUnit = true;
       }
-      OB_ASSERT( foundUnit );
+      BOOST_REQUIRE( foundUnit );
     }
 
   }
@@ -222,11 +222,11 @@ void test_StereoPerception()
 {
   OBMol mol;
   OBConversion conv;
-  OB_ASSERT( conv.SetInFormat("mol") );
+  BOOST_REQUIRE( conv.SetInFormat("mol") );
 
   /*
   cout << "structure break1" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/break1.mol")) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/break1.mol")) );
     // need to calculate symmetry first
     std::vector<unsigned int> symmetry_classes;
     OpenBabel::OBGraphSym graphsym(&mol);
@@ -235,109 +235,109 @@ void test_StereoPerception()
     Automorphisms G = FindAutomorphisms(&mol, symmetry_classes);
     cout << "G.size " << G.size() << endl;
 
-  OB_ASSERT( doStereoPerception3(mol, Units(TH(0), TH(4), TH(3), TH(9), TH(15)),
+  BOOST_REQUIRE( doStereoPerception3(mol, Units(TH(0), TH(4), TH(3), TH(9), TH(15)),
         DepUnits(Units(TH(0), TH(4)), Units(TH(3), TH(9)), Units(TH(15)))) );
   */
 
   cout << "structure perception1" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception1.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception1.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception2" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception2.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception2.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception3" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception3.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 2, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 2, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception3.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 2, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 2, 0) );
 
   cout << "structure perception4" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception4.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception4.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception5" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception5.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception5.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception6" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception6.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 2) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 2) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception6.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 2) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 2) );
 
   cout << "structure perception7" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception7.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception7.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception8" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception8.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception8.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception9" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception9.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception9.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception10" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception10.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 1, 1) );
-  OB_ASSERT( doStereoPerception2(mol, 1, 1) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception10.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 1, 1) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 1, 1) );
 
   cout << "structure perception11" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception11.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 3, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 3, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception11.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 3, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 3, 0) );
 
   cout << "structure perception12" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception12.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception12.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception13" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception13.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception13.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception14" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception14.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception14.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception15" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception15.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception15.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "structure perception16" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception16.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 1, 2) );
-  OB_ASSERT( doStereoPerception2(mol, 1, 2) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception16.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 1, 2) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 1, 2) );
 
   cout << "structure perception17" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception17.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 2, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 2, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception17.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 2, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 2, 0) );
 
   cout << "structure perception18" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception18.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 3, 1) );
-  OB_ASSERT( doStereoPerception2(mol, 3, 1) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception18.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 3, 1) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 3, 1) );
 
   cout << "structure perception19" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception19.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 2, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 2, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception19.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 2, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 2, 0) );
 
   cout << "structure perception20" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/perception20.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 4, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 4, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/perception20.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 4, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 4, 0) );
 
   /*
    * J. Chem. Inf. Comput. Sci., Vol. 33, No. 6, 1993
@@ -345,84 +345,84 @@ void test_StereoPerception()
    * Figure 1. Examples of compounds containing parastereocenters
    */
   cout << "Razinger paper, fig. 1: structure a" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_a.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 2) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 2) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_a.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 2) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 2) );
 
   cout << "Razinger paper, fig. 1: structure b" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_b.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 2, 2) );
-  OB_ASSERT( doStereoPerception2(mol, 2, 2) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_b.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 2, 2) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 2, 2) );
 
   cout << "Razinger paper, fig. 1: structure c" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_c.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 2, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 2, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_c.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 2, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 2, 0) );
 
   cout << "Razinger paper, fig. 1: structure d" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_d.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 3, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 3, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_d.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 3, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 3, 0) );
 
   cout << "Razinger paper, fig. 1: structure e" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_e.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 6, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 6, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_e.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 6, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 6, 0) );
 
   cout << "Razinger paper, fig. 1: structure f" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_f.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 2, 1) );
-  OB_ASSERT( doStereoPerception2(mol, 2, 1) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_f.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 2, 1) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 2, 1) );
 
   cout << "Razinger paper, fig. 1: structure g" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_g.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 0, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 0, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_g.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 0, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 0, 0) );
 
   cout << "Razinger paper, fig. 1: structure h" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_h.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 2, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 2, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_h.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 2, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 2, 0) );
 
   cout << "Razinger paper, fig. 1: structure i" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_i.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 3, 0) ); // rule 2a
-  OB_ASSERT( doStereoPerception2(mol, 3, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_i.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 3, 0) ); // rule 2a
+  BOOST_REQUIRE( doStereoPerception2(mol, 3, 0) );
 
   cout << "Razinger paper, fig. 1: structure j" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_j.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 7, 0) ); // rule 2b
-  OB_ASSERT( doStereoPerception2(mol, 7, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_j.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 7, 0) ); // rule 2b
+  BOOST_REQUIRE( doStereoPerception2(mol, 7, 0) );
 
   cout << "Razinger paper, fig. 1: structure k" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_k.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 3, 0) ); // counter example to j
-  OB_ASSERT( doStereoPerception2(mol, 3, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_k.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 3, 0) ); // counter example to j
+  BOOST_REQUIRE( doStereoPerception2(mol, 3, 0) );
 
   cout << "Razinger paper, fig. 1: structure l" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_l.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 13, 0) ); // rule 2b
-  OB_ASSERT( doStereoPerception2(mol, 13, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_l.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 13, 0) ); // rule 2b
+  BOOST_REQUIRE( doStereoPerception2(mol, 13, 0) );
 
   cout << "Razinger paper, fig. 1: structure m" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_m.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 12, 0) ); // counter example to l
-  OB_ASSERT( doStereoPerception2(mol, 12, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_m.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 12, 0) ); // counter example to l
+  BOOST_REQUIRE( doStereoPerception2(mol, 12, 0) );
 
   cout << "Razinger paper, fig. 1: structure n" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_n.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 5, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 5, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_n.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 5, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 5, 0) );
 
   cout << "Razinger paper, fig. 1: structure o" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_o.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 2, 0) );
-  OB_ASSERT( doStereoPerception2(mol, 2, 0) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_o.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 2, 0) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 2, 0) );
 
   cout << "Razinger paper, fig. 1: structure p" << endl;
-  OB_ASSERT( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_p.mol")) );
-  OB_ASSERT( doStereoPerception(mol, 5, 2) );
-  OB_ASSERT( doStereoPerception2(mol, 5, 2) );
+  BOOST_REQUIRE( conv.ReadFile(&mol, GetFilename("stereo/razinger_fig1_p.mol")) );
+  BOOST_REQUIRE( doStereoPerception(mol, 5, 2) );
+  BOOST_REQUIRE( doStereoPerception2(mol, 5, 2) );
 
 
 
@@ -432,7 +432,7 @@ void test_StereoPerception()
 
 
 
-int stereotest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(stereotest)
 {
   int defaultchoice = 1;
   

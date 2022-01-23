@@ -16,8 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/generic.h>
@@ -30,7 +29,7 @@ using namespace OpenBabel;
 
 std::string static GetFilename(const std::string &filename)
 {
-  string path = TESTDATADIR + filename;
+  string path = TEST_SAMPLES_PATH + std::string("/") + filename;
   return path;
 }
 
@@ -41,7 +40,7 @@ void testSpaceGroupWithSpace()
   conv.SetInFormat("car");
   conv.ReadFile(&mol, GetFilename("test3.car"));
   OBUnitCell* pUC = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
-  OB_ASSERT( pUC->GetSpaceGroupName() == "P 4" );
+  BOOST_REQUIRE( pUC->GetSpaceGroupName() == "P 4" );
 }
 
 
@@ -52,7 +51,7 @@ void testSpaceGroupWithoutParentheses()
   conv.SetInFormat("car");
   conv.ReadFile(&mol, GetFilename("test2.car"));
   OBUnitCell* pUC = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
-  OB_ASSERT( pUC->GetSpaceGroupName() == "P4" );
+  BOOST_REQUIRE( pUC->GetSpaceGroupName() == "P4" );
 }
 
 void testSpaceGroupWithParentheses()
@@ -62,7 +61,7 @@ void testSpaceGroupWithParentheses()
   conv.SetInFormat("car");
   conv.ReadFile(&mol, GetFilename("test1.car"));
   OBUnitCell* pUC = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
-  OB_ASSERT( pUC->GetSpaceGroupName() == "P4" );
+  BOOST_REQUIRE( pUC->GetSpaceGroupName() == "P4" );
   
 }
 
@@ -73,46 +72,13 @@ void testDefaultSpaceGroup()
   conv.SetInFormat("car");
   conv.ReadFile(&mol, GetFilename("monoclinic.car"));
   OBUnitCell* pUC = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
-  OB_ASSERT( pUC->GetSpaceGroupName() == "" );
+  BOOST_REQUIRE_EQUAL( pUC->GetSpaceGroupName(), "");
 }
 
-int carspacegrouptest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(carspacegrouptest)
 {
-  int defaultchoice = 1;
-
-  int choice = defaultchoice;
-
-  if (argc > 1) {
-    if(sscanf(argv[1], "%d", &choice) != 1) {
-      printf("Couldn't parse that input as a number\n");
-      return -1;
-    }
-  }
-
-  // Define location of file formats for testing
-  #ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-  #endif
-
-  switch(choice) {
-  case 1:
     testDefaultSpaceGroup();
-    break;
-  case 2:
     testSpaceGroupWithParentheses();
-    break;
-  case 3:
     testSpaceGroupWithoutParentheses();
-    break;
-  case 4:
     testSpaceGroupWithSpace();
-    break;
-  default:
-    cout << "Test number " << choice << " does not exist!\n";
-    return -1;
-  }
-
-  return(0);
 }

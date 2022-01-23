@@ -1,4 +1,4 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/phmodel.h>
@@ -26,10 +26,10 @@ void testMolToCdxmlConversion()
 
   std::string cdxmlTarget = OBTestUtil::ReadFileContent("alanine.cdxml");
 
-  OB_COMPARE(cdxmlFromMol, cdxmlTarget);
+  BOOST_REQUIRE_EQUAL(cdxmlFromMol, cdxmlTarget);
 }
 
-int conversiontest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(conversiontest)
 {
   int defaultchoice = 1;
   

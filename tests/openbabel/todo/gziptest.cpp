@@ -15,17 +15,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
+#include <boost/test/unit_test.hpp>
 #include <cstdlib>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 
@@ -85,7 +81,7 @@ void checkResults(const string& file, const vector<string>& correctResults)
 // string into a molecule, converts that molecule into canonical smiles
 // and compares to gzip.out
 
-int gziptest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(gziptest)
 {
 
   int choice = 1;

@@ -16,12 +16,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
  ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 
 #include <fstream>
@@ -41,7 +36,7 @@ using namespace OpenBabel;
    string osmilestypes_file = "nci.smi";
 #endif
 
-int smilesmatch(int argc, char* argv[])
+ BOOST_AUTO_TEST_CASE(smilesmatch)
 {
   int defaultchoice = 1;
   

@@ -1,6 +1,7 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/obconversion.h>
-
+#include <openbabel/math/vector3.h>
+#include "obtest.h"
 using namespace std;
 using namespace OpenBabel;
 
@@ -10,11 +11,10 @@ void testLossOfHydrogen(string filename)
 {
   string testfile = OBTestUtil::GetFilename(filename);
   ifstream ifs(testfile.c_str());
-
   OBConversion conv(&ifs);
-  OB_REQUIRE(conv.SetInFormat("sdf"));
+  BOOST_REQUIRE(conv.SetInFormat("sdf"));
   OBMol mol;
-  OB_REQUIRE(conv.Read(&mol));
+  BOOST_REQUIRE(conv.Read(&mol));
   bool success = true;
   int i = 0;
   while (success) {
@@ -24,25 +24,14 @@ void testLossOfHydrogen(string filename)
     unsigned int newNatoms = mol.NumAtoms();
     cout << "Mol#" << i << ", Title " << mol.GetTitle() << ", Original atoms vs New atoms: ";
     cout << Natoms << " vs " << newNatoms << "\n";
-    OB_ASSERT( Natoms == newNatoms);
+    BOOST_REQUIRE( Natoms == newNatoms);
     cout << "\n";
     success = conv.Read(&mol);
     i += 1;
   }
-
-  
 }
 
-int implicitHtest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(implicitHtest)
 {
-  // Define location of file formats for testing
-  #ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-  #endif  
-
   testLossOfHydrogen("implicitH.sdf");
-
-  return 0;
 }

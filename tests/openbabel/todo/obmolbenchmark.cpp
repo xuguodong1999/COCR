@@ -23,7 +23,7 @@ void benchmarkOBMol1()
 void benchmarkOBMol2()
 {
   OBConversion conv;
-  OB_REQUIRE( conv.SetInFormat("pdb") );
+  BOOST_REQUIRE( conv.SetInFormat("pdb") );
   OB_NAMED_BENCHMARK("OBMol 2: reading pdb file with 1788 atoms") {
     OBMol mol;
     conv.ReadFile(&mol, GetFilename("1DRF.pdb"));
@@ -33,7 +33,7 @@ void benchmarkOBMol2()
 void benchmarkOBMol3()
 {
   OBConversion conv;
-  OB_REQUIRE( conv.SetInFormat("pdb") );
+  BOOST_REQUIRE( conv.SetInFormat("pdb") );
   OB_NAMED_BENCHMARK("OBMol 2: reading pdb file with 18448 atoms") {
     OBMol mol;
     conv.ReadFile(&mol, GetFilename("3G61.pdb"));

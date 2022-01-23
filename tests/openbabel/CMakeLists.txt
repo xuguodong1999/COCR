@@ -14,6 +14,7 @@ include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIB_DIR})
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} PROJECT_SOURCE)
+#aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/todo PROJECT_SOURCE)
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
 

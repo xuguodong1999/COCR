@@ -15,17 +15,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
+#include <boost/test/unit_test.hpp>
 #include <cstdlib>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 
@@ -37,7 +33,7 @@ using namespace OpenBabel;
 
 // 1
 // reads in molecules from a file
-int multicmltest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(multicmltest)
 {
 
   int choice = 1;

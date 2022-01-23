@@ -1,5 +1,4 @@
-#include "obtest.h"
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/stereo/tetrahedral.h>
@@ -24,19 +23,19 @@ void testTetrahedralStereo1()
   // read a smiles string
   OBMol mol;
   OBConversion conv;
-  OB_REQUIRE( conv.SetInFormat("smi") );
+  BOOST_REQUIRE( conv.SetInFormat("smi") );
   cout << "smiles: C[C@H](O)N" << endl;
-  OB_REQUIRE( conv.ReadString(&mol, "C[C@H](O)N") );
+  BOOST_REQUIRE( conv.ReadString(&mol, "C[C@H](O)N") );
 
   // get the stereo data
-  OB_REQUIRE( mol.HasData(OBGenericDataType::StereoData) );
+  BOOST_REQUIRE( mol.HasData(OBGenericDataType::StereoData) );
   std::vector<OBGenericData *> stereoData = mol.GetAllData(OBGenericDataType::StereoData);
-  OB_REQUIRE( stereoData.size() == 1 );
+  BOOST_REQUIRE( stereoData.size() == 1 );
 
   // convert to tetrahedral data
-  OB_REQUIRE( ((OBStereoBase*)stereoData[0])->GetType() == OBStereo::Tetrahedral );
+  BOOST_REQUIRE( ((OBStereoBase*)stereoData[0])->GetType() == OBStereo::Tetrahedral );
   OBTetrahedralStereo *ts = dynamic_cast<OBTetrahedralStereo*>(stereoData[0]);
-  OB_REQUIRE( ts );
+  BOOST_REQUIRE( ts );
 
   // print the configuration
   cout << *ts << endl;
@@ -49,7 +48,7 @@ void testTetrahedralStereo1()
   OBTetrahedralStereo::Config cfg(1, 0, OBStereo::MakeRefs(4, 3, 2), OBStereo::Clockwise);
 
   // compare stereochemistry
-  OB_REQUIRE( ts->GetConfig() == cfg );
+  BOOST_REQUIRE( ts->GetConfig() == cfg );
 
   cout << endl;
 }
@@ -60,11 +59,11 @@ void genericSmilesCanonicalTest(const std::string &smiles)
   // read a smiles string
   OBMol mol;
   OBConversion conv;
-  OB_REQUIRE( conv.SetInFormat("smi") );
-  OB_REQUIRE( conv.SetOutFormat("can") );
+  BOOST_REQUIRE( conv.SetInFormat("smi") );
+  BOOST_REQUIRE( conv.SetOutFormat("can") );
   cout << "smiles: " << smiles << endl;
   // read a smiles string
-  OB_REQUIRE( conv.ReadString(&mol, smiles) );
+  BOOST_REQUIRE( conv.ReadString(&mol, smiles) );
 
   // store the stereo data for the smiles string using unique symmetry ids
   std::vector<OBTetrahedralStereo::Config> tetrahedral1;
@@ -72,7 +71,7 @@ void genericSmilesCanonicalTest(const std::string &smiles)
   std::vector<OBSquarePlanarStereo::Config> squareplanar1;
 
   // get the stereo data
-  OB_ASSERT( mol.HasData(OBGenericDataType::StereoData) );
+  BOOST_REQUIRE( mol.HasData(OBGenericDataType::StereoData) );
   std::vector<OBGenericData *> stereoData = mol.GetAllData(OBGenericDataType::StereoData);
 
   std::vector<unsigned int> canlbls;
@@ -85,8 +84,8 @@ void genericSmilesCanonicalTest(const std::string &smiles)
     if (((OBStereoBase*)*data)->GetType() == OBStereo::Tetrahedral) {
       // convert to tetrahedral data
       OBTetrahedralStereo *ts = dynamic_cast<OBTetrahedralStereo*>(*data);
-      OB_REQUIRE( ts );
-      OB_ASSERT( ts->IsValid() );
+      BOOST_REQUIRE( ts );
+      BOOST_REQUIRE( ts->IsValid() );
       if (!ts->IsValid())
         continue;
 
@@ -108,8 +107,8 @@ void genericSmilesCanonicalTest(const std::string &smiles)
     if (((OBStereoBase*)*data)->GetType() == OBStereo::CisTrans) {
       // convert to tetrahedral data
       OBCisTransStereo *ct = dynamic_cast<OBCisTransStereo*>(*data);
-      OB_REQUIRE( ct );
-      OB_ASSERT( ct->IsValid() );
+      BOOST_REQUIRE( ct );
+      BOOST_REQUIRE( ct->IsValid() );
 
       OBCisTransStereo::Config config = ct->GetConfig();
       // convert atom ids to symmetry ids
@@ -129,8 +128,8 @@ void genericSmilesCanonicalTest(const std::string &smiles)
     if (((OBStereoBase*)*data)->GetType() == OBStereo::SquarePlanar) {
       // convert to tetrahedral data
       OBSquarePlanarStereo *sp = dynamic_cast<OBSquarePlanarStereo*>(*data);
-      OB_REQUIRE( sp );
-      OB_ASSERT( sp->IsValid() );
+      BOOST_REQUIRE( sp );
+      BOOST_REQUIRE( sp->IsValid() );
       if (!sp->IsValid())
         continue;
 
@@ -157,7 +156,7 @@ void genericSmilesCanonicalTest(const std::string &smiles)
   std::string canSmiles = conv.WriteString(&mol);
   cout << "canSmiles: " << canSmiles;
   // read can smiles in again
-  OB_REQUIRE( conv.ReadString(&mol, canSmiles) );
+  BOOST_REQUIRE( conv.ReadString(&mol, canSmiles) );
 
   // store the stereo data for the smiles string using unique symmetry ids
   std::vector<OBTetrahedralStereo::Config> tetrahedral2;
@@ -165,7 +164,7 @@ void genericSmilesCanonicalTest(const std::string &smiles)
   std::vector<OBSquarePlanarStereo::Config> squareplanar2;
 
   // get the stereo data
-  OB_ASSERT( mol.HasData(OBGenericDataType::StereoData) );
+  BOOST_REQUIRE( mol.HasData(OBGenericDataType::StereoData) );
   stereoData = mol.GetAllData(OBGenericDataType::StereoData);
 
   OBGraphSym gs2(&mol);
@@ -176,8 +175,8 @@ void genericSmilesCanonicalTest(const std::string &smiles)
     if (((OBStereoBase*)*data)->GetType() == OBStereo::Tetrahedral) {
       // convert to tetrahedral data
       OBTetrahedralStereo *ts = dynamic_cast<OBTetrahedralStereo*>(*data);
-      OB_REQUIRE( ts );
-      OB_ASSERT( ts->IsValid() );
+      BOOST_REQUIRE( ts );
+      BOOST_REQUIRE( ts->IsValid() );
 
       OBTetrahedralStereo::Config config = ts->GetConfig();
       // convert atom ids to symmetry ids
@@ -197,8 +196,8 @@ void genericSmilesCanonicalTest(const std::string &smiles)
     if (((OBStereoBase*)*data)->GetType() == OBStereo::CisTrans) {
       // convert to tetrahedral data
       OBCisTransStereo *ct = dynamic_cast<OBCisTransStereo*>(*data);
-      OB_REQUIRE( ct );
-      OB_ASSERT( ct->IsValid() );
+      BOOST_REQUIRE( ct );
+      BOOST_REQUIRE( ct->IsValid() );
 
       OBCisTransStereo::Config config = ct->GetConfig();
       // convert atom ids to symmetry ids
@@ -218,8 +217,8 @@ void genericSmilesCanonicalTest(const std::string &smiles)
     if (((OBStereoBase*)*data)->GetType() == OBStereo::SquarePlanar) {
       // convert to tetrahedral data
       OBSquarePlanarStereo *sp = dynamic_cast<OBSquarePlanarStereo*>(*data);
-      OB_REQUIRE( sp );
-      OB_ASSERT( sp->IsValid() );
+      BOOST_REQUIRE( sp );
+      BOOST_REQUIRE( sp->IsValid() );
 
       OBSquarePlanarStereo::Config config = sp->GetConfig();
       // convert atom ids to symmetry ids
@@ -240,11 +239,11 @@ void genericSmilesCanonicalTest(const std::string &smiles)
   }
 
   // compare the tetrahedral structs
-  OB_ASSERT( tetrahedral1.size() == tetrahedral2.size() );
+  BOOST_REQUIRE( tetrahedral1.size() == tetrahedral2.size() );
   for (unsigned int i = 0; i < tetrahedral1.size(); ++i) {
     for (unsigned int j = 0; j < tetrahedral2.size(); ++j) {
       if (tetrahedral1[i].center == tetrahedral2[j].center)
-        OB_ASSERT( tetrahedral1[i] == tetrahedral2[j] );
+        BOOST_REQUIRE( tetrahedral1[i] == tetrahedral2[j] );
         if ( tetrahedral1[i] != tetrahedral2[j] ) {
           cout << "1 = " << tetrahedral1[i] << endl;
           cout << "2 = " << tetrahedral2[j] << endl;
@@ -252,21 +251,21 @@ void genericSmilesCanonicalTest(const std::string &smiles)
     }
   }
   // compare the cistrans structs
-  OB_ASSERT( cistrans1.size() == cistrans2.size() );
+  BOOST_REQUIRE( cistrans1.size() == cistrans2.size() );
   for (unsigned int i = 0; i < cistrans1.size(); ++i) {
     for (unsigned int j = 0; j < cistrans2.size(); ++j) {
       if ((cistrans1[i].begin == cistrans2[j].begin) && (cistrans1[i].end == cistrans2[j].end))
-        OB_ASSERT( cistrans1[i] == cistrans2[j] );
+        BOOST_REQUIRE( cistrans1[i] == cistrans2[j] );
       if ((cistrans1[i].begin == cistrans2[j].end) && (cistrans1[i].end == cistrans2[j].begin))
-        OB_ASSERT( cistrans1[i] == cistrans2[j] );
+        BOOST_REQUIRE( cistrans1[i] == cistrans2[j] );
     }
   }
   // compare the square-planar structs
-  OB_ASSERT( squareplanar1.size() == squareplanar2.size() );
+  BOOST_REQUIRE( squareplanar1.size() == squareplanar2.size() );
   for (unsigned int i = 0; i < squareplanar1.size(); ++i) {
     for (unsigned int j = 0; j < squareplanar2.size(); ++j) {
       if (squareplanar1[i].center == squareplanar2[j].center)
-        OB_ASSERT( squareplanar1[i] == squareplanar2[j] );
+        BOOST_REQUIRE( squareplanar1[i] == squareplanar2[j] );
         if ( squareplanar1[i] != squareplanar2[j] ) {
           cout << "1 = " << squareplanar1[i] << endl;
           cout << "2 = " << squareplanar2[j] << endl;
@@ -278,7 +277,7 @@ void genericSmilesCanonicalTest(const std::string &smiles)
 }
 
 
-int smilestest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(smilestest)
 {
   int defaultchoice = 1;
   

@@ -2,25 +2,20 @@
 logppsa.cpp - Unit tests for Open Babel OBLogP and OBPSA class
 
 Copyright (C) 2007 Tim Vandermmeersch
- 
+
 This file is part of the Open Babel project.
 For more information, see <http://openbabel.org/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
- 
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
@@ -28,13 +23,13 @@ GNU General Public License for more details.
 #include <openbabel/obutil.h>
 #include <cstdlib>
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 
 using namespace std;
 using namespace OpenBabel;
 
-int logp_psa(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(logp_psa)
 {
   int defaultchoice = 1;
   

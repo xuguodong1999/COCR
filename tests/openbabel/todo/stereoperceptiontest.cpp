@@ -1,4 +1,4 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/mol.h>
@@ -26,34 +26,34 @@ std::string test_singleTetrahedral(const std::string &file,
   ifs.close();
 
   std::vector<OBGenericData *> stereoData = mol.GetAllData(OBGenericDataType::StereoData);
-  OB_ASSERT( stereoData.size() == 1 );
+  BOOST_REQUIRE( stereoData.size() == 1 );
 
   // compare the stereochemistry
   for (std::vector<OBGenericData*>::iterator data = stereoData.begin(); data != stereoData.end(); ++data) {
     if (((OBStereoBase*)*data)->GetType() == OBStereo::Tetrahedral) {
       OBTetrahedralStereo *ts = dynamic_cast<OBTetrahedralStereo*>(*data);
-      OB_ASSERT( ts->GetConfig() == correct );
+      BOOST_REQUIRE( ts->GetConfig() == correct );
       if ( ts->GetConfig() != correct ) {
         cout << "found = " << ts->GetConfig() << endl;
         cout << "correct = " << correct << endl;
       }
 
       OBTetrahedralStereo::Config cfg = ts->GetConfig();
-      OB_ASSERT( cfg.specified );
+      BOOST_REQUIRE( cfg.specified );
       // change refs 
       OBStereo::Permutate(cfg.refs, 1, 2);
-      OB_ASSERT( cfg != correct );
+      BOOST_REQUIRE( cfg != correct );
       // change winding
       cfg.winding = (cfg.winding == OBStereo::Clockwise) ? OBStereo::AntiClockwise : OBStereo::Clockwise;
-      OB_ASSERT( cfg == correct );
+      BOOST_REQUIRE( cfg == correct );
       // change view
       cfg.view = (cfg.view == OBStereo::ViewFrom) ? OBStereo::ViewTowards : OBStereo::ViewFrom;
-      OB_ASSERT( cfg != correct );
+      BOOST_REQUIRE( cfg != correct );
       cfg.view = (cfg.view == OBStereo::ViewFrom) ? OBStereo::ViewTowards : OBStereo::ViewFrom;
-      OB_ASSERT( cfg == correct );
+      BOOST_REQUIRE( cfg == correct );
       // change center
       cfg.center = 3994;
-      OB_ASSERT( cfg != correct );
+      BOOST_REQUIRE( cfg != correct );
 
 
     }
@@ -81,13 +81,13 @@ std::string test_singleCisTrans(const std::string &file,
   ifs.close();
 
   std::vector<OBGenericData *> stereoData = mol.GetAllData(OBGenericDataType::StereoData);
-  OB_ASSERT( stereoData.size() == 1 );
+  BOOST_REQUIRE( stereoData.size() == 1 );
 
   // compare the stereochemistry
   for (std::vector<OBGenericData*>::iterator data = stereoData.begin(); data != stereoData.end(); ++data) {
     if (((OBStereoBase*)*data)->GetType() == OBStereo::CisTrans) {
       OBCisTransStereo *ct = dynamic_cast<OBCisTransStereo*>(*data);
-      OB_ASSERT( ct->GetConfig() == correct );
+      BOOST_REQUIRE( ct->GetConfig() == correct );
       if ( ct->GetConfig() != correct ) {
         cout << "found = " << ct->GetConfig() << endl;
         cout << "correct = " << correct << endl;
@@ -123,9 +123,9 @@ std::string test_singleUnspecifiedTetrahedral(const std::string &file,
   string retval = readMol(&mol, file);
   if (retval.size() > 0) {
     OBStereoFacade stereo(&mol);
-    OB_ASSERT( stereo.HasTetrahedralStereo(center) );
+    BOOST_REQUIRE( stereo.HasTetrahedralStereo(center) );
     OBTetrahedralStereo *ts = stereo.GetTetrahedralStereo(center);
-    OB_ASSERT( ts->GetConfig().specified == false );
+    BOOST_REQUIRE( ts->GetConfig().specified == false );
   }
 
   return retval;
@@ -138,11 +138,11 @@ std::string test_singleUnknownTetrahedral(const std::string &file,
   string retval = readMol(&mol, file);
   if (retval.size() > 0) {
     OBStereoFacade stereo(&mol);
-    OB_ASSERT( stereo.HasTetrahedralStereo(center) );
+    BOOST_REQUIRE( stereo.HasTetrahedralStereo(center) );
     OBTetrahedralStereo *ts = stereo.GetTetrahedralStereo(center);
     OBTetrahedralStereo::Config cfg = ts->GetConfig();
-    OB_ASSERT( cfg.specified == true );
-    OB_ASSERT( cfg.winding == OBStereo::UnknownWinding );
+    BOOST_REQUIRE( cfg.specified == true );
+    BOOST_REQUIRE( cfg.winding == OBStereo::UnknownWinding );
   }
 
   return retval;
@@ -169,11 +169,11 @@ void test_noStereo(const std::string &file)
   StereoFrom3D(&mol);
 
   std::vector<OBGenericData *> stereoData = mol.GetAllData(OBGenericDataType::StereoData);
-  OB_ASSERT( stereoData.size() == 0 );
-} 
+  BOOST_REQUIRE( stereoData.size() == 0 );
+}
 
 
-int stereoperceptiontest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(stereoperceptiontest)
 {
   int defaultchoice = 1;
   
@@ -231,11 +231,11 @@ int stereoperceptiontest(int argc, char* argv[])
     smiles3D_6 = test_singleTetrahedral("stereo/tetrahedral3D_4.mol",
         OBTetrahedralStereo::Config(0, 1, OBStereo::MakeRefs(2, 3, 4), OBStereo::AntiClockwise));
 
-    OB_ASSERT( smiles3D_1 == smiles3D_2 );
-    OB_ASSERT( smiles3D_1 == smiles3D_3 );
-    OB_ASSERT( smiles3D_1 == smiles3D_4 );
-    OB_ASSERT( smiles3D_1 == smiles3D_5 );
-    OB_ASSERT( smiles3D_1 == smiles3D_6 );
+    BOOST_REQUIRE( smiles3D_1 == smiles3D_2 );
+    BOOST_REQUIRE( smiles3D_1 == smiles3D_3 );
+    BOOST_REQUIRE( smiles3D_1 == smiles3D_4 );
+    BOOST_REQUIRE( smiles3D_1 == smiles3D_5 );
+    BOOST_REQUIRE( smiles3D_1 == smiles3D_6 );
     
     cout << smiles3D_1 << endl;
     break;
@@ -297,8 +297,8 @@ int stereoperceptiontest(int argc, char* argv[])
     smiles10 = test_singleCisTrans("stereo/cistrans3D_5.mol", OBCisTransStereo::Config(1, 3, 
         OBStereo::MakeRefs(0, 2, 4, OBStereo::ImplicitRef), OBStereo::ShapeU));
 
-    OB_ASSERT( smiles7 == smiles9 );
-    OB_ASSERT( smiles8 == smiles10 );
+    BOOST_REQUIRE( smiles7 == smiles9 );
+    BOOST_REQUIRE( smiles8 == smiles10 );
     
     cout << smiles7 << endl;
 
@@ -351,8 +351,8 @@ int stereoperceptiontest(int argc, char* argv[])
     smiles2D_3 = test_singleTetrahedral("stereo/tetrahedral2D_5.mol",
         OBTetrahedralStereo::Config(1, 0, OBStereo::MakeRefs(2, 3, 4), OBStereo::AntiClockwise));
 
-    OB_ASSERT( smiles2D_1 == smiles2D_2 );
-    OB_ASSERT( smiles2D_1 == smiles2D_3 );
+    BOOST_REQUIRE( smiles2D_1 == smiles2D_2 );
+    BOOST_REQUIRE( smiles2D_1 == smiles2D_3 );
     
     cout << smiles2D_1 << endl;
     
@@ -405,8 +405,8 @@ int stereoperceptiontest(int argc, char* argv[])
         OBTetrahedralStereo::Config(1, 0, OBStereo::MakeRefs(2, 3, OBStereo::ImplicitRef), 
         OBStereo::AntiClockwise));
 
-    OB_ASSERT( smiles2D_4 == smiles2D_7 );
-    OB_ASSERT( smiles2D_5 == smiles2D_6 );*/
+    BOOST_REQUIRE( smiles2D_4 == smiles2D_7 );
+    BOOST_REQUIRE( smiles2D_5 == smiles2D_6 );*/
 
     cout << smiles2D_4 << endl;
 

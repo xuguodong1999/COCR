@@ -16,12 +16,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 
 #include <fstream>
@@ -47,7 +42,7 @@ void GenerateRingReference();
   string lsmilestypes_file = "files/attype.00.smi";
 #endif
 
-int ringtest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(ringtest)
 {
   int defaultchoice = 1;
   

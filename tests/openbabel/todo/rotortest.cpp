@@ -1,4 +1,4 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/rotor.h>
@@ -32,36 +32,36 @@ void testOBRotorGetSet()
   
   // SetBond/GetBond
   rotor.SetBond(&bond);
-  OB_ASSERT(rotor.GetBond()->GetIdx() == bond.GetIdx());
+  BOOST_REQUIRE(rotor.GetBond()->GetIdx() == bond.GetIdx());
   // SetIdx/GetIdx
   rotor.SetIdx(45);
-  OB_ASSERT(rotor.GetIdx() == 45);
+  BOOST_REQUIRE(rotor.GetIdx() == 45);
   // SetDihedralAtoms/GetDihedralAtoms
   int ref_ptr[4] = {1, 2, 3, 4};
   rotor.SetDihedralAtoms(ref_ptr);
   rotor.GetDihedralAtoms(ref_ptr);
-  OB_ASSERT(ref_ptr[0] == 1);
-  OB_ASSERT(ref_ptr[1] == 2);
-  OB_ASSERT(ref_ptr[2] == 3);
-  OB_ASSERT(ref_ptr[3] == 4);
+  BOOST_REQUIRE(ref_ptr[0] == 1);
+  BOOST_REQUIRE(ref_ptr[1] == 2);
+  BOOST_REQUIRE(ref_ptr[2] == 3);
+  BOOST_REQUIRE(ref_ptr[3] == 4);
   std::vector<int> ref_vector = rotor.GetDihedralAtoms();
-  OB_ASSERT(ref_vector[0] == 1);
-  OB_ASSERT(ref_vector[1] == 2);
-  OB_ASSERT(ref_vector[2] == 3);
-  OB_ASSERT(ref_vector[3] == 4);
+  BOOST_REQUIRE(ref_vector[0] == 1);
+  BOOST_REQUIRE(ref_vector[1] == 2);
+  BOOST_REQUIRE(ref_vector[2] == 3);
+  BOOST_REQUIRE(ref_vector[3] == 4);
   rotor.SetDihedralAtoms(ref_vector);
   ref_vector = rotor.GetDihedralAtoms();
-  OB_ASSERT(ref_vector[0] == 1);
-  OB_ASSERT(ref_vector[1] == 2);
-  OB_ASSERT(ref_vector[2] == 3);
-  OB_ASSERT(ref_vector[3] == 4);
+  BOOST_REQUIRE(ref_vector[0] == 1);
+  BOOST_REQUIRE(ref_vector[1] == 2);
+  BOOST_REQUIRE(ref_vector[2] == 3);
+  BOOST_REQUIRE(ref_vector[3] == 4);
   // SetTorsionValues/GetTorsionValues/Size
   std::vector<double> angles;
   angles.push_back(0.0);
   angles.push_back(3.1415);
   rotor.SetTorsionValues(angles);
-  OB_ASSERT(rotor.GetTorsionValues().size() == 2);
-  OB_ASSERT(rotor.Size() == 2);
+  BOOST_REQUIRE(rotor.GetTorsionValues().size() == 2);
+  BOOST_REQUIRE(rotor.Size() == 2);
 }
 
 void testOBRotorSetToAngle()
@@ -88,12 +88,12 @@ void testOBRotorSetToAngle()
     atoms[i] = (atoms[i] - 1) * 3;
   rotor.SetRotAtoms(atoms);
 
-  OB_ASSERT(IsNear_mod(fabs(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates())), 180.0, 360.0, 1.0));
+  BOOST_REQUIRE(IsNear_mod(fabs(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates())), 180.0, 360.0, 1.0));
 
   // rotate
   rotor.SetToAngle(mol->GetCoordinates(), 60.0 * DEG_TO_RAD);
 
-  OB_ASSERT(IsNear(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates()), 60.0, 1.0));
+  BOOST_REQUIRE(IsNear(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates()), 60.0, 1.0));
 }
 
 void testOBRotorSetRotor()
@@ -120,7 +120,7 @@ void testOBRotorSetRotor()
     atoms[i] = (atoms[i] - 1) * 3;
   rotor.SetRotAtoms(atoms);
 
-  OB_ASSERT(IsNear_mod(fabs(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates())), 180.0, 360.0, 1.0));
+  BOOST_REQUIRE(IsNear_mod(fabs(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates())), 180.0, 360.0, 1.0));
   rotor.SetToAngle(mol->GetCoordinates(), 60.0 * DEG_TO_RAD);
 
   // set torsion values
@@ -131,13 +131,13 @@ void testOBRotorSetRotor()
 
   // rotate to 0.0 radians
   rotor.SetRotor(mol->GetCoordinates(), 0);
-  OB_ASSERT(IsNear(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates()), 0.0, 1.0));
+  BOOST_REQUIRE(IsNear(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates()), 0.0, 1.0));
   // rotate to 3.1415 radians
   rotor.SetRotor(mol->GetCoordinates(), 1);
-  OB_ASSERT(IsNear_mod(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates()), 180.0, 360.0, 1.0));
+  BOOST_REQUIRE(IsNear_mod(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates()), 180.0, 360.0, 1.0));
    // rotate to 0.0 radians
   rotor.SetRotor(mol->GetCoordinates(), 0, 1);
-  OB_ASSERT(IsNear(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates()), 0.0, 1.0)); 
+  BOOST_REQUIRE(IsNear(RAD_TO_DEG * rotor.CalcTorsion(mol->GetCoordinates()), 0.0, 1.0));
 }
 
 
@@ -151,27 +151,27 @@ void testOBRotorListFixedBonds()
   // test with no bonds fixed
   OBRotorList rlist1;
   rlist1.Setup(*mol);
-  OB_ASSERT(rlist1.Size() == 5);
+  BOOST_REQUIRE(rlist1.Size() == 5);
 
   // test with bond 3 fixed
   OBBitVec fixedBonds;
   fixedBonds.SetBitOn(3);
   rlist1.SetFixedBonds(fixedBonds);
   rlist1.Setup(*mol);
-  OB_ASSERT(rlist1.Size() == 4);
+  BOOST_REQUIRE(rlist1.Size() == 4);
 
   // test with bond 1, 3, 5 fixed
   fixedBonds.SetBitOn(1);
   fixedBonds.SetBitOn(5);
   rlist1.SetFixedBonds(fixedBonds);
   rlist1.Setup(*mol);
-  OB_ASSERT(rlist1.Size() == 2);
+  BOOST_REQUIRE(rlist1.Size() == 2);
 
   // test with bond 1, 2, 3, 5 fixed
   fixedBonds.SetBitOn(2);
   rlist1.SetFixedBonds(fixedBonds);
   rlist1.Setup(*mol);
-  OB_ASSERT(rlist1.Size() == 1);
+  BOOST_REQUIRE(rlist1.Size() == 1);
 
 
 
@@ -179,7 +179,7 @@ void testOBRotorListFixedBonds()
 }
 
 
-int rotortest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(rotortest)
 {
   int defaultchoice = 1;
   

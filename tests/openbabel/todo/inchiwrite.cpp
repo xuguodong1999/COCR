@@ -15,12 +15,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
  ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -35,7 +30,7 @@ extern string GetInChI(istream& is);
 }
 using namespace OpenBabel;
 
-int main(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(inchiwrite)
 {
   if(argc !=3)
   {

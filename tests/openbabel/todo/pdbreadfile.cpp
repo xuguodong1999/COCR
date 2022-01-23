@@ -15,19 +15,14 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/atom.h>
 #include <cstdlib>
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <openbabel/elements.h>
 
@@ -35,7 +30,7 @@ using namespace std;
 using namespace OpenBabel;
 
 
-int pdbreadfile(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(pdbreadfile)
 {
   int defaultchoice = 1;
 

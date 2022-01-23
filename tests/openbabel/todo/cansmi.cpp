@@ -15,12 +15,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
  ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
-
+#include <boost/test/unit_test.hpp>
 #include <openbabel/babelconfig.h>
 
 #include <fstream>
@@ -32,88 +27,32 @@
 using namespace std;
 using namespace OpenBabel;
 
-#ifdef TESTDATADIR
-  string btestdatadir = TESTDATADIR;
-  string bsmilestypes_file = btestdatadir + "nci.smi";
-#else
-   string bsmilestypes_file = "nci.smi";
-#endif
-
-int cansmi(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(cansmi)
 {
-  int defaultchoice = 1;
-  
-  int choice = defaultchoice;
-
-  if (argc > 1) {
-    if(sscanf(argv[1], "%d", &choice) != 1) {
-      printf("Couldn't parse that input as a number\n");
-      return -1;
-    }
-  }
-
-  #ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-  #endif
 
   unsigned int currentMol = 0;
   OBMol mol, mol2;
   string buffer;
-
-  cout << endl << "# Testing Canonical SMILES Generation ...  \n";
+  string bsmilestypes_file = TEST_SAMPLES_PATH + std::string("/") + "nci.smi";
   
   std::ifstream mifs(bsmilestypes_file.c_str());
-  if (!mifs)
-    {
-      cout << "Bail out! Cannot read test data " << bsmilestypes_file << endl;
-      return -1; // test failed
-    }
+  BOOST_ASSERT(mifs);
 
-  OBConversion conv(&mifs, &cout);
-  if (! conv.SetInAndOutFormats("SMI","CAN"))
-    {
-      cout << "Bail out! SMILES format is not loaded" << endl;
-      return -1;
-    }
+  OBConversion conv(&mifs, &cerr);
+  BOOST_ASSERT(conv.SetInAndOutFormats("SMI","CAN"));
 
-  switch(choice) {
-  case 1:
     //read in molecules (as SMI), write as CANSMI, read in again
     while (getline(mifs, buffer))
       {
         mol.Clear();
-        if (!conv.ReadString(&mol, buffer)) {
-          cout << "not ok " << ++currentMol << " # SMILES read failed"
-               << " buffer was " << buffer << "\n";
-          continue;
-        }
+        BOOST_ASSERT(conv.ReadString(&mol, buffer));
         if (mol.Empty())
           continue;
 
         buffer = conv.WriteString(&mol);
 
         mol2.Clear();
-        if (!conv.ReadString(&mol2, buffer)) {
-          cout << "not ok " << ++currentMol << " # SMARTS did not match"
-               << " for molecule " << buffer << "\n";
-          continue;
-        }
-
-        // Now make sure the molecules are roughly equivalent
-        if (mol.NumHvyAtoms() == mol2.NumHvyAtoms())
-          cout << "ok " << ++currentMol << " # number of heavy atoms match\n";
-        else
-          cout << "not ok " << ++currentMol << " # number of heavy atoms wrong"
-               << " for molecule " << buffer << "\n";
+        BOOST_ASSERT(conv.ReadString(&mol2, buffer));
+        BOOST_REQUIRE_EQUAL(mol.NumHvyAtoms(), mol2.NumHvyAtoms());
       }
-    break;
-  default:
-    cout << "Test number " << choice << " does not exist!\n";
-    return -1;
-  }
-
-  // Passed Test
-  return 0;
 }
