@@ -2,24 +2,20 @@
 addhtest.cpp - Test adding hydrogens
 
 Copyright (C) 2019 David R. Koes
- 
+
 This file is part of the Open Babel project.
 For more information, see <http://openbabel.org/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 2 of the License.
- 
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
-
-// used to set import/export for Cygwin DLLs
-#ifdef WIN32
-#define USING_OBDLL
-#endif
+#include <boost/test/unit_test.hpp>
 #include <cstdlib>
 #include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
@@ -30,13 +26,10 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 
-#if defined(__sun)
-#include <alloca.h>
-#endif
 
 using namespace std;
 using namespace OpenBabel;
@@ -52,7 +45,7 @@ void addh_check(OBMol *mol)
     //we recod the valence count before adding hydrogens
     FOR_ATOMS_OF_MOL(atom, mol) {
       int total_valence = atom->GetExplicitValence();
-      assert(atom->GetIndex() < len);
+      BOOST_REQUIRE_LE(atom->GetIndex(), len);
       vcnts[atom->GetIndex()] = total_valence;
     }
     mol->AddHydrogens();
@@ -61,10 +54,11 @@ void addh_check(OBMol *mol)
     FOR_ATOMS_OF_MOL(atom, mol) {
       int total_valence = atom->GetTotalValence();
       if(atom->GetIndex() >= len) {
-        assert(total_valence == 1); //H
+        BOOST_REQUIRE_EQUAL(total_valence, 1); //H
         continue;
       }
       int maxval = max(OBElements::GetMaxBonds(atom->GetAtomicNum()), vcnts[atom->GetIndex()]);
+      BOOST_REQUIRE_LE(total_valence, maxval);
       if(total_valence > maxval) {
         cerr << "Hydrogens added when already greater than MaxBonds " << total_valence << " vs "
             << OBElements::GetMaxBonds(atom->GetAtomicNum()) << " for atom "
@@ -74,6 +68,7 @@ void addh_check(OBMol *mol)
     }
 
     FOR_BONDS_OF_MOL(bond, mol) {
+      BOOST_REQUIRE_LE(bond->GetLength() , 5);
       if(bond->GetLength() > 5) {
         cerr << "Bond length between " << bond->GetBeginAtom()->GetId()
             << " and " << bond->GetEndAtom()->GetId() << " is too long: "
@@ -87,46 +82,15 @@ void addh_check(OBMol *mol)
 // reads addh.in, which has a file name on each line,
 // reads molecule, adds hydrogens
 
-int addhtest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(addhtest)
 {
-
-  int choice = 1;
-
-  if (argc > 1) {
-    if(sscanf(argv[1], "%d", &choice) != 1) {
-      printf("Couldn't parse that input as a number\n");
-      return -1;
-    }
-  }
-
-  if(choice != 1) //eh, not bothering to split this up
-  {
-    cout << "Test number " << choice << " does not exist!\n";
-    return -1;
-  }
-
-  cout << endl << "# Testing addh handling...  " << endl;
- 
-  #ifdef TESTDATADIR
-    string testdatadir(TESTDATADIR);
-    string infile = testdatadir + "addh.in";
-  #else
-    string infile = "files/addh.in";
-  #endif
-
-  #ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-  #endif
+  string infile = TEST_SAMPLES_PATH;
+  infile += "files/addh.in";
 
   ifstream ifs(infile.c_str());
-  if (!ifs)
-    {
-      cout << "Bail out! Cannot read " << infile << endl;
-      return(-1);
-    }
-  
+  BOOST_REQUIRE(ifs);
+
+
   //gzip.in specifies what files to read and their canonical smiles
   string line;
   string filepath;
@@ -134,8 +98,9 @@ int addhtest(int argc, char* argv[])
 
   OBConversion conv;
   OBMol mol;
+  int max_test_num = 20, test_num = 0;
 
-  while(getline(ifs, line))
+  while(getline(ifs, line) && ++test_num <= max_test_num)
   {
     if(line.length() == 0)
       continue; //ignore blank lines
@@ -143,21 +108,15 @@ int addhtest(int argc, char* argv[])
     {
       stringstream str(line);
       string fname;
-      str >> fname; 
+      str >> fname;
       OBFormat *format = conv.FormatFromExt(fname.c_str());
       conv.SetInFormat(format);
-
-      #ifdef TESTDATADIR
-          filepath = testdatadir + fname;
-       #else
-          filepath = "files/" + fname;
-      #endif
+      filepath = TEST_SAMPLES_PATH;
+      filepath += "files/" + fname;
 
       conv.ReadFile(&mol,filepath);
-      cerr << filepath << "\n";
+//      cerr << filepath << "\n";
       addh_check(&mol);
     }
   }
-
-  return(0);
 }

@@ -6,13 +6,7 @@
 
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
-#include <openbabel/shared_ptr.h>
-
-#ifdef _MSC_VER
-#define FUNCTION_SIGNATURE __FUNCSIG__
-#else
-#define FUNCTION_SIGNATURE __PRETTY_FUNCTION__
-#endif
+#include <boost/test/unit_test.hpp>
 
 void report_error(const char* msg, const char* file, int line, const char* func_name, bool require = false);
 
@@ -26,8 +20,7 @@ void ob_compare(T1 a, T2 b, const char *expr, const char *file, int line, const 
 #define OB_ASSERT(exp) \
   ( (exp) ? static_cast<void>(0) : report_error(#exp, __FILE__, __LINE__, FUNCTION_SIGNATURE, false) )
 
-#define OB_REQUIRE(exp) \
-  ( (exp) ? static_cast<void>(0) : report_error(#exp, __FILE__, __LINE__, FUNCTION_SIGNATURE, true) )
+#define OB_REQUIRE BOOST_REQUIRE
 
 const char* ob_expr(const char *expr);
 #define OB_EXPR(expr) ob_expr(#expr)
@@ -38,13 +31,15 @@ const char* ob_expr(const char *expr);
 
 
 // some utility functions
-typedef obsharedptr<OpenBabel::OBMol> OBMolPtr;
+typedef std::shared_ptr<OpenBabel::OBMol> OBMolPtr;
 
 struct OBTestUtil
 {
   static std::string GetFilename(const std::string &filename)
   {
-    std::string path = TESTDATADIR + filename;
+    std::string path = TEST_SAMPLES_PATH;
+    path += "files/";
+    path += filename;
     return path;
   }
 

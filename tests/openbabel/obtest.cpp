@@ -1,3 +1,7 @@
+#define BOOST_TEST_MODULE OpenBabelTest
+#include "./obtest.h"
+#include <boost/test/unit_test.hpp>
+
 #include <iostream>
 #include <cstdlib>
 

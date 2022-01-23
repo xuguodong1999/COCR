@@ -1,4 +1,4 @@
-#include "obtest.h"
+#include <boost/test/unit_test.hpp>
 #include <openbabel/atom.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/math/align.h>
@@ -40,27 +40,27 @@ void test_simpleAlign()
 
   align.Align();
   result = align.GetAlignment();
-  OB_ASSERT( result[0].IsApprox(ref[0], 1.0E-08) );
-  OB_ASSERT( result[1].IsApprox(ref[1], 1.0E-08) );
-  OB_ASSERT( fabs(align.GetRMSD()) < 1.0E-08 );
+  BOOST_REQUIRE( result[0].IsApprox(ref[0], 1.0E-08) );
+  BOOST_REQUIRE( result[1].IsApprox(ref[1], 1.0E-08) );
+  BOOST_REQUIRE( fabs(align.GetRMSD()) < 1.0E-08 );
 
   // Align ab to dc
   target[0] = a; target[1] = b;
   align.SetTarget(target);
   align.Align();
   result = align.GetAlignment();
-  OB_ASSERT( result[0].IsApprox(ref[0], 1.0E-08) );
-  OB_ASSERT( result[1].IsApprox(ref[1], 1.0E-08) );
-  OB_ASSERT( fabs(align.GetRMSD()) < 1.0E-08 );
+  BOOST_REQUIRE( result[0].IsApprox(ref[0], 1.0E-08) );
+  BOOST_REQUIRE( result[1].IsApprox(ref[1], 1.0E-08) );
+  BOOST_REQUIRE( fabs(align.GetRMSD()) < 1.0E-08 );
 
   // Align be to dc
   target[0] = b; target[1] = e;
   align.SetTarget(target);
   align.Align();
   result = align.GetAlignment();
-  OB_ASSERT( result[0].IsApprox(ref[0], 1.0E-08) );
-  OB_ASSERT( result[1].IsApprox(ref[1], 1.0E-08) );
-  OB_ASSERT( fabs(align.GetRMSD()) < 1.0E-08 );
+  BOOST_REQUIRE( result[0].IsApprox(ref[0], 1.0E-08) );
+  BOOST_REQUIRE( result[1].IsApprox(ref[1], 1.0E-08) );
+  BOOST_REQUIRE( fabs(align.GetRMSD()) < 1.0E-08 );
 
   // Align bd to ac
   ref[0] = a; ref[1] = c;
@@ -69,9 +69,9 @@ void test_simpleAlign()
   align.SetTarget(target);
   align.Align();
   result = align.GetAlignment();
-  OB_ASSERT( result[0].IsApprox(ref[0], 1.0E-08) );
-  OB_ASSERT( result[1].IsApprox(ref[1], 1.0E-08) );
-  OB_ASSERT( fabs(align.GetRMSD()) < 1.0E-08 );
+  BOOST_REQUIRE( result[0].IsApprox(ref[0], 1.0E-08) );
+  BOOST_REQUIRE( result[1].IsApprox(ref[1], 1.0E-08) );
+  BOOST_REQUIRE( fabs(align.GetRMSD()) < 1.0E-08 );
 
   // Verify that using GetRotMatrix() works to rotate bd onto ac
   matrix3x3 rot = align.GetRotMatrix();
@@ -82,7 +82,7 @@ void test_simpleAlign()
     vector3 aligned = target[i] - centroids[0];
     aligned *= rot;
     aligned += centroids[1];
-    OB_ASSERT( aligned.IsApprox(ref[i], 1.0E-08) ); 
+    BOOST_REQUIRE( aligned.IsApprox(ref[i], 1.0E-08) ); 
   }
 }
 
@@ -110,23 +110,23 @@ void test_RMSD()
   OBAlign align(ref, target);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd - 0.05) < 1.0E-06 );
+  BOOST_REQUIRE( fabs(rmsd - 0.05) < 1.0E-06 );
 }
 
 void test_alignMol(){
   OBConversion conv;
   bool success = conv.SetInFormat("xyz");
-  OB_REQUIRE( success );
+  BOOST_REQUIRE( success );
 
   OBMol mol;
-  success = conv.ReadFile(&mol, TESTDATADIR + string("test3d.xyz"));
-  OB_REQUIRE( success );
+  success = conv.ReadFile(&mol, TEST_SAMPLES_PATH + string("files/test3d.xyz"));
+  BOOST_REQUIRE( success );
 
   // Align molecule to itself (not using symmetry)
   OBAlign align = OBAlign(mol, mol, true, false);
   align.Align();
   double rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 1.0E-6 );
+  BOOST_REQUIRE( fabs(rmsd) < 1.0E-6 );
 
   // Rotate molecule and align it to itself
   OBMol mol_b = mol;
@@ -137,23 +137,23 @@ void test_alignMol(){
   mol_b.Rotate(rot_array);
 
   // Assert that rotation has occured
-  OB_ASSERT( !mol_b.GetAtom(1)->GetVector().IsApprox(mol.GetAtom(1)->GetVector(), 1.0E-8) );
+  BOOST_REQUIRE( !mol_b.GetAtom(1)->GetVector().IsApprox(mol.GetAtom(1)->GetVector(), 1.0E-8) );
 
   align.SetTargetMol(mol_b);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 1.0E-6 );
+  BOOST_REQUIRE( fabs(rmsd) < 1.0E-6 );
 }
 
 void test_alignMolWithSym(){
   OBConversion conv;
-  OB_REQUIRE( conv.SetInFormat("smi") );
+  BOOST_REQUIRE( conv.SetInFormat("smi") );
 
   OBMol mol;
-  OB_REQUIRE( conv.ReadString(&mol, "ClC(=O)Cl") );
+  BOOST_REQUIRE( conv.ReadString(&mol, "ClC(=O)Cl") );
 
   OBBuilder builder;
-  OB_REQUIRE( builder.Build(mol) );
+  BOOST_REQUIRE( builder.Build(mol) );
 
   // Offset Atom#1
   OBAtom *patom = mol.GetAtom(1);
@@ -165,7 +165,7 @@ void test_alignMolWithSym(){
   OBAlign align = OBAlign(mol, mol_b, true, true);
   align.Align();
   double rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 1.0E-6 );
+  BOOST_REQUIRE( fabs(rmsd) < 1.0E-6 );
 
   // Swap atom #1 and #4 in mol_b, and align again (also with symmetry)
   vector<int> a(4);
@@ -174,35 +174,35 @@ void test_alignMolWithSym(){
   align.SetTargetMol(mol_b);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 1.0E-6 );
+  BOOST_REQUIRE( fabs(rmsd) < 1.0E-6 );
   
   // Now align without symmetry
   align = OBAlign(mol, mol_b, true, false);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) > 1.0E-2 );
+  BOOST_REQUIRE( fabs(rmsd) > 1.0E-2 );
 
 }
 
 void test_alignWithoutHydrogens() {
   OBConversion conv;
   bool success = conv.SetInFormat("xyz");
-  OB_REQUIRE( success );
+  BOOST_REQUIRE( success );
 
   OBMol mol;
-  success = conv.ReadFile(&mol, TESTDATADIR + string("test3d.xyz"));
-  OB_REQUIRE( success );
+  success = conv.ReadFile(&mol, TEST_SAMPLES_PATH + string("files/test3d.xyz"));
+  BOOST_REQUIRE( success );
 
   // Align molecule to itself without hydrogens
   OBAlign align = OBAlign(mol, mol, false, false);
   align.Align();
   double rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 1.0E-6 );
+  BOOST_REQUIRE( fabs(rmsd) < 1.0E-6 );
 
   // Move one of the hydrogens and rotate molecule
   OBMol clone = mol;
   OBAtom *atom = clone.GetAtom(8);
-  OB_REQUIRE( atom->GetAtomicNum() == OBElements::Hydrogen );
+  BOOST_REQUIRE( atom->GetAtomicNum() == OBElements::Hydrogen );
   atom->SetVector(atom->GetVector() + vector3(0.1, 0.1, 0.1));
 
   matrix3x3 rot;
@@ -212,46 +212,46 @@ void test_alignWithoutHydrogens() {
   clone.Rotate(rot_array);
 
   // Assert that rotation has occured
-  OB_ASSERT( !clone.GetAtom(1)->GetVector().IsApprox(mol.GetAtom(1)->GetVector(), 1.0E-8) );
+  BOOST_REQUIRE( !clone.GetAtom(1)->GetVector().IsApprox(mol.GetAtom(1)->GetVector(), 1.0E-8) );
 
   // Align molecule to clone, with hydrogens
   align = OBAlign(mol, clone, true, false);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) > 1.0E-3 );
+  BOOST_REQUIRE( fabs(rmsd) > 1.0E-3 );
   vector<vector3> result = align.GetAlignment();
-  OB_ASSERT( result.size() == mol.NumAtoms() );
+  BOOST_REQUIRE( result.size() == mol.NumAtoms() );
 
   // Align molecule to clone, without hydrogens
   align = OBAlign(mol, clone, false, false);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 1.0E-6 );
+  BOOST_REQUIRE( fabs(rmsd) < 1.0E-6 );
   result = align.GetAlignment();
-  OB_ASSERT( result.size() == mol.NumAtoms() );
-  OB_ASSERT( result.at(0).IsApprox( mol.GetAtom(1)->GetVector(), 1.0E-8 ) );
+  BOOST_REQUIRE( result.size() == mol.NumAtoms() );
+  BOOST_REQUIRE( result.at(0).IsApprox( mol.GetAtom(1)->GetVector(), 1.0E-8 ) );
 
   // Align molecule to clone, without hydrogens but with sym
   align = OBAlign(mol, clone, false, true);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 1.0E-6 );
+  BOOST_REQUIRE( fabs(rmsd) < 1.0E-6 );
   result = align.GetAlignment();
-  OB_ASSERT( result.size() == mol.NumAtoms() );
-  OB_ASSERT( result.at(0).IsApprox( mol.GetAtom(1)->GetVector(), 1.0E-8 ) );
+  BOOST_REQUIRE( result.size() == mol.NumAtoms() );
+  BOOST_REQUIRE( result.at(0).IsApprox( mol.GetAtom(1)->GetVector(), 1.0E-8 ) );
 }
 
 void test_alignWithSymWithoutHydrogens() {
   OBConversion conv;
   bool success = conv.SetInFormat("smi");
-  OB_REQUIRE( success );
+  BOOST_REQUIRE( success );
 
   OBMol mol;
   success = conv.ReadString(&mol, "BrCC(Cl)(Cl)Cl");
-  OB_REQUIRE( success );
+  BOOST_REQUIRE( success );
 
   OBBuilder builder;
-  OB_REQUIRE( builder.Build(mol) );
+  BOOST_REQUIRE( builder.Build(mol) );
   mol.AddHydrogens();
 
   // Rotate the CCl3
@@ -263,19 +263,19 @@ void test_alignWithSymWithoutHydrogens() {
   OBAlign align = OBAlign(mol, clone, true, false);
   align.Align();
   double rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) > 1.2 );
+  BOOST_REQUIRE( fabs(rmsd) > 1.2 );
 
   // Align molecule to clone with hydrogens and with sym
   align = OBAlign(mol, clone, true, true);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 0.017 );
+  BOOST_REQUIRE( fabs(rmsd) < 0.017 );
 
   // Align molecule to clone without hydrogens and with sym
   align = OBAlign(mol, clone, false, true);
   align.Align();
   rmsd = align.GetRMSD();
-  OB_ASSERT( fabs(rmsd) < 0.019 );
+  BOOST_REQUIRE( fabs(rmsd) < 0.019 );
 }
 
 void test_bug()
@@ -300,7 +300,7 @@ void test_bug()
 
   align.Align();
   result = align.GetAlignment();
-  OB_ASSERT( fabs(align.GetRMSD()) < 0.04 );
+  BOOST_REQUIRE( fabs(align.GetRMSD()) < 0.04 );
 
   // Verify that using GetRotMatrix() gives the same answer as GetAlignment()
   matrix3x3 rot = align.GetRotMatrix();
@@ -311,7 +311,7 @@ void test_bug()
     vector3 tmp = target[i] - centroids[0];
     tmp *= rot;
     vector3 aligned = tmp + centroids[1];
-    OB_ASSERT( aligned.IsApprox(result[i], 1.0E-08) ); 
+    BOOST_REQUIRE( aligned.IsApprox(result[i], 1.0E-08) ); 
   }
 }
 
@@ -378,59 +378,23 @@ void test_QCP()
     align.SetMethod(OBAlign::Kabsch);
     align.Align();
     double rmsd = align.GetRMSD();
-    OB_ASSERT(fabs(rmsd - 0.719) < 0.001);
+    BOOST_REQUIRE(fabs(rmsd - 0.719) < 0.001);
 
     align.SetMethod(OBAlign::QCP);
     align.Align();
     rmsd = align.GetRMSD();
-    OB_ASSERT(fabs(rmsd - 0.719) < 0.001);
+    BOOST_REQUIRE(fabs(rmsd - 0.719) < 0.001);
 
 }
 
-int aligntest(int argc, char* argv[])
+BOOST_AUTO_TEST_CASE(aligntest)
 {
-  int defaultchoice = 1;
-  
-  int choice = defaultchoice;
-
-  if (argc > 1) {
-    if(sscanf(argv[1], "%d", &choice) != 1) {
-      printf("Couldn't parse that input as a number\n");
-      return -1;
-    }
-  }
-
-  // Define location of file formats for testing
-  #ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-  #endif  
-
-  switch(choice) {
-  case 1:
     test_bug();
-    break;
-  case 2:
     test_simpleAlign();
-    break;
-  case 3:
     test_RMSD();
-    break;
-  case 4:
     test_alignMol();
     test_alignMolWithSym();
-    break;
-  case 5:
     test_alignWithoutHydrogens();
     test_alignWithSymWithoutHydrogens();
-    break;
-  default:
-    cout << "Test number " << choice << " does not exist!\n";
-    return -1;
-  }
-
-  test_QCP();
-
-  return 0;
+    test_QCP();
 }

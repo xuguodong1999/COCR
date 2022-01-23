@@ -8,24 +8,13 @@
 #include <vector>
 #include <algorithm>
 
-using std::cout;
 using std::endl;
 using namespace OpenBabel;
 
-
-int canonstabletest(int argc, char *argv[])
+BOOST_AUTO_TEST_CASE(canonstabletest)
 {
-
-  // Define location of file formats for testing
-#ifdef FORMATDIR
-    char env[BUFF_SIZE];
-    snprintf(env, BUFF_SIZE, "BABEL_LIBDIR=%s", FORMATDIR);
-    putenv(env);
-#endif  
-
-  std::ifstream ifs(OBTestUtil::GetFilename("canonstable.can").c_str());
-  OB_REQUIRE( ifs );
-
+  std::ifstream ifs(OBTestUtil::GetFilename("canonstable.can"));
+  BOOST_REQUIRE( ifs );
 
   OBMol mol;
   OBConversion conv;
@@ -34,7 +23,7 @@ int canonstabletest(int argc, char *argv[])
 
   std::string line;
   while (std::getline(ifs, line)) {
-    OB_REQUIRE( conv.ReadString(&mol, line.c_str()) );
+    BOOST_REQUIRE( conv.ReadString(&mol, line) );
 
     std::vector<OBAtom*> atoms;
     FOR_ATOMS_OF_MOL(atom, mol)
@@ -50,13 +39,11 @@ int canonstabletest(int argc, char *argv[])
       std::string cansmi = conv.WriteString(&mol, true);
       // comapare with ref
       if (cansmi != line) {
-        cout << "ref = " << line << endl;
-        cout << "can = " << cansmi << endl;
-        OB_ASSERT( cansmi == line );
+        std::cerr << "ref = " << line << endl
+            << "can = " << cansmi << endl;
       }
+      BOOST_REQUIRE_EQUAL( cansmi, line);
     }
   }
- 
-  return 0;
 }
 
