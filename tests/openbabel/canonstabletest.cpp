@@ -4,6 +4,7 @@
 #include <openbabel/atom.h>
 #include <openbabel/obiter.h>
 
+#include <random>
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -31,7 +32,7 @@ BOOST_AUTO_TEST_CASE(canonstabletest)
 
     for (int i = 0; i < 5; ++i) {
       // shuffle the atoms
-      std::random_shuffle(atoms.begin(), atoms.end());
+      std::shuffle(atoms.begin(), atoms.end(), std::default_random_engine());
       mol.RenumberAtoms(atoms);
 
       // get can smiles
