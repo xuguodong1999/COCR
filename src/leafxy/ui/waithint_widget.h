@@ -1,6 +1,4 @@
-#ifndef WAITHINT_WIDGET_H
-#define WAITHINT_WIDGET_H
-
+#pragma once
 #include <QWidget>
 
 namespace Ui {
@@ -20,5 +18,3 @@ public:
 private:
     Ui::WaitHintWidget *ui;
 };
-
-#endif // WAITHINT_WIDGET_H

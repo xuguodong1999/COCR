@@ -1,6 +1,4 @@
-#ifndef IMAGE_WIDGET_H
-#define IMAGE_WIDGET_H
-
+#pragma once
 #include <QWidget>
 
 namespace Ui {
@@ -37,5 +35,3 @@ private slots:
 
     void binaryImage();
 };
-
-#endif // IMAGE_WIDGET_H

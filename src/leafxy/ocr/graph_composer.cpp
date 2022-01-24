@@ -13,11 +13,11 @@ struct pair_hash {
     }
 };
 
-std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem> &_items) {
-//    xgd::ComposerHelper helper;
+std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRItem> &_items) {
+//    cocr::ComposerHelper helper;
 //    return helper.compose(_items);
     // FIXME: this is just a simple impl
-    // TODO: make better solution in xgd::ComposerHelper later
+    // TODO: make better solution in cocr::ComposerHelper later
     // call sub index in _items as oldId
     // <oldId> for atom, line bond, circle and grouped string
     std::vector<size_t> aIds, bIds, cIds, gIds;
@@ -380,9 +380,9 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
     }
     //
     //// ************************************************** ////
-    auto mol = std::make_shared<xgd::JMolAdapter>();
-    std::unordered_map<size_t, std::shared_ptr<xgd::JAtom>> bondSideAtomMap, bondSideGroupMap;
-//    std::unordered_map<size_t, std::shared_ptr<xgd::JResidue>> bondSideResidueMap;
+    auto mol = std::make_shared<cocr::JMolAdapter>();
+    std::unordered_map<size_t, std::shared_ptr<cocr::JAtom>> bondSideAtomMap, bondSideGroupMap;
+//    std::unordered_map<size_t, std::shared_ptr<cocr::JResidue>> bondSideResidueMap;
 
     // 添加元素图元
     for (auto&[aid, itemSet]:aNodeMap) {
@@ -447,7 +447,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             bondSideAtomMap[bSideId] = atom;
         }
     }
-    auto get_side_atom = [&](const size_t &_bSideId) -> std::shared_ptr<xgd::JAtom> {
+    auto get_side_atom = [&](const size_t &_bSideId) -> std::shared_ptr<cocr::JAtom> {
         auto it = bondSideAtomMap.find(_bSideId);
         if (bondSideAtomMap.end() == it) {
             return nullptr;
@@ -455,7 +455,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
             return it->second;
         }
     };
-    auto get_side_group = [&](const size_t &_bSideId) -> std::shared_ptr<xgd::JAtom> {
+    auto get_side_group = [&](const size_t &_bSideId) -> std::shared_ptr<cocr::JAtom> {
         auto it = bondSideGroupMap.find(_bSideId);
         if (bondSideGroupMap.end() == it) {
             return nullptr;
@@ -555,7 +555,7 @@ std::shared_ptr<xgd::JMol> xgd::GraphComposer::compose(const std::vector<OCRItem
 //        qDebug() << "aidSet.size()=" << aidSet.size();
         std::vector<id_type> bondVec1, bondVec2;
         // modify_bond
-        mol->loopBondVec([&](xgd::JBond &bond) {
+        mol->loopBondVec([&](cocr::JBond &bond) {
             if (aidSet.end() != aidSet.find(bond.getFrom()->getId()) &&
                 aidSet.end() != aidSet.find(bond.getTo()->getId())) {
                 bondVec1.push_back(bond.getId());

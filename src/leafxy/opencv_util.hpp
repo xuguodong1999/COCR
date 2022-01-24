@@ -1,11 +1,9 @@
-#ifndef _XGD_OPENCV_UTIL_HPP_
-#define _XGD_OPENCV_UTIL_HPP_
-
+#pragma once
 #include <opencv2/core/types.hpp>
 #include <opencv2/core/mat.hpp>
 #include <QImage>
 
-namespace xgd {
+namespace cocr {
     template<typename _Tp>
     inline _Tp getDistance2D(const cv::Point_<_Tp> &p1, const cv::Point_<_Tp> &p2) {
         return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
@@ -38,4 +36,3 @@ namespace xgd {
     QImage binaryAlphaImage(cv::Mat &src);
 
 }
-#endif//_XGD_OPENCV_UTIL_HPP_

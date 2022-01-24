@@ -10,7 +10,7 @@
  * @param _src
  * @return 可以送进网络的图像
  */
-cv::Mat xgd::ObjectDetector::preProcess(const cv::Mat &_src) {
+cv::Mat cocr::ObjectDetector::preProcess(const cv::Mat &_src) {
     if (_src.empty())throw std::runtime_error("get empty image in ObjectDetector::preProcess");
     int w = _src.cols, h = _src.rows;
     if (w > maxWidth || h > maxHeight) {
@@ -49,7 +49,7 @@ cv::Mat xgd::ObjectDetector::preProcess(const cv::Mat &_src) {
     return procImg;
 }
 
-xgd::ObjectDetector::ObjectDetector() : maxHeight(1280), maxWidth(1280) {
+cocr::ObjectDetector::ObjectDetector() : maxHeight(1280), maxWidth(1280) {
 
 }
 

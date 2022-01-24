@@ -1,9 +1,7 @@
-#ifndef _DETECTOR_OBJECT_HPP_
-#define _DETECTOR_OBJECT_HPP_
-
+#pragma once
 #include <opencv2/core/types.hpp>
 
-namespace xgd {
+namespace cocr {
     enum class DetectorObjectType {
         SingleLine = 0,
         DoubleLine = 1,
@@ -41,4 +39,3 @@ namespace xgd {
         const float &h() const;
     };
 }
-#endif//_DETECTOR_OBJECT_HPP_

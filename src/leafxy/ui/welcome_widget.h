@@ -1,6 +1,4 @@
-#ifndef WELCOME_WIDGET_H
-#define WELCOME_WIDGET_H
-
+#pragma once
 #include <QWidget>
 
 namespace Ui {
@@ -23,5 +21,3 @@ signals:
 
     void sig_agree_box_checked(bool isChecked);
 };
-
-#endif // WELCOME_WIDGET_H

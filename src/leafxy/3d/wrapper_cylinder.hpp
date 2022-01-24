@@ -1,6 +1,4 @@
-#ifndef _3D_CYLINDER_WRAPPER_HPP_
-#define _3D_CYLINDER_WRAPPER_HPP_
-
+#pragma once
 #include "wrapper_single.hpp"
 
 namespace Qt3DExtras {
@@ -25,5 +23,3 @@ public:
 private:
     void setLength(const float &_length);
 };
-
-#endif//_3D_CYLINDER_WRAPPER_HPP_

@@ -1,6 +1,4 @@
-#ifndef PAINT_WIDGET_H
-#define PAINT_WIDGET_H
-
+#pragma once
 #include <QWidget>
 #include <QPen>
 #include <vector>
@@ -84,5 +82,3 @@ signals:
 
     void sig_modified();
 };
-
-#endif // PAINT_WIDGET_H

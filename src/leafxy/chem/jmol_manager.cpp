@@ -1,7 +1,7 @@
 #include "jmol_manager.hpp"
 #include "jmol_adapter.hpp"
 
-using namespace xgd;
+using namespace cocr;
 
 JMolManager::JMolManager(JMolManager::mol_type _inputMol) :
         inputMol(std::move(_inputMol)), currentMol(_inputMol), expandedMol(nullptr),

@@ -91,9 +91,9 @@
 //        }
 //        std::string refBuffer = f.readAll().toStdString();
 //        f.close();
-//        std::shared_ptr <xgd::JMol> refMol;
+//        std::shared_ptr <cocr::JMol> refMol;
 //        try {
-//            refMol = std::make_shared<xgd::JMolAdapter>();
+//            refMol = std::make_shared<cocr::JMolAdapter>();
 //            refMol->readAs(refBuffer, refSuffixMap[subDirName].toStdString());
 //        } catch (std::exception &e) {
 //            fail_and_exit(REF_MOL_LOAD_FAILED, e.what());
@@ -191,7 +191,7 @@
 //            || s.contains("[") || s.contains("@") || s.contains("3")) {
 //            continue;
 //        }
-//        auto refMol = std::make_shared<xgd::JMolAdapter>();
+//        auto refMol = std::make_shared<cocr::JMolAdapter>();
 //        refMol->readAsSMI(s.toStdString());
 //        if (refMol->getBondNum() < 1) { continue; }
 //        auto refSMI = refMol->writeAs("can");
@@ -260,7 +260,7 @@
 //    for (auto &smi:smiles) {
 //        sub_all += 1;
 ////        if (sub_all >= 20) { break; }
-//        auto refMol = std::make_shared<xgd::JMolAdapter>();
+//        auto refMol = std::make_shared<cocr::JMolAdapter>();
 //        refMol->readAsSMI(smi.toStdString());
 //        std::string refCan = refMol->writeAs("can");
 //        auto hwMol = std::make_shared<HwMol>(refMol);
@@ -368,9 +368,9 @@
 //    for (auto val = arr.begin(); val != arr.end(); val++) {
 //        auto obj = val->GetObject();
 //        auto groundTruth = obj["smi"].GetString();
-//        auto mol = std::make_shared<xgd::JMolAdapter>();
+//        auto mol = std::make_shared<cocr::JMolAdapter>();
 //        mol->readAsSMI(groundTruth);
-//        mol->loopAtomVec([&](xgd::JAtom &atom) {
+//        mol->loopAtomVec([&](cocr::JAtom &atom) {
 //            auto it = eleCounter.find(atom.getName());
 //            if (eleCounter.end() == it) {
 //                eleCounter[atom.getName()] = 1;
@@ -378,7 +378,7 @@
 //                ++it->second;
 //            }
 //        });
-//        mol->loopBondVec([&](xgd::JBond &bond) {
+//        mol->loopBondVec([&](cocr::JBond &bond) {
 //            ++bondCounter[bond.getBondOrder()];
 //        });
 //        auto atoms = obj["atoms"].GetArray();

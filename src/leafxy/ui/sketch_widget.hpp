@@ -1,6 +1,4 @@
-#ifndef _XGD_SKETCH_WIDGET_HPP_
-#define _XGD_SKETCH_WIDGET_HPP_
-
+#pragma once
 #include <QResizeEvent>
 #include <QCloseEvent>
 #include <QMoveEvent>
@@ -76,5 +74,3 @@ private:
 
     void endPenDraw();
 };
-
-#endif//_XGD_SKETCH_WIDGET_HPP_

@@ -1,12 +1,10 @@
-#ifndef VIEW2D_WIDGET_H
-#define VIEW2D_WIDGET_H
-
+#pragma once
 #include <QWidget>
 
 namespace Ui {
     class View2DWidget;
 }
-namespace xgd {
+namespace cocr {
     class JMol;
 }
 class Mol2DWidget;
@@ -18,7 +16,7 @@ public:
 
     ~View2DWidget();
 
-    void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
+    void syncMolToScene(std::shared_ptr<cocr::JMol> _mol);
 
     void startWaitHint();
 
@@ -41,5 +39,3 @@ private slots:
 
     void reformatInputState();
 };
-
-#endif // VIEW2D_WIDGET_H

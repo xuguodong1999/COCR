@@ -1,6 +1,4 @@
-#ifndef _XGD_OBJECT_DETECTION_OPENCV_DNN_IMPL_HPP_
-#define _XGD_OBJECT_DETECTION_OPENCV_DNN_IMPL_HPP_
-
+#pragma once
 #include "../ocr/object_detector.hpp"
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
@@ -9,7 +7,7 @@
 #include <vector>
 
 
-namespace xgd {
+namespace cocr {
     class ObjectDetectorOpenCVImpl : public ObjectDetector {
         cv::dnn::Net net;
         std::vector<cv::String> outBlobNames;
@@ -28,4 +26,3 @@ namespace xgd {
         detect(const cv::Mat &_originImage) override;
     };
 }
-#endif//_XGD_OBJECT_DETECTION_OPENCV_DNN_IMPL_HPP_

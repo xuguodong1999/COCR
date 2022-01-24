@@ -1,7 +1,5 @@
-#ifndef _XGD_JATOM_HPP_
-#define _XGD_JATOM_HPP_
+#pragma once
 
-//#include "jnode.hpp"
 #include <vector>
 #include <string>
 #include <memory>
@@ -10,7 +8,7 @@
 #include <QString>
 
 
-namespace xgd {
+namespace cocr {
     class JMol;
 
     // 约定：元素类型 0 表示 OCRA 所谓的超原子、即未解析的字符串
@@ -111,4 +109,3 @@ namespace xgd {
 
     int getCommonNebNum(const ElementType &_type);
 }
-#endif//_XGD_JATOM_HPP_

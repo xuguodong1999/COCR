@@ -13,7 +13,7 @@
 
 #include <coordgenlibs/sketcherMinimizer.h>
 #include <QDebug>
-using namespace xgd;
+using namespace cocr;
 
 
 JMolAdapter::JMolAdapter() : isOBMolLatest(true), obMol(std::make_shared<OpenBabel::OBMol>()) {

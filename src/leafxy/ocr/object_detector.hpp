@@ -1,13 +1,11 @@
-#ifndef _XGD_OBJECT_DETECTION_HPP_
-#define _XGD_OBJECT_DETECTION_HPP_
-
+#pragma once
 #include "ocr_item.hpp"
 #include <string>
 #include <memory>
 #include <vector>
 
 
-namespace xgd {
+namespace cocr {
     // FIXME: 添加对宽度小于1的边框的优化
     class ObjectDetector {
     protected:
@@ -33,4 +31,3 @@ namespace xgd {
         detect(const cv::Mat &_originImage) = 0;
     };
 }
-#endif//_XGD_OBJECT_DETECTION_HPP_

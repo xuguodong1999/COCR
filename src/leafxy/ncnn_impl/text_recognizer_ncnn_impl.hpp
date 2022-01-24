@@ -1,6 +1,4 @@
-#ifndef _XGD_TEXT_RECOGNITION_NCNN_IMPL_HPP_
-#define _XGD_TEXT_RECOGNITION_NCNN_IMPL_HPP_
-
+#pragma once
 #include "../ocr/text_recognizer.hpp"
 #include <string>
 #include <memory>
@@ -9,7 +7,7 @@ namespace ncnn {
     class Net;
 }
 
-namespace xgd {
+namespace cocr {
     class TextRecognizerNcnnImpl : public TextRecognizer {
         int maxWidth;
         int numThread;
@@ -34,4 +32,3 @@ namespace xgd {
         void freeModel() override;
     };
 }
-#endif//_XGD_TEXT_RECOGNITION_NCNN_IMPL_HPP_

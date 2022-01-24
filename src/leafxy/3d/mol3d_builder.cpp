@@ -18,18 +18,18 @@
 
 #include <optional>
 
-using xgd::MathUtil;
+using cocr::MathUtil;
 
-inline QVector3D getQVector3D(const xgd::JAtom &_atom) {
+inline QVector3D getQVector3D(const cocr::JAtom &_atom) {
     return {_atom.xx, _atom.yy, _atom.zz};
 }
 
-inline QVector3D getQVector3D(const std::shared_ptr<xgd::JAtom> &_atom) {
+inline QVector3D getQVector3D(const std::shared_ptr<cocr::JAtom> &_atom) {
     return getQVector3D(*_atom);
 }
 
 
-void Mol3DBuilder::prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_viewSize, const QVector3D &_blankArea) {
+void Mol3DBuilder::prepare(std::shared_ptr<cocr::JMol> _mol, const QVector3D &_viewSize, const QVector3D &_blankArea) {
     qDebug() << __FUNCTION__;
     mol = std::move(_mol);
     mol->norm3D(_viewSize.x(), _viewSize.y(), _viewSize.z(),
@@ -39,21 +39,21 @@ void Mol3DBuilder::prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_vi
 
 void Mol3DBuilder::build() {
     qDebug() << __FUNCTION__;
-    using namespace xgd;
+    using namespace cocr;
     // 坐标系
 //    buildAxis(0, 0, 0, 100);
     resetMolRoot();
     float avgBondLength = mol->getAvgBondLength();
     if (avgBondLength < 1)avgBondLength = 20;
     // 添加3D原子球
-    mol->loopAtomVec([&](xgd::JAtom &atom) {
+    mol->loopAtomVec([&](cocr::JAtom &atom) {
 //        return;
         auto wrapper = std::make_shared<SphereWrapper>(molRoot);
         atoms[atom.getId()] = wrapper;
 //        qDebug() << getQVector3D(atom);
         wrapper->setId(atom.getId());
         wrapper->setTranslation(getQVector3D(atom));
-        wrapper->setColor(xgd::getColor(atom.getType()));
+        wrapper->setColor(cocr::getColor(atom.getType()));
         wrapper->setRadius(atom.getRadius() / atom.getDefaultRadius() * avgBondLength / 3);
         wrapper->setScale(1);
         wrapper->setRindsAndSlices(100, 100);

@@ -2,12 +2,12 @@
 #include "jatom.hpp"
 #include <QDebug>
 
-using namespace xgd;
+using namespace cocr;
 using atom_t = std::shared_ptr<JAtom>;
 
-std::unordered_map<std::string, TokenType> xgd::SUPER_ATOM_MAP;
+std::unordered_map<std::string, TokenType> cocr::SUPER_ATOM_MAP;
 
-size_t xgd::MAX_SUPER_ATOM_LENGTH = 0;
+size_t cocr::MAX_SUPER_ATOM_LENGTH = 0;
 
 std::unordered_set<TokenType> TOKEN_BOND_SET = {
         TokenType::Single, TokenType::Double, TokenType::Triple
@@ -23,35 +23,35 @@ std::unordered_set<TokenType> TOKEN_BOND_SET = {
 //        TokenType::Ace, TokenType::THPO, TokenType::NHZ, TokenType::Ms
 };
 
-inline bool isChargeToken(const xgd::TokenType &_abb) {
+inline bool isChargeToken(const cocr::TokenType &_abb) {
     return TOKEN_NEG_SET.end() != TOKEN_NEG_SET.find(_abb);
 }
 
-inline bool isAbbToken(const xgd::TokenType &_abb) {
+inline bool isAbbToken(const cocr::TokenType &_abb) {
     return TOKEN_ABB_SET.end() != TOKEN_ABB_SET.find(_abb);
 }
 
-inline bool isBondToken(const xgd::TokenType &_abb) {
+inline bool isBondToken(const cocr::TokenType &_abb) {
     return TOKEN_BOND_SET.end() != TOKEN_BOND_SET.find(_abb);
 }
 
-inline bool isNumberToken(const xgd::TokenType &_abb) {
+inline bool isNumberToken(const cocr::TokenType &_abb) {
     return TokenType::Number == _abb;
 }
 
-inline bool isElementToken(const xgd::TokenType &_abb) {
+inline bool isElementToken(const cocr::TokenType &_abb) {
     return TokenType::Element == _abb;
 }
 
-inline bool isNoneToken(const xgd::TokenType &_abb) {
+inline bool isNoneToken(const cocr::TokenType &_abb) {
     return TokenType::None == _abb;
 }
 
-inline bool isLeftToken(const xgd::TokenType &_abb) {
+inline bool isLeftToken(const cocr::TokenType &_abb) {
     return TokenType::Left == _abb;
 }
 
-inline bool isRightToken(const xgd::TokenType &_abb) {
+inline bool isRightToken(const cocr::TokenType &_abb) {
     return TokenType::Right == _abb;
 }
 
@@ -339,7 +339,7 @@ std::pair<atom_t, atom_t> JMol_p::makeAcyl(const ElementType &_acyl, const Eleme
     return {root, root};
 }
 
-void xgd::initSuperAtomMap() {
+void cocr::initSuperAtomMap() {
     if (!SUPER_ATOM_MAP.empty()) { return; }
     // 元素语义
     for (auto&[str, data]:STR_ELEMENT_MAP) {
@@ -538,7 +538,7 @@ std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
  * 1、电荷解析通过词法分析做
  * 2、没有分隔符，请使用最长单词试探法
  */
-bool xgd::JMol_p::tryExpand(const id_type &_aid) {
+bool cocr::JMol_p::tryExpand(const id_type &_aid) {
     initSuperAtomMap();
     auto atom = mol.getAtom(_aid);
     if (!atom) { return false; }
@@ -692,7 +692,7 @@ bool JMol_p::reverseTokens(JMol_p::token_struct &tokenStruct) {
         } else if (isElementToken(curToken)) {//TODO: 添加数字
             elements2[tokens2.size()] = elements[i];
             tokens2.push_back(curToken);
-            if (numCache != -1 && xgd::getCommonNebNum(elements[i]) == 1) {
+            if (numCache != -1 && cocr::getCommonNebNum(elements[i]) == 1) {
                 numbers2[tokens2.size()] = numCache;
                 tokens2.push_back(TokenType::Number);
                 numCache = -1;

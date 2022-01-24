@@ -27,7 +27,6 @@ if (WITH_OPENVINO)
     add_definitions(-DWITH_OPENVINO)
 endif (WITH_OPENVINO)
 
-add_definitions(-DWITH_MODEL_QRC)
 if (ANDROID)
     qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_DATA_DIR}/leafxy_ncnn.qrc)
 else ()

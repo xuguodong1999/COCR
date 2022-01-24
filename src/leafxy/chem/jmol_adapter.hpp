@@ -1,6 +1,4 @@
-#ifndef _JMOL_ADAPTER_HPP_
-#define _JMOL_ADAPTER_HPP_
-
+#pragma once
 #include "jmol.hpp"
 #include <unordered_map>
 #include <functional>
@@ -12,7 +10,7 @@ namespace OpenBabel {
 
     class OBBond;
 }
-namespace xgd {
+namespace cocr {
     /**
      * 适配目标：
      * 1、使用 OpenBabel 实现三维标准化和其它需求
@@ -111,6 +109,3 @@ namespace xgd {
         std::vector<std::shared_ptr<JMol>> split() override;
     };
 }
-
-
-#endif//_JMOL_ADAPTER_HPP_

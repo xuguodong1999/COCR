@@ -10,7 +10,7 @@
 #include <cmath>
 #include <optional>
 
-using xgd::MathUtil;
+using cocr::MathUtil;
 
 std::unordered_map<decltype(MultiCylinderWrapper::cylinders.size()), std::vector<QVector3D>>
         MultiCylinderWrapper::sTransStrategy = {

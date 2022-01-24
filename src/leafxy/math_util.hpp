@@ -1,10 +1,8 @@
-#ifndef _XGD_MATH_UTIL_HPP_
-#define _XGD_MATH_UTIL_HPP_
-
+#pragma once
 #include <QVector3D>
 #include <QPointF>
 
-namespace xgd {
+namespace cocr {
     class MathUtil {
     public:
         static QPointF getZero();
@@ -62,4 +60,3 @@ namespace xgd {
         MathUtil() = default;
     };
 }
-#endif//_XGD_MATH_UTIL_HPP_

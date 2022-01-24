@@ -20,7 +20,7 @@
 #include <QWidget>
 #include <cmath>
 
-using xgd::MathUtil;
+using cocr::MathUtil;
 
 enum class SimpleGesture {
     GestureNone,

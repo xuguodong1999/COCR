@@ -32,10 +32,10 @@
 
 #endif
 
-xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
+cocr::OCRManager makeOCRManager(const std::string &_modelDir) {
     /// detector
 #if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
-    static xgd::ObjectDetectorOpenCVImpl detector;
+    static cocr::ObjectDetectorOpenCVImpl detector;
     if (!detector.initModel(
             _modelDir + "/yolo-3l-c8.cfg",
             _modelDir + "/yolo-3l-c8.weights")) {
@@ -44,7 +44,7 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
     detector.setConfThresh(0.15);
     detector.setIouThresh(0.45);
 #else
-    static xgd::ObjectDetectorNcnnImpl detector;
+    static cocr::ObjectDetectorNcnnImpl detector;
     detector.setNumThread(4);
     if (!detector.initModel(_modelDir + "/yolo_3l_c8.bin",
                             _modelDir + "/yolo_3l_c8.param",
@@ -53,25 +53,25 @@ xgd::OCRManager makeOCRManager(const std::string &_modelDir) {
     }
 #endif
     /// recognizer
-    static xgd::TextRecognizerNcnnImpl recognizer;
+    static cocr::TextRecognizerNcnnImpl recognizer;
     if (!recognizer.initModel(_modelDir + "/vgg_lstm_57_fp16_mixFont.bin",
                               _modelDir + "/vgg_lstm_57_fp16.param",
-                              xgd::TextCorrector::GetAlphabet(), 3200)) {
+                              cocr::TextCorrector::GetAlphabet(), 3200)) {
         std::cerr << "fail to load crnn from ncnn" << std::endl;
     }
 //    /// recognizer by opencv_dnn
-//    static xgd::TextRecognizerOpenCVImpl recognizer;
+//    static cocr::TextRecognizerOpenCVImpl recognizer;
 //    if (!recognizer.initModel(_modelDir + "/crnn_192_mix_sim.onnx",
-//                              xgd::TextCorrector::GetAlphabet(), 192)) {
+//                              cocr::TextCorrector::GetAlphabet(), 192)) {
 //        std::cerr << "fail to load crnn from ncnn" << std::endl;
 //    }
     /// corrector
-    static xgd::TextCorrector corrector;
+    static cocr::TextCorrector corrector;
     corrector.InitData();
     /// composer
-    static xgd::GraphComposer composer;
+    static cocr::GraphComposer composer;
     /// manager
-    xgd::OCRManager ocrManager(detector, recognizer, corrector, composer);
+    cocr::OCRManager ocrManager(detector, recognizer, corrector, composer);
     return ocrManager;
 }
 
@@ -109,7 +109,7 @@ const char *ROOT_DIR = "C:/Users/xgd/source/repos/leafxy/";
     while (true) {
         QImage image((ROOT_DIR + QString("testcase/%1.jpg").arg(testcases[idx++])));
         idx %= testcases.size();
-        auto testImg = xgd::convertQImageToMat(image);
+        auto testImg = cocr::convertQImageToMat(image);
 //        auto testImg = cv::imread(ROOT_DIR + "testcase/1.jpg", cv::IMREAD_GRAYSCALE);
 //        cv::erode(testImg, testImg, cv::Mat());
         auto mol = ocrManager.ocr(testImg, true);
@@ -146,7 +146,7 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
 //        cv::erode(image, image, cv::Mat());
         int angle = 2;
         if (rand() % 2) { angle = -2; }
-        image = xgd::rotateCvMat(image, angle);
+        image = cocr::rotateCvMat(image, angle);
         auto mol = ocrManager.ocr(image, true);
         auto widget = new Mol2DWidget(nullptr);
         widget->resize(960, 640);
@@ -156,8 +156,8 @@ void loopUsptoBenchMark(bool _random = false, const QSet<size_t> &_badExample = 
     }
 }
 
-std::shared_ptr<xgd::JMol> getTestMol() {
-    using namespace xgd;
+std::shared_ptr<cocr::JMol> getTestMol() {
+    using namespace cocr;
     auto mol = std::make_shared<JMolAdapter>();
 //    mol->readAsSMI("N[C@@](F)(C)C(=O)O");
     auto c0 = mol->addAtom(ElementType::C);
@@ -190,8 +190,8 @@ std::shared_ptr<xgd::JMol> getTestMol() {
     return mol;
 }
 
-std::shared_ptr<xgd::JMol> getTestMol_CC0C() {
-    using namespace xgd;
+std::shared_ptr<cocr::JMol> getTestMol_CC0C() {
+    using namespace cocr;
     auto mol = std::make_shared<JMolAdapter>();
 
     auto c0 = mol->addAtom(ElementType::C);
@@ -208,7 +208,7 @@ std::shared_ptr<xgd::JMol> getTestMol_CC0C() {
 }
 
 void testJMol() {
-    using namespace xgd;
+    using namespace cocr;
 //    JMolAdapter mol;
 //    mol.readAsSMI("c1ccccc1");
 //    std::cout << mol.writeAsPDB() << std::endl;
@@ -222,9 +222,9 @@ void testJMol() {
 //    auto b2 = mol.addBond(newAtom, mol.getAtom(5), b01->getType());
 //    mol.display();
 //    auto mol = getTestMol();
-//    auto mol = std::make_shared<xgd::JMolAdapter>();
+//    auto mol = std::make_shared<cocr::JMolAdapter>();
 //    mol->readAsSMI("CC(=O)C");
-    auto mol = std::make_shared<xgd::JMolAdapter>();
+    auto mol = std::make_shared<cocr::JMolAdapter>();
     mol->readAsSMI("CCC(=O)CCC");
     qDebug() << "smi=" << mol->writeAs("smi").c_str();
 }
@@ -241,7 +241,7 @@ void testMol2D_UI() {
 void testMol3D_UI() {
 //    auto mol = getTestMol_CC0C();
 //    std::cout<<mol->writeAsPDB()<<std::endl;
-    auto mol = std::make_shared<xgd::JMolAdapter>();
+    auto mol = std::make_shared<cocr::JMolAdapter>();
     mol->readAsSMI("C=C(F)C(=O)CC(Br)=C");
 //    mol->readAsSMI("C([H])([H])=C([H])-C#N");
 //    mol->readAsSMI("c1([H])c([H])c([H])c(O[H])c(C#N)c1([H])");
@@ -297,7 +297,7 @@ int testMolFormat() {
         std::cout << "\"" << suffixVec.back() << "\",";
     }
     std::cout << std::endl;
-    std::shared_ptr<xgd::JMol> mol = std::make_shared<xgd::JMolAdapter>();
+    std::shared_ptr<cocr::JMol> mol = std::make_shared<cocr::JMolAdapter>();
     mol->readAsSMI("c1ccccc1");
     std::cout << "**********************" << std::endl;
     for (auto &format:suffixVec) {

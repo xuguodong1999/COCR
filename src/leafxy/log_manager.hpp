@@ -1,6 +1,4 @@
-#ifndef _XGD_LOG_MANAGER_HPP_
-#define _XGD_LOG_MANAGER_HPP_
-
+#pragma once
 #include <QObject>
 #include <QFile>
 #include <QMutex>
@@ -41,5 +39,3 @@ private:
 
     QString getLogFileName() const;
 };
-
-#endif//_XGD_LOG_MANAGER_HPP_

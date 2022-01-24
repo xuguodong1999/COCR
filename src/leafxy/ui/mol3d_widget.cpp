@@ -31,7 +31,7 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : QWidget(parent), mol(nullptr), minVi
     connect(builder, &Mol3DBuilder::sig_mol_build_done, this, &Mol3DWidget::endWaitHint);
 }
 
-void Mol3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
+void Mol3DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
     mol = std::move(_mol);
     window->reset();
     qDebug() << __FUNCTION__;
@@ -63,7 +63,7 @@ QString Mol3DWidget::makeAtomInfo(const size_t &_aid) {
         auto atom = mol->getAtom(_aid);
         if (atom) {
             info.append("\n" + tr("element: ") + atom->getQName());
-            if (xgd::ElementType::SA != atom->getType()) {
+            if (cocr::ElementType::SA != atom->getType()) {
                 info.append("\n" + tr("mass: ") + QString::number(atom->getMass(), 'f', 4));
             }
         }

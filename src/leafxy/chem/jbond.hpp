@@ -1,12 +1,10 @@
-#ifndef _XGD_JBOND_HPP_
-#define _XGD_JBOND_HPP_
-
+#pragma once
 #include <memory>
 #include <QColor>
 #include <QString>
 
 
-namespace xgd {
+namespace cocr {
     class JAtom;
 
     enum class BondType : int {
@@ -60,4 +58,3 @@ namespace xgd {
 
     QColor getColor(const BondType &_bondType);
 }
-#endif//_XGD_JBOND_HPP_

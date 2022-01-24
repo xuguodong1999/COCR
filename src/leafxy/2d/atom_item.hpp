@@ -1,5 +1,4 @@
-#ifndef _2D_ATOM_ITEM_HPP_
-#define _2D_ATOM_ITEM_HPP_
+#pragma once
 
 #include "base_item.hpp"
 #include "chem/jatom.hpp"
@@ -7,7 +6,7 @@
 
 class BondItem;
 
-namespace xgd {
+namespace cocr {
     class JAtom;
 }
 class AtomItem : public BaseItem {
@@ -16,10 +15,10 @@ class AtomItem : public BaseItem {
     friend class BondItem;
 
     inline static float sCommonSize = 10;
-    xgd::id_type aid;
+    cocr::id_type aid;
 public:
 
-    AtomItem(const xgd::id_type &_aid, QGraphicsItem *parent = nullptr);
+    AtomItem(const cocr::id_type &_aid, QGraphicsItem *parent = nullptr);
 
     void setHTML(const QString &_html);
 
@@ -39,5 +38,3 @@ public:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
 };
-
-#endif//_2D_ATOM_ITEM_HPP_

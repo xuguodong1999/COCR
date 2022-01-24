@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <numeric>
 
-bool xgd::TextRecognizerNcnnImpl::initModel(
+bool cocr::TextRecognizerNcnnImpl::initModel(
         const std::string &_ncnnBin, const std::string &_ncnnParam, const std::string &_words, const int &_maxWidth) {
     QFile cfgFile(_ncnnParam.c_str()), weightsFile(_ncnnBin.c_str());
     if (!cfgFile.open(QIODevice::ReadOnly) || !weightsFile.open(QIODevice::ReadOnly)) {
@@ -44,7 +44,7 @@ bool xgd::TextRecognizerNcnnImpl::initModel(
     return true;
 }
 
-std::pair<std::string, std::vector<float>> xgd::TextRecognizerNcnnImpl::recognize(
+std::pair<std::string, std::vector<float>> cocr::TextRecognizerNcnnImpl::recognize(
         const cv::Mat &_originImage) {
     cv::Mat srcResize = preProcess(_originImage);
     ncnn::Mat in = ncnn::Mat::from_pixels(
@@ -61,7 +61,7 @@ std::pair<std::string, std::vector<float>> xgd::TextRecognizerNcnnImpl::recogniz
     return recognize((float *) out.data, out.h, out.w);
 }
 
-void xgd::TextRecognizerNcnnImpl::freeModel() {
+void cocr::TextRecognizerNcnnImpl::freeModel() {
     net->clear();
     net = nullptr;
 }
@@ -71,7 +71,7 @@ inline static size_t argmax(ForwardIterator first, ForwardIterator last) {
     return std::distance(first, std::max_element(first, last));
 }
 
-std::pair<std::string, std::vector<float>> xgd::TextRecognizerNcnnImpl::recognize(
+std::pair<std::string, std::vector<float>> cocr::TextRecognizerNcnnImpl::recognize(
         const float *_outputData, const int &_h, const int _w) {
     std::string strRes;
     std::vector<float> scores;
@@ -94,11 +94,11 @@ std::pair<std::string, std::vector<float>> xgd::TextRecognizerNcnnImpl::recogniz
     return {strRes, scores};
 }
 
-xgd::TextRecognizerNcnnImpl::TextRecognizerNcnnImpl() : numThread(16) {
+cocr::TextRecognizerNcnnImpl::TextRecognizerNcnnImpl() : numThread(16) {
 
 }
 
-cv::Mat xgd::TextRecognizerNcnnImpl::preProcess(const cv::Mat &_src) {
+cv::Mat cocr::TextRecognizerNcnnImpl::preProcess(const cv::Mat &_src) {
     cv::Mat srcResized = TextRecognizer::preProcess(_src);
     if (srcResized.cols > maxWidth) {
         cv::resize(srcResized, srcResized, cv::Size(maxWidth, dstHeight), 0, 0, cv::INTER_CUBIC);
@@ -108,7 +108,7 @@ cv::Mat xgd::TextRecognizerNcnnImpl::preProcess(const cv::Mat &_src) {
     return srcResized;
 }
 
-void xgd::TextRecognizerNcnnImpl::setNumThread(int numThread) {
+void cocr::TextRecognizerNcnnImpl::setNumThread(int numThread) {
     TextRecognizerNcnnImpl::numThread = numThread;
     if (net) { net->opt.num_threads = numThread; }
 }

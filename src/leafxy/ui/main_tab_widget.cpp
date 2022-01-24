@@ -137,8 +137,8 @@ void MainTabWidget::resizeEvent(QResizeEvent *e) {
 
 void MainTabWidget::onOcrJobReady() {
     isMolLatest = true;
-    xgd::JMolManager::GetInstance().setInputMol(ocrThread->getMol());
-    auto mol = xgd::JMolManager::GetInstance().getInputMol();
+    cocr::JMolManager::GetInstance().setInputMol(ocrThread->getMol());
+    auto mol = cocr::JMolManager::GetInstance().getInputMol();
     if (!mol) {
         QMessageBox::information(
                 this, tr("No Molecule Detected"),
@@ -149,7 +149,7 @@ void MainTabWidget::onOcrJobReady() {
     if (ui->tabWidget->currentIndex() == 2) {
         view2DWidget->syncMolToScene(mol);
     } else if (ui->tabWidget->currentIndex() == 3) {
-        mol = xgd::JMolManager::GetInstance().getFullHydrogenInputMol();
+        mol = cocr::JMolManager::GetInstance().getFullHydrogenInputMol();
         if (!mol) {
             QMessageBox::information(
                     this, tr("3D Molecule build failed"),

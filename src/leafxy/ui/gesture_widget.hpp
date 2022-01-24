@@ -1,6 +1,4 @@
-#ifndef _XGD_GESTURE_WIDGET_HPP_
-#define _XGD_GESTURE_WIDGET_HPP_
-
+#pragma once
 #include <QWidget>
 #include <QGestureEvent>
 
@@ -24,6 +22,3 @@ protected:
     void onPinchGesture(QPinchGesture *gesture);
 
 };
-
-
-#endif//_XGD_GESTURE_WIDGET_HPP_

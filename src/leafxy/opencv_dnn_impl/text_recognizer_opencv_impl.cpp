@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-bool xgd::TextRecognizerOpenCVImpl::initModel(
+bool cocr::TextRecognizerOpenCVImpl::initModel(
         const std::string &_onnxFile, const std::string &_words, int _width) {
     try {
         dstWidth = _width;
@@ -24,11 +24,11 @@ bool xgd::TextRecognizerOpenCVImpl::initModel(
     return true;
 }
 
-void xgd::TextRecognizerOpenCVImpl::freeModel() {
+void cocr::TextRecognizerOpenCVImpl::freeModel() {
     model = nullptr;
 }
 
-std::pair<std::string, std::vector<float>> xgd::TextRecognizerOpenCVImpl::recognize(
+std::pair<std::string, std::vector<float>> cocr::TextRecognizerOpenCVImpl::recognize(
         const cv::Mat &_originImage) {
     cv::Mat srcResized = preProcess(_originImage);
     std::string recognitionResult = model->recognize(srcResized);
@@ -36,7 +36,7 @@ std::pair<std::string, std::vector<float>> xgd::TextRecognizerOpenCVImpl::recogn
     return {recognitionResult, scores};
 }
 
-cv::Mat xgd::TextRecognizerOpenCVImpl::preProcess(const cv::Mat &_src) {
+cv::Mat cocr::TextRecognizerOpenCVImpl::preProcess(const cv::Mat &_src) {
     cv::Mat srcResized = TextRecognizer::preProcess(_src);
     if (srcResized.cols < dstWidth) {
         cv::hconcat(srcResized, cv::Mat(dstHeight, dstWidth - srcResized.cols, CV_8UC1, cv::Scalar(255)), srcResized);

@@ -1,12 +1,10 @@
-#ifndef _XGD_TEXT_RECOGNITION_HPP_
-#define _XGD_TEXT_RECOGNITION_HPP_
-
+#pragma once
 #include <opencv2/core/mat.hpp>
 #include <string>
 #include <memory>
 
 
-namespace xgd {
+namespace cocr {
     class TextRecognizer {
     protected:
         std::vector<std::string> wordVec;
@@ -21,4 +19,3 @@ namespace xgd {
         virtual std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) = 0;
     };
 }
-#endif//_XGD_TEXT_RECOGNITION_HPP_

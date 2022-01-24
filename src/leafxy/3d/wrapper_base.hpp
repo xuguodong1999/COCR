@@ -1,6 +1,4 @@
-#ifndef _3D_BASE_WRAPPER_HPP_
-#define _3D_BASE_WRAPPER_HPP_
-
+#pragma once
 #include <QObject>
 #include <QVector3D>
 #include <QColor>
@@ -37,5 +35,3 @@ public:
 
     virtual void setId(const size_t &_id);
 };
-
-#endif//_3D_BASE_WRAPPER_HPP_

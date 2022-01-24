@@ -1,6 +1,4 @@
-#ifndef _XGD_GESTURE_VIEW_HPP_
-#define _XGD_GESTURE_VIEW_HPP_
-
+#pragma once
 #include <QGestureEvent>
 #include <QGraphicsView>
 
@@ -32,5 +30,3 @@ protected:
 
     void reset();
 };
-
-#endif//_XGD_GESTURE_VIEW_HPP_

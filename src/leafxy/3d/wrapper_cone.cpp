@@ -6,7 +6,7 @@
 #include <Qt3DCore/QTransform>
 #include <Qt3DExtras/QConeMesh>
 
-using xgd::MathUtil;
+using cocr::MathUtil;
 
 ConeWrapper::ConeWrapper(Qt3DCore::QEntity *_root) : SingleWrapper(_root), cone(new Qt3DExtras::QConeMesh()) {
     entity->addComponent(cone);

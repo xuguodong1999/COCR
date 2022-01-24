@@ -7,15 +7,15 @@
 #include <QPainter>
 #include <cmath>
 
-using xgd::MathUtil;
+using cocr::MathUtil;
 
-BondItem::BondItem(const xgd::id_type &_bid, QGraphicsItem *parent)
-        : BaseItem(parent), bid(_bid), mFrom(nullptr), mTo(nullptr), mType(xgd::BondType::SingleBond) {
+BondItem::BondItem(const cocr::id_type &_bid, QGraphicsItem *parent)
+        : BaseItem(parent), bid(_bid), mFrom(nullptr), mTo(nullptr), mType(cocr::BondType::SingleBond) {
     mPathItem = new QGraphicsPathItem(this);
     setFlags(QGraphicsItem::ItemIsSelectable);
 }
 
-void BondItem::setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_type,
+void BondItem::setBond(AtomItem *_from, AtomItem *_to, const cocr::BondType &_type,
                        const float &_offset1, const float &_offset2) {
     mFrom = _from;
     mTo = _to;
@@ -28,7 +28,7 @@ void BondItem::setBond(AtomItem *_from, AtomItem *_to, const xgd::BondType &_typ
 }
 
 void BondItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    if (xgd::BondType::UpBond == mType) {
+    if (cocr::BondType::UpBond == mType) {
         painter->fillPath(mPathItem->path(), QBrush(Qt::black));
     }
     mPathItem->paint(painter, option, widget);
@@ -39,7 +39,7 @@ QRectF BondItem::boundingRect() const {
 }
 
 void BondItem::updateBond() {
-    using namespace xgd;
+    using namespace cocr;
     auto c1 = mFrom->pos(), c2 = mTo->pos();
     auto r1 = mFrom->boundingRect(), r2 = mTo->boundingRect();
     QPointF from(c1.x() + r1.width() * offset1, c1.y() + r2.height() / 2),

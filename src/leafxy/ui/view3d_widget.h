@@ -1,12 +1,10 @@
-#ifndef VIEW3D_WIDGET_H
-#define VIEW3D_WIDGET_H
-
+#pragma once
 #include <QWidget>
 
 namespace Ui {
     class View3DWidget;
 }
-namespace xgd {
+namespace cocr {
     class JMol;
 }
 class Mol3DWidget;
@@ -19,7 +17,7 @@ public:
 
     ~View3DWidget();
 
-    void syncMolToScene(std::shared_ptr<xgd::JMol> _mol);
+    void syncMolToScene(std::shared_ptr<cocr::JMol> _mol);
 
     void startWaitHint();
 
@@ -40,5 +38,3 @@ private slots:
 
     void reformatInputState();
 };
-
-#endif // VIEW3D_WIDGET_H

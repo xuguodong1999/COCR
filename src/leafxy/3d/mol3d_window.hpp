@@ -1,6 +1,4 @@
-#ifndef _XGD_MOL3D_WINDOW_HPP_
-#define _XGD_MOL3D_WINDOW_HPP_
-
+#pragma once
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DCore/QTransform>
 
@@ -89,5 +87,3 @@ private:
 
     void rotateCamera(const QVector2D &_dir);
 };
-
-#endif//_XGD_MOL3D_WINDOW_HPP_

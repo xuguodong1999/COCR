@@ -1,6 +1,4 @@
-#ifndef _XGD_TEXT_RECOGNITION_OPENCV_DNN_IMPL_HPP_
-#define _XGD_TEXT_RECOGNITION_OPENCV_DNN_IMPL_HPP_
-
+#pragma once
 #include "../ocr/text_recognizer.hpp"
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
@@ -8,7 +6,7 @@
 #include <memory>
 
 
-namespace xgd {
+namespace cocr {
     /**
      * FIXME: onnx in opencv_dnn only support fixed image width
      */
@@ -26,4 +24,3 @@ namespace xgd {
         std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) override;
     };
 }
-#endif//_XGD_TEXT_RECOGNITION_OPENCV_DNN_IMPL_HPP_

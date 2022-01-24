@@ -6,7 +6,7 @@
 #include <QFile>
 #include <QDebug>
 
-bool xgd::ObjectDetectorNcnnImpl::initModel(
+bool cocr::ObjectDetectorNcnnImpl::initModel(
         const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth) {
     maxWidth = maxHeight = _maxWidth - sizeBase;
     QFile cfgFile(_ncnnParam.c_str()), weightsFile(_ncnnBin.c_str());
@@ -66,13 +66,13 @@ bool xgd::ObjectDetectorNcnnImpl::initModel(
     return true;
 }
 
-void xgd::ObjectDetectorNcnnImpl::freeModel() {
+void cocr::ObjectDetectorNcnnImpl::freeModel() {
     net->clear();
     net = nullptr;
 }
 
-std::pair<cv::Mat, std::vector<xgd::DetectorObject>>
-xgd::ObjectDetectorNcnnImpl::detect(const cv::Mat &_originImage) {
+std::pair<cv::Mat, std::vector<cocr::DetectorObject>>
+cocr::ObjectDetectorNcnnImpl::detect(const cv::Mat &_originImage) {
     cv::Mat input = preProcess(_originImage);
     ncnn::Mat in = ncnn::Mat::from_pixels(
             input.data, ncnn::Mat::PIXEL_GRAY,
@@ -84,7 +84,7 @@ xgd::ObjectDetectorNcnnImpl::detect(const cv::Mat &_originImage) {
     ex.input("data", in);
     ncnn::Mat out;
     ex.extract("output", out);
-    std::vector<xgd::DetectorObject> objects;
+    std::vector<cocr::DetectorObject> objects;
     for (int i = 0; i < out.h; i++) {
         const float *vec = out.row(i);
         int label = vec[0] - 1;
@@ -100,11 +100,11 @@ xgd::ObjectDetectorNcnnImpl::detect(const cv::Mat &_originImage) {
     return {input, objects};
 }
 
-xgd::ObjectDetectorNcnnImpl::ObjectDetectorNcnnImpl() : numThread(4), net(nullptr) {
+cocr::ObjectDetectorNcnnImpl::ObjectDetectorNcnnImpl() : numThread(4), net(nullptr) {
 
 }
 
-void xgd::ObjectDetectorNcnnImpl::setNumThread(int numThread) {
+void cocr::ObjectDetectorNcnnImpl::setNumThread(int numThread) {
     ObjectDetectorNcnnImpl::numThread = numThread;
     if (net) { net->opt.num_threads = numThread; }
 }

@@ -2,7 +2,7 @@
 #include <opencv2/imgproc.hpp>
 #include <QPixmap>
 
-void xgd::cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
+void cocr::cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
                      const cv::Scalar &_color, const int &_thickness, bool _rotate) {
     int x = _center.x, y = _center.y, xx[4], yy[4];
     if (_rotate) {
@@ -24,7 +24,7 @@ void xgd::cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, co
              _color, _thickness, cv::LINE_AA);
 }
 
-cv::Mat xgd::rotateCvMat(const cv::Mat &srcImage, double angle) {
+cv::Mat cocr::rotateCvMat(const cv::Mat &srcImage, double angle) {
     cv::Mat destImage;
     cv::Point2f center(srcImage.cols / 2, srcImage.rows / 2);
     cv::Mat M = cv::getRotationMatrix2D(center, angle, 1);
@@ -35,7 +35,7 @@ cv::Mat xgd::rotateCvMat(const cv::Mat &srcImage, double angle) {
 }
 
 
-cv::Mat xgd::convertQImageToMat(const QImage &_img) {
+cv::Mat cocr::convertQImageToMat(const QImage &_img) {
     cv::Mat mat;
     if (_img.isNull()) {
         throw std::runtime_error("you are converting an empty QImage to cv::Mat");
@@ -63,13 +63,13 @@ cv::Mat xgd::convertQImageToMat(const QImage &_img) {
     return mat;
 }
 
-cv::Mat xgd::convertQPixmapToMat(const QPixmap &_img) {
-    return xgd::convertQImageToMat(_img.toImage());
+cv::Mat cocr::convertQPixmapToMat(const QPixmap &_img) {
+    return cocr::convertQImageToMat(_img.toImage());
 }
 
 #include <opencv2/highgui.hpp>
 
-QImage xgd::binaryAlphaImage(cv::Mat &src) {
+QImage cocr::binaryAlphaImage(cv::Mat &src) {
     cv::Mat result;
     cv::cvtColor(src, result, cv::COLOR_RGBA2GRAY);
     cv::adaptiveThreshold(result, result, 255.0,

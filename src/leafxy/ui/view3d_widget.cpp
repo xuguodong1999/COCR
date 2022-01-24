@@ -17,7 +17,7 @@ View3DWidget::View3DWidget(QWidget *parent)
     for (auto &format:formatVec) {
         if (std::string::npos != format.find("Read-only")) { continue; }
         auto suffix = format.substr(0, format.find(" "));
-        if (!xgd::JMol::IsValidWritableFormat(suffix)) { continue; }
+        if (!cocr::JMol::IsValidWritableFormat(suffix)) { continue; }
         ui->format_box->addItem(QString::fromStdString(suffix));
     }
     connect(ui->format_box, &QComboBox::currentTextChanged, [&](const QString &formatName) {
@@ -41,7 +41,7 @@ View3DWidget::~View3DWidget() {
     delete ui;
 }
 
-void View3DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
+void View3DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
     mol3DWidget->syncMolToScene(_mol);
 }
 
@@ -64,11 +64,11 @@ void View3DWidget::showFormatDialog() {
     formatDialog->resize(size() * 0.8);
     formatDialog->setModal(true);
     formatDialog->setWindowTitle(QString::fromStdString(currentFormat));
-    auto mol = xgd::JMolManager::GetInstance().getFullHydrogenExpandedMol(false);
+    auto mol = cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol(false);
     if (mol) {
         bool hasSuperAtom = false;
-        mol->loopAtomVec([&](xgd::JAtom &atom) {
-            if (xgd::ElementType::SA == atom.getType()) {
+        mol->loopAtomVec([&](cocr::JAtom &atom) {
+            if (cocr::ElementType::SA == atom.getType()) {
                 hasSuperAtom = true;
                 return;
             }
@@ -95,16 +95,16 @@ void View3DWidget::showFormatDialog() {
 
 
 void View3DWidget::switchSuperAtomState() {
-    std::shared_ptr<xgd::JMol> mol;
+    std::shared_ptr<cocr::JMol> mol;
     if (++expBtnClickTimes % 2) {
-        mol = xgd::JMolManager::GetInstance().getFullHydrogenExpandedMol();
+        mol = cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol();
     } else {
-        mol = xgd::JMolManager::GetInstance().getFullHydrogenInputMol();
+        mol = cocr::JMolManager::GetInstance().getFullHydrogenInputMol();
     }
     syncMolToScene(mol);
 }
 
 void View3DWidget::reformatInputState() {
-    auto mol = xgd::JMolManager::GetInstance().getCurrentMol();
+    auto mol = cocr::JMolManager::GetInstance().getCurrentMol();
     syncMolToScene(mol);
 }

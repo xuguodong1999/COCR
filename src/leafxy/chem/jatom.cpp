@@ -6,9 +6,9 @@
 
 #include <QDebug>
 
-using xgd::ElementType;
-using xgd::ColorName;
-std::vector<float> xgd::ELEMENT_MASS_LIST = {
+using cocr::ElementType;
+using cocr::ColorName;
+std::vector<float> cocr::ELEMENT_MASS_LIST = {
         0, 1.00795, 4.0026, 6.9412, 9.01218, 10.8117, 12.0108, 14.0067, 15.9994, 18.9984, 20.1798, 22.9898, 24.3051,
         26.9815, 28.0855, 30.9738, 32.0655, 35.4532, 39.9481, 39.0983, 40.0784, 44.9559, 47.8671, 50.9415, 51.9962,
         54.938, 55.8452, 58.9332, 58.6934, 63.5463, 65.394, 69.7231, 72.641, 74.9216, 78.963, 79.9041, 83.7982, 85.4678,
@@ -19,7 +19,7 @@ std::vector<float> xgd::ELEMENT_MASS_LIST = {
         226, 227, 232.038, 231.036, 238.029, 238.849, 242.88, 244.859, 246.911, 248.927, 252.958, 253.966, 259.005,
         260.012, 261.02, 264.044, 269.083, 270.09, 273.114, 274.122, 272.106, 278.153, 283.192, 282.184, 287.223,
 };
-std::vector<float> xgd::ELEMENT_ELECTRON_NEG_LIST = {
+std::vector<float> cocr::ELEMENT_ELECTRON_NEG_LIST = {
         0, 2.2, 3.89, 0.98, 1.57, 2.04, 2.55, 3.04, 3.44, 3.98, 3.67, 0.93, 1.31, 1.61, 1.9, 2.19, 2.58, 3.16, 3.3,
         0.82, 1, 1.36, 1.54, 1.63, 1.66, 1.55, 1.83, 1.88, 1.91, 1.9, 1.65, 1.81, 2.01, 2.18, 2.55, 2.96, 3, 0.82, 0.95,
         1.22, 1.33, 1.6, 2.16, 1.9, 2.2, 2.28, 2.2, 1.93, 1.69, 1.78, 1.96, 2.05, 2.1, 2.66, 2.67, 0.97, 0.89, 1.1,
@@ -27,13 +27,13 @@ std::vector<float> xgd::ELEMENT_ELECTRON_NEG_LIST = {
         2.28, 2.54, 2, 1.62, 2.33, 2.02, 2, 2.2, 2.2, 0.7, 0.9, 1.1, 1.3, 1.5, 1.38, 1.36, 1.28, 1.13, 1.28, 1.3, 1.3,
         1.3, 1.3, 1.3, 1.3, 1.291, 1.3, 1.5, 2.36, 1.9, 2.2, 2.2, 2.28, 2.54, 2,
 };
-std::vector<float> xgd::ELEMENT_RADIUS_LIST = {
+std::vector<float> cocr::ELEMENT_RADIUS_LIST = {
         0, 32, 93, 123, 90, 82, 77, 75, 73, 72, 71, 154, 136, 118, 111, 106, 102, 99, 98, 203, 174, 144, 132, 122, 118,
         117, 117, 116, 115, 117, 125, 126, 122, 120, 116, 114, 112, 216, 191, 162, 145, 134, 130, 127, 125, 125, 128,
         134, 148, 144, 141, 140, 136, 133, 131, 235, 198, 169, 165, 165, 164, 163, 162, 185, 161, 159, 159, 158, 157,
         156, 174, 156, 144, 134, 130, 128, 126, 127, 130, 134, 149, 148, 147, 146, 146, 145, 0, 0, 0, 0, 165, 0, 142,
 };
-std::vector<std::string> xgd::ELEMENT_NAME_LIST = {
+std::vector<std::string> cocr::ELEMENT_NAME_LIST = {
         "SuperAtom",
         "H", "He",
         "Li", "Be", "B", "C", "N", "O", "F", "Ne",
@@ -47,7 +47,7 @@ std::vector<std::string> xgd::ELEMENT_NAME_LIST = {
         "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn"
 };
 
-std::unordered_map<std::string, ElementType> xgd::STR_ELEMENT_MAP = {
+std::unordered_map<std::string, ElementType> cocr::STR_ELEMENT_MAP = {
         {"SuperAtom", ElementType::SA},
         {"H",         ElementType::H},
         {"He",        ElementType::He},
@@ -163,7 +163,7 @@ std::unordered_map<std::string, ElementType> xgd::STR_ELEMENT_MAP = {
         {"Cn",        ElementType::Cn}
 };
 
-std::unordered_map<ElementType, int> xgd::ELEMENT_COMMON_NEB_NUM_MAP = {
+std::unordered_map<ElementType, int> cocr::ELEMENT_COMMON_NEB_NUM_MAP = {
         {ElementType::H,  1},
         {ElementType::Li, 1},
         {ElementType::Na, 1},
@@ -203,76 +203,76 @@ std::unordered_map<ElementType, int> xgd::ELEMENT_COMMON_NEB_NUM_MAP = {
 
 };
 
-const std::string &xgd::convertElementTypeToName(const ElementType &_type) {
+const std::string &cocr::convertElementTypeToName(const ElementType &_type) {
     return ELEMENT_NAME_LIST[static_cast<size_t>(_type)];
 }
 
-ElementType xgd::convertNameToElementType(const std::string &_name) {
+ElementType cocr::convertNameToElementType(const std::string &_name) {
     auto it = STR_ELEMENT_MAP.find(_name);
     if (it != STR_ELEMENT_MAP.end())return it->second;
     return ElementType::SA;
 }
 
-const std::string &xgd::JAtom::getName() const {
+const std::string &cocr::JAtom::getName() const {
     if (isSuperAtom()) {
         return name;
     }
     return convertElementTypeToName(type);
 }
 
-const ElementType &xgd::JAtom::getType() const {
+const ElementType &cocr::JAtom::getType() const {
     return type;
 }
 
-QString xgd::JAtom::getQName() const {
+QString cocr::JAtom::getQName() const {
     return getName().c_str();
 }
 
-void xgd::JAtom::set2D(const float &_x, const float &_y) {
+void cocr::JAtom::set2D(const float &_x, const float &_y) {
     x = x0 = x1 = _x;
     y = y0 = y1 = _y;
 }
 
-void xgd::JAtom::set3D(const float &_x, const float &_y, const float &_z) {
+void cocr::JAtom::set3D(const float &_x, const float &_y, const float &_z) {
     xx = _x;
     yy = _y;
     zz = _z;
 }
 
-int xgd::JAtom::getCharge() const {
+int cocr::JAtom::getCharge() const {
     return charge;
 }
 
 
-xgd::JAtom::JAtom(const size_t &_id, const ElementType &_element, const float &_x, const float &_y)
+cocr::JAtom::JAtom(const size_t &_id, const ElementType &_element, const float &_x, const float &_y)
         : id(_id), mIsImplicit(false), type(_element), x(_x), y(_y),
           x0(_x), y0(_y), x1(_x), y1(_y), xx(0), yy(0), zz(0), charge(0), mIsLeftToRight(false) {
 }
 
-xgd::JAtom::JAtom(const size_t &_id, const std::string &_name,
+cocr::JAtom::JAtom(const size_t &_id, const std::string &_name,
                   const float &_x0, const float &_y0, const float &_x1, const float &_y1)
         : id(_id), mIsImplicit(false), type(ElementType::SA), x((_x0 + _x1) / 2), y((_y0 + _y1) / 2),
           x0(_x0), y0(_y0), x1(_x1), y1(_y1), xx(0), yy(0), zz(0), charge(0), name(_name), mIsLeftToRight(false) {
 
 }
 
-int xgd::JAtom::getAtomicNumber() const {
+int cocr::JAtom::getAtomicNumber() const {
     return static_cast<size_t>(getType());
 }
 
-float xgd::JAtom::getMass() const {
+float cocr::JAtom::getMass() const {
     size_t an = getAtomicNumber();
     if (an >= ELEMENT_MASS_LIST.size()) { return 0; }
     return ELEMENT_MASS_LIST[an];
 }
 
-float xgd::JAtom::getElectronNeg() const {
+float cocr::JAtom::getElectronNeg() const {
     size_t an = getAtomicNumber();
     if (an >= ELEMENT_ELECTRON_NEG_LIST.size()) { return 0; }
     return ELEMENT_ELECTRON_NEG_LIST[an];
 }
 
-float xgd::JAtom::getRadius() const {
+float cocr::JAtom::getRadius() const {
     size_t an = getAtomicNumber();
     if (an >= ELEMENT_RADIUS_LIST.size()) { return 0; }
     float r = ELEMENT_RADIUS_LIST[an];
@@ -281,7 +281,7 @@ float xgd::JAtom::getRadius() const {
     return r;
 }
 
-float xgd::JAtom::getDefaultRadius() {
+float cocr::JAtom::getDefaultRadius() {
     return sDefaultRadius;
 }
 
@@ -300,7 +300,7 @@ static std::unordered_map<ElementType, ColorName> colorMap = {
         {ElementType::I,  ColorName::rgbPurple}
 };
 
-QColor xgd::getColor(const ElementType &_element) {
+QColor cocr::getColor(const ElementType &_element) {
     auto it = colorMap.find(_element);
     if (colorMap.end() == it) {
         return qColor(ColorName::rgbPink);
@@ -308,7 +308,7 @@ QColor xgd::getColor(const ElementType &_element) {
     return qColor(it->second);
 }
 
-int xgd::getCommonNebNum(const ElementType &_type) {
+int cocr::getCommonNebNum(const ElementType &_type) {
     auto it = ELEMENT_COMMON_NEB_NUM_MAP.find(_type);
     if (ELEMENT_COMMON_NEB_NUM_MAP.end() != it) {
         return it->second;
@@ -317,55 +317,55 @@ int xgd::getCommonNebNum(const ElementType &_type) {
 }
 
 
-bool xgd::JAtom::isImplicit() const {
+bool cocr::JAtom::isImplicit() const {
     return mIsImplicit;
 }
 
-void xgd::JAtom::setImplicit(bool _isImplicit) {
+void cocr::JAtom::setImplicit(bool _isImplicit) {
     mIsImplicit = _isImplicit;
 }
 
-void xgd::JAtom::setId(const id_type &_id) {
+void cocr::JAtom::setId(const id_type &_id) {
     id = _id;
 }
 
-xgd::id_type xgd::JAtom::getId() {
+cocr::id_type cocr::JAtom::getId() {
     return id;
 }
 
-bool xgd::JAtom::isSuperAtom() const {
-    return xgd::ElementType::SA == type;
+bool cocr::JAtom::isSuperAtom() const {
+    return cocr::ElementType::SA == type;
 }
 
-void xgd::JAtom::setCharge(int charge) {
+void cocr::JAtom::setCharge(int charge) {
     JAtom::charge = charge;
 }
 
-void xgd::JAtom::setType(const ElementType &_type) {
+void cocr::JAtom::setType(const ElementType &_type) {
     type = _type;
 }
 
-bool xgd::JAtom::isLeftToRight() const {
+bool cocr::JAtom::isLeftToRight() const {
     return mIsLeftToRight;
 }
 
-void xgd::JAtom::setIsLeftToRight(bool isLeftToRight) {
+void cocr::JAtom::setIsLeftToRight(bool isLeftToRight) {
     if (!mIsLeftToRight) { mIsLeftToRight = isLeftToRight; }
 }
 
-int xgd::JAtom::getCommonNebNum() const {
-    return xgd::getCommonNebNum(type);
+int cocr::JAtom::getCommonNebNum() const {
+    return cocr::getCommonNebNum(type);
 }
 
-std::vector<std::pair<float, std::shared_ptr<xgd::JBond>>> &xgd::JAtom::getSaBonds() {
+std::vector<std::pair<float, std::shared_ptr<cocr::JBond>>> &cocr::JAtom::getSaBonds() {
     return saBonds;
 }
 
-void xgd::JAtom::insertSuperAtomBonds(std::shared_ptr<JBond> _bond, const float &_offset) {
+void cocr::JAtom::insertSuperAtomBonds(std::shared_ptr<JBond> _bond, const float &_offset) {
     saBonds.push_back(std::make_pair(_offset, std::move(_bond)));
 }
 
-void xgd::JAtom::clearSABonds() {
+void cocr::JAtom::clearSABonds() {
     saBonds.clear();
 }
 

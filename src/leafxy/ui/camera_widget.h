@@ -1,5 +1,4 @@
-#ifndef CAMERA_WIDGET_H
-#define CAMERA_WIDGET_H
+#pragma once
 
 #include <QWidget>
 #include <QtMultimedia/QCamera>
@@ -68,5 +67,3 @@ private:
     QScopedPointer<QCamera> m_camera;
     QScopedPointer<QCameraImageCapture> m_imageCapture;
 };
-
-#endif // CAMERA_WIDGET_H

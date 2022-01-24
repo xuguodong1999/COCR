@@ -1,6 +1,4 @@
-#ifndef _XGD_JMOL_HPP_
-#define _XGD_JMOL_HPP_
-
+#pragma once
 #include "jatom.hpp"
 #include "jbond.hpp"
 #include <unordered_set>
@@ -11,7 +9,7 @@
 
 using id_type = size_t;
 
-namespace xgd {
+namespace cocr {
     class JMol_p;
 
     class JMol {
@@ -130,5 +128,3 @@ namespace xgd {
 
 // define it in specific impl
 std::vector<std::string> GetWritableFormats();
-
-#endif//_XGD_JMOL_HPP_

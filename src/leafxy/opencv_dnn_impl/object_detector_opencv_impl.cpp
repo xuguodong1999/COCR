@@ -7,7 +7,7 @@
 
 #include <QFile>
 
-bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const std::string &_weightsFile) {
+bool cocr::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const std::string &_weightsFile) {
     try {
         QFile cfgFile(_cfgFile.c_str()), weightsFile(_weightsFile.c_str());
         if (!cfgFile.open(QIODevice::ReadOnly) || !weightsFile.open(QIODevice::ReadOnly)) {
@@ -51,12 +51,12 @@ bool xgd::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, const
     return true;
 }
 
-void xgd::ObjectDetectorOpenCVImpl::freeModel() {
+void cocr::ObjectDetectorOpenCVImpl::freeModel() {
 
 }
 
-std::pair<cv::Mat, std::vector<xgd::DetectorObject>>
-xgd::ObjectDetectorOpenCVImpl::detect(const cv::Mat &_originImage) {
+std::pair<cv::Mat, std::vector<cocr::DetectorObject>>
+cocr::ObjectDetectorOpenCVImpl::detect(const cv::Mat &_originImage) {
     cv::Mat blob;
     cv::Mat input = preProcess(_originImage);
     cv::dnn::blobFromImage(input, blob, 1 / 255.0);
@@ -97,11 +97,11 @@ xgd::ObjectDetectorOpenCVImpl::detect(const cv::Mat &_originImage) {
     return {input, objects};
 }
 
-void xgd::ObjectDetectorOpenCVImpl::setConfThresh(float confThresh) {
+void cocr::ObjectDetectorOpenCVImpl::setConfThresh(float confThresh) {
     ObjectDetectorOpenCVImpl::confThresh = confThresh;
 }
 
-void xgd::ObjectDetectorOpenCVImpl::setIouThresh(float iouThresh) {
+void cocr::ObjectDetectorOpenCVImpl::setIouThresh(float iouThresh) {
     ObjectDetectorOpenCVImpl::iouThresh = iouThresh;
 }
 

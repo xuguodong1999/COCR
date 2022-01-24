@@ -1,6 +1,4 @@
-#ifndef _3D_MULTI_CYLINDER_WRAPPER_HPP_
-#define _3D_MULTI_CYLINDER_WRAPPER_HPP_
-
+#pragma once
 #include "wrapper_cylinder.hpp"
 #include <QVector3D>
 #include <QColor>
@@ -40,5 +38,3 @@ private:
 
     void loopMultiWrappers(std::function<void(CylinderWrapper &)> _func);
 };
-
-#endif//_3D_MULTI_CYLINDER_WRAPPER_HPP_

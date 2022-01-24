@@ -1,6 +1,4 @@
-#ifndef _3D_CONE_HPP_
-#define _3D_CONE_HPP_
-
+#pragma once
 #include "wrapper_single.hpp"
 
 #include <QVector3D>
@@ -24,5 +22,3 @@ public:
 private:
     void setHeight(const float &_height);
 };
-
-#endif//_3D_CONE_HPP_

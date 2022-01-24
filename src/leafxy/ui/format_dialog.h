@@ -1,6 +1,4 @@
-#ifndef _XGD_UI_FORMAT_DIALOG_H_
-#define _XGD_UI_FORMAT_DIALOG_H_
-
+#pragma once
 #include <QDialog>
 
 namespace Ui {
@@ -27,5 +25,3 @@ private slots:
 
     void copyAs();
 };
-
-#endif // _XGD_UI_FORMAT_DIALOG_H_

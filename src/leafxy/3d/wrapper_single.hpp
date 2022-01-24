@@ -1,6 +1,4 @@
-#ifndef _3D_SINGLE_WRAPPER_HPP_
-#define _3D_SINGLE_WRAPPER_HPP_
-
+#pragma once
 #include "wrapper_base.hpp"
 
 namespace Qt3DExtras {
@@ -16,5 +14,3 @@ public:
 
     void setColor(const QColor &_color) override;
 };
-
-#endif//_3D_SINGLE_WRAPPER_HPP_

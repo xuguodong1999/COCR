@@ -2,7 +2,7 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 
-cv::Mat xgd::TextRecognizer::preProcess(const cv::Mat &_src) {
+cv::Mat cocr::TextRecognizer::preProcess(const cv::Mat &_src) {
     // default behavior: resized to dstHeight
     if (_src.empty())throw std::runtime_error("get empty image in TextRecognizer::preProcess");
     float scaleX = (float) dstHeight / (float) _src.rows;

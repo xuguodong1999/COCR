@@ -1,10 +1,8 @@
-#ifndef _COLOR_TYPES_HPP_
-#define _COLOR_TYPES_HPP_
-
+#pragma once
 #include <QColor>
 #include <opencv2/core/types.hpp>
 
-namespace xgd {
+namespace cocr {
     enum class ColorName {
         rgbSnow = 0, rgbGhostWhite, rgbWhiteSmoke, rgbGainsboro, rgbFloralWhite,
         rgbOldLace, rgbLinen, rgbAntiqueWhite, rgbPapayaWhip, rgbBlanchedAlmond, rgbBisque, rgbPeachPuff,
@@ -93,4 +91,3 @@ namespace xgd {
      */
     cv::Scalar cvColor(const ColorName &_colorName);
 }
-#endif//_COLOR_TYPES_HPP_

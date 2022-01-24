@@ -1,9 +1,7 @@
-#ifndef _XGD_JMOL_MANAGER_HPP_
-#define _XGD_JMOL_MANAGER_HPP_
-
+#pragma once
 #include <memory>
 
-namespace xgd {
+namespace cocr {
     class JMol;
 
     class JMolManager {
@@ -37,4 +35,3 @@ namespace xgd {
         static JMolManager &GetInstance();
     };
 }
-#endif//_XGD_JMOL_MANAGER_HPP_

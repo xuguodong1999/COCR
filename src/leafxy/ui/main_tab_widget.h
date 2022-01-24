@@ -1,6 +1,4 @@
-#ifndef MAIN_TAB_WIDGET_H
-#define MAIN_TAB_WIDGET_H
-
+#pragma once
 #include <QWidget>
 
 namespace Ui {
@@ -85,5 +83,3 @@ private:
 
     void safeDeleteCamWidget();
 };
-
-#endif // MAIN_TAB_WIDGET_H

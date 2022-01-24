@@ -1,6 +1,4 @@
-#ifndef _3D_SHPERE_WRAPPER_HPP_
-#define _3D_SHPERE_WRAPPER_HPP_
-
+#pragma once
 #include "wrapper_single.hpp"
 
 namespace Qt3DExtras {
@@ -17,5 +15,3 @@ public:
 
     void setRindsAndSlices(const int &_rings, const int &_slices) override;
 };
-
-#endif//_3D_SHPERE_WRAPPER_HPP_

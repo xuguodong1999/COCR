@@ -1,6 +1,4 @@
-#ifndef _XGD_OBJECT_DETECTION_NCNN_IMPL_HPP_
-#define _XGD_OBJECT_DETECTION_NCNN_IMPL_HPP_
-
+#pragma once
 #include "../ocr/object_detector.hpp"
 #include <string>
 #include <memory>
@@ -10,7 +8,7 @@ namespace ncnn {
     class Net;
 }
 
-namespace xgd {
+namespace cocr {
     class ObjectDetectorNcnnImpl : public ObjectDetector {
         int numThread;
 
@@ -30,4 +28,3 @@ namespace xgd {
         detect(const cv::Mat &_originImage) override;
     };
 }
-#endif//_XGD_OBJECT_DETECTION_NCNN_IMPL_HPP_

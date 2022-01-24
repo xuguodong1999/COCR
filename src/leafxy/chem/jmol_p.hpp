@@ -1,13 +1,11 @@
-#ifndef _XGD_JMOL_P_
-#define _XGD_JMOL_P_
-
+#pragma once
 #include "jmol.hpp"
 #include <unordered_map>
 #include <memory>
 #include <optional>
 #include <queue>
 
-namespace xgd {
+namespace cocr {
     class JAtom;
 
     enum class TokenType {
@@ -144,4 +142,3 @@ namespace xgd {
 
 
 }
-#endif//_XGD_JMOL_P_

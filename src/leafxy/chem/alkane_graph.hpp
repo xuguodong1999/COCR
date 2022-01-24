@@ -1,6 +1,4 @@
-#ifndef _XGD_ALKANE_GRAPH_HPP_
-#define _XGD_ALKANE_GRAPH_HPP_
-
+#pragma once
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -10,7 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace xgd {
+namespace cocr {
     using hash_type = uint64_t;
     using node_type = unsigned char;
     enum NodeColor {
@@ -330,4 +328,3 @@ namespace xgd {
         return std::move(smiles);
     };
 }
-#endif//_XGD_ALKANE_GRAPH_HPP_

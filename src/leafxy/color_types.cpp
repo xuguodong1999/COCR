@@ -459,12 +459,12 @@ static const std::vector<std::tuple<unsigned char, unsigned char, unsigned char>
         {144, 238, 144}
 };
 
-QColor xgd::qColor(const xgd::ColorName &_colorName) {
+QColor cocr::qColor(const cocr::ColorName &_colorName) {
     auto&[r, g, b]=predefinedColors[static_cast<int>(_colorName)];
     return QColor(r, g, b);
 }
 
-cv::Scalar xgd::cvColor(const xgd::ColorName &_colorName) {
+cv::Scalar cocr::cvColor(const cocr::ColorName &_colorName) {
     auto&[r, g, b]=predefinedColors[static_cast<int>(_colorName)];
     return cv::Scalar(b, g, r);
 }

@@ -3,7 +3,7 @@
 #include <opencv2/imgproc.hpp>
 #include <unordered_map>
 
-namespace xgd {
+namespace cocr {
     struct OCRLineDataItem : public OCRDataItem {
         BondType bondType;
         float length;
@@ -115,7 +115,7 @@ namespace xgd {
     }
 }
 
-void xgd::OCRLineDataItem::predFromTo(const cv::Mat &_imgGray) {
+void cocr::OCRLineDataItem::predFromTo(const cv::Mat &_imgGray) {
     if (BondType::UpBond == bondType || BondType::DownBond == bondType) {
         predFromToForWedge(_imgGray);
     } else {
@@ -123,7 +123,7 @@ void xgd::OCRLineDataItem::predFromTo(const cv::Mat &_imgGray) {
     }
 }
 
-void xgd::OCRLineDataItem::predFromToForLine(const cv::Mat &_imgGray) {
+void cocr::OCRLineDataItem::predFromToForLine(const cv::Mat &_imgGray) {
     float w = rect.width, h = rect.height, x = rect.x, y = rect.y;
     int xmin = (std::max)(0, (int) std::floor(x));
     int ymin = (std::max)(0, (int) std::floor(y));
@@ -184,7 +184,7 @@ void xgd::OCRLineDataItem::predFromToForLine(const cv::Mat &_imgGray) {
     }
 }
 
-void xgd::OCRLineDataItem::predFromToForWedge(const cv::Mat &_imgGray) {
+void cocr::OCRLineDataItem::predFromToForWedge(const cv::Mat &_imgGray) {
     float w = rect.width, h = rect.height, x = rect.x, y = rect.y;
     int xmin = (std::max)(0, (int) std::floor(x));
     int ymin = (std::max)(0, (int) std::floor(y));
@@ -281,19 +281,19 @@ void xgd::OCRLineDataItem::predFromToForWedge(const cv::Mat &_imgGray) {
 //    cv::waitKey(0);
 }
 
-void xgd::OCRItem::setAsLineBond(const xgd::BondType &_bt, const cv::Rect2f &_rect, const cv::Mat &_input) {
+void cocr::OCRItem::setAsLineBond(const cocr::BondType &_bt, const cv::Rect2f &_rect, const cv::Mat &_input) {
     type = OCRItemType::Line;
     auto bd = std::make_shared<OCRLineDataItem>(_bt, _rect);
     bd->predFromTo(_input);
     data = bd;
 }
 
-void xgd::OCRItem::setAsCircleBond(const cv::Rect2f &_rect) {
+void cocr::OCRItem::setAsCircleBond(const cv::Rect2f &_rect) {
     type = OCRItemType::Circle;
     data = std::make_shared<OCRCircleDataItem>(_rect);
 }
 
-void xgd::OCRItem::setAsText(std::string &_text, const cv::Rect2f &_rect) {
+void cocr::OCRItem::setAsText(std::string &_text, const cv::Rect2f &_rect) {
     ElementType eleType = convertNameToElementType(_text);
     if (eleType != ElementType::SA) {
         type = OCRItemType::Element;
@@ -304,46 +304,46 @@ void xgd::OCRItem::setAsText(std::string &_text, const cv::Rect2f &_rect) {
     }
 }
 
-xgd::ElementType xgd::OCRItem::getElement() const {
+cocr::ElementType cocr::OCRItem::getElement() const {
     return data->getElement();
 }
 
-const cv::Point2f &xgd::OCRItem::getFrom() const {
+const cv::Point2f &cocr::OCRItem::getFrom() const {
     return data->getFrom();
 }
 
-const cv::Point2f &xgd::OCRItem::getTo() const {
+const cv::Point2f &cocr::OCRItem::getTo() const {
     return data->getTo();
 }
 
-float xgd::OCRItem::getRadius() const {
+float cocr::OCRItem::getRadius() const {
     return data->getRadius();
 }
 
-std::string xgd::OCRItem::getText() const {
+std::string cocr::OCRItem::getText() const {
     return data->getText();
 }
 
-const cv::Rect2f &xgd::OCRItem::getRect() const {
+const cv::Rect2f &cocr::OCRItem::getRect() const {
     return data->rect;
 }
 
-cv::Point2f xgd::OCRItem::getCenter() const {
+cv::Point2f cocr::OCRItem::getCenter() const {
     return data->getCenter();
 }
 
-xgd::BondType xgd::OCRItem::getBondType() const {
+cocr::BondType cocr::OCRItem::getBondType() const {
     return data->getBondType();
 }
 
-size_t xgd::OCRItem::getUId() const {
+size_t cocr::OCRItem::getUId() const {
     return uid;
 }
 
-xgd::OCRItem::OCRItem(const size_t &_uid) : uid(_uid) {
+cocr::OCRItem::OCRItem(const size_t &_uid) : uid(_uid) {
 
 }
 
-void xgd::OCRItem::setUId(const size_t &_uid) {
+void cocr::OCRItem::setUId(const size_t &_uid) {
     uid = _uid;
 }

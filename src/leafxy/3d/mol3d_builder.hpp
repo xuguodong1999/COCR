@@ -1,6 +1,4 @@
-#ifndef _MOL3D_BUILDER_HPP_
-#define _MOL3D_BUILDER_HPP_
-
+#pragma once
 #include <QObject>
 #include <QColor>
 #include <QVector3D>
@@ -14,7 +12,7 @@ namespace Qt3DCore {
     class QEntity;
 }
 
-namespace xgd {
+namespace cocr {
     class JMol;
 }
 
@@ -26,7 +24,7 @@ class Mol3DBuilder : public QObject {
 Q_OBJECT
 
     Qt3DCore::QEntity *root, *molRoot, *axisRoot;
-    std::shared_ptr<xgd::JMol> mol;
+    std::shared_ptr<cocr::JMol> mol;
     Qt3DCore::QTransform *molRootTrans;
 private:
     int sphereRings, sphereSlices, cylinderRings, cylinderSlices;
@@ -43,7 +41,7 @@ public:
 
     Mol3DBuilder(QObject *parent, Qt3DCore::QEntity *_root);
 
-    void prepare(std::shared_ptr<xgd::JMol> _mol, const QVector3D &_viewSize,
+    void prepare(std::shared_ptr<cocr::JMol> _mol, const QVector3D &_viewSize,
                  const QVector3D &_blankArea = {5, 5, 5});
 
     void resetMolRoot();
@@ -61,5 +59,3 @@ public slots:
 private:
     void buildAxis(const float &_x = 0, const float &_y = 0, const float &_z = 0, const float &_l = 100);
 };
-
-#endif//_MOL3D_BUILDER_HPP_

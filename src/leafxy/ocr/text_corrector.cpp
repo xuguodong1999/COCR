@@ -3,7 +3,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace xgd {
+namespace cocr {
     extern std::vector<std::string> ELEMENT_NAME_LIST;
 
     std::string replaceSubStr(const std::string &_target,
@@ -20,7 +20,7 @@ namespace xgd {
 }
 
 
-std::string xgd::TextCorrector::correct(const std::string &_text) {
+std::string cocr::TextCorrector::correct(const std::string &_text) {
     std::string result = _text;
     for (size_t i = 0; i < result.size(); i++) {
         auto &c = result[i];
@@ -47,18 +47,18 @@ std::string xgd::TextCorrector::correct(const std::string &_text) {
         case 4:
             break;
     }
-    result = xgd::replaceSubStr(result, "OD", "OO");
-    result = xgd::replaceSubStr(result, "DD", "OO");
-    result = xgd::replaceSubStr(result, "DO", "OO");
-    result = xgd::replaceSubStr(result, "SH", "OO");
-    result = xgd::replaceSubStr(result, "HD", "HO");
-    result = xgd::replaceSubStr(result, "DH", "OH");
-    result = xgd::replaceSubStr(result, "CL", "Cl");
-    result = xgd::replaceSubStr(result, "CZ", "C2");
-    result = xgd::replaceSubStr(result, "(Z", "C2");
-    result = xgd::replaceSubStr(result, "CbZ", "Cbz");
-    result = xgd::replaceSubStr(result, "CeO", "COO");
-    result = xgd::replaceSubStr(result, "eOO", "_OO");
+    result = cocr::replaceSubStr(result, "OD", "OO");
+    result = cocr::replaceSubStr(result, "DD", "OO");
+    result = cocr::replaceSubStr(result, "DO", "OO");
+    result = cocr::replaceSubStr(result, "SH", "OO");
+    result = cocr::replaceSubStr(result, "HD", "HO");
+    result = cocr::replaceSubStr(result, "DH", "OH");
+    result = cocr::replaceSubStr(result, "CL", "Cl");
+    result = cocr::replaceSubStr(result, "CZ", "C2");
+    result = cocr::replaceSubStr(result, "(Z", "C2");
+    result = cocr::replaceSubStr(result, "CbZ", "Cbz");
+    result = cocr::replaceSubStr(result, "CeO", "COO");
+    result = cocr::replaceSubStr(result, "eOO", "_OO");
     int lb = 0, rb = 0;
     for (auto &c:result) {
         if (c == '(') { ++lb; } else if (c == ')') { ++rb; }
@@ -83,7 +83,7 @@ std::string xgd::TextCorrector::correct(const std::string &_text) {
     return result;
 }
 
-const std::string &xgd::TextCorrector::correct2(const std::string &_text) {
+const std::string &cocr::TextCorrector::correct2(const std::string &_text) {
     auto it = c2Map.find(_text);
     if (c2Map.end() == it) {
         return _text;
@@ -92,7 +92,7 @@ const std::string &xgd::TextCorrector::correct2(const std::string &_text) {
     }
 }
 
-std::vector<std::string> xgd::TextCorrector::similarChar = {
+std::vector<std::string> cocr::TextCorrector::similarChar = {
         "A4",
         "DO0",
         "B83",
@@ -107,7 +107,7 @@ std::vector<std::string> xgd::TextCorrector::similarChar = {
         "q9",
 };
 
-void xgd::TextCorrector::InitData() {
+void cocr::TextCorrector::InitData() {
     for (auto &sim:similarChar) {
         for (size_t i = 0; i < sim.length(); i++) {
             for (size_t j = i + 1; j < sim.length(); j++) {
@@ -137,6 +137,6 @@ void xgd::TextCorrector::InitData() {
     }
 }
 
-const std::string &xgd::TextCorrector::GetAlphabet() {
+const std::string &cocr::TextCorrector::GetAlphabet() {
     return ALPHABET;
 }

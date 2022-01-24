@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <QObject>
 
-using namespace xgd;
+using namespace cocr;
 
 JBond::JBond(const id_type &_id, std::shared_ptr<JAtom> _from, std::shared_ptr<JAtom> _to, const BondType &_type,
              const float &_offset1, const float &_offset2)
@@ -106,7 +106,7 @@ static std::unordered_map<BondType, ColorName> colorMap = {
         {BondType::DownBond,        ColorName::rgbLightGoldenrod4}
 };
 
-QColor xgd::getColor(const BondType &_bondType) {
+QColor cocr::getColor(const BondType &_bondType) {
     auto it = colorMap.find(_bondType);
     if (colorMap.end() == it) {
         return qColor(ColorName::rgbBlack);

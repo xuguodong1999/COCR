@@ -19,7 +19,7 @@ View2DWidget::View2DWidget(QWidget *parent)
     for (auto &format:formatVec) {
         if (std::string::npos != format.find("Read-only")) { continue; }
         auto suffix = format.substr(0, format.find(" "));
-        if (!xgd::JMol::IsValidWritableFormat(suffix)) { continue; }
+        if (!cocr::JMol::IsValidWritableFormat(suffix)) { continue; }
         ui->format_box->addItem(QString::fromStdString(suffix));
     }
     connect(ui->format_box, &QComboBox::currentTextChanged, [&](const QString &formatName) {
@@ -42,7 +42,7 @@ View2DWidget::~View2DWidget() {
     delete ui;
 }
 
-void View2DWidget::syncMolToScene(std::shared_ptr<xgd::JMol> _mol) {
+void View2DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
     mol2DWidget->syncMolToScene(_mol);
 }
 
@@ -56,11 +56,11 @@ void View2DWidget::showFormatDialog() {
     formatDialog->resize(size() * 0.8);
     formatDialog->setModal(true);
     formatDialog->setWindowTitle(QString::fromStdString(currentFormat));
-    auto mol = xgd::JMolManager::GetInstance().getFullHydrogenExpandedMol(false);
+    auto mol = cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol(false);
     if (mol) {
         bool hasSuperAtom = false;
-        mol->loopAtomVec([&](xgd::JAtom &atom) {
-            if (xgd::ElementType::SA == atom.getType()) {
+        mol->loopAtomVec([&](cocr::JAtom &atom) {
+            if (cocr::ElementType::SA == atom.getType()) {
                 hasSuperAtom = true;
                 return;
             }
@@ -86,29 +86,29 @@ void View2DWidget::showFormatDialog() {
 }
 
 void View2DWidget::switchHydrogenState() {
-    std::shared_ptr<xgd::JMol> mol;
+    std::shared_ptr<cocr::JMol> mol;
     if ((++hyBtnClickTimes) % 2) {
-        mol = !(expBtnClickTimes % 2) ? xgd::JMolManager::GetInstance().getFullHydrogenInputMol()
-                                      : xgd::JMolManager::GetInstance().getFullHydrogenExpandedMol();
+        mol = !(expBtnClickTimes % 2) ? cocr::JMolManager::GetInstance().getFullHydrogenInputMol()
+                                      : cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol();
     } else {
-        mol = !(expBtnClickTimes % 2) ? xgd::JMolManager::GetInstance().getInputMol()
-                                      : xgd::JMolManager::GetInstance().getExpandedMol();
+        mol = !(expBtnClickTimes % 2) ? cocr::JMolManager::GetInstance().getInputMol()
+                                      : cocr::JMolManager::GetInstance().getExpandedMol();
     }
     syncMolToScene(mol);
 }
 
 void View2DWidget::switchSuperAtomState() {
-    std::shared_ptr<xgd::JMol> mol;
+    std::shared_ptr<cocr::JMol> mol;
     if ((++expBtnClickTimes) % 2) {
-        mol = xgd::JMolManager::GetInstance().getExpandedMol();
+        mol = cocr::JMolManager::GetInstance().getExpandedMol();
     } else {
-        mol = xgd::JMolManager::GetInstance().getInputMol();
+        mol = cocr::JMolManager::GetInstance().getInputMol();
     }
     syncMolToScene(mol);
 }
 
 void View2DWidget::reformatInputState() {
-    auto mol = xgd::JMolManager::GetInstance().getCurrentMol();
+    auto mol = cocr::JMolManager::GetInstance().getCurrentMol();
     syncMolToScene(mol);
 }
 

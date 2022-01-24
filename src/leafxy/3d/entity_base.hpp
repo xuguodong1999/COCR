@@ -1,5 +1,4 @@
-#ifndef _3D_BASE_ENTITY_HPP_
-#define _3D_BASE_ENTITY_HPP_
+#pragma once
 
 #include <Qt3DCore/QEntity>
 
@@ -42,5 +41,3 @@ public slots:
 
     void onPicked(Qt3DRender::QPickEvent *event);
 };
-
-#endif//_3D_BASE_ENTITY_HPP_

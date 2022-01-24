@@ -1,12 +1,10 @@
-#ifndef _XGD_OCR_TYPES_HPP_
-#define _XGD_OCR_TYPES_HPP_
-
+#pragma once
 #include "detector_object.hpp"
 #include "../chem/jatom.hpp"
 #include "../chem/jbond.hpp"
 #include <string>
 
-namespace xgd {
+namespace cocr {
     enum class OCRItemType {
         Element,
         Group,
@@ -69,4 +67,3 @@ namespace xgd {
         BondType getBondType() const;
     };
 }
-#endif//_XGD_OCR_TYPES_HPP_
