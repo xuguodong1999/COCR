@@ -12,6 +12,9 @@ set(COCR_DEPENDENCIES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies CACHE INTERNA
 set(COCR_INCLUDE_DIR ${COCR_DEPENDENCIES_DIR}/include CACHE INTERNAL "")
 # remember to cite ${OPENBABEL_DATA_QRC_FILE} if you link openbabel
 set(OPENBABEL_DATA_QRC_FILE ${COCR_DATA_DIR}/openbabel.qrc CACHE INTERNAL "")
+# put all dll and exe in one directory
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 
 # always need openmp
 find_package(OpenMP)
