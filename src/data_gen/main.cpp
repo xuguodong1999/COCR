@@ -15,6 +15,8 @@
 
 #include <memory>
 #include <iostream>
+#include <QDebug>
+#include <QDir>
 
 extern CRNNDataGenerator crnnDataGenerator;
 
@@ -55,15 +57,40 @@ void checkIsomers() {
     p.count(30);
 }
 
+static QString USAGE_MEG = "";
+
 int main(int argc, char **argv) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     QApplication a(argc, argv);
-    HwDataLoader::getInstance();
-    try {
+    auto arguments = a.arguments();
+    if (arguments.empty()) { // display something
+        HwDataLoader::getInstance();
         displayCRNNData();
-        return a.exec();
-    } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        exit(-1);
+    } else if (arguments.size() == 3) {
+        auto dataType = arguments.at(0).toLower();
+        auto sampleNum = arguments.at(1);
+        auto outputDir = arguments.at(2);
+        bool ok = false;
+        int sample_num = sampleNum.toLong(&ok, 10);
+        if (!ok) {
+            qDebug() << sampleNum << " is not a number";
+            qDebug() << USAGE_MEG;
+        } else if (!QDir(outputDir).exists()) {
+            qDebug() << outputDir << " is not an existing directory";
+            qDebug() << USAGE_MEG;
+        } else if ("-yolo" == dataType) { // generate training data for yolo
+
+        } else if ("-crnn" == dataType) { // generate training data for crnn
+
+        } else if("-isomer" == dataType) { // generate isomer data for happy
+
+        }else {
+            qDebug() << USAGE_MEG;
+        }
+    } else {
+        qDebug() << USAGE_MEG;
     }
+    return 0;
 }
