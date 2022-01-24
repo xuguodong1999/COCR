@@ -7,6 +7,8 @@
 COCR, **O**ptical **C**haracter **R**ecognition for **C**hemical Structures, was once a demo for my undergraduate
 graduation thesis in 2021.6. It brings OCSR(optical chemical structure recognition) capability into handwriting cases. Below is a summary of supported items.
 
+
+
 |symbol|looks like|supported|
 |---|---|---|
 |strings|**(CH<sub>2</sub>)<sub>2</sub>COOEt**|✔️|
@@ -70,6 +72,9 @@ A chemical structure generator for handwriting cases is written to provider trai
 
 After a minimal build above, a data_gen(.exe) can be found under $(BUILD_DIR)/out. There are following usages:
 * Double click or run from shell WITHOUT arguments
+```txt
+this will display samples with cv::imshow
+```
 
 * Run with -yolo [number of samples] [an empty, existing directory path], for example,
 
@@ -89,7 +94,7 @@ After a minimal build above, a data_gen(.exe) can be found under $(BUILD_DIR)/ou
 
 ```shell
 # generate all alkane isomers for C-num ≤ 10 under ./isomer/
-# dont play with numver over 20 without taking a look at src/data_gen/isomers.cpp.
+# dont play with number over 20 without taking a look at src/data_gen/isomers.cpp.
 # it may comsume a lot of memory and cpus.
 ./data_gen -isomer 16 ./
 ```
