@@ -37,10 +37,7 @@ struct OBTestUtil
 {
   static std::string GetFilename(const std::string &filename)
   {
-    std::string path = TEST_SAMPLES_PATH;
-    path += "files/";
-    path += filename;
-    return path;
+    return TEST_SAMPLES_PATH + "files/" + filename;
   }
 
   static OBMolPtr ReadFile(const std::string &filename)

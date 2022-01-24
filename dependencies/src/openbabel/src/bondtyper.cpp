@@ -32,10 +32,7 @@ namespace OpenBabel
 
 
   //! Global OBBondTyper for perception of bond order assignment.
-#if __cplusplus >= 201103L
-  THREAD_LOCAL //this is required for correct multi-threading
-#endif
-	OBBondTyper  bondtyper;
+    THREAD_LOCAL OBBondTyper  bondtyper;
 
   /*! \class OBBondTyper bondtyper.h <openbabel/bondtyper.cpp>
     \brief Assigns bond types for file formats without bond information
@@ -116,7 +113,6 @@ namespace OpenBabel
     vector<vector<int> >::iterator matches, l;
     vector<pair<OBSmartsPattern*, vector<int> > >::iterator i;
     unsigned int j;
-
     // Loop through for all the functional groups and assign bond orders
     for (i = _fgbonds.begin();i != _fgbonds.end();++i)
       {

@@ -24,6 +24,7 @@ BOOST_AUTO_TEST_CASE(canonstabletest)
 
   std::string line;
   while (std::getline(ifs, line)) {
+    line.erase(line.find_last_not_of(" \n\r\t") + 1);
     BOOST_REQUIRE( conv.ReadString(&mol, line) );
 
     std::vector<OBAtom*> atoms;

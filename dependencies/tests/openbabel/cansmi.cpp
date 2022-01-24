@@ -33,8 +33,8 @@ BOOST_AUTO_TEST_CASE(cansmi)
   unsigned int currentMol = 0;
   OBMol mol, mol2;
   string buffer;
-  string bsmilestypes_file = TEST_SAMPLES_PATH + std::string("/files/") + "nci.smi";
-  
+  string bsmilestypes_file = TEST_SAMPLES_PATH + "files/nci.smi";
+
   std::ifstream mifs(bsmilestypes_file.c_str());
   BOOST_ASSERT(mifs);
 

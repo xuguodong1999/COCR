@@ -1,3 +1,4 @@
+
 /**********************************************************************
 aromatest.cpp - Test Open Babel aromaticity perception
 

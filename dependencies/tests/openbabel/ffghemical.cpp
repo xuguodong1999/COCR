@@ -33,8 +33,8 @@ void PGenerateEnergies(const string& emolecules_file, const string& eresults_fil
 
 BOOST_AUTO_TEST_CASE(ffghemical)
 {
-  string eresults_file = TEST_SAMPLES_PATH + std::string("files/ghemicalresults.txt");
-  string emolecules_file = TEST_SAMPLES_PATH + std::string("files/forcefield.sdf");
+  string eresults_file = TEST_SAMPLES_PATH + "files/ghemicalresults.txt";
+  string emolecules_file = TEST_SAMPLES_PATH + "files/forcefield.sdf";
 
   // PGenerateEnergies(emolecules_file, eresults_file);
 

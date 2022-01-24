@@ -82,7 +82,7 @@ void test_simpleAlign()
     vector3 aligned = target[i] - centroids[0];
     aligned *= rot;
     aligned += centroids[1];
-    BOOST_REQUIRE( aligned.IsApprox(ref[i], 1.0E-08) ); 
+    BOOST_REQUIRE( aligned.IsApprox(ref[i], 1.0E-08) );
   }
 }
 
@@ -119,7 +119,7 @@ void test_alignMol(){
   BOOST_REQUIRE( success );
 
   OBMol mol;
-  success = conv.ReadFile(&mol, TEST_SAMPLES_PATH + string("files/test3d.xyz"));
+  success = conv.ReadFile(&mol, TEST_SAMPLES_PATH + "files/test3d.xyz");
   BOOST_REQUIRE( success );
 
   // Align molecule to itself (not using symmetry)
@@ -175,7 +175,7 @@ void test_alignMolWithSym(){
   align.Align();
   rmsd = align.GetRMSD();
   BOOST_REQUIRE( fabs(rmsd) < 1.0E-6 );
-  
+
   // Now align without symmetry
   align = OBAlign(mol, mol_b, true, false);
   align.Align();
@@ -190,7 +190,7 @@ void test_alignWithoutHydrogens() {
   BOOST_REQUIRE( success );
 
   OBMol mol;
-  success = conv.ReadFile(&mol, TEST_SAMPLES_PATH + string("files/test3d.xyz"));
+  success = conv.ReadFile(&mol, TEST_SAMPLES_PATH + "files/test3d.xyz");
   BOOST_REQUIRE( success );
 
   // Align molecule to itself without hydrogens
@@ -311,7 +311,7 @@ void test_bug()
     vector3 tmp = target[i] - centroids[0];
     tmp *= rot;
     vector3 aligned = tmp + centroids[1];
-    BOOST_REQUIRE( aligned.IsApprox(result[i], 1.0E-08) ); 
+    BOOST_REQUIRE( aligned.IsApprox(result[i], 1.0E-08) );
   }
 }
 
