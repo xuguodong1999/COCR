@@ -1,7 +1,13 @@
 project(coordgenlibs LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+include_directories(${COCR_INCLUDE_DIR})
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
+
+# include windows dll info
+if (MSVC)
+    list(APPEND PROJECT_SOURCE ${COCR_DATA_DIR}/windows/3rd.rc)
+    include_directories(${COCR_DATA_DIR}/windows)
+endif ()
 
 set(QT_COMPONENTS Core)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)

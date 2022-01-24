@@ -1,6 +1,6 @@
 project(MaeparserTest LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+include_directories(${COCR_INCLUDE_DIR})
 
 set(QT_COMPONENTS Core)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)

@@ -1,6 +1,7 @@
 project(OpenBabelTest LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+set(CMAKE_AUTORCC ON)
+include_directories(${COCR_INCLUDE_DIR})
 
 set(QT_COMPONENTS Core)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -13,7 +14,7 @@ link_directories(${Boost_LIB_DIR})
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} PROJECT_SOURCE)
 #aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/todo PROJECT_SOURCE)
 
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE} ${OPENBABEL_DATA_QRC_FILE})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 

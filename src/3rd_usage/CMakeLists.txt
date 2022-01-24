@@ -1,6 +1,6 @@
 project(3rdUsage LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../dependencies/include)
+include_directories(${COCR_INCLUDE_DIR})
 
 set(PROJECT_SOURCE_DIR_LIST ./eigen/ ./fdeep/ ./rx/)
 list(LENGTH PROJECT_SOURCE_DIR_LIST PROJECT_SOURCE_DIR_LENGTH)

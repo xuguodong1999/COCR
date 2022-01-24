@@ -1,8 +1,9 @@
 project(RxQtTest LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+include_directories(${COCR_INCLUDE_DIR})
 
 set(CMAKE_AUTOMOC ON)
+
 set(QT_COMPONENTS Test)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)

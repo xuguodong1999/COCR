@@ -1,9 +1,8 @@
 project(openbabel LANGUAGES C CXX)
 
-set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include/inchi)
+include_directories(${COCR_INCLUDE_DIR})
+include_directories(${COCR_INCLUDE_DIR}/inchi)
 
 set(QT_COMPONENTS Core)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -31,22 +30,26 @@ foreach (PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR_LIST})
     list(APPEND PROJECT_SOURCE ${PROJECT_SOURCES})
 endforeach ()
 
+# include windows dll info
+if (MSVC)
+    list(APPEND PROJECT_SOURCE ${COCR_DATA_DIR}/windows/3rd.rc)
+    include_directories(${COCR_DATA_DIR}/windows)
+endif ()
+
 # generate openbabel qrc
-set(DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../data)
-set(OPENBABEL_DATA_DIR ${DATA_DIR}/openbabel)
+set(OPENBABEL_DATA_DIR ${COCR_DATA_DIR}/openbabel)
 file(GLOB_RECURSE OPENBABEL_DATA_LIST ${OPENBABEL_DATA_DIR}/**)
 set(OPENBABEL_QRC "")
 string(APPEND OPENBABEL_QRC "<RCC>\n<qresource prefix=\"/\">\n")
 foreach (OPENBABEL_DATA ${OPENBABEL_DATA_LIST})
-    string(REPLACE ${DATA_DIR}/ "" OPENBABEL_DATA_RELATIVE_PATH ${OPENBABEL_DATA})
+    string(REPLACE ${COCR_DATA_DIR}/ "" OPENBABEL_DATA_RELATIVE_PATH ${OPENBABEL_DATA})
     string(APPEND OPENBABEL_QRC
             "<file compress=\"9\" compress-algo=\"best\">${OPENBABEL_DATA_RELATIVE_PATH}</file>\n")
 endforeach ()
 string(APPEND OPENBABEL_QRC "</qresource>\n</RCC>")
-set(OPENBABEL_DATA_QRC_FILE ${OPENBABEL_DATA_DIR}/../openbabel.qrc)
 file(WRITE ${OPENBABEL_DATA_QRC_FILE} ${OPENBABEL_QRC})
 
-add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE} ${OPENBABEL_DATA_QRC_FILE})
+add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 set(QT_COMPONENT_TARGETS)

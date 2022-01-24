@@ -4,8 +4,10 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# ncnn has not put its include directory in cmake config yet
 include_directories(${ncnn_DIR}/../../../include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../dependencies/include)
+include_directories(${COCR_INCLUDE_DIR})
 
 set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -15,9 +17,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS LinguistTools REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
 
-set(DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../data)
 # notice that qm file is generated through cmake job
-set(TS_FILES ${DATA_DIR}/${PROJECT_NAME}_zh_CN.ts)
+set(TS_FILES ${COCR_DATA_DIR}/${PROJECT_NAME}_zh_CN.ts)
 qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_trans.qrc
         "<RCC>\n<qresource prefix=\"/\">\n<file alias=\"leafxy_zh_CN.qm\">leafxy_zh_CN.qm</file>\n</qresource>\n</RCC>")
@@ -28,9 +29,9 @@ endif (WITH_OPENVINO)
 
 add_definitions(-DWITH_MODEL_QRC)
 if (ANDROID)
-    qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${DATA_DIR}/leafxy_ncnn.qrc)
+    qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_DATA_DIR}/leafxy_ncnn.qrc)
 else ()
-    qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${DATA_DIR}/leafxy_ocv_dnn.qrc)
+    qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_DATA_DIR}/leafxy_ocv_dnn.qrc)
 endif ()
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
@@ -42,27 +43,28 @@ if (NOT ANDROID)
 endif ()
 
 # collect source files
-set(PROJECT_SOURCES ${LEAFXY_MODEL_QRC_FILE} ${DATA_DIR}/openbabel.qrc ${DATA_DIR}/leafxy.qrc)
+set(PROJECT_SOURCE ${LEAFXY_MODEL_QRC_FILE} ${COCR_DATA_DIR}/leafxy.qrc ${OPENBABEL_DATA_QRC_FILE})
 foreach (SRC_DIR ${SRC_DIR_LIST})
-    aux_source_directory(${SRC_DIR} PROJECT_SOURCE)
-    list(APPEND PROJECT_SOURCES ${PROJECT_SOURCE})
+    set(_PROJECT_SOURCE)
+    aux_source_directory(${SRC_DIR} PROJECT_SOURCES)
+    list(APPEND PROJECT_SOURCE ${PROJECT_SOURCES})
 endforeach ()
 
 # include windows exe info
 if (MSVC)
-    list(APPEND PROJECT_SOURCES ${DATA_DIR}/leafxy.rc)
-    include_directories(${DATA_DIR})
+    list(APPEND PROJECT_SOURCE ${COCR_DATA_DIR}/windows/leafxy.rc)
+    include_directories(${COCR_DATA_DIR}/windows)
 endif ()
 
-list(APPEND PROJECT_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_trans.qrc)
+list(APPEND PROJECT_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_trans.qrc)
 
 # add exe
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+    qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
 elseif (ANDROID)
-    add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
+    add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE})
 else ()
-    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
 endif ()
 
 # product suffix

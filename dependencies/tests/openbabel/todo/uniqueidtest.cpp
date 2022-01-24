@@ -4,8 +4,9 @@
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 
-using namespace std;
-using namespace OpenBabel;
+using OpenBabel::OBMol;
+using OpenBabel::OBAtom;
+using OpenBabel::OBBond;
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -191,5 +192,3 @@ BOOST_AUTO_TEST_CASE(uniqueidtest)
     testIdsDeleteBond();
     testIdsAddBond();
 }
-
-                

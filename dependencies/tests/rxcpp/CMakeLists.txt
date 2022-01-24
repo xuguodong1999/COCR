@@ -1,6 +1,6 @@
 project(RxCppTest LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+include_directories(${COCR_INCLUDE_DIR})
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
@@ -19,8 +19,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
-target_compile_options(${PROJECT_NAME} PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/bigobj>)
+target_compile_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/bigobj>)
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
