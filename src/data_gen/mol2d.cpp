@@ -1,7 +1,7 @@
 #include "mol2d.hpp"
 #include "opencv_util.hpp"
 
-#include <coordgen/sketcherMinimizer.h>
+#include <coordgenlibs/sketcherMinimizer.h>
 
 Mol2D::Mol2D(std::shared_ptr<JMol> _mol) : MolHolder(std::move(_mol)) {
 

@@ -308,7 +308,7 @@ void CRNNDataGenerator::display() {
 
 void CRNNDataGenerator::getDictTexts() {
     LineTextDataCreator dc;
-    dc.loadFromWordDict();
+    dc.loadFromWordDict((TEST_SAMPLES_PATH + "words_dictionary.json").c_str());
     std::unordered_set<std::string> textSet;
     for (auto &text:dc.getWordSet()) {
         if (text.length() <= MAX_TEXT_LENGTH) {

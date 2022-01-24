@@ -7,6 +7,7 @@
 #include <random>
 #include <algorithm>
 
+static std::string COUCH_SYM_PATH = TEST_SAMPLES_PATH + "couch-sym.dat";
 static std::vector<int> sLabelCharLikeLine = {
         8, 24, 53,
         130, 134, 141, 146, 158,
@@ -293,7 +294,7 @@ void HwDataLoader::LoadCouchDataSet() {
     if (!fromQrc) {
         std::static_pointer_cast<std::ifstream>(ism)->close();
     }
-    for (auto &dat:mData) {
+    for (auto &dat: mData) {
         dat.resize(dat.size());
     }
 }
@@ -321,10 +322,10 @@ HwDataSample::HwDataSample(std::vector<std::vector<cv::Point2f>> &&_data) {
 
 HwScript HwDataSample::toHwScript() const {
     HwScript hwScript;
-    for (auto &stroke:mData) {
+    for (auto &stroke: mData) {
         if (stroke.empty())continue;
         HwStroke hwStroke;
-        for (auto &pt:stroke) {
+        for (auto &pt: stroke) {
             hwStroke.push_back(pt);
         }
         hwScript.push_back(hwStroke);

@@ -1,42 +1,43 @@
-project(data_gen)
-
-set(CMAKE_CXX_STANDARD 17)
-
-include_directories(${3RD_LIB_DIR}/openbabel/include ${3RD_LIB_DIR}/coordgenlibs/include)
-
-find_package(OpenCV REQUIRED)
-
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+project(data_gen LANGUAGES CXX)
 
 set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-aux_source_directory(. PROJECT_SOURCES)
-list(REMOVE_ITEM PROJECT_SOURCES ./main_detect.cpp ./main_text.cpp ./main_display.cpp)
+include_directories(${COCR_INCLUDE_DIR})
+
+set(QT_COMPONENTS Widgets Core)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
+find_package(OpenCV REQUIRED)
+
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
+
+# collect source files
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} PROJECT_SOURCE)
+list(APPEND PROJECT_SOURCE ${OPENBABEL_DATA_QRC_FILE})
+
+# add exe
+if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
+else ()
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
+endif ()
+
+# product suffix
+set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
+
+set(QT_COMPONENT_TARGETS)
+foreach (QT_COMPONENT ${QT_COMPONENTS})
+    list(APPEND QT_COMPONENT_TARGETS Qt${QT_VERSION_MAJOR}::${QT_COMPONENT})
+endforeach ()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        openbabel coordgenlibs
+        ${QT_COMPONENT_TARGETS}
+        opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE "TEST_SAMPLES_PATH=std::string(\"${COCR_DATA_DIR}/datasets/\")")
 
 if (MSVC)
-    add_executable(${PROJECT_NAME} main_display.cpp ${PROJECT_SOURCES} ${RES_ROOT}/obdata.qrc)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-            ${OpenCV_LIBS} Qt${QT_VERSION_MAJOR}::Widgets openbabel coordgen)
     target_link_options(${PROJECT_NAME} PRIVATE "/FORCE:MULTIPLE")
-else ()
-    add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
-    add_executable(${PROJECT_NAME}_detect main_detect.cpp ${RES_ROOT}/obdata.qrc)
-    add_executable(${PROJECT_NAME}_text main_text.cpp ${RES_ROOT}/obdata.qrc)
-    add_executable(${PROJECT_NAME}_display main_display.cpp ${RES_ROOT}/obdata.qrc)
-
-    add_dependencies(${PROJECT_NAME}_detect ${PROJECT_NAME})
-    add_dependencies(${PROJECT_NAME}_text ${PROJECT_NAME})
-    add_dependencies(${PROJECT_NAME}_display ${PROJECT_NAME})
-
-    target_compile_definitions(${PROJECT_NAME} PRIVATE
-            $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-
-    # link opencv, patched openbabel and coordgen here
-    target_link_libraries(${PROJECT_NAME} PUBLIC
-            ${OpenCV_LIBS} Qt${QT_VERSION_MAJOR}::Widgets openbabel coordgen)
-
-    target_link_libraries(${PROJECT_NAME}_detect PRIVATE ${PROJECT_NAME})
-    target_link_libraries(${PROJECT_NAME}_display PRIVATE ${PROJECT_NAME})
-    target_link_libraries(${PROJECT_NAME}_text PRIVATE ${PROJECT_NAME})
 endif (MSVC)

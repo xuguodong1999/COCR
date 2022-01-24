@@ -2,7 +2,6 @@
 #define _HW_DATA_HPP_
 
 #include "hw_script.hpp"
-#include "config.hpp"
 #include <map>
 #include <string>
 #include <vector>

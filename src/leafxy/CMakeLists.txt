@@ -93,7 +93,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 if (NOT ANDROID)
     target_link_libraries(${PROJECT_NAME} PRIVATE opencv_dnn)
 endif ()
-
-#if (MSVC)
-#    target_link_options(${PROJECT_NAME} PRIVATE "/FORCE:MULTIPLE")
-#endif (MSVC)
