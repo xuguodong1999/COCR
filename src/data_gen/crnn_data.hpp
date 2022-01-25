@@ -40,6 +40,8 @@ public:
 
     bool init(const std::string &_topDir);
 
+    bool initData();
+
     void getDictTexts();
 
 

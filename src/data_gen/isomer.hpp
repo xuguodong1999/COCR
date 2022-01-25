@@ -48,7 +48,7 @@ private:
         size_t mSize;
         // 536870923ULL for c1-28,1024ULL*1024ULL*512ULL,12G
         // 1073741824ULL for c29 and c30, 24G
-        const size_t max_size = 1073741827ULL;
+        const size_t max_size = 102400ULL;
 
         quick_set() : mSize(0) {
             mData.resize(max_size);

@@ -22,42 +22,49 @@ extern CRNNDataGenerator crnnDataGenerator;
 
 void displayCRNNData() {
     srand(42);
-    crnnDataGenerator.init("path/to/somewhere1");
+    crnnDataGenerator.initData();
     crnnDataGenerator.display();
 }
 
-void generateCRNNData() {
-    srand(42);
-    crnnDataGenerator.init("/path/to/somewhere1");
-    crnnDataGenerator.dump(2000000, 50000);
-}
-
 void displayYoloData() {
-    SOSODarknet generator;
-    generator.init("path/to/somewhere2");
-    generator.display();
-    generator.dump(1000000, 5);
-}
-
-void genYoloData() {
     srand(42);
-    crnnDataGenerator.init("/path/to/somewhere1");
+    crnnDataGenerator.initData();
     SOSODarknet generator;
-    generator.init("/path/to/somewhere2");
-    generator.dump(200000, 5);
+    generator.display();
 }
 
-void calcIsomers() {
-    auto &isomer = IsomerCounter::GetInstance();
-    isomer.calculate_i_from_i_1("/path/to/a/large/disk", 30);
+void generateCRNNData(const std::string &dir, const size_t &num) {
+    srand(42);
+    if (!crnnDataGenerator.init(dir)) {
+        std::cerr << __FUNCTION__ << " failed by CRNNDataGenerator.init" << std::flush;
+        exit(-1);
+    }
+    crnnDataGenerator.dump(num, 0);
 }
 
-void checkIsomers() {
+void generateYoloData(const std::string &dir, const size_t &num) {
+    srand(42);
+    crnnDataGenerator.initData();
+    SOSODarknet generator;
+    if (!generator.init(dir)) {
+        std::cerr << __FUNCTION__ << " failed by SOSODarknet.init" << std::flush;
+        exit(-1);
+    }
+    generator.dump(num, 1);
+}
+
+void calcIsomers(const std::string &dir, const size_t &carbonNum) {
     auto &p = PolyaIsomerCounter::GetInstance();
     p.count(30);
+    auto &isomer = IsomerCounter::GetInstance();
+    isomer.calculate(carbonNum, dir.c_str());
 }
 
-static QString USAGE_MEG = "";
+static const char *USAGE_MEG = "data_gen usage:\n"
+                               "(1)\t./data_gen\n"
+                               "(2)\t./data_gen -yolo [number of samples] [an empty, existing directory path]\n"
+                               "(3)\t./data_gen -crnn [number of samples] [an empty, existing directory path]\n"
+                               "(4)\t./data_gen -isomer [number of samples] [an empty, existing directory path]\n";
 
 int main(int argc, char **argv) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -68,29 +75,31 @@ int main(int argc, char **argv) {
     if (arguments.empty()) { // display something
         HwDataLoader::getInstance();
         displayCRNNData();
-    } else if (arguments.size() == 3) {
-        auto dataType = arguments.at(0).toLower();
-        auto sampleNum = arguments.at(1);
-        auto outputDir = arguments.at(2);
+        return a.exec();
+    } else if (arguments.size() == 4) {
+        const auto dataType = arguments.at(1).toLower();
+        const auto &sampleNum = arguments.at(2);
+        const auto &outputDir = arguments.at(3);
         bool ok = false;
-        int sample_num = sampleNum.toLong(&ok, 10);
+        long sample_num = sampleNum.toLong(&ok, 10);
+        QDir outDir(outputDir);
         if (!ok) {
             qDebug() << sampleNum << " is not a number";
-            qDebug() << USAGE_MEG;
-        } else if (!QDir(outputDir).exists()) {
+            std::cerr << USAGE_MEG << std::flush;
+        } else if (!outDir.exists()) {
             qDebug() << outputDir << " is not an existing directory";
-            qDebug() << USAGE_MEG;
+            std::cerr << USAGE_MEG << std::flush;
         } else if ("-yolo" == dataType) { // generate training data for yolo
-
+            generateYoloData(outDir.absolutePath().toStdString() + "/yolo_data/", sample_num);
         } else if ("-crnn" == dataType) { // generate training data for crnn
-
-        } else if("-isomer" == dataType) { // generate isomer data for happy
-
-        }else {
-            qDebug() << USAGE_MEG;
+            generateCRNNData(outDir.absolutePath().toStdString() + "/crnn_data/", sample_num);
+        } else if ("-isomer" == dataType) { // generate isomer data for happy
+            calcIsomers(outDir.absolutePath().toStdString(), sample_num);
+        } else {
+            std::cerr << USAGE_MEG << std::flush;
         }
     } else {
-        qDebug() << USAGE_MEG;
+        std::cerr << USAGE_MEG << std::flush;
     }
     return 0;
 }

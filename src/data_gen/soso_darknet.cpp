@@ -17,7 +17,6 @@ bool SOSODarknet::init(const std::string &_topDir) {
         if (!std::filesystem::create_directories(_topDir)) {
             std::cerr << "fail to create dir: " << _topDir << std::endl;
             exit(-1);
-            return false;
         }
     }
     imgPath = _topDir + imgDir;
@@ -34,7 +33,6 @@ bool SOSODarknet::init(const std::string &_topDir) {
         !std::filesystem::is_empty(labelPath)) {
         std::cerr << "target dir not empty: " << imgPath << " or " << labelPath << std::endl;
         exit(-1);
-        return false;
     }
     isInited = true;
     return true;

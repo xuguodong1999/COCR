@@ -19,7 +19,7 @@
 #include <QFontDatabase>
 #include <QDebug>
 
-static std::vector<QString> availableFontFamilies;
+static std::vector<QString> availableFontFamilies = {"Arial"};
 
 static cv::Mat GetFont(const QString &_text, const QString &_fontFamily = "Arial") {
 //    return cv::Mat(32,32,CV_8UC1,cv::Scalar(0));
@@ -38,7 +38,8 @@ static cv::Mat GetFont(const QString &_text, const QString &_fontFamily = "Arial
     float k = 5;
     painter.scale(k, k);
     painter.translate(0, 0);
-    td.drawContents(&painter);// FIXME: 已确认这一行代码无法并行
+    // FIXME: why QTextDocument.drawContents cant run as parallel job through openmp?
+    td.drawContents(&painter);
     cv::Mat cvImg(image.height(), image.width(),
                   CV_8UC1, (void *) image.constBits(), image.bytesPerLine());
     auto rectPtr = getBoundBoxForBWFont(cvImg);
@@ -54,7 +55,7 @@ std::string SOSO_ALPHABET = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghi
 
 CRNNDataGenerator::CRNNDataGenerator() : isInited(false) {
     alphabetSet.clear();
-    for (auto &c:SOSO_ALPHABET) {
+    for (auto &c: SOSO_ALPHABET) {
         alphabetSet.insert(c);
     }
 }
@@ -82,6 +83,11 @@ bool CRNNDataGenerator::init(const std::string &_topDir) {
         }
     }
     isInited = true;
+    initData();
+    return true;
+}
+
+bool CRNNDataGenerator::initData() {
     getChemTexts();
     getDictTexts();
     std::cout << "chemTexts.size()=" << chemTexts.size() << ", dictTexts.size()="
@@ -89,7 +95,7 @@ bool CRNNDataGenerator::init(const std::string &_topDir) {
     getRandomTexts(10 * (chemTexts.size() + dictTexts.size()));
     if (availableFontFamilies.empty()) {
         auto allSystemFonts = QFontDatabase().families();
-        QSet<QString> whiteList = {
+        static QSet<QString> whiteList = {
                 "Arial", "Arial Narrow", "Arial Rounded MT Bold",
 
                 "LM Mono 10", "LM Mono 12", "LM Mono 8", "LM Mono 9", "LM Mono Caps 10", "LM Mono Light 10",
@@ -108,12 +114,13 @@ bool CRNNDataGenerator::init(const std::string &_topDir) {
 
                 "华文中宋", "华文仿宋", "华文宋体", "华文新魏", "华文楷体", "华文细黑", "幼圆", "文鼎ＰＬ简中楷", "文鼎ＰＬ简报宋",
                 "方正姚体", "隶书"};
-        for (auto &font:allSystemFonts) {
+        for (auto &font: allSystemFonts) {
             if (whiteList.contains(font)) {
                 availableFontFamilies.push_back(font);
             }
         }
     }
+    isInited = true;
     return true;
 }
 
@@ -137,10 +144,10 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
     std::ofstream trainOfsm(trainLabelFile), testOfsm(testLabelFile);
 //    dbi.put(wtxn, "num-samples", std::to_string(_trainNum).c_str());
     for (size_t idx = 0; idx < _trainNum; idx++) {
-        if (byProb(0.4)) {//四六开
+        if (byProb(0.4)) { // 4:6
             text = randSelect(chemTexts);
             textType = 2;
-        } else if (byProb(0.5)) {//五五开
+        } else if (byProb(0.5)) { // 4:3:3
             text = randSelect(randomTexts);
             textType = 0;
         } else {
@@ -214,7 +221,7 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         std::string::npos == _text.find("+")) {// 机打数据
         if (byProb(0.7)) {// 走 Qt 的富文本渲染
             QString qData;
-            for (auto &c:_text) {
+            for (auto &c: _text) {
                 if ('0' <= c && c <= '9') {
                     qData.push_back(QString("<sub>") + c + "</sub>");
                 } else {
@@ -310,14 +317,14 @@ void CRNNDataGenerator::getDictTexts() {
     LineTextDataCreator dc;
     dc.loadFromWordDict((TEST_SAMPLES_PATH + "words_dictionary.json").c_str());
     std::unordered_set<std::string> textSet;
-    for (auto &text:dc.getWordSet()) {
+    for (auto &text: dc.getWordSet()) {
         if (text.length() <= MAX_TEXT_LENGTH) {
             textSet.insert(text);
         }
     }
     dictTexts.clear();
     dictTexts.reserve(textSet.size());
-    for (auto &text:textSet) {
+    for (auto &text: textSet) {
         dictTexts.push_back(text);
     }
 //    std::cout << textSet.size() << std::endl;
@@ -344,7 +351,7 @@ void CRNNDataGenerator::getDictTexts() {
 std::string CRNNDataGenerator::convertToKey(const std::string &_key) const {
     std::string key;
     key.reserve(_key.size());
-    for (auto &c:_key) {
+    for (auto &c: _key) {
         if (notExist(alphabetSet, c)) {
             if (std::isalpha(c)) {
                 key.push_back(std::toupper(c));
@@ -370,8 +377,7 @@ void CRNNDataGenerator::getRandomTexts(const size_t &_num, const size_t &_len) {
         tmpTextSet.insert(tmp);
     }
     randomTexts.clear();
-    randomTexts.reserve(tmpTextSet.size());
-    for (auto &text:tmpTextSet) {
+    for (auto &text: tmpTextSet) {
         randomTexts.push_back(text);
     }
 }
@@ -380,14 +386,14 @@ void CRNNDataGenerator::getChemTexts() {
     LineTextDataCreator dc;
     dc.loadFromPattern();
     std::unordered_set<std::string> textSet;
-    for (auto &text:dc.getWordSet()) {
+    for (auto &text: dc.getWordSet()) {
         if (text.length() <= MAX_TEXT_LENGTH) {
             textSet.insert(text);
         }
     }
     chemTexts.clear();
     chemTexts.reserve(textSet.size());
-    for (auto &text:textSet) {
+    for (auto &text: textSet) {
         chemTexts.push_back(text);
     }
 }
@@ -468,7 +474,7 @@ cv::Mat CRNNDataGenerator::getStandardLongText() {
             textType = 1;
         }
         QString qData;
-        for (auto &c:text) {
+        for (auto &c: text) {
             if ('0' <= c && c <= '9') {
                 qData.push_back(QString("<sub>") + c + "</sub>");
             } else if ('#' == c) {
