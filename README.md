@@ -99,7 +99,7 @@ this will display samples with cv::imshow
 4. Run with -isomer [number of samples] [an empty, existing directory path], for example,
 
 ```shell
-# generate all alkane isomers for C-num ≤ 10 under ./isomer/
+# generate all alkane isomers for C-num ≤ 10 namely {CARBON_NUM}.dat under ./
 # dont play with number over 20 without taking a look at src/data_gen/isomers.cpp.
 # it may comsume a lot of memory and cpus.
 ./data_gen -isomer 16 ./
