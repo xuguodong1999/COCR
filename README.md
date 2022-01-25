@@ -10,7 +10,7 @@ graduation thesis in 2021.6. It brings OCSR(optical chemical structure recogniti
 
 
 |symbol|looks like|supported|
-|---|---|---|
+|:-:|:-:|:-:|
 |strings|**(CH<sub>2</sub>)<sub>2</sub>COOEt**|✔️|
 |rings|**⏣**|✔️|
 |solid wedge|**▲**|✔️|
@@ -56,7 +56,7 @@ cmake .. -G "Ninja" \
 -DOpenCV_DIR=path/to/opencv4/lib/cmake/opencv4 \
 -Dncnn_DIR=path/to/ncnn/lib/cmake/ncnn
 
-cmake --build . -j $(nprocs) --config Release
+cmake --build . -j $(nproc) --config Release
 ```
 For 3rdparty unit tests, add -DBUILD_TESTS=ON option. Boost is required, for example,
 ```shell
@@ -98,26 +98,6 @@ this will display samples with cv::imshow
 # it may comsume a lot of memory and cpus.
 ./data_gen -isomer 16 ./
 ```
-
-## Desktop and mobile application
-
-### Platforms ( tested )
-* Linux
-* Windows
-* Android
-* macos
-
-### Cheminformat Support
-* OpenBabel was made to work well with Qt's rcc system, and has been used as forcefield or format provider in COCR.
-
-### Stick-and-ball render
-* Use Qt3D C++ API.
-
-### DNN backend
-* Use either OpenCV or ncnn.
-
-## Acknowledgements
-* Development of COCR project was once supported by NANJING UNIVERSITY SOFTWARE INSTITUTE as a National College Student Innovation and Entrepreneurship Training Program.
 
 ## License
 [GPLv3 Clause](./LICENSE.md)
