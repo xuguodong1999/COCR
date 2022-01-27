@@ -72,9 +72,9 @@ int main(int argc, char **argv) {
 #endif
     QApplication a(argc, argv);
     auto arguments = a.arguments();
-    if (arguments.empty()) { // display something
+    if (arguments.size() == 1) { // display something
         HwDataLoader::getInstance();
-        displayCRNNData();
+        displayYoloData();
         return a.exec();
     } else if (arguments.size() == 4) {
         const auto dataType = arguments.at(1).toLower();
