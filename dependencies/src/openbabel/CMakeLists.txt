@@ -21,7 +21,7 @@ set(PROJECT_SOURCE_DIR_LIST
         src/math
         src/ops
         src/stereo)
-if (UNIX)
+if (UNIX AND NOT APPLE)
     list(APPEND PROJECT_SOURCE_DIR_LIST src/formats/xtc src/formats/png)
 endif ()
 set(PROJECT_SOURCE)
@@ -58,5 +58,10 @@ foreach (QT_COMPONENT ${QT_COMPONENTS})
 endforeach ()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COMPONENT_TARGETS} coordgenlibs maeparser)
+
+# openmp for apple clang
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+endif(APPLE)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE OPENBABEL_LIBRARY)

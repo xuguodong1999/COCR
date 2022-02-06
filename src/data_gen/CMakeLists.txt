@@ -38,6 +38,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "TEST_SAMPLES_PATH=std::string(\"${COCR_DATA_DIR}/datasets/\")")
 
+# openmp for apple clang
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+endif(APPLE)
+
 if (MSVC)
     target_link_options(${PROJECT_NAME} PRIVATE "/FORCE:MULTIPLE")
 endif (MSVC)

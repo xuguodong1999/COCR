@@ -31,6 +31,8 @@ if (MSVC)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_definitions(_USE_MATH_DEFINES) # for M_PI macro
+elseif (APPLE)
+    include_directories(/opt/homebrew/include/)
 endif ()
 
 

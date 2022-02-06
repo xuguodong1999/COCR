@@ -11,7 +11,10 @@ foreach (i RANGE ${PROJECT_SOURCE_DIR_LOOP})
     list(GET PROJECT_SOURCE_DIR_LIST ${i} PROJECT_SOURCE_DIR)
     aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_SOURCE_DIR} PROJECT_SOURCE_${i})
     add_executable(${SUB_PROJECT_NAME} ${PROJECT_SOURCE_${i}})
-
+    # openmp for apple clang
+    if (APPLE)
+        target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+    endif(APPLE)
     set_target_properties(${SUB_PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 endforeach ()
 
