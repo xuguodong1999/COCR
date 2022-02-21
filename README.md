@@ -49,7 +49,7 @@ cd COCR && mkdir build && cd build
 
 cmake .. -G "Ninja" \
 -DBUILD_TESTS=OFF \
--DQt5_DIR=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
+-DQT_DIR=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
 -DOpenCV_DIR=path/to/opencv4/lib/cmake/opencv4 \
 -Dncnn_DIR=path/to/ncnn/lib/cmake/ncnn
 
@@ -61,6 +61,13 @@ cmake --build . -j $(nproc) --config Release
 ```shell
 -DBUILD_TESTS=ON \
 -DBoost_DIR=path/to/boost/lib/cmake/Boost-1.77.0
+```
+
+3. For train with cpp codes, add -DBUILD_ELS_LAB=ON option. Libtorch is required, for example,
+
+```shell
+-DBUILD_ELS_LAB=ON \
+-DTorch_DIR=path/to/libtorch/share/cmake/Torch
 ```
 
 * Under data/models, YOLO and CRNN weights are both available in ncnn format. Additionally, YOLO in darknet and CRNN in

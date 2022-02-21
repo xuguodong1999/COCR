@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
+option(BUILD_ELS_LAB "Libtorch is required to build cpp train" OFF)
 # path to assets
 set(COCR_DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 # path to 3rdparty libraries

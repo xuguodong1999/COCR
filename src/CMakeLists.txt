@@ -10,3 +10,7 @@ if (NOT ANDROID)
     add_dependencies(data_gen coordgenlibs)
     add_dependencies(data_gen openbabel)
 endif ()
+
+if (BUILD_ELS_LAB)
+    add_subdirectory(elslab)
+endif ()
