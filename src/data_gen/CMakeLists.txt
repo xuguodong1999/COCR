@@ -3,7 +3,7 @@ project(data_gen LANGUAGES CXX)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-include_directories(${COCR_INCLUDE_DIR})
+include_directories(${COCR_INCLUDE_DIRS})
 
 set(QT_COMPONENTS Widgets Core)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)

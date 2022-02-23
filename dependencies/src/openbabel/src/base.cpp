@@ -557,7 +557,7 @@ namespace OpenBabel
   general should be more thorough and complete.
 
   One major change is that the library uses the same header
-  <code>\#include</code> paths as external code. This documentation
+  <code>\#include </code> paths as external code. This documentation
   attempts to uniformly use the correct style, e.g.:
   <code>\#include \<openbabel/mol.h\></code>
 

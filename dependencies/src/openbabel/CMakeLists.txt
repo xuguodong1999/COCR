@@ -1,7 +1,7 @@
 project(openbabel LANGUAGES C CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${COCR_INCLUDE_DIR})
+include_directories(${COCR_INCLUDE_DIRS})
 include_directories(${COCR_INCLUDE_DIR}/inchi)
 
 set(QT_COMPONENTS Core)

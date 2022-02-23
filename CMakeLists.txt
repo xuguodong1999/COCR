@@ -10,7 +10,9 @@ set(COCR_DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 # path to 3rdparty libraries
 set(COCR_DEPENDENCIES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies CACHE INTERNAL "")
 # path to header-only 3rdparty libraries
+set(COCR_HEADER_DIR ${COCR_DEPENDENCIES_DIR}/header-only CACHE INTERNAL "")
 set(COCR_INCLUDE_DIR ${COCR_DEPENDENCIES_DIR}/include CACHE INTERNAL "")
+set(COCR_INCLUDE_DIRS ${COCR_INCLUDE_DIR} ${COCR_HEADER_DIR} CACHE INTERNAL "")
 # remember to cite ${OPENBABEL_DATA_QRC_FILE} if you link openbabel
 set(OPENBABEL_DATA_QRC_FILE ${COCR_DATA_DIR}/openbabel.qrc CACHE INTERNAL "")
 # put all dll and exe in one directory
@@ -37,5 +39,5 @@ elseif (APPLE)
 endif ()
 
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dependencies)
+add_subdirectory(src)
+add_subdirectory(dependencies)

@@ -19,7 +19,7 @@ GNU General Public License for more details.
 #ifndef VERBOSE_VISITORS
 #define VERBOSE_VISITORS
 
-#include<ostream>
+#include <ostream>
 
 namespace OpenBabel {
 

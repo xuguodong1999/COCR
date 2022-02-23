@@ -1,8 +1,8 @@
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/coordgenlibs)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/maeparser)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/openbabel)
+add_subdirectory(src/coordgenlibs)
+add_subdirectory(src/maeparser)
+add_subdirectory(src/openbabel)
 if (BUILD_TESTS)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
+    add_subdirectory(tests)
 endif ()
 
 add_dependencies(coordgenlibs maeparser)

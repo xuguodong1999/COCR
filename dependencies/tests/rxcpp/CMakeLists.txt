@@ -1,10 +1,6 @@
 project(RxCppTest LANGUAGES CXX)
 
-include_directories(${COCR_INCLUDE_DIR})
-
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-include_directories(${Boost_INCLUDE_DIR})
-link_directories(${Boost_LIB_DIR})
+include_directories(${COCR_INCLUDE_DIRS})
 
 set(PROJECT_SOURCE_DIR_LIST ./ ./operators/ ./sources/ ./subjects/ ./subscriptions/)
 set(PROJECT_SOURCE)
@@ -16,8 +12,6 @@ endforeach ()
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
-
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/bigobj>)
 

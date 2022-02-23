@@ -1,6 +1,6 @@
 project(RxQtTest LANGUAGES CXX)
 
-include_directories(${COCR_INCLUDE_DIR})
+include_directories(${COCR_INCLUDE_DIRS})
 
 set(CMAKE_AUTOMOC ON)
 

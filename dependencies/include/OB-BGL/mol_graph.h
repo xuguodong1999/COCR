@@ -24,7 +24,7 @@ GNU General Public License for more details.
 #include <boost/property_map.hpp> // OBAtomMap, OBBondMap
 #include <boost/graph/visitors.hpp> // functor_caller, recorder
 
-#include"openbabel/mol.h"
+#include "openbabel/mol.h"
 
 namespace boost // cannot specialize boost::graph_traits outside namespace
 {

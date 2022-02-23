@@ -1,6 +1,6 @@
 project(coordgenlibs LANGUAGES CXX)
 
-include_directories(${COCR_INCLUDE_DIR})
+include_directories(${COCR_INCLUDE_DIRS})
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
 
 # include windows dll info

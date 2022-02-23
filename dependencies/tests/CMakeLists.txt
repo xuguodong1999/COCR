@@ -1,8 +1,8 @@
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/maeparser)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/coordgenlibs)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/rxcpp)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/rxqt)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/openbabel)
+add_subdirectory(maeparser)
+add_subdirectory(coordgenlibs)
+add_subdirectory(rxcpp)
+add_subdirectory(rxqt)
+add_subdirectory(openbabel)
 
 add_dependencies(MaeparserTest maeparser)
 add_dependencies(CoordgenlibsTest coordgenlibs)
