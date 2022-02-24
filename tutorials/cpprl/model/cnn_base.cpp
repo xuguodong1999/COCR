@@ -1,8 +1,12 @@
-#include <torch/nn.h>
-
 #include "model/cnn_base.h"
 #include "model/model_utils.h"
+
+#include <torch/nn/modules/conv.h>
+#include <torch/nn/modules/container/functional.h>
+#include <torch/nn/modules/linear.h>
+#include <torch/types.h>
 #include <doctest/doctest.h>
+
 
 namespace cpprl {
     CnnBase::CnnBase(unsigned int num_inputs,
@@ -43,38 +47,31 @@ namespace cpprl {
     }
 
     TEST_CASE("CnnBase") {
-    auto base = std::make_shared<CnnBase>(3, true, 10);
+        auto base = std::make_shared<CnnBase>(3, true, 10);
 
-    SUBCASE("Sanity checks") {
-    DOCTEST_CHECK(base->is_recurrent() == true);
-    DOCTEST_CHECK(base->get_hidden_size() == 10);
-}
+        SUBCASE("Sanity checks") {
+            DOCTEST_CHECK(base->is_recurrent() == true);
+            DOCTEST_CHECK(base->get_hidden_size() == 10);
+        }
 
-SUBCASE("Output tensors are correct shapes")
-{
-auto inputs = torch::rand({4, 3, 84, 84});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = base->forward(inputs, rnn_hxs, masks);
+        SUBCASE("Output tensors are correct shapes") {
+            auto inputs = torch::rand({4, 3, 84, 84});
+            auto rnn_hxs = torch::rand({4, 10});
+            auto masks = torch::zeros({4, 1});
+            auto outputs = base->forward(inputs, rnn_hxs, masks);
 
-REQUIRE(outputs
-.
+            REQUIRE(outputs.size() == 3);
+            // Critic
+            DOCTEST_CHECK(outputs[0].size(0) == 4);
+            DOCTEST_CHECK(outputs[0].size(1) == 1);
 
-size()
+            // Actor
+            DOCTEST_CHECK(outputs[1].size(0) == 4);
+            DOCTEST_CHECK(outputs[1].size(1) == 10);
 
-== 3);
-
-// Critic
-DOCTEST_CHECK(outputs[0].size(0) == 4);
-DOCTEST_CHECK(outputs[0].size(1) == 1);
-
-// Actor
-DOCTEST_CHECK(outputs[1].size(0) == 4);
-DOCTEST_CHECK(outputs[1].size(1) == 10);
-
-// Hidden state
-DOCTEST_CHECK(outputs[2].size(0) == 4);
-DOCTEST_CHECK(outputs[2].size(1) == 10);
-}
-}
+            // Hidden state
+            DOCTEST_CHECK(outputs[2].size(0) == 4);
+            DOCTEST_CHECK(outputs[2].size(1) == 10);
+        }
+    }
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/activation.h>
+#include <torch/nn/modules/container/sequential.h>
 #include "util.h"
 //Pyramid Attention Network Decoder
 

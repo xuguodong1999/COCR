@@ -1,14 +1,12 @@
-#include <memory>
-
-#include <torch/nn.h>
-
 #include "model/output_layers.h"
 #include "model/model_utils.h"
 #include "distributions/distribution.h"
 #include "distributions/bernoulli.h"
 #include "distributions/categorical.h"
 #include "distributions/normal.h"
+#include <torch/types.h>
 #include <doctest/doctest.h>
+#include <memory>
 
 using namespace torch;
 
@@ -52,57 +50,55 @@ namespace cpprl {
     }
 
     TEST_CASE("BernoulliOutput") {
-    auto output_layer = BernoulliOutput(3, 5);
+        auto output_layer = BernoulliOutput(3, 5);
 
-    SUBCASE("Output distribution has correct output shape") {
-    float input_array[2][3] = {{0, 1, 2},
-                               {3, 4, 5}};
-    auto input_tensor = torch::from_blob(input_array,
-                                         {2, 3},
-                                         TensorOptions(torch::kFloat));
-    auto dist = output_layer.forward(input_tensor);
+        SUBCASE("Output distribution has correct output shape") {
+            float input_array[2][3] = {{0, 1, 2},
+                                       {3, 4, 5}};
+            auto input_tensor = torch::from_blob(input_array,
+                                                 {2, 3},
+                                                 TensorOptions(torch::kFloat));
+            auto dist = output_layer.forward(input_tensor);
 
-    auto output = dist->sample();
+            auto output = dist->sample();
 
-    DOCTEST_CHECK(output.sizes().vec() == std::vector<int64_t>{2, 5});
-}
-}
+            DOCTEST_CHECK(output.sizes().vec() == std::vector<int64_t>{2, 5});
+        }
+    }
 
-TEST_CASE("CategoricalOutput")
-{
-auto output_layer = CategoricalOutput(3, 5);
+    TEST_CASE("CategoricalOutput")
+    {
+        auto output_layer = CategoricalOutput(3, 5);
 
-SUBCASE("Output distribution has correct output shape")
-{
-float input_array[2][3] = {{0, 1, 2},
-                           {3, 4, 5}};
-auto input_tensor = torch::from_blob(input_array,
-                                     {2, 3},
-                                     TensorOptions(torch::kFloat));
-auto dist = output_layer.forward(input_tensor);
+        SUBCASE("Output distribution has correct output shape") {
+            float input_array[2][3] = {{0, 1, 2},
+                                       {3, 4, 5}};
+            auto input_tensor = torch::from_blob(input_array,
+                                                 {2, 3},
+                                                 TensorOptions(torch::kFloat));
+            auto dist = output_layer.forward(input_tensor);
 
-auto output = dist->sample();
+            auto output = dist->sample();
 
-DOCTEST_CHECK(output.sizes().vec() == std::vector<int64_t>{2});
-}
-}
+            DOCTEST_CHECK(output.sizes().vec() == std::vector<int64_t>{2});
+        }
+    }
 
-TEST_CASE("NormalOutput")
-{
-auto output_layer = NormalOutput(3, 5);
+    TEST_CASE("NormalOutput")
+    {
+        auto output_layer = NormalOutput(3, 5);
 
-SUBCASE("Output distribution has correct output shape")
-{
-float input_array[2][3] = {{0, 1, 2},
-                           {3, 4, 5}};
-auto input_tensor = torch::from_blob(input_array,
-                                     {2, 3},
-                                     TensorOptions(torch::kFloat));
-auto dist = output_layer.forward(input_tensor);
+        SUBCASE("Output distribution has correct output shape") {
+            float input_array[2][3] = {{0, 1, 2},
+                                       {3, 4, 5}};
+            auto input_tensor = torch::from_blob(input_array,
+                                                 {2, 3},
+                                                 TensorOptions(torch::kFloat));
+            auto dist = output_layer.forward(input_tensor);
 
-auto output = dist->sample();
+            auto output = dist->sample();
 
-DOCTEST_CHECK(output.sizes().vec() == std::vector<int64_t>{2, 5});
-}
-}
+            DOCTEST_CHECK(output.sizes().vec() == std::vector<int64_t>{2, 5});
+        }
+    }
 }

@@ -8,7 +8,12 @@
 #pragma once
 
 #include <torch/script.h>
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/pooling.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/activation.h>
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/conv.h>
 
 //Conv2d + BatchNorm2d + LeakyReLU
 class BasicConvImpl : public torch::nn::Module {

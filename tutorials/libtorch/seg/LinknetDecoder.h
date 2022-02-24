@@ -1,5 +1,7 @@
 #pragma once
 
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/container/modulelist.h>
 #include "util.h"
 
 torch::nn::Sequential TransposeX2(int in_channels, int out_channels, bool use_batchnorm = true);

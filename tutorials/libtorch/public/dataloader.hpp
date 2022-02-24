@@ -6,7 +6,7 @@
 #include <vector>
 #include <random>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 // For Original Header
 #include "datasets.hpp"
 

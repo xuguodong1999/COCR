@@ -1,3 +1,6 @@
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/activation.h>
+#include <torch/serialize.h>
 #include "VGG.h"
 
 torch::nn::Sequential make_features(std::vector<int> &cfg, bool batch_norm) {

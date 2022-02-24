@@ -1,14 +1,15 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-
-#include <torch/nn.h>
-
 #include "model/nn_base.h"
 #include "model/output_layers.h"
 #include "observation_normalizer.h"
 #include "spaces.h"
+
+#include <torch/types.h>
+#include <torch/nn/module.h>
+
+#include <vector>
+#include <memory>
 
 using namespace torch;
 

@@ -1,7 +1,5 @@
-#ifndef DATASET_H
-#define DATASET_H
+#pragma once
 
-#include <torch/script.h>
 #include <torch/torch.h>
 #include <vector>
 #include <string>
@@ -39,5 +37,3 @@ private:
     std::vector<std::string> image_paths;
     std::vector<int> labels;
 };
-
-#endif // DATASET_H

@@ -1,6 +1,6 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "image_io.h"
-#include <torch/torch.h>
+#include <torch/types.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 

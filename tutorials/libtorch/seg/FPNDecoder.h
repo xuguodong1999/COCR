@@ -1,5 +1,6 @@
 #pragma once
 
+#include <torch/nn/modules/container/modulelist.h>
 #include "util.h"
 
 class Conv3x3GNReLUImpl : public torch::nn::Module {

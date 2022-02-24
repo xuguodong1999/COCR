@@ -1,7 +1,9 @@
 // Copyright 2020-present pytorch-cpp Authors
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/linear.h>
 
 class NeuralNetImpl : public torch::nn::Module {
 public:

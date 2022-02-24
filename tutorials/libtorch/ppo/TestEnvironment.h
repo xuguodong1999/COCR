@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Eigen/Core>
-#include <torch/torch.h>
+#include <torch/types.h>
 
 enum STATUS {
     PLAYING,

@@ -1,7 +1,9 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "rnn_lm.h"
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/rnn.h>
 #include <tuple>
+#include <torch/nn/functional/activation.h>
 
 RNNLMImpl::RNNLMImpl(int64_t vocab_size, int64_t embed_size, int64_t hidden_size, int64_t num_layers)
         : embed(vocab_size, embed_size),

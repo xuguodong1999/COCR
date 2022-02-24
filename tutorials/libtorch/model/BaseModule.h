@@ -1,6 +1,10 @@
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/conv.h>
+#include <torch/nn/modules/linear.h>
 #include <torch/script.h>
 
 inline torch::nn::Conv2dOptions conv_options(int64_t in_planes, int64_t out_planes, int64_t kerner_size,

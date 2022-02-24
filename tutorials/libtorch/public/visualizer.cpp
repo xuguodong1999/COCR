@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <cmath>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 #include <opencv2/opencv.hpp>
 #include <png++/png.hpp>
 // For Original Header

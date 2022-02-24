@@ -1,7 +1,8 @@
 #include <tuple>
 #include <vector>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/loss.h>
 // For Original Header
 #include "loss.hpp"
 #include "losses.hpp"

@@ -1,6 +1,7 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "decoder_rnn.h"
 #include <torch/types.h>
+#include <torch/nn/modules/rnn.h>
 
 using torch::indexing::Slice;
 using torch::indexing::Ellipsis;

@@ -1,6 +1,6 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "imagefolder_dataset.h"
-#include <torch/torch.h>
+#include <torch/types.h>
 #include <vector>
 #include <algorithm>
 #include <filesystem>

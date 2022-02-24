@@ -35,6 +35,8 @@ Copyright(c) AllentDan 2021,
 All rights reserved.
 */
 
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/container/modulelist.h>
 #include "util.h"
 
 //struct StackSequentailImpl : torch::nn::SequentialImpl {

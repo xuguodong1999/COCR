@@ -1,6 +1,9 @@
 #ifndef UNETDECODER_H
 #define UNETDECODER_H
 
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/container/modulelist.h>
 #include "util.h"
 
 //attention and basic

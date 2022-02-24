@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <cmath>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 #include <omp.h>
 // For Original Header
 #include "datasets.hpp"

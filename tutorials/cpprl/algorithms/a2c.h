@@ -1,12 +1,11 @@
 #pragma once
 
+#include "algorithms/algorithm.h"
+
+#include <torch/types.h>
+#include <torch/optim/rmsprop.h>
 #include <string>
 #include <vector>
-
-#include <torch/nn.h>
-#include <torch/optim.h>
-
-#include "algorithms/algorithm.h"
 
 namespace cpprl {
     class Policy;

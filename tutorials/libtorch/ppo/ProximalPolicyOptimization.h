@@ -1,7 +1,8 @@
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
 #include <random>
+#include <torch/optim/optimizer.h>
 
 #include "Models.h"
 

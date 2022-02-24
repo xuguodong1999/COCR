@@ -1,3 +1,5 @@
+#include <torch/data/dataloader.h>
+#include <torch/data/transforms/stack.h>
 #include "dataSet.h"
 
 int main(int argc, char *argv[]) {

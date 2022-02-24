@@ -1,7 +1,11 @@
 // Copyright 2020-present pytorch-cpp Authors
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/rnn.h>
+#include <torch/nn/modules/embedding.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/linear.h>
 #include <tuple>
 
 class RNNLMImpl : public torch::nn::Module {

@@ -4,7 +4,7 @@
 #include <tuple>                       // std::tuple
 #include <vector>                      // std::vector
 // For External Library
-#include <torch/torch.h>               // torch
+#include <torch/types.h>               // torch
 #include <boost/program_options.hpp>   // boost::program_options
 // For Original Header
 #include "loss.hpp"                    // Loss, MMDLoss

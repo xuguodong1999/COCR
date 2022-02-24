@@ -1,8 +1,7 @@
 #pragma once
 
-#include <torch/nn.h>
-
 #include "generators/generator.h"
+#include <torch/types.h>
 
 namespace cpprl {
     class RecurrentGenerator : public Generator {

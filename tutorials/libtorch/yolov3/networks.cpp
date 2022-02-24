@@ -1,7 +1,13 @@
 #include <vector>
 #include <typeinfo>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/functional/upsampling.h>
+#include <torch/nn/init.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/activation.h>
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/conv.h>
 // For Original Header
 #include "networks.hpp"
 

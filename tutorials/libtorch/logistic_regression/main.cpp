@@ -1,5 +1,12 @@
 // Copyright 2020-present pytorch-cpp Authors
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/functional/loss.h>
+#include <torch/data/dataloader.h>
+#include <torch/data/datasets.h>
+#include <torch/data/transforms.h>
+#include <torch/optim/sgd.h>
+#include <torch/cuda.h>
+#include <torch/nn/modules/linear.h>
 #include <iostream>
 #include <iomanip>
 

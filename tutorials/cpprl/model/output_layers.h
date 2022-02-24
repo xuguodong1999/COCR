@@ -1,10 +1,12 @@
 #pragma once
 
-#include <memory>
-
-#include <torch/nn.h>
-
 #include "distributions/distribution.h"
+
+#include <torch/types.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/linear.h>
+
+#include <memory>
 
 using namespace torch;
 

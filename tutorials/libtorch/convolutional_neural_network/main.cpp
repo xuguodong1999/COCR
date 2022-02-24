@@ -1,5 +1,10 @@
 // Copyright 2020-present pytorch-cpp Authors
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/functional/loss.h>
+#include <torch/data/dataloader.h>
+#include <torch/data/transforms.h>
+#include <torch/optim/adam.h>
+#include <torch/cuda.h>
 #include <iostream>
 #include <iomanip>
 #include "convnet.h"

@@ -1,7 +1,7 @@
-#include <torch/nn.h>
-
 #include "model/mlp_base.h"
 #include "model/model_utils.h"
+#include <torch/types.h>
+#include <torch/nn/modules/container/functional.h>
 #include <doctest/doctest.h>
 
 namespace cpprl {
@@ -59,77 +59,62 @@ namespace cpprl {
     }
 
     TEST_CASE("MlpBase") {
-    SUBCASE("Recurrent") {
-    auto base = MlpBase(5, true, 10);
+        SUBCASE("Recurrent") {
+            auto base = MlpBase(5, true, 10);
 
-    SUBCASE("Sanity checks") {
-    DOCTEST_CHECK(base.is_recurrent() == true);
-    DOCTEST_CHECK(base.get_hidden_size() == 10);
-}
+            SUBCASE("Sanity checks") {
+                DOCTEST_CHECK(base.is_recurrent() == true);
+                DOCTEST_CHECK(base.get_hidden_size() == 10);
+            }
 
-SUBCASE("Output tensors are correct shapes")
-{
-auto inputs = torch::rand({4, 5});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = base.forward(inputs, rnn_hxs, masks);
+            SUBCASE("Output tensors are correct shapes") {
+                auto inputs = torch::rand({4, 5});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto outputs = base.forward(inputs, rnn_hxs, masks);
 
-REQUIRE(outputs
-.
+                REQUIRE(outputs.size() == 3);
+                // Critic
+                DOCTEST_CHECK(outputs[0].size(0) == 4);
+                DOCTEST_CHECK(outputs[0].size(1) == 1);
 
-size()
+                // Actor
+                DOCTEST_CHECK(outputs[1].size(0) == 4);
+                DOCTEST_CHECK(outputs[1].size(1) == 10);
 
-== 3);
+                // Hidden state
+                DOCTEST_CHECK(outputs[2].size(0) == 4);
+                DOCTEST_CHECK(outputs[2].size(1) == 10);
+            }
+        }
 
-// Critic
-DOCTEST_CHECK(outputs[0].size(0) == 4);
-DOCTEST_CHECK(outputs[0].size(1) == 1);
+        SUBCASE("Non-recurrent") {
+            auto base = MlpBase(5, false, 10);
 
-// Actor
-DOCTEST_CHECK(outputs[1].size(0) == 4);
-DOCTEST_CHECK(outputs[1].size(1) == 10);
+            SUBCASE("Sanity checks") {
+                DOCTEST_CHECK(base.is_recurrent() == false);
+            }
 
-// Hidden state
-DOCTEST_CHECK(outputs[2].size(0) == 4);
-DOCTEST_CHECK(outputs[2].size(1) == 10);
-}
-}
+            SUBCASE("Output tensors are correct shapes") {
+                auto inputs = torch::rand({4, 5});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto outputs = base.forward(inputs, rnn_hxs, masks);
 
-SUBCASE("Non-recurrent")
-{
-auto base = MlpBase(5, false, 10);
+                REQUIRE(outputs.size() == 3);
 
-SUBCASE("Sanity checks")
-{
-DOCTEST_CHECK(base.is_recurrent() == false);
-}
+                // Critic
+                DOCTEST_CHECK(outputs[0].size(0) == 4);
+                DOCTEST_CHECK(outputs[0].size(1) == 1);
 
-SUBCASE("Output tensors are correct shapes")
-{
-auto inputs = torch::rand({4, 5});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = base.forward(inputs, rnn_hxs, masks);
+                // Actor
+                DOCTEST_CHECK(outputs[1].size(0) == 4);
+                DOCTEST_CHECK(outputs[1].size(1) == 10);
 
-REQUIRE(outputs
-.
-
-size()
-
-== 3);
-
-// Critic
-DOCTEST_CHECK(outputs[0].size(0) == 4);
-DOCTEST_CHECK(outputs[0].size(1) == 1);
-
-// Actor
-DOCTEST_CHECK(outputs[1].size(0) == 4);
-DOCTEST_CHECK(outputs[1].size(1) == 10);
-
-// Hidden state
-DOCTEST_CHECK(outputs[2].size(0) == 4);
-DOCTEST_CHECK(outputs[2].size(1) == 10);
-}
-}
-}
+                // Hidden state
+                DOCTEST_CHECK(outputs[2].size(0) == 4);
+                DOCTEST_CHECK(outputs[2].size(1) == 10);
+            }
+        }
+    }
 }

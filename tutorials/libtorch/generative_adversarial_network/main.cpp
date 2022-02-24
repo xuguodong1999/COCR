@@ -1,7 +1,16 @@
 // Copyright 2020-present pytorch-cpp Authors
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/data/dataloader.h>
+#include <torch/data/datasets.h>
+#include <torch/data/transforms.h>
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/cuda.h>
+#include <torch/nn/modules/activation.h>
+#include <torch/optim/adam.h>
+#include <torch/nn/modules/linear.h>
 #include <iostream>
 #include <iomanip>
+#include <torch/nn/functional/loss.h>
 #include "image_io.h"
 
 using image_io::save_image;

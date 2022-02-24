@@ -2,7 +2,11 @@
 #define VGG_H
 
 #include <torch/script.h>
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/pooling.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/conv.h>
 #include <vector>
 
 inline torch::nn::Conv2dOptions conv_options(int64_t in_planes, int64_t out_planes, int64_t kerner_size,

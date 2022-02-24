@@ -5,7 +5,7 @@
 #include <utility>
 #include <memory>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 #include <opencv2/opencv.hpp>
 
 #define CV_MAT false

@@ -1,9 +1,13 @@
 // Copyright 2020-present pytorch-cpp Authors
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/cuda.h>
+#include <torch/optim/adam.h>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <tuple>
+#include <torch/nn/functional/loss.h>
+#include <torch/nn/utils/clip_grad.h>
 #include "rnn_lm.h"
 #include "corpus.h"
 

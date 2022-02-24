@@ -1,10 +1,9 @@
 #pragma once
 
-#include <vector>
-
-#include <torch/nn.h>
-
 #include "running_mean_std.h"
+#include <torch/types.h>
+#include <torch/nn/module.h>
+#include <vector>
 
 namespace cpprl {
     class ObservationNormalizer;

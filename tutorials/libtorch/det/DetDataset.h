@@ -1,6 +1,7 @@
 #pragma once
 
 #include "util.h"
+#include <torch/torch.h>
 #include <opencv2/opencv.hpp>
 #include "Augmentations.h"
 

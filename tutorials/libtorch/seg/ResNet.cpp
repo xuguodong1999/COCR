@@ -1,3 +1,4 @@
+#include <torch/serialize.h>
 #include "ResNet.h"
 
 BlockImpl::BlockImpl(int64_t inplanes, int64_t planes, int64_t stride_,

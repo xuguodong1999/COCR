@@ -1,6 +1,6 @@
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
 
 //prediction [NCHW], a tensor after softmax activation at C dim
 //target [N1HW], a tensor refer to label

@@ -2,7 +2,11 @@
 #define UTIL_H
 
 #include <torch/script.h>
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/dropout.h>
+#include <torch/nn/modules/pooling.h>
+#include <torch/nn/modules/conv.h>
+#include <torch/nn/options/upsampling.h>
 
 
 inline torch::nn::Conv2dOptions conv_options(int64_t in_planes, int64_t out_planes, int64_t kerner_size,

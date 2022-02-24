@@ -1,6 +1,8 @@
 #include <cmath>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/conv.h>
+#include <torch/nn/functional/conv.h>
 // For Original Header
 #include "losses.hpp"
 

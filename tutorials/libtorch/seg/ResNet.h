@@ -6,6 +6,9 @@ All rights reserved.
 #ifndef RESNET_H
 #define RESNET_H
 
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/linear.h>
 #include "util.h"
 #include "InterFace.h"
 

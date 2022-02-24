@@ -1,7 +1,10 @@
 // Copyright 2020-present pytorch-cpp Authors
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/optim/sgd.h>
+#include <torch/nn/modules/linear.h>
 #include <iostream>
 #include <iomanip>
+#include <torch/nn/functional/loss.h>
 
 int main() {
     std::cout << "Linear Regression\n\n";

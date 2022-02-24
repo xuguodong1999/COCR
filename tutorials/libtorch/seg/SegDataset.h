@@ -1,7 +1,7 @@
-#ifndef SEGDATASET_H
-#define SEGDATASET_H
+#pragma once
 
 #include "util.h"
+#include <torch/torch.h>
 #include <fstream>
 #include <opencv2/opencv.hpp>
 
@@ -54,5 +54,3 @@ private:
     std::vector<std::string> list_labels;
     trainTricks tricks;
 };
-
-#endif // SEGDATASET_H

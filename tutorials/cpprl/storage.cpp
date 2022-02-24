@@ -1,14 +1,12 @@
-#include <memory>
-#include <vector>
-
-#include <c10/util/ArrayRef.h>
-#include <torch/nn.h>
-
 #include "generators/feed_forward_generator.h"
 #include "generators/recurrent_generator.h"
 #include "storage.h"
 #include "spaces.h"
+#include <torch/types.h>
 #include <doctest/doctest.h>
+
+#include <memory>
+#include <vector>
 
 namespace cpprl {
     RolloutStorage::RolloutStorage(int64_t num_steps,
@@ -217,63 +215,63 @@ namespace cpprl {
 // cppcheck-suppress syntaxError
     TEST_CASE ("RolloutStorage")
     {
-                SUBCASE("Initializes tensors to correct sizes") {
+        SUBCASE("Initializes tensors to correct sizes") {
             RolloutStorage storage(3, 5, {5, 2}, ActionSpace{"Discrete", {3}}, 10, torch::kCPU);
 
-                    DOCTEST_CHECK(storage.get_observations().size(0) == 4);
-                    DOCTEST_CHECK(storage.get_observations().size(1) == 5);
-                    DOCTEST_CHECK(storage.get_observations().size(2) == 5);
-                    DOCTEST_CHECK(storage.get_observations().size(3) == 2);
+            DOCTEST_CHECK(storage.get_observations().size(0) == 4);
+            DOCTEST_CHECK(storage.get_observations().size(1) == 5);
+            DOCTEST_CHECK(storage.get_observations().size(2) == 5);
+            DOCTEST_CHECK(storage.get_observations().size(3) == 2);
 
-                    DOCTEST_CHECK(storage.get_hidden_states().size(0) == 4);
-                    DOCTEST_CHECK(storage.get_hidden_states().size(1) == 5);
-                    DOCTEST_CHECK(storage.get_hidden_states().size(2) == 10);
+            DOCTEST_CHECK(storage.get_hidden_states().size(0) == 4);
+            DOCTEST_CHECK(storage.get_hidden_states().size(1) == 5);
+            DOCTEST_CHECK(storage.get_hidden_states().size(2) == 10);
 
-                    DOCTEST_CHECK(storage.get_rewards().size(0) == 3);
-                    DOCTEST_CHECK(storage.get_rewards().size(1) == 5);
-                    DOCTEST_CHECK(storage.get_rewards().size(2) == 1);
+            DOCTEST_CHECK(storage.get_rewards().size(0) == 3);
+            DOCTEST_CHECK(storage.get_rewards().size(1) == 5);
+            DOCTEST_CHECK(storage.get_rewards().size(2) == 1);
 
-                    DOCTEST_CHECK(storage.get_value_predictions().size(0) == 4);
-                    DOCTEST_CHECK(storage.get_value_predictions().size(1) == 5);
-                    DOCTEST_CHECK(storage.get_value_predictions().size(2) == 1);
+            DOCTEST_CHECK(storage.get_value_predictions().size(0) == 4);
+            DOCTEST_CHECK(storage.get_value_predictions().size(1) == 5);
+            DOCTEST_CHECK(storage.get_value_predictions().size(2) == 1);
 
-                    DOCTEST_CHECK(storage.get_returns().size(0) == 4);
-                    DOCTEST_CHECK(storage.get_returns().size(1) == 5);
-                    DOCTEST_CHECK(storage.get_returns().size(2) == 1);
+            DOCTEST_CHECK(storage.get_returns().size(0) == 4);
+            DOCTEST_CHECK(storage.get_returns().size(1) == 5);
+            DOCTEST_CHECK(storage.get_returns().size(2) == 1);
 
-                    DOCTEST_CHECK(storage.get_action_log_probs().size(0) == 3);
-                    DOCTEST_CHECK(storage.get_action_log_probs().size(1) == 5);
-                    DOCTEST_CHECK(storage.get_action_log_probs().size(2) == 1);
+            DOCTEST_CHECK(storage.get_action_log_probs().size(0) == 3);
+            DOCTEST_CHECK(storage.get_action_log_probs().size(1) == 5);
+            DOCTEST_CHECK(storage.get_action_log_probs().size(2) == 1);
 
-                    DOCTEST_CHECK(storage.get_actions().size(0) == 3);
-                    DOCTEST_CHECK(storage.get_actions().size(1) == 5);
-                    DOCTEST_CHECK(storage.get_actions().size(2) == 1);
+            DOCTEST_CHECK(storage.get_actions().size(0) == 3);
+            DOCTEST_CHECK(storage.get_actions().size(1) == 5);
+            DOCTEST_CHECK(storage.get_actions().size(2) == 1);
 
-                    DOCTEST_CHECK(storage.get_masks().size(0) == 4);
-                    DOCTEST_CHECK(storage.get_masks().size(1) == 5);
-                    DOCTEST_CHECK(storage.get_masks().size(2) == 1);
+            DOCTEST_CHECK(storage.get_masks().size(0) == 4);
+            DOCTEST_CHECK(storage.get_masks().size(1) == 5);
+            DOCTEST_CHECK(storage.get_masks().size(2) == 1);
         }
 
-                SUBCASE("Initializes actions to correct type") {
-                    SUBCASE("Long") {
+        SUBCASE("Initializes actions to correct type") {
+            SUBCASE("Long") {
                 RolloutStorage storage(3, 5, {5, 2}, ActionSpace{"Discrete", {3}}, 10, torch::kCPU);
 
-                        DOCTEST_CHECK(storage.get_actions().dtype() == torch::kLong);
+                DOCTEST_CHECK(storage.get_actions().dtype() == torch::kLong);
             }
 
-                    SUBCASE("Float") {
+            SUBCASE("Float") {
                 RolloutStorage storage(3, 5, {5, 2}, ActionSpace{"Box", {3}}, 10, torch::kCPU);
 
-                        DOCTEST_CHECK(storage.get_actions().dtype() == torch::kFloat);
+                DOCTEST_CHECK(storage.get_actions().dtype() == torch::kFloat);
             }
         }
 
-                SUBCASE("to() doesn't crash") {
+        SUBCASE("to() doesn't crash") {
             RolloutStorage storage(3, 4, {5}, ActionSpace{"Discrete", {3}}, 10, torch::kCPU);
             storage.to(torch::kCPU);
         }
 
-                SUBCASE("insert() inserts values") {
+        SUBCASE("insert() inserts values") {
             RolloutStorage storage(3, 4, {5, 2}, ActionSpace{"Discrete", {3}}, 10, torch::kCPU);
             storage.insert(torch::rand({4, 5, 2}) + 1,
                            torch::rand({4, 10}) + 1,
@@ -285,33 +283,33 @@ namespace cpprl {
 
             INFO("Observations: \n"
                          << storage.get_observations() << "\n");
-                    DOCTEST_CHECK(storage.get_observations()[1][0][0][0].item().toDouble() !=
+            DOCTEST_CHECK(storage.get_observations()[1][0][0][0].item().toDouble() !=
                           doctest::Approx(0));
             INFO("Hidden states: \n"
                          << storage.get_hidden_states() << "\n");
-                    DOCTEST_CHECK(storage.get_hidden_states()[1][0][0].item().toDouble() !=
+            DOCTEST_CHECK(storage.get_hidden_states()[1][0][0].item().toDouble() !=
                           doctest::Approx(0));
             INFO("Actions: \n"
                          << storage.get_actions() << "\n");
-                    DOCTEST_CHECK(storage.get_actions()[0][0][0].item().toInt() != 0);
+            DOCTEST_CHECK(storage.get_actions()[0][0][0].item().toInt() != 0);
             INFO("Action log probs: \n"
                          << storage.get_action_log_probs() << "\n");
-                    DOCTEST_CHECK(storage.get_action_log_probs()[0][0][0].item().toDouble() !=
+            DOCTEST_CHECK(storage.get_action_log_probs()[0][0][0].item().toDouble() !=
                           doctest::Approx(0));
             INFO("Value predictions: \n"
                          << storage.get_value_predictions() << "\n");
-                    DOCTEST_CHECK(storage.get_value_predictions()[0][0][0].item().toDouble() !=
+            DOCTEST_CHECK(storage.get_value_predictions()[0][0][0].item().toDouble() !=
                           doctest::Approx(0));
             INFO("Rewards: \n"
                          << storage.get_rewards() << "\n");
-                    DOCTEST_CHECK(storage.get_rewards()[0][0][0].item().toDouble() !=
+            DOCTEST_CHECK(storage.get_rewards()[0][0][0].item().toDouble() !=
                           doctest::Approx(0));
             INFO("Masks: \n"
                          << storage.get_masks() << "\n");
-                    DOCTEST_CHECK(storage.get_masks()[1][0][0].item().toInt() != 1);
+            DOCTEST_CHECK(storage.get_masks()[1][0][0].item().toInt() != 1);
         }
 
-                SUBCASE("compute_returns()") {
+        SUBCASE("compute_returns()") {
             RolloutStorage storage(3, 2, {4}, ActionSpace{"Discrete", {3}}, 5, torch::kCPU);
 
             std::vector<float> value_preds{0, 1};
@@ -345,7 +343,7 @@ namespace cpprl {
                            torch::from_blob(rewards.data(), {2, 1}),
                            torch::from_blob(masks.data(), {2, 1}));
 
-                    SUBCASE("Gives correct results without GAE") {
+            SUBCASE("Gives correct results without GAE") {
                 std::vector<float> next_values{0, 1};
                 storage.compute_returns(torch::from_blob(&next_values[0], {2, 1}),
                                         false, 0.6, 0.6);
@@ -356,25 +354,25 @@ namespace cpprl {
                              << storage.get_rewards() << "\n");
                 INFO("Returns: \n"
                              << storage.get_returns() << "\n");
-                        DOCTEST_CHECK(storage.get_returns()[0][0].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[0][0].item().toDouble() ==
                               doctest::Approx(1.32));
-                        DOCTEST_CHECK(storage.get_returns()[0][1].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[0][1].item().toDouble() ==
                               doctest::Approx(2.2));
-                        DOCTEST_CHECK(storage.get_returns()[1][0].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[1][0].item().toDouble() ==
                               doctest::Approx(2.2));
-                        DOCTEST_CHECK(storage.get_returns()[1][1].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[1][1].item().toDouble() ==
                               doctest::Approx(2));
-                        DOCTEST_CHECK(storage.get_returns()[2][0].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[2][0].item().toDouble() ==
                               doctest::Approx(2));
-                        DOCTEST_CHECK(storage.get_returns()[2][1].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[2][1].item().toDouble() ==
                               doctest::Approx(3.6));
-                        DOCTEST_CHECK(storage.get_returns()[3][0].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[3][0].item().toDouble() ==
                               doctest::Approx(0));
-                        DOCTEST_CHECK(storage.get_returns()[3][1].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[3][1].item().toDouble() ==
                               doctest::Approx(1));
             }
 
-                    SUBCASE("Gives correct results with GAE") {
+            SUBCASE("Gives correct results with GAE") {
                 std::vector<float> next_values{0, 1};
                 storage.compute_returns(torch::from_blob(&next_values[0], {2, 1}),
                                         true, 0.6, 0.6);
@@ -387,27 +385,27 @@ namespace cpprl {
                              << storage.get_value_predictions() << "\n");
                 INFO("Returns: \n"
                              << storage.get_returns() << "\n");
-                        DOCTEST_CHECK(storage.get_returns()[0][0].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[0][0].item().toDouble() ==
                               doctest::Approx(1.032));
-                        DOCTEST_CHECK(storage.get_returns()[0][1].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[0][1].item().toDouble() ==
                               doctest::Approx(2.2));
-                        DOCTEST_CHECK(storage.get_returns()[1][0].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[1][0].item().toDouble() ==
                               doctest::Approx(2.2));
-                        DOCTEST_CHECK(storage.get_returns()[1][1].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[1][1].item().toDouble() ==
                               doctest::Approx(2));
-                        DOCTEST_CHECK(storage.get_returns()[2][0].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[2][0].item().toDouble() ==
                               doctest::Approx(2));
-                        DOCTEST_CHECK(storage.get_returns()[2][1].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[2][1].item().toDouble() ==
                               doctest::Approx(3.6));
-                        DOCTEST_CHECK(storage.get_returns()[3][0].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[3][0].item().toDouble() ==
                               doctest::Approx(0));
-                        DOCTEST_CHECK(storage.get_returns()[3][1].item().toDouble() ==
+                DOCTEST_CHECK(storage.get_returns()[3][1].item().toDouble() ==
                               doctest::Approx(0));
             }
         }
 
-                SUBCASE("after_update() copies last observation, moves hidden state and mask to "
-                        "the 0th timestep") {
+        SUBCASE("after_update() copies last observation, moves hidden state and mask to "
+                "the 0th timestep") {
             RolloutStorage storage(3, 2, {3}, ActionSpace{"Discrete", {3}}, 2, torch::kCPU);
 
             std::vector<float> obs{0, 1, 2, 1, 2, 3};
@@ -444,31 +442,31 @@ namespace cpprl {
 
             INFO("Observations: \n"
                          << storage.get_observations() << "\n");
-                    DOCTEST_CHECK(storage.get_observations()[0][0][1].item().toDouble() ==
+            DOCTEST_CHECK(storage.get_observations()[0][0][1].item().toDouble() ==
                           doctest::Approx(6));
             INFO("Hidden_states: \n"
                          << storage.get_hidden_states() << "\n");
-                    DOCTEST_CHECK(storage.get_hidden_states()[0][0][1].item().toDouble() ==
+            DOCTEST_CHECK(storage.get_hidden_states()[0][0][1].item().toDouble() ==
                           doctest::Approx(2));
             INFO("Masks: \n"
                          << storage.get_masks() << "\n");
-                    DOCTEST_CHECK(storage.get_masks()[0][0][0].item().toDouble() ==
+            DOCTEST_CHECK(storage.get_masks()[0][0][0].item().toDouble() ==
                           doctest::Approx(0));
         }
 
-                SUBCASE("Can create feed-forward generator") {
+        SUBCASE("Can create feed-forward generator") {
             RolloutStorage storage(3, 5, {5, 2}, ActionSpace{"Discrete", {3}}, 10, torch::kCPU);
             auto generator = storage.feed_forward_generator(torch::rand({3, 5, 1}), 5);
             generator->next();
         }
 
-                SUBCASE("Can create recurrent generator") {
+        SUBCASE("Can create recurrent generator") {
             RolloutStorage storage(3, 5, {5, 2}, ActionSpace{"Discrete", {3}}, 10, torch::kCPU);
             auto generator = storage.recurrent_generator(torch::rand({3, 5, 1}), 5);
             generator->next();
         }
 
-                SUBCASE("Can combine multiple storages into one") {
+        SUBCASE("Can combine multiple storages into one") {
             std::vector<RolloutStorage> storages;
             for (int i = 0; i < 5; ++i) {
                 storages.push_back({3, 1, {4}, ActionSpace{"Discrete", {3}}, 5, torch::kCPU});
@@ -511,32 +509,33 @@ namespace cpprl {
 
             RolloutStorage combined_storage(pointers, torch::kCPU);
 
-                    DOCTEST_CHECK(combined_storage.get_observations().size(0) == 4);
-                    DOCTEST_CHECK(combined_storage.get_observations().size(1) == 5);
-                    DOCTEST_CHECK(combined_storage.get_hidden_states().size(0) == 4);
-                    DOCTEST_CHECK(combined_storage.get_hidden_states().size(1) == 5);
-                    DOCTEST_CHECK(combined_storage.get_hidden_states().size(2) == 5);
-                    DOCTEST_CHECK(combined_storage.get_rewards().size(0) == 3);
-                    DOCTEST_CHECK(combined_storage.get_rewards().size(1) == 5);
-                    DOCTEST_CHECK(combined_storage.get_rewards().size(2) == 1);
-                    DOCTEST_CHECK(combined_storage.get_value_predictions().size(0) == 4);
-                    DOCTEST_CHECK(combined_storage.get_value_predictions().size(1) == 5);
-                    DOCTEST_CHECK(combined_storage.get_value_predictions().size(2) == 1);
-                    DOCTEST_CHECK(combined_storage.get_returns().size(0) == 4);
-                    DOCTEST_CHECK(combined_storage.get_returns().size(1) == 5);
-                    DOCTEST_CHECK(combined_storage.get_returns().size(2) == 1);
-                    DOCTEST_CHECK(combined_storage.get_action_log_probs().size(0) == 3);
-                    DOCTEST_CHECK(combined_storage.get_action_log_probs().size(1) == 5);
-                    DOCTEST_CHECK(combined_storage.get_action_log_probs().size(2) == 1);
-                    DOCTEST_CHECK(combined_storage.get_actions().size(0) == 3);
-                    DOCTEST_CHECK(combined_storage.get_actions().size(1) == 5);
-                    DOCTEST_CHECK(combined_storage.get_actions().size(2) == 1);
-                    DOCTEST_CHECK(combined_storage.get_masks().size(0) == 4);
-                    DOCTEST_CHECK(combined_storage.get_masks().size(1) == 5);
-                    DOCTEST_CHECK(combined_storage.get_masks().size(2) == 1);
+            DOCTEST_CHECK(combined_storage.get_observations().size(0) == 4);
+            DOCTEST_CHECK(combined_storage.get_observations().size(1) == 5);
+            DOCTEST_CHECK(combined_storage.get_hidden_states().size(0) == 4);
+            DOCTEST_CHECK(combined_storage.get_hidden_states().size(1) == 5);
+            DOCTEST_CHECK(combined_storage.get_hidden_states().size(2) == 5);
+            DOCTEST_CHECK(combined_storage.get_rewards().size(0) == 3);
+            DOCTEST_CHECK(combined_storage.get_rewards().size(1) == 5);
+            DOCTEST_CHECK(combined_storage.get_rewards().size(2) == 1);
+            DOCTEST_CHECK(combined_storage.get_value_predictions().size(0) == 4);
+            DOCTEST_CHECK(combined_storage.get_value_predictions().size(1) == 5);
+            DOCTEST_CHECK(combined_storage.get_value_predictions().size(2) == 1);
+            DOCTEST_CHECK(combined_storage.get_returns().size(0) == 4);
+            DOCTEST_CHECK(combined_storage.get_returns().size(1) == 5);
+            DOCTEST_CHECK(combined_storage.get_returns().size(2) == 1);
+            DOCTEST_CHECK(combined_storage.get_action_log_probs().size(0) == 3);
+            DOCTEST_CHECK(combined_storage.get_action_log_probs().size(1) == 5);
+            DOCTEST_CHECK(combined_storage.get_action_log_probs().size(2) == 1);
+            DOCTEST_CHECK(combined_storage.get_actions().size(0) == 3);
+            DOCTEST_CHECK(combined_storage.get_actions().size(1) == 5);
+            DOCTEST_CHECK(combined_storage.get_actions().size(2) == 1);
+            DOCTEST_CHECK(combined_storage.get_masks().size(0) == 4);
+            DOCTEST_CHECK(combined_storage.get_masks().size(1) == 5);
+            DOCTEST_CHECK(combined_storage.get_masks().size(2) == 1);
 
             for (int i = 0; i < 5; ++i) {
-                        DOCTEST_CHECK((combined_storage.get_observations().narrow(1, i, 1) == storages[i].get_observations())
+                DOCTEST_CHECK((combined_storage.get_observations().narrow(1, i, 1)
+                               == storages[i].get_observations())
                                       .all()
                                       .item()
                                       .toBool());

@@ -1,9 +1,9 @@
 #pragma once
 
+#include "storage.h"
+
 #include <string>
 #include <vector>
-
-#include "storage.h"
 
 namespace cpprl {
     struct UpdateDatum {

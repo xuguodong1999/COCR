@@ -1,3 +1,4 @@
+#include <torch/nn/modules/activation.h>
 #include "UNetDecoder.h"
 
 SCSEModuleImpl::SCSEModuleImpl(int in_channels, int reduction, bool _use_attention) {

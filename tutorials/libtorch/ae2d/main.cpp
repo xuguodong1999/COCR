@@ -6,12 +6,14 @@
 #include <random>                      // std::random_device
 #include <cstdlib>                     // std::srand, std::rand
 // For External Library
-#include <torch/torch.h>               // torch
+#include <torch/types.h>               // torch
+#include <torch/cuda.h>
 #include <opencv2/opencv.hpp>          // cv::Mat
 #include <boost/program_options.hpp>   // boost::program_options
 // For Original Header
 #include "networks.hpp"                // ConvolutionalAutoEncoder
 #include "transforms.hpp"              // transforms
+#include "dae2d/networks.hpp"
 
 // Define Namespace
 namespace fs = std::filesystem;

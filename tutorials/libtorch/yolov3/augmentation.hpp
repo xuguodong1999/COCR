@@ -6,7 +6,7 @@
 #include <random>
 #include <memory>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 #include <opencv2/opencv.hpp>
 // For Original Header
 #include "transforms.hpp"

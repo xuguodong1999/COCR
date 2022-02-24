@@ -2,6 +2,8 @@
 #include "transform.h"
 #include <cmath>
 #include <vector>
+#include <torch/nn/functional/padding.h>
+#include <torch/nn/functional/conv.h>
 
 using torch::indexing::Slice;
 using torch::indexing::Ellipsis;

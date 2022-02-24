@@ -1,7 +1,9 @@
 // Copyright 2020-present pytorch-cpp Authors
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/data/transforms.h>
+#include <torch/nn/module.h>
 #include <vector>
 #include <iostream>
 #include "vocabulary.h"

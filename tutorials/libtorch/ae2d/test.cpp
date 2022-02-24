@@ -5,8 +5,10 @@
 #include <chrono>                      // std::chrono
 #include <utility>                     // std::pair
 // For External Library
-#include <torch/torch.h>               // torch
+#include <torch/types.h>               // torch
 #include <boost/program_options.hpp>   // boost::program_options
+#include <torch/serialize.h>
+#include <torch/cuda.h>
 // For Original Header
 #include "loss.hpp"                    // Loss
 #include "networks.hpp"                // ConvolutionalAutoEncoder

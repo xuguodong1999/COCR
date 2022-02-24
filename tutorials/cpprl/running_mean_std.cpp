@@ -1,6 +1,5 @@
-#include <torch/nn.h>
-
 #include "running_mean_std.h"
+#include <torch/types.h>
 #include <doctest/doctest.h>
 
 namespace cpprl {
@@ -42,7 +41,7 @@ namespace cpprl {
 
     TEST_CASE ("RunningMeanStd")
     {
-                SUBCASE("Calculates mean and variance correctly") {
+        SUBCASE("Calculates mean and variance correctly") {
             RunningMeanStd rms(5);
             auto observations = torch::rand({3, 5});
             rms->update(observations[0]);
@@ -65,7 +64,7 @@ namespace cpprl {
             }
         }
 
-                SUBCASE("Loads mean and variance from constructor correctly") {
+        SUBCASE("Loads mean and variance from constructor correctly") {
             RunningMeanStd rms(std::vector<float>{1, 2, 3}, std::vector<float>{4, 5, 6});
 
             auto mean = rms->get_mean();

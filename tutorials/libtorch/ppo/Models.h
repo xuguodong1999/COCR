@@ -1,6 +1,8 @@
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/linear.h>
 #include <math.h>
 
 // Network model for Proximal Policy Optimization on Incy Wincy.

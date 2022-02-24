@@ -2,7 +2,7 @@
 #define LOSSES_HPP
 
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 
 
 // -------------------

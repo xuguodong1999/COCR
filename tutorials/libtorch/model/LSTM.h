@@ -2,6 +2,7 @@
 
 #include "BaseModule.h"
 #include <tuple>
+#include <torch/nn/modules/rnn.h>
 
 inline torch::nn::LSTMOptions
 lstmOption(int in_features, int hidden_layer_size, int num_layers, bool batch_first = false,

@@ -1,3 +1,5 @@
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/activation.h>
 #include "LinknetDecoder.h"
 
 torch::nn::Sequential TransposeX2(int in_channels, int out_channels, bool use_batchnorm) {

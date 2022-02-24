@@ -3,7 +3,7 @@
 
 #include <string>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 
 
 // -----------------------------------

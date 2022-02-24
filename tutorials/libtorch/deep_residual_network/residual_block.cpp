@@ -1,6 +1,8 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "residual_block.h"
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/conv.h>
 
 namespace resnet {
     ResidualBlockImpl::ResidualBlockImpl(int64_t in_channels, int64_t out_channels, int64_t stride,

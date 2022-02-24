@@ -1,8 +1,7 @@
 #pragma once
 
+#include <torch/types.h>
 #include <vector>
-
-#include <torch/nn.h>
 
 namespace cpprl {
     struct MiniBatch {

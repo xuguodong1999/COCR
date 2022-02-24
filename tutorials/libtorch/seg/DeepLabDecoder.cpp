@@ -1,3 +1,5 @@
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/activation.h>
 #include "DeepLabDecoder.h"
 
 

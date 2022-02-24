@@ -1,6 +1,6 @@
 // Copyright 2020-present pytorch-cpp Authors
 // Original: https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html
-#include <torch/torch.h>
+#include <torch/types.h>
 #include <iostream>
 #include <iomanip>
 

@@ -1,6 +1,6 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "transform.h"
-#include <torch/torch.h>
+#include <torch/types.h>
 
 using torch::indexing::Slice;
 using torch::indexing::Ellipsis;

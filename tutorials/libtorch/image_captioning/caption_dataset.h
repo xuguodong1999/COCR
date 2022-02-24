@@ -4,6 +4,7 @@
 #include <torch/data/datasets/base.h>
 #include <torch/data/example.h>
 #include <torch/types.h>
+#include <torch/data/datasets.h>
 #include <cstddef>
 #include <fstream>
 #include <string>

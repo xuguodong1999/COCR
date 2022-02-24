@@ -1,3 +1,6 @@
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/normalization.h>
+#include <torch/nn/modules/activation.h>
 #include "FPNDecoder.h"
 
 Conv3x3GNReLUImpl::Conv3x3GNReLUImpl(int _in_channels, int _out_channels, bool _upsample) {

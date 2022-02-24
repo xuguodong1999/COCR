@@ -1,6 +1,7 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "variational_autoencoder.h"
 #include <utility>
+#include <torch/nn/functional/activation.h>
 
 VAEImpl::VAEImpl(int64_t image_size, int64_t h_dim, int64_t z_dim)
         : fc1(image_size, h_dim),

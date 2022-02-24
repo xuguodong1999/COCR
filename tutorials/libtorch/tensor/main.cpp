@@ -1,4 +1,7 @@
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/conv.h>
 #include <iostream>
 #include <vector>
 

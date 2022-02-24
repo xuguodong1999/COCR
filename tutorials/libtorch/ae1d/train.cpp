@@ -7,8 +7,10 @@
 #include <vector>                      // std::vector
 #include <utility>                     // std::pair
 // For External Library
-#include <torch/torch.h>               // torch
+#include <torch/types.h>               // torch
+#include <torch/optim/adam.h>
 #include <boost/program_options.hpp>   // boost::program_options
+#include <torch/serialize.h>
 // For Original Header
 #include "loss.hpp"                    // Loss
 #include "networks.hpp"                // AutoEncoder1d

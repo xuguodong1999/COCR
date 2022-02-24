@@ -1,8 +1,8 @@
 #pragma once
 
+#include <torch/types.h>
+#include <torch/nn/module.h>
 #include <vector>
-
-#include <torch/nn.h>
 
 namespace cpprl {
 // https://github.com/openai/baselines/blob/master/baselines/common/running_mean_std.py

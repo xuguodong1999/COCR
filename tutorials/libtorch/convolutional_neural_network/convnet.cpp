@@ -1,6 +1,6 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "convnet.h"
-#include <torch/torch.h>
+#include <torch/types.h>
 
 ConvNetImpl::ConvNetImpl(int64_t num_classes)
         : fc(64 * 4 * 4, num_classes) {

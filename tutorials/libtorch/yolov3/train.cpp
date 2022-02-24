@@ -10,7 +10,10 @@
 #include <cstdlib>                     // std::rand
 #include <cmath>                       // std::pow
 // For External Library
-#include <torch/torch.h>               // torch
+#include <torch/types.h>               // torch
+#include <torch/optim/sgd.h>
+#include <torch/nn/functional/upsampling.h>
+#include <torch/serialize.h>
 #include <opencv2/opencv.hpp>          // cv::Mat
 #include <boost/program_options.hpp>   // boost::program_options
 // For Original Header

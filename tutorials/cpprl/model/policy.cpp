@@ -1,11 +1,10 @@
-#include <torch/nn.h>
-
 #include "model/policy.h"
 #include "distributions/categorical.h"
 #include "model/mlp_base.h"
 #include "model/output_layers.h"
 #include "observation_normalizer.h"
 #include "spaces.h"
+#include <torch/types.h>
 #include <doctest/doctest.h>
 
 using namespace torch;
@@ -126,229 +125,198 @@ namespace cpprl {
     }
 
     TEST_CASE("Policy") {
-    SUBCASE("Recurrent") {
-    auto base = std::make_shared<MlpBase>(3, true, 10);
-    Policy policy(ActionSpace{"Discrete", {5}}, base);
+        SUBCASE("Recurrent") {
+            auto base = std::make_shared<MlpBase>(3, true, 10);
+            Policy policy(ActionSpace{"Discrete", {5}}, base);
 
-    SUBCASE("Sanity checks") {
-    DOCTEST_CHECK(policy->is_recurrent() == true);
-    DOCTEST_CHECK(policy->get_hidden_size() == 10);
-}
+            SUBCASE("Sanity checks") {
+                DOCTEST_CHECK(policy->is_recurrent() == true);
+                DOCTEST_CHECK(policy->get_hidden_size() == 10);
+            }
 
-SUBCASE("act() output tensors are correct shapes")
-{
-auto inputs = torch::rand({4, 3});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = policy->act(inputs, rnn_hxs, masks);
+            SUBCASE("act() output tensors are correct shapes") {
+                auto inputs = torch::rand({4, 3});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto outputs = policy->act(inputs, rnn_hxs, masks);
 
-REQUIRE(outputs
-.
+                REQUIRE(outputs.size() == 4);
+                // Value
+                INFO("Value: \n"
+                             << outputs[0] << "\n");
+                DOCTEST_CHECK(outputs[0].size(0) == 4);
+                DOCTEST_CHECK(outputs[0].size(1) == 1);
 
-size()
+                // Actions
+                INFO("Actions: \n"
+                             << outputs[1] << "\n");
+                DOCTEST_CHECK(outputs[1].size(0) == 4);
+                DOCTEST_CHECK(outputs[1].size(1) == 1);
 
-== 4);
+                // Log probs
+                INFO("Log probs: \n"
+                             << outputs[2] << "\n");
+                DOCTEST_CHECK(outputs[2].size(0) == 4);
+                DOCTEST_CHECK(outputs[2].size(1) == 1);
 
-// Value
-INFO("Value: \n"
-<< outputs[0] << "\n");
-DOCTEST_CHECK(outputs[0].size(0) == 4);
-DOCTEST_CHECK(outputs[0].size(1) == 1);
+                // Hidden states
+                INFO("Hidden states: \n"
+                             << outputs[3] << "\n");
+                DOCTEST_CHECK(outputs[3].size(0) == 4);
+                DOCTEST_CHECK(outputs[3].size(1) == 10);
+            }
 
-// Actions
-INFO("Actions: \n"
-<< outputs[1] << "\n");
-DOCTEST_CHECK(outputs[1].size(0) == 4);
-DOCTEST_CHECK(outputs[1].size(1) == 1);
+            SUBCASE("evaluate_actions() output tensors are correct shapes") {
+                auto inputs = torch::rand({4, 3});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto actions = torch::randint(5, {4, 1});
+                auto outputs = policy->evaluate_actions(inputs, rnn_hxs, masks, actions);
 
-// Log probs
-INFO("Log probs: \n"
-<< outputs[2] << "\n");
-DOCTEST_CHECK(outputs[2].size(0) == 4);
-DOCTEST_CHECK(outputs[2].size(1) == 1);
+                REQUIRE(outputs.size() == 4);
 
-// Hidden states
-INFO("Hidden states: \n"
-<< outputs[3] << "\n");
-DOCTEST_CHECK(outputs[3].size(0) == 4);
-DOCTEST_CHECK(outputs[3].size(1) == 10);
-}
+                // Value
+                INFO("Value: \n"
+                             << outputs[0] << "\n");
+                DOCTEST_CHECK(outputs[0].size(0) == 4);
+                DOCTEST_CHECK(outputs[0].size(1) == 1);
 
-SUBCASE("evaluate_actions() output tensors are correct shapes")
-{
-auto inputs = torch::rand({4, 3});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto actions = torch::randint(5, {4, 1});
-auto outputs = policy->evaluate_actions(inputs, rnn_hxs, masks, actions);
+                // Log probs
+                INFO("Log probs: \n"
+                             << outputs[1] << "\n");
+                DOCTEST_CHECK(outputs[1].size(0) == 4);
+                DOCTEST_CHECK(outputs[1].size(1) == 1);
 
-REQUIRE(outputs
-.
+                // Entropy
+                INFO("Entropy: \n"
+                             << outputs[2] << "\n");
+                DOCTEST_CHECK(outputs[2].sizes().size() == 0);
 
-size()
+                // Hidden states
+                INFO("Hidden states: \n"
+                             << outputs[3] << "\n");
+                DOCTEST_CHECK(outputs[3].size(0) == 4);
+                DOCTEST_CHECK(outputs[3].size(1) == 10);
+            }
 
-== 4);
+            SUBCASE("get_values() output tensor is correct shapes") {
+                auto inputs = torch::rand({4, 3});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto outputs = policy->get_values(inputs, rnn_hxs, masks);
 
-// Value
-INFO("Value: \n"
-<< outputs[0] << "\n");
-DOCTEST_CHECK(outputs[0].size(0) == 4);
-DOCTEST_CHECK(outputs[0].size(1) == 1);
+                // Value
+                DOCTEST_CHECK(outputs.size(0) == 4);
+                DOCTEST_CHECK(outputs.size(1) == 1);
+            }
 
-// Log probs
-INFO("Log probs: \n"
-<< outputs[1] << "\n");
-DOCTEST_CHECK(outputs[1].size(0) == 4);
-DOCTEST_CHECK(outputs[1].size(1) == 1);
+            SUBCASE("get_probs() output tensor is correct shapes") {
+                auto inputs = torch::rand({4, 3});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto outputs = policy->get_probs(inputs, rnn_hxs, masks);
 
-// Entropy
-INFO("Entropy: \n"
-<< outputs[2] << "\n");
-DOCTEST_CHECK(outputs[2].sizes().size() == 0);
+                // Probabilities
+                DOCTEST_CHECK(outputs.size(0) == 4);
+                DOCTEST_CHECK(outputs.size(1) == 5);
+            }
+        }
 
-// Hidden states
-INFO("Hidden states: \n"
-<< outputs[3] << "\n");
-DOCTEST_CHECK(outputs[3].size(0) == 4);
-DOCTEST_CHECK(outputs[3].size(1) == 10);
-}
+        SUBCASE("Non-recurrent") {
+            auto base = std::make_shared<MlpBase>(3, false, 10);
+            Policy policy(ActionSpace{"Discrete", {5}}, base);
 
-SUBCASE("get_values() output tensor is correct shapes")
-{
-auto inputs = torch::rand({4, 3});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = policy->get_values(inputs, rnn_hxs, masks);
+            SUBCASE("Sanity checks") {
+                DOCTEST_CHECK(policy->is_recurrent() == false);
+            }
 
-// Value
-DOCTEST_CHECK(outputs.size(0) == 4);
-DOCTEST_CHECK(outputs.size(1) == 1);
-}
+            SUBCASE("act() output tensors are correct shapes") {
+                auto inputs = torch::rand({4, 3});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto outputs = policy->act(inputs, rnn_hxs, masks);
 
-SUBCASE("get_probs() output tensor is correct shapes")
-{
-auto inputs = torch::rand({4, 3});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = policy->get_probs(inputs, rnn_hxs, masks);
+                REQUIRE(outputs.size() == 4);
 
-// Probabilities
-DOCTEST_CHECK(outputs.size(0) == 4);
-DOCTEST_CHECK(outputs.size(1) == 5);
-}
-}
+                // Value
+                INFO("Value: \n"
+                             << outputs[0] << "\n");
+                DOCTEST_CHECK(outputs[0].size(0) == 4);
+                DOCTEST_CHECK(outputs[0].size(1) == 1);
 
-SUBCASE("Non-recurrent")
-{
-auto base = std::make_shared<MlpBase>(3, false, 10);
-Policy policy(ActionSpace{"Discrete", {5}}, base);
+                // Actions
+                INFO("Actions: \n"
+                             << outputs[1] << "\n");
+                DOCTEST_CHECK(outputs[1].size(0) == 4);
+                DOCTEST_CHECK(outputs[1].size(1) == 1);
 
-SUBCASE("Sanity checks")
-{
-DOCTEST_CHECK(policy->is_recurrent() == false);
-}
+                // Log probs
+                INFO("Log probs: \n"
+                             << outputs[2] << "\n");
+                DOCTEST_CHECK(outputs[2].size(0) == 4);
+                DOCTEST_CHECK(outputs[2].size(1) == 1);
 
-SUBCASE("act() output tensors are correct shapes")
-{
-auto inputs = torch::rand({4, 3});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = policy->act(inputs, rnn_hxs, masks);
+                // Hidden states
+                INFO("Hidden states: \n"
+                             << outputs[3] << "\n");
+                DOCTEST_CHECK(outputs[3].size(0) == 4);
+                DOCTEST_CHECK(outputs[3].size(1) == 10);
+            }
 
-REQUIRE(outputs
-.
+            SUBCASE("evaluate_actions() output tensors are correct shapes") {
+                auto inputs = torch::rand({4, 3});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto actions = torch::randint(5, {4, 1});
+                auto outputs = policy->evaluate_actions(inputs, rnn_hxs, masks, actions);
 
-size()
+                REQUIRE(outputs.size() == 4);
 
-== 4);
+                // Value
+                INFO("Value: \n"
+                             << outputs[0] << "\n");
+                DOCTEST_CHECK(outputs[0].size(0) == 4);
+                DOCTEST_CHECK(outputs[0].size(1) == 1);
 
-// Value
-INFO("Value: \n"
-<< outputs[0] << "\n");
-DOCTEST_CHECK(outputs[0].size(0) == 4);
-DOCTEST_CHECK(outputs[0].size(1) == 1);
+                // Log probs
+                INFO("Log probs: \n"
+                             << outputs[1] << "\n");
+                DOCTEST_CHECK(outputs[1].size(0) == 4);
+                DOCTEST_CHECK(outputs[1].size(1) == 1);
 
-// Actions
-INFO("Actions: \n"
-<< outputs[1] << "\n");
-DOCTEST_CHECK(outputs[1].size(0) == 4);
-DOCTEST_CHECK(outputs[1].size(1) == 1);
+                // Entropy
+                INFO("Entropy: \n"
+                             << outputs[2] << "\n");
+                DOCTEST_CHECK(outputs[2].sizes().size() == 0);
 
-// Log probs
-INFO("Log probs: \n"
-<< outputs[2] << "\n");
-DOCTEST_CHECK(outputs[2].size(0) == 4);
-DOCTEST_CHECK(outputs[2].size(1) == 1);
+                // Hidden states
+                INFO("Hidden states: \n"
+                             << outputs[3] << "\n");
+                DOCTEST_CHECK(outputs[3].size(0) == 4);
+                DOCTEST_CHECK(outputs[3].size(1) == 10);
+            }
 
-// Hidden states
-INFO("Hidden states: \n"
-<< outputs[3] << "\n");
-DOCTEST_CHECK(outputs[3].size(0) == 4);
-DOCTEST_CHECK(outputs[3].size(1) == 10);
-}
+            SUBCASE("get_values() output tensor is correct shapes") {
+                auto inputs = torch::rand({4, 3});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto outputs = policy->get_values(inputs, rnn_hxs, masks);
 
-SUBCASE("evaluate_actions() output tensors are correct shapes")
-{
-auto inputs = torch::rand({4, 3});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto actions = torch::randint(5, {4, 1});
-auto outputs = policy->evaluate_actions(inputs, rnn_hxs, masks, actions);
+                // Value
+                DOCTEST_CHECK(outputs.size(0) == 4);
+                DOCTEST_CHECK(outputs.size(1) == 1);
+            }
 
-REQUIRE(outputs
-.
+            SUBCASE("get_probs() output tensor is correct shapes") {
+                auto inputs = torch::rand({4, 3});
+                auto rnn_hxs = torch::rand({4, 10});
+                auto masks = torch::zeros({4, 1});
+                auto outputs = policy->get_probs(inputs, rnn_hxs, masks);
 
-size()
-
-== 4);
-
-// Value
-INFO("Value: \n"
-<< outputs[0] << "\n");
-DOCTEST_CHECK(outputs[0].size(0) == 4);
-DOCTEST_CHECK(outputs[0].size(1) == 1);
-
-// Log probs
-INFO("Log probs: \n"
-<< outputs[1] << "\n");
-DOCTEST_CHECK(outputs[1].size(0) == 4);
-DOCTEST_CHECK(outputs[1].size(1) == 1);
-
-// Entropy
-INFO("Entropy: \n"
-<< outputs[2] << "\n");
-DOCTEST_CHECK(outputs[2].sizes().size() == 0);
-
-// Hidden states
-INFO("Hidden states: \n"
-<< outputs[3] << "\n");
-DOCTEST_CHECK(outputs[3].size(0) == 4);
-DOCTEST_CHECK(outputs[3].size(1) == 10);
-}
-
-SUBCASE("get_values() output tensor is correct shapes")
-{
-auto inputs = torch::rand({4, 3});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = policy->get_values(inputs, rnn_hxs, masks);
-
-// Value
-DOCTEST_CHECK(outputs.size(0) == 4);
-DOCTEST_CHECK(outputs.size(1) == 1);
-}
-
-SUBCASE("get_probs() output tensor is correct shapes")
-{
-auto inputs = torch::rand({4, 3});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({4, 1});
-auto outputs = policy->get_probs(inputs, rnn_hxs, masks);
-
-// Probabilities
-DOCTEST_CHECK(outputs.size(0) == 4);
-DOCTEST_CHECK(outputs.size(1) == 5);
-}
-}
-}
+                // Probabilities
+                DOCTEST_CHECK(outputs.size(0) == 4);
+                DOCTEST_CHECK(outputs.size(1) == 5);
+            }
+        }
+    }
 }

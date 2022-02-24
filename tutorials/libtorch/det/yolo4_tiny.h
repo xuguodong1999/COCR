@@ -6,6 +6,7 @@
 */
 #pragma once
 
+#include <torch/nn/modules/container/sequential.h>
 #include "CSPdarknet53_tiny.h"
 
 //conv+upsample

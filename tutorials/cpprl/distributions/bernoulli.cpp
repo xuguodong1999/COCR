@@ -1,8 +1,6 @@
-#include <ATen/core/Reduction.h>
-#include <c10/util/ArrayRef.h>
-#include <torch/nn.h>
-
 #include "distributions/bernoulli.h"
+
+#include <torch/types.h>
 #include <doctest/doctest.h>
 
 namespace cpprl {
@@ -51,107 +49,97 @@ namespace cpprl {
     }
 
     TEST_CASE("Bernoulli") {
-    SUBCASE("Throws when provided both probs and logits") {
-    auto tensor = torch::Tensor();
-    CHECK_THROWS(Bernoulli(&tensor, &tensor)
-    );
-}
+        SUBCASE("Throws when provided both probs and logits") {
+            auto tensor = torch::Tensor();
+            CHECK_THROWS(Bernoulli(&tensor, &tensor)
+            );
+        }
 
-SUBCASE("Sampled numbers are in the right range")
-{
-float probabilities[] = {0.2, 0.2, 0.2, 0.2, 0.2};
-auto probabilities_tensor = torch::from_blob(probabilities, {5});
-auto dist = Bernoulli(&probabilities_tensor, nullptr);
+        SUBCASE("Sampled numbers are in the right range") {
+            float probabilities[] = {0.2, 0.2, 0.2, 0.2, 0.2};
+            auto probabilities_tensor = torch::from_blob(probabilities, {5});
+            auto dist = Bernoulli(&probabilities_tensor, nullptr);
 
-auto output = dist.sample({100});
-auto more_than_1 = output > 1;
-auto less_than_0 = output < 0;
-DOCTEST_CHECK(!more_than_1.any().item().toInt());
-DOCTEST_CHECK(!less_than_0.any().item().toInt());
-}
+            auto output = dist.sample({100});
+            auto more_than_1 = output > 1;
+            auto less_than_0 = output < 0;
+            DOCTEST_CHECK(!more_than_1.any().item().toInt());
+            DOCTEST_CHECK(!less_than_0.any().item().toInt());
+        }
 
-SUBCASE("Sampled tensors are of the right shape")
-{
-float probabilities[] = {0.2, 0.2, 0.2, 0.2, 0.2};
-auto probabilities_tensor = torch::from_blob(probabilities, {5});
-auto dist = Bernoulli(&probabilities_tensor, nullptr);
+        SUBCASE("Sampled tensors are of the right shape") {
+            float probabilities[] = {0.2, 0.2, 0.2, 0.2, 0.2};
+            auto probabilities_tensor = torch::from_blob(probabilities, {5});
+            auto dist = Bernoulli(&probabilities_tensor, nullptr);
 
-DOCTEST_CHECK(dist.sample({20}).sizes().vec() == std::vector<int64_t>{20, 5});
-DOCTEST_CHECK(dist.sample({2, 20}).sizes().vec() == std::vector<int64_t>{2, 20, 5});
-DOCTEST_CHECK(dist.sample({1, 2, 3, 4}).sizes().vec() == std::vector<int64_t>{1, 2, 3, 4, 5});
-}
+            DOCTEST_CHECK(dist.sample({20}).sizes().vec() == std::vector<int64_t>{20, 5});
+            DOCTEST_CHECK(dist.sample({2, 20}).sizes().vec() == std::vector<int64_t>{2, 20, 5});
+            DOCTEST_CHECK(dist.sample({1, 2, 3, 4}).sizes().vec() == std::vector<int64_t>{1, 2, 3, 4, 5});
+        }
 
-SUBCASE("Multi-dimensional input probabilities are handled correctly")
-{
-SUBCASE("Sampled tensors are of the right shape")
-{
-float probabilities[2][4] = {{0.5,  0.5,  0.0,  0.0},
-                             {0.25, 0.25, 0.25, 0.25}};
-auto probabilities_tensor = torch::from_blob(probabilities, {2, 4});
-auto dist = Bernoulli(&probabilities_tensor, nullptr);
+        SUBCASE("Multi-dimensional input probabilities are handled correctly") {
+            SUBCASE("Sampled tensors are of the right shape") {
+                float probabilities[2][4] = {{0.5,  0.5,  0.0,  0.0},
+                                             {0.25, 0.25, 0.25, 0.25}};
+                auto probabilities_tensor = torch::from_blob(probabilities, {2, 4});
+                auto dist = Bernoulli(&probabilities_tensor, nullptr);
 
-DOCTEST_CHECK(dist.sample({20}).sizes().vec() == std::vector<int64_t>{20, 2, 4});
-DOCTEST_CHECK(dist.sample({10, 5}).sizes().vec() == std::vector<int64_t>{10, 5, 2, 4});
-}
-}
+                DOCTEST_CHECK(dist.sample({20}).sizes().vec() == std::vector<int64_t>{20, 2, 4});
+                DOCTEST_CHECK(dist.sample({10, 5}).sizes().vec() == std::vector<int64_t>{10, 5, 2, 4});
+            }
+        }
 
-SUBCASE("entropy()")
-{
-float probabilities[2][2] = {{0.5,  0.0},
-                             {0.25, 0.25}};
-auto probabilities_tensor = torch::from_blob(probabilities, {2, 2});
-auto dist = Bernoulli(&probabilities_tensor, nullptr);
+        SUBCASE("entropy()") {
+            float probabilities[2][2] = {{0.5,  0.0},
+                                         {0.25, 0.25}};
+            auto probabilities_tensor = torch::from_blob(probabilities, {2, 2});
+            auto dist = Bernoulli(&probabilities_tensor, nullptr);
 
-auto entropies = dist.entropy();
+            auto entropies = dist.entropy();
 
-SUBCASE("Returns correct values")
-{
-DOCTEST_CHECK(entropies[0][0].item().toDouble() ==
-      doctest::Approx(0.6931).epsilon(1e-3));
-DOCTEST_CHECK(entropies[0][1].item().toDouble() ==
-      doctest::Approx(0.0000).epsilon(1e-3));
-DOCTEST_CHECK(entropies[1][0].item().toDouble() ==
-      doctest::Approx(0.5623).epsilon(1e-3));
-DOCTEST_CHECK(entropies[1][1].item().toDouble() ==
-      doctest::Approx(0.5623).epsilon(1e-3));
-}
+            SUBCASE("Returns correct values") {
+                DOCTEST_CHECK(entropies[0][0].item().toDouble() ==
+                              doctest::Approx(0.6931).epsilon(1e-3));
+                DOCTEST_CHECK(entropies[0][1].item().toDouble() ==
+                              doctest::Approx(0.0000).epsilon(1e-3));
+                DOCTEST_CHECK(entropies[1][0].item().toDouble() ==
+                              doctest::Approx(0.5623).epsilon(1e-3));
+                DOCTEST_CHECK(entropies[1][1].item().toDouble() ==
+                              doctest::Approx(0.5623).epsilon(1e-3));
+            }
 
-SUBCASE("Output tensor is the correct size")
-{
-DOCTEST_CHECK(entropies.sizes().vec() == std::vector<int64_t>{2, 2});
-}
-}
+            SUBCASE("Output tensor is the correct size") {
+                DOCTEST_CHECK(entropies.sizes().vec() == std::vector<int64_t>{2, 2});
+            }
+        }
 
-SUBCASE("log_prob()")
-{
-float probabilities[2][2] = {{0.5,  0.0},
-                             {0.25, 0.25}};
-auto probabilities_tensor = torch::from_blob(probabilities, {2, 2});
-auto dist = Bernoulli(&probabilities_tensor, nullptr);
+        SUBCASE("log_prob()") {
+            float probabilities[2][2] = {{0.5,  0.0},
+                                         {0.25, 0.25}};
+            auto probabilities_tensor = torch::from_blob(probabilities, {2, 2});
+            auto dist = Bernoulli(&probabilities_tensor, nullptr);
 
-float actions[2][2] = {{1, 0},
-                       {1, 0}};
-auto actions_tensor = torch::from_blob(actions, {2, 2});
-auto log_probs = dist.log_prob(actions_tensor);
+            float actions[2][2] = {{1, 0},
+                                   {1, 0}};
+            auto actions_tensor = torch::from_blob(actions, {2, 2});
+            auto log_probs = dist.log_prob(actions_tensor);
 
-INFO(log_probs
-<< "\n");
-SUBCASE("Returns correct values")
-{
-DOCTEST_CHECK(log_probs[0][0].item().toDouble() ==
-      doctest::Approx(-0.6931).epsilon(1e-3));
-DOCTEST_CHECK(log_probs[0][1].item().toDouble() ==
-      doctest::Approx(0.0000).epsilon(1e-3));
-DOCTEST_CHECK(log_probs[1][0].item().toDouble() ==
-      doctest::Approx(-1.3863).epsilon(1e-3));
-DOCTEST_CHECK(log_probs[1][1].item().toDouble() ==
-      doctest::Approx(-0.2876).epsilon(1e-3));
-}
+            INFO(log_probs
+                         << "\n");
+            SUBCASE("Returns correct values") {
+                DOCTEST_CHECK(log_probs[0][0].item().toDouble() ==
+                              doctest::Approx(-0.6931).epsilon(1e-3));
+                DOCTEST_CHECK(log_probs[0][1].item().toDouble() ==
+                              doctest::Approx(0.0000).epsilon(1e-3));
+                DOCTEST_CHECK(log_probs[1][0].item().toDouble() ==
+                              doctest::Approx(-1.3863).epsilon(1e-3));
+                DOCTEST_CHECK(log_probs[1][1].item().toDouble() ==
+                              doctest::Approx(-0.2876).epsilon(1e-3));
+            }
 
-SUBCASE("Output tensor is correct size")
-{
-DOCTEST_CHECK(log_probs.sizes().vec() == std::vector<int64_t>{2, 2});
-}
-}
-}
+            SUBCASE("Output tensor is correct size") {
+                DOCTEST_CHECK(log_probs.sizes().vec() == std::vector<int64_t>{2, 2});
+            }
+        }
+    }
 }

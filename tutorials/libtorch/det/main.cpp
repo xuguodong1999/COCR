@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <torch/serialize.h>
 #include "yolo4_tiny.h"
 #include "yolo_training.h"
 #include "Detector.h"

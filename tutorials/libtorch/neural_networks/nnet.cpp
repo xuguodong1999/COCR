@@ -1,6 +1,9 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "nnet.h"
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/pooling.h>
+#include <torch/nn/modules/conv.h>
+#include <torch/nn/modules/linear.h>
 
 NetImpl::NetImpl() :
         conv1(torch::nn::Conv2dOptions(1, 6, 3)),

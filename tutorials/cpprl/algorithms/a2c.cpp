@@ -1,15 +1,14 @@
-#include <chrono>
-#include <memory>
-
-#include <torch/nn.h>
-
 #include "algorithms/a2c.h"
 #include "algorithms/algorithm.h"
 #include "model/mlp_base.h"
 #include "model/policy.h"
 #include "storage.h"
 #include "spaces.h"
+
+#include <torch/types.h>
 #include <doctest/doctest.h>
+#include <chrono>
+#include <memory>
 
 namespace cpprl {
     A2C::A2C(Policy &policy,
@@ -169,103 +168,100 @@ namespace cpprl {
     }
 
     TEST_CASE("A2C") {
-    SUBCASE("update() learns basic pattern") {
-    torch::manual_seed(0);
-    auto base = std::make_shared<MlpBase>(1, false, 5);
-    ActionSpace space{"Discrete", {2}};
-    Policy policy(space, base);
-    RolloutStorage storage(5, 2, {1}, space, 5, torch::kCPU);
-    A2C a2c(policy, 1, 0.5, 1e-3, 0.001);
+        SUBCASE("update() learns basic pattern") {
+            torch::manual_seed(0);
+            auto base = std::make_shared<MlpBase>(1, false, 5);
+            ActionSpace space{"Discrete", {2}};
+            Policy policy(space, base);
+            RolloutStorage storage(5, 2, {1}, space, 5, torch::kCPU);
+            A2C a2c(policy, 1, 0.5, 1e-3, 0.001);
 
-    // The reward is the action
-    auto pre_game_probs = policy->get_probs(
-            torch::ones({2, 1}),
-            torch::zeros({2, 5}),
-            torch::ones({2, 1}));
+            // The reward is the action
+            auto pre_game_probs = policy->get_probs(
+                    torch::ones({2, 1}),
+                    torch::zeros({2, 5}),
+                    torch::ones({2, 1}));
 
-    learn_pattern(policy, storage, a2c
-    );
+            learn_pattern(policy, storage, a2c
+            );
 
-    auto post_game_probs = policy->get_probs(
-            torch::ones({2, 1}),
-            torch::zeros({2, 5}),
-            torch::ones({2, 1}));
+            auto post_game_probs = policy->get_probs(
+                    torch::ones({2, 1}),
+                    torch::zeros({2, 5}),
+                    torch::ones({2, 1}));
 
-    INFO("Pre-training probabilities: \n"
-    << pre_game_probs << "\n");
-    INFO("Post-training probabilities: \n"
-    << post_game_probs << "\n");
-    DOCTEST_CHECK(post_game_probs[0][0].item().toDouble() <
-          pre_game_probs[0][0].item().toDouble());
-    DOCTEST_CHECK(post_game_probs[0][1].item().toDouble() >
-          pre_game_probs[0][1].item().toDouble());
-}
+            INFO("Pre-training probabilities: \n"
+                         << pre_game_probs << "\n");
+            INFO("Post-training probabilities: \n"
+                         << post_game_probs << "\n");
+            DOCTEST_CHECK(post_game_probs[0][0].item().toDouble() <
+                          pre_game_probs[0][0].item().toDouble());
+            DOCTEST_CHECK(post_game_probs[0][1].item().toDouble() >
+                          pre_game_probs[0][1].item().toDouble());
+        }
 
-SUBCASE("update() learns basic game")
-{
-SUBCASE("Without normalized observations")
-{
-torch::manual_seed(0);
-auto base = std::make_shared<MlpBase>(1, false, 5);
-ActionSpace space{"Discrete", {2}};
-Policy policy(space, base);
-RolloutStorage storage(5, 2, {1}, space, 5, torch::kCPU);
-A2C a2c(policy, 1, 0.5, 1e-7, 0.0001);
+        SUBCASE("update() learns basic game") {
+            SUBCASE("Without normalized observations") {
+                torch::manual_seed(0);
+                auto base = std::make_shared<MlpBase>(1, false, 5);
+                ActionSpace space{"Discrete", {2}};
+                Policy policy(space, base);
+                RolloutStorage storage(5, 2, {1}, space, 5, torch::kCPU);
+                A2C a2c(policy, 1, 0.5, 1e-7, 0.0001);
 
-auto pre_game_probs = policy->get_probs(
-        torch::ones({2, 1}),
-        torch::zeros({2, 5}),
-        torch::ones({2, 1}));
+                auto pre_game_probs = policy->get_probs(
+                        torch::ones({2, 1}),
+                        torch::zeros({2, 5}),
+                        torch::ones({2, 1}));
 
-learn_game(policy, storage, a2c
-);
+                learn_game(policy, storage, a2c
+                );
 
-auto post_game_probs = policy->get_probs(
-        torch::ones({2, 1}),
-        torch::zeros({2, 5}),
-        torch::ones({2, 1}));
+                auto post_game_probs = policy->get_probs(
+                        torch::ones({2, 1}),
+                        torch::zeros({2, 5}),
+                        torch::ones({2, 1}));
 
-INFO("Pre-training probabilities: \n"
-<< pre_game_probs << "\n");
-INFO("Post-training probabilities: \n"
-<< post_game_probs << "\n");
-DOCTEST_CHECK(post_game_probs[0][0].item().toDouble() <
-      pre_game_probs[0][0].item().toDouble());
-DOCTEST_CHECK(post_game_probs[0][1].item().toDouble() >
-      pre_game_probs[0][1].item().toDouble());
-}
+                INFO("Pre-training probabilities: \n"
+                             << pre_game_probs << "\n");
+                INFO("Post-training probabilities: \n"
+                             << post_game_probs << "\n");
+                DOCTEST_CHECK(post_game_probs[0][0].item().toDouble() <
+                              pre_game_probs[0][0].item().toDouble());
+                DOCTEST_CHECK(post_game_probs[0][1].item().toDouble() >
+                              pre_game_probs[0][1].item().toDouble());
+            }
 
-SUBCASE("With normalized observations")
-{
-torch::manual_seed(0);
-auto base = std::make_shared<MlpBase>(1, false, 5);
-ActionSpace space{"Discrete", {2}};
-Policy policy(space, base, true);
-RolloutStorage storage(5, 2, {1}, space, 5, torch::kCPU);
-A2C a2c(policy, 1, 0.5, 1e-7, 0.0001);
+            SUBCASE("With normalized observations") {
+                torch::manual_seed(0);
+                auto base = std::make_shared<MlpBase>(1, false, 5);
+                ActionSpace space{"Discrete", {2}};
+                Policy policy(space, base, true);
+                RolloutStorage storage(5, 2, {1}, space, 5, torch::kCPU);
+                A2C a2c(policy, 1, 0.5, 1e-7, 0.0001);
 
-auto pre_game_probs = policy->get_probs(
-        torch::ones({2, 1}),
-        torch::zeros({2, 5}),
-        torch::ones({2, 1}));
+                auto pre_game_probs = policy->get_probs(
+                        torch::ones({2, 1}),
+                        torch::zeros({2, 5}),
+                        torch::ones({2, 1}));
 
-learn_game(policy, storage, a2c
-);
+                learn_game(policy, storage, a2c
+                );
 
-auto post_game_probs = policy->get_probs(
-        torch::ones({2, 1}),
-        torch::zeros({2, 5}),
-        torch::ones({2, 1}));
+                auto post_game_probs = policy->get_probs(
+                        torch::ones({2, 1}),
+                        torch::zeros({2, 5}),
+                        torch::ones({2, 1}));
 
-INFO("Pre-training probabilities: \n"
-<< pre_game_probs << "\n");
-INFO("Post-training probabilities: \n"
-<< post_game_probs << "\n");
-DOCTEST_CHECK(post_game_probs[0][0].item().toDouble() <
-      pre_game_probs[0][0].item().toDouble());
-DOCTEST_CHECK(post_game_probs[0][1].item().toDouble() >
-      pre_game_probs[0][1].item().toDouble());
-}
-}
-}
+                INFO("Pre-training probabilities: \n"
+                             << pre_game_probs << "\n");
+                INFO("Post-training probabilities: \n"
+                             << post_game_probs << "\n");
+                DOCTEST_CHECK(post_game_probs[0][0].item().toDouble() <
+                              pre_game_probs[0][0].item().toDouble());
+                DOCTEST_CHECK(post_game_probs[0][1].item().toDouble() >
+                              pre_game_probs[0][1].item().toDouble());
+            }
+        }
+    }
 }

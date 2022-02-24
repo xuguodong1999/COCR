@@ -1,12 +1,10 @@
 #pragma once
 
-#include <memory>
-
-#include <c10/util/ArrayRef.h>
-#include <torch/nn.h>
-
 #include "generators/generator.h"
 #include "spaces.h"
+
+#include <torch/types.h>
+#include <memory>
 
 namespace cpprl {
     class RolloutStorage {

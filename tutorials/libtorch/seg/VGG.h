@@ -5,6 +5,7 @@ All rights reserved.
 */
 #pragma once
 
+#include <torch/nn/modules/container/sequential.h>
 #include "util.h"
 #include "InterFace.h"
 

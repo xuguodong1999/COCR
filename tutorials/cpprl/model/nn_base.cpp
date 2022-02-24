@@ -1,7 +1,6 @@
-#include <torch/nn.h>
-
 #include "model/nn_base.h"
 #include "model/model_utils.h"
+#include <torch/types.h>
 #include <doctest/doctest.h>
 
 using namespace torch;
@@ -103,53 +102,36 @@ namespace cpprl {
     }
 
     TEST_CASE("NNBase") {
-    auto base = std::make_shared<NNBase>(true, 5, 10);
+        auto base = std::make_shared<NNBase>(true, 5, 10);
 
-    SUBCASE("forward_gru() outputs correct shapes when given samples from one"
-    " agent") {
-    auto inputs = torch::rand({4, 5});
-    auto rnn_hxs = torch::rand({4, 10});
-    auto masks = torch::zeros({4, 1});
-    auto outputs = base->forward_gru(inputs, rnn_hxs, masks);
+        SUBCASE("forward_gru() outputs correct shapes when given samples from one"
+                " agent") {
+            auto inputs = torch::rand({4, 5});
+            auto rnn_hxs = torch::rand({4, 10});
+            auto masks = torch::zeros({4, 1});
+            auto outputs = base->forward_gru(inputs, rnn_hxs, masks);
+            REQUIRE(outputs.size() == 2);
+            // x
+            DOCTEST_CHECK(outputs[0].size(0) == 4);
+            DOCTEST_CHECK(outputs[0].size(1) == 10);
+            // rnn_hxs
+            DOCTEST_CHECK(outputs[1].size(0) == 4);
+            DOCTEST_CHECK(outputs[1].size(1) == 10);
+        }
 
-    REQUIRE(outputs
-    .
-
-    size()
-
-    == 2);
-
-    // x
-    DOCTEST_CHECK(outputs[0].size(0) == 4);
-    DOCTEST_CHECK(outputs[0].size(1) == 10);
-
-    // rnn_hxs
-    DOCTEST_CHECK(outputs[1].size(0) == 4);
-    DOCTEST_CHECK(outputs[1].size(1) == 10);
-}
-
-SUBCASE("forward_gru() outputs correct shapes when given samples from "
-"multiple agents")
-{
-auto inputs = torch::rand({12, 5});
-auto rnn_hxs = torch::rand({4, 10});
-auto masks = torch::zeros({12, 1});
-auto outputs = base->forward_gru(inputs, rnn_hxs, masks);
-
-REQUIRE(outputs
-.
-
-size()
-
-== 2);
-
-// x
-DOCTEST_CHECK(outputs[0].size(0) == 12);
-DOCTEST_CHECK(outputs[0].size(1) == 10);
-
-// rnn_hxs
-DOCTEST_CHECK(outputs[1].size(0) == 4);
-DOCTEST_CHECK(outputs[1].size(1) == 10);
-}
-}
+        SUBCASE("forward_gru() outputs correct shapes when given samples from "
+                "multiple agents") {
+            auto inputs = torch::rand({12, 5});
+            auto rnn_hxs = torch::rand({4, 10});
+            auto masks = torch::zeros({12, 1});
+            auto outputs = base->forward_gru(inputs, rnn_hxs, masks);
+            REQUIRE(outputs.size() == 2);
+            // x
+            DOCTEST_CHECK(outputs[0].size(0) == 12);
+            DOCTEST_CHECK(outputs[0].size(1) == 10);
+            // rnn_hxs
+            DOCTEST_CHECK(outputs[1].size(0) == 4);
+            DOCTEST_CHECK(outputs[1].size(1) == 10);
+        }
+    }
 }

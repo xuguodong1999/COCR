@@ -6,7 +6,8 @@
 */
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/module.h>
 #include <torch/script.h>
 
 # define Pi 3.14159265358979323846

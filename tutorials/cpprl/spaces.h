@@ -1,8 +1,7 @@
 #pragma once
 
 #include <string>
-
-#include <torch/nn.h>
+#include <vector>
 
 namespace cpprl {
     struct ActionSpace {

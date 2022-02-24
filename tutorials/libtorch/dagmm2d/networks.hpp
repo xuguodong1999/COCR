@@ -3,7 +3,9 @@
 
 #include <string>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/container/sequential.h>
 #include <boost/program_options.hpp>
 
 // Define Namespace

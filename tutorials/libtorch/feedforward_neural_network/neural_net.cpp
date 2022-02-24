@@ -1,6 +1,7 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "neural_net.h"
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/functional/activation.h>
 
 NeuralNetImpl::NeuralNetImpl(int64_t input_size, int64_t hidden_size, int64_t num_classes)
         : fc1(input_size, hidden_size), fc2(hidden_size, num_classes) {

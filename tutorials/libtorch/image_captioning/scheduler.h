@@ -1,9 +1,14 @@
 // Copyright 2020-present pytorch-cpp Authors
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/optim/sgd.h>
+#include <torch/optim/adam.h>
 #include <vector>
 #include <algorithm>
+#include <torch/optim/adagrad.h>
+#include <torch/optim/lbfgs.h>
+#include <torch/optim/rmsprop.h>
 
 namespace scheduler {
     template<typename TOptimizer>

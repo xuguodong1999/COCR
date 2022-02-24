@@ -4,7 +4,7 @@
 #include <tuple>
 #include <vector>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 
 
 // -------------------

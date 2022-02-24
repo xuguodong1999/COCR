@@ -3,7 +3,8 @@
 #include <sstream>                     // std::stringstream
 #include <utility>                     // std::pair
 // For External Library
-#include <torch/torch.h>               // torch
+#include <torch/types.h>               // torch
+#include <torch/serialize.h>
 #include <boost/program_options.hpp>   // boost::program_options
 // For Original Header
 #include "networks.hpp"                // GAN_Generator

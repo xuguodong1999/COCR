@@ -1,6 +1,7 @@
 // Copyright 2020-present pytorch-cpp Authors
 #include "rnn.h"
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/rnn.h>
 
 using torch::indexing::Slice;
 

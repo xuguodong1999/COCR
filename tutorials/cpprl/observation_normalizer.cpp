@@ -1,7 +1,6 @@
-#include <torch/nn.h>
-
 #include "observation_normalizer.h"
 #include "running_mean_std.h"
+#include <torch/types.h>
 #include <doctest/doctest.h>
 
 namespace cpprl {
@@ -79,7 +78,7 @@ namespace cpprl {
 
     TEST_CASE ("ObservationNormalizer")
     {
-                SUBCASE("Clips values correctly") {
+        SUBCASE("Clips values correctly") {
             ObservationNormalizer normalizer(7, 1);
             float observation_array[] = {-1000, -100, -10, 0, 10, 100, 1000};
             auto observation = torch::from_blob(observation_array, {7});
@@ -91,7 +90,7 @@ namespace cpprl {
             DOCTEST_CHECK(!has_too_small_values);
         }
 
-                SUBCASE("Normalizes values correctly") {
+        SUBCASE("Normalizes values correctly") {
             ObservationNormalizer normalizer(5);
 
             float obs_1_array[] = {-10., 0., 5., 3.2, 0.};
@@ -113,7 +112,7 @@ namespace cpprl {
             DOCTEST_CHECK(processed_observation[4].item().toFloat() == doctest::Approx(1.31322402));
         }
 
-                SUBCASE("Loads mean and variance from constructor correctly") {
+        SUBCASE("Loads mean and variance from constructor correctly") {
             ObservationNormalizer normalizer(std::vector<float>({1, 2, 3}), std::vector<float>({4, 5, 6}));
 
             auto mean = normalizer->get_mean();
@@ -126,7 +125,7 @@ namespace cpprl {
             DOCTEST_CHECK(variance[2] == doctest::Approx(6));
         }
 
-                SUBCASE("Is constructed from other normalizers correctly") {
+        SUBCASE("Is constructed from other normalizers correctly") {
             std::vector<ObservationNormalizer> normalizers;
             for (int i = 0; i < 3; ++i) {
                 normalizers.push_back(ObservationNormalizer(3));

@@ -7,8 +7,11 @@
 #include <vector>                      // std::vector
 #include <utility>                     // std::pair
 // For External Library
-#include <torch/torch.h>               // torch
+#include <torch/types.h>               // torch
+#include <torch/serialize.h>
+#include <torch/optim/adam.h>
 #include <boost/program_options.hpp>   // boost::program_options
+#include <torch/nn/modules/loss.h>
 // For Original Header
 #include "loss.hpp"                    // Loss
 #include "networks.hpp"                // Encoder, Decoder, GAN_Discriminator

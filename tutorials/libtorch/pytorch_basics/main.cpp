@@ -1,8 +1,18 @@
 // Copyright 2020-present pytorch-cpp Authors
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/data/dataloader.h>
+#include <torch/data/datasets.h>
+#include <torch/data/transforms.h>
+#include <torch/optim/sgd.h>
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/activation.h>
+#include <torch/serialize.h>
+#include <torch/nn/modules/conv.h>
+#include <torch/nn/modules/linear.h>
 #include <torch/script.h>
 #include <iostream>
 #include <iomanip>
+#include <torch/nn/modules/loss.h>
 
 void print_tensor_size(const torch::Tensor &);
 

@@ -1,8 +1,8 @@
 #pragma once
 
+#include <torch/types.h>
+#include <torch/nn/module.h>
 #include <vector>
-
-#include <torch/nn.h>
 
 using namespace torch;
 

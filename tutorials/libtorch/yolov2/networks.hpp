@@ -4,8 +4,10 @@
 #include <iostream>
 #include <vector>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
 #include <boost/program_options.hpp>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/container/sequential.h>
 
 // Define Namespace
 namespace nn = torch::nn;

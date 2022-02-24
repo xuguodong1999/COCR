@@ -1,9 +1,14 @@
 // Copyright 2020-present pytorch-cpp Authors
 // Original: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/data/dataloader.h>
+#include <torch/data/transforms.h>
+#include <torch/optim/sgd.h>
+#include <torch/serialize.h>
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <torch/nn/modules/loss.h>
 #include "nnet.h"
 #include "cifar10.h"
 

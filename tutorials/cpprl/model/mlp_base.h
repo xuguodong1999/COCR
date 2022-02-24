@@ -1,10 +1,11 @@
 #pragma once
 
-#include <vector>
-
-#include <torch/nn.h>
-
 #include "model/nn_base.h"
+
+#include <torch/types.h>
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/linear.h>
+#include <vector>
 
 using namespace torch;
 

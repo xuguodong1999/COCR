@@ -4,6 +4,7 @@
 #include "LSTM.h"
 #include <iostream>
 #include <string>
+#include <torch/optim/adam.h>
 
 using namespace std;
 

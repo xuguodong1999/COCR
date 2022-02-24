@@ -1,11 +1,10 @@
-#include <algorithm>
-#include <vector>
-
-#include <torch/nn.h>
-
 #include "generators/recurrent_generator.h"
 #include "generators/generator.h"
+
+#include <torch/types.h>
 #include <doctest/doctest.h>
+#include <algorithm>
+#include <vector>
 
 namespace cpprl {
     torch::Tensor flatten_helper(int timesteps, int processes, torch::Tensor tensor) {
@@ -93,62 +92,39 @@ namespace cpprl {
     }
 
     TEST_CASE("RecurrentGenerator") {
-    RecurrentGenerator generator(3, 3, torch::rand({6, 3, 4}),
-                                 torch::rand({6, 3, 3}), torch::rand({5, 3, 1}), torch::rand({6, 3, 1}),
-                                 torch::rand({6, 3, 1}), torch::ones({6, 3, 1}), torch::rand({5, 3, 1}),
-                                 torch::rand({5, 3, 1}));
+        RecurrentGenerator generator(3, 3, torch::rand({6, 3, 4}),
+                                     torch::rand({6, 3, 3}), torch::rand({5, 3, 1}), torch::rand({6, 3, 1}),
+                                     torch::rand({6, 3, 1}), torch::ones({6, 3, 1}), torch::rand({5, 3, 1}),
+                                     torch::rand({5, 3, 1}));
 
-    SUBCASE("Minibatch tensors are correct sizes") {
-    auto minibatch = generator.next();
+        SUBCASE("Minibatch tensors are correct sizes") {
+            auto minibatch = generator.next();
 
-    DOCTEST_CHECK(minibatch.observations.sizes().vec() == std::vector<int64_t>{5, 4});
-    DOCTEST_CHECK(minibatch.hidden_states.sizes().vec() == std::vector<int64_t>{1, 3});
-    DOCTEST_CHECK(minibatch.actions.sizes().vec() == std::vector<int64_t>{5, 1});
-    DOCTEST_CHECK(minibatch.value_predictions.sizes().vec() == std::vector<int64_t>{5, 1});
-    DOCTEST_CHECK(minibatch.returns.sizes().vec() == std::vector<int64_t>{5, 1});
-    DOCTEST_CHECK(minibatch.masks.sizes().vec() == std::vector<int64_t>{5, 1});
-    DOCTEST_CHECK(minibatch.action_log_probs.sizes().vec() == std::vector<int64_t>{5, 1});
-    DOCTEST_CHECK(minibatch.advantages.sizes().vec() == std::vector<int64_t>{5, 1});
-}
+            DOCTEST_CHECK(minibatch.observations.sizes().vec() == std::vector<int64_t>{5, 4});
+            DOCTEST_CHECK(minibatch.hidden_states.sizes().vec() == std::vector<int64_t>{1, 3});
+            DOCTEST_CHECK(minibatch.actions.sizes().vec() == std::vector<int64_t>{5, 1});
+            DOCTEST_CHECK(minibatch.value_predictions.sizes().vec() == std::vector<int64_t>{5, 1});
+            DOCTEST_CHECK(minibatch.returns.sizes().vec() == std::vector<int64_t>{5, 1});
+            DOCTEST_CHECK(minibatch.masks.sizes().vec() == std::vector<int64_t>{5, 1});
+            DOCTEST_CHECK(minibatch.action_log_probs.sizes().vec() == std::vector<int64_t>{5, 1});
+            DOCTEST_CHECK(minibatch.advantages.sizes().vec() == std::vector<int64_t>{5, 1});
+        }
 
-SUBCASE("done() indicates whether the generator has finished")
-{
-DOCTEST_CHECK(!generator.done());
-generator.
+        SUBCASE("done() indicates whether the generator has finished") {
+            DOCTEST_CHECK(!generator.done());
+            generator.next();
+            DOCTEST_CHECK(!generator.done());
+            generator.next();
+            DOCTEST_CHECK(!generator.done());
+            generator.next();
+            DOCTEST_CHECK(generator.done());
+        }
 
-next();
-DOCTEST_CHECK(!generator.done());
-generator.
-
-next();
-DOCTEST_CHECK(!generator.done());
-generator.
-
-next();
-
-DOCTEST_CHECK(generator.done());
-}
-
-SUBCASE("Calling a generator after it has finished throws an exception")
-{
-generator.
-
-next();
-
-generator.
-
-next();
-
-generator.
-
-next();
-
-CHECK_THROWS(generator
-.
-
-next()
-
-);
-}
-}
+        SUBCASE("Calling a generator after it has finished throws an exception") {
+            generator.next();
+            generator.next();
+            generator.next();
+            CHECK_THROWS(generator.next());
+        }
+    }
 }

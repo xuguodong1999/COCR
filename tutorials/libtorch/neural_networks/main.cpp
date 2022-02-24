@@ -1,8 +1,10 @@
 // Copyright 2020-present pytorch-cpp Authors
 // Original: https://pytorch.org/tutorials/beginner/blitz/neural_networks_tutorial.html
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/optim/sgd.h>
 #include <iostream>
 #include <iomanip>
+#include <torch/nn/modules/loss.h>
 #include "nnet.h"
 
 int main() {

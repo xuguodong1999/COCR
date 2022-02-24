@@ -1,6 +1,7 @@
 #include <fstream>
 #include <Eigen/Core>
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/serialize.h>
 #include "ProximalPolicyOptimization.h"
 #include "Models.h"
 #include "TestEnvironment.h"

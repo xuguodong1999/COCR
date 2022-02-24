@@ -8,7 +8,8 @@
 #include <iomanip>                     // std::setprecision
 #include <cstdlib>                     // std::exit
 // For External Library
-#include <torch/torch.h>               // torch
+#include <torch/types.h>               // torch
+#include <torch/serialize.h>
 #include <opencv2/opencv.hpp>          // cv::Mat
 #include <boost/program_options.hpp>   // boost::program_options
 // For Original Header

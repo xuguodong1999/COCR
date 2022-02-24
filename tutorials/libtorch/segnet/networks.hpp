@@ -4,8 +4,12 @@
 #include <tuple>
 #include <vector>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/pooling.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/container/sequential.h>
 #include <boost/program_options.hpp>
+#include <torch/nn/modules/container/modulelist.h>
 
 // Define Namespace
 namespace nn = torch::nn;

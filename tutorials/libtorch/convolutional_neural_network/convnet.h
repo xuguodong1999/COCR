@@ -1,7 +1,14 @@
 // Copyright 2020-present pytorch-cpp Authors
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/modules/pooling.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/activation.h>
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/conv.h>
+#include <torch/nn/modules/linear.h>
 
 class ConvNetImpl : public torch::nn::Module {
 public:

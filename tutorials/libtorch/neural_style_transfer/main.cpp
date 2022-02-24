@@ -1,8 +1,12 @@
 // Copyright 2020-present pytorch-cpp Authors
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/data/transforms.h>
+#include <torch/cuda.h>
+#include <torch/optim/adam.h>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <torch/nn/functional/loss.h>
 #include "vggnet.h"
 #include "image_io.h"
 

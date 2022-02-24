@@ -2,7 +2,14 @@
 #include <typeinfo>
 #include <cmath>
 // For External Library
-#include <torch/torch.h>
+#include <torch/types.h>
+#include <torch/nn/init.h>
+#include <torch/nn/module.h>
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/activation.h>
+#include <torch/nn/modules/batchnorm.h>
+#include <torch/nn/modules/conv.h>
+#include <torch/nn/modules/linear.h>
 // For Original Header
 #include "networks.hpp"
 

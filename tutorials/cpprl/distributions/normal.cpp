@@ -1,14 +1,8 @@
-#define _USE_MATH_DEFINES
-
-#include <math.h>
+#include "distributions/normal.h"
+#include <torch/types.h>
+#include <doctest/doctest.h>
 #include <cmath>
 #include <limits>
-
-#include <c10/util/ArrayRef.h>
-#include <torch/nn.h>
-
-#include "distributions/normal.h"
-#include <doctest/doctest.h>
 
 namespace cpprl {
     Normal::Normal(const torch::Tensor loc,
@@ -40,68 +34,62 @@ namespace cpprl {
     }
 
     TEST_CASE("Normal") {
-    float locs_array[] = {0, 1, 2, 3, 4, 5};
-    float scales_array[] = {5, 4, 3, 2, 1, 0};
-    auto locs = torch::from_blob(locs_array, {2, 3});
-    auto scales = torch::from_blob(scales_array, {2, 3});
-    auto dist = Normal(locs, scales);
+        float locs_array[] = {0, 1, 2, 3, 4, 5};
+        float scales_array[] = {5, 4, 3, 2, 1, 0};
+        auto locs = torch::from_blob(locs_array, {2, 3});
+        auto scales = torch::from_blob(scales_array, {2, 3});
+        auto dist = Normal(locs, scales);
 
-    SUBCASE("Sampled tensors have correct shape") {
-    DOCTEST_CHECK(dist.sample().sizes().vec() == std::vector<int64_t>{2, 3});
-    DOCTEST_CHECK(dist.sample({20}).sizes().vec() == std::vector<int64_t>{20, 2, 3});
-    DOCTEST_CHECK(dist.sample({2, 20}).sizes().vec() == std::vector<int64_t>{2, 20, 2, 3});
-    DOCTEST_CHECK(dist.sample({1, 2, 3, 4, 5}).sizes().vec() == std::vector<int64_t>{1, 2, 3, 4, 5, 2, 3});
-}
+        SUBCASE("Sampled tensors have correct shape") {
+            DOCTEST_CHECK(dist.sample().sizes().vec() == std::vector<int64_t>{2, 3});
+            DOCTEST_CHECK(dist.sample({20}).sizes().vec() == std::vector<int64_t>{20, 2, 3});
+            DOCTEST_CHECK(dist.sample({2, 20}).sizes().vec() == std::vector<int64_t>{2, 20, 2, 3});
+            DOCTEST_CHECK(dist.sample({1, 2, 3, 4, 5}).sizes().vec() == std::vector<int64_t>{1, 2, 3, 4, 5, 2, 3});
+        }
 
-SUBCASE("entropy()")
-{
-auto entropies = dist.entropy();
+        SUBCASE("entropy()") {
+            auto entropies = dist.entropy();
 
-SUBCASE("Returns correct values")
-{
-INFO("Entropies: \n"
-<< entropies);
+            SUBCASE("Returns correct values") {
+                INFO("Entropies: \n"
+                             << entropies);
 
-DOCTEST_CHECK(entropies[0].item().toDouble() ==
-      doctest::Approx(8.3512).epsilon(1e-3));
-DOCTEST_CHECK(entropies[1].item().toDouble() ==
-      -std::numeric_limits<float>::infinity());
-}
+                DOCTEST_CHECK(entropies[0].item().toDouble() ==
+                              doctest::Approx(8.3512).epsilon(1e-3));
+                DOCTEST_CHECK(entropies[1].item().toDouble() ==
+                              -std::numeric_limits<float>::infinity());
+            }
 
-SUBCASE("Output tensor is the correct size")
-{
-DOCTEST_CHECK(entropies.sizes().vec() == std::vector<int64_t>{2});
-}
-}
+            SUBCASE("Output tensor is the correct size") {
+                DOCTEST_CHECK(entropies.sizes().vec() == std::vector<int64_t>{2});
+            }
+        }
 
-SUBCASE("log_prob()")
-{
-float actions[2][3] = {{0, 1, 2},
-                       {0, 1, 2}};
-auto actions_tensor = torch::from_blob(actions, {2, 3});
-auto log_probs = dist.log_prob(actions_tensor);
+        SUBCASE("log_prob()") {
+            float actions[2][3] = {{0, 1, 2},
+                                   {0, 1, 2}};
+            auto actions_tensor = torch::from_blob(actions, {2, 3});
+            auto log_probs = dist.log_prob(actions_tensor);
 
-INFO(log_probs
-<< "\n");
-SUBCASE("Returns correct values")
-{
-DOCTEST_CHECK(log_probs[0][0].item().toDouble() ==
-      doctest::Approx(-2.5284).epsilon(1e-3));
-DOCTEST_CHECK(log_probs[0][1].item().toDouble() ==
-      doctest::Approx(-2.3052).epsilon(1e-3));
-DOCTEST_CHECK(log_probs[0][2].item().toDouble() ==
-      doctest::Approx(-2.0176).epsilon(1e-3));
-DOCTEST_CHECK(log_probs[1][0].item().toDouble() ==
-      doctest::Approx(-2.7371).epsilon(1e-3));
-DOCTEST_CHECK(log_probs[1][1].item().toDouble() ==
-      doctest::Approx(-5.4189).epsilon(1e-3));
-DOCTEST_CHECK(std::isnan(log_probs[1][2].item().toDouble()));
-}
+            INFO(log_probs
+                         << "\n");
+            SUBCASE("Returns correct values") {
+                DOCTEST_CHECK(log_probs[0][0].item().toDouble() ==
+                              doctest::Approx(-2.5284).epsilon(1e-3));
+                DOCTEST_CHECK(log_probs[0][1].item().toDouble() ==
+                              doctest::Approx(-2.3052).epsilon(1e-3));
+                DOCTEST_CHECK(log_probs[0][2].item().toDouble() ==
+                              doctest::Approx(-2.0176).epsilon(1e-3));
+                DOCTEST_CHECK(log_probs[1][0].item().toDouble() ==
+                              doctest::Approx(-2.7371).epsilon(1e-3));
+                DOCTEST_CHECK(log_probs[1][1].item().toDouble() ==
+                              doctest::Approx(-5.4189).epsilon(1e-3));
+                DOCTEST_CHECK(std::isnan(log_probs[1][2].item().toDouble()));
+            }
 
-SUBCASE("Output tensor is correct size")
-{
-DOCTEST_CHECK(log_probs.sizes().vec() == std::vector<int64_t>{2, 3});
-}
-}
-}
+            SUBCASE("Output tensor is correct size") {
+                DOCTEST_CHECK(log_probs.sizes().vec() == std::vector<int64_t>{2, 3});
+            }
+        }
+    }
 }

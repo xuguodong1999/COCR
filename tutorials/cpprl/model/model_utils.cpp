@@ -1,6 +1,8 @@
-#include <torch/nn.h>
-
 #include "model/model_utils.h"
+#include <torch/nn/init.h>
+#include <torch/nn/modules/container/sequential.h>
+#include <torch/nn/modules/linear.h>
+#include <torch/nn/modules/container/functional.h>
 #include <doctest/doctest.h>
 
 using namespace torch;
@@ -9,7 +11,7 @@ namespace cpprl {
     torch::Tensor orthogonal_(Tensor tensor, double gain) {
         NoGradGuard guard;
         // Only tensors with 2 or more dimensions are supported
-        DOCTEST_CHECK(  tensor.ndimension() >= 2);
+        DOCTEST_CHECK(tensor.ndimension() >= 2);
 
         const auto rows = tensor.size(0);
         const auto columns = tensor.numel() / rows;
@@ -56,68 +58,46 @@ namespace cpprl {
     }
 
     TEST_CASE("Flatten") {
-    auto flatten = Flatten();
+        auto flatten = Flatten();
 
-    SUBCASE("Flatten converts 3 dimensional vector to 2 dimensional") {
-    auto input = torch::rand({5, 5, 5});
-    auto output = flatten->forward(input);
+        SUBCASE("Flatten converts 3 dimensional vector to 2 dimensional") {
+            auto input = torch::rand({5, 5, 5});
+            auto output = flatten->forward(input);
 
-    DOCTEST_CHECK(output.size(0) == 5);
-    DOCTEST_CHECK(output.size(1) == 25);
-}
+            DOCTEST_CHECK(output.size(0) == 5);
+            DOCTEST_CHECK(output.size(1) == 25);
+        }
 
-SUBCASE("Flatten converts 5 dimensional vector to 2 dimensional")
-{
-auto input = torch::rand({2, 2, 2, 2, 2});
-auto output = flatten->forward(input);
+        SUBCASE("Flatten converts 5 dimensional vector to 2 dimensional") {
+            auto input = torch::rand({2, 2, 2, 2, 2});
+            auto output = flatten->forward(input);
 
-DOCTEST_CHECK(output.size(0) == 2);
-DOCTEST_CHECK(output.size(1) == 16);
-}
+            DOCTEST_CHECK(output.size(0) == 2);
+            DOCTEST_CHECK(output.size(1) == 16);
+        }
 
-SUBCASE("Flatten converts 1 dimensional vector to 2 dimensional")
-{
-auto input = torch::rand({10});
-auto output = flatten->forward(input);
+        SUBCASE("Flatten converts 1 dimensional vector to 2 dimensional") {
+            auto input = torch::rand({10});
+            auto output = flatten->forward(input);
 
-DOCTEST_CHECK(output.size(0) == 10);
-DOCTEST_CHECK(output.size(1) == 1);
-}
-}
+            DOCTEST_CHECK(output.size(0) == 10);
+            DOCTEST_CHECK(output.size(1) == 1);
+        }
+    }
 
-TEST_CASE("init_weights()")
-{
-auto module = nn::Sequential(
-        nn::Linear(5, 10),
-        nn::Functional(torch::relu),
-        nn::Linear(10, 8));
-
-init_weights(module
-->
-
-named_parameters(),
-
-1, 0);
-
-SUBCASE("Bias weights are initialized to 0")
-{
-for (
-const auto &parameter
-: module->
-
-named_parameters()
-
-)
-{
-if (parameter.
-
-key()
-
-.find("bias") != std::string::npos)
-{
-DOCTEST_CHECK(parameter.value()[0].item().toDouble() == doctest::Approx(0));
-}
-}
-}
-}
+    TEST_CASE("init_weights()")
+    {
+        auto module = nn::Sequential(
+                nn::Linear(5, 10),
+                nn::Functional(torch::relu),
+                nn::Linear(10, 8));
+        init_weights(module->named_parameters(), 1, 0);
+        SUBCASE("Bias weights are initialized to 0") {
+            for (const auto &parameter: module->named_parameters()) {
+                if (parameter.key().find("bias") != std::string::npos) {
+                    DOCTEST_CHECK(parameter.value()[0].item().toDouble() == doctest::Approx(0));
+                }
+            }
+        }
+    }
 }

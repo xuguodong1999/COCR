@@ -1,6 +1,6 @@
 #pragma once
 
-#include <torch/nn.h>
+#include <torch/types.h>
 
 namespace cpprl {
     class Distribution {

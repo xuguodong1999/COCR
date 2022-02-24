@@ -1,9 +1,8 @@
 #pragma once
 
-#include <c10/util/ArrayRef.h>
-#include <torch/nn.h>
-
 #include "distributions/distribution.h"
+
+#include <torch/types.h>
 
 namespace cpprl {
     class Categorical : public Distribution {
