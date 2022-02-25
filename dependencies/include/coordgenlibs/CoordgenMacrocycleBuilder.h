@@ -6,7 +6,7 @@
 #ifndef COORDGEN_MACROCYCLE_BUILDER_H
 #define COORDGEN_MACROCYCLE_BUILDER_H
 
-#include "coordgenlibs/CoordgenConfig.hpp"
+#include <coordgenlibs_export.h>
 #include <cstdlib>
 #include <iostream>
 #include <vector>

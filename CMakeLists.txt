@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
+
 project(dev LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
 option(BUILD_ELS_LAB "Libtorch is required to build cpp train" OFF)
+option(BUILD_TUTORIALS "Libtorch is required to build 3rdparty code examples" OFF)
 # path to assets
 set(COCR_DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 # path to 3rdparty libraries
@@ -21,13 +23,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 
 # always need openmp
 find_package(OpenMP)
-if (OPENMP_FOUND)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-else (OPENMP_FOUND)
-    message(WARNING "openmp not found. Acceleration for alkane generation disabled.")
-endif (OPENMP_FOUND)
+if (OPENMP_FOUND AND NOT ANDROID)
+    set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS})
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS})
+    set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS})
+endif ()
 
 if (MSVC)
     set(Boost_USE_STATIC_LIBS OFF CACHE INTERNAL "")
@@ -38,11 +38,17 @@ elseif (APPLE)
     include_directories(/opt/homebrew/include/)
 endif ()
 
+if (ANDROID)
+    include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
+    GET_SUB_DIR_NAME(QT_MODULE_DIR_LIST ${QT_DIR}/../)
+    foreach (QT_MODULE ${QT_MODULE_DIR_LIST})
+        set(${QT_MODULE}_DIR ${QT_DIR}/../${QT_MODULE} CACHE INTERNAL "")
+    endforeach ()
+    unset(QT_MODULE_DIR_LIST)
+endif ()
 
 add_subdirectory(dependencies)
-
 add_subdirectory(leafxy)
-add_subdirectory(tutorials)
 
 add_dependencies(leafxy openbabel)
 add_dependencies(leafxy coordgenlibs)
@@ -53,6 +59,23 @@ if (NOT ANDROID)
     add_dependencies(data_gen openbabel)
 endif ()
 
+if (BUILD_ELS_LAB OR BUILD_TUTORIALS)
+    find_package(OpenCV QUIET)
+    find_package(Torch QUIET)
+    set(LIBTORCH_READY ${Torch_FOUND} AND ${OpenCV_FOUND})
+    if (NOT ${LIBTORCH_READY})
+        message(WARNING "Torch_FOUND=" ${Torch_FOUND} ",OpenCV_FOUND=" ${OpenCV_FOUND}
+                ", so BUILD_ELS_LAB and BUILD_TUTORIALS set to false")
+        set(BUILD_ELS_LAB OFF)
+        set(BUILD_TUTORIALS OFF)
+    endif ()
+    unset(LIBTORCH_READY)
+endif ()
+
 if (BUILD_ELS_LAB)
     add_subdirectory(elslab)
+endif ()
+
+if (BUILD_TUTORIALS)
+    add_subdirectory(tutorials)
 endif ()

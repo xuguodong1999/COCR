@@ -9,18 +9,13 @@ if (MSVC)
     include_directories(${COCR_DATA_DIR}/windows)
 endif ()
 
-set(QT_COMPONENTS Core)
-find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
-
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
-set(QT_COMPONENT_TARGETS)
-foreach (QT_COMPONENT ${QT_COMPONENTS})
-    list(APPEND QT_COMPONENT_TARGETS Qt${QT_VERSION_MAJOR}::${QT_COMPONENT})
-endforeach ()
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COMPONENT_TARGETS} maeparser)
+target_link_libraries(${PROJECT_NAME} PRIVATE maeparser)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE COORDGENLIBS_LIBRARY)

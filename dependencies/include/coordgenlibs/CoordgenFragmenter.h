@@ -4,7 +4,7 @@
  */
 #pragma once
 
-#include "coordgenlibs/CoordgenConfig.hpp"
+#include <coordgenlibs_export.h>
 
 #include <cstddef>
 #include <vector>

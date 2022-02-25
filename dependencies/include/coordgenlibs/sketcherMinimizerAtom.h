@@ -8,7 +8,7 @@
 
 #pragma once
 // #include <sketcherMinimizerPointF>
-#include "coordgenlibs/CoordgenConfig.hpp"
+#include <coordgenlibs_export.h>
 #include "coordgenlibs/sketcherMinimizerMaths.h"
 #include <iostream>
 #include <map>

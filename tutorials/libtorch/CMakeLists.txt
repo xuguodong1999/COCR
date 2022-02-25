@@ -1,33 +1,22 @@
 project(tutorials_libtorch LANGUAGES CXX)
 
+include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${COCR_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/public)
 
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
-
-find_package(Torch REQUIRED)
-include_directories(${TORCH_INCLUDE_DIRS})
-
+# find_package(OpenCV REQUIRED)
+# find_package(Torch REQUIRED)
 find_package(Boost COMPONENTS program_options REQUIRED)
+
+include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(${TORCH_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIB_DIR})
 
-# https://stackoverflow.com/questions/7787823
-MACRO(SUBDIRLIST result curdir)
-    FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
-    SET(dirlist "")
-    FOREACH (child ${children})
-        IF (IS_DIRECTORY ${curdir}/${child})
-            LIST(APPEND dirlist ${child})
-        ENDIF ()
-    ENDFOREACH ()
-    SET(${result} ${dirlist})
-ENDMACRO()
-
 # collect all directory-path as a list
-SUBDIRLIST(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR})
+GET_SUB_DIR_NAME(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR})
 list(LENGTH PROJECT_SOURCE_DIR_LIST PROJECT_SOURCE_DIR_LENGTH)
 math(EXPR PROJECT_SOURCE_DIR_LOOP ${PROJECT_SOURCE_DIR_LENGTH}-1)
 
@@ -35,7 +24,6 @@ math(EXPR PROJECT_SOURCE_DIR_LOOP ${PROJECT_SOURCE_DIR_LENGTH}-1)
 set(TMP_PROJECT_SOURCE_DIR_LIST)
 foreach (i RANGE ${PROJECT_SOURCE_DIR_LOOP})
     list(GET PROJECT_SOURCE_DIR_LIST ${i} PROJECT_SOURCE_DIR)
-    string(REGEX REPLACE "(.*\\/)(.*)(\\/)" "\\2" PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
     # skip ./public
     if (NOT ${PROJECT_SOURCE_DIR} STREQUAL "public")
         list(APPEND TMP_PROJECT_SOURCE_DIR_LIST ${PROJECT_SOURCE_DIR})
@@ -55,7 +43,6 @@ math(EXPR PROJECT_SOURCE_DIR_LOOP ${PROJECT_SOURCE_DIR_LENGTH}-1)
 
 foreach (i RANGE ${PROJECT_SOURCE_DIR_LOOP})
     list(GET PROJECT_SOURCE_DIR_LIST ${i} PROJECT_SOURCE_DIR)
-    string(REGEX REPLACE "(.*\\/)(.*)(\\/)" "\\2" PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
     aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_SOURCE_DIR} PROJECT_SOURCE_${i}_${PROJECT_NAME})
     set(SUB_PROJECT_NAME ${PROJECT_NAME}_${PROJECT_SOURCE_DIR})
     add_executable(${SUB_PROJECT_NAME} ${PROJECT_SOURCE_${i}_${PROJECT_NAME}})

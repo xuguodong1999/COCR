@@ -51,6 +51,10 @@ else ()
 
     set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
+    # for future qml cases
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+            $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+
     set(QT_COMPONENT_TARGETS)
     foreach (QT_COMPONENT ${QT_COMPONENTS})
         list(APPEND QT_COMPONENT_TARGETS Qt${QT_VERSION_MAJOR}::${QT_COMPONENT})

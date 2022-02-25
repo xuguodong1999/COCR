@@ -1,11 +1,12 @@
 #pragma once
 
-#include "maeparser/MaeParserConfig.hpp"
+#include <maeparser_export.h>
 
 #include <cassert>
 #include <cstring>
 #include <map>
 #include <stdexcept>
+#include <algorithm>
 #include <string>
 #include <utility>
 #include <memory>

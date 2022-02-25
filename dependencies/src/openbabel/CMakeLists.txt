@@ -21,7 +21,7 @@ set(PROJECT_SOURCE_DIR_LIST
         src/math
         src/ops
         src/stereo)
-if (UNIX AND NOT APPLE)
+if (UNIX AND NOT APPLE AND NOT ANDROID)
     list(APPEND PROJECT_SOURCE_DIR_LIST src/formats/xtc src/formats/png)
 endif ()
 set(PROJECT_SOURCE)
@@ -62,6 +62,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COMPONENT_TARGETS} coordgenli
 # openmp for apple clang
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
-endif(APPLE)
+endif (APPLE)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE OPENBABEL_LIBRARY)

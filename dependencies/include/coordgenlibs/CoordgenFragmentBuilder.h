@@ -10,7 +10,7 @@
 #include <stack>
 #include <vector>
 
-#include "coordgenlibs/CoordgenConfig.hpp"
+#include <coordgenlibs_export.h>
 #include "coordgenlibs/CoordgenMacrocycleBuilder.h"
 
 class sketcherMinimizerAtom;

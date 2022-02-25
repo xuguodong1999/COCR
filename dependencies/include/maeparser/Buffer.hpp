@@ -1,6 +1,6 @@
 #pragma once
 
-#include "maeparser/MaeParserConfig.hpp"
+#include <maeparser_export.h>
 
 #include <algorithm>
 #include <cassert>

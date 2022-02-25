@@ -2,7 +2,7 @@
 
 #include "maeparser/Buffer.hpp"
 #include "maeparser/MaeBlock.hpp"
-#include "maeparser/MaeParserConfig.hpp"
+#include <maeparser_export.h>
 
 #include <cerrno>
 #include <cstdio>

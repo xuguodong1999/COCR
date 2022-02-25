@@ -1,7 +1,11 @@
 # clion config
 
 ```shell
--G "Ninja" -DOpenCV_DIR=~/shared/opencv4/lib/cmake/opencv4 -DQt5_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -Dncnn_DIR=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR=~/shared/boost/lib/cmake/Boost-1.77.0 -DBUILD_TESTS=ON -DBUILD_ELS_LAB=ON -DTorch_DIR=~/shared/libtorch/share/cmake/Torch -DQT_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5
+# ubuntu host build for linux platform
+-G "Ninja" -DBUILD_TESTS=ON -DBUILD_ELS_LAB=ON -DBUILD_TUTORIALS=ON -DOpenCV_DIR=~/shared/opencv4/lib/cmake/opencv4 -Dncnn_DIR=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR=~/shared/boost/lib/cmake/Boost-1.77.0 -DTorch_DIR=~/shared/libtorch/share/cmake/Torch -DQT_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -DQt5_DIR=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5
+# ubuntu host build for android platform
+-G "Ninja" -DQt5_DIR=/home/xgd/shared/Qt/5.15.2/android/lib/cmake/Qt5 -DQT_DIR=/home/xgd/shared/Qt/5.15.2/android/lib/cmake/Qt5 -DCMAKE_TOOLCHAIN_FILE=/home/xgd/Android/Sdk/ndk/21.4.7075529/build/cmake/android.toolchain.cmake -DANDROID_PLATFORM=30 -DANDROID_ABI=arm64-v8a -DJAVA_HOME=/home/xgd/shared/jdk1.8.0_30
+
 ```
 
 # cmake build

@@ -3,7 +3,7 @@
 #include "maeparser/Buffer.hpp"
 #include "maeparser/MaeBlock.hpp"
 #include "maeparser/MaeParser.hpp"
-#include "maeparser/MaeParserConfig.hpp"
+#include <maeparser_export.h>
 
 #include <cstdio>
 #include <memory>

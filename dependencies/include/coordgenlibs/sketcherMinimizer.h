@@ -10,7 +10,7 @@
 #include <vector>
 #include <iostream>
 
-#include "CoordgenConfig.hpp"
+#include <coordgenlibs_export.h>
 
 #include "coordgenlibs/CoordgenFragmentBuilder.h"
 #include "coordgenlibs/CoordgenMinimizer.h"

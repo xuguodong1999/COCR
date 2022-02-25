@@ -6,16 +6,26 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # ncnn has not put its include directory in cmake config yet
-include_directories(${ncnn_DIR}/../../../include)
 include_directories(${COCR_INCLUDE_DIRS})
 
 set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
-find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
-find_package(QT NAMES Qt6 Qt5 COMPONENTS LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS LinguistTools REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
+
+if (ANDROID)
+    include(FetchContent)
+    FetchContent_Declare(ncnn_android
+            URL https://github.com/Tencent/ncnn/releases/download/20210720/ncnn-20210720-android-vulkan-shared.zip)
+    FetchContent_MakeAvailable(ncnn_android)
+    FetchContent_Declare(opencv_android
+            URL https://github.com/opencv/opencv/releases/download/4.5.5/opencv-4.5.5-android-sdk.zip)
+    FetchContent_MakeAvailable(opencv_android)
+    set(ncnn_DIR ${ncnn_android_SOURCE_DIR}/${ANDROID_ABI}/lib/cmake/ncnn)
+    set(OpenCV_DIR ${opencv_android_SOURCE_DIR}/sdk/native/jni/abi-${ANDROID_ABI})
+endif ()
 find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
+include_directories(${ncnn_DIR}/../../../include)
 
 # notice that qm file is generated through cmake job
 set(TS_FILES ${COCR_DATA_DIR}/${PROJECT_NAME}_zh_CN.ts)
@@ -28,8 +38,8 @@ if (WITH_OPENVINO)
 endif (WITH_OPENVINO)
 
 if (ANDROID)
-    set(ANDROID_MIN_SDK_VERSION 21)
-    set(ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android CACHE INTERNAL "")
+    set(ANDROID_MIN_SDK_VERSION 24)
+    set(ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android/settings CACHE INTERNAL "")
     qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_DATA_DIR}/leafxy_ncnn.qrc)
 else ()
     qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_DATA_DIR}/leafxy_ocv_dnn.qrc)
@@ -64,6 +74,8 @@ if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
 elseif (ANDROID)
     add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE} ${ANDROID_PACKAGE_SOURCE_DIR}/AndroidManifest.xml)
+    # override no rtti and exceptions in ncnn
+    set_target_properties(ncnn PROPERTIES INTERFACE_COMPILE_OPTIONS "-frtti;-fexceptions")
 else ()
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
 endif ()
@@ -75,10 +87,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 if (MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE YES LINK_FLAGS "/ENTRY:mainCRTStartup")
 endif ()
-
-# for future qml cases
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-        $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
 set(QT_COMPONENT_TARGETS)
 foreach (QT_COMPONENT ${QT_COMPONENTS})
