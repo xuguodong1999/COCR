@@ -49,9 +49,9 @@ cd COCR && mkdir build && cd build
 
 cmake .. -G "Ninja" \
 -DBUILD_TESTS=OFF \
--DQT_DIR=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
--DOpenCV_DIR=path/to/opencv4/lib/cmake/opencv4 \
--Dncnn_DIR=path/to/ncnn/lib/cmake/ncnn
+-DQT_DIR:PATH=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
+-DOpenCV_DIR:PATH=path/to/opencv4/lib/cmake/opencv4 \
+-Dncnn_DIR:PATH=path/to/ncnn/lib/cmake/ncnn
 
 cmake --build . -j $(nproc) --config Release
 ```
@@ -60,7 +60,7 @@ cmake --build . -j $(nproc) --config Release
 
 ```shell
 -DBUILD_TESTS=ON \
--DBoost_DIR=path/to/boost/lib/cmake/Boost-1.77.0
+-DBoost_DIR:PATH=path/to/boost/lib/cmake/Boost-1.77.0
 ```
 
 3. For train with cpp codes, add -DBUILD_ELS_LAB=ON option. Libtorch is required, for example,
