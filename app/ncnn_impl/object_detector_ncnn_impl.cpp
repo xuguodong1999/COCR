@@ -22,15 +22,15 @@ bool cocr::ObjectDetectorNcnnImpl::initModel(
     try {
         net = std::make_shared<ncnn::Net>();
         net->opt.num_threads = numThread;
-//        net->opt.use_vulkan_compute = true;
-//        net->opt.use_winograd_convolution = true;
-//        net->opt.use_sgemm_convolution = true;
-//        net->opt.use_fp16_packed = true;
-//        net->opt.use_fp16_storage = true;
-//        net->opt.use_fp16_arithmetic = true;
-//        net->opt.use_packing_layout = true;
-//        net->opt.use_shader_pack8 = false;
-//        net->opt.use_image_storage = false;
+        net->opt.use_vulkan_compute = false;
+        net->opt.use_winograd_convolution = true;
+        net->opt.use_sgemm_convolution = true;
+        net->opt.use_fp16_packed = true;
+        net->opt.use_fp16_storage = true;
+        net->opt.use_fp16_arithmetic = true;
+        net->opt.use_packing_layout = true;
+        net->opt.use_shader_pack8 = false;
+        net->opt.use_image_storage = false;
         const unsigned char *cfgMem = (const unsigned char *) cfg.data();
         ncnn::DataReaderFromMemory cfgReader(cfgMem);
         int ret_param = net->load_param(cfgReader);
