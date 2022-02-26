@@ -2,11 +2,11 @@
 
 ```shell
 # ubuntu host build for linux platform
--G "Ninja" -DBUILD_TESTS=ON -DBUILD_ELS_LAB=ON -DBUILD_TUTORIALS=ON -DOpenCV_DIR:PATH=~/shared/opencv4/lib/cmake/opencv4 -Dncnn_DIR:PATH=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR:PATH=~/shared/boost/lib/cmake/Boost-1.77.0 -DTorch_DIR:PATH=~/shared/libtorch/share/cmake/Torch -DQT_DIR:PATH=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5
+-G "Ninja" -DBUILD_TESTS=ON -DBUILD_ELS_LAB=ON -DBUILD_TUTORIALS=ON -DOpenCV_DIR:PATH=~/shared/opencv4/lib/cmake/opencv4 -Dncnn_DIR:PATH=~/shared/ncnn/lib/cmake/ncnn -DBoost_DIR:PATH=~/shared/boost/lib/cmake/Boost-1.77.0 -DTorch_DIR:PATH=~/shared/libtorch/share/cmake/Torch -DQt5_DIR:PATH=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5
 # ubuntu host build for android platform
 # due to qt-community-lts issues, 
 # qt-5.15.2 only support single project-level apk build
-cmake .. -G "Ninja" -DQT_DIR:PATH=~/shared/Qt/5.15.2/android/lib/cmake/Qt5 -DCMAKE_TOOLCHAIN_FILE=~/Android/Sdk/ndk/21.4.7075529/build/cmake/android.toolchain.cmake -DANDROID_PLATFORM=30 -DANDROID=ON -DANDROID_ABI=arm64-v8a -DJAVA_HOME=~/shared/jdk1.8.0_30 -DANDROID_NATIVE_API_LEVEL=24 -DANDROID_BUILD_ABI_arm64-v8a=ON -DCMAKE_BUILD_TYPE=Release -DANDROID_DEPLOY_QT:FILEPATH=~/shared/Qt/5.15.2/android/bin/androiddeployqt -DANDROID_SDK:PATH=~/Android/Sdk -DANDROID_NDK:PATH=~/Android/Sdk/ndk/21.4.7075529
+cmake .. -G "Ninja" -DQt5_DIR:PATH=~/shared/Qt/5.15.2/android/lib/cmake/Qt5 -DCMAKE_TOOLCHAIN_FILE=~/Android/Sdk/ndk/21.4.7075529/build/cmake/android.toolchain.cmake -DANDROID_PLATFORM=30 -DANDROID=ON -DANDROID_ABI=armeabi-v7a -DJAVA_HOME=~/shared/jdk1.8.0_30 -DANDROID_NATIVE_API_LEVEL=24 -DANDROID_BUILD_ABI_armeabi-v7a=ON -DCMAKE_BUILD_TYPE=Release -DANDROID_DEPLOY_QT:FILEPATH=~/shared/Qt/5.15.2/android/bin/androiddeployqt -DANDROID_SDK:PATH=~/Android/Sdk -DANDROID_NDK:PATH=~/Android/Sdk/ndk/21.4.7075529
 
 cmake --build . -j $(nproc) --config Release
 

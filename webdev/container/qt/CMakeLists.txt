@@ -7,7 +7,7 @@ set(LIB_ALL_FOUND ON)
 foreach (QT_COMPONENT ${QT_COMPONENTS})
     if (NOT Qt5${QT_COMPONENT}_FOUND)
         set(LIB_ALL_FOUND OFF)
-        message(WARNING Qt5${QT_COMPONENT} " not found in " ${QT_DIR})
+        message(WARNING Qt5${QT_COMPONENT} " not found in " ${Qt5_DIR})
     endif ()
 endforeach (QT_COMPONENT ${QT_COMPONENTS})
 

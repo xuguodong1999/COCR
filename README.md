@@ -49,7 +49,7 @@ cd COCR && mkdir build && cd build
 
 cmake .. -G "Ninja" \
 -DBUILD_TESTS=OFF \
--DQT_DIR:PATH=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
+-DQt5_DIR:PATH=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
 -DOpenCV_DIR:PATH=path/to/opencv4/lib/cmake/opencv4 \
 -Dncnn_DIR:PATH=path/to/ncnn/lib/cmake/ncnn
 

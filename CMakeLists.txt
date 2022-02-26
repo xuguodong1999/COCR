@@ -41,10 +41,6 @@ elseif (ANDROID) # use apk_shell for android-qt project
     include(${CMAKE_SOURCE_DIR}/cmake/FindAndroidDeps.cmake)
 endif ()
 
-if (NOT ${Qt5_DIR})
-    set(Qt5_DIR ${QT_DIR} CACHE INTERNAL "")
-endif ()
-
 add_subdirectory(dependencies)
 add_subdirectory(app) # target as ${APP_NAME}
 

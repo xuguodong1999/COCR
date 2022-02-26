@@ -28,7 +28,6 @@ if (WITH_OPENVINO)
 endif (WITH_OPENVINO)
 
 if (ANDROID)
-    set(ANDROID_MIN_SDK_VERSION 24)
     set(ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android/settings CACHE INTERNAL "")
     qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_ASSETS_DIR}/leafxy_ncnn.qrc)
 else ()

@@ -1,7 +1,7 @@
 include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
-GET_SUB_DIR_NAME(QT_MODULE_DIR_LIST ${QT_DIR}/../)
+GET_SUB_DIR_NAME(QT_MODULE_DIR_LIST ${Qt5_DIR}/../)
 foreach (QT_MODULE ${QT_MODULE_DIR_LIST})
-    set(${QT_MODULE}_DIR ${QT_DIR}/../${QT_MODULE} CACHE INTERNAL "")
+    set(${QT_MODULE}_DIR ${Qt5_DIR}/../${QT_MODULE} CACHE INTERNAL "")
 endforeach ()
 unset(QT_MODULE_DIR_LIST)
 
