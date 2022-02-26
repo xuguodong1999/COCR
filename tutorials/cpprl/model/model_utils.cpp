@@ -1,5 +1,6 @@
 #include "model/model_utils.h"
 #include <torch/nn/init.h>
+#include <torch/cuda.h>
 #include <torch/nn/modules/container/sequential.h>
 #include <torch/nn/modules/linear.h>
 #include <torch/nn/modules/container/functional.h>
@@ -15,7 +16,9 @@ namespace cpprl {
 
         const auto rows = tensor.size(0);
         const auto columns = tensor.numel() / rows;
-        auto flattened = torch::randn({rows, columns});
+        auto flattened = torch::randn({rows, columns})
+                // try skip lapack on msvc cpu mode
+                .to(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU);
 
         if (rows < columns) {
             flattened.t_();
