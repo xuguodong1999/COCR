@@ -3,7 +3,7 @@ project(tutorials_cpprl LANGUAGES CXX)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${COCR_HEADER_DIR})
 
-# find_package(Torch REQUIRED)
+find_package(Torch REQUIRED)
 
 include_directories(${TORCH_INCLUDE_DIRS})
 set(PROJECT_SOURCE_DIR_LIST ./ ./algorithms/ ./distributions/ ./generators/ ./model/)

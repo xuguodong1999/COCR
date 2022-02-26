@@ -1,12 +1,13 @@
 project(openbabel LANGUAGES C CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${COCR_INCLUDE_DIRS})
-include_directories(${COCR_INCLUDE_DIR}/inchi)
+include_directories(${COCR_INCLUDE_DIR})
+include_directories(${COCR_HEADER_DIR}/../include/inchi)
 
 set(QT_COMPONENTS Core)
-# find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
-# find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
+if (NOT ANDROID) # use apk_shell for android-qt project
+    find_package(Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
+endif ()
 
 set(PROJECT_SOURCE_DIR_LIST
         src
@@ -32,29 +33,29 @@ endforeach ()
 
 # include windows dll info
 if (MSVC)
-    list(APPEND PROJECT_SOURCE ${COCR_DATA_DIR}/windows/3rd.rc)
-    include_directories(${COCR_DATA_DIR}/windows)
+    list(APPEND PROJECT_SOURCE ${COCR_ASSETS_DIR}/windows/3rd.rc)
+    include_directories(${COCR_ASSETS_DIR}/windows)
 endif ()
 
 # generate openbabel qrc
-set(OPENBABEL_DATA_DIR ${COCR_DATA_DIR}/openbabel)
+set(OPENBABEL_DATA_DIR ${COCR_ASSETS_DIR}/openbabel)
 file(GLOB_RECURSE OPENBABEL_DATA_LIST ${OPENBABEL_DATA_DIR}/**)
 set(OPENBABEL_QRC "")
 string(APPEND OPENBABEL_QRC "<RCC>\n<qresource prefix=\"/\">\n")
 foreach (OPENBABEL_DATA ${OPENBABEL_DATA_LIST})
-    string(REPLACE ${COCR_DATA_DIR}/ "" OPENBABEL_DATA_RELATIVE_PATH ${OPENBABEL_DATA})
+    string(REPLACE ${COCR_ASSETS_DIR}/ "" OPENBABEL_DATA_RELATIVE_PATH ${OPENBABEL_DATA})
     string(APPEND OPENBABEL_QRC
             "<file compress=\"9\" compress-algo=\"best\">${OPENBABEL_DATA_RELATIVE_PATH}</file>\n")
 endforeach ()
 string(APPEND OPENBABEL_QRC "</qresource>\n</RCC>")
-file(WRITE ${OPENBABEL_DATA_QRC_FILE} ${OPENBABEL_QRC})
+file(WRITE ${OpenBabel_QRC} ${OPENBABEL_QRC})
 
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 set(QT_COMPONENT_TARGETS)
 foreach (QT_COMPONENT ${QT_COMPONENTS})
-    list(APPEND QT_COMPONENT_TARGETS Qt${QT_VERSION_MAJOR}::${QT_COMPONENT})
+    list(APPEND QT_COMPONENT_TARGETS Qt5::${QT_COMPONENT})
 endforeach ()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COMPONENT_TARGETS} coordgenlibs maeparser)

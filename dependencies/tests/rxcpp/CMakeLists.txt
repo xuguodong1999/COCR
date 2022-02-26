@@ -1,6 +1,6 @@
 project(RxCppTest LANGUAGES CXX)
 
-include_directories(${COCR_INCLUDE_DIRS})
+include_directories(${COCR_INCLUDE_DIR})
 
 set(PROJECT_SOURCE_DIR_LIST ./ ./operators/ ./sources/ ./subjects/ ./subscriptions/)
 set(PROJECT_SOURCE)

@@ -1,12 +1,12 @@
 project(maeparser LANGUAGES CXX)
 
-include_directories(${COCR_INCLUDE_DIRS})
+include_directories(${COCR_INCLUDE_DIR})
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
 
 # include windows dll info
 if (MSVC)
-    list(APPEND PROJECT_SOURCE ${COCR_DATA_DIR}/windows/3rd.rc)
-    include_directories(${COCR_DATA_DIR}/windows)
+    list(APPEND PROJECT_SOURCE ${COCR_ASSETS_DIR}/windows/3rd.rc)
+    include_directories(${COCR_ASSETS_DIR}/windows)
 endif ()
 
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE})

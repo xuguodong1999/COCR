@@ -3,23 +3,24 @@ cmake_minimum_required(VERSION 3.16)
 project(dev LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# put all dll and exe in one directory
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 
 option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
 option(BUILD_ELS_LAB "Libtorch is required to build cpp train" OFF)
 option(BUILD_TUTORIALS "Libtorch is required to build 3rdparty code examples" OFF)
+# android apk name
+set(APP_NAME leafxy CACHE INTERNAL "")
 # path to assets
-set(COCR_DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
+set(COCR_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 # path to 3rdparty libraries
-set(COCR_DEPENDENCIES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies CACHE INTERNAL "")
+set(COCR_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies CACHE INTERNAL "")
 # path to header-only 3rdparty libraries
-set(COCR_HEADER_DIR ${COCR_DEPENDENCIES_DIR}/header-only CACHE INTERNAL "")
-set(COCR_INCLUDE_DIR ${COCR_DEPENDENCIES_DIR}/include CACHE INTERNAL "")
-set(COCR_INCLUDE_DIRS ${COCR_INCLUDE_DIR} ${COCR_HEADER_DIR} CACHE INTERNAL "")
-# remember to cite ${OPENBABEL_DATA_QRC_FILE} if you link openbabel
-set(OPENBABEL_DATA_QRC_FILE ${COCR_DATA_DIR}/openbabel.qrc CACHE INTERNAL "")
-# put all dll and exe in one directory
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
+set(COCR_HEADER_DIR ${COCR_DEPS_DIR}/header-only CACHE INTERNAL "")
+set(COCR_INCLUDE_DIR ${COCR_DEPS_DIR}/include ${COCR_HEADER_DIR} CACHE INTERNAL "")
+# remember to cite ${OpenBabel_QRC} if you link openbabel
+set(OpenBabel_QRC ${COCR_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
 
 # always need openmp
 find_package(OpenMP)
@@ -36,47 +37,24 @@ if (MSVC)
     add_compile_definitions(_USE_MATH_DEFINES) # for M_PI macro
 elseif (APPLE)
     include_directories(/opt/homebrew/include/)
+elseif (ANDROID) # use apk_shell for android-qt project
+    include(${CMAKE_SOURCE_DIR}/cmake/FindAndroidDeps.cmake)
 endif ()
 
-if (ANDROID)
-    include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
-    GET_SUB_DIR_NAME(QT_MODULE_DIR_LIST ${QT_DIR}/../)
-    foreach (QT_MODULE ${QT_MODULE_DIR_LIST})
-        set(${QT_MODULE}_DIR ${QT_DIR}/../${QT_MODULE} CACHE INTERNAL "")
-    endforeach ()
-    unset(QT_MODULE_DIR_LIST)
-elseif (NOT ${Qt5_DIR})
+if (NOT ${Qt5_DIR})
     set(Qt5_DIR ${QT_DIR} CACHE INTERNAL "")
 endif ()
-set(APP_NAME dev CACHE INTERNAL "")
-set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
-find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
-unset(QT_COMPONENTS)
 
 add_subdirectory(dependencies)
-add_subdirectory(leafxy)
+add_subdirectory(app) # target as ${APP_NAME}
 
-add_dependencies(dev openbabel)
-add_dependencies(dev coordgenlibs)
+add_dependencies(${APP_NAME} openbabel)
+add_dependencies(${APP_NAME} coordgenlibs)
 
 if (NOT ANDROID)
     add_subdirectory(data_gen)
     add_dependencies(data_gen coordgenlibs)
     add_dependencies(data_gen openbabel)
-endif ()
-
-if (BUILD_ELS_LAB OR BUILD_TUTORIALS)
-    find_package(OpenCV QUIET)
-    find_package(Torch QUIET)
-    set(LIBTORCH_READY ${Torch_FOUND} AND ${OpenCV_FOUND})
-    if (NOT ${LIBTORCH_READY})
-        message(WARNING "Torch_FOUND=" ${Torch_FOUND} ",OpenCV_FOUND=" ${OpenCV_FOUND}
-                ", so BUILD_ELS_LAB and BUILD_TUTORIALS set to false")
-        set(BUILD_ELS_LAB OFF)
-        set(BUILD_TUTORIALS OFF)
-    endif ()
-    unset(LIBTORCH_READY)
 endif ()
 
 if (BUILD_ELS_LAB)

@@ -294,12 +294,13 @@ OCRThread::OCRThread(QObject *_parent)
 #else
     static cocr::ObjectDetectorNcnnImpl detector;
     detector.setNumThread(4);
-    if (!detector.initModel(ncnnDetModel, ncnnTextModelCfg, 1280)) {
+    if (!detector.initModel(ncnnDetModel, ncnnDetModelCfg, 1280)) {
         qDebug() << "fail to init ncnn detector";
     }
 #endif
     /// recognizer
     static cocr::TextRecognizerNcnnImpl recognizer;
+    recognizer.setNumThread(4);
     if (!recognizer.initModel(ncnnTextModel, ncnnTextModelCfg,
                               cocr::TextCorrector::GetAlphabet(), 3200)) {
         qDebug() << "fail to init ncnn recognizer";

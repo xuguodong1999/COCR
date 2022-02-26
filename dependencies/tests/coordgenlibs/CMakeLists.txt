@@ -1,10 +1,6 @@
 project(CoordgenlibsTest LANGUAGES CXX)
 
-include_directories(${COCR_INCLUDE_DIRS})
-
-set(QT_COMPONENTS Core)
-find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
+include_directories(${COCR_INCLUDE_DIR})
 
 find_package(Boost COMPONENTS filesystem iostreams unit_test_framework REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
@@ -18,12 +14,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "TEST_SAMPLES_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
-set(QT_COMPONENT_TARGETS)
-foreach (QT_COMPONENT ${QT_COMPONENTS})
-    list(APPEND QT_COMPONENT_TARGETS Qt${QT_VERSION_MAJOR}::${QT_COMPONENT})
-endforeach ()
-
-target_link_libraries(${PROJECT_NAME} ${QT_COMPONENT_TARGETS} ${Boost_LIBRARIES} coordgenlibs maeparser)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} coordgenlibs maeparser)
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
