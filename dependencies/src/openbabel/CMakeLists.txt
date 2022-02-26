@@ -40,15 +40,15 @@ endif ()
 # generate openbabel qrc
 set(OPENBABEL_DATA_DIR ${COCR_ASSETS_DIR}/openbabel)
 file(GLOB_RECURSE OPENBABEL_DATA_LIST ${OPENBABEL_DATA_DIR}/**)
-set(OPENBABEL_QRC "")
-string(APPEND OPENBABEL_QRC "<RCC>\n<qresource prefix=\"/\">\n")
+set(QRC_CONTENT "")
+string(APPEND QRC_CONTENT "<RCC>\n<qresource prefix=\"/\">\n")
 foreach (OPENBABEL_DATA ${OPENBABEL_DATA_LIST})
     string(REPLACE ${COCR_ASSETS_DIR}/ "" OPENBABEL_DATA_RELATIVE_PATH ${OPENBABEL_DATA})
-    string(APPEND OPENBABEL_QRC
+    string(APPEND QRC_CONTENT
             "<file compress=\"9\" compress-algo=\"best\">${OPENBABEL_DATA_RELATIVE_PATH}</file>\n")
 endforeach ()
-string(APPEND OPENBABEL_QRC "</qresource>\n</RCC>")
-file(WRITE ${OpenBabel_QRC} ${OPENBABEL_QRC})
+string(APPEND QRC_CONTENT "</qresource>\n</RCC>")
+file(WRITE ${OpenBabel_QRC} ${QRC_CONTENT})
 
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")

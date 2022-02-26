@@ -22,6 +22,7 @@ qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/leafxy_trans.qrc
         "<RCC>\n<qresource prefix=\"/\">\n<file alias=\"leafxy_zh_CN.qm\">leafxy_zh_CN.qm</file>\n</qresource>\n</RCC>")
 
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 if (WITH_OPENVINO)
     add_definitions(-DWITH_OPENVINO)
 endif (WITH_OPENVINO)
@@ -33,8 +34,6 @@ if (ANDROID)
 else ()
     qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_ASSETS_DIR}/leafxy_ocv_dnn.qrc)
 endif ()
-
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # source dir
 set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./chem ./ocr)
