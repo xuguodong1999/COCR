@@ -169,6 +169,7 @@ void test_with_queue() {
         while (true) {
             while (!ready)
                 cv.wait(lck);
+            if (quit) break;
             while (q.size_approx() < cached_batch) {
                 auto[batch_input, batch_label]=get_data_with_samples(
                         batch_size, runtime_device);
@@ -199,6 +200,9 @@ void test_with_queue() {
             optimizer.step();
             if (++epoch > num_epochs * DATA_SET_SIZE / batch_size) {
                 quit = true;
+                std::unique_lock<std::mutex> lck(mtx);
+                ready = true;
+                cv.notify_all();
                 break;
             }
         }
