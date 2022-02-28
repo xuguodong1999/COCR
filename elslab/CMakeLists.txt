@@ -11,12 +11,13 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 # collect source files
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} PROJECT_SOURCE)
-list(APPEND PROJECT_SOURCE ${OpenBabel_QRC})
-
-# add exe
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
-
-# product suffix
-set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
-
-target_link_libraries(${PROJECT_NAME} PRIVATE ${TORCH_LIBRARIES} ${OpenCV_LIBS})
+foreach (PROJECT_SOURCE_FILE_PATH ${PROJECT_SOURCE})
+    # add exe
+    get_filename_component(PROJECT_SOURCE_FILE ${PROJECT_SOURCE_FILE_PATH} NAME)
+    set(PROJECT_NAME_${PROJECT_NAME} ${PROJECT_NAME}_${PROJECT_SOURCE_FILE})
+    add_executable(${PROJECT_NAME_${PROJECT_NAME}} ${PROJECT_SOURCE_FILE_PATH})
+    # product suffix
+    set_target_properties(${PROJECT_NAME_${PROJECT_NAME}} PROPERTIES DEBUG_POSTFIX "d")
+    target_link_libraries(${PROJECT_NAME_${PROJECT_NAME}} PRIVATE ${TORCH_LIBRARIES} ${OpenCV_LIBS})
+    unset(PROJECT_NAME_${PROJECT_NAME})
+endforeach ()

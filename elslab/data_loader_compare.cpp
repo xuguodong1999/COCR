@@ -1,11 +1,9 @@
-#include <torch/serialize.h>
 #include <torch/types.h>
 #include <torch/cuda.h>
 #include <torch/nn/module.h>
 #include <torch/nn/modules/conv.h>
 #include <torch/data/datasets/base.h>
 #include <torch/data/dataloader.h>
-#include <torch/data/samplers/sequential.h>
 #include <torch/optim/adam.h>
 #include <torch/data/transforms/stack.h>
 #include <torch/data/datasets/map.h>
@@ -170,10 +168,14 @@ void test_with_queue() {
             while (!ready)
                 cv.wait(lck);
             if (quit) break;
-            while (q.size_approx() < cached_batch) {
-                auto[batch_input, batch_label]=get_data_with_samples(
-                        batch_size, runtime_device);
-                q.enqueue({batch_input, batch_label});
+            int delta = cached_batch - q.size_approx();
+            if (delta > 0) {
+#pragma omp parallel for default(none) shared(delta, q)
+                for (int i = 0; i < delta; i++) {
+                    auto[batch_input, batch_label]=get_data_with_samples(
+                            batch_size, runtime_device);
+                    q.enqueue({batch_input, batch_label});
+                }
             }
             ready = false;
             if (quit) break;
