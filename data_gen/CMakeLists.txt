@@ -3,7 +3,7 @@ project(data_gen LANGUAGES CXX)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-include_directories(${COCR_INCLUDE_DIR})
+include_directories(${DEV_INCLUDE_DIR})
 
 set(QT_COMPONENTS Widgets Core)
 find_package(Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
@@ -31,7 +31,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         ${QT_COMPONENT_TARGETS}
         opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE "TEST_SAMPLES_PATH=std::string(\"${COCR_ASSETS_DIR}/datasets/\")")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/datasets/\")")
 
 # openmp for apple clang
 if (APPLE)

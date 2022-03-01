@@ -13,14 +13,14 @@ option(BUILD_TUTORIALS "Libtorch is required to build 3rdparty code examples" OF
 # android apk name
 set(APP_NAME leafxy CACHE INTERNAL "")
 # path to assets
-set(COCR_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
+set(DEV_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 # path to 3rdparty libraries
-set(COCR_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies CACHE INTERNAL "")
+set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies CACHE INTERNAL "")
 # path to header-only 3rdparty libraries
-set(COCR_HEADER_DIR ${COCR_DEPS_DIR}/header-only CACHE INTERNAL "")
-set(COCR_INCLUDE_DIR ${COCR_DEPS_DIR}/include ${COCR_HEADER_DIR} CACHE INTERNAL "")
+set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/header-only CACHE INTERNAL "")
+set(DEV_INCLUDE_DIR ${DEV_DEPS_DIR}/include ${DEV_DEPS_DIR}/include/inchi ${DEV_HEADER_DIR} CACHE INTERNAL "")
 # remember to cite ${OpenBabel_QRC} if you link openbabel
-set(OpenBabel_QRC ${COCR_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
+set(OpenBabel_QRC ${DEV_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
 
 # always need openmp
 find_package(OpenMP)
@@ -51,6 +51,10 @@ if (NOT ANDROID)
     add_subdirectory(data_gen)
     add_dependencies(data_gen coordgenlibs)
     add_dependencies(data_gen openbabel)
+endif ()
+
+if (BUILD_TESTS)
+    add_subdirectory(tests)
 endif ()
 
 if (BUILD_ELS_LAB)

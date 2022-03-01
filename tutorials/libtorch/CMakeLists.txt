@@ -1,9 +1,9 @@
-project(tutorials_libtorch LANGUAGES CXX)
+project(tut_torch LANGUAGES CXX)
 
 include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${COCR_INCLUDE_DIR})
+include_directories(${DEV_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/public)
 
 find_package(OpenCV REQUIRED)

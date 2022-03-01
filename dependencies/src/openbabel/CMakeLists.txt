@@ -1,8 +1,7 @@
-project(openbabel LANGUAGES C CXX)
+project(openbabel LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${COCR_INCLUDE_DIR})
-include_directories(${COCR_HEADER_DIR}/../include/inchi)
+include_directories(${DEV_INCLUDE_DIR})
 
 set(QT_COMPONENTS Core)
 if (NOT ANDROID) # use apk_shell for android-qt project
@@ -18,7 +17,6 @@ set(PROJECT_SOURCE_DIR_LIST
         src/forcefields
         src/formats
         src/formats/json
-        src/formats/libinchi
         src/math
         src/ops
         src/stereo)
@@ -33,17 +31,17 @@ endforeach ()
 
 # include windows dll info
 if (MSVC)
-    list(APPEND PROJECT_SOURCE ${COCR_ASSETS_DIR}/windows/3rd.rc)
-    include_directories(${COCR_ASSETS_DIR}/windows)
+    list(APPEND PROJECT_SOURCE ${DEV_ASSETS_DIR}/windows/3rd.rc)
+    include_directories(${DEV_ASSETS_DIR}/windows)
 endif ()
 
 # generate openbabel qrc
-set(OPENBABEL_DATA_DIR ${COCR_ASSETS_DIR}/openbabel)
+set(OPENBABEL_DATA_DIR ${DEV_ASSETS_DIR}/openbabel)
 file(GLOB_RECURSE OPENBABEL_DATA_LIST ${OPENBABEL_DATA_DIR}/**)
 set(QRC_CONTENT "")
 string(APPEND QRC_CONTENT "<RCC>\n<qresource prefix=\"/\">\n")
 foreach (OPENBABEL_DATA ${OPENBABEL_DATA_LIST})
-    string(REPLACE ${COCR_ASSETS_DIR}/ "" OPENBABEL_DATA_RELATIVE_PATH ${OPENBABEL_DATA})
+    string(REPLACE ${DEV_ASSETS_DIR}/ "" OPENBABEL_DATA_RELATIVE_PATH ${OPENBABEL_DATA})
     string(APPEND QRC_CONTENT
             "<file compress=\"9\" compress-algo=\"best\">${OPENBABEL_DATA_RELATIVE_PATH}</file>\n")
 endforeach ()
@@ -58,11 +56,9 @@ foreach (QT_COMPONENT ${QT_COMPONENTS})
     list(APPEND QT_COMPONENT_TARGETS Qt5::${QT_COMPONENT})
 endforeach ()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COMPONENT_TARGETS} coordgenlibs maeparser)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COMPONENT_TARGETS} coordgenlibs maeparser inchi)
 
 # openmp for apple clang
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
 endif (APPLE)
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE OPENBABEL_LIBRARY)
