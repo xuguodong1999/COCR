@@ -5,11 +5,15 @@
 #ifndef _ISOMER_HPP_
 #define _ISOMER_HPP_
 
-#include "alkane_graph.hpp"
+#include "../app/chem/alkane_graph.hpp"
 
 #include <fstream>
 #include <map>
 #include <algorithm>
+
+using cocr::AlkaneGraph;
+using cocr::node_type;
+using cocr::hash_type;
 
 class IsomerCounter {
     using graph = AlkaneGraph<node_type>;

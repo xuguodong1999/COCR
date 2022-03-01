@@ -1,11 +1,14 @@
 #include "mol_util.hpp"
-#include "alkane_graph.hpp"
+#include "../app/chem/alkane_graph.hpp"
 #include "std_util.hpp"
 
 #include "openbabel_util.hpp"
 
 std::shared_ptr<MolUtil> molUtil;
 
+using cocr::AlkaneGraph;
+using cocr::node_type;
+using cocr::hash_type;
 
 std::vector<std::shared_ptr<JMol>> MolUtil::split(const JMol &_mol) {
     AlkaneGraph<size_t> graph;

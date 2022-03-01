@@ -1,9 +1,13 @@
 #include "mol.hpp"
-#include "alkane_graph.hpp"
+#include "../app/chem/alkane_graph.hpp"
 #include "mol_util.hpp"
 #include "std_util.hpp"
 
 #include <random>
+
+using cocr::AlkaneGraph;
+using cocr::node_type;
+using cocr::hash_type;
 
 std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber, const float &_x, const float &_y) {
     auto aid = mAids++;
