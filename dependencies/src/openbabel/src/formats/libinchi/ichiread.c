@@ -1037,31 +1037,28 @@ int ReadWriteInChI(INCHI_IOSTREAM *pInp, INCHI_IOSTREAM *pOut, INCHI_IOSTREAM *p
                 }
 #endif
 
-                if ( szMessage ) 
+                int len;
+                InchiTimeGet(&ulTStart);
+                FillOutCompareMessage(szMessage, nMessageLen, OneInput.CompareInchiFlags[0]);
+                if ( OneInput.CompareInchiFlags[1][0] || OneInput.CompareInchiFlags[1][1] )
                 {
-                    int len;
-                    InchiTimeGet(&ulTStart);
-                    FillOutCompareMessage(szMessage, nMessageLen, OneInput.CompareInchiFlags[0]);
-                    if ( OneInput.CompareInchiFlags[1][0] || OneInput.CompareInchiFlags[1][1] ) 
-                    {
-                        AddOneMsg(szMessage, (int)strlen(szMessage), nMessageLen, "Disconnected: ", "; ");
-                        FillOutCompareMessage(szMessage, nMessageLen, OneInput.CompareInchiFlags[1]);
-                    }
-                    /* add a metal warning */
-                    if ( bHasMetal && nInitLenMessage < (len=(int)strlen(szMessage)) ) 
-                    {
-                        char szMetal[] = " (Metal compound)";
-                        int shift;
-                        if ( len + (int)sizeof(szMetal) > nMessageLen ) {
-                            len = nMessageLen - (int)sizeof(szMetal);
-                        }
-                        shift = nInitLenMessage + (int)sizeof(szMetal) - 1;
-                        memmove(szMessage+shift, szMessage + nInitLenMessage, (len-nInitLenMessage)*sizeof(szMessage[0]));
-                        memcpy(szMessage + nInitLenMessage, szMetal, sizeof(szMetal)-sizeof(szMessage[0]));
-                        szMessage[shift+len-nInitLenMessage] = '\0';
-                    }
-                    ulProcessingTime += InchiTimeElapsed(&ulTStart);
+                    AddOneMsg(szMessage, (int)strlen(szMessage), nMessageLen, "Disconnected: ", "; ");
+                    FillOutCompareMessage(szMessage, nMessageLen, OneInput.CompareInchiFlags[1]);
                 }
+                /* add a metal warning */
+                if ( bHasMetal && nInitLenMessage < (len=(int)strlen(szMessage)) )
+                {
+                    char szMetal[] = " (Metal compound)";
+                    int shift;
+                    if ( len + (int)sizeof(szMetal) > nMessageLen ) {
+                        len = nMessageLen - (int)sizeof(szMetal);
+                    }
+                    shift = nInitLenMessage + (int)sizeof(szMetal) - 1;
+                    memmove(szMessage+shift, szMessage + nInitLenMessage, (len-nInitLenMessage)*sizeof(szMessage[0]));
+                    memcpy(szMessage + nInitLenMessage, szMetal, sizeof(szMetal)-sizeof(szMessage[0]));
+                    szMessage[shift+len-nInitLenMessage] = '\0';
+                }
+                ulProcessingTime += InchiTimeElapsed(&ulTStart);
                 
                 ret = 0;
 

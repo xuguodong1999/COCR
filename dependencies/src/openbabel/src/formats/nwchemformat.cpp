@@ -299,14 +299,15 @@ static const char* OPTIMIZATION_END_PATTERN = "  Optimization converged";
             continue;
         }
         blank_line = false;
-        if (vs[0][0] == '0')
+        if (vs[0][0] == '0') {
             charge = atoi(vs[4].c_str());
-        else if (vs[0][0] == '1')
+        }
+        else if (vs[0][0] == '1') {
             for (unsigned int i = 0; i < 3; i++)
-                if (vs[i+1][0] == '1')
+                if (vs[i + 1][0] == '1')
                     dipole[i] = atof(vs[4].c_str());
-        else if (vs[0][0] == '2')
-        {
+        }
+        else if (vs[0][0] == '2') {
             double value = atof(vs[4].c_str());
             unsigned int i[2], j = 0;
             for (unsigned int k = 0 ; k<3; k++)

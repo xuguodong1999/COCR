@@ -544,7 +544,7 @@ namespace OpenBabel
     eigenvectors. The eigenvectors are normalized and mutually
     orthogonal.
   */
-  void matrix3x3::jacobi(unsigned int n, double *a, double *d, double *v)
+  void matrix3x3::jacobi(int n, double *a, double *d, double *v)
   {
     double onorm, dnorm;
     double b, dma, q, t, c, s;
@@ -556,9 +556,9 @@ namespace OpenBabel
 
     // Set v to the identity matrix, set the vector d to contain the
     // diagonal elements of the matrix a
-    for (j = 0; j < static_cast<int>(n); j++)
+    for (j = 0; j < n; j++)
       {
-        for (i = 0; i < static_cast<int>(n); i++)
+        for (i = 0; i < n; i++)
           v[n*i+j] = 0.0;
         v[n*j+j] = 1.0;
         d[j] = a[n*j+j];
@@ -571,7 +571,7 @@ namespace OpenBabel
         // onorm to the maximum norm of the off-diagonal elements
         dnorm = 0.0;
         onorm = 0.0;
-        for (j = 0; j < static_cast<int>(n); j++)
+        for (j = 0; j < n; j++)
           {
             dnorm += (double)fabs(d[j]);
             for (i = 0; i < j; i++)
@@ -581,7 +581,7 @@ namespace OpenBabel
         if((onorm/dnorm) <= 1.0e-12)
           goto Exit_now;
 
-        for (j = 1; j < static_cast<int>(n); j++)
+        for (j = 1; j < n; j++)
           {
             for (i = 0; i <= j - 1; i++)
               {
@@ -618,14 +618,14 @@ namespace OpenBabel
                         a[n*i+k] = atemp;
                       }
 
-                    for (k = j+1; k < static_cast<int>(n); k++)
+                    for (k = j+1; k < n; k++)
                       {
                         atemp = c * a[n*i+k] - s * a[n*j+k];
                         a[n*j+k] = s * a[n*i+k] + c * a[n*j+k];
                         a[n*i+k] = atemp;
                       }
 
-                    for (k = 0; k < static_cast<int>(n); k++)
+                    for (k = 0; k < n; k++)
                       {
                         vtemp = c * v[n*k+i] - s * v[n*k+j];
                         v[n*k+j] = s * v[n*k+i] + c * v[n*k+j];
@@ -646,11 +646,11 @@ namespace OpenBabel
     // smallest eigenvalues come first.
     nrot = l;
 
-    for (j = 0; j < static_cast<int>(n)-1; j++)
+    for (j = 0; j < n - 1; j++)
       {
         k = j;
         dtemp = d[k];
-        for (i = j+1; i < static_cast<int>(n); i++)
+        for (i = j+1; i < n; i++)
           if(d[i] < dtemp)
             {
               k = i;
@@ -661,7 +661,7 @@ namespace OpenBabel
           {
             d[k] = d[j];
             d[j] = dtemp;
-            for (i = 0; i < static_cast<int>(n); i++)
+            for (i = 0; i < n; i++)
               {
                 dtemp = v[n*i+k];
                 v[n*i+k] = v[n*i+j];

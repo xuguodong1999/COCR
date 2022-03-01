@@ -18,8 +18,7 @@ GNU General Public License for more details.
 #pragma once
 
 #include <openbabel/babelconfig.h>
-#include <locale>
-
+#include <memory>
 namespace OpenBabel
 {
   class OBLocalePrivate;
@@ -30,13 +29,12 @@ namespace OpenBabel
   public:
 
     OBLocale();
-    ~OBLocale();
 
     void SetLocale();
     void RestoreLocale();
 
   protected:
-    OBLocalePrivate* d;
+      std::shared_ptr<OBLocalePrivate> d;
   };
 
   //global definitions

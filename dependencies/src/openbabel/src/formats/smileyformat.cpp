@@ -161,13 +161,18 @@ namespace OpenBabel
           break;
         case Smiley::AntiClockwise:
           switch (chiralNbrs.size()) {
-            case 4:
-              OBTetrahedralStereo *stereo = new OBTetrahedralStereo(mol);
-              stereo->SetConfig(OBTetrahedralStereo::Config(center, from, refs, OBStereo::AntiClockwise));
-              mol->SetData(stereo);
-              break;
+            case 4: {
+                OBTetrahedralStereo *stereo = new OBTetrahedralStereo(mol);
+                stereo->SetConfig(OBTetrahedralStereo::Config(center, from, refs, OBStereo::AntiClockwise));
+                mol->SetData(stereo);
+                break;
+            }
+            default:
+                break;
           }
           break;
+        default:
+            break;
       }
     }
 

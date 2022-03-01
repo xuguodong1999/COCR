@@ -175,7 +175,7 @@ bool XXXFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
 	/* For multi-molecule formats, leave the input stream at the start of the
 	   next molecule, ready for this routine to be called again.
 
-	/* Return true if ok. Returning false means discard the OBMol and stop
+	   Return true if ok. Returning false means discard the OBMol and stop
 	   converting, unless the -e option is set. With a multi-molecule inputstream
 	   this will skip the current molecule and continue with the next, if SkipObjects()
 	   has been defined. If it has not, and continuation after errors is still required,

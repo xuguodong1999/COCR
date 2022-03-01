@@ -123,7 +123,6 @@ private:
   void initGlobals();
   void solve(int ntypes, int z[MAXBONDS][4], int depth);
   string constring(int conntab [MAXBONDS][4], char * tstr);
-  string intToStr(int k);
   string getMCDL(OBMol* pmol, bool includeCoordinates);
   void restoreFullMCDL(string value, OBMol* pmol);
   void setMCDL(const string lineToParse, OBMol* pmol, string & sout);
@@ -180,9 +179,7 @@ private:
 {
     int  i,j,k,n,nn,icons[6],comma;
     char line[82],semis[100];
-    string result="";
-
-    result="[";
+    string result ="[";
     semis[0] = '\0';
 
     for (i=0; i<ntatoms; i++)
@@ -211,21 +208,21 @@ private:
         {
             if (icons[j] > (i+1) && comma == 0)
             {
-                sprintf(line,"%s%d",semis,icons[j]);
-                result=result+line;//strcat(sp,line);
+                result += semis;
+                result += std::to_string(icons[j]);//strcat(sp,line);
                 comma = 1;
                 semis[0] = '\0';
             }
             else if (icons[j] > (i+1) && comma == 1)
             {
-                sprintf(line,",%d",icons[j]);
-                result=result+line;//strcat(sp,line);
+                result += ",";
+                result += std::to_string(icons[j]);//strcat(sp,line);
             }
 
         }
     }
 
-    result=result+"]";
+    result += "]";
     return result;
 }
 
@@ -472,15 +469,6 @@ private:
 }
 
 
-  string MCDLFormat::intToStr(int k) {
-    char temp[16];
-    sprintf(temp,"%d",k);
-  string line=temp;
-  return line;
-  };
-
-
-
   string MCDLFormat::getMCDL(OBMol* pmol, bool includeCoordinates) {
     int  i=0;
     int  j=0;
@@ -717,17 +705,17 @@ private:
     if (netcharge != 0)
     {
         if (netcharge > 0)
-            data=data+intToStr(netcharge)+"+;";
-        else data=data+intToStr(abs(netcharge))+"-;";
+            data=data+std::to_string(netcharge)+"+;";
+        else data=data+std::to_string(abs(netcharge))+"-;";
     }
-    if (netradical != 0) data=data+intToStr(netradical)+"*;";
+    if (netradical != 0) data=data+std::to_string(netradical)+"*;";
     // fragment portion of linear descriptor
     for (i=0; i<ltypes; i++) {
       if (i > 0) {
         data=data+';';
       }
       if (ifragnum[i] > 1) {
-        data=data+intToStr(ifragnum[i]);
+        data=data+std::to_string(ifragnum[i]);
       }
       data=data+fragment[i];
     }
@@ -752,11 +740,11 @@ private:
       for (j=0; j<n; j++) {
         if ((icons[j] > (i+1)) && (comma == 0)) {
           constr=constr+semis;
-          constr=constr+intToStr(icons[j]);
+          constr=constr+std::to_string(icons[j]);
           comma = 1;
           semis="";
         }  else if ((icons[j] > (i+1)) && (comma == 1)) {
-          constr=constr+","+intToStr(icons[j]);
+          constr=constr+","+std::to_string(icons[j]);
         }
       }
       nt++;
@@ -792,9 +780,9 @@ private:
         if (n > 0) {
           for (j=0; j<nt; j++) if (chgarray[j][0] == i) {
             if (chgarray[j][1] == 0)
-              frag=""+intToStr(chgarray[j][1])+","+intToStr(abs(i))+"-";//Math.abs(i)+"-1";
+              frag=""+std::to_string(chgarray[j][1])+","+std::to_string(abs(i))+"-";//Math.abs(i)+"-1";
             else
-              frag=""+intToStr(chgarray[j][1])+","+intToStr(abs(i))+"-";//Math.abs(i)+"-"+chgarray[j][1];
+              frag=""+std::to_string(chgarray[j][1])+","+std::to_string(abs(i))+"-";//Math.abs(i)+"-"+chgarray[j][1];
             if (line.length() > 0) line=line+";";
             line=line+frag;
           }
@@ -806,9 +794,9 @@ private:
         if (n > 0) {
           for (j=0; j<nt; j++) if (chgarray[j][0] == i) {
             if (chgarray[j][1] == 0)
-              frag=""+intToStr(chgarray[j][1])+","+intToStr(i)+"+";//i+"+1";
+              frag=""+std::to_string(chgarray[j][1])+","+std::to_string(i)+"+";//i+"+1";
             else
-              frag=""+intToStr(chgarray[j][1])+","+intToStr(i)+"+";
+              frag=""+std::to_string(chgarray[j][1])+","+std::to_string(i)+"+";
             if (line.length() > 0) line=line+";";
             line=line+frag;
           }
@@ -853,9 +841,9 @@ private:
         if (n > 0) {
           for (j=0; j<nt; j++) if (chgarray[j][0] == i) {
             if (chgarray[j][1] == 0)
-              frag=""+intToStr(chgarray[j][1])+","+intToStr(i)+"*";
+              frag=""+std::to_string(chgarray[j][1])+","+std::to_string(i)+"*";
             else
-              frag=""+intToStr(chgarray[j][1])+","+intToStr(i)+"*";
+              frag=""+std::to_string(chgarray[j][1])+","+std::to_string(i)+"*";
             if (line.length() > 0) line=line+";";
             line=line+frag;
           }
@@ -1086,7 +1074,7 @@ private:
     };
   };
   if ((netcharge != 0) && (chargestring == "")) {
-    chargestring = "1," +intToStr(abs(netcharge));
+    chargestring = "1," +std::to_string(abs(netcharge));
     if (netcharge < 0) chargestring=chargestring+"-"; else chargestring=chargestring+"+";
   };
   //radical processing
@@ -1099,7 +1087,7 @@ private:
     };
   };
   if ((netradical != 0) && (radicalstring == "")) {
-    radicalstring= "1," + intToStr(abs(netcharge)) + "*";
+    radicalstring= "1," + std::to_string(abs(netcharge)) + "*";
   };
 
   n1=indexOf(value,"]");
@@ -1145,7 +1133,7 @@ private:
         ss=mf.substr(mf.length()-1,mf.length());
         k=atoi(ss.c_str())+1;//Integer.parseInt(ss)+1;
       } else k=2;
-      mf=mf.substr(0,n2+1)+intToStr(k);
+      mf=mf.substr(0,n2+1)+std::to_string(k);
       n2=lastIndexOf(mf,"HH");
     };
     //passed to this point...

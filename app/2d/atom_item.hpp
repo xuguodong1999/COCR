@@ -22,9 +22,9 @@ public:
 
     void setHTML(const QString &_html);
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
 
     /**
      * 设置图元左边缘中心位置，仅在初始化时调用

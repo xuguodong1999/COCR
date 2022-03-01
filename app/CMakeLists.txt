@@ -10,7 +10,7 @@ include_directories(${COCR_INCLUDE_DIR})
 
 set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
 if (NOT ANDROID) # use apk_shell for android-qt project
-    find_package(Qt5 COMPONENTS  ${QT_COMPONENTS} LinguistTools REQUIRED)
+    find_package(Qt5 COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
 endif ()
 find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
@@ -27,13 +27,6 @@ if (WITH_OPENVINO)
     add_definitions(-DWITH_OPENVINO)
 endif (WITH_OPENVINO)
 
-if (ANDROID)
-    set(ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android/settings CACHE INTERNAL "")
-    qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_ASSETS_DIR}/leafxy_ncnn.qrc)
-else ()
-    qt5_add_big_resources(LEAFXY_MODEL_QRC_FILE ${COCR_ASSETS_DIR}/leafxy_ocv_dnn.qrc)
-endif ()
-
 # source dir
 set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./chem ./ocr)
 if (NOT ANDROID)
@@ -41,11 +34,12 @@ if (NOT ANDROID)
 endif ()
 
 # collect source files
-set(PROJECT_SOURCE ${LEAFXY_MODEL_QRC_FILE} ${COCR_ASSETS_DIR}/leafxy.qrc ${OpenBabel_QRC})
+set(PROJECT_SOURCE ${OpenBabel_QRC} ${COCR_ASSETS_DIR}/leafxy.qrc ${CMAKE_CURRENT_BINARY_DIR}/leafxy_trans.qrc)
+
 foreach (SRC_DIR ${SRC_DIR_LIST})
-    set(_PROJECT_SOURCE)
-    aux_source_directory(${SRC_DIR} PROJECT_SOURCES)
-    list(APPEND PROJECT_SOURCE ${PROJECT_SOURCES})
+    aux_source_directory(${SRC_DIR} DIR_SRC)
+    list(APPEND PROJECT_SOURCE ${DIR_SRC})
+    unset(DIR_SRC)
 endforeach ()
 
 # include windows exe info
@@ -54,15 +48,19 @@ if (MSVC)
     include_directories(${COCR_ASSETS_DIR}/windows)
 endif ()
 
-list(APPEND PROJECT_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/leafxy_trans.qrc)
-
 # add exe
 if (ANDROID)
-    add_library(${APP_NAME} SHARED ${PROJECT_SOURCE} ${ANDROID_PACKAGE_SOURCE_DIR}/AndroidManifest.xml)
+    qt5_add_big_resources(MODEL_QRC ${COCR_ASSETS_DIR}/leafxy_ncnn.qrc)
+    set(ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android CACHE INTERNAL "")
+    add_library(${APP_NAME} SHARED
+            ${PROJECT_SOURCE}
+            ${MODEL_QRC}
+            ${ANDROID_PACKAGE_SOURCE_DIR}/AndroidManifest.xml)
     # override no rtti and exceptions in ncnn
     set_target_properties(ncnn PROPERTIES INTERFACE_COMPILE_OPTIONS "-fexceptions")
 else ()
-    add_executable(${APP_NAME} ${PROJECT_SOURCE})
+    qt5_add_big_resources(MODEL_QRC ${COCR_ASSETS_DIR}/leafxy_ocv_dnn.qrc)
+    add_executable(${APP_NAME} ${PROJECT_SOURCE} ${MODEL_QRC})
 endif ()
 
 # product suffix
@@ -73,7 +71,7 @@ if (MSVC)
     set_target_properties(${APP_NAME} PROPERTIES WIN32_EXECUTABLE YES LINK_FLAGS "/ENTRY:mainCRTStartup")
 endif ()
 
-set(QT_COMPONENT_TARGETS)
+unset(QT_COMPONENT_TARGETS)
 foreach (QT_COMPONENT ${QT_COMPONENTS})
     list(APPEND QT_COMPONENT_TARGETS Qt5::${QT_COMPONENT})
 endforeach ()
@@ -84,7 +82,7 @@ target_link_libraries(${APP_NAME} PRIVATE
         ${QT_COMPONENT_TARGETS}
         opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
 
-# on desktop, i prefer to use large yolo weights by opencv_dnn, instead of ncnn
+# on desktop, USE opencv_dnn instead of ncnn
 if (NOT ANDROID)
     target_link_libraries(${APP_NAME} PRIVATE opencv_dnn)
 endif ()

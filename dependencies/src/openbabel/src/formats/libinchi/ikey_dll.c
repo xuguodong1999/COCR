@@ -262,7 +262,7 @@ size_t bytelen = 32;
     if (jproto)
     {
         /* 2009-01-07 fix bug/typo: assigned incorrect length to the protonation segment of 
-        /* source string ( was sproto[ncp]='\0'; should be sproto[lenproto]='\0'; )  */
+           source string ( was sproto[ncp]='\0'; should be sproto[lenproto]='\0'; )  */
         int lenproto = j - (int) jproto;
         if (lenproto<3)
         {	

@@ -16,29 +16,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 #include <openbabel/locale.h>
-#include <cstdlib>
-#include <cstring>
-
+#include <locale>
 namespace OpenBabel
 {
   class OBLocalePrivate {
   public:
-    char *old_locale_string;
-#if HAVE_USELOCALE
-    locale_t new_c_num_locale;
-    locale_t old_locale;
-#endif
     unsigned int counter; // Reference counter -- ensures balance in SetLocale/RestoreLocale calls
-
+    std::locale oldLocale;
     OBLocalePrivate(): counter(0)
     {
-#if HAVE_USELOCALE
-      new_c_num_locale = newlocale(LC_NUMERIC_MASK, NULL, NULL);
-#endif
+      std::locale::global(std::locale("C"));
     }
-
-    ~OBLocalePrivate()
-    {    }
   }; // class definition for OBLocalePrivate
 
   /** \class OBLocale locale.h <openbabel/locale.h>
@@ -68,37 +56,15 @@ namespace OpenBabel
    * to SetLocale() and the last call to RestoreLocale() will do any work.
    **/
 
-  OBLocale::OBLocale()
-  {
-    d = new OBLocalePrivate;
-  }
-
-  OBLocale::~OBLocale()
-  {
-    if (d) {
-      delete d;
-      d = nullptr;
-    }
-  }
+  OBLocale::OBLocale(): d(std::make_shared<OBLocalePrivate>()) {}
 
   void OBLocale::SetLocale()
   {
     if (d->counter == 0) {
       // Set the locale for number parsing to avoid locale issues: PR#1785463
-#if HAVE_USELOCALE
       // Extended per-thread interface
-      d->old_locale = uselocale(d->new_c_num_locale);
-#else
-#ifndef ANDROID
-      // Original global POSIX interface
-      // regular UNIX, no USELOCALE, no ANDROID
-      d->old_locale_string = strdup(setlocale(LC_NUMERIC, nullptr));
-#else
-      // ANDROID should stay as "C" -- Igor Filippov
-      d->old_locale_string = "C";
-#endif
-  	  setlocale(LC_NUMERIC, "C");
-#endif
+      d->oldLocale = std::locale();
+      std::locale::global(std::locale("C"));
     }
 
     ++d->counter;
@@ -109,15 +75,7 @@ namespace OpenBabel
     --d->counter;
     if(d->counter == 0) {
       // return the locale to the original one
-#ifdef HAVE_USELOCALE
-      uselocale(d->old_locale);
-#else
-      setlocale(LC_NUMERIC, d->old_locale_string);
-#ifndef ANDROID
-      // Don't free on Android because "C" is a static ctring constant
-      free (d->old_locale_string);
-#endif
-#endif
+        std::locale::global(d->oldLocale);
     }
   }
 

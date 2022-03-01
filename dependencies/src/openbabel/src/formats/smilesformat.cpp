@@ -2848,19 +2848,15 @@ namespace OpenBabel {
       hcount--;
     if (hcount > 0) {
       if (options.smarts && stereo == nullptr) {
-        char tcount[10];
         for (int i = 0; i < hcount; ++i) {
           buffer += "!H";
-          snprintf(tcount, 10, "%d", i);
-          buffer += tcount;
+          buffer += std::to_string(i);
         }
       }
       else {
         buffer += 'H';
         if (hcount > 1) {
-          char tcount[10];
-          snprintf(tcount, 10, "%d", hcount);
-          buffer += tcount;
+          buffer += std::to_string(hcount);
         }
       }
     }
@@ -2872,11 +2868,9 @@ namespace OpenBabel {
         buffer += '+';
       else
         buffer += '-';
-
-      if (abs(charge) > 1) {
-        char tchar[10];
-        snprintf(tchar, 10, "%d", abs(charge));
-        buffer += tchar;
+      int abs_charge = std::abs(charge);
+      if (abs_charge > 1) {
+        buffer += std::to_string(abs_charge);
       }
     }
 
@@ -2889,9 +2883,7 @@ namespace OpenBabel {
           int ac = acdata->GetGenericValue();
           if (ac >= 0) { // Allow 0, why not?
             buffer += ':';
-            char tchar[12]; // maxint has 10 digits
-            snprintf(tchar, 12, "%d", ac);
-            buffer += tchar;
+            buffer += std::to_string(ac);
           }
         }
       }

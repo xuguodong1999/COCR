@@ -69,6 +69,8 @@
 
 #include "ichirvrs.h"
 
+#pragma clang diagnostic ignored "-Wunsequenced"
+
 /******************************************************************************************************/
 void CopyAt2St( inp_ATOM *at, inp_ATOM_STEREO * st, int num_atoms )
 {

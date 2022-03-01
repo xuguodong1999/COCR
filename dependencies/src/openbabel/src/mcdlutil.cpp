@@ -5023,8 +5023,16 @@ namespace OpenBabel {
     };
 
     if (bondLabel != nullptr && nBonds() > 0) {
-      bondLabel->resize(molecule1->nBonds());
-      if (test2) for (j=0; j<molecule1->nBonds(); j++) if (bSTested[j]>=0) (*bondLabel)[j]=1; else (*bondLabel)[j]=0;
+        bondLabel->resize(molecule1->nBonds());
+        if (test2) {
+            for (j = 0; j < molecule1->nBonds(); j++) {
+                if (bSTested[j] >= 0) {
+                    (*bondLabel)[j] = 1;
+                } else {
+                    (*bondLabel)[j] = 0;
+                }
+            }
+        }
     };
     result=test2;
 

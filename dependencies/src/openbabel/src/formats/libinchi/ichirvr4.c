@@ -70,6 +70,8 @@
 #include "ichirvrs.h"
 /*^^^ */
 
+#pragma clang diagnostic ignored "-Wunsequenced"
+
 /********************** Forbid carbon charge edges ***********************************/
 int ForbidCarbonChargeEdges( BN_STRUCT *pBNS, ALL_TC_GROUPS *pTCGroups, EDGE_LIST *pCarbonChargeEdges, int forbidden_edge_mask  )
 {
@@ -3131,7 +3133,7 @@ int AddRemIsoProtonsInRestrStruct( ICHICONST INPUT_PARMS *ip_inp,  STRUCT_DATA *
                                         Process and save charge delta.
     -----------------------------------------------------------------------------------*/
 
-    for ( iComp = 0; iComp < num_components && num_prot; iComp ++ ) {
+    for ( iComp = 0; iComp < num_components; iComp ++ ) {
         bAccumulateChanges = 0;
         if ( pStruct[iComp].nLink < 0 && num_componentsR > 0 ) {
             /* check */

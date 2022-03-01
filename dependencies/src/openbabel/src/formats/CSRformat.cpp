@@ -58,7 +58,7 @@ namespace OpenBabel
     int MolCount; //was = 1;
 
     void WriteSize(int,ostream&);
-    char *PadString(char*,int);
+    std::string PadString(const std::string &input, const size_t &length, const char &b = ' ');
     void WriteCSRHeader(ostream&,OBMol&);
     void WriteCSRCoords(ostream&,OBMol&);
 
@@ -97,10 +97,9 @@ namespace OpenBabel
 
   void CSRFormat::WriteCSRHeader(ostream &ofs,OBMol &mol)
   {
-    char *molnames;
     int nmol, natom;
 
-    molnames = PadString((char*)mol.GetTitle(),100);
+    std::string molnames = PadString(mol.GetTitle(),100);
 
     nmol = 1;
     natom = mol.NumAtoms();
@@ -115,14 +114,12 @@ namespace OpenBabel
     WriteSize(2*sizeof(int),ofs);
 
     WriteSize(100*sizeof(char),ofs);
-    ofs.write(molnames,100*sizeof(char));
+    ofs.write(molnames.c_str(),100*sizeof(char));
     WriteSize(100*sizeof(char),ofs);
 
     WriteSize(sizeof(int),ofs);
     ofs.write((char*)&natom,sizeof(int));
     WriteSize(sizeof(int),ofs);
-
-    delete [] molnames;
   }
 
   void CSRFormat::WriteCSRCoords(ostream &ofs,OBMol &mol)
@@ -130,7 +127,6 @@ namespace OpenBabel
     int the_size,jconf;
     double x,y,z,energy;
     char title[100];
-    char *tag;
 
     the_size = sizeof(int) + sizeof(double) + (80 * sizeof(char));
 
@@ -138,12 +134,12 @@ namespace OpenBabel
     energy = -2.584565;
 
     snprintf(title, 80, "%s:%d",mol.GetTitle(),MolCount);
-    tag = PadString(title,80);
+    std::string tag = PadString(title,80);
 
     WriteSize(the_size,ofs);
     ofs.write((char*)&jconf,sizeof(int));
     ofs.write((char*)&energy,sizeof(double));
-    ofs.write(tag,80*sizeof(char));
+    ofs.write(tag.c_str(),80*sizeof(char));
     WriteSize(the_size,ofs);
 
     WriteSize(mol.NumAtoms()*sizeof(double),ofs);
@@ -172,8 +168,6 @@ namespace OpenBabel
         ofs.write((char*)&z,sizeof(double));
       }
     WriteSize(mol.NumAtoms()*sizeof(double),ofs);
-
-    delete [] tag;
   }
 
   void CSRFormat::WriteSize(int size,ostream &ofs)
@@ -181,15 +175,11 @@ namespace OpenBabel
     ofs.write((char*)&size,sizeof(int));
   }
 
-  char* CSRFormat::PadString(char *input, int size)
+  std::string CSRFormat::PadString(const std::string &input, const size_t &length, const char &b)
   {
-    char *output;
-
-    output = new char[size];
-    memset(output, ' ', size);
-    strncpy(output, input, strlen(input));
-    output[ size - 1] = '\0';
-    return(output);
+    std::string output(b, length);
+    output.replace(0,(std::min)(input.length(),length),input);
+    return output;
   }
 
 } //namespace OpenBabel

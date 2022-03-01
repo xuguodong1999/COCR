@@ -279,7 +279,7 @@ namespace OpenBabel
       friend OB_EXPORT std::ostream& operator<< (std::ostream&, const matrix3x3 & ) ;
 
       //! Eigenvalue calculation
-      static void jacobi(unsigned int n, double *a, double *d, double *v);
+      static void jacobi(int n, double *a, double *d, double *v);
     };
 
 #ifndef SWIG

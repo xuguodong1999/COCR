@@ -32,9 +32,9 @@ public:
     void setBond(AtomItem *_from, AtomItem *_to, const cocr::BondType &_type = cocr::BondType::SingleBond,
                  const float &_offset1 = 0.5, const float &_offset2 = 0.5);
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e) override;

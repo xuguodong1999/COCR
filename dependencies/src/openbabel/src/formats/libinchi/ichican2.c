@@ -3071,23 +3071,19 @@ L8: /* here nu is discrete: check rho for being a bettere leaf or isomorphism */
     /*if ( !lab || qzb_rho < 0 || !QZFIX_OK(qzb_rho_fix) )*/
     if ( !lab || ((qzb_rho < 0) && ( !pzb_rho_fix || qzb_rho_fix > 0 )) )
         goto L6;
-    if ( pzb_rho_fix && kLeast_rho_fix && 0 == qzb_rho_fix ) {
+    if ( pzb_rho_fix && 0 == qzb_rho_fix ) {
         /* check for the rejection condition: Lambda > zb_rho_fix */
-        if ( kLeast_rho_fix ) {
-            int qzb_rho_fix_alt;
-            qzb_rho_fix     = CtFullCompareLayers( kLeast_rho_fix );
-            /* for debug only */
-            qzb_rho_fix_alt =  CtFullCompare( &Lambda, pzb_rho_fix, 1, bSplitTautCompare );
-            if ( qzb_rho_fix != qzb_rho_fix_alt ) {
+        int qzb_rho_fix_alt;
+        qzb_rho_fix     = CtFullCompareLayers( kLeast_rho_fix );
+        /* for debug only */
+        qzb_rho_fix_alt =  CtFullCompare( &Lambda, pzb_rho_fix, 1, bSplitTautCompare );
+        if ( qzb_rho_fix != qzb_rho_fix_alt ) {
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
-                int stop = 1;
+            int stop = 1;
 #endif
-                qzb_rho_fix = qzb_rho_fix_alt;
-            }
-            /* end debug */
-        } else {
-            qzb_rho_fix = CtFullCompare( &Lambda, pzb_rho_fix, 1, bSplitTautCompare );
+            qzb_rho_fix = qzb_rho_fix_alt;
         }
+        /* end debug */
         if ( !pzb_rho_fix_reached ) {
             pzb_rho_fix_reached = !qzb_rho_fix;
         }
@@ -3111,21 +3107,17 @@ L8: /* here nu is discrete: check rho for being a bettere leaf or isomorphism */
     /* !!! we should never come here if G(nu) != G(rho): CtPartCompare must be enough !!! */
     
     /* if ( G(nu) > G(rho) ) goto L9; */
-    if ( kLeast_rho ) {
-        int cur_qzb_alt;
-        qzb_rho =     CtFullCompareLayers( kLeast_rho );
-        /* for debug only */
-        cur_qzb_alt = CtFullCompare( &Lambda, pzb_rho, 0, bSplitTautCompare );
-        if ( qzb_rho != cur_qzb_alt ) {
+    int cur_qzb_alt;
+    qzb_rho =     CtFullCompareLayers( kLeast_rho );
+    /* for debug only */
+    cur_qzb_alt = CtFullCompare( &Lambda, pzb_rho, 0, bSplitTautCompare );
+    if ( qzb_rho != cur_qzb_alt ) {
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
-            int stop = 1;
+        int stop = 1;
 #endif
-            qzb_rho = cur_qzb_alt;
-        }
-        /* end debug */
-    } else {
-        qzb_rho = CtFullCompare( &Lambda, pzb_rho, 0, bSplitTautCompare );
+        qzb_rho = cur_qzb_alt;
     }
+    /* end debug */
     /* qzb_rho difference can be due to layers 1..MAX_LAYERS-1 only */
     if ( 0 < qzb_rho ) {
         /* CtFullCompare( &Lambda, pzb_rho, 0, bSplitTautCompare ); */

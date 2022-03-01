@@ -3585,7 +3585,7 @@ int MarkTautomerGroups( inp_ATOM *at, int num_atoms, T_GROUP_INFO *t_group_info,
         AT_RANK *nDfsPathPos = (AT_RANK  *)inchi_calloc( num_atoms, sizeof(nDfsPathPos[0]) );
         DFS_PATH DfsPath[MAX_ALT_PATH_LEN];
         int      ret;
-        if ( !nDfsPathPos || !DfsPath ) {
+        if ((!nDfsPathPos) != 0) {
             tot_changes = CT_OUT_OF_RAM;  /*   <BRKPT> */
             goto free_memory;
         }

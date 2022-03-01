@@ -910,6 +910,8 @@ bool ChemKinFormat::WriteReactionLine(OBReaction* pReact, OBConversion* pConv)
     case OBRateData::SRI:
     case OBRateData::LINDERMANN:
       mstring = " (+M) ";
+    default:
+      break;
     }
   }
 
@@ -997,7 +999,7 @@ bool ChemKinFormat::WriteReactionLine(OBReaction* pReact, OBConversion* pConv)
         << fixed << pRD->GetLoRate(OBRateData::n) << ' '
         << setprecision(1) << pRD->GetLoRate(OBRateData::E) << '/' << endl;
       //fallthrough
-    case OBRateData::THREEBODY:
+    case OBRateData::THREEBODY: {
       string id;
       double eff;
       int neffs=0;
@@ -1009,6 +1011,9 @@ bool ChemKinFormat::WriteReactionLine(OBReaction* pReact, OBConversion* pConv)
       }
       if(neffs)
         ss << endl;
+      }
+    default:
+      break;
     }
   }
   else //simple option
