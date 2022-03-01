@@ -80,7 +80,7 @@ void fprint_digest( FILE* fw, const char *header, unsigned char *a );
 
 
 /****************************************************************************/
-EXPIMP_TEMPLATE INCHI_EXPORT
+extern INCHI_EXPORT
 int GetStdINCHIKeyFromStdINCHI( const char* szINCHISource,
                                            char* szINCHIKey )
 {
@@ -101,7 +101,7 @@ int GetStdINCHIKeyFromStdINCHI( const char* szINCHISource,
 
 
 /****************************************************************************/
-EXPIMP_TEMPLATE INCHI_EXPORT
+extern INCHI_EXPORT
 int GetINCHIKeyFromINCHI( const char* szINCHISource,
                                      const int xtra1,
                                      const int xtra2,
@@ -501,7 +501,7 @@ fin:
 /****************************************************************************
 Check if the string represents valid InChIKey.
 ****************************************************************************/
-EXPIMP_TEMPLATE INCHI_EXPORT int CheckINCHIKey( const char *szINCHIKey )
+extern INCHI_EXPORT int CheckINCHIKey( const char *szINCHIKey )
 {
     size_t slen, j;
 
