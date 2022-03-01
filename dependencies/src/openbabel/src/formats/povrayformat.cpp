@@ -29,6 +29,7 @@ GNU General Public License for more details.
 #include <sstream>
 #include <cctype>
 #include <functional>
+#include <algorithm>
 
 /* ---- Max. length of a atom-label ---- */
 #define StrLen 32

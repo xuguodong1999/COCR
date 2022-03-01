@@ -32,7 +32,7 @@
  */
 
 
-#include "mode.h"
+#include "../mode.h"
 #include "inchi_api.h"
 #include "ixa_status.h"
 #include <stdlib.h>
@@ -69,7 +69,7 @@ static IXA_INCHIKEYBUILDER_HANDLE KEYBUILDER_Pack( INCHIKEYBUILDER *pKeyBuilder 
 
 
 /****************************************************************************/
-IXA_INCHIKEYBUILDER_HANDLE  IXA_INCHIKEYBUILDER_Create( IXA_STATUS_HANDLE hStatus )
+IXA_INCHIKEYBUILDER_HANDLE INCHI_DECL IXA_INCHIKEYBUILDER_Create( IXA_STATUS_HANDLE hStatus )
 {
     INCHIKEYBUILDER* key_builder = (INCHIKEYBUILDER*) inchi_malloc( sizeof( INCHIKEYBUILDER ) );
     if (!key_builder)
@@ -84,7 +84,7 @@ IXA_INCHIKEYBUILDER_HANDLE  IXA_INCHIKEYBUILDER_Create( IXA_STATUS_HANDLE hStatu
 
 
 /****************************************************************************/
-void  IXA_INCHIKEYBUILDER_Destroy( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_INCHIKEYBUILDER_Destroy( IXA_STATUS_HANDLE hStatus,
                                              IXA_INCHIKEYBUILDER_HANDLE hKeyBuilder )
 {
     INCHIKEYBUILDER* key_builder = KEYBUILDER_Unpack( hStatus, hKeyBuilder );
@@ -96,7 +96,7 @@ void  IXA_INCHIKEYBUILDER_Destroy( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_INCHIKEYBUILDER_SetInChI( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_INCHIKEYBUILDER_SetInChI( IXA_STATUS_HANDLE hStatus,
                                               IXA_INCHIKEYBUILDER_HANDLE hKeyBuilder,
                                               const char *pInChI )
 {
@@ -120,7 +120,7 @@ void  IXA_INCHIKEYBUILDER_SetInChI( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-const char*  IXA_INCHIKEYBUILDER_GetInChIKey( IXA_STATUS_HANDLE hStatus,
+const char* INCHI_DECL IXA_INCHIKEYBUILDER_GetInChIKey( IXA_STATUS_HANDLE hStatus,
                                                         IXA_INCHIKEYBUILDER_HANDLE hKeyBuilder )
 {
     INCHIKEYBUILDER* key_builder = KEYBUILDER_Unpack( hStatus, hKeyBuilder );

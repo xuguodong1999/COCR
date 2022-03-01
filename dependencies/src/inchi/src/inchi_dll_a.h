@@ -122,6 +122,11 @@ typedef struct tagINCHIGEN_CONTROL
 } INCHIGEN_CONTROL;
 
 
+
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Exported functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+
 /* to compile all InChI code as a C++ code #define COMPILE_ALL_CPP */
 #ifndef COMPILE_ALL_CPP
 #ifdef __cplusplus

@@ -34,9 +34,9 @@
 
 #include "string.h"
 
-#include "mode.h"
+#include "../mode.h"
 #include "inchi_api.h"
-#include "util.h"
+#include "../util.h"
 #include "ixa_mol.h"
 #include "ixa_status.h"
 
@@ -177,7 +177,7 @@ static IXA_BONDID FindCumuleneCentre( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_ReadInChI( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_ReadInChI( IXA_STATUS_HANDLE hStatus,
                                    IXA_MOL_HANDLE    hMolecule,
                                    const char*       pInChI )
 {

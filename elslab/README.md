@@ -9,6 +9,8 @@
 # due to qt-community-lts issues, 
 # qt-5.15.2 only support single project-level apk build
 cmake .. -G "Ninja" -DQt5_DIR:PATH=~/shared/Qt/5.15.2/android/lib/cmake/Qt5 -DCMAKE_TOOLCHAIN_FILE=~/Android/Sdk/ndk/21.4.7075529/build/cmake/android.toolchain.cmake -DANDROID_PLATFORM=30 -DANDROID=ON -DANDROID_ABI=armeabi-v7a -DJAVA_HOME=~/shared/jdk1.8.0_30 -DANDROID_NATIVE_API_LEVEL=24 -DANDROID_BUILD_ABI_armeabi-v7a=ON -DANDROID_DEPLOY_QT:FILEPATH=~/shared/Qt/5.15.2/android/bin/androiddeployqt -DANDROID_SDK:PATH=~/Android/Sdk -DANDROID_NDK:PATH=~/Android/Sdk/ndk/21.4.7075529
+# windows host build for android platform
+cmake .. -G "Ninja" -DQt5_DIR:PATH=C:/Qt/5.15.2/android/lib/cmake/Qt5 -DCMAKE_TOOLCHAIN_FILE=C:/Users/xgd/AppData/Local/Android/Sdk/ndk/21.4.7075529/build/cmake/android.toolchain.cmake -DANDROID_PLATFORM=30 -DANDROID=ON -DANDROID_ABI=armeabi-v7a -DJAVA_HOME=C:/Library/Runtime/jdk-1.8.0_291 -DANDROID_NATIVE_API_LEVEL=24 -DANDROID_BUILD_ABI_armeabi-v7a=ON -DANDROID_DEPLOY_QT:FILEPATH=C:/Qt/5.15.2/android/bin/androiddeployqt -DANDROID_SDK:PATH=C:/Users/xgd/AppData/Local/Android/Sdk -DANDROID_NDK:PATH=C:/Users/xgd/AppData/Local/Android/Sdk/ndk/21.4.7075529
 
 cmake --build . -j $(nproc) --config Release
 
@@ -37,5 +39,13 @@ git clone --recursive https://github.com/pytorch/pytorch
 git submodule sync
 git submodule update --init --recursive
 
+# ubuntu host build
 cmake -G "Ninja" ~/git/pytorch -DCMAKE_INSTALL_PREFIX=~/shared/libtorch -DOpenCV_DIR=~/shared/opencv4/lib/cmake/opencv4 -DBUILD_PYTHON=OFF -DUSE_OPENCV=ON -DUSE_DISTRIBUTED=OFF -DUSE_TENSORPIPE=OFF -DUSE_CUDA=ON -DUSE_MKLDNN=ON -DUSE_NCCL=OFF -DUSE_NUMPY=OFF -DCMAKE_BUILD_TYPE=Release -DBUILD_DOCS=ON -DCMAKE_INSTALL_DOCDIR=~/shared/libtorch/doc
+
+# windows host build
+set SHARED_LIB_DIR=C:/Library/Shared
+## debug
+cmake D:/git/pytorch -G "Ninja" -DCMAKE_INSTALL_PREFIX=%SHARED_LIB_DIR%/libtorch -DBUILD_PYTHON=OFF -DUSE_OPENCV=ON -DOpenCV_DIR=%SHARED_LIB_DIR%/opencv4/x64/vc16/lib -DUSE_DISTRIBUTED=OFF -DUSE_TENSORPIPE=OFF -DUSE_CUDA=ON -DUSE_MKLDNN=OFF -DUSE_NCCL=OFF -DUSE_NUMPY=OFF -DUSE_MKLDNN=ON -DCMAKE_BUILD_TYPE=Debug
+## release
+cmake D:/git/pytorch -G "Ninja" -DCMAKE_INSTALL_PREFIX=%SHARED_LIB_DIR%/libtorch -DBUILD_PYTHON=OFF -DUSE_OPENCV=ON -DOpenCV_DIR=%SHARED_LIB_DIR%/opencv4/x64/vc16/lib -DUSE_DISTRIBUTED=OFF -DUSE_TENSORPIPE=OFF -DBUILD_TEST=ON -DUSE_CUDA=ON -DUSE_MKLDNN=OFF -DUSE_NCCL=OFF -DUSE_MKLDNN=ON  -DUSE_NUMPY=OFF -DCMAKE_BUILD_TYPE=Release -DBUILD_DOCS=ON -DCMAKE_INSTALL_DOCDIR=%SHARED_LIB_DIR%/libtorch/doc
 ```

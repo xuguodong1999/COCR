@@ -32,9 +32,9 @@
  */
 
 
-#include "mode.h"
+#include "../mode.h"
 #include "inchi_api.h"
-#include "inpdef.h"
+#include "../inpdef.h"
 #include "ixa_status.h"
 #include "ixa_mol.h"
 #include <ctype.h>
@@ -716,7 +716,7 @@ static void BUILDER_Update( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_INCHIBUILDER_HANDLE  IXA_INCHIBUILDER_Create( IXA_STATUS_HANDLE hStatus )
+IXA_INCHIBUILDER_HANDLE INCHI_DECL IXA_INCHIBUILDER_Create( IXA_STATUS_HANDLE hStatus )
 {
     INCHIBUILDER* builder = (INCHIBUILDER*) inchi_malloc( sizeof( INCHIBUILDER ) );
     if (!builder)
@@ -737,7 +737,7 @@ IXA_INCHIBUILDER_HANDLE  IXA_INCHIBUILDER_Create( IXA_STATUS_HANDLE hStatus )
 
 
 /****************************************************************************/
-void  IXA_INCHIBUILDER_Destroy( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_INCHIBUILDER_Destroy( IXA_STATUS_HANDLE hStatus,
                                           IXA_INCHIBUILDER_HANDLE hBuilder )
 {
     INCHIBUILDER* builder = BUILDER_Unpack( hStatus, hBuilder );
@@ -755,7 +755,7 @@ void  IXA_INCHIBUILDER_Destroy( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_INCHIBUILDER_SetMolecule( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_INCHIBUILDER_SetMolecule( IXA_STATUS_HANDLE hStatus,
                                               IXA_INCHIBUILDER_HANDLE hBuilder,
                                               IXA_MOL_HANDLE hMolecule )
 {
@@ -1497,7 +1497,7 @@ void  IXA_INCHIBUILDER_SetMolecule( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_INCHIBUILDER_SetOption_Stereo( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_INCHIBUILDER_SetOption_Stereo( IXA_STATUS_HANDLE hStatus,
                                                    IXA_INCHIBUILDER_HANDLE hBuilder,
                                                    IXA_INCHIBUILDER_STEREOOPTION vValue )
 {
@@ -1511,7 +1511,7 @@ void  IXA_INCHIBUILDER_SetOption_Stereo( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_INCHIBUILDER_SetOption_Timeout( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_INCHIBUILDER_SetOption_Timeout( IXA_STATUS_HANDLE hStatus,
                                                     IXA_INCHIBUILDER_HANDLE hBuilder,
                                                     int vValue )
 {
@@ -1526,7 +1526,7 @@ void  IXA_INCHIBUILDER_SetOption_Timeout( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_INCHIBUILDER_SetOption_Timeout_MilliSeconds( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_INCHIBUILDER_SetOption_Timeout_MilliSeconds( IXA_STATUS_HANDLE hStatus,
                                                                  IXA_INCHIBUILDER_HANDLE hBuilder,
                                                                  long vValue )
 {
@@ -1540,7 +1540,7 @@ void  IXA_INCHIBUILDER_SetOption_Timeout_MilliSeconds( IXA_STATUS_HANDLE hStatus
 
 
 /****************************************************************************/
-void  IXA_INCHIBUILDER_SetOption( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_INCHIBUILDER_SetOption( IXA_STATUS_HANDLE hStatus,
                                             IXA_INCHIBUILDER_HANDLE hBuilder,
                                             IXA_INCHIBUILDER_OPTION vOption,
                                             IXA_BOOL vValue )
@@ -1659,8 +1659,8 @@ void  IXA_INCHIBUILDER_SetOption( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-extern INCHI_EXPORT
-IXA_BOOL  IXA_INCHIBUILDER_CheckOption( IXA_STATUS_HANDLE hStatus,
+EXPIMP_TEMPLATE INCHI_API
+IXA_BOOL INCHI_DECL IXA_INCHIBUILDER_CheckOption( IXA_STATUS_HANDLE hStatus,
                                                   IXA_INCHIBUILDER_HANDLE hBuilder,
                                                   IXA_INCHIBUILDER_OPTION vOption )
 {
@@ -1818,8 +1818,8 @@ IXA_BOOL  IXA_INCHIBUILDER_CheckOption( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-extern INCHI_EXPORT
-IXA_BOOL  IXA_INCHIBUILDER_CheckOption_Stereo( IXA_STATUS_HANDLE hStatus,
+EXPIMP_TEMPLATE INCHI_API
+IXA_BOOL INCHI_DECL IXA_INCHIBUILDER_CheckOption_Stereo( IXA_STATUS_HANDLE hStatus,
                                                          IXA_INCHIBUILDER_HANDLE hBuilder,
                                                          IXA_INCHIBUILDER_STEREOOPTION vValue )
 {
@@ -1840,8 +1840,8 @@ IXA_BOOL  IXA_INCHIBUILDER_CheckOption_Stereo( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-extern INCHI_EXPORT
-long  IXA_INCHIBUILDER_GetOption_Timeout_MilliSeconds( IXA_STATUS_HANDLE hStatus,
+EXPIMP_TEMPLATE INCHI_API
+long INCHI_DECL IXA_INCHIBUILDER_GetOption_Timeout_MilliSeconds( IXA_STATUS_HANDLE hStatus,
                                                                  IXA_INCHIBUILDER_HANDLE hBuilder )
 {
     INCHIBUILDER* builder = BUILDER_Unpack(hStatus, hBuilder);
@@ -1856,7 +1856,7 @@ long  IXA_INCHIBUILDER_GetOption_Timeout_MilliSeconds( IXA_STATUS_HANDLE hStatus
 
 
 /****************************************************************************/
-const char*  IXA_INCHIBUILDER_GetInChI( IXA_STATUS_HANDLE hStatus,
+const char* INCHI_DECL IXA_INCHIBUILDER_GetInChI( IXA_STATUS_HANDLE hStatus,
                                                   IXA_INCHIBUILDER_HANDLE hBuilder )
 {
     INCHIBUILDER* builder = BUILDER_Unpack( hStatus, hBuilder );
@@ -1871,7 +1871,7 @@ const char*  IXA_INCHIBUILDER_GetInChI( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-const char*  IXA_INCHIBUILDER_GetInChIEx( IXA_STATUS_HANDLE hStatus,
+const char* INCHI_DECL IXA_INCHIBUILDER_GetInChIEx( IXA_STATUS_HANDLE hStatus,
                                                     IXA_INCHIBUILDER_HANDLE hBuilder )
 {
     INCHIBUILDER* builder = BUILDER_Unpack( hStatus, hBuilder );
@@ -1886,7 +1886,7 @@ const char*  IXA_INCHIBUILDER_GetInChIEx( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-const char*  IXA_INCHIBUILDER_GetAuxInfo( IXA_STATUS_HANDLE hStatus,
+const char* INCHI_DECL IXA_INCHIBUILDER_GetAuxInfo( IXA_STATUS_HANDLE hStatus,
                                                     IXA_INCHIBUILDER_HANDLE hBuilder )
 {
     INCHIBUILDER* builder = BUILDER_Unpack( hStatus, hBuilder );
@@ -1901,7 +1901,7 @@ const char*  IXA_INCHIBUILDER_GetAuxInfo( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-const char*  IXA_INCHIBUILDER_GetLog( IXA_STATUS_HANDLE hStatus,
+const char* INCHI_DECL IXA_INCHIBUILDER_GetLog( IXA_STATUS_HANDLE hStatus,
                                                 IXA_INCHIBUILDER_HANDLE hBuilder )
 {
     INCHIBUILDER* builder = BUILDER_Unpack( hStatus, hBuilder );

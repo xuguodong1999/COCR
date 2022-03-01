@@ -798,6 +798,10 @@ if (sd->nErrorType < _IS_ERROR && prep_inp_data)
     return sd->nErrorType;
 }
 
+
+#ifndef TARGET_API_LIB
+
+
 /****************************************************************************/
 int CreateCompositeNormAtom( COMP_ATOM_DATA  *composite_norm_data,
                             INP_ATOM_DATA2  *all_inp_norm_data,
@@ -1058,6 +1062,7 @@ exit_error:
 
     return ret;
 }
+#endif
 
 
 /****************************************************************************/

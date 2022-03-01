@@ -38,12 +38,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "mode.h"
+#include "../mode.h"
 #include "inchi_api.h"
-#include "ichicomp.h"
-#include "util.h"
-#include "mol_fmt.h"
-#include "ichi_io.h"
+#include "../ichicomp.h"
+#include "../util.h"
+#include "../mol_fmt.h"
+#include "../ichi_io.h"
 
 #include "ixa_status.h"
 #include "ixa_mol.h"
@@ -68,7 +68,7 @@ static void IXA_MOL_GenericReadMolfile( IXA_STATUS_HANDLE hStatus,
 Read Molfile (throuh call to InChI native ReadMolfile() )
 and pack the data into INCHIMOL
 ****************************************************************************/
-void  IXA_MOL_ReadMolfile(IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_ReadMolfile(IXA_STATUS_HANDLE hStatus,
                                     IXA_MOL_HANDLE    hMolecule,
                                     const char*       pBytes)
 {

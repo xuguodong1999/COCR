@@ -115,8 +115,8 @@ inchi_Atom *CreateInchiAtom( int num_atoms )
 
 
 /*****************************************************************************/
-extern INCHI_EXPORT
-int  MakeINCHIFromMolfileText( const char *moltext,
+EXPIMP_TEMPLATE INCHI_API
+int INCHI_DECL MakeINCHIFromMolfileText( const char *moltext,
                                          char *szOptions,
                                          inchi_Output *result )
 {

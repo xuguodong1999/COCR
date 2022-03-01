@@ -231,54 +231,54 @@ extern "C" {
 /****************************************************************************/
 /*              Functions handling IXA Status Objects                      */
 
-    extern INCHI_EXPORT IXA_STATUS_HANDLE IXA_STATUS_Create( );
+    EXPIMP_TEMPLATE INCHI_API IXA_STATUS_HANDLE INCHI_DECL IXA_STATUS_Create( );
 
-    extern INCHI_EXPORT void IXA_STATUS_Clear( IXA_STATUS_HANDLE hStatus );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_STATUS_Clear( IXA_STATUS_HANDLE hStatus );
 
-    extern INCHI_EXPORT void IXA_STATUS_Destroy( IXA_STATUS_HANDLE hStatus );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_STATUS_Destroy( IXA_STATUS_HANDLE hStatus );
 
-    extern INCHI_EXPORT IXA_BOOL IXA_STATUS_HasError( IXA_STATUS_HANDLE hStatus );
+    EXPIMP_TEMPLATE INCHI_API IXA_BOOL INCHI_DECL IXA_STATUS_HasError( IXA_STATUS_HANDLE hStatus );
 
-    extern INCHI_EXPORT IXA_BOOL IXA_STATUS_HasWarning( IXA_STATUS_HANDLE hStatus );
+    EXPIMP_TEMPLATE INCHI_API IXA_BOOL INCHI_DECL IXA_STATUS_HasWarning( IXA_STATUS_HANDLE hStatus );
 
-    extern INCHI_EXPORT int IXA_STATUS_GetCount( IXA_STATUS_HANDLE hStatus );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_STATUS_GetCount( IXA_STATUS_HANDLE hStatus );
 
-    extern INCHI_EXPORT IXA_STATUS IXA_STATUS_GetSeverity( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_STATUS INCHI_DECL IXA_STATUS_GetSeverity( IXA_STATUS_HANDLE hStatus,
                                                                            int               vIndex );
 
-    extern INCHI_EXPORT const char* IXA_STATUS_GetMessage( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API const char* INCHI_DECL IXA_STATUS_GetMessage( IXA_STATUS_HANDLE hStatus,
                                                                            int               vIndex );
 
 
     /****************************************************************************/
     /*       Functions to Create, Clear and Destroy Molecule Objects            */
 
-    extern INCHI_EXPORT IXA_MOL_HANDLE IXA_MOL_Create( IXA_STATUS_HANDLE hStatus );
+    EXPIMP_TEMPLATE INCHI_API IXA_MOL_HANDLE INCHI_DECL IXA_MOL_Create( IXA_STATUS_HANDLE hStatus );
 
-    extern INCHI_EXPORT void IXA_MOL_Clear( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_Clear( IXA_STATUS_HANDLE hStatus,
                                                             IXA_MOL_HANDLE    hMolecule );
 
-    extern INCHI_EXPORT void IXA_MOL_Destroy( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_Destroy( IXA_STATUS_HANDLE hStatus,
                                                               IXA_MOL_HANDLE    hMolecule );
 
 
     /****************************************************************************/
     /*               Functions Operating on Complete Molecules                  */
 
-    extern INCHI_EXPORT void IXA_MOL_ReadMolfile( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_ReadMolfile( IXA_STATUS_HANDLE hStatus,
                                                                    IXA_MOL_HANDLE    hMolecule,
                                                                    const char*       pBytes );
 
     
-    extern INCHI_EXPORT void IXA_MOL_ReadInChI( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_ReadInChI( IXA_STATUS_HANDLE hStatus,
                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                  const char*       pInChI );
 
-    extern INCHI_EXPORT void IXA_MOL_SetChiral( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetChiral( IXA_STATUS_HANDLE hStatus,
                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                  IXA_BOOL          vChiral );
 
-    extern INCHI_EXPORT IXA_BOOL IXA_MOL_GetChiral( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BOOL INCHI_DECL IXA_MOL_GetChiral( IXA_STATUS_HANDLE hStatus,
                                                                      IXA_MOL_HANDLE    hMolecule );
 
 
@@ -286,51 +286,51 @@ extern "C" {
     /****************************************************************************/
     /*               Functions to Add and Define Atoms                          */
 
-    extern INCHI_EXPORT IXA_ATOMID IXA_MOL_CreateAtom( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_ATOMID INCHI_DECL IXA_MOL_CreateAtom( IXA_STATUS_HANDLE hStatus,
                                                                         IXA_MOL_HANDLE    hMolecule );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomElement( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomElement( IXA_STATUS_HANDLE hStatus,
                                                                       IXA_MOL_HANDLE    hMolecule,
                                                                       IXA_ATOMID        vAtom,
                                                                       const char*       pElement );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
                                                                            IXA_MOL_HANDLE    hMolecule,
                                                                            IXA_ATOMID        vAtom,
                                                                            int               vAtomicNumber );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomMass( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomMass( IXA_STATUS_HANDLE hStatus,
                                                                    IXA_MOL_HANDLE    hMolecule,
                                                                    IXA_ATOMID        vAtom,
                                                                    int               vMassNumber );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomCharge( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomCharge( IXA_STATUS_HANDLE hStatus,
                                                                      IXA_MOL_HANDLE    hMolecule,
                                                                      IXA_ATOMID        vAtom,
                                                                      int               vCharge );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomRadical( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomRadical( IXA_STATUS_HANDLE hStatus,
                                                                      IXA_MOL_HANDLE    hMolecule,
                                                                      IXA_ATOMID        vAtom,
                                                                      IXA_ATOM_RADICAL  vRadical );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
                                                                        IXA_MOL_HANDLE    hMolecule,
                                                                        IXA_ATOMID        vAtom,
                                                                        int               vHydrogenMassNumber,
                                                                        int               vHydrogenCount );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomX( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomX( IXA_STATUS_HANDLE hStatus,
                                                                IXA_MOL_HANDLE    hMolecule,
                                                                IXA_ATOMID        vAtom,
                                                                double            vX );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomY( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomY( IXA_STATUS_HANDLE hStatus,
                                                                IXA_MOL_HANDLE    hMolecule,
                                                                IXA_ATOMID        vAtom,
                                                                double            vY );
 
-    extern INCHI_EXPORT void IXA_MOL_SetAtomZ( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetAtomZ( IXA_STATUS_HANDLE hStatus,
                                                                IXA_MOL_HANDLE    hMolecule,
                                                                IXA_ATOMID        vAtom,
                                                                double            vZ );
@@ -339,23 +339,23 @@ extern "C" {
     /****************************************************************************/
     /*               Functions to Add and Define Bonds                          */
 
-    extern INCHI_EXPORT IXA_BONDID IXA_MOL_CreateBond( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BONDID INCHI_DECL IXA_MOL_CreateBond( IXA_STATUS_HANDLE hStatus,
                                                                        IXA_MOL_HANDLE    hMolecule,
                                                                        IXA_ATOMID        vAtom1,
                                                                        IXA_ATOMID        vAtom2 );
 
-    extern INCHI_EXPORT void IXA_MOL_SetBondType( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetBondType( IXA_STATUS_HANDLE hStatus,
                                                                   IXA_MOL_HANDLE    hMolecule,
                                                                   IXA_BONDID        vBond,
                                                                   IXA_BOND_TYPE     vType );
 
-    extern INCHI_EXPORT void IXA_MOL_SetBondWedge( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetBondWedge( IXA_STATUS_HANDLE hStatus,
                                                                    IXA_MOL_HANDLE    hMolecule,
                                                                    IXA_BONDID        vBond,
                                                                    IXA_ATOMID        vRefAtom,
                                                                    IXA_BOND_WEDGE    vDirection );
 
-    extern INCHI_EXPORT void IXA_MOL_SetDblBondConfig( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetDblBondConfig( IXA_STATUS_HANDLE  hStatus,
                                                                        IXA_MOL_HANDLE     hMolecule,
                                                                        IXA_BONDID         vBond,
                                                                        IXA_DBLBOND_CONFIG vConfig );
@@ -364,7 +364,7 @@ extern "C" {
     /*****************************************************************************/
     /*              Functions to Add and Define Stereodescriptors                */
 
-    extern INCHI_EXPORT IXA_STEREOID IXA_MOL_CreateStereoTetrahedron( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_STEREOID INCHI_DECL IXA_MOL_CreateStereoTetrahedron( IXA_STATUS_HANDLE hStatus,
                                                                                       IXA_MOL_HANDLE    hMolecule,
                                                                                       IXA_ATOMID        vCentralAtom,
                                                                                       IXA_ATOMID        vVertex1,
@@ -372,7 +372,7 @@ extern "C" {
                                                                                       IXA_ATOMID        vVertex3,
                                                                                       IXA_ATOMID        vVertex4 );
 
-    extern INCHI_EXPORT IXA_STEREOID IXA_MOL_CreateStereoRectangle( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_STEREOID INCHI_DECL IXA_MOL_CreateStereoRectangle( IXA_STATUS_HANDLE hStatus,
                                                                                     IXA_MOL_HANDLE    hMolecule,
                                                                                     IXA_BONDID        vCentralBond,
                                                                                     IXA_ATOMID        vVertex1,
@@ -380,7 +380,7 @@ extern "C" {
                                                                                     IXA_ATOMID        vVertex3,
                                                                                     IXA_ATOMID        vVertex4 );
 
-    extern INCHI_EXPORT IXA_STEREOID IXA_MOL_CreateStereoAntiRectangle( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_STEREOID INCHI_DECL IXA_MOL_CreateStereoAntiRectangle( IXA_STATUS_HANDLE hStatus,
                                                                                         IXA_MOL_HANDLE    hMolecule,
                                                                                         IXA_ATOMID        vCentralAtom,
                                                                                         IXA_ATOMID        vVertex1,
@@ -388,13 +388,13 @@ extern "C" {
                                                                                         IXA_ATOMID        vVertex3,
                                                                                         IXA_ATOMID        vVertex4 );
 
-    extern INCHI_EXPORT void IXA_MOL_SetStereoParity( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetStereoParity( IXA_STATUS_HANDLE hStatus,
                                                                       IXA_MOL_HANDLE    hMolecule,
                                                                       IXA_STEREOID      vStereo,
                                                                       IXA_STEREO_PARITY vParity );
 
 
-    extern INCHI_EXPORT int IXA_MOL_ReserveSpace( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_ReserveSpace( IXA_STATUS_HANDLE hStatus,
                                                                    IXA_MOL_HANDLE    hMolecule,
                                                                    int num_atoms,
                                                                    int num_bonds,
@@ -404,10 +404,10 @@ extern "C" {
     /****************************************************************************/
     /*               Functions to to Treat Extended molecular data              */
 
-    extern INCHI_EXPORT IXA_POLYMERUNITID IXA_MOL_CreatePolymerUnit( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_POLYMERUNITID INCHI_DECL IXA_MOL_CreatePolymerUnit( IXA_STATUS_HANDLE hStatus,
                                                                                       IXA_MOL_HANDLE    hMolecule );
 
-    extern INCHI_EXPORT void IXA_MOL_SetPolymerUnit( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_MOL_SetPolymerUnit( IXA_STATUS_HANDLE hStatus,
                                                                       IXA_MOL_HANDLE    hMolecule,
                                                                       IXA_POLYMERUNITID vPunit,
                                                                       int               vid,
@@ -428,59 +428,59 @@ extern "C" {
     /****************************************************************************/
     /*               Functions to Navigate Within a Molecule                    */
 
-    extern INCHI_EXPORT int IXA_MOL_GetNumAtoms( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetNumAtoms( IXA_STATUS_HANDLE hStatus,
                                                                   IXA_MOL_HANDLE    hMolecule );
 
-    extern INCHI_EXPORT int IXA_MOL_GetNumBonds( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetNumBonds( IXA_STATUS_HANDLE hStatus,
                                                                   IXA_MOL_HANDLE    hMolecule );
 
-    extern INCHI_EXPORT IXA_ATOMID IXA_MOL_GetAtomId( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_ATOMID INCHI_DECL IXA_MOL_GetAtomId( IXA_STATUS_HANDLE  hStatus,
                                                                        IXA_MOL_HANDLE hMolecule,
                                                                        int            vAtomIndex );
 
-    extern INCHI_EXPORT IXA_BONDID IXA_MOL_GetBondId( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BONDID INCHI_DECL IXA_MOL_GetBondId( IXA_STATUS_HANDLE  hStatus,
                                                                        IXA_MOL_HANDLE hMolecule,
                                                                        int            vBondIndex );
 
-    extern INCHI_EXPORT int IXA_MOL_GetAtomIndex( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetAtomIndex( IXA_STATUS_HANDLE hStatus,
                                                                    IXA_MOL_HANDLE    hMolecule,
                                                                    IXA_ATOMID        vAtom );
 
-    extern INCHI_EXPORT int IXA_MOL_GetBondIndex( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetBondIndex( IXA_STATUS_HANDLE hStatus,
                                                                   IXA_MOL_HANDLE    hMolecule,
                                                                   IXA_BONDID        vBond );
 
-    extern INCHI_EXPORT int IXA_MOL_GetAtomNumBonds( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetAtomNumBonds( IXA_STATUS_HANDLE hStatus,
                                                                      IXA_MOL_HANDLE    hMolecule,
                                                                      IXA_ATOMID    vAtom );
 
-    extern INCHI_EXPORT IXA_POLYMERUNITID IXA_MOL_GetPolymerUnitId( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_POLYMERUNITID INCHI_DECL IXA_MOL_GetPolymerUnitId( IXA_STATUS_HANDLE  hStatus,
                                                                                      IXA_MOL_HANDLE     hMolecule,
                                                                                      int                vPolymerUnitIndex );
-    extern INCHI_EXPORT int IXA_MOL_GetPolymerUnitIndex( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetPolymerUnitIndex( IXA_STATUS_HANDLE hStatus,
                                                                           IXA_MOL_HANDLE    hMolecule,
                                                                           IXA_POLYMERUNITID vPolymerUnit );
 
 
-    extern INCHI_EXPORT IXA_BONDID IXA_MOL_GetAtomBond( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BONDID INCHI_DECL IXA_MOL_GetAtomBond( IXA_STATUS_HANDLE  hStatus,
                                                                             IXA_MOL_HANDLE hMolecule,
                                                                             IXA_ATOMID     vAtom,
                                                                             int            vBondIndex );
 
-    extern INCHI_EXPORT IXA_BONDID IXA_MOL_GetCommonBond( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BONDID INCHI_DECL IXA_MOL_GetCommonBond( IXA_STATUS_HANDLE  hStatus,
                                                                               IXA_MOL_HANDLE hMolecule,
                                                                               IXA_ATOMID     vAtom1,
                                                                               IXA_ATOMID     vAtom2 );
 
-    extern INCHI_EXPORT IXA_ATOMID IXA_MOL_GetBondAtom1( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_ATOMID INCHI_DECL IXA_MOL_GetBondAtom1( IXA_STATUS_HANDLE  hStatus,
                                                                              IXA_MOL_HANDLE hMolecule,
                                                                              IXA_BONDID     vBond );
 
-    extern INCHI_EXPORT IXA_ATOMID IXA_MOL_GetBondAtom2( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_ATOMID INCHI_DECL IXA_MOL_GetBondAtom2( IXA_STATUS_HANDLE  hStatus,
                                                                              IXA_MOL_HANDLE hMolecule,
                                                                              IXA_BONDID     vBond );
 
-    extern INCHI_EXPORT IXA_ATOMID IXA_MOL_GetBondOtherAtom( IXA_STATUS_HANDLE  hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_ATOMID INCHI_DECL IXA_MOL_GetBondOtherAtom( IXA_STATUS_HANDLE  hStatus,
                                                                              IXA_MOL_HANDLE     hMolecule,
                                                                              IXA_BONDID         vBond,
                                                                              IXA_ATOMID         vAtom );
@@ -488,40 +488,40 @@ extern "C" {
     /*****************************************************************************/
     /*             Functions to Return Information About Atoms                   */
 
-    extern INCHI_EXPORT const char* IXA_MOL_GetAtomElement( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API const char* INCHI_DECL IXA_MOL_GetAtomElement( IXA_STATUS_HANDLE hStatus,
                                                                             IXA_MOL_HANDLE    hMolecule,
                                                                             IXA_ATOMID        vAtom );
 
-    extern INCHI_EXPORT int IXA_MOL_GetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
                                                                          IXA_MOL_HANDLE    hMolecule,
                                                                          IXA_ATOMID        vAtom );
 
-    extern INCHI_EXPORT int IXA_MOL_GetAtomMass( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetAtomMass( IXA_STATUS_HANDLE hStatus,
                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                  IXA_ATOMID        vAtom );
 
-    extern INCHI_EXPORT int IXA_MOL_GetAtomCharge( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetAtomCharge( IXA_STATUS_HANDLE hStatus,
                                                                    IXA_MOL_HANDLE    hMolecule,
                                                                    IXA_ATOMID        vAtom );
 
-    extern INCHI_EXPORT IXA_ATOM_RADICAL IXA_MOL_GetAtomRadical( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_ATOM_RADICAL INCHI_DECL IXA_MOL_GetAtomRadical( IXA_STATUS_HANDLE hStatus,
                                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                                  IXA_ATOMID        vAtom );
 
-    extern INCHI_EXPORT int IXA_MOL_GetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
                                                                       IXA_MOL_HANDLE    hMolecule,
                                                                       IXA_ATOMID        vAtom,
                                                                       int               vHydrogenMassNumber );
 
-    extern INCHI_EXPORT double IXA_MOL_GetAtomX( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API double INCHI_DECL IXA_MOL_GetAtomX( IXA_STATUS_HANDLE hStatus,
                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                  IXA_ATOMID        vAtom );
 
-    extern INCHI_EXPORT double IXA_MOL_GetAtomY( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API double INCHI_DECL IXA_MOL_GetAtomY( IXA_STATUS_HANDLE hStatus,
                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                  IXA_ATOMID        vAtom );
 
-    extern INCHI_EXPORT double IXA_MOL_GetAtomZ( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API double INCHI_DECL IXA_MOL_GetAtomZ( IXA_STATUS_HANDLE hStatus,
                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                  IXA_ATOMID        vAtom );
 
@@ -529,16 +529,16 @@ extern "C" {
     /*****************************************************************************/
     /*             Functions to Return Information About Bonds                   */
 
-    extern INCHI_EXPORT IXA_BOND_TYPE IXA_MOL_GetBondType( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BOND_TYPE INCHI_DECL IXA_MOL_GetBondType( IXA_STATUS_HANDLE hStatus,
                                                                            IXA_MOL_HANDLE    hMolecule,
                                                                            IXA_BONDID        vBond );
 
-    extern INCHI_EXPORT IXA_BOND_WEDGE IXA_MOL_GetBondWedge( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BOND_WEDGE INCHI_DECL IXA_MOL_GetBondWedge( IXA_STATUS_HANDLE hStatus,
                                                                              IXA_MOL_HANDLE    hMolecule,
                                                                              IXA_BONDID        vBond,
                                                                              IXA_ATOMID        vRefAtom );
 
-    extern INCHI_EXPORT IXA_DBLBOND_CONFIG IXA_MOL_GetDblBondConfig( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_DBLBOND_CONFIG INCHI_DECL IXA_MOL_GetDblBondConfig( IXA_STATUS_HANDLE hStatus,
                                                                                         IXA_MOL_HANDLE hMolecule,
                                                                                         IXA_BONDID     vBond );
 
@@ -546,64 +546,64 @@ extern "C" {
     /*      Functions to return Information About Stereodescriptors              */
 
 
-    extern INCHI_EXPORT int IXA_MOL_GetNumStereos( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetNumStereos( IXA_STATUS_HANDLE hStatus,
                                                                    IXA_MOL_HANDLE    hMolecule );
 
-    extern INCHI_EXPORT IXA_STEREOID IXA_MOL_GetStereoId( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_STEREOID INCHI_DECL IXA_MOL_GetStereoId( IXA_STATUS_HANDLE hStatus,
                                                                           IXA_MOL_HANDLE    hMolecule,
                                                                           int               vStereoIndex );
 
-    extern INCHI_EXPORT int IXA_MOL_GetStereoIndex( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetStereoIndex( IXA_STATUS_HANDLE hStatus,
                                                                     IXA_MOL_HANDLE    hMolecule,
                                                                     IXA_STEREOID      vStereo );
 
-    extern INCHI_EXPORT IXA_STEREO_TOPOLOGY IXA_MOL_GetStereoTopology( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_STEREO_TOPOLOGY INCHI_DECL IXA_MOL_GetStereoTopology( IXA_STATUS_HANDLE hStatus,
                                                                                        IXA_MOL_HANDLE    hMolecule,
                                                                                        IXA_STEREOID      vStereo );
 
-    extern INCHI_EXPORT IXA_ATOMID IXA_MOL_GetStereoCentralAtom( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_ATOMID INCHI_DECL IXA_MOL_GetStereoCentralAtom( IXA_STATUS_HANDLE hStatus,
                                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                                  IXA_STEREOID      vStereo );
 
-    extern INCHI_EXPORT IXA_BONDID IXA_MOL_GetStereoCentralBond( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BONDID INCHI_DECL IXA_MOL_GetStereoCentralBond( IXA_STATUS_HANDLE hStatus,
                                                                                  IXA_MOL_HANDLE    hMolecule,
                                                                                  IXA_STEREOID      vStereo );
 
-    extern INCHI_EXPORT int IXA_MOL_GetStereoNumVertices( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL IXA_MOL_GetStereoNumVertices( IXA_STATUS_HANDLE hStatus,
                                                                           IXA_MOL_HANDLE    hMolecule,
                                                                           IXA_STEREOID      vStereo );
 
-    extern INCHI_EXPORT IXA_ATOMID IXA_MOL_GetStereoVertex( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_ATOMID INCHI_DECL IXA_MOL_GetStereoVertex( IXA_STATUS_HANDLE hStatus,
                                                                             IXA_MOL_HANDLE    hMolecule,
                                                                             IXA_STEREOID      vStereo,
                                                                             int               vVertexIndex );
 
-    extern INCHI_EXPORT IXA_STEREO_PARITY IXA_MOL_GetStereoParity( IXA_STATUS_HANDLE hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_STEREO_PARITY INCHI_DECL IXA_MOL_GetStereoParity( IXA_STATUS_HANDLE hStatus,
                                                                                       IXA_MOL_HANDLE hMolecule,
                                                                                       IXA_STEREOID   vStereo );
 
     /****************************************************************************/
     /*                    Functions for Generating InChIs                       */
 
-    extern INCHI_EXPORT IXA_INCHIBUILDER_HANDLE IXA_INCHIBUILDER_Create( IXA_STATUS_HANDLE hStatus );
+    EXPIMP_TEMPLATE INCHI_API IXA_INCHIBUILDER_HANDLE INCHI_DECL IXA_INCHIBUILDER_Create( IXA_STATUS_HANDLE hStatus );
 
-    extern INCHI_EXPORT void IXA_INCHIBUILDER_SetMolecule( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_INCHIBUILDER_SetMolecule( IXA_STATUS_HANDLE       hStatus,
                                                                            IXA_INCHIBUILDER_HANDLE hInChIBuilder,
                                                                            IXA_MOL_HANDLE          hMolecule );
 
-    extern INCHI_EXPORT const char* IXA_INCHIBUILDER_GetInChI( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API const char* INCHI_DECL IXA_INCHIBUILDER_GetInChI( IXA_STATUS_HANDLE       hStatus,
                                                                                IXA_INCHIBUILDER_HANDLE hInChIBuilder );
 
-    extern INCHI_EXPORT const char* IXA_INCHIBUILDER_GetInChIEx( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API const char* INCHI_DECL IXA_INCHIBUILDER_GetInChIEx( IXA_STATUS_HANDLE       hStatus,
                                                                                  IXA_INCHIBUILDER_HANDLE hBuilder );
 
-    extern INCHI_EXPORT const char* IXA_INCHIBUILDER_GetAuxInfo( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API const char* INCHI_DECL IXA_INCHIBUILDER_GetAuxInfo( IXA_STATUS_HANDLE       hStatus,
                                                                                  IXA_INCHIBUILDER_HANDLE hInChIBuilder );
 
-    extern INCHI_EXPORT const char* IXA_INCHIBUILDER_GetLog( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API const char* INCHI_DECL IXA_INCHIBUILDER_GetLog( IXA_STATUS_HANDLE       hStatus,
                                                                              IXA_INCHIBUILDER_HANDLE hInChIBuilder );
 
-    extern INCHI_EXPORT void IXA_INCHIBUILDER_Destroy( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_INCHIBUILDER_Destroy( IXA_STATUS_HANDLE       hStatus,
                                                                        IXA_INCHIBUILDER_HANDLE hInChIBuilder );
 
 
@@ -612,31 +612,31 @@ extern "C" {
     /*       Functions for Specifying/checking InChI Generation Options         */
 
 
-    extern INCHI_EXPORT void IXA_INCHIBUILDER_SetOption( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_INCHIBUILDER_SetOption( IXA_STATUS_HANDLE       hStatus,
                                                                          IXA_INCHIBUILDER_HANDLE hInChIBuilder,
                                                                          IXA_INCHIBUILDER_OPTION vOption,
                                                                          IXA_BOOL                vValue );
 
-    extern INCHI_EXPORT void IXA_INCHIBUILDER_SetOption_Stereo( IXA_STATUS_HANDLE             hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_INCHIBUILDER_SetOption_Stereo( IXA_STATUS_HANDLE             hStatus,
                                                                                 IXA_INCHIBUILDER_HANDLE       hInChIBuilder,
                                                                                 IXA_INCHIBUILDER_STEREOOPTION vValue );
 
-    extern INCHI_EXPORT void IXA_INCHIBUILDER_SetOption_Timeout( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_INCHIBUILDER_SetOption_Timeout( IXA_STATUS_HANDLE       hStatus,
                                                                                  IXA_INCHIBUILDER_HANDLE hInChIBuilder,
                                                                                  int                     vValue );
-    extern INCHI_EXPORT void IXA_INCHIBUILDER_SetOption_Timeout_MilliSeconds( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_INCHIBUILDER_SetOption_Timeout_MilliSeconds( IXA_STATUS_HANDLE       hStatus,
                                                                                                IXA_INCHIBUILDER_HANDLE hInChIBuilder,
                                                                                                long                     vValue );
 
-    extern INCHI_EXPORT IXA_BOOL IXA_INCHIBUILDER_CheckOption( IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BOOL INCHI_DECL IXA_INCHIBUILDER_CheckOption( IXA_STATUS_HANDLE       hStatus,
                                                                                 IXA_INCHIBUILDER_HANDLE hInChIBuilder,
                                                                                 IXA_INCHIBUILDER_OPTION vOption);
 
-    extern INCHI_EXPORT IXA_BOOL IXA_INCHIBUILDER_CheckOption_Stereo(IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API IXA_BOOL INCHI_DECL IXA_INCHIBUILDER_CheckOption_Stereo(IXA_STATUS_HANDLE       hStatus,
                                                                                       IXA_INCHIBUILDER_HANDLE hInChIBuilder,
                                                                                       IXA_INCHIBUILDER_STEREOOPTION vValue);
 
-    extern INCHI_EXPORT long IXA_INCHIBUILDER_GetOption_Timeout_MilliSeconds(IXA_STATUS_HANDLE       hStatus,
+    EXPIMP_TEMPLATE INCHI_API long INCHI_DECL IXA_INCHIBUILDER_GetOption_Timeout_MilliSeconds(IXA_STATUS_HANDLE       hStatus,
                                                                                               IXA_INCHIBUILDER_HANDLE hInChIBuilder);
 
 
@@ -645,16 +645,16 @@ extern "C" {
     /*                    Functions for Generating InChI Keys                   */
 
 
-    extern INCHI_EXPORT IXA_INCHIKEYBUILDER_HANDLE IXA_INCHIKEYBUILDER_Create( IXA_STATUS_HANDLE hStatus );
+    EXPIMP_TEMPLATE INCHI_API IXA_INCHIKEYBUILDER_HANDLE INCHI_DECL IXA_INCHIKEYBUILDER_Create( IXA_STATUS_HANDLE hStatus );
 
-    extern INCHI_EXPORT void IXA_INCHIKEYBUILDER_SetInChI( IXA_STATUS_HANDLE          hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_INCHIKEYBUILDER_SetInChI( IXA_STATUS_HANDLE          hStatus,
                                                                            IXA_INCHIKEYBUILDER_HANDLE hInChIKeyBuilder,
                                                                            const char*                pInChI );
 
-    extern INCHI_EXPORT const char* IXA_INCHIKEYBUILDER_GetInChIKey( IXA_STATUS_HANDLE          hStatus,
+    EXPIMP_TEMPLATE INCHI_API const char* INCHI_DECL IXA_INCHIKEYBUILDER_GetInChIKey( IXA_STATUS_HANDLE          hStatus,
                                                                                      IXA_INCHIKEYBUILDER_HANDLE hInChIKeyBuilder );
 
-    extern INCHI_EXPORT void IXA_INCHIKEYBUILDER_Destroy( IXA_STATUS_HANDLE          hStatus,
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL IXA_INCHIKEYBUILDER_Destroy( IXA_STATUS_HANDLE          hStatus,
                                                                           IXA_INCHIKEYBUILDER_HANDLE hInChIKeyBuilder );
 
 

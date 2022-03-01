@@ -1,11 +1,8 @@
 #pragma once
-#include <QtCore/qglobal.h>
 
-#if defined(OPENBABEL_LIBRARY)
-# define OB_EXPORT Q_DECL_EXPORT
-#else
-# define OB_EXPORT Q_DECL_IMPORT
-#endif
+#include <openbabel_export.h>
+
+# define OB_EXPORT OPENBABEL_EXPORT
 
 #ifdef _MSC_VER
 #define THREAD_LOCAL __declspec(thread)

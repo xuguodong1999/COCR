@@ -68,7 +68,7 @@ int InchiToInchi_Input( INCHI_IOSTREAM *inp_molfile, inchi_Input *orig_at_data, 
 
 
 /*****************************************************************************************************/
-extern INCHI_EXPORT int  Get_std_inchi_Input_FromAuxInfo
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL Get_std_inchi_Input_FromAuxInfo
 ( char *szInchiAuxInfo,
 int bDoNotAddH,
 InchiInpData *pInchiInp )
@@ -78,7 +78,7 @@ InchiInpData *pInchiInp )
                                         pInchiInp );
 }
 
-extern INCHI_EXPORT int  Get_inchi_Input_FromAuxInfo( char *szInchiAuxInfo,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL Get_inchi_Input_FromAuxInfo( char *szInchiAuxInfo,
                                                   int bDoNotAddH, int bDiffUnkUndfStereo,
                                                   InchiInpData *pInchiInp )
 {
@@ -171,12 +171,12 @@ extern INCHI_EXPORT int  Get_inchi_Input_FromAuxInfo( char *szInchiAuxInfo,
     return nRet;
 }
 /*****************************************************************************************************/
-void  Free_std_inchi_Input( inchi_Input *pInp )
+void INCHI_DECL Free_std_inchi_Input( inchi_Input *pInp )
 {
     Free_inchi_Input( pInp );
 }
 
-void  Free_inchi_Input( inchi_Input *pInp )
+void INCHI_DECL Free_inchi_Input( inchi_Input *pInp )
 {
     FreeInchi_Atom( &pInp->atom );
     FreeInchi_Stereo0D( &pInp->stereo0D );

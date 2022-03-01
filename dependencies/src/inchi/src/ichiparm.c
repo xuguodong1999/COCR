@@ -239,7 +239,7 @@ int set_common_options_by_parg( const char *pArg,
         got = 1;
     }
 
-#ifndef USE_STDINCHI_EXPORT
+#ifndef USE_STDINCHI_API
     /* These options DO TURN OFF Std flag   */
     else if (!inchi_stricmp( pArg, "SREL" ))
     {
@@ -446,7 +446,7 @@ int set_common_options_by_parg( const char *pArg,
     }
     
 
-#endif /* ifndef USE_STDINCHI_EXPORT */
+#endif /* ifndef USE_STDINCHI_API */
 
     if ( !got && developer_options)
     {
@@ -2607,7 +2607,7 @@ void HelpCommandLineParms( INCHI_IOSTREAM *f )
     inchi_ios_print_nodisplay( f, "  NEWPSOFF    Both ends of wedge point to stereocenters (default: a narrow end)\n" );
     inchi_ios_print_nodisplay( f, "  LooseTSACheck   Relax criteria of ambiguous drawing for in-ring tetrahedral stereo\n" );
     inchi_ios_print_nodisplay( f, "  DoNotAddH   All H are explicit (default: add H according to usual valences)\n" );
-#ifndef USE_STDINCHI_EXPORT
+#ifndef USE_STDINCHI_API
     inchi_ios_print_nodisplay( f, "Stereo perception modifiers (non-standard InChI)\n" );
     inchi_ios_print_nodisplay( f, "  SRel        Relative stereo\n" );
     inchi_ios_print_nodisplay( f, "  SRac        Racemic stereo\n" );

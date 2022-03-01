@@ -140,8 +140,8 @@ int bInterrupted = 0;
     FreeINCHI
 
 ****************************************************************************/
-extern INCHI_EXPORT
-void  FreeINCHI( inchi_Output *out )
+EXPIMP_TEMPLATE INCHI_API
+void INCHI_DECL FreeINCHI( inchi_Output *out )
 {
     if (!out)
     {
@@ -170,8 +170,8 @@ void  FreeINCHI( inchi_Output *out )
     FreeStdINCHI
 
 ****************************************************************************/
-extern INCHI_EXPORT
-void  FreeStdINCHI( inchi_Output *out )
+EXPIMP_TEMPLATE INCHI_API
+void INCHI_DECL FreeStdINCHI( inchi_Output *out )
 {
     FreeINCHI( out );
 }
@@ -182,8 +182,8 @@ void  FreeStdINCHI( inchi_Output *out )
 
     FreeStructFromStdINCHI
 ****************************************************************************/
-extern INCHI_EXPORT
-void  FreeStructFromStdINCHI( inchi_OutputStruct *out )
+EXPIMP_TEMPLATE INCHI_API
+void INCHI_DECL FreeStructFromStdINCHI( inchi_OutputStruct *out )
 {
     FreeStructFromINCHI( out );
 }
@@ -195,8 +195,8 @@ void  FreeStructFromStdINCHI( inchi_OutputStruct *out )
     FreeStructFromINCHI
 
 ****************************************************************************/
-extern INCHI_EXPORT
-void  FreeStructFromINCHI( inchi_OutputStruct *out )
+EXPIMP_TEMPLATE INCHI_API
+void INCHI_DECL FreeStructFromINCHI( inchi_OutputStruct *out )
 {
     if (!out)
     {
@@ -229,8 +229,8 @@ void  FreeStructFromINCHI( inchi_OutputStruct *out )
     GetStdINCHI
 
 ****************************************************************************/
-extern INCHI_EXPORT
-int  GetStdINCHI( inchi_Input *inp, inchi_Output *out )
+EXPIMP_TEMPLATE INCHI_API
+int INCHI_DECL GetStdINCHI( inchi_Input *inp, inchi_Output *out )
 {
     inchi_InputEx extended_input;
 
@@ -257,8 +257,8 @@ int  GetStdINCHI( inchi_Input *inp, inchi_Output *out )
     GetINCHI
 
 ****************************************************************************/
-extern INCHI_EXPORT
-int  GetINCHI( inchi_Input *inp, inchi_Output *out )
+EXPIMP_TEMPLATE INCHI_API
+int INCHI_DECL GetINCHI( inchi_Input *inp, inchi_Output *out )
 {
     inchi_InputEx extended_input;
 
@@ -312,8 +312,8 @@ int input_erroneously_contains_pseudoatoms( inchi_Input *inp,
     GetINCHIEx
 
 ****************************************************************************/
-extern INCHI_EXPORT
-int  GetINCHIEx( inchi_InputEx *inp, inchi_Output *out )
+EXPIMP_TEMPLATE INCHI_API
+int INCHI_DECL GetINCHIEx( inchi_InputEx *inp, inchi_Output *out )
 {
     int i;
 
@@ -816,8 +816,8 @@ void copy_corrected_log_tail( inchi_Output *out, INCHI_IOSTREAM *log_file )
             success/errors codes
 
 ****************************************************************************/
-extern INCHI_EXPORT
-int  CheckINCHI( const char *szINCHI, const int strict )
+EXPIMP_TEMPLATE INCHI_API
+int INCHI_DECL CheckINCHI( const char *szINCHI, const int strict )
 {
     int ret = INCHI_VALID_NON_STANDARD;
     int ret_i2i;
@@ -2058,7 +2058,7 @@ err_exit:
 
 
 /****************************************************************************/
-int  GetStringLength( char *p )
+int INCHI_DECL GetStringLength( char *p )
 {
     if (p)
     {
@@ -2086,7 +2086,7 @@ int  GetStringLength( char *p )
  inchi_Output does not need to be initilized out to zeroes;
  see FreeINCHI() on how to deallocate it
 ****************************************************************************/
-int  GetINCHIfromINCHI( inchi_InputINCHI *inpInChI,
+int INCHI_DECL GetINCHIfromINCHI( inchi_InputINCHI *inpInChI,
                                   inchi_Output *out )
 {
     STRUCT_DATA struct_data;
@@ -2427,8 +2427,8 @@ translate_RetVal:
     GetStructFromStdINCHI
 
 ****************************************************************************/
-extern INCHI_EXPORT
-int  GetStructFromStdINCHI( inchi_InputINCHI *inpInChI,
+EXPIMP_TEMPLATE INCHI_API
+int INCHI_DECL GetStructFromStdINCHI( inchi_InputINCHI *inpInChI,
                                       inchi_OutputStruct *outStruct )
 {
     if (( inpInChI ) &&
@@ -2451,8 +2451,8 @@ int  GetStructFromStdINCHI( inchi_InputINCHI *inpInChI,
 
     GetStructFromINCHIEx
 ****************************************************************************/
-extern INCHI_EXPORT
-int  GetStructFromINCHIEx( inchi_InputINCHI *inpInChI,
+EXPIMP_TEMPLATE INCHI_API
+int INCHI_DECL GetStructFromINCHIEx( inchi_InputINCHI *inpInChI,
                                      inchi_OutputStructEx *outStruct )
 {
     INCHI_CLOCK ic;
@@ -2823,8 +2823,8 @@ translate_RetVal:
     GetStructFromINCHI
 
 ****************************************************************************/
-extern INCHI_EXPORT
-int  GetStructFromINCHI( inchi_InputINCHI *inpInChI,
+EXPIMP_TEMPLATE INCHI_API
+int INCHI_DECL GetStructFromINCHI( inchi_InputINCHI *inpInChI,
                                    inchi_OutputStruct *out )
 {
     int ret = 0;
@@ -2859,8 +2859,8 @@ int  GetStructFromINCHI( inchi_InputINCHI *inpInChI,
     FreeStructFromINCHIEx
 
 ****************************************************************************/
-extern INCHI_EXPORT
-void  FreeStructFromINCHIEx( inchi_OutputStructEx *out )
+EXPIMP_TEMPLATE INCHI_API
+void INCHI_DECL FreeStructFromINCHIEx( inchi_OutputStructEx *out )
 {
     if (!out)
         return;

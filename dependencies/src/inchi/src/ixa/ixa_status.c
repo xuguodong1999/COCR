@@ -32,7 +32,7 @@
  */
 
 
-#include "mode.h"
+#include "../mode.h"
 #include "inchi_api.h"
 #include "ixa_status.h"
 #include <string.h>
@@ -220,7 +220,7 @@ static IXA_BOOL INCHISTATUS_TestSeverity( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_STATUS_HANDLE  IXA_STATUS_Create( void )
+IXA_STATUS_HANDLE INCHI_DECL IXA_STATUS_Create( void )
 {
     INCHISTATUS* status = (INCHISTATUS*) inchi_malloc( sizeof( INCHISTATUS ) );
     if (!status)
@@ -233,7 +233,7 @@ IXA_STATUS_HANDLE  IXA_STATUS_Create( void )
 
 
 /****************************************************************************/
-void  IXA_STATUS_Destroy( IXA_STATUS_HANDLE hStatus )
+void INCHI_DECL IXA_STATUS_Destroy( IXA_STATUS_HANDLE hStatus )
 {
     INCHISTATUS* status = STATUS_Unpack( hStatus );
     if (!status)
@@ -246,7 +246,7 @@ void  IXA_STATUS_Destroy( IXA_STATUS_HANDLE hStatus )
 
 
 /****************************************************************************/
-void  IXA_STATUS_Clear( IXA_STATUS_HANDLE hStatus )
+void INCHI_DECL IXA_STATUS_Clear( IXA_STATUS_HANDLE hStatus )
 {
     INCHISTATUS* status = STATUS_Unpack( hStatus );
     if (!status)
@@ -258,21 +258,21 @@ void  IXA_STATUS_Clear( IXA_STATUS_HANDLE hStatus )
 
 
 /****************************************************************************/
-IXA_BOOL  IXA_STATUS_HasError( IXA_STATUS_HANDLE hStatus )
+IXA_BOOL INCHI_DECL IXA_STATUS_HasError( IXA_STATUS_HANDLE hStatus )
 {
     return INCHISTATUS_TestSeverity( hStatus, IXA_STATUS_ERROR );
 }
 
 
 /****************************************************************************/
-IXA_BOOL  IXA_STATUS_HasWarning( IXA_STATUS_HANDLE hStatus )
+IXA_BOOL INCHI_DECL IXA_STATUS_HasWarning( IXA_STATUS_HANDLE hStatus )
 {
     return INCHISTATUS_TestSeverity( hStatus, IXA_STATUS_WARNING );
 }
 
 
 /****************************************************************************/
-int  IXA_STATUS_GetCount( IXA_STATUS_HANDLE hStatus )
+int INCHI_DECL IXA_STATUS_GetCount( IXA_STATUS_HANDLE hStatus )
 {
     INCHISTATUS* status = STATUS_Unpack( hStatus );
     if (!status)
@@ -285,7 +285,7 @@ int  IXA_STATUS_GetCount( IXA_STATUS_HANDLE hStatus )
 
 
 /****************************************************************************/
-const char*  IXA_STATUS_GetMessage( IXA_STATUS_HANDLE hStatus,
+const char* INCHI_DECL IXA_STATUS_GetMessage( IXA_STATUS_HANDLE hStatus,
                                               int               vIndex )
 {
     INCHISTATUS* status = STATUS_Unpack( hStatus );
@@ -303,7 +303,7 @@ const char*  IXA_STATUS_GetMessage( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_STATUS  IXA_STATUS_GetSeverity( IXA_STATUS_HANDLE hStatus,
+IXA_STATUS INCHI_DECL IXA_STATUS_GetSeverity( IXA_STATUS_HANDLE hStatus,
                                               int               vIndex )
 {
     INCHISTATUS* status = STATUS_Unpack( hStatus );

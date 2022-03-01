@@ -36,12 +36,12 @@
 #include <string.h>
 #include <limits.h>
 
-#include "mode.h"
-#include "ichierr.h"
-#include "mol_fmt.h"
+#include "../mode.h"
+#include "../ichierr.h"
+#include "../mol_fmt.h"
 #include "inchi_api.h"
 
-#include "ichi_io.h"
+#include "../ichi_io.h"
 
 #include "ixa_mol.h"
 #include "ixa_status.h"
@@ -712,7 +712,7 @@ IXA_ATOMID MOL_GetBondOtherAtom( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_MOL_HANDLE  IXA_MOL_Create( IXA_STATUS_HANDLE hStatus )
+IXA_MOL_HANDLE INCHI_DECL IXA_MOL_Create( IXA_STATUS_HANDLE hStatus )
 {
     INCHIMOL* molecule = (INCHIMOL*) inchi_malloc( sizeof( INCHIMOL ) );
     if (!molecule)
@@ -727,7 +727,7 @@ IXA_MOL_HANDLE  IXA_MOL_Create( IXA_STATUS_HANDLE hStatus )
 
 
 /****************************************************************************/
-void  IXA_MOL_Destroy( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_Destroy( IXA_STATUS_HANDLE hStatus,
                                  IXA_MOL_HANDLE    hMolecule )
 {
     INCHIMOL* molecule = MOL_Unpack( hStatus, hMolecule );
@@ -742,7 +742,7 @@ void  IXA_MOL_Destroy( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_Clear( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_Clear( IXA_STATUS_HANDLE hStatus,
                                IXA_MOL_HANDLE    hMolecule )
 {
     INCHIMOL* molecule = MOL_Unpack( hStatus, hMolecule );
@@ -756,7 +756,7 @@ void  IXA_MOL_Clear( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetChiral( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetChiral( IXA_STATUS_HANDLE hStatus,
                                    IXA_MOL_HANDLE    hMolecule,
                                    IXA_BOOL          vChiral )
 {
@@ -771,7 +771,7 @@ void  IXA_MOL_SetChiral( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_BOOL  IXA_MOL_GetChiral( IXA_STATUS_HANDLE hStatus,
+IXA_BOOL INCHI_DECL IXA_MOL_GetChiral( IXA_STATUS_HANDLE hStatus,
                                        IXA_MOL_HANDLE    hMolecule )
 {
     INCHIMOL* molecule = MOL_Unpack( hStatus, hMolecule );
@@ -784,7 +784,7 @@ IXA_BOOL  IXA_MOL_GetChiral( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_ATOMID  IXA_MOL_CreateAtom( IXA_STATUS_HANDLE hStatus,
+IXA_ATOMID INCHI_DECL IXA_MOL_CreateAtom( IXA_STATUS_HANDLE hStatus,
                                           IXA_MOL_HANDLE    hMolecule )
 {
     INCHIMOL* molecule = MOL_Unpack( hStatus, hMolecule );
@@ -799,7 +799,7 @@ IXA_ATOMID  IXA_MOL_CreateAtom( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetNumAtoms( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetNumAtoms( IXA_STATUS_HANDLE hStatus,
                                     IXA_MOL_HANDLE    hMolecule )
 {
     INCHIMOL* molecule = MOL_Unpack( hStatus, hMolecule );
@@ -813,7 +813,7 @@ int  IXA_MOL_GetNumAtoms( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_ATOMID  IXA_MOL_GetAtomId( IXA_STATUS_HANDLE hStatus,
+IXA_ATOMID INCHI_DECL IXA_MOL_GetAtomId( IXA_STATUS_HANDLE hStatus,
                                          IXA_MOL_HANDLE    hMolecule,
                                          int               vAtomIndex )
 {
@@ -840,7 +840,7 @@ IXA_ATOMID  IXA_MOL_GetAtomId( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetAtomIndex( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetAtomIndex( IXA_STATUS_HANDLE hStatus,
                                      IXA_MOL_HANDLE    hMolecule,
                                      IXA_ATOMID        vAtom )
 {
@@ -862,7 +862,7 @@ int  IXA_MOL_GetAtomIndex( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetAtomNumBonds( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetAtomNumBonds( IXA_STATUS_HANDLE hStatus,
                                         IXA_MOL_HANDLE    hMolecule,
                                         IXA_ATOMID        vAtom )
 {
@@ -885,7 +885,7 @@ int  IXA_MOL_GetAtomNumBonds( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_BONDID  IXA_MOL_GetAtomBond( IXA_STATUS_HANDLE hStatus,
+IXA_BONDID INCHI_DECL IXA_MOL_GetAtomBond( IXA_STATUS_HANDLE hStatus,
                                            IXA_MOL_HANDLE    hMolecule,
                                            IXA_ATOMID        vAtom,
                                            int               vBondIndex )
@@ -912,7 +912,7 @@ IXA_BONDID  IXA_MOL_GetAtomBond( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomX( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetAtomX( IXA_STATUS_HANDLE hStatus,
                                   IXA_MOL_HANDLE    hMolecule,
                                   IXA_ATOMID        vAtom,
                                   double            vX )
@@ -936,7 +936,7 @@ void  IXA_MOL_SetAtomX( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-double  IXA_MOL_GetAtomX( IXA_STATUS_HANDLE hStatus,
+double INCHI_DECL IXA_MOL_GetAtomX( IXA_STATUS_HANDLE hStatus,
                                     IXA_MOL_HANDLE    hMolecule,
                                     IXA_ATOMID        vAtom )
 {
@@ -959,7 +959,7 @@ double  IXA_MOL_GetAtomX( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomY( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetAtomY( IXA_STATUS_HANDLE hStatus,
                                   IXA_MOL_HANDLE    hMolecule,
                                   IXA_ATOMID        vAtom,
                                   double            vY )
@@ -983,7 +983,7 @@ void  IXA_MOL_SetAtomY( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-double  IXA_MOL_GetAtomY( IXA_STATUS_HANDLE hStatus,
+double INCHI_DECL IXA_MOL_GetAtomY( IXA_STATUS_HANDLE hStatus,
                                     IXA_MOL_HANDLE    hMolecule,
                                     IXA_ATOMID        vAtom )
 {
@@ -1006,7 +1006,7 @@ double  IXA_MOL_GetAtomY( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomZ( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetAtomZ( IXA_STATUS_HANDLE hStatus,
                                   IXA_MOL_HANDLE    hMolecule,
                                   IXA_ATOMID        vAtom,
                                   double            vZ )
@@ -1030,7 +1030,7 @@ void  IXA_MOL_SetAtomZ( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-double  IXA_MOL_GetAtomZ( IXA_STATUS_HANDLE hStatus,
+double INCHI_DECL IXA_MOL_GetAtomZ( IXA_STATUS_HANDLE hStatus,
                                     IXA_MOL_HANDLE    hMolecule,
                                     IXA_ATOMID        vAtom )
 {
@@ -1053,7 +1053,7 @@ double  IXA_MOL_GetAtomZ( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomElement( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetAtomElement( IXA_STATUS_HANDLE hStatus,
                                         IXA_MOL_HANDLE    hMolecule,
                                         IXA_ATOMID        vAtom,
                                         const char*       pElement )
@@ -1093,7 +1093,7 @@ void  IXA_MOL_SetAtomElement( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-const char*  IXA_MOL_GetAtomElement( IXA_STATUS_HANDLE hStatus,
+const char* INCHI_DECL IXA_MOL_GetAtomElement( IXA_STATUS_HANDLE hStatus,
                                                IXA_MOL_HANDLE    hMolecule,
                                                IXA_ATOMID        vAtom )
 {
@@ -1116,7 +1116,7 @@ const char*  IXA_MOL_GetAtomElement( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
                                              IXA_MOL_HANDLE    hMolecule,
                                              IXA_ATOMID        vAtom,
                                              int               vAtomicNumber )
@@ -1146,7 +1146,7 @@ void  IXA_MOL_SetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
                                             IXA_MOL_HANDLE    hMolecule,
                                             IXA_ATOMID        vAtom )
 {
@@ -1169,7 +1169,7 @@ int  IXA_MOL_GetAtomAtomicNumber( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
                                           IXA_MOL_HANDLE    hMolecule,
                                           IXA_ATOMID        vAtom,
                                           int               vHydrogenIsotope,
@@ -1219,7 +1219,7 @@ void  IXA_MOL_SetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
                                          IXA_MOL_HANDLE    hMolecule,
                                          IXA_ATOMID        vAtom,
                                          int               vHydrogenIsotope )
@@ -1254,7 +1254,7 @@ int  IXA_MOL_GetAtomHydrogens( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomMass( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetAtomMass( IXA_STATUS_HANDLE hStatus,
                                      IXA_MOL_HANDLE    hMolecule,
                                      IXA_ATOMID        vAtom,
                                      int               vMassNumber )
@@ -1298,7 +1298,7 @@ void  IXA_MOL_SetAtomMass( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetAtomMass( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetAtomMass( IXA_STATUS_HANDLE hStatus,
                                     IXA_MOL_HANDLE    hMolecule,
                                     IXA_ATOMID        vAtom )
 {
@@ -1321,7 +1321,7 @@ int  IXA_MOL_GetAtomMass( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomRadical( IXA_STATUS_HANDLE   hStatus,
+void INCHI_DECL IXA_MOL_SetAtomRadical( IXA_STATUS_HANDLE   hStatus,
                                         IXA_MOL_HANDLE      hMolecule,
                                         IXA_ATOMID          vAtom,
                                         IXA_ATOM_RADICAL    vRadical )
@@ -1345,7 +1345,7 @@ void  IXA_MOL_SetAtomRadical( IXA_STATUS_HANDLE   hStatus,
 
 
 /****************************************************************************/
-IXA_ATOM_RADICAL  IXA_MOL_GetAtomRadical( IXA_STATUS_HANDLE hStatus,
+IXA_ATOM_RADICAL INCHI_DECL IXA_MOL_GetAtomRadical( IXA_STATUS_HANDLE hStatus,
                                                     IXA_MOL_HANDLE    hMolecule,
                                                     IXA_ATOMID        vAtom )
 {
@@ -1368,7 +1368,7 @@ IXA_ATOM_RADICAL  IXA_MOL_GetAtomRadical( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetAtomCharge( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetAtomCharge( IXA_STATUS_HANDLE hStatus,
                                        IXA_MOL_HANDLE    hMolecule,
                                        IXA_ATOMID        vAtom,
                                        int               vCharge )
@@ -1392,7 +1392,7 @@ void  IXA_MOL_SetAtomCharge( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetAtomCharge( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetAtomCharge( IXA_STATUS_HANDLE hStatus,
                                       IXA_MOL_HANDLE    hMolecule,
                                       IXA_ATOMID        vAtom )
 {
@@ -1415,7 +1415,7 @@ int  IXA_MOL_GetAtomCharge( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_ReserveSpace( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_ReserveSpace( IXA_STATUS_HANDLE hStatus,
                                      IXA_MOL_HANDLE    hMolecule,
                                      int               num_atoms,
                                      int               num_bonds,
@@ -1480,7 +1480,7 @@ int  IXA_MOL_ReserveSpace( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_BONDID  IXA_MOL_CreateBond( IXA_STATUS_HANDLE hStatus,
+IXA_BONDID INCHI_DECL IXA_MOL_CreateBond( IXA_STATUS_HANDLE hStatus,
                                           IXA_MOL_HANDLE    hMolecule,
                                           IXA_ATOMID        vAtom1,
                                           IXA_ATOMID        vAtom2 )
@@ -1626,7 +1626,7 @@ IXA_BONDID  IXA_MOL_CreateBond( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetNumBonds( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetNumBonds( IXA_STATUS_HANDLE hStatus,
                                     IXA_MOL_HANDLE    hMolecule )
 {
     INCHIMOL* molecule = MOL_Unpack( hStatus, hMolecule );
@@ -1640,7 +1640,7 @@ int  IXA_MOL_GetNumBonds( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_BONDID  IXA_MOL_GetBondId( IXA_STATUS_HANDLE hStatus,
+IXA_BONDID INCHI_DECL IXA_MOL_GetBondId( IXA_STATUS_HANDLE hStatus,
                                          IXA_MOL_HANDLE    hMolecule,
                                          int               vBondIndex )
 {
@@ -1667,7 +1667,7 @@ IXA_BONDID  IXA_MOL_GetBondId( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetBondIndex( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetBondIndex( IXA_STATUS_HANDLE hStatus,
                                      IXA_MOL_HANDLE    hMolecule,
                                      IXA_BONDID        vBond )
 {
@@ -1689,8 +1689,8 @@ int  IXA_MOL_GetBondIndex( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-extern INCHI_EXPORT
-IXA_ATOMID  IXA_MOL_GetBondAtom1( IXA_STATUS_HANDLE hStatus,
+EXPIMP_TEMPLATE INCHI_API
+IXA_ATOMID INCHI_DECL IXA_MOL_GetBondAtom1( IXA_STATUS_HANDLE hStatus,
                                             IXA_MOL_HANDLE    hMolecule,
                                             IXA_BONDID        vBond )
 {
@@ -1714,8 +1714,8 @@ IXA_ATOMID  IXA_MOL_GetBondAtom1( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-extern INCHI_EXPORT
-IXA_ATOMID  IXA_MOL_GetBondAtom2( IXA_STATUS_HANDLE hStatus,
+EXPIMP_TEMPLATE INCHI_API
+IXA_ATOMID INCHI_DECL IXA_MOL_GetBondAtom2( IXA_STATUS_HANDLE hStatus,
                                             IXA_MOL_HANDLE    hMolecule,
                                             IXA_BONDID        vBond )
 {
@@ -1738,8 +1738,8 @@ IXA_ATOMID  IXA_MOL_GetBondAtom2( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-extern INCHI_EXPORT
-IXA_ATOMID  IXA_MOL_GetBondOtherAtom( IXA_STATUS_HANDLE  hStatus,
+EXPIMP_TEMPLATE INCHI_API
+IXA_ATOMID INCHI_DECL IXA_MOL_GetBondOtherAtom( IXA_STATUS_HANDLE  hStatus,
                                                 IXA_MOL_HANDLE     hMolecule,
                                                 IXA_BONDID         vBond,
                                                 IXA_ATOMID         vAtom )
@@ -1779,7 +1779,7 @@ IXA_ATOMID  IXA_MOL_GetBondOtherAtom( IXA_STATUS_HANDLE  hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetBondType( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetBondType( IXA_STATUS_HANDLE hStatus,
                                      IXA_MOL_HANDLE    hMolecule,
                                      IXA_BONDID    vBond,
                                      IXA_BOND_TYPE  vType )
@@ -1804,8 +1804,8 @@ void  IXA_MOL_SetBondType( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-extern INCHI_EXPORT
-IXA_BOND_TYPE  IXA_MOL_GetBondType( IXA_STATUS_HANDLE hStatus,
+EXPIMP_TEMPLATE INCHI_API
+IXA_BOND_TYPE INCHI_DECL IXA_MOL_GetBondType( IXA_STATUS_HANDLE hStatus,
                                               IXA_MOL_HANDLE    hMolecule,
                                               IXA_BONDID        vBond )
 {
@@ -1827,7 +1827,7 @@ IXA_BOND_TYPE  IXA_MOL_GetBondType( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetBondWedge( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetBondWedge( IXA_STATUS_HANDLE hStatus,
                                       IXA_MOL_HANDLE    hMolecule,
                                       IXA_BONDID        vBond,
                                       IXA_ATOMID        vRefAtom,
@@ -1863,7 +1863,7 @@ void  IXA_MOL_SetBondWedge( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_BOND_WEDGE
+IXA_BOND_WEDGE INCHI_DECL
 IXA_MOL_GetBondWedge( IXA_STATUS_HANDLE hStatus,
                       IXA_MOL_HANDLE    hMolecule,
                       IXA_BONDID        vBond,
@@ -1900,7 +1900,7 @@ IXA_MOL_GetBondWedge( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetDblBondConfig( IXA_STATUS_HANDLE  hStatus,
+void INCHI_DECL IXA_MOL_SetDblBondConfig( IXA_STATUS_HANDLE  hStatus,
                                           IXA_MOL_HANDLE     hMolecule,
                                           IXA_BONDID         vBond,
                                           IXA_DBLBOND_CONFIG vConfig )
@@ -1924,7 +1924,7 @@ void  IXA_MOL_SetDblBondConfig( IXA_STATUS_HANDLE  hStatus,
 
 
 /****************************************************************************/
-IXA_DBLBOND_CONFIG  IXA_MOL_GetDblBondConfig( IXA_STATUS_HANDLE hStatus,
+IXA_DBLBOND_CONFIG INCHI_DECL IXA_MOL_GetDblBondConfig( IXA_STATUS_HANDLE hStatus,
                                                         IXA_MOL_HANDLE    hMolecule,
                                                         IXA_BONDID        vBond )
 {
@@ -1947,7 +1947,7 @@ IXA_DBLBOND_CONFIG  IXA_MOL_GetDblBondConfig( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_BONDID  IXA_MOL_GetCommonBond( IXA_STATUS_HANDLE hStatus,
+IXA_BONDID INCHI_DECL IXA_MOL_GetCommonBond( IXA_STATUS_HANDLE hStatus,
                                              IXA_MOL_HANDLE    hMolecule,
                                              IXA_ATOMID        vAtom1,
                                              IXA_ATOMID        vAtom2 )
@@ -1993,7 +1993,7 @@ IXA_BONDID  IXA_MOL_GetCommonBond( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_STEREOID  IXA_MOL_CreateStereoTetrahedron( IXA_STATUS_HANDLE hStatus,
+IXA_STEREOID INCHI_DECL IXA_MOL_CreateStereoTetrahedron( IXA_STATUS_HANDLE hStatus,
                                                          IXA_MOL_HANDLE    hMolecule,
                                                          IXA_ATOMID        vCentralAtom,
                                                          IXA_ATOMID        vVertex1,
@@ -2028,7 +2028,7 @@ IXA_STEREOID  IXA_MOL_CreateStereoTetrahedron( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_STEREOID  IXA_MOL_CreateStereoRectangle( IXA_STATUS_HANDLE hStatus,
+IXA_STEREOID INCHI_DECL IXA_MOL_CreateStereoRectangle( IXA_STATUS_HANDLE hStatus,
                                                        IXA_MOL_HANDLE    hMolecule,
                                                        IXA_BONDID        vCentralBond,
                                                        IXA_ATOMID        vVertex1,
@@ -2062,7 +2062,7 @@ IXA_STEREOID  IXA_MOL_CreateStereoRectangle( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_STEREOID  IXA_MOL_CreateStereoAntiRectangle( IXA_STATUS_HANDLE hStatus,
+IXA_STEREOID INCHI_DECL IXA_MOL_CreateStereoAntiRectangle( IXA_STATUS_HANDLE hStatus,
                                                            IXA_MOL_HANDLE    hMolecule,
                                                            IXA_ATOMID        vCentralAtom,
                                                            IXA_ATOMID        vVertex1,
@@ -2096,7 +2096,7 @@ IXA_STEREOID  IXA_MOL_CreateStereoAntiRectangle( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetNumStereos( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetNumStereos( IXA_STATUS_HANDLE hStatus,
                                      IXA_MOL_HANDLE    hMolecule )
 {
     INCHIMOL* molecule = MOL_Unpack( hStatus, hMolecule );
@@ -2110,7 +2110,7 @@ int  IXA_MOL_GetNumStereos( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_STEREOID  IXA_MOL_GetStereoId( IXA_STATUS_HANDLE hStatus,
+IXA_STEREOID INCHI_DECL IXA_MOL_GetStereoId( IXA_STATUS_HANDLE hStatus,
                                              IXA_MOL_HANDLE    hMolecule,
                                              int               vStereoIndex )
 {
@@ -2131,7 +2131,7 @@ IXA_STEREOID  IXA_MOL_GetStereoId( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetStereoIndex( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetStereoIndex( IXA_STATUS_HANDLE hStatus,
                                        IXA_MOL_HANDLE    hMolecule,
                                        IXA_STEREOID      vStereo )
 {
@@ -2147,7 +2147,7 @@ int  IXA_MOL_GetStereoIndex( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_STEREO_TOPOLOGY  IXA_MOL_GetStereoTopology( IXA_STATUS_HANDLE hStatus,
+IXA_STEREO_TOPOLOGY INCHI_DECL IXA_MOL_GetStereoTopology( IXA_STATUS_HANDLE hStatus,
                                                           IXA_MOL_HANDLE    hMolecule,
                                                           IXA_STEREOID      vStereo )
 {
@@ -2169,7 +2169,7 @@ IXA_STEREO_TOPOLOGY  IXA_MOL_GetStereoTopology( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_ATOMID  IXA_MOL_GetStereoCentralAtom( IXA_STATUS_HANDLE hStatus,
+IXA_ATOMID INCHI_DECL IXA_MOL_GetStereoCentralAtom( IXA_STATUS_HANDLE hStatus,
                                                     IXA_MOL_HANDLE    hMolecule,
                                                     IXA_STEREOID      vStereo )
 {
@@ -2202,7 +2202,7 @@ IXA_ATOMID  IXA_MOL_GetStereoCentralAtom( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_BONDID  IXA_MOL_GetStereoCentralBond( IXA_STATUS_HANDLE hStatus,
+IXA_BONDID INCHI_DECL IXA_MOL_GetStereoCentralBond( IXA_STATUS_HANDLE hStatus,
                                                     IXA_MOL_HANDLE    hMolecule,
                                                     IXA_STEREOID      vStereo )
 {
@@ -2235,7 +2235,7 @@ IXA_BONDID  IXA_MOL_GetStereoCentralBond( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetStereoNumVertices( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetStereoNumVertices( IXA_STATUS_HANDLE hStatus,
                                              IXA_MOL_HANDLE    hMolecule,
                                              IXA_STEREOID      vStereo )
 {
@@ -2257,7 +2257,7 @@ int  IXA_MOL_GetStereoNumVertices( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_ATOMID  IXA_MOL_GetStereoVertex( IXA_STATUS_HANDLE hStatus,
+IXA_ATOMID INCHI_DECL IXA_MOL_GetStereoVertex( IXA_STATUS_HANDLE hStatus,
                                                IXA_MOL_HANDLE    hMolecule,
                                                IXA_STEREOID      vStereo,
                                                int               vVertexIndex )
@@ -2293,7 +2293,7 @@ IXA_ATOMID  IXA_MOL_GetStereoVertex( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetStereoParity( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetStereoParity( IXA_STATUS_HANDLE hStatus,
                                          IXA_MOL_HANDLE    hMolecule,
                                          IXA_STEREOID      vStereo,
                                          IXA_STEREO_PARITY vParity )
@@ -2314,7 +2314,7 @@ void  IXA_MOL_SetStereoParity( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_STEREO_PARITY  IXA_MOL_GetStereoParity( IXA_STATUS_HANDLE hStatus,
+IXA_STEREO_PARITY INCHI_DECL IXA_MOL_GetStereoParity( IXA_STATUS_HANDLE hStatus,
                                                       IXA_MOL_HANDLE    hMolecule,
                                                       IXA_STEREOID      vStereo )
 {
@@ -2336,7 +2336,7 @@ IXA_STEREO_PARITY  IXA_MOL_GetStereoParity( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-void  IXA_MOL_SetPolymerUnit( IXA_STATUS_HANDLE hStatus,
+void INCHI_DECL IXA_MOL_SetPolymerUnit( IXA_STATUS_HANDLE hStatus,
                                         IXA_MOL_HANDLE    hMolecule,
                                         IXA_POLYMERUNITID vPunit,
                                         int               vid,          /* it is what is called 'Sgroup number' in CTFILE   */
@@ -2664,7 +2664,7 @@ exitf:
 
 
 /****************************************************************************/
-IXA_POLYMERUNITID  IXA_MOL_CreatePolymerUnit( IXA_STATUS_HANDLE hStatus,
+IXA_POLYMERUNITID INCHI_DECL IXA_MOL_CreatePolymerUnit( IXA_STATUS_HANDLE hStatus,
                                                         IXA_MOL_HANDLE    hMolecule )
 {
     INCHIMOL* molecule = MOL_Unpack( hStatus, hMolecule );
@@ -2679,7 +2679,7 @@ IXA_POLYMERUNITID  IXA_MOL_CreatePolymerUnit( IXA_STATUS_HANDLE hStatus,
 
 
 /****************************************************************************/
-IXA_POLYMERUNITID  IXA_MOL_GetPolymerUnitId( IXA_STATUS_HANDLE  hStatus,
+IXA_POLYMERUNITID INCHI_DECL IXA_MOL_GetPolymerUnitId( IXA_STATUS_HANDLE  hStatus,
                                                        IXA_MOL_HANDLE     hMolecule,
                                                        int                vPolymerUnitIndex )
 {
@@ -2700,7 +2700,7 @@ IXA_POLYMERUNITID  IXA_MOL_GetPolymerUnitId( IXA_STATUS_HANDLE  hStatus,
 
 
 /****************************************************************************/
-int  IXA_MOL_GetPolymerUnitIndex( IXA_STATUS_HANDLE hStatus,
+int INCHI_DECL IXA_MOL_GetPolymerUnitIndex( IXA_STATUS_HANDLE hStatus,
                                             IXA_MOL_HANDLE    hMolecule,
                                             IXA_POLYMERUNITID vPolymerUnit )
 {

@@ -111,7 +111,7 @@ int CanonOneStructureINChI( CANON_GLOBALS *pCG,
 
 
 /****************************************************************************/
-INCHIGEN_HANDLE  STDINCHIGEN_Create( void )
+INCHIGEN_HANDLE INCHI_DECL STDINCHIGEN_Create( void )
 {
     return INCHIGEN_Create( );
 }
@@ -119,7 +119,7 @@ INCHIGEN_HANDLE  STDINCHIGEN_Create( void )
 
 
 /****************************************************************************/
-INCHIGEN_HANDLE  INCHIGEN_Create( void )
+INCHIGEN_HANDLE INCHI_DECL INCHIGEN_Create( void )
 {
     INCHIGEN_CONTROL * HGen = NULL;
 
@@ -174,7 +174,7 @@ INCHIGEN_HANDLE  INCHIGEN_Create( void )
 
 
 /****************************************************************************/
-int  STDINCHIGEN_Setup( INCHIGEN_HANDLE _HGen,
+int INCHI_DECL STDINCHIGEN_Setup( INCHIGEN_HANDLE _HGen,
                                  INCHIGEN_DATA * pGenData,
                                  inchi_Input * pInp )
 {
@@ -249,7 +249,7 @@ int  STDINCHIGEN_Setup( INCHIGEN_HANDLE _HGen,
 
 
 /****************************************************************************/
-int  INCHIGEN_Setup( INCHIGEN_HANDLE _HGen,
+int INCHI_DECL INCHIGEN_Setup( INCHIGEN_HANDLE _HGen,
                               INCHIGEN_DATA * pGenData,
                               inchi_Input * pInp )
 {
@@ -424,14 +424,14 @@ ret:switch (retcode)
 
 
 /****************************************************************************/
-int  STDINCHIGEN_DoNormalization( INCHIGEN_HANDLE HGen, INCHIGEN_DATA * pGenData )
+int INCHI_DECL STDINCHIGEN_DoNormalization( INCHIGEN_HANDLE HGen, INCHIGEN_DATA * pGenData )
 {
     return INCHIGEN_DoNormalization( HGen, pGenData );
 }
 
 
 /****************************************************************************/
-int  INCHIGEN_DoNormalization( INCHIGEN_HANDLE _HGen, INCHIGEN_DATA *pGenData )
+int INCHI_DECL INCHIGEN_DoNormalization( INCHIGEN_HANDLE _HGen, INCHIGEN_DATA *pGenData )
 {
     int nRet = 0, nRet1 = 0;
     /* int maxINChI=0; */
@@ -679,7 +679,7 @@ exit_function:
 
 
 /****************************************************************************/
-int  STDINCHIGEN_DoCanonicalization
+int INCHI_DECL STDINCHIGEN_DoCanonicalization
 ( INCHIGEN_HANDLE HGen, INCHIGEN_DATA * pGenData )
 {
     return INCHIGEN_DoCanonicalization( HGen, pGenData );
@@ -687,7 +687,7 @@ int  STDINCHIGEN_DoCanonicalization
 
 
 /****************************************************************************/
-int  INCHIGEN_DoCanonicalization
+int INCHI_DECL INCHIGEN_DoCanonicalization
 ( INCHIGEN_HANDLE _HGen, INCHIGEN_DATA *pGenData )
 {
     int nRet = 0, nRet1 /*, maxINChI=0*/;
@@ -849,7 +849,7 @@ exit_function:
 
 
 /****************************************************************************/
-int  STDINCHIGEN_DoSerialization( INCHIGEN_HANDLE HGen,
+int INCHI_DECL STDINCHIGEN_DoSerialization( INCHIGEN_HANDLE HGen,
                                                                      INCHIGEN_DATA * pGenData,
                                                                      inchi_Output * pResults )
 {
@@ -859,7 +859,7 @@ int  STDINCHIGEN_DoSerialization( INCHIGEN_HANDLE HGen,
 
 
 /****************************************************************************/
-int  INCHIGEN_DoSerialization( INCHIGEN_HANDLE _HGen,
+int INCHI_DECL INCHIGEN_DoSerialization( INCHIGEN_HANDLE _HGen,
                                         INCHIGEN_DATA * pGenData,
                                         inchi_Output * pResults )
 {
@@ -1112,7 +1112,7 @@ frees:
 
 
 /****************************************************************************/
-void  STDINCHIGEN_Reset( INCHIGEN_HANDLE HGen,
+void INCHI_DECL STDINCHIGEN_Reset( INCHIGEN_HANDLE HGen,
                                INCHIGEN_DATA * pGenData,
                                inchi_Output * pResults )
 {
@@ -1121,7 +1121,7 @@ void  STDINCHIGEN_Reset( INCHIGEN_HANDLE HGen,
 
 
 /****************************************************************************/
-void  INCHIGEN_Reset( INCHIGEN_HANDLE _HGen,
+void INCHI_DECL INCHIGEN_Reset( INCHIGEN_HANDLE _HGen,
                                  INCHIGEN_DATA * pGenData,
                                  inchi_Output * pResults )
 {
@@ -1294,14 +1294,14 @@ void  INCHIGEN_Reset( INCHIGEN_HANDLE _HGen,
 
 
 /****************************************************************************/
-void  STDINCHIGEN_Destroy( INCHIGEN_HANDLE HGen )
+void INCHI_DECL STDINCHIGEN_Destroy( INCHIGEN_HANDLE HGen )
 {
     INCHIGEN_Destroy( HGen );
 }
 
 
 /****************************************************************************/
-void  INCHIGEN_Destroy( INCHIGEN_HANDLE _HGen )
+void INCHI_DECL INCHIGEN_Destroy( INCHIGEN_HANDLE _HGen )
 {
     INCHIGEN_CONTROL * HGen = (INCHIGEN_CONTROL *) _HGen;
 

@@ -226,7 +226,7 @@ MS VC compiler pragmas
 /* also ensure that final binaries access platform-dependent TBB 32/64 bit dlls             */
 /* (tbbmalloc.dll tbbmalloc_proxy.dll) and MSVCR120.dll or other corresp. to TBB compile    */
 /*                                                                                          */
-#include "../../INCHI_EXPORT/tbb/tbbmalloc_proxy_for_inchi.h"
+#include "../../INCHI_API/tbb/tbbmalloc_proxy_for_inchi.h"
 #endif
 #endif
 

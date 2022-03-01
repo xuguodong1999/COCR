@@ -35,7 +35,6 @@
 #ifndef _INHCH_API_H_
 #define _INHCH_API_H_
 
-#include <inchi_export.h>
 
 #ifndef FIND_RING_SYSTEMS
 #define FIND_RING_SYSTEMS 1
@@ -681,6 +680,15 @@ void FreeInChIExtInput( inchi_Input_Polymer    *polymer, inchi_Input_V3000 *v300
  *
  *************************************************/
 
+#include <inchi_export.h>
+#ifdef _MSC_VER
+#define EXPIMP_TEMPLATE extern
+#else
+#define EXPIMP_TEMPLATE
+#endif
+#define INCHI_API INCHI_EXPORT
+#define INCHI_DECL
+
 /* Return codes for
         GetINCHI
         GetStdINCHI
@@ -805,12 +813,12 @@ GetINCHI / GetStdINCHI
         /SaveOpt    Save custom InChI creation options (non-standard InChI)
 
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int GetINCHI( inchi_Input *inp, inchi_Output *out );
-    extern INCHI_EXPORT int GetStdINCHI( inchi_Input *inp, inchi_Output *out );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetINCHI( inchi_Input *inp, inchi_Output *out );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetStdINCHI( inchi_Input *inp, inchi_Output *out );
 
 
     /* Extended version of GetINCHI supporting v. 1.05+ extensions: V3000; polymers */
-    extern INCHI_EXPORT int GetINCHIEx( inchi_InputEx *inp, inchi_Output *out );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetINCHIEx( inchi_InputEx *inp, inchi_Output *out );
 
 
     /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -820,8 +828,8 @@ GetINCHI / GetStdINCHI
         obtained from each GetINCHI /GetStdINCHI call
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT void FreeINCHI( inchi_Output *out );
-    extern INCHI_EXPORT void FreeStdINCHI( inchi_Output *out );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL FreeINCHI( inchi_Output *out );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL FreeStdINCHI( inchi_Output *out );
 
 
 
@@ -831,7 +839,7 @@ GetINCHI / GetStdINCHI
         helper: get string length
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int GetStringLength( char *p );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetStringLength( char *p );
 
 
     /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -842,9 +850,9 @@ GetINCHI / GetStdINCHI
         Option /Inchi2Struct is not needed for GetStructFromINCHI()/GetStructFromStdINCHI()
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int GetStructFromINCHI( inchi_InputINCHI *inpInChI, inchi_OutputStruct *outStruct );
-    extern INCHI_EXPORT int GetStructFromStdINCHI( inchi_InputINCHI *inpInChI, inchi_OutputStruct *outStruct );
-    extern INCHI_EXPORT int GetStructFromINCHIEx( inchi_InputINCHI *inpInChI, inchi_OutputStructEx *outStruct );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetStructFromINCHI( inchi_InputINCHI *inpInChI, inchi_OutputStruct *outStruct );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetStructFromStdINCHI( inchi_InputINCHI *inpInChI, inchi_OutputStruct *outStruct );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetStructFromINCHIEx( inchi_InputINCHI *inpInChI, inchi_OutputStructEx *outStruct );
 
 
     /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -854,9 +862,9 @@ GetINCHI / GetStdINCHI
         GetStructFromStdINCHI / GetStructFromINCHI / GetStructFromINCHIEx
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT void FreeStructFromINCHI( inchi_OutputStruct *out );
-    extern INCHI_EXPORT void FreeStructFromStdINCHI( inchi_OutputStruct *out );
-    extern INCHI_EXPORT void FreeStructFromINCHIEx( inchi_OutputStructEx *out );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL FreeStructFromINCHI( inchi_OutputStruct *out );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL FreeStructFromStdINCHI( inchi_OutputStruct *out );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL FreeStructFromINCHIEx( inchi_OutputStructEx *out );
 
 
     /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -872,7 +880,7 @@ GetINCHI / GetStdINCHI
         Note: there is no explicit tool to conversion from/to standard InChI
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int GetINCHIfromINCHI( inchi_InputINCHI *inpInChI, inchi_Output *out );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetINCHIfromINCHI( inchi_InputINCHI *inpInChI, inchi_Output *out );
 
 #ifndef COMPILE_ALL_CPP
 #ifdef __cplusplus
@@ -926,12 +934,12 @@ Output:
     Return value:  see RetValGetINCHI
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int Get_inchi_Input_FromAuxInfo(
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL Get_inchi_Input_FromAuxInfo(
                                                             char *szInchiAuxInfo,
                                                             int bDoNotAddH,
                                                             int bDiffUnkUndfStereo,
                                                             InchiInpData *pInchiInp );
-    extern INCHI_EXPORT int Get_std_inchi_Input_FromAuxInfo( char *szInchiAuxInfo,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL Get_std_inchi_Input_FromAuxInfo( char *szInchiAuxInfo,
                                                             int bDoNotAddH,
                                                             InchiInpData *pInchiInp );
 
@@ -944,8 +952,8 @@ Output:
         Free_inchi_Input( inchi_Input *pInp )
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT void Free_inchi_Input( inchi_Input *pInp );
-    extern INCHI_EXPORT void Free_std_inchi_Input( inchi_Input *pInp );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL Free_inchi_Input( inchi_Input *pInp );
+    EXPIMP_TEMPLATE INCHI_API void INCHI_DECL Free_std_inchi_Input( inchi_Input *pInp );
 
 
 
@@ -964,7 +972,7 @@ Output:
         success/errors codes
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int CheckINCHI( const char *szINCHI, const int strict );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL CheckINCHI( const char *szINCHI, const int strict );
 
 
 #ifndef COMPILE_ALL_CPP
@@ -1083,7 +1091,7 @@ Returns:
         success/errors codes
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int GetINCHIKeyFromINCHI( const char* szINCHISource,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetINCHIKeyFromINCHI( const char* szINCHISource,
                                                                   const int xtra1,
                                                                   const int xtra2,
                                                                   char* szINCHIKey,
@@ -1101,7 +1109,7 @@ Returns:
         To calculate extra hash(es), use GetINCHIKeyFromINCHI with stdInChI as input.
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int GetStdINCHIKeyFromStdINCHI( const char* szINCHISource,
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL GetStdINCHIKeyFromStdINCHI( const char* szINCHISource,
                                                                         char* szINCHIKey );
 
 
@@ -1116,7 +1124,7 @@ Returns:
             success/errors codes
 
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-    extern INCHI_EXPORT int CheckINCHIKey( const char *szINCHIKey );
+    EXPIMP_TEMPLATE INCHI_API int INCHI_DECL CheckINCHIKey( const char *szINCHIKey );
 
 #ifndef COMPILE_ALL_CPP
 #ifdef __cplusplus
@@ -1281,8 +1289,8 @@ InChI Generator: create generator
 Returns handle of generator object or NULL on failure
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-extern INCHI_EXPORT INCHIGEN_HANDLE INCHIGEN_Create( void );
-extern INCHI_EXPORT INCHIGEN_HANDLE STDINCHIGEN_Create( void );
+EXPIMP_TEMPLATE INCHI_API INCHIGEN_HANDLE INCHI_DECL INCHIGEN_Create( void );
+EXPIMP_TEMPLATE INCHI_API INCHIGEN_HANDLE INCHI_DECL STDINCHIGEN_Create( void );
 
 
 
@@ -1292,10 +1300,10 @@ INCHIGEN_Setup / STDINCHIGEN_Setup
 InChI Generator: setup
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-extern INCHI_EXPORT int INCHIGEN_Setup( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL INCHIGEN_Setup( INCHIGEN_HANDLE HGen,
                                                          INCHIGEN_DATA * pGenData,
                                                          inchi_Input * pInp );
-extern INCHI_EXPORT int STDINCHIGEN_Setup( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL STDINCHIGEN_Setup( INCHIGEN_HANDLE HGen,
                                                             INCHIGEN_DATA * pGenData,
                                                             inchi_Input * pInp );
 
@@ -1307,9 +1315,9 @@ INCHIGEN_DoNormalization / STDINCHIGEN_DoNormalization
 InChI Generator: structure normalization stage
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-extern INCHI_EXPORT int INCHIGEN_DoNormalization( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL INCHIGEN_DoNormalization( INCHIGEN_HANDLE HGen,
                                                                    INCHIGEN_DATA * pGenData );
-extern INCHI_EXPORT int STDINCHIGEN_DoNormalization( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL STDINCHIGEN_DoNormalization( INCHIGEN_HANDLE HGen,
                                                                       INCHIGEN_DATA * pGenData );
 
 
@@ -1320,9 +1328,9 @@ INCHIGEN_DoCanonicalization / STDINCHIGEN_DoCanonicalization
 InChI Generator: structure canonicalization stage
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-extern INCHI_EXPORT int INCHIGEN_DoCanonicalization( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL INCHIGEN_DoCanonicalization( INCHIGEN_HANDLE HGen,
                                                                       INCHIGEN_DATA * pGenData );
-extern INCHI_EXPORT int STDINCHIGEN_DoCanonicalization( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL STDINCHIGEN_DoCanonicalization( INCHIGEN_HANDLE HGen,
                                                                          INCHIGEN_DATA * pGenData );
 
 
@@ -1333,10 +1341,10 @@ INCHIGEN_DoSerialization / STDINCHIGEN_DoSerialization
 InChI Generator: InChI serialization stage
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-extern INCHI_EXPORT int INCHIGEN_DoSerialization( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL INCHIGEN_DoSerialization( INCHIGEN_HANDLE HGen,
                                                                    INCHIGEN_DATA * pGenData,
                                                                    inchi_Output * pResults );
-extern INCHI_EXPORT int STDINCHIGEN_DoSerialization( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL STDINCHIGEN_DoSerialization( INCHIGEN_HANDLE HGen,
                                                                       INCHIGEN_DATA * pGenData,
                                                                       inchi_Output * pResults );
 
@@ -1348,10 +1356,10 @@ INCHIGEN_Reset / STDINCHIGEN_Reset
     InChI Generator: reset stage (use before get next structure)
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-extern INCHI_EXPORT void INCHIGEN_Reset( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API void INCHI_DECL INCHIGEN_Reset( INCHIGEN_HANDLE HGen,
                                                           INCHIGEN_DATA * pGenData,
                                                           inchi_Output * pResults );
-extern INCHI_EXPORT void STDINCHIGEN_Reset( INCHIGEN_HANDLE HGen,
+EXPIMP_TEMPLATE INCHI_API void INCHI_DECL STDINCHIGEN_Reset( INCHIGEN_HANDLE HGen,
                                                              INCHIGEN_DATA * pGenData,
                                                              inchi_Output * pResults );
 
@@ -1362,8 +1370,8 @@ INCHIGEN_Destroy / STDINCHIGEN_Destroy
     InChI Generator: destroy generator
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-extern INCHI_EXPORT void INCHIGEN_Destroy( INCHIGEN_HANDLE HGen );
-extern INCHI_EXPORT void STDINCHIGEN_Destroy( INCHIGEN_HANDLE HGen );
+EXPIMP_TEMPLATE INCHI_API void INCHI_DECL INCHIGEN_Destroy( INCHIGEN_HANDLE HGen );
+EXPIMP_TEMPLATE INCHI_API void INCHI_DECL STDINCHIGEN_Destroy( INCHIGEN_HANDLE HGen );
 
 
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1372,7 +1380,7 @@ MakeINCHIFromMolfileText
     Direct generation of InChI from Molfile supplied as text
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-extern INCHI_EXPORT int MakeINCHIFromMolfileText( const char *moltext,
+EXPIMP_TEMPLATE INCHI_API int INCHI_DECL MakeINCHIFromMolfileText( const char *moltext,
                                                                    char *options,
                                                                    inchi_Output *result );
 

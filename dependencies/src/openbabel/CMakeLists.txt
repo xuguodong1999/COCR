@@ -62,3 +62,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COMPONENT_TARGETS} coordgenli
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
 endif (APPLE)
+
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
