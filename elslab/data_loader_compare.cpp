@@ -8,7 +8,7 @@
 #include <torch/data/transforms/stack.h>
 #include <torch/data/datasets/map.h>
 #include <torch/nn/functional/loss.h>
-#include <concurrentqueue/blockingconcurrentqueue.h>
+#include <moodycamel/blockingconcurrentqueue.h>
 
 const torch::DeviceType runtime_device = torch::kCUDA;
 const size_t batch_size = 64;
