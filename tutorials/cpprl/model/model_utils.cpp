@@ -5,6 +5,7 @@
 #include <torch/nn/modules/linear.h>
 #include <torch/nn/modules/container/functional.h>
 #include <doctest/doctest.h>
+#include <torch/linalg.h>
 
 using namespace torch;
 
@@ -26,7 +27,7 @@ namespace cpprl {
 
         // Compute the qr factorization
         Tensor q, r;
-        std::tie(q, r) = torch::qr(flattened);
+        std::tie(q, r) = torch::linalg::qr(flattened);
         // Make Q uniform according to https://arxiv.org/pdf/math-ph/0609050.pdf
         auto d = torch::diag(r, 0);
         auto ph = d.sign();
