@@ -1,3 +1,11 @@
+# copy from ncnn
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s FORCE_FILESYSTEM=1 -s EXIT_RUNTIME=1")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s FORCE_FILESYSTEM=1   -s EXIT_RUNTIME=1")
+set(CMAKE_EXECUTBLE_LINKER_FLAGS "${CMAKE_EXECUTBLE_LINKER_FLAGS} -s FORCE_FILESYSTEM=1 -s EXIT_RUNTIME=1")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=15")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=15")
+set(CMAKE_EXECUTBLE_LINKER_FLAGS "${CMAKE_EXECUTBLE_LINKER_FLAGS} -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=15")
+
 include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
 GET_SUB_DIR_NAME(QT_MODULE_DIR_LIST ${Qt5_DIR}/../)
 foreach (QT_MODULE ${QT_MODULE_DIR_LIST})
@@ -19,5 +27,5 @@ FetchContent_MakeAvailable(ncnn_android)
 FetchContent_Declare(opencv_android
         URL https://github.com/nihui/opencv-mobile/releases/download/v14/opencv-mobile-4.5.4-webassembly.zip)
 FetchContent_MakeAvailable(opencv_android)
-set(ncnn_DIR ${ncnn_android_SOURCE_DIR}/basic/lib/cmake/ncnn)
-set(OpenCV_DIR ${opencv_android_SOURCE_DIR}/basic/lib/cmake/opencv4)
+set(ncnn_DIR ${ncnn_android_SOURCE_DIR}/threads/lib/cmake/ncnn)
+set(OpenCV_DIR ${opencv_android_SOURCE_DIR}/threads/lib/cmake/opencv4)
