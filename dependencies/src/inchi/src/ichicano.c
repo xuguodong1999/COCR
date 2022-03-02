@@ -37,7 +37,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-#include <sys/timeb.h>
 
 #include "mode.h"
 #include "ichicano.h"

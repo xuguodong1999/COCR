@@ -38,11 +38,6 @@
 
 #include "mode.h"
 
-#if defined(COMPILE_ANSI_ONLY) && defined(__APPLE__)
-/*    For build under OSX, advice from Burt Leland */
-#include "ichicomp.h"    /* Needed for __isascii define */
-#endif
-
 #include "util.h"
 #include "extr_ct.h"
 
@@ -1741,13 +1736,13 @@ char* lrtrim( char *p, int* nLen )
 
     if (p && ( len = (int) strlen( p ) ))
     {
-        for (i = 0; i < len && __isascii( p[i] ) && isspace( p[i] ); i++)
+        for (i = 0; i < len && isascii( p[i] ) && isspace( p[i] ); i++)
         {
             ;
         }
         if (i)
             (memmove) ( p, p + i, ( len -= i ) + 1 );
-        for (; 0 < len && __isascii( p[len - 1] ) && isspace( p[len - 1] ); len--)
+        for (; 0 < len && isascii( p[len - 1] ) && isspace( p[len - 1] ); len--)
         {
             ;
         }
