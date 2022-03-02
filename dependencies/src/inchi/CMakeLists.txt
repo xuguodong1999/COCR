@@ -10,7 +10,7 @@ if (MSVC)
     include_directories(${DEV_ASSETS_DIR}/windows)
 endif ()
 
-add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE} ${IXA_PROJECT_SOURCE})
+add_library(${PROJECT_NAME} ${PROJECT_SOURCE} ${IXA_PROJECT_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE TARGET_API_LIB)

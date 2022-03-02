@@ -1,17 +1,19 @@
-#include <QMessageBox>
-#include "view3d_widget.h"
-#include "chem/jmol_manager.hpp"
+#include "2d/view2d_widget.h"
+#include "ui_view2d_widget.h"
+#include "2d/mol2d_widget.hpp"
 #include "chem/jmol.hpp"
-#include "3d/entity_base.hpp"
-#include "ui_view3d_widget.h"
-#include "mol3d_widget.hpp"
-#include "format_dialog.h"
+#include "chem/jmol_manager.hpp"
+#include "ui/format_dialog.h"
+#include "2d/base_item.hpp"
+#include <QTimer>
+#include <QDebug>
+#include <QMessageBox>
 
-View3DWidget::View3DWidget(QWidget *parent)
-        : QWidget(parent), ui(new Ui::View3DWidget), expBtnClickTimes(0) {
+View2DWidget::View2DWidget(QWidget *parent)
+        : QWidget(parent), ui(new Ui::View2DWidget), hyBtnClickTimes(0), expBtnClickTimes(0) {
     ui->setupUi(this);
 
-    BaseEntity::SetView3DWidget(this);
+    BaseItem::SetView2DWidget(this);
 
     auto formatVec = GetWritableFormats();
     for (auto &format:formatVec) {
@@ -25,40 +27,30 @@ View3DWidget::View3DWidget(QWidget *parent)
     });
     ui->format_box->setCurrentText("smi");
 
-    connect(ui->format_btn, &QToolButton::clicked, this, &View3DWidget::showFormatDialog);
-    connect(ui->expand_btn, &QToolButton::clicked, this, &View3DWidget::switchSuperAtomState);
-    connect(ui->reset_btn, &QToolButton::clicked, this, &View3DWidget::reformatInputState);
+    connect(ui->format_btn, &QToolButton::clicked, this, &View2DWidget::showFormatDialog);
+    connect(ui->hydrogen_btn, &QToolButton::clicked, this, &View2DWidget::switchHydrogenState);
+    connect(ui->expand_btn, &QToolButton::clicked, this, &View2DWidget::switchSuperAtomState);
+    connect(ui->reset_btn, &QToolButton::clicked, this, &View2DWidget::reformatInputState);
 
     auto l = new QHBoxLayout();
-    mol3DWidget = new Mol3DWidget(ui->container);
-    l->addWidget(mol3DWidget);
-    l->setContentsMargins(0, 0, 0, 0);
-    l->setSpacing(0);
+    mol2DWidget = new Mol2DWidget(ui->container);
+    l->addWidget(mol2DWidget);
     ui->container->setLayout(l);
 }
 
-View3DWidget::~View3DWidget() {
+View2DWidget::~View2DWidget() {
     delete ui;
 }
 
-void View3DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
-    mol3DWidget->syncMolToScene(_mol);
+void View2DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
+    mol2DWidget->syncMolToScene(_mol);
 }
 
-void View3DWidget::startWaitHint() {
-    mol3DWidget->startWaitHint();
+void View2DWidget::startWaitHint() {
+    mol2DWidget->startWaitHint();
 }
 
-void View3DWidget::onAtomPicked(const size_t &_aid) {
-    ui->pick_edit->setText(mol3DWidget->makeAtomInfo(_aid));
-}
-
-void View3DWidget::onBondPicked(const size_t &_bid) {
-    ui->pick_edit->setText(mol3DWidget->makeBondInfo(_bid));
-}
-
-
-void View3DWidget::showFormatDialog() {
+void View2DWidget::showFormatDialog() {
     qDebug() << __FUNCTION__ << currentFormat.c_str();
     auto formatDialog = new FormatDialog(this);
     formatDialog->resize(size() * 0.8);
@@ -93,18 +85,37 @@ void View3DWidget::showFormatDialog() {
     formatDialog->exec();
 }
 
-
-void View3DWidget::switchSuperAtomState() {
+void View2DWidget::switchHydrogenState() {
     std::shared_ptr<cocr::JMol> mol;
-    if (++expBtnClickTimes % 2) {
-        mol = cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol();
+    if ((++hyBtnClickTimes) % 2) {
+        mol = !(expBtnClickTimes % 2) ? cocr::JMolManager::GetInstance().getFullHydrogenInputMol()
+                                      : cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol();
     } else {
-        mol = cocr::JMolManager::GetInstance().getFullHydrogenInputMol();
+        mol = !(expBtnClickTimes % 2) ? cocr::JMolManager::GetInstance().getInputMol()
+                                      : cocr::JMolManager::GetInstance().getExpandedMol();
     }
     syncMolToScene(mol);
 }
 
-void View3DWidget::reformatInputState() {
+void View2DWidget::switchSuperAtomState() {
+    std::shared_ptr<cocr::JMol> mol;
+    if ((++expBtnClickTimes) % 2) {
+        mol = cocr::JMolManager::GetInstance().getExpandedMol();
+    } else {
+        mol = cocr::JMolManager::GetInstance().getInputMol();
+    }
+    syncMolToScene(mol);
+}
+
+void View2DWidget::reformatInputState() {
     auto mol = cocr::JMolManager::GetInstance().getCurrentMol();
     syncMolToScene(mol);
+}
+
+void View2DWidget::onAtomPicked(const size_t &_aid) {
+    ui->pick_edit->setText(mol2DWidget->makeAtomInfo(_aid));
+}
+
+void View2DWidget::onBondPicked(const size_t &_bid) {
+    ui->pick_edit->setText(mol2DWidget->makeBondInfo(_bid));
 }

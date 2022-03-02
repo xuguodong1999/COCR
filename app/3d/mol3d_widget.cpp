@@ -1,8 +1,8 @@
-#include "mol3d_widget.hpp"
-#include "../chem/jmol.hpp"
-#include "../3d/mol3d_window.hpp"
-#include "../3d/mol3d_builder.hpp"
-#include "waithint_widget.h"
+#include "3d/mol3d_widget.hpp"
+#include "chem/jmol.hpp"
+#include "3d/mol3d_window.hpp"
+#include "3d/mol3d_builder.hpp"
+#include "ui/waithint_widget.h"
 #include <Qt3DCore/QEntity>
 #include <QHBoxLayout>
 #include <QDebug>

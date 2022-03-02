@@ -9,7 +9,7 @@ WelcomeWidget::WelcomeWidget(QWidget *parent) :
         QWidget(parent),
         ui(new Ui::WelcomeWidget) {
     ui->setupUi(this);
-    ui->agree_box->setCheckState(leafxyApp->getSettings().value(
+    ui->agree_box->setCheckState(leafxySettings.value(
             KEY_IS_AGREE, false).toBool() ? Qt::Checked : Qt::Unchecked);
     ui->intro_edit->setText(tr(
             "<p>LEAFXY app is an OCSR (Optical Chemical Structure Recognition) toolset capable of handling handwritten samples.</p>"
@@ -33,7 +33,7 @@ WelcomeWidget::WelcomeWidget(QWidget *parent) :
     connect(ui->agree_box, &QCheckBox::stateChanged, [&](int status) {
         bool checked = (status == Qt::Checked);
         emit sig_agree_box_checked(checked);
-        leafxyApp->getSettings().setValue(KEY_IS_AGREE, checked);
+        leafxySettings.setValue(KEY_IS_AGREE, checked);
     });
 }
 

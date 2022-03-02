@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QWidget>
 
 namespace Ui {
@@ -9,33 +10,30 @@ class WelcomeWidget;
 class PaintWidget;
 
 class View2DWidget;
-
+#ifndef Q_OS_WASM
 class View3DWidget;
-
+#endif
 class ImageWidget;
-
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
 class CameraWidget;
-
+#endif
 class OCRThread;
 
 class QHBoxLayout;
 
 class MainTabWidget : public QWidget {
 Q_OBJECT
-
-public:
-    explicit MainTabWidget(QWidget *parent = nullptr);
-
-    ~MainTabWidget();
-
-private:
     Ui::MainTabWidget *ui;
     WelcomeWidget *welcomeWidget;
     PaintWidget *paintWidget;
     View2DWidget *view2DWidget;
+#ifndef Q_OS_WASM
     View3DWidget *view3DWidget;
+#endif
     ImageWidget *imageWidget;
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
     CameraWidget *cameraWidget;
+#endif
     OCRThread *ocrThread;
     bool is2DLastUsed;
     bool isMolLatest;
@@ -45,10 +43,12 @@ private:
     enum class DataSource {
         CAMERA, IMAGE, PAINT
     } lastSource;
-
-    void setRecentlyUsedViewer(bool is2D);
-
     const char *KEY_IS_2D_LAST_USED = "main_tab_widget/is_2d_last_used";
+public:
+    explicit MainTabWidget(QWidget *parent = nullptr);
+
+    ~MainTabWidget();
+
 protected:
     void resizeEvent(QResizeEvent *e) override;
 
@@ -73,13 +73,16 @@ private:
     void safeAttach2DWidget();
 
     void safeDelete2DWidget();
-
+#ifndef Q_OS_WASM
     void safeAttach3DWidget();
 
     void safeDelete3DWidget();
-
+#endif
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
     // 拍照窗体存在跨平台兼容问题，也是懒加载
     void safeAttachCamWidget();
 
     void safeDeleteCamWidget();
+#endif
+    void setRecentlyUsedViewer(bool is2D);
 };

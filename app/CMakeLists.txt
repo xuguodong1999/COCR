@@ -8,8 +8,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # ncnn has not put its include directory in cmake config yet
 include_directories(${DEV_INCLUDE_DIR})
 
-set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
-if (NOT ANDROID) # use apk_shell for android-qt project
+set(QT_COMPONENTS Widgets)
+if (NOT WASM)
+    list(APPEND QT_COMPONENTS MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
+endif ()
+if (NOT ANDROID AND NOT WASM) # use apk_shell for android-qt project
     find_package(Qt5 COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
 endif ()
 find_package(OpenCV REQUIRED)
@@ -28,9 +31,20 @@ if (WITH_OPENVINO)
 endif (WITH_OPENVINO)
 
 # source dir
-set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./3d ./chem ./ocr)
-if (NOT ANDROID)
+set(SRC_DIR_LIST ./ ./ui ./ncnn_impl ./2d ./chem ./ocr)
+if (USE_OPENCV_DNN)
     list(APPEND SRC_DIR_LIST ./opencv_dnn_impl)
+    qt5_add_big_resources(MODEL_QRC ${DEV_ASSETS_DIR}/leafxy_ocv_dnn.qrc)
+else ()
+    qt5_add_big_resources(MODEL_QRC ${DEV_ASSETS_DIR}/leafxy_ncnn.qrc)
+endif ()
+
+if (NOT WASM)
+    list(APPEND SRC_DIR_LIST ./3d ./camera)
+endif ()
+
+if (NOT WASM AND NOT ANDROID)
+    list(APPEND SRC_DIR_LIST ./camera)
 endif ()
 
 # collect source files
@@ -48,9 +62,9 @@ if (MSVC)
     include_directories(${DEV_ASSETS_DIR}/windows)
 endif ()
 
+
 # add exe
 if (ANDROID)
-    qt5_add_big_resources(MODEL_QRC ${DEV_ASSETS_DIR}/leafxy_ncnn.qrc)
     set(ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android CACHE INTERNAL "")
     add_library(${APP_NAME} SHARED
             ${PROJECT_SOURCE}
@@ -59,7 +73,6 @@ if (ANDROID)
     # override no rtti and exceptions in ncnn
     set_target_properties(ncnn PROPERTIES INTERFACE_COMPILE_OPTIONS "-fexceptions")
 else ()
-    qt5_add_big_resources(MODEL_QRC ${DEV_ASSETS_DIR}/leafxy_ocv_dnn.qrc)
     add_executable(${APP_NAME} ${PROJECT_SOURCE} ${MODEL_QRC})
 endif ()
 
@@ -80,9 +93,14 @@ endforeach ()
 target_link_libraries(${APP_NAME} PRIVATE
         openbabel coordgenlibs ncnn
         ${QT_COMPONENT_TARGETS}
-        opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
+        opencv_core opencv_imgproc opencv_highgui)
 
 # on desktop, USE opencv_dnn instead of ncnn
-if (NOT ANDROID)
-    target_link_libraries(${APP_NAME} PRIVATE opencv_dnn)
+if (NOT ANDROID AND NOT WASM)
+    target_link_libraries(${APP_NAME} PRIVATE opencv_dnn opencv_imgcodecs)
+endif ()
+
+if (WASM)
+    set_target_properties(${APP_NAME} PROPERTIES LINK_FLAGS
+            "-s WASM=1 -s FULL_ES2=1 -s FULL_ES3=1 -s USE_WEBGL2=1 -s EXIT_RUNTIME=1 -s ERROR_ON_UNDEFINED_SYMBOLS=1 -s EXTRA_EXPORTED_RUNTIME_METHODS=[\"UTF16ToString\",\"stringToUTF16\"] --bind -s FETCH=1 -O2 -s ALLOW_MEMORY_GROWTH=1 -s TOTAL_MEMORY=335544320")
 endif ()

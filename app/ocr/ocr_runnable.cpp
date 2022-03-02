@@ -146,7 +146,7 @@ inline static cocr::BondType toBondType(const cocr::DetectorObjectType &_objType
 cocr::OCRManager::OCRManager(cocr::ObjectDetector &_detector, cocr::TextRecognizer &_recognizer,
                              TextCorrector &_corrector, GraphComposer &_composer)
         : detector(_detector), recognizer(_recognizer), corrector(_corrector), composer(_composer) {
-
+    qDebug() << "OCRManager::OCRManager";
 }
 
 std::shared_ptr<cocr::JMol> cocr::OCRManager::ocr(cv::Mat &_originInput, bool _debug) {
@@ -277,6 +277,7 @@ void cocr::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat
 
 OCRThread::OCRThread(QObject *_parent)
         : QThread(_parent) {
+    qDebug() << "OCRThread::OCRThread";
     const char *ncnnTextModel = ":/models/ncnn/text_57/vgg_lstm_57_fp16_mixFont.bin";
     const char *ncnnTextModelCfg = ":/models/ncnn/text_57/vgg_lstm_57_fp16.param";
     const char *ncnnDetModel = ":/models/ncnn/det_8/yolo_3l_c8.bin";

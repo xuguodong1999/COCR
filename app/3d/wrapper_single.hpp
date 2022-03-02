@@ -1,5 +1,5 @@
 #pragma once
-#include "wrapper_base.hpp"
+#include "3d/wrapper_base.hpp"
 
 namespace Qt3DExtras {
     class QPhongMaterial;

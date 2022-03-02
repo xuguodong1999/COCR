@@ -1,6 +1,6 @@
-#include "wrapper_multi_cylinder.hpp"
-#include "entity_base.hpp"
-#include "wrapper_cylinder.hpp"
+#include "3d/wrapper_multi_cylinder.hpp"
+#include "3d/entity_base.hpp"
+#include "3d/wrapper_cylinder.hpp"
 
 #include "math_util.hpp"
 

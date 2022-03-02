@@ -1,5 +1,5 @@
-#include "entity_base.hpp"
-#include "../ui/view3d_widget.h"
+#include "3d/entity_base.hpp"
+#include "3d/view3d_widget.h"
 
 #include <Qt3DRender/QObjectPicker>
 #include <Qt3DRender/QPickEvent>

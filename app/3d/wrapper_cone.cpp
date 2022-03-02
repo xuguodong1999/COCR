@@ -1,5 +1,5 @@
-#include "wrapper_cone.hpp"
-#include "entity_base.hpp"
+#include "3d/wrapper_cone.hpp"
+#include "3d/entity_base.hpp"
 
 #include "math_util.hpp"
 

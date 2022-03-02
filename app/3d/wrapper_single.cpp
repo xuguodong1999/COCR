@@ -1,6 +1,6 @@
-#include "wrapper_single.hpp"
+#include "3d/wrapper_single.hpp"
 
-#include "entity_base.hpp"
+#include "3d/entity_base.hpp"
 
 #include <Qt3DExtras/QPhongMaterial>
 #include <Qt3DCore/QEntity>

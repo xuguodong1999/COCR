@@ -17,6 +17,7 @@ GNU General Public License for more details.
 ***********************************************************************/
 #pragma once
 #include <cmath>
+#include <cstdlib>
 /* Return the implicit MDL valence for element "elem" with charge "q".  */
 static unsigned int MDLValence(unsigned int elem, int q, unsigned int val)
 {

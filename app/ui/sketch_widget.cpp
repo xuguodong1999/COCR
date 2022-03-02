@@ -30,7 +30,7 @@ Q_DECLARE_METATYPE(ui_script_type)
 SketchWidget::SketchWidget(QWidget *parent, QPen *_pen, QColor *_bgColor)
         : QWidget(parent), mPen(_pen), mBgColor(_bgColor) {
     qRegisterMetaTypeStreamOperators<ui_script_type>("QList<QList<QPointF>>");
-    currentScript = leafxyApp->getSettings().value("sketch_widget/last_script", QVariant::fromValue(
+    currentScript = leafxySettings.value("sketch_widget/last_script", QVariant::fromValue(
             currentScript)).value<ui_script_type>();
 //    if (!ptsList.empty()) {
 //        QTimer::singleShot(50, [&]() {
@@ -40,7 +40,7 @@ SketchWidget::SketchWidget(QWidget *parent, QPen *_pen, QColor *_bgColor)
 //            switch (result) {
 //                case QMessageBox::No:
 //                    ptsList.clear();
-//                    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(ptsList));
+//                    leafxySettings.setValue("sketch_widget/last_script", QVariant::fromValue(ptsList));
 //                    sync();
 //                    break;
 //                default:
@@ -124,7 +124,7 @@ void SketchWidget::endPenDraw() {
 
 void SketchWidget::reset() {
     currentScript.clear();
-    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
+    leafxySettings.setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
     sync();
 }
 
@@ -154,7 +154,7 @@ void SketchWidget::redo() {
 }
 
 void SketchWidget::saveLastScript() {
-    leafxyApp->getSettings().setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
+    leafxySettings.setValue("sketch_widget/last_script", QVariant::fromValue(currentScript));
 }
 
 void SketchWidget::keyPressEvent(QKeyEvent *e) {

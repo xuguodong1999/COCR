@@ -2,10 +2,21 @@
 #include "ui_main_tab_widget.h"
 #include "welcome_widget.h"
 #include "paint_widget.h"
-#include "view2d_widget.h"
-#include "view3d_widget.h"
+#include "../2d/view2d_widget.h"
+
+#ifndef Q_OS_WASM
+
+#include "../3d/view3d_widget.h"
+
+#endif
+
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+
+#include "../camera/camera_widget.h"
+
+#endif
+
 #include "image_widget.h"
-#include "camera_widget.h"
 #include "ocr/ocr_runnable.hpp"
 #include "application.hpp"
 #include "chem/jmol.hpp"
@@ -13,10 +24,17 @@
 #include <QTimer>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QDebug>
 
 MainTabWidget::MainTabWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::MainTabWidget),
-          view2DWidget(nullptr), view3DWidget(nullptr), cameraWidget(nullptr),
+          view2DWidget(nullptr),
+#ifndef Q_OS_WASM
+          view3DWidget(nullptr),
+#endif
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+          cameraWidget(nullptr),
+#endif
           ocrThread(new OCRThread(this)), lastSource(DataSource::PAINT),
           isOCRBtnClicked(false), isAgreementChecked(false), isMolLatest(false) {
     ui->setupUi(this);
@@ -25,51 +43,67 @@ MainTabWidget::MainTabWidget(QWidget *parent)
     welcomeWidget = new WelcomeWidget(ui->wel_tab);
     l->addWidget(welcomeWidget);
     ui->wel_tab->setLayout(l);
+    // 更新协议同意状态
+    setAgreementChecked(welcomeWidget->isAgreed());
+    connect(welcomeWidget, &WelcomeWidget::sig_agree_box_checked, this, &MainTabWidget::setAgreementChecked);
+    qDebug() << "MainTabWidget::MainTabWidget WelcomeWidget";
     // 绘图页
     l = new QHBoxLayout(ui->draw_tab);
     paintWidget = new PaintWidget(ui->draw_tab);
     l->addWidget(paintWidget);
     ui->draw_tab->setLayout(l);
+    // 设置状态更新避免重复识别
+    connect(paintWidget, &PaintWidget::sig_modified, [&]() { isMolLatest = false; });
+    // 从按钮启动 OCR 任务
+    connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked,
+            this, QOverload<const QList<QList<QPointF>> &>::of(&MainTabWidget::doOCR));
+    qDebug() << "MainTabWidget::MainTabWidget PaintWidget";
     // 2D
     v2dLayout = new QHBoxLayout(ui->v2d_tab);
     ui->v2d_tab->setLayout(v2dLayout);
+    qDebug() << "MainTabWidget::MainTabWidget v2dLayout";
+    ui->tabWidget->setTabVisible(3, false);
+    ui->tabWidget->setTabVisible(4, false);
+    ui->tabWidget->setTabVisible(5, false);
+#ifndef Q_OS_WASM
     // 3D
     v3dLayout = new QHBoxLayout(ui->v3d_tab);
     ui->v3d_tab->setLayout(v3dLayout);
+    ui->tabWidget->setTabVisible(3, true);
+#endif
+
+// FIXME: 安卓设备上 QCameraViewFinder 有 bug，据说不支持，最简单的做法是加 Qml
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
     // 图片加载页
     l = new QHBoxLayout(ui->img_tab);
     imageWidget = new ImageWidget(ui->img_tab);
     l->addWidget(imageWidget);
     ui->img_tab->setLayout(l);
+    ui->tabWidget->setTabVisible(4, true);
+    connect(imageWidget, &ImageWidget::sig_ocr_btn_clicked,
+            this, QOverload<const QImage &>::of(&MainTabWidget::doOCR));
+    connect(imageWidget, &ImageWidget::sig_modified, [&]() { isMolLatest = false; });
     // 拍照页
     camLayout = new QHBoxLayout(ui->cam_tab);
     ui->cam_tab->setLayout(camLayout);
+    ui->tabWidget->setTabVisible(5, true);
+#endif
     // 用户上一次观看 OCR 结果的偏好
-    is2DLastUsed = leafxyApp->getSettings().value(KEY_IS_2D_LAST_USED, false).toBool();
+    is2DLastUsed = leafxySettings.value(
+            KEY_IS_2D_LAST_USED,
+#ifdef Q_OS_WASM
+            true
+#else
+            false
+#endif
+    ).toBool();
     // 页面切换需要根据 mol 数据刷新显示
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainTabWidget::handleTabChange);
-    // 从按钮启动 OCR 任务
-    connect(paintWidget, &PaintWidget::sig_ocr_btn_clicked,
-            this, QOverload<const QList<QList<QPointF>> &>::of(&MainTabWidget::doOCR));
-    connect(imageWidget, &ImageWidget::sig_ocr_btn_clicked,
-            this, QOverload<const QImage &>::of(&MainTabWidget::doOCR));
     // OCR 任务完成后告知主窗体
     connect(ocrThread, &OCRThread::sig_mol_ready, this, &MainTabWidget::onOcrJobReady);
-    // 更新协议同意状态
-    setAgreementChecked(welcomeWidget->isAgreed());
-    connect(welcomeWidget, &WelcomeWidget::sig_agree_box_checked, this, &MainTabWidget::setAgreementChecked);
     // 设置起始页面：欢迎页或者绘图页
     ui->tabWidget->setCurrentIndex(isAgreementChecked ? 1 : 0);
-    // 设置状态更新避免重复识别
-    connect(paintWidget, &PaintWidget::sig_modified, [&]() { isMolLatest = false; });
-    connect(imageWidget, &ImageWidget::sig_modified, [&]() { isMolLatest = false; });
-    // FIXME: 安卓设备上 QCameraViewFinder 有 bug，据说不支持，最简单的做法是加 Qml
-//#ifdef Q_OS_ANDROID
-    ui->tabWidget->setTabVisible(5, false);
-//#endif
-#ifdef Q_OS_ANDROID
-    ui->tabWidget->setTabVisible(4, false);
-#endif
+    qDebug() << "MainTabWidget::MainTabWidget done";
 }
 
 
@@ -92,8 +126,12 @@ void MainTabWidget::handleTabChange(int index) {
             const DataSource currentSource = DataSource::PAINT;
             if (currentSource != lastSource) { isMolLatest = false; }
             safeDelete2DWidget();
+#ifndef Q_OS_WASM
             safeDelete3DWidget();
+#endif
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
             safeDeleteCamWidget();
+#endif
             lastSource = DataSource::PAINT;
             break;
         }
@@ -104,6 +142,7 @@ void MainTabWidget::handleTabChange(int index) {
             }
             break;
         }
+#ifndef Q_OS_WASM
         case 3: {
             safeAttach3DWidget();
             if (!isOCRBtnClicked) {
@@ -111,12 +150,14 @@ void MainTabWidget::handleTabChange(int index) {
             }
             break;
         }
+#endif
         case 4: {
             const DataSource currentSource = DataSource::IMAGE;
             if (currentSource != lastSource) { isMolLatest = false; }
             lastSource = DataSource::IMAGE;
             break;
         }
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
         case 5: {
             const DataSource currentSource = DataSource::CAMERA;
             if (currentSource != lastSource) { isMolLatest = false; }
@@ -124,6 +165,7 @@ void MainTabWidget::handleTabChange(int index) {
             lastSource = DataSource::CAMERA;
             break;
         }
+#endif
     }
     isOCRBtnClicked = false;
 }
@@ -148,7 +190,9 @@ void MainTabWidget::onOcrJobReady() {
     }
     if (ui->tabWidget->currentIndex() == 2) {
         view2DWidget->syncMolToScene(mol);
-    } else if (ui->tabWidget->currentIndex() == 3) {
+    }
+#ifndef Q_OS_WASM
+    else if (ui->tabWidget->currentIndex() == 3) {
         mol = cocr::JMolManager::GetInstance().getFullHydrogenInputMol();
         if (!mol) {
             QMessageBox::information(
@@ -159,6 +203,7 @@ void MainTabWidget::onOcrJobReady() {
         }
         view3DWidget->syncMolToScene(mol);
     }
+#endif
 }
 
 void MainTabWidget::doOCR(const QList<QList<QPointF>> &_script) {
@@ -168,11 +213,13 @@ void MainTabWidget::doOCR(const QList<QList<QPointF>> &_script) {
     if (is2DLastUsed) {
         ui->tabWidget->setCurrentIndex(2);
         view2DWidget->startWaitHint();
-    } else {
+    }
+#ifndef Q_OS_WASM
+    else {
         ui->tabWidget->setCurrentIndex(3);
         view3DWidget->startWaitHint();
     }
-
+#endif
     if (isMolLatest) {
         onOcrJobReady();
     } else {
@@ -183,6 +230,7 @@ void MainTabWidget::doOCR(const QList<QList<QPointF>> &_script) {
 
 void MainTabWidget::safeAttach2DWidget() {
     is2DLastUsed = true;
+    setRecentlyUsedViewer(is2DLastUsed);
     if (!view2DWidget) {
         view2DWidget = new View2DWidget(ui->v2d_tab);
         v2dLayout->addWidget(view2DWidget);
@@ -200,9 +248,11 @@ void MainTabWidget::safeDelete2DWidget() {
     }
 }
 
+#ifndef Q_OS_WASM
+
 void MainTabWidget::safeAttach3DWidget() {
     is2DLastUsed = false;
-    leafxyApp->getSettings().setValue("main_tab_widget/is_2d_last_used", is2DLastUsed);
+    setRecentlyUsedViewer(is2DLastUsed);
     if (!view3DWidget) {
         view3DWidget = new View3DWidget(ui->v3d_tab);
         v3dLayout->addWidget(view3DWidget);
@@ -219,6 +269,9 @@ void MainTabWidget::safeDelete3DWidget() {
 //        view3DWidget = nullptr;
     }
 }
+
+#endif
+#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
 
 void MainTabWidget::safeAttachCamWidget() {
     if (!cameraWidget) {
@@ -238,13 +291,15 @@ void MainTabWidget::safeDeleteCamWidget() {
     }
 }
 
+#endif
+
 void MainTabWidget::setAgreementChecked(bool isChecked) {
     isAgreementChecked = isChecked;
 }
 
 void MainTabWidget::setRecentlyUsedViewer(bool is2D) {
     is2DLastUsed = is2D;
-    leafxyApp->getSettings().setValue(KEY_IS_2D_LAST_USED, is2DLastUsed);
+    leafxySettings.setValue(KEY_IS_2D_LAST_USED, is2DLastUsed);
 }
 
 void MainTabWidget::doOCR(const QImage &_image) {
@@ -253,11 +308,13 @@ void MainTabWidget::doOCR(const QImage &_image) {
     if (is2DLastUsed) {
         ui->tabWidget->setCurrentIndex(2);
         view2DWidget->startWaitHint();
-    } else {
+    }
+#ifndef Q_OS_WASM
+    else {
         ui->tabWidget->setCurrentIndex(3);
         view3DWidget->startWaitHint();
     }
-
+#endif
 //    if (isMolLatest) {
 //        onOcrJobReady();
 //    } else {

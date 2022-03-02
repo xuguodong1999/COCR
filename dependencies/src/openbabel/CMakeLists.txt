@@ -20,7 +20,7 @@ set(PROJECT_SOURCE_DIR_LIST
         src/math
         src/ops
         src/stereo)
-if (UNIX AND NOT APPLE AND NOT ANDROID)
+if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT WASM)
     list(APPEND PROJECT_SOURCE_DIR_LIST src/formats/xtc src/formats/png)
 endif ()
 set(PROJECT_SOURCE)
@@ -48,7 +48,7 @@ endforeach ()
 string(APPEND QRC_CONTENT "</qresource>\n</RCC>")
 file(WRITE ${OpenBabel_QRC} ${QRC_CONTENT})
 
-add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE})
+add_library(${PROJECT_NAME} ${PROJECT_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 set(QT_COMPONENT_TARGETS)

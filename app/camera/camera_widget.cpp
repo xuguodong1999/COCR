@@ -1,4 +1,4 @@
-#include "camera_widget.h"
+#include "camera/camera_widget.h"
 #include "ui_camera_widget.h"
 
 #include <QtMultimediaWidgets/QCameraViewfinder>

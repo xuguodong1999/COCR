@@ -1,5 +1,5 @@
 #pragma once
-#include "wrapper_cylinder.hpp"
+#include "3d/wrapper_cylinder.hpp"
 #include <QVector3D>
 #include <QColor>
 #include <QString>

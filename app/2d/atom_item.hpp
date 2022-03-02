@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base_item.hpp"
+#include "2d/base_item.hpp"
 #include "chem/jatom.hpp"
 #include <QGraphicsTextItem>
 

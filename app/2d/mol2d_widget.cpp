@@ -1,7 +1,7 @@
-#include "mol2d_widget.hpp"
+#include "2d/mol2d_widget.hpp"
 #include "2d/atom_item.hpp"
 #include "2d/bond_item.hpp"
-#include "waithint_widget.h"
+#include "ui/waithint_widget.h"
 #include "chem/jmol.hpp"
 #include <QDebug>
 #include <cmath>

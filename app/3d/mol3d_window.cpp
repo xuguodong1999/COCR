@@ -1,21 +1,13 @@
-#include "mol3d_window.hpp"
+#include "3d/mol3d_window.hpp"
 #include "math_util.hpp"
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QPointLight>
 #include <Qt3DRender/QRenderSettings>
-#include <Qt3DRender/QRayCaster>
-#include <Qt3DRender/QScreenRayCaster>
-#include <Qt3DRender/QObjectPicker>
-#include <Qt3DRender/QPickEvent>
-#include <Qt3DInput/QMouseHandler>
-#include <Qt3DInput/QMouseDevice>
 
 #include <Qt3DExtras/QForwardRenderer>
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DCore/QTransform>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QWheelEvent>
-#include <QtGui/QKeyEvent>
 #include <QApplication>
 #include <QWidget>
 #include <cmath>

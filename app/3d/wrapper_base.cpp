@@ -1,5 +1,5 @@
-#include "wrapper_base.hpp"
-#include "entity_base.hpp"
+#include "3d/wrapper_base.hpp"
+#include "3d/entity_base.hpp"
 #include <Qt3DCore/QTransform>
 
 BaseWrapper::BaseWrapper(Qt3DCore::QEntity *_root) : root(_root), transform(new Qt3DCore::QTransform(_root)) {

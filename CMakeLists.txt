@@ -8,6 +8,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 
 option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
+option(BUILD_DATA_GEN "Generate data for yolo and crnn training" ON)
+option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" ON)
 option(BUILD_ELS_LAB "Libtorch is required to build cpp train" OFF)
 option(BUILD_TUTORIALS "Libtorch is required to build 3rdparty code examples" OFF)
 # android apk name
@@ -39,22 +41,29 @@ elseif (APPLE)
     include_directories(/opt/homebrew/include/)
 elseif (ANDROID) # use apk_shell for android-qt project
     include(${CMAKE_SOURCE_DIR}/cmake/FindAndroidDeps.cmake)
+elseif (WASM)
+    include(${CMAKE_SOURCE_DIR}/cmake/FindWasmDeps.cmake)
+endif ()
+
+if (ANDROID OR WASM)
+    set(BUILD_DATA_GEN OFF)
+    set(USE_OPENCV_DNN OFF)
 endif ()
 
 add_subdirectory(dependencies)
-add_subdirectory(app) # target as ${APP_NAME}
 
+add_subdirectory(app) # target as ${APP_NAME}
 add_dependencies(${APP_NAME} openbabel)
 add_dependencies(${APP_NAME} coordgenlibs)
 
-if (NOT ANDROID)
+if (BUILD_TESTS)
+    add_subdirectory(tests)
+endif ()
+
+if (BUILD_DATA_GEN)
     add_subdirectory(data_gen)
     add_dependencies(data_gen coordgenlibs)
     add_dependencies(data_gen openbabel)
-endif ()
-
-if (BUILD_TESTS)
-    add_subdirectory(tests)
 endif ()
 
 if (BUILD_ELS_LAB)

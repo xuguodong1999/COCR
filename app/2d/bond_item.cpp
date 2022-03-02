@@ -1,6 +1,6 @@
-#include "bond_item.hpp"
-#include "atom_item.hpp"
-#include "ui/view2d_widget.h"
+#include "2d/bond_item.hpp"
+#include "2d/atom_item.hpp"
+#include "2d/view2d_widget.h"
 #include "math_util.hpp"
 
 #include <QDebug>

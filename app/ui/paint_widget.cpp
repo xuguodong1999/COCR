@@ -29,9 +29,9 @@ PaintWidget::PaintWidget(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWid
 }
 
 void PaintWidget::readConfigurations() {
-    mPenWidthIndex = leafxyApp->getSettings().value(
+    mPenWidthIndex = leafxySettings.value(
             KEY_PEN_WIDTH_INDEX, DEFAULT_PEN_WIDTH_INDEX).toInt();
-    mColorModeIndex = leafxyApp->getSettings().value(
+    mColorModeIndex = leafxySettings.value(
             KEY_PEN_COLOR_INDEX, DEFAULT_COLOR_MODE_INDEX).toInt();
 
     auto&[bgColor, penColor]=mColorModeOptions[mColorModeIndex];
@@ -75,7 +75,7 @@ void PaintWidget::updateDotIcon() {
 
 void PaintWidget::increaseDotSize() {
     mPenWidthIndex = (mPenWidthIndex + 1) % mPenWidthOptions.size();
-    leafxyApp->getSettings().setValue(KEY_PEN_WIDTH_INDEX, mPenWidthIndex);
+    leafxySettings.setValue(KEY_PEN_WIDTH_INDEX, mPenWidthIndex);
 
     mPen.setWidthF(mPenWidthOptions[mPenWidthIndex]);
 
@@ -86,7 +86,7 @@ void PaintWidget::increaseDotSize() {
 
 void PaintWidget::increaseColorMode() {
     mColorModeIndex = (mColorModeIndex + 1) % mColorModeOptions.size();
-    leafxyApp->getSettings().setValue(KEY_PEN_COLOR_INDEX, mColorModeIndex);
+    leafxySettings.setValue(KEY_PEN_COLOR_INDEX, mColorModeIndex);
     auto&[bgColor, penColor]=mColorModeOptions[mColorModeIndex];
     mBgColor = bgColor;
     mPen.setColor(penColor);

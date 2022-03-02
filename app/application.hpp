@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QSettings>
 
-#define leafxyApp (static_cast<Application *>(QCoreApplication::instance()))
+#define leafxySettings (static_cast<Application *>(QCoreApplication::instance())->getSettings())
 
 class Application : public QApplication {
 public:

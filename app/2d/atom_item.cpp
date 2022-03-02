@@ -1,5 +1,5 @@
-#include "atom_item.hpp"
-#include "ui/view2d_widget.h"
+#include "2d/atom_item.hpp"
+#include "2d/view2d_widget.h"
 
 AtomItem::AtomItem(const cocr::id_type &_aid, QGraphicsItem *parent) :
         aid(_aid), BaseItem(parent) {

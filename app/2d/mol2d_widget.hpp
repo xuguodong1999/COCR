@@ -1,5 +1,5 @@
 #pragma once
-#include "gesture_view.hpp"
+#include "ui/gesture_view.hpp"
 #include <QGraphicsScene>
 #include <QGraphicsView>
 

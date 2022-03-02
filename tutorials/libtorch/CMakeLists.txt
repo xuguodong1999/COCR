@@ -34,7 +34,7 @@ unset(TMP_PROJECT_SOURCE_DIR_LIST)
 
 # make codes under ./public a standalone lib
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/public PROJECT_SOURCE_PUBLIC)
-add_library(${PROJECT_NAME}_public SHARED ${PROJECT_SOURCE_PUBLIC})
+add_library(${PROJECT_NAME}_public ${PROJECT_SOURCE_PUBLIC})
 target_link_libraries(${PROJECT_NAME}_public PRIVATE
         ${TORCH_LIBRARIES} ${OpenCV_LIBS} png)
 

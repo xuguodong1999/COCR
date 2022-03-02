@@ -1,9 +1,9 @@
-#include "mol3d_builder.hpp"
-#include "entity_base.hpp"
-#include "wrapper_cone.hpp"
-#include "wrapper_sphere.hpp"
-#include "wrapper_cylinder.hpp"
-#include "wrapper_multi_cylinder.hpp"
+#include "3d/mol3d_builder.hpp"
+#include "3d/entity_base.hpp"
+#include "3d/wrapper_cone.hpp"
+#include "3d/wrapper_sphere.hpp"
+#include "3d/wrapper_cylinder.hpp"
+#include "3d/wrapper_multi_cylinder.hpp"
 
 #include "chem/jmol.hpp"
 

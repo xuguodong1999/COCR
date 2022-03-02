@@ -1,5 +1,5 @@
 #pragma once
-#include "wrapper_single.hpp"
+#include "3d/wrapper_single.hpp"
 
 namespace Qt3DExtras {
     class QCylinderMesh;
