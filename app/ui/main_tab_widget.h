@@ -14,7 +14,7 @@ class View2DWidget;
 class View3DWidget;
 #endif
 class ImageWidget;
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
 class CameraWidget;
 #endif
 class OCRThread;
@@ -31,7 +31,7 @@ Q_OBJECT
     View3DWidget *view3DWidget;
 #endif
     ImageWidget *imageWidget;
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
     CameraWidget *cameraWidget;
 #endif
     OCRThread *ocrThread;
@@ -78,7 +78,7 @@ private:
 
     void safeDelete3DWidget();
 #endif
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
     // 拍照窗体存在跨平台兼容问题，也是懒加载
     void safeAttachCamWidget();
 

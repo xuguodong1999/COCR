@@ -10,7 +10,7 @@
 
 #endif
 
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
 
 #include "../camera/camera_widget.h"
 
@@ -32,7 +32,7 @@ MainTabWidget::MainTabWidget(QWidget *parent)
 #ifndef Q_OS_WASM
           view3DWidget(nullptr),
 #endif
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
           cameraWidget(nullptr),
 #endif
           ocrThread(new OCRThread(this)), lastSource(DataSource::PAINT),
@@ -73,7 +73,7 @@ MainTabWidget::MainTabWidget(QWidget *parent)
 #endif
 
 // FIXME: 安卓设备上 QCameraViewFinder 有 bug，据说不支持，最简单的做法是加 Qml
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
     // 图片加载页
     l = new QHBoxLayout(ui->img_tab);
     imageWidget = new ImageWidget(ui->img_tab);
@@ -129,7 +129,7 @@ void MainTabWidget::handleTabChange(int index) {
 #ifndef Q_OS_WASM
             safeDelete3DWidget();
 #endif
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
             safeDeleteCamWidget();
 #endif
             lastSource = DataSource::PAINT;
@@ -157,7 +157,7 @@ void MainTabWidget::handleTabChange(int index) {
             lastSource = DataSource::IMAGE;
             break;
         }
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
         case 5: {
             const DataSource currentSource = DataSource::CAMERA;
             if (currentSource != lastSource) { isMolLatest = false; }
@@ -271,7 +271,7 @@ void MainTabWidget::safeDelete3DWidget() {
 }
 
 #endif
-#if not defined(Q_OS_WASM) and not defined(Q_OS_ANDROID)
+#if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
 
 void MainTabWidget::safeAttachCamWidget() {
     if (!cameraWidget) {
