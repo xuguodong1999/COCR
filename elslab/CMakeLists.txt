@@ -3,11 +3,20 @@ project(elslab LANGUAGES CXX)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${DEV_INCLUDE_DIR})
 
-find_package(OpenCV REQUIRED)
-find_package(Torch REQUIRED)
+find_package(OpenCV QUIET)
+find_package(Torch QUIET)
 
-include_directories(${TORCH_INCLUDE_DIRS})
-include_directories(${OpenCV_INCLUDE_DIRS})
+if (NOT ${Torch_FOUND})
+    message(WARNING "Torch not found, ${PROJECT_NAME} will not be built")
+    return()
+endif ()
+
+if (NOT ${OpenCV_FOUND})
+    message(WARNING "OpenCV not found, ${PROJECT_NAME} will not be built")
+    return()
+endif ()
+
+include_directories(${TORCH_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 
 # collect source files
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} PROJECT_SOURCE)

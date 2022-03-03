@@ -31,12 +31,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         ${QT_COMPONENT_TARGETS}
         opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/datasets/\")")
+if (IOS OR ANDROID OR APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenMP_CXX_FLAGS})
+endif ()
 
-# openmp for apple clang
-if (APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
-endif(APPLE)
+target_compile_definitions(${PROJECT_NAME} PRIVATE "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/datasets/\")")
 
 if (MSVC)
     target_link_options(${PROJECT_NAME} PRIVATE "/FORCE:MULTIPLE")

@@ -21,10 +21,12 @@ GNU General Public License for more details.
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/shared_ptr.hpp> // OBAtomMap, OBBondMap
-#include <boost/property_map.hpp> // OBAtomMap, OBBondMap
+#include <boost/property_map/property_map.hpp> // OBAtomMap, OBBondMap
 #include <boost/graph/visitors.hpp> // functor_caller, recorder
 
 #include <openbabel/mol.h>
+#include <openbabel/bond.h>
+#include <openbabel/atom.h>
 
 namespace boost // cannot specialize boost::graph_traits outside namespace
 {

@@ -1,17 +1,17 @@
 include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
-GET_SUB_DIR_NAME(QT_MODULE_DIR_LIST ${Qt5_DIR}/../)
-foreach (QT_MODULE ${QT_MODULE_DIR_LIST})
-    set(${QT_MODULE}_DIR ${Qt5_DIR}/../${QT_MODULE} CACHE INTERNAL "")
-endforeach ()
-unset(QT_MODULE_DIR_LIST)
+findQtModules()
 
 set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
+
+# apk shell begin
 set(_PROJECT_NAME ${PROJECT_NAME})
 set(PROJECT_NAME ${APP_NAME})
 find_package(Qt5 COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
 set(PROJECT_NAME ${_PROJECT_NAME})
 unset(_PROJECT_NAME)
 unset(QT_COMPONENTS)
+# apk shell end
+
 include(FetchContent)
 FetchContent_Declare(ncnn_android
         # URL http://127.0.0.1:5500/ncnn-20210720-android-vulkan.zip)

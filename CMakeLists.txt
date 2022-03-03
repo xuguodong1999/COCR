@@ -8,6 +8,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 
 option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
+option(BUILD_SHARED_LIBS "Build as shared or static libs" ON)
 option(BUILD_DATA_GEN "Generate data for yolo and crnn training" ON)
 option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" ON)
 option(BUILD_ELS_LAB "Libtorch is required to build cpp train" OFF)
@@ -46,15 +47,22 @@ elseif (WASM)
 endif ()
 
 if (ANDROID OR WASM)
+    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, BUILD_ELS_LAB and BUILD_TUTORIALS set to OFF")
     set(BUILD_DATA_GEN OFF)
     set(USE_OPENCV_DNN OFF)
+    set(BUILD_TESTS OFF)
+    set(BUILD_ELS_LAB OFF)
+    set(BUILD_TUTORIALS OFF)
 endif ()
 
 add_subdirectory(dependencies)
 
-add_subdirectory(app) # target as ${APP_NAME}
+add_subdirectory(tools) # target as ${APP_NAME}
 add_dependencies(${APP_NAME} openbabel)
 add_dependencies(${APP_NAME} coordgenlibs)
+
+find_package(Boost QUIET)
+find_package(Torch QUIET)
 
 if (BUILD_TESTS)
     add_subdirectory(tests)
@@ -62,7 +70,6 @@ endif ()
 
 if (BUILD_DATA_GEN)
     add_subdirectory(data_gen)
-    add_dependencies(data_gen coordgenlibs)
     add_dependencies(data_gen openbabel)
 endif ()
 

@@ -16,15 +16,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
-#include "babelconfig.h"
-#include "openbabel/mol.h"
-#include "openbabel/obconversion.h"
+#include <openbabel/babelconfig.h>
+#include <openbabel/mol.h>
+#include <openbabel/obconversion.h>
 
 #include <iostream>
 //#include <unistd.h>
 
-#include "mol_graph.h"
-#include "verbose_visitors.h"
+#include <openbabel/bgl/mol_graph.h>
+#include <openbabel/bgl/verbose_visitors.h>
 
 #include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/undirected_dfs.hpp>

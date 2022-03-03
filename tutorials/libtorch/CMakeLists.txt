@@ -6,9 +6,24 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${DEV_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/public)
 
-find_package(OpenCV REQUIRED)
-find_package(Torch REQUIRED)
-find_package(Boost COMPONENTS program_options REQUIRED)
+find_package(OpenCV QUIET)
+find_package(Torch QUIET)
+find_package(Boost COMPONENTS program_options QUIET)
+
+if (NOT ${Torch_FOUND})
+    message(WARNING "Torch not found, ${PROJECT_NAME} will not be built")
+    return()
+endif ()
+
+if (NOT ${OpenCV_FOUND})
+    message(WARNING "OpenCV not found, ${PROJECT_NAME} will not be built")
+    return()
+endif ()
+
+if (NOT ${Boost_FOUND})
+    message(WARNING "Boost not found, ${PROJECT_NAME} will not be built")
+    return()
+endif ()
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(${TORCH_INCLUDE_DIRS})

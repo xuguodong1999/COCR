@@ -1,5 +1,5 @@
 #include "mol_util.hpp"
-#include "../app/chem/alkane_graph.hpp"
+#include "../tools/chem/alkane_graph.hpp"
 #include "std_util.hpp"
 
 #include "openbabel_util.hpp"

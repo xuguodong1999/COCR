@@ -3,7 +3,12 @@ project(tut_cpprl LANGUAGES CXX)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${DEV_HEADER_DIR})
 
-find_package(Torch REQUIRED)
+find_package(Torch QUIET)
+
+if (NOT ${Torch_FOUND})
+    message(WARNING "Torch not found, ${PROJECT_NAME} will not be built")
+    return()
+endif ()
 
 include_directories(${TORCH_INCLUDE_DIRS})
 set(PROJECT_SOURCE_DIR_LIST ./ ./algorithms/ ./distributions/ ./generators/ ./model/)
