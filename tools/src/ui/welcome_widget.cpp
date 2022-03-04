@@ -10,7 +10,13 @@ WelcomeWidget::WelcomeWidget(QWidget *parent) :
         ui(new Ui::WelcomeWidget) {
     ui->setupUi(this);
     ui->agree_box->setCheckState(leafxySettings.value(
-            KEY_IS_AGREE, false).toBool() ? Qt::Checked : Qt::Unchecked);
+            KEY_IS_AGREE,
+#ifdef Q_OS_WASM
+            true
+#else
+            false
+#endif
+    ).toBool() ? Qt::Checked : Qt::Unchecked);
     ui->intro_edit->setText(tr(
             "<p>LEAFXY app is an OCSR (Optical Chemical Structure Recognition) toolset capable of handling handwritten samples.</p>"
             "<p>Honor of its creation belongs to Guodong Xu, an undergraduate of Nanjing University in 2021.</p>"

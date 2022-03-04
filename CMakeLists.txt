@@ -33,21 +33,6 @@ if (OPENMP_FOUND AND NOT ANDROID)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif ()
 
-if (NOT WASM AND NOT ANDROID)
-    # put all dll and exe in one directory
-    # wasm and android has specific output archive
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
-else ()
-    # disable unrelated project for wasm and android
-    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, BUILD_ELS_LAB and BUILD_TUTORIALS set to OFF")
-    set(BUILD_DATA_GEN OFF)
-    set(USE_OPENCV_DNN OFF)
-    set(BUILD_TESTS OFF)
-    set(BUILD_ELS_LAB OFF)
-    set(BUILD_TUTORIALS OFF)
-endif ()
-
 if (MSVC)
     set(Boost_USE_STATIC_LIBS OFF CACHE INTERNAL "")
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -59,6 +44,22 @@ elseif (ANDROID) # use apk_shell for android-qt project
     include(${CMAKE_SOURCE_DIR}/cmake/FindAndroidDeps.cmake)
 elseif (WASM)
     include(${CMAKE_SOURCE_DIR}/cmake/FindWasmDeps.cmake)
+endif ()
+
+if (NOT WASM AND NOT ANDROID)
+    # put all dll and exe in one directory
+    # wasm and android has specific output archive
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
+else ()
+    # disable unrelated project for wasm and android
+    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, BUILD_ELS_LAB and BUILD_TUTORIALS set to OFF")
+    set(USE_OPENCV_DNN OFF)
+
+    set(BUILD_DATA_GEN OFF)
+    set(BUILD_TESTS OFF)
+    set(BUILD_ELS_LAB OFF)
+    set(BUILD_TUTORIALS OFF)
 endif ()
 
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)

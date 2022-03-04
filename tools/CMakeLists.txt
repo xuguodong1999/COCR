@@ -88,7 +88,7 @@ target_link_libraries(${APP_NAME} PRIVATE
         opencv_core opencv_imgproc opencv_highgui)
 
 # on desktop, USE opencv_dnn instead of ncnn
-if (NOT ANDROID AND NOT WASM)
+if (USE_OPENCV_DNN)
     target_link_libraries(${APP_NAME} PRIVATE opencv_dnn opencv_imgcodecs)
 endif ()
 
