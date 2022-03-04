@@ -55,8 +55,8 @@ function(copyQtWasmTemplates TEMPLATE_ROOT APP_NAME OUTPUT_ROOT)
         get_filename_component(WASM_TEMPLATE_NAME ${WASM_TEMPLATE} NAME)
         if (${WASM_TEMPLATE_NAME} STREQUAL "index.html") # replace APP_NAME placeholder to real ${APP_NAME}
             file(READ ${WASM_TEMPLATE} OLD_INDEX_HTML_BUFFER)
-            string(REPLACE "APP_NAME" "${APP_NAME}" INDEX_HTML_BUFFER ${OLD_INDEX_HTML_BUFFER})
-            writeFileIfChanged(${OUTPUT_ROOT}/${WASM_TEMPLATE_NAME} ${INDEX_HTML_BUFFER})
+            string(REPLACE "APP_NAME" "${APP_NAME}" INDEX_HTML_BUFFER "${OLD_INDEX_HTML_BUFFER}")
+            writeFileIfChanged(${OUTPUT_ROOT}/${WASM_TEMPLATE_NAME} "${INDEX_HTML_BUFFER}")
         else () # just copy
             add_custom_command(TARGET ${APP_NAME}_wasm_template POST_BUILD COMMAND ${CMAKE_COMMAND} -E
                     copy ${WASM_TEMPLATE} ${OUTPUT_ROOT})
@@ -75,5 +75,5 @@ function(writeQrcFileBySearchDirectory OUTPUT_PATH SEARCH_DIR RELATIVE_DIR)
     endforeach ()
     string(APPEND QRC_BUFFER "</qresource>\n</RCC>")
 
-    writeFileIfChanged(${OUTPUT_PATH} ${QRC_BUFFER})
+    writeFileIfChanged(${OUTPUT_PATH} "${QRC_BUFFER}")
 endfunction()
