@@ -5,7 +5,7 @@
 #ifndef _ISOMER_HPP_
 #define _ISOMER_HPP_
 
-#include "../tools/chem/alkane_graph.hpp"
+#include "alkane_graph.hpp"
 
 #include <fstream>
 #include <map>

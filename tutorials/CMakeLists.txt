@@ -8,7 +8,7 @@ find_package(OpenCV QUIET)
 find_package(Qt5 COMPONENTS Widgets QUIET)
 
 # collect source files
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/common PROJECT_SOURCE)
 # {name}.cpp -> target as -> {name}.cpp.o
 # rules:
 #   if {name} has qt suffix, then link qt
@@ -16,26 +16,31 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
 #   if {name} has torch suffix, then link libtorch
 foreach (PROJECT_SOURCE_FILE_PATH ${PROJECT_SOURCE})
     # add exe
-    get_filename_component(PROJECT_SOURCE_FILE ${PROJECT_SOURCE_FILE_PATH} NAME)
-    set(TARGET_NAME ${PROJECT_NAME}_${PROJECT_SOURCE_FILE})
+    get_filename_component(PROJECT_SOURCE_FILE ${PROJECT_SOURCE_FILE_PATH} NAME_WE)
+    set(TARGET_NAME ${PROJECT_NAME}_com_${PROJECT_SOURCE_FILE})
     # file prefix
     ## ob: try build openbabel with boost, coordgenlibs and maeparser
-    string(FIND ${PROJECT_SOURCE_FILE} "ob" PREFIX_POS)
+    string(FIND "${PROJECT_SOURCE_FILE}" "ob" PREFIX_POS)
     if (NOT PREFIX_POS) # ==0
         if (NOT ${Boost_FOUND})
             message(WARNING "Boost not found, ${TARGET_NAME} will not be fully built")
             continue()
         endif ()
-        add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH})
+         if (NOT ${Qt5_FOUND})
+            message(WARNING "Qt5 not found, ${TARGET_NAME} will not be built")
+            continue()
+        endif ()
+        set(CMAKE_AUTORCC ON)
+        add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH} ${OpenBabel_QRC})
         # product suffix
         set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
         target_include_directories(${TARGET_NAME} PRIVATE ${Boost_INCLUDE_DIR} ${DEV_INCLUDE_DIR})
-        target_link_libraries(${TARGET_NAME} openbabel coordgenlibs maeparser ${Boost_LIBRARIES})
+        target_link_libraries(${TARGET_NAME} openbabel coordgenlibs maeparser Qt5::Core ${Boost_LIBRARIES})
         add_dependencies(${TARGET_NAME} openbabel coordgenlibs maeparser)
         continue()
     endif ()
     ## torch
-    string(FIND ${PROJECT_SOURCE_FILE} "torch" PREFIX_POS)
+    string(FIND "${PROJECT_SOURCE_FILE}" "torch" PREFIX_POS)
     if (NOT PREFIX_POS) # ==0
         if (NOT ${Torch_FOUND})
             message(WARNING "Torch not found, ${TARGET_NAME} will not be built")
@@ -53,7 +58,7 @@ foreach (PROJECT_SOURCE_FILE_PATH ${PROJECT_SOURCE})
         continue()
     endif ()
     ## qt
-    string(FIND ${PROJECT_SOURCE_FILE} "qt" PREFIX_POS)
+    string(FIND "${PROJECT_SOURCE_FILE}" "qt" PREFIX_POS)
     if (NOT PREFIX_POS) # ==0
         if (NOT ${Qt5_FOUND})
             message(WARNING "Qt5 not found, ${TARGET_NAME} will not be built")
@@ -69,7 +74,3 @@ foreach (PROJECT_SOURCE_FILE_PATH ${PROJECT_SOURCE})
     # product suffix
     set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
 endforeach ()
-
-# standalone proj
-add_subdirectory(cpprl)
-add_subdirectory(libtorch)

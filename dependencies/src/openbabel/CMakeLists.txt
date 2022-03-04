@@ -1,4 +1,5 @@
 project(openbabel LANGUAGES CXX)
+include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${DEV_INCLUDE_DIR})
@@ -7,7 +8,6 @@ if (NOT ANDROID) # use apk_shell for android-qt project
     find_package(Qt5 COMPONENTS Core REQUIRED)
 endif ()
 
-include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
 GET_ALL_SUB_DIR_NAME(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR})
 
 # require libxml2, TODO: port to QtXml
@@ -18,8 +18,7 @@ if (APPLE OR ANDROID OR WASM)
 endif ()
 
 foreach (PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR_LIST})
-    aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_SOURCE_DIR} PROJECT_SOURCES)
-    list(APPEND PROJECT_SOURCE ${PROJECT_SOURCES})
+    aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_SOURCE_DIR} PROJECT_SOURCE)
 endforeach ()
 
 # include windows dll info
@@ -29,8 +28,7 @@ if (MSVC)
 endif ()
 
 # generate openbabel qrc
-include(${CMAKE_SOURCE_DIR}/cmake/GenerateOpenBabelQrc.cmake)
-generateOpenBabelQrc(${OpenBabel_QRC})
+writeQrcFileBySearchDirectory("${OpenBabel_QRC}" "${DEV_ASSETS_DIR}/openbabel/**" "${DEV_ASSETS_DIR}")
 
 add_library(${PROJECT_NAME} ${PROJECT_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")

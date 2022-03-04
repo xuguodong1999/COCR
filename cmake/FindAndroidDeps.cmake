@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/cmake/macro.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 findQtModules()
 
 set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)

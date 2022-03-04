@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(dev LANGUAGES CXX)
+project(dev)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# put all dll and exe in one directory
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 
 option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
 option(BUILD_SHARED_LIBS "Build as shared or static libs" ON)
@@ -33,6 +33,21 @@ if (OPENMP_FOUND AND NOT ANDROID)
     set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS})
 endif ()
 
+if (NOT WASM AND NOT ANDROID)
+    # put all dll and exe in one directory
+    # wasm and android has specific output archive
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
+else ()
+    # disable unrelated project for wasm and android
+    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, BUILD_ELS_LAB and BUILD_TUTORIALS set to OFF")
+    set(BUILD_DATA_GEN OFF)
+    set(USE_OPENCV_DNN OFF)
+    set(BUILD_TESTS OFF)
+    set(BUILD_ELS_LAB OFF)
+    set(BUILD_TUTORIALS OFF)
+endif ()
+
 if (MSVC)
     set(Boost_USE_STATIC_LIBS OFF CACHE INTERNAL "")
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -46,14 +61,7 @@ elseif (WASM)
     include(${CMAKE_SOURCE_DIR}/cmake/FindWasmDeps.cmake)
 endif ()
 
-if (ANDROID OR WASM)
-    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, BUILD_ELS_LAB and BUILD_TUTORIALS set to OFF")
-    set(BUILD_DATA_GEN OFF)
-    set(USE_OPENCV_DNN OFF)
-    set(BUILD_TESTS OFF)
-    set(BUILD_ELS_LAB OFF)
-    set(BUILD_TUTORIALS OFF)
-endif ()
+add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 add_subdirectory(dependencies)
 
@@ -61,11 +69,16 @@ add_subdirectory(tools) # target as ${APP_NAME}
 add_dependencies(${APP_NAME} openbabel)
 add_dependencies(${APP_NAME} coordgenlibs)
 
-find_package(Boost QUIET)
-find_package(Torch QUIET)
+if (NOT ANDROID AND NOT IOS)
+    add_subdirectory(tools_qml)
+endif ()
 
 if (BUILD_TESTS)
-    add_subdirectory(tests)
+    add_subdirectory(tests/maeparser)
+    add_subdirectory(tests/coordgenlibs)
+    add_subdirectory(tests/rxcpp)
+    add_subdirectory(tests/rxqt)
+    add_subdirectory(tests/openbabel)
 endif ()
 
 if (BUILD_DATA_GEN)
@@ -79,4 +92,7 @@ endif ()
 
 if (BUILD_TUTORIALS)
     add_subdirectory(tutorials)
+    # standalone proj
+    add_subdirectory(tutorials/cpprl)
+    add_subdirectory(tutorials/libtorch)
 endif ()
