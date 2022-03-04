@@ -12,7 +12,7 @@ GET_ALL_SUB_DIR_NAME(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR})
 
 # require libxml2, TODO: port to QtXml
 list(REMOVE_ITEM PROJECT_SOURCE_DIR_LIST src/formats/xml)
-if (APPLE OR ANDROID OR WASM)
+if (NOT UNIX OR APPLE OR ANDROID OR WASM)
     # require <rpc/xdr.h> <zlib.h>
     list(REMOVE_ITEM PROJECT_SOURCE_DIR_LIST src/formats/xtc src/formats/png)
 endif ()

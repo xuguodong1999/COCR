@@ -88,16 +88,16 @@ std::optional<matrix<T>> gemm(const matrix<T> &A, const matrix<T> &B,
     for (len_type m = 0; m < M; m++) {
         std::vector<grid_map> SSMS(N);
 #pragma omp parallel for
-        for (len_type n = 0; n < N; n++) {
+        for (long long n = 0; n < N; n++) {
             C[m][n] = 0;
             for (len_type k = 0; k < K; k++) {
                 C[m][n] += A[m][k] * B[k][n];
-                increaseGridMap(SSMS[n], m, k, k, n);
+//                increaseGridMap(SSMS[n], m, k, k, n);
             }
         }
-        for (auto &ssm: SSMS) {
-            unionGridMap(SSM, ssm);
-        }
+//        for (auto &ssm: SSMS) {
+//            unionGridMap(SSM, ssm);
+//        }
     }
     printGridMap(SSM);
     return C;
@@ -146,9 +146,9 @@ std::optional<matrix<T>> gemm(const matrix<T> &A, const matrix<T> &B) {
 
 
 int main() {
-    const size_t M = 30;
-    const size_t N = 40;
-    const size_t K = 50;
+    const size_t M = 3000;
+    const size_t N = 4000;
+    const size_t K = 5000;
     matrix<scalar> A, B, C;
     A = make_matrix<scalar>(M, K, one * 1);
     B = make_matrix<scalar>(K, N, one * 1);
