@@ -27,15 +27,14 @@
 ##
 #############################################################################
 
+import argparse
 import os
-import socket
 import ssl
-import sys
-import threading
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from subprocess import run
+
 import netifaces as ni
-import argparse
+
 
 # This script implements a web server which serves the content of the current
 # working directory using the http and secure https protocols. The server is
@@ -81,7 +80,7 @@ def main():
     cmd_addresses = args.address or []
     serve_path = args.path
 
-    addresses = ["127.0.0.1"] + cmd_addresses
+    addresses = ["localhost"] + cmd_addresses
     if all_addresses:
         addresses += [
             addr[ni.AF_INET][0]["addr"]
@@ -130,8 +129,7 @@ def main():
                 keyfile=cert_key_file,
                 server_side=True,
             )
-        thread = threading.Thread(target=httpd.serve_forever)
-        thread.start()
+        httpd.serve_forever()
 
     # Start servers
     print(f"Serving at:")
