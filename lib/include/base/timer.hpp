@@ -1,9 +1,4 @@
-/**
- * This file is a part of COCR Project
- * @author 徐国栋
- */
-#ifndef _TIMER_HPP_
-#define _TIMER_HPP_
+#pragma once
 
 #include <chrono>
 
@@ -17,5 +12,3 @@ public:
 
     void stop(bool _display_duration = true);
 };
-
-#endif//_TIMER_HPP_
