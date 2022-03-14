@@ -64,36 +64,36 @@ endif ()
 
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
-add_subdirectory(dependencies)
-
-add_subdirectory(tools) # target as ${APP_NAME}
-add_dependencies(${APP_NAME} openbabel)
-add_dependencies(${APP_NAME} coordgenlibs)
-
-if (NOT ANDROID AND NOT IOS)
-    add_subdirectory(tools_qml)
-endif ()
-
-if (BUILD_TESTS)
-    add_subdirectory(tests/maeparser)
-    add_subdirectory(tests/coordgenlibs)
-    add_subdirectory(tests/rxcpp)
-    add_subdirectory(tests/rxqt)
-    add_subdirectory(tests/openbabel)
-endif ()
-
-if (BUILD_DATA_GEN)
-    add_subdirectory(data_gen)
-    add_dependencies(data_gen openbabel)
-endif ()
-
-if (BUILD_ELS_LAB)
-    add_subdirectory(elslab)
-endif ()
-
-if (BUILD_TUTORIALS)
-    add_subdirectory(tutorials)
-    # standalone proj
-    add_subdirectory(tutorials/cpprl)
-    add_subdirectory(tutorials/libtorch)
-endif ()
+# add_subdirectory(dependencies)
+#
+# add_subdirectory(tools) # target as ${APP_NAME}
+# add_dependencies(${APP_NAME} openbabel)
+# add_dependencies(${APP_NAME} coordgenlibs)
+#
+#if (NOT ANDROID AND NOT IOS)
+#    add_subdirectory(tools_qml)
+#endif ()
+#
+#if (BUILD_TESTS)
+#    add_subdirectory(tests/maeparser)
+#    add_subdirectory(tests/coordgenlibs)
+#    add_subdirectory(tests/rxcpp)
+#    add_subdirectory(tests/rxqt)
+#    add_subdirectory(tests/openbabel)
+#endif ()
+#
+#if (BUILD_DATA_GEN)
+#    add_subdirectory(data_gen)
+#    add_dependencies(data_gen openbabel)
+#endif ()
+#
+#if (BUILD_ELS_LAB)
+#    add_subdirectory(elslab)
+#endif ()
+#
+#if (BUILD_TUTORIALS)
+#    add_subdirectory(tutorials)
+#    # standalone proj
+#    add_subdirectory(tutorials/cpprl)
+#    add_subdirectory(tutorials/libtorch)
+#endif ()

@@ -1,7 +1,7 @@
-add_subdirectory(src/coordgenlibs)
-add_subdirectory(src/maeparser)
-add_subdirectory(src/openbabel)
-add_subdirectory(src/inchi)
+add_subdirectory(coordgenlibs)
+add_subdirectory(maeparser)
+add_subdirectory(openbabel)
+add_subdirectory(inchi)
 
 add_dependencies(coordgenlibs maeparser)
 
