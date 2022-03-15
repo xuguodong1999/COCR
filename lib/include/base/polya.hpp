@@ -1,11 +1,12 @@
 /**
  * https://github.com/snljty/CountAlkylIsomer
  */
-#include "bignumber.hpp"
+#include "cocr_base_export.h"
+#include "base/bignumber.hpp"
 #include <iostream>
 #include <vector>
 
-class PolyaIsomerCounter {
+class COCR_BASE_EXPORT PolyaIsomerCounter {
     using count_type = UnsignedInteger;
     std::vector<count_type> A, P, Q, C;
     const count_type two = 2, three = 3, six = 6, eight = 8, twenty_four = 24;

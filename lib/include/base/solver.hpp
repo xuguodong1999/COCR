@@ -1,11 +1,6 @@
-/**
- * This file is a part of COCR Project
- * @author 徐国栋
- */
-#ifndef _SOLVER_HPP_
-#define  _SOLVER_HPP_
+#pragma once
 
-#include "fraction.hpp"
+#include "base/fraction.hpp"
 #include <vector>
 #include <iostream>
 #include <cassert>
@@ -70,5 +65,3 @@ inline std::vector<T> linearSolve(const std::vector<std::vector<T>> &in) {
     }
     return std::move(out);
 }
-
-#endif// _SOLVER_HPP_

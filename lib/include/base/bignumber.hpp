@@ -2,16 +2,15 @@
  * 版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。
  * 本文链接：https://blog.csdn.net/shutdownYourComputer/article/details/88865909
  */
-#ifndef _BIGNUMBER_HPP_
-#define _BIGNUMBER_HPP_
-
+#pragma once
+#include "cocr_base_export.h"
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <string>
 #include <vector>
 
-class UnsignedInteger {
+class COCR_BASE_EXPORT UnsignedInteger {
     unsigned char buffer[256];
     size_t bufferSize;
 public:
@@ -57,5 +56,3 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const UnsignedInteger &num);
 };
-
-#endif //_BIGNUMBER_HPP_

@@ -1,11 +1,6 @@
-/**
- * This file is a part of COCR Project
- * @author 徐国栋
- */
-#ifndef _ISOMER_HPP_
-#define _ISOMER_HPP_
-
-#include "alkane_graph.hpp"
+#pragma once
+#include "cocr_base_export.h"
+#include "base/alkane_graph.hpp"
 
 #include <fstream>
 #include <map>
@@ -15,7 +10,7 @@ using cocr::AlkaneGraph;
 using cocr::node_type;
 using cocr::hash_type;
 
-class IsomerCounter {
+class COCR_BASE_EXPORT IsomerCounter {
     using graph = AlkaneGraph<node_type>;
     const int thread_num = 11;
 public:
@@ -110,5 +105,3 @@ private:
         }
     } curSet;
 };
-
-#endif //_ISOMER_HPP_

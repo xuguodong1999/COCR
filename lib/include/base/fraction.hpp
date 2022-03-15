@@ -1,9 +1,4 @@
-/**
- * This file is a part of COCR Project
- * @author 徐国栋
- */
-#ifndef _FRACTION_HPP_
-#define _FRACTION_HPP_
+#pragma once
 
 #include <iostream>
 #include <sstream>
@@ -186,5 +181,3 @@ template<typename T>
 inline float abs(const Fraction<T> &f) {
     return std::abs(f.floatValue());
 }
-
-#endif//_FRACTION_HPP_

@@ -1,7 +1,7 @@
 /**
  * https://github.com/snljty/CountAlkylIsomer
  */
-#include "polya.hpp"
+#include "base/polya.hpp"
 
 void PolyaIsomerCounter::a_i(const size_t &m) {
     /*  m >= 0 for A[m]  */

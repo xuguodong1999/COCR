@@ -71,6 +71,7 @@ endif ()
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 add_subdirectory(3rdparty)
+add_subdirectory(lib)
 
 # add_subdirectory(tools) # target as ${APP_NAME}
 # add_dependencies(${APP_NAME} openbabel)

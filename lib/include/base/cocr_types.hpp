@@ -1,16 +1,58 @@
-#ifndef _COLORS_HPP_
-#define _COLORS_HPP_
+#pragma once
 
+#include "base/fraction.hpp"
+
+#include <cstdint>
+#include <string>
 #include <vector>
-#include <tuple>
+#include <unordered_map>
 
-#ifdef QT_GUI_LIB
+using hash_type = uint64_t;
+using node_type = unsigned char;
 
-#include <QColor>
 
-#endif
+enum class DetectorClasses {
+    ItemEmpty = 0,
+    ItemSingleBond,
+    ItemDoubleBond,
+    ItemTripleBond,
+    ItemSolidWedgeBond,
+    ItemDashWedgeBond,
+    ItemWaveBond,
+    ItemCircleBond,
+    ItemC,
+    ItemH,
+    ItemO,
+    ItemN,
+    ItemP,
+    ItemS,
+    ItemF,
+    ItemCl,
+    ItemBr,
+    ItemI,
+    ItemB,
+    ItemHorizontalStr
+};
 
-#include <opencv2/core/types.hpp>
+enum class ElementType : size_t {
+    None = 0, H = 1, He, Li, Be, B, C = 6, N = 7, O = 8, F = 9, Ne,
+    Na, Mg, Al, Si, P, S = 16, Cl = 17, Ar, K, Ca = 20,
+    Sc, Ti, V, Cr, Mn, Fe, Co, Ni, Cu, Zn,
+    Ga, Ge, As, Se, Br, Kr,
+    Rb, Sr, Y, Zr, Nb, Mo, Tc, Ru, Rh, Pd, Ag, Cd,
+    In, Sn, Sb, Te, I, Xe,
+    Cs, Ba, La, Ce, Pr, Nd, Pm, Sm, Eu, Gd, Tb, Dy,
+    Ho, Er, Tm, Yb, Lu, Hf, Ta, W, Re, Os, Ir, Pt,
+    Au, Hg, Tl, Pb, Bi, Po, At, Rn, Fr, Ra, Ac, Th,
+    Pa, U, Np, Pu, Am, Cm, Bk, Cf, Es, Fm, Md, No,
+    Lr, Rf, Db, Sg, Bh, Hs, Mt, Ds, Rg, Cn
+};
+
+enum class AtomStereo {
+    None = 0,
+    R,
+    S
+};
 
 enum class ColorName {
     rgbSnow = 0, rgbGhostWhite, rgbWhiteSmoke, rgbGainsboro, rgbFloralWhite,
@@ -85,12 +127,14 @@ enum class ColorName {
     rgbgrey61, rgbgrey71, rgbgray81, rgbgray91, rgbDarkGrey, rgbDarkBlue, rgbDarkCyan, rgbDarkMagenta,
     rgbDarkRed, rgbLightGreen = 454
 };
-#ifdef QT_GUI_LIB
 
-QColor getQColor(const ColorName &_colorName);
+extern std::vector<std::string> ElementsData;
+extern std::unordered_map<ElementType, frac> ElementValenceData;
+extern std::string POS_CHARGE_TEXT, NEG_CHARGE_TEXT;
 
-#endif
+DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementType);
 
-cv::Scalar getScalar(const ColorName &_colorName);
+const std::string &convertElementTypeToString(const ElementType &_elementType);
 
-#endif//_COLORS_HPP_
+// 返回建议比例，以碳为基准
+float atomRadius(const ElementType &_element);

@@ -1,9 +1,5 @@
-/**
- * This file is a part of COCR Project
- * @author 徐国栋
- */
-#include "isomer.hpp"
-#include "timer.hpp"
+#include "base/isomer.hpp"
+#include "base/timer.hpp"
 #include <fstream>
 #include <unordered_set>
 
