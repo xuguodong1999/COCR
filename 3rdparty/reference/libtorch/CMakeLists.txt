@@ -1,4 +1,4 @@
-project(tut_torch LANGUAGES CXX)
+project(ref_torch LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

@@ -27,7 +27,7 @@ GNU General Public License for more details.
 #include <openbabel/stereo/cistrans.h>
 #include <openbabel/elements.h>
 
-#include "inchi_api.h"
+#include "inchi/inchi_api.h"
 #include <sstream>
 #include <set>
 #include <vector>

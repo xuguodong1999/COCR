@@ -1,6 +1,6 @@
 project(maeparser LANGUAGES CXX)
 
-include_directories(${DEV_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
 
 # include windows dll info
@@ -15,3 +15,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 include(GenerateExportHeader)
 generate_export_header(${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+
+if (BUILD_TESTS)
+    add_subdirectory(test)
+endif ()

@@ -17,7 +17,6 @@ GNU General Public License for more details.
 ***********************************************************************/
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
-#include <openbabel/babelconfig.h>
 #include <openbabel/mol.h>
 #include <openbabel/obconversion.h>
 #include <openbabel/atom.h>

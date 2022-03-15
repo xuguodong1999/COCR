@@ -20,7 +20,6 @@ GNU General Public License for more details.
 #include <openbabel/obconversion.h>
 #include <openbabel/obmolecformat.h>
 
-#include "inchi_api.h"
 #include <sstream>
 #include <set>
 #include <vector>

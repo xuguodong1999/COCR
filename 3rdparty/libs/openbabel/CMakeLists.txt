@@ -8,17 +8,18 @@ if (NOT ANDROID) # use apk_shell for android-qt project
     find_package(Qt5 COMPONENTS Core REQUIRED)
 endif ()
 
-GET_ALL_SUB_DIR_NAME(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR})
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
+GET_ALL_SUB_DIR_NAME(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # require libxml2, TODO: port to QtXml
-list(REMOVE_ITEM PROJECT_SOURCE_DIR_LIST src/formats/xml)
+list(REMOVE_ITEM PROJECT_SOURCE_DIR_LIST formats/xml)
 if (NOT UNIX OR APPLE OR ANDROID OR WASM)
     # require <rpc/xdr.h> <zlib.h>
-    list(REMOVE_ITEM PROJECT_SOURCE_DIR_LIST src/formats/xtc src/formats/png)
+    list(REMOVE_ITEM PROJECT_SOURCE_DIR_LIST formats/xtc formats/png)
 endif ()
 
 foreach (PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR_LIST})
-    aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_SOURCE_DIR} PROJECT_SOURCE)
+    aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_SOURCE_DIR} PROJECT_SOURCE)
 endforeach ()
 
 # include windows dll info
@@ -31,12 +32,20 @@ endif ()
 writeQrcFileBySearchDirectory("${OpenBabel_QRC}" "${DEV_ASSETS_DIR}/openbabel/**" "${DEV_ASSETS_DIR}")
 
 add_library(${PROJECT_NAME} ${PROJECT_SOURCE})
+add_dependencies(${PROJECT_NAME} inchi)
+add_dependencies(${PROJECT_NAME} maeparser)
+add_dependencies(${PROJECT_NAME} coordgenlibs)
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 
 include(GenerateExportHeader)
 generate_export_header(${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core coordgenlibs maeparser inchi)
 if (IOS OR ANDROID OR APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenMP_CXX_FLAGS})
+endif ()
+
+if (BUILD_TESTS)
+    add_subdirectory(test)
 endif ()

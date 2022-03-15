@@ -1,6 +1,6 @@
 project(inchi LANGUAGES C)
 
-include_directories(${DEV_DEPS_DIR}/include/inchi)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/inchi)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src/ixa PROJECT_SOURCE)
 

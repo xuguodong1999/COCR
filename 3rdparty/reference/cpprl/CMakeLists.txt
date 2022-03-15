@@ -1,4 +1,4 @@
-project(tut_cpprl LANGUAGES CXX)
+project(ref_cpprl LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

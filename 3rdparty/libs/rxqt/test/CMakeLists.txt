@@ -1,4 +1,4 @@
-project(RxQtTest LANGUAGES CXX)
+project(test_rxqt LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_AUTOMOC ON)

@@ -24,6 +24,7 @@
 #include "coordgenlibs/sketcherMinimizerMaths.h"
 #include "coordgenlibs/sketcherMinimizerStretchInteraction.h"
 #include "coordgenlibs/sketcherMinimizerRing.h"
+#include "maeparser/MaeConstants.hpp"
 
 using namespace std;
 using namespace schrodinger;

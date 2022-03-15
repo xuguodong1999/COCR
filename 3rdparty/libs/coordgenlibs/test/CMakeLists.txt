@@ -1,4 +1,4 @@
-project(CoordgenlibsTest LANGUAGES CXX)
+project(test_coordgenlibs LANGUAGES CXX)
 
 include_directories(${DEV_INCLUDE_DIR})
 
@@ -12,9 +12,9 @@ endif ()
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIB_DIR})
 
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} PROJECT_SOURCE)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} TEST_SOURCE)
 
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
+add_executable(${PROJECT_NAME} ${TEST_SOURCE})
 add_dependencies(${PROJECT_NAME} coordgenlibs)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")

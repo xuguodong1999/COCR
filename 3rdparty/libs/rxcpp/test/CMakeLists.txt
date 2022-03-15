@@ -1,4 +1,4 @@
-project(RxCppTest LANGUAGES CXX)
+project(test_rxcpp LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 include_directories(${DEV_INCLUDE_DIR})

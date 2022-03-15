@@ -18,10 +18,16 @@ set(APP_NAME leafxy CACHE INTERNAL "")
 # path to assets
 set(DEV_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 # path to 3rdparty libraries
-set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies CACHE INTERNAL "")
+set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty CACHE INTERNAL "")
 # path to header-only 3rdparty libraries
 set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/header-only CACHE INTERNAL "")
-set(DEV_INCLUDE_DIR ${DEV_DEPS_DIR}/include ${DEV_DEPS_DIR}/include/inchi ${DEV_HEADER_DIR} CACHE INTERNAL "")
+set(DEV_INCLUDE_DIR
+        ${DEV_DEPS_DIR}/libs/inchi/include
+        ${DEV_DEPS_DIR}/libs/maeparser/include
+        ${DEV_DEPS_DIR}/libs/coordgenlibs/include
+        ${DEV_DEPS_DIR}/libs/openbabel/include
+        ${DEV_HEADER_DIR}
+        CACHE INTERNAL "")
 # remember to cite ${OpenBabel_QRC} if you link openbabel
 set(OpenBabel_QRC ${DEV_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
 
@@ -64,8 +70,8 @@ endif ()
 
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
-# add_subdirectory(dependencies)
-#
+add_subdirectory(3rdparty)
+
 # add_subdirectory(tools) # target as ${APP_NAME}
 # add_dependencies(${APP_NAME} openbabel)
 # add_dependencies(${APP_NAME} coordgenlibs)
