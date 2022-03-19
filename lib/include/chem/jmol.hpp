@@ -1,6 +1,6 @@
 #pragma once
-#include "jatom.hpp"
-#include "jbond.hpp"
+#include "chem/jatom.hpp"
+#include "chem/jbond.hpp"
 #include <unordered_set>
 #include <vector>
 #include <memory>
@@ -12,7 +12,7 @@ using id_type = size_t;
 namespace cocr {
     class JMol_p;
 
-    class JMol {
+    class COCR_CHEM_EXPORT JMol {
     protected:
         id_type id;
         id_type idBase;

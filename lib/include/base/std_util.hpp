@@ -1,9 +1,4 @@
-/**
- * This file is a part of COCR Project
- * @author 徐国栋
- */
-#ifndef _STD_UTIL_HPP_
-#define _STD_UTIL_HPP_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -150,5 +145,3 @@ template<typename E, typename T>
 inline bool notExist(const T &_container, const E &_element) {
     return _container.end() == _container.find(_element);
 }
-
-#endif//_STD_UTIL_HPP_

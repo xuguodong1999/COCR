@@ -1,8 +1,8 @@
-#include "mol_util.hpp"
-#include "alkane_graph.hpp"
-#include "std_util.hpp"
+#include "chem/mol_util.hpp"
+#include "base/alkane_graph.hpp"
+#include "base/std_util.hpp"
 
-#include "openbabel_util.hpp"
+#include "chem/openbabel_util.hpp"
 
 std::shared_ptr<MolUtil> molUtil;
 

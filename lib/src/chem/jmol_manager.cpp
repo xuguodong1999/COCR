@@ -1,5 +1,5 @@
-#include "jmol_manager.hpp"
-#include "jmol_adapter.hpp"
+#include "chem/jmol_manager.hpp"
+#include "chem/jmol_adapter.hpp"
 
 using namespace cocr;
 

@@ -1,10 +1,11 @@
 #pragma once
+#include <cocr_chem_export.h>
 #include <memory>
 
 namespace cocr {
     class JMol;
 
-    class JMolManager {
+    class COCR_CHEM_EXPORT JMolManager {
         using mol_type = std::shared_ptr<JMol>;
         mol_type inputMol, currentMol;
 

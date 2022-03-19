@@ -1,8 +1,4 @@
-/**
- * This file is a part of COCR Project
- * @author 徐国栋
- */
-#include "std_util.hpp"
+#include "base/std_util.hpp"
 #include <random>
 #include <numeric>
 

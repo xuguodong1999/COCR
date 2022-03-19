@@ -1,6 +1,5 @@
-#include "jmol.hpp"
-#include "jmol_p.hpp"
-#include <QDebug>
+#include "chem/jmol.hpp"
+#include "chem/jmol_p.hpp"
 #include <cmath>
 #include <iostream>
 #include <exception>
@@ -124,17 +123,17 @@ std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
 void JMol::display() {
     onExtraDataNeeded();
     loopAtomVec([&](JAtom &atom) {
-        qDebug() << atom.getId() << ":" << atom.getName().c_str();
+//        qDebug() << atom.getId() << ":" << atom.getName().c_str();
         if (is2DInfoLatest) {
-            qDebug() << "2d(" << atom.x << "," << atom.y << ")";
+//            qDebug() << "2d(" << atom.x << "," << atom.y << ")";
         }
         if (is3DInfoLatest) {
-            qDebug() << "3d(" << atom.xx << "," << atom.yy << atom.zz << ")";
+//            qDebug() << "3d(" << atom.xx << "," << atom.yy << atom.zz << ")";
         }
     });
     loopBondVec([&](JBond &bond) {
-        qDebug() << bond.getId() << ":" << bond.getBondOrder() << ","
-                 << bond.getFrom()->getId() << "-" << bond.getTo()->getId();
+//        qDebug() << bond.getId() << ":" << bond.getBondOrder() << ","
+//                 << bond.getFrom()->getId() << "-" << bond.getTo()->getId();
     });
 }
 
@@ -182,9 +181,9 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
 
 void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
                   const float &_x, const float &_y, const float &_z, bool keepRatio) {
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
     if (!is3DInfoLatest) {
-        qDebug() << __FUNCTION__ << "generate3D=" << generate3D();
+//        qDebug() << __FUNCTION__ << "generate3D=" << generate3D();
     }
     float minx, miny, minz, maxx, maxy, maxz;
     minx = miny = minz = std::numeric_limits<float>::max();
@@ -216,10 +215,10 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
 }
 
 float JMol::getAvgBondLength() {
-    qDebug() << __FUNCTION__;
+//    qDebug() << __FUNCTION__;
     if (bondMap.empty()) { return 0; }
     if (!is3DInfoLatest) {
-        qDebug() << __FUNCTION__ << "generate3D=" << generate3D();
+//        qDebug() << __FUNCTION__ << "generate3D=" << generate3D();
     }
     float avgBondLength = 0;
     loopBondVec([&](JBond &bond) {

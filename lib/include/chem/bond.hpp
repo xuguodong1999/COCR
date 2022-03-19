@@ -1,13 +1,12 @@
-#ifndef _BOND_HPP_
-#define _BOND_HPP_
-
-#include "fraction.hpp"
-#include "bond_type.hpp"
+#pragma once
+#include <cocr_chem_export.h>
+#include "base/fraction.hpp"
+#include "chem/bond_type.hpp"
 #include <vector>
 #include <string>
 #include <unordered_set>
 
-class JBond {
+class COCR_CHEM_EXPORT JBond {
     JBondType bondType;
     size_t atomFrom, atomTo;
     size_t id;
@@ -47,4 +46,3 @@ public:
     void addBond(const size_t &_bid);
 };
 //bool operator==(const JBond &_b1, const JBond &_b2);
-#endif//_BOND_HPP_

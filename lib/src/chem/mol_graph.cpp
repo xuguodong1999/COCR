@@ -1,5 +1,5 @@
-#include "mol_graph.hpp"
-#include "mol_util.hpp"
+#include "chem/mol_graph.hpp"
+#include "chem/mol_util.hpp"
 
 extern std::shared_ptr<MolUtil> molUtil;
 

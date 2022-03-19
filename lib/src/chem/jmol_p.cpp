@@ -1,6 +1,5 @@
-#include "jmol_p.hpp"
-#include "jatom.hpp"
-#include <QDebug>
+#include "chem/jmol_p.hpp"
+#include "chem/jatom.hpp"
 
 using namespace cocr;
 using atom_t = std::shared_ptr<JAtom>;

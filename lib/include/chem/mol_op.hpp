@@ -1,9 +1,8 @@
-#ifndef _MOL_OP_HPP_
-#define _MOL_OP_HPP_
+#pragma once
 
-#include "mol_holder.hpp"
+#include "chem/mol_holder.hpp"
 
-class MolOp : public MolHolder {
+class COCR_CHEM_EXPORT MolOp : public MolHolder {
     //<原子id，化合价or当前键级>
     std::unordered_map<size_t, frac> atomValenceMap;
     //<原子id，邻接的双键数>
@@ -105,5 +104,3 @@ private:
 
     void updateDoubleBondCounter();
 };
-
-#endif//_MOL_OP_HPP_

@@ -1,6 +1,7 @@
 project(cocr LANGUAGES CXX)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${DEV_INCLUDE_DIR})
 
 include(GenerateExportHeader)
 function(makeDLL TARGET)
@@ -18,4 +19,40 @@ function(makeDLL TARGET)
     target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 endfunction()
 
-makeDLL("base")
+function(addDeps TARGET DEPS)
+    foreach (DEP ${DEPS})
+        add_dependencies(${PROJECT_NAME}_${TARGET} ${PROJECT_NAME}_${DEP})
+        target_link_libraries(${PROJECT_NAME}_${TARGET} PRIVATE ${PROJECT_NAME}_${DEP})
+    endforeach ()
+endfunction()
+
+function(add3rdDeps TARGET DEPS)
+    foreach (DEP ${DEPS})
+        target_link_libraries(${PROJECT_NAME}_${TARGET} PRIVATE ${DEP})
+    endforeach ()
+endfunction()
+
+makeDLL(base)
+
+makeDLL(chem)
+addDeps(chem base)
+add3rdDeps(chem "openbabel;coordgenlibs")
+
+#makeDLL(stroke)
+#addDeps(stroke base chem)
+#add3rdDeps(stroke opencv_core opencv_imgproc Qt5::Core)
+#
+#makeDLL(data)
+#addDeps(data base chem stroke)
+#add3rdDeps(stroke opencv_core opencv_imgcodecs opencv_highgui Qt5::Core Qt5::Widgets)
+#
+#makeDLL(ocr)
+#makeDLL(ncnn_crnn)
+## makeDLL(ocv_crnn)
+#addDeps(ocr base chem)
+#
+#if (USE_OPENCV_DNN)
+#    makeDLL(ocv_yolo)
+#else ()
+#    makeDLL(ncnn_yolo)
+#endif ()

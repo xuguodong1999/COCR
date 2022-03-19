@@ -1,11 +1,9 @@
-#ifndef _RDKIT_UTIL_HPP_
-#define _RDKIT_UTIL_HPP_
+#pragma once
 
-#include "mol_util.hpp"
+#include "chem/mol_util.hpp"
 
 #include <string>
 #include <vector>
-
 
 class MolUtilOpenBabelImpl : public MolUtil {
 public:
@@ -26,5 +24,3 @@ public:
 
     std::vector<std::vector<size_t>> getSSSR(const JMol &_mol);
 };
-
-#endif//_RDKIT_UTIL_HPP_

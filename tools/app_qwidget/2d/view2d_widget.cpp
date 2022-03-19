@@ -60,7 +60,7 @@ void View2DWidget::showFormatDialog() {
     if (mol) {
         bool hasSuperAtom = false;
         mol->loopAtomVec([&](cocr::JAtom &atom) {
-            if (cocr::ElementType::SA == atom.getType()) {
+            if (ElementType::SA == atom.getType()) {
                 hasSuperAtom = true;
                 return;
             }

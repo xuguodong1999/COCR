@@ -304,7 +304,7 @@ void cocr::OCRItem::setAsText(std::string &_text, const cv::Rect2f &_rect) {
     }
 }
 
-cocr::ElementType cocr::OCRItem::getElement() const {
+ElementType cocr::OCRItem::getElement() const {
     return data->getElement();
 }
 

@@ -1,4 +1,4 @@
-#include "mol_holder.hpp"
+#include "chem/mol_holder.hpp"
 
 
 std::shared_ptr<JMol> MolHolder::getMol() {

@@ -1,9 +1,8 @@
-#ifndef _ATOM_HPP_
-#define _ATOM_HPP_
+#pragma once
+#include <cocr_chem_export.h>
+#include "base/cocr_types.hpp"
 
-#include "cocr_types.hpp"
-
-class JAtom {
+class COCR_CHEM_EXPORT JAtom {
     ElementType elementType;
     size_t id;
     AtomStereo atomStereo;
@@ -38,6 +37,3 @@ public:
 
     void setCoord2d(const float &_x, const float &_y);
 };
-
-
-#endif//_ATOM_HPP_

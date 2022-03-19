@@ -1,7 +1,7 @@
-#include "mol.hpp"
-#include "alkane_graph.hpp"
-#include "mol_util.hpp"
-#include "std_util.hpp"
+#include "chem/mol.hpp"
+#include "base/alkane_graph.hpp"
+#include "chem/mol_util.hpp"
+#include "base/std_util.hpp"
 
 #include <random>
 

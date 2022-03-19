@@ -1,4 +1,4 @@
-#include "atom.hpp"
+#include "chem/atom.hpp"
 #include <iostream>
 #include <algorithm>
 

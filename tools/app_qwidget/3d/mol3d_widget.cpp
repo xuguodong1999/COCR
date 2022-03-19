@@ -63,7 +63,7 @@ QString Mol3DWidget::makeAtomInfo(const size_t &_aid) {
         auto atom = mol->getAtom(_aid);
         if (atom) {
             info.append("\n" + tr("element: ") + atom->getQName());
-            if (cocr::ElementType::SA != atom->getType()) {
+            if (ElementType::SA != atom->getType()) {
                 info.append("\n" + tr("mass: ") + QString::number(atom->getMass(), 'f', 4));
             }
         }

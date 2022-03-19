@@ -1,7 +1,9 @@
 #pragma once
+#include <cocr_chem_export.h>
+#include "base/cocr_types.hpp"
+
+#include <string>
 #include <memory>
-#include <QColor>
-#include <QString>
 
 
 namespace cocr {
@@ -19,7 +21,7 @@ namespace cocr {
 
     using id_type = size_t;
 
-    class JBond {
+    class COCR_CHEM_EXPORT JBond {
         id_type id;
         std::shared_ptr<JAtom> from, to;
     public:
@@ -44,8 +46,6 @@ namespace cocr {
 
         BondType getType() const;
 
-        QString getQName() const;
-
         int getBondOrder() const;
 
         void setType(const BondType &_type);
@@ -56,5 +56,5 @@ namespace cocr {
               const BondType &_type = BondType::SingleBond, const float &_offset1 = 0.5, const float &_offset2 = 0.5);
     };
 
-    QColor getColor(const BondType &_bondType);
+    ColorName getColor(const BondType &_bondType);
 }

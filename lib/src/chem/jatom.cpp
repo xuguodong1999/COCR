@@ -1,13 +1,10 @@
-#include "jatom.hpp"
-#include "color_types.hpp"
+#include "chem/jatom.hpp"
+#include "base/cocr_types.hpp"
 #include <vector>
 #include <string>
 #include <unordered_map>
 
-#include <QDebug>
 
-using cocr::ElementType;
-using cocr::ColorName;
 std::vector<float> cocr::ELEMENT_MASS_LIST = {
         0, 1.00795, 4.0026, 6.9412, 9.01218, 10.8117, 12.0108, 14.0067, 15.9994, 18.9984, 20.1798, 22.9898, 24.3051,
         26.9815, 28.0855, 30.9738, 32.0655, 35.4532, 39.9481, 39.0983, 40.0784, 44.9559, 47.8671, 50.9415, 51.9962,
@@ -224,10 +221,6 @@ const ElementType &cocr::JAtom::getType() const {
     return type;
 }
 
-QString cocr::JAtom::getQName() const {
-    return getName().c_str();
-}
-
 void cocr::JAtom::set2D(const float &_x, const float &_y) {
     x = x0 = x1 = _x;
     y = y0 = y1 = _y;
@@ -300,12 +293,12 @@ static std::unordered_map<ElementType, ColorName> colorMap = {
         {ElementType::I,  ColorName::rgbPurple}
 };
 
-QColor cocr::getColor(const ElementType &_element) {
+ColorName cocr::getColor(const ElementType &_element) {
     auto it = colorMap.find(_element);
     if (colorMap.end() == it) {
-        return qColor(ColorName::rgbPink);
+        return  ColorName::rgbPink;
     }
-    return qColor(it->second);
+    return it->second;
 }
 
 int cocr::getCommonNebNum(const ElementType &_type) {
@@ -334,7 +327,7 @@ cocr::id_type cocr::JAtom::getId() {
 }
 
 bool cocr::JAtom::isSuperAtom() const {
-    return cocr::ElementType::SA == type;
+    return ElementType::SA == type;
 }
 
 void cocr::JAtom::setCharge(int charge) {

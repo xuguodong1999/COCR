@@ -1,11 +1,10 @@
-#ifndef _MOL_UTIL_HPP_
-#define _MOL_UTIL_HPP_
+#pragma once
 
-#include "mol.hpp"
-#include "mol3d.hpp"
+#include "chem/mol.hpp"
+#include "chem/mol3d.hpp"
 
 
-class MolUtil {
+class COCR_CHEM_EXPORT MolUtil {
 public:
     /**
       * 通过染色遍历寻找孤立的连通片，把孤立的连通片作为独立分子返回，不影响原有结构
@@ -31,5 +30,3 @@ public:
 
     virtual std::vector<std::vector<size_t>> getSSSR(const JMol &_mol) = 0;
 };
-
-#endif//_MOL_UTIL_HPP_

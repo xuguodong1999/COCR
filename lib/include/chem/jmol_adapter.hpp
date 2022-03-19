@@ -1,5 +1,6 @@
 #pragma once
-#include "jmol.hpp"
+
+#include "chem/jmol.hpp"
 #include <unordered_map>
 #include <functional>
 
@@ -16,7 +17,7 @@ namespace cocr {
      * 1、使用 OpenBabel 实现三维标准化和其它需求
      * 2、使用 coordgenlibs 实现二维标准化
      */
-    class JMolAdapter : public JMol {
+    class COCR_CHEM_EXPORT JMolAdapter : public JMol {
         std::shared_ptr<OpenBabel::OBMol> obMol;
         std::unordered_map<id_type, unsigned long> atomIdMap;
         std::unordered_map<id_type, unsigned long> bondIdMap;

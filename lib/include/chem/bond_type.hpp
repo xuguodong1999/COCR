@@ -1,5 +1,4 @@
-#ifndef _BOND_TYPE_HPP_
-#define _BOND_TYPE_HPP_
+#pragma once
 enum class JBondType {
     NoneBond = 0,// 错误类型
     SingleBond = 1,// 单键，常规
@@ -14,4 +13,3 @@ enum class JBondType {
 
     CircleBond, // 特指苯环kekule表达方式中的圆，尽在绘图部分用到
 };
-#endif//_BOND_TYPE_HPP_

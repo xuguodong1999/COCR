@@ -1,6 +1,7 @@
-#include "jmol_adapter.hpp"
-#include "jmol_p.hpp"
-#include "alkane_graph.hpp"
+#include "chem/jmol_adapter.hpp"
+#include "chem/jmol_p.hpp"
+#include "base/alkane_graph.hpp"
+
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/ring.h>
@@ -12,21 +13,21 @@
 #include <openbabel/generic.h>
 
 #include <coordgenlibs/sketcherMinimizer.h>
-#include <QDebug>
+
 using namespace cocr;
 
 
 JMolAdapter::JMolAdapter() : isOBMolLatest(true), obMol(std::make_shared<OpenBabel::OBMol>()) {
-//    qDebug() << __FUNCTION__;
+//    // qDebug() << __FUNCTION__;
 }
 
 JMolAdapter::~JMolAdapter() {
-//    qDebug() << __FUNCTION__;
+//    // qDebug() << __FUNCTION__;
 }
 
 JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
         isOBMolLatest(false), obMol(std::make_shared<OpenBabel::OBMol>()), JMol() {
-//    qDebug() << __FUNCTION__ << "const&";
+//    // qDebug() << __FUNCTION__ << "const&";
     id = _jMolAdapter.id + 1;
     idBase = _jMolAdapter.idBase;
     std::unordered_multimap<id_type, std::pair<float, std::shared_ptr<JAtom>>> saMap;
@@ -56,7 +57,7 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
 }
 
 JMolAdapter::JMolAdapter(JMolAdapter &&_jMolAdapter) {
-//    qDebug() << __FUNCTION__ << "&&";
+//    // qDebug() << __FUNCTION__ << "&&";
     obMol = _jMolAdapter.obMol;
 }
 
@@ -160,14 +161,14 @@ void JMolAdapter::onMolUpdated() {
 }
 
 bool JMolAdapter::runForcefield() {
-    qDebug() << __FUNCTION__;
+    // qDebug() << __FUNCTION__;
     if (obMol->Empty())return true;
     try {
         OpenBabel::OBBuilder builder;
-        qDebug() << "builder.Build ret" << builder.Build(*obMol);
+        // qDebug() << "builder.Build ret" << builder.Build(*obMol);
         // FIXME: 适配器的逻辑是手动添加氢原子，不能使用 OpenBabel 的 PH 计算机制
         // OpenBabel 的 gen3d 工具调用了这个接口，是因为 gen3d 的输入是文件
-//         qDebug() << "obMol->AddHydrogens ret" << obMol->AddHydrogens(false, true);
+//         // qDebug() << "obMol->AddHydrogens ret" << obMol->AddHydrogens(false, true);
     } catch (...) {
         return false;
     }
@@ -177,13 +178,13 @@ bool JMolAdapter::runForcefield() {
     }
     pFF->SetLogLevel(OBFF_LOGLVL_NONE);
     if (!pFF->Setup(*obMol)) {
-        qDebug() << "pFF->Setup ret false";
+        // qDebug() << "pFF->Setup ret false";
     }
     try {
         pFF->SteepestDescent(100, 1.0e-4);
         pFF->WeightedRotorSearch(50, 50);
         pFF->SteepestDescent(100, 1.0e-6);
-        qDebug() << "pFF->UpdateCoordinates ret" << pFF->UpdateCoordinates(*obMol);
+        // qDebug() << "pFF->UpdateCoordinates ret" << pFF->UpdateCoordinates(*obMol);
     } catch (...) {
         return false;
     }
@@ -212,7 +213,7 @@ void JMolAdapter::syncBonds(std::function<void(JBond &, OpenBabel::OBBond *)> _f
 }
 
 void JMolAdapter::sync3D() {
-    qDebug() << __FUNCTION__;
+    // qDebug() << __FUNCTION__;
     syncAtoms([](JAtom &atom, OpenBabel::OBAtom *obAtom) {
         atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
     });
@@ -220,7 +221,7 @@ void JMolAdapter::sync3D() {
 }
 
 bool JMolAdapter::generate2D() {
-    qDebug() << __FUNCTION__;
+    // qDebug() << __FUNCTION__;
     checkOBMol();
     try {
         sketcherMinimizer minimizer;
@@ -251,13 +252,13 @@ bool JMolAdapter::generate2D() {
 }
 
 bool JMolAdapter::generate3D() {
-    qDebug() << __FUNCTION__;
+    // qDebug() << __FUNCTION__;
     checkOBMol();
     return runForcefield();
 }
 
 void JMolAdapter::syncNewEntityFromOBMol() {
-//    qDebug() << __FUNCTION__;
+//    // qDebug() << __FUNCTION__;
     onMolUpdated();
     FOR_ATOMS_OF_MOL(obAtomIter, *obMol) {
         auto obAtom = obAtomIter->GetId();
@@ -314,7 +315,7 @@ void JMolAdapter::addOBAtom(JAtom &_atom) {
     } else if (ElementType::H == _atom.getType()) {
         obAtom.SetAtomicNum(1);
     } else {
-//        qDebug() << "_atom.getAtomicNumber()=" << _atom.getAtomicNumber();
+//        // qDebug() << "_atom.getAtomicNumber()=" << _atom.getAtomicNumber();
         obAtom.SetAtomicNum(_atom.getAtomicNumber());
 
     }
@@ -327,7 +328,7 @@ void JMolAdapter::addOBAtom(JAtom &_atom) {
 //    }
     atomIdMap[_atom.getId()] = obAtom.GetId();
     atomIdMap2[obAtom.GetId()] = _atom.getId();
-//    qDebug() << obAtom->GetAtomicMass();
+//    // qDebug() << obAtom->GetAtomicMass();
 }
 
 void JMolAdapter::addOBBond(JBond &_bond) {
@@ -378,7 +379,7 @@ void JMolAdapter::addOBBond(JBond &_bond) {
     if (to) {
         auto obTo = atomIdMap.find(to->getId());
         if (atomIdMap.end() != obTo) {
-//            qDebug() << "setEnd" << obMol->GetAtomById(obTo->second)->GetId();
+//            // qDebug() << "setEnd" << obMol->GetAtomById(obTo->second)->GetId();
             obBond.SetEnd(obMol->GetAtomById(obTo->second));
         } else {
             throw std::runtime_error("atomIdMap empty for jatom to in addOBBond");
@@ -399,7 +400,7 @@ void JMolAdapter::onExtraDataNeeded() {
 }
 
 void JMolAdapter::resetOBMol() {
-//    qDebug() << __FUNCTION__;
+//    // qDebug() << __FUNCTION__;
     bondIdMap.clear();
     atomIdMap.clear();
     bondIdMap2.clear();
@@ -417,7 +418,7 @@ void JMolAdapter::resetOBMol() {
 std::shared_ptr<JAtom>
 JMolAdapter::addSuperAtom(const std::string &_name, const float &_x0, const float &_y0, const float &_x1,
                           const float &_y1) {
-//    qDebug() << __FUNCTION__;
+//    // qDebug() << __FUNCTION__;
     onMolUpdated();
     checkOBMol();
     auto atom = JMol::addSuperAtom(_name, _x0, _y0, _x1, _y1);
@@ -428,14 +429,14 @@ JMolAdapter::addSuperAtom(const std::string &_name, const float &_x0, const floa
 
 void JMolAdapter::display() {
     JMol::display();
-    qDebug() << "ob atom info:";
+    // qDebug() << "ob atom info:";
     syncAtoms([](JAtom &atom, OpenBabel::OBAtom *obAtom) {
-        qDebug() << obAtom->GetId() << obAtom->GetIdx() << obAtom->GetAtomicNum();
+        // qDebug() << obAtom->GetId() << obAtom->GetIdx() << obAtom->GetAtomicNum();
     });
-    qDebug() << "ob bond info:";
+    // qDebug() << "ob bond info:";
     syncBonds([](JBond &bond, OpenBabel::OBBond *obBond) {
-        qDebug() << bond.getId();
-        qDebug() << obBond->GetBeginAtom()->GetId() << obBond->GetEndAtom()->GetId() << obBond->GetBondOrder();
+        // qDebug() << bond.getId();
+        // qDebug() << obBond->GetBeginAtom()->GetId() << obBond->GetEndAtom()->GetId() << obBond->GetBondOrder();
     });
 }
 

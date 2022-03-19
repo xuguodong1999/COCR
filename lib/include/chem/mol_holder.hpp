@@ -1,9 +1,8 @@
-#ifndef _MOL_HOLDER_HPP_
-#define _MOL_HOLDER_HPP_
+#pragma once
+#include <cocr_chem_export.h>
+#include "chem/mol.hpp"
 
-#include "mol.hpp"
-
-class MolHolder {
+class COCR_CHEM_EXPORT MolHolder {
 protected:
     std::shared_ptr<JMol> mol;
 public:
@@ -16,5 +15,3 @@ public:
     void reset(std::shared_ptr<JMol> _mol);
 
 };
-
-#endif//_MOL_HOLDER_HPP_

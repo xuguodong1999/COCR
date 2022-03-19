@@ -1,6 +1,4 @@
-#include "mol2d.hpp"
-#include "opencv_util.hpp"
-
+#include "chem/mol2d.hpp"
 #include <coordgenlibs/sketcherMinimizer.h>
 
 Mol2D::Mol2D(std::shared_ptr<JMol> _mol) : MolHolder(std::move(_mol)) {
@@ -42,7 +40,7 @@ void Mol2D::calcCoord2D() {
     atomPosMap2D.clear();
     for (auto&[aid, cAtom]:j2cAtomMap) {
         auto pos = cAtom->getCoordinates();
-        atomPosMap2D[aid] = {true, cv::Point2f(pos.x(), pos.y())};
+        atomPosMap2D[aid] = {true, {pos.x(), pos.y()}};
     }
 }
 
@@ -58,11 +56,11 @@ float Mol2D::getAvgBondLength() const {
     return avgBondLength / mol->bondsNum();
 }
 
-void Mol2D::setPos2D(const size_t &_aid, bool _isExplicit, const cv::Point2f &_pos) {
+void Mol2D::setPos2D(const size_t &_aid, bool _isExplicit, const point2f &_pos) {
     atomPosMap2D[_aid] = {_isExplicit, _pos};
 }
 
-const cv::Point2f &Mol2D::getPos2D(const size_t &_aid) const {
+const point2f &Mol2D::getPos2D(const size_t &_aid) const {
     return atomPosMap2D.find(_aid)->second.second;
 }
 

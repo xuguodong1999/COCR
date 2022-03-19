@@ -1,8 +1,7 @@
-#ifndef _MOL_HPP_
-#define _MOL_HPP_
-
-#include "atom.hpp"
-#include "bond.hpp"
+#pragma once
+#include <cocr_chem_export.h>
+#include "chem/atom.hpp"
+#include "chem/bond.hpp"
 
 #include <memory>
 #include <functional>
@@ -12,7 +11,7 @@
  * JMol 维护自己管理的原子和键的 id
  * 辅助类一律采用持有 JMol 的智能指针的方式进行开发
  */
-class JMol {
+class COCR_CHEM_EXPORT JMol {
     // 维护原子和键的自增 id
     size_t mAids, mBids;
     //<原子id，原子>
@@ -74,7 +73,4 @@ public:
     std::shared_ptr<JBond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
                                    const JBondType &_bondType = JBondType::SingleBond);
 
-private:
 };
-
-#endif//_MOL_HPP_

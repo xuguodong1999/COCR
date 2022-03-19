@@ -1,5 +1,6 @@
 #pragma once
-#include "jmol.hpp"
+
+#include "chem/jmol.hpp"
 #include <unordered_map>
 #include <memory>
 #include <optional>
