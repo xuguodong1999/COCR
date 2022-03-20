@@ -11,10 +11,14 @@
 extern std::string SOSO_ALPHABET;
 
 class COCR_DATA_EXPORT CRNNDataGenerator {
-    inline static const char *imgKey = "image-%09d", *labelKey = "label-%09d";
-    inline static const std::string imgDir = "/JPEGImages/", gtFileName = "labels.txt",
-            trainDir = "/train/", testDir = "/test/";
-    inline static const int height = 32, width = 192;
+    inline static const char *imgKey = "image-%09d";
+    inline static const char *labelKey = "label-%09d";
+    inline static const std::string imgDir = "/JPEGImages/";
+    inline static const std::string gtFileName = "labels.txt";
+    inline static const std::string trainDir = "/train/";
+    inline static const std::string testDir = "/test/";
+    inline static const int height = 32;
+    inline static const int width = 192;
     inline static const size_t MAX_TEXT_LENGTH = 7;
     bool isInited;
     std::string topDir;
@@ -62,3 +66,5 @@ public:
 
     cv::Mat getStandardLongText();
 };
+
+COCR_DATA_EXPORT extern CRNNDataGenerator crnnDataGenerator;

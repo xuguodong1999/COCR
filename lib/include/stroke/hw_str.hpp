@@ -29,13 +29,21 @@ enum class HwSpecText {
 class COCR_STROKE_EXPORT HwStr : public HwItem {
     std::vector<std::pair<std::string, HwCharType>> richText;
     DetectorClasses label;
-    inline static const float
-            centHeight = 30, offset = 10, offsetW = 10, maxHeight = centHeight + 2 * offset,
-            subCentHeight = 20, subOffset = 5, subOffsetW = 5, subMaxHeight =
-            subCentHeight + 2 * subOffset, subStartMinRatio = 0.5,
-            randAngle = 3,
-            subCentHeight2 = 27, subOffset2 = 5, subOffsetW2 = 8, subMaxHeight2 =
-            subCentHeight2 + 2 * subOffset2, subStartMinRatio2 = 0.3;
+    inline static const float centHeight = 30;
+    inline static const float offset = 10;
+    inline static const float offsetW = 10;
+    inline static const float maxHeight = centHeight + 2 * offset;
+    inline static const float subCentHeight = 20;
+    inline static const float subOffset = 5;
+    inline static const float subOffsetW = 5;
+    inline static const float subMaxHeight = subCentHeight + 2 * subOffset;
+    inline static const float subStartMinRatio = 0.5;
+    inline static const float randAngle = 3;
+    inline static const float subCentHeight2 = 27;
+    inline static const float subOffset2 = 5;
+    inline static const float subOffsetW2 = 8;
+    inline static const float subMaxHeight2 = subCentHeight2 + 2 * subOffset2;
+    inline static const float subStartMinRatio2 = 0.3;
     inline static std::unordered_map<std::string, HwSpecText> sTextMap = {
             {"+", HwSpecText::PositiveElec},
             {"_", HwSpecText::NegativeElec},

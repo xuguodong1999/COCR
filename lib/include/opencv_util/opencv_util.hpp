@@ -1,4 +1,5 @@
 #pragma once
+#include <cocr_opencv_util_export.h>
 #include "base/cocr_types.hpp"
 #include <opencv2/core/mat.hpp>
 
@@ -26,7 +27,7 @@ inline cv::Point_<_Tp> getRectCenter2D(const cv::Rect_<_Tp> &_rect) {
  * @param _newHeight
  * @return 图像，{比例、水平偏移、竖直偏移}
  */
-std::pair<cv::Mat, std::tuple<float, float, float>>
+COCR_OPENCV_UTIL_EXPORT std::pair<cv::Mat, std::tuple<float, float, float>>
 resizeCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
               const cv::Scalar &_padColor = cv::Scalar(255., 255., 255.));
 
@@ -38,7 +39,7 @@ resizeCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
  * @param _padColor
  * @return
  */
-std::pair<cv::Mat, std::tuple<float, float, float>>
+COCR_OPENCV_UTIL_EXPORT std::pair<cv::Mat, std::tuple<float, float, float>>
 padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
            const cv::Scalar &_padColor = cv::Scalar(255., 255., 255.));
 
@@ -48,7 +49,7 @@ padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
  * @param _bgPixel 背景颜色值
  * @return 正包围盒
  */
-std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar &_bgPixel = 255);
+COCR_OPENCV_UTIL_EXPORT std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar &_bgPixel = 255);
 
 template<typename _Tp>
 inline _Tp getDistance3D(const cv::Point3_<_Tp> &p1, const cv::Point3_<_Tp> &p2) {
@@ -69,14 +70,14 @@ inline _Tp getScalarSum(const cv::Scalar_<_Tp> &_scalar) {
 //
 //cv::Mat convertQPixmapToMat(const QPixmap &_img);
 
-void salt_pepper(cv::Mat image, int n);
+COCR_OPENCV_UTIL_EXPORT void salt_pepper(cv::Mat image, int n);
 
 
-void cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
+COCR_OPENCV_UTIL_EXPORT void cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
                 const cv::Scalar &_color, const int &_thickness = 1, bool _rotate = true);
 
-cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle);
+COCR_OPENCV_UTIL_EXPORT cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle);
 
-cv::Scalar_<unsigned char> getScalar(const ColorName &_colorName);
+COCR_OPENCV_UTIL_EXPORT cv::Scalar_<unsigned char> getScalar(const ColorName &_colorName);
 
 //QImage binaryAlphaImage(cv::Mat &src);

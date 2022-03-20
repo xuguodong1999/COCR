@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cocr_base_export.h>
 #include "base/fraction.hpp"
 
 #include <cstdint>
@@ -124,14 +124,14 @@ enum class ColorName:size_t {
     rgbDarkRed, rgbLightGreen = 454
 };
 
-extern std::vector<std::string> ElementsData;
-extern std::unordered_map<ElementType, frac> ElementValenceData;
-extern std::string POS_CHARGE_TEXT, NEG_CHARGE_TEXT;
-extern const unsigned char predefinedColors[][3];
+COCR_BASE_EXPORT extern std::vector<std::string> ElementsData;
+COCR_BASE_EXPORT extern std::unordered_map<ElementType, frac> ElementValenceData;
+COCR_BASE_EXPORT extern std::string POS_CHARGE_TEXT, NEG_CHARGE_TEXT;
+COCR_BASE_EXPORT extern const unsigned char predefinedColors[][3];
 
-DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementType);
+COCR_BASE_EXPORT DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementType);
 
-const std::string &convertElementTypeToString(const ElementType &_elementType);
+COCR_BASE_EXPORT const std::string &convertElementTypeToString(const ElementType &_elementType);
 
 // 返回建议比例，以碳为基准
-float atomRadius(const ElementType &_element);
+COCR_BASE_EXPORT float atomRadius(const ElementType &_element);

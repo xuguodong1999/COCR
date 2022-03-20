@@ -5,7 +5,8 @@
 #include <string>
 
 class COCR_DATA_EXPORT SOSODarknet {
-    inline static const std::string imgDir = "/JPEGImages/", labelDir = "/labels/";
+    inline static const std::string imgDir = "/JPEGImages/";
+    inline static const std::string labelDir = "/labels/";
     bool isInited;
     std::string imgPath, labelPath;
 public:

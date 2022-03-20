@@ -1,5 +1,5 @@
 #pragma once
-
+#include <coordgenlibs_export.h>
 ///
 // Shim for creating sketcherMolecules from .mae files.
 #include "coordgenlibs/sketcherMinimizerMolecule.h"
@@ -11,4 +11,4 @@
 // and bond orders will be ignored (i.e. no chiralities or stereo bonds will be
 // parsed).
 //
-sketcherMinimizerMolecule * mol_from_mae_block(schrodinger::mae::Block &block);
+COORDGENLIBS_EXPORT sketcherMinimizerMolecule * mol_from_mae_block(schrodinger::mae::Block &block);

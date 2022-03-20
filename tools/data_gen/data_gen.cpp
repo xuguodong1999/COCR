@@ -15,8 +15,6 @@
 
 #include <iostream>
 
-extern CRNNDataGenerator crnnDataGenerator;
-
 void displayCRNNData() {
     srand(42);
     crnnDataGenerator.initData();

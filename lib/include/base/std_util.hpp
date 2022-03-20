@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cocr_base_export.h>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -15,15 +15,15 @@ inline std::string to_string_with_precision(const T _fValue, const int n = 2) {
     return out.str();
 }
 
-std::string trim(const std::string &str);
+COCR_BASE_EXPORT std::string trim(const std::string &str);
 
-std::string deleteSubStr(const std::string &_target, const std::string &_subStr);
+COCR_BASE_EXPORT std::string deleteSubStr(const std::string &_target, const std::string &_subStr);
 
-std::string replaceSubStr(const std::string &_target,
+COCR_BASE_EXPORT std::string replaceSubStr(const std::string &_target,
                           const std::string &_subStr, const std::string &_newSubStr);
 
-extern std::default_random_engine DRE;
-extern std::uniform_int_distribution<int> UID;
+COCR_BASE_EXPORT extern std::default_random_engine DRE;
+COCR_BASE_EXPORT extern std::uniform_int_distribution<int> UID;
 
 inline int randInt() {
     return UID(DRE);

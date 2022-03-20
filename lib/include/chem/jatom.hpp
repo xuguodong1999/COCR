@@ -88,11 +88,11 @@ namespace cocr {
         int getCommonNebNum() const;
     };
 
-    const std::string &convertElementTypeToName(const ElementType &_type);
+    COCR_CHEM_EXPORT const std::string &convertElementTypeToName(const ElementType &_type);
 
-    ElementType convertNameToElementType(const std::string &_name);
+    COCR_CHEM_EXPORT ElementType convertNameToElementType(const std::string &_name);
 
-    ColorName getColor(const ElementType &_element);
+    COCR_CHEM_EXPORT ColorName getColor(const ElementType &_element);
 
-    int getCommonNebNum(const ElementType &_type);
+    COCR_CHEM_EXPORT int getCommonNebNum(const ElementType &_type);
 }

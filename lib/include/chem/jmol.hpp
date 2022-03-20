@@ -22,7 +22,8 @@ namespace cocr {
         bool is3DInfoLatest, is2DInfoLatest;
         static std::unordered_set<std::string> FORMAT_WRITE_WHITE_LIST;
 
-        inline static std::unordered_set<std::string> sAvailableOutputFormat, sAvailableInputFormat;
+        inline static std::unordered_set<std::string> sAvailableOutputFormat;
+        inline static std::unordered_set<std::string> sAvailableInputFormat;
 
         std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
 
