@@ -1,6 +1,6 @@
 #include "data/crnn_data.hpp"
 #include "data/color_def.hpp"
-#include "data/opencv_util.hpp"
+#include "opencv_util/opencv_util.hpp"
 #include "data/hw_mol.hpp"
 
 #include "base/timer.hpp"

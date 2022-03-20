@@ -1,7 +1,9 @@
 #pragma once
-#include "../ocr/object_detector.hpp"
+#include "ocr/object_detector.hpp"
+
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
+
 #include <string>
 #include <memory>
 #include <vector>

@@ -1,5 +1,5 @@
-#include "ocr_item.hpp"
-#include "opencv_util.hpp"
+#include "ocr/ocr_item.hpp"
+#include "opencv_util/opencv_util.hpp"
 #include <opencv2/imgproc.hpp>
 #include <unordered_map>
 

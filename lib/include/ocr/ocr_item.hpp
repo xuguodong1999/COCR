@@ -1,7 +1,8 @@
 #pragma once
-#include "detector_object.hpp"
-#include "../chem/jatom.hpp"
-#include "../chem/jbond.hpp"
+#include <cocr_ocr_export.h>
+#include "ocr/detector_object.hpp"
+#include "chem/jatom.hpp"
+#include "chem/jbond.hpp"
 #include <string>
 
 namespace cocr {
@@ -12,7 +13,7 @@ namespace cocr {
         Circle
     };
 
-    struct OCRDataItem {
+    struct COCR_OCR_EXPORT OCRDataItem {
         cv::Rect2f rect;
 
         OCRDataItem(const cv::Rect2f &_rect);
@@ -32,7 +33,7 @@ namespace cocr {
         virtual BondType getBondType() const;
     };
 
-    class OCRItem {
+    class COCR_OCR_EXPORT OCRItem {
         std::shared_ptr<OCRDataItem> data;
         size_t uid;
     public:

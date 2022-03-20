@@ -1,4 +1,5 @@
 #pragma once
+#include <cocr_ocr_export.h>
 #include <opencv2/core/types.hpp>
 
 namespace cocr {
@@ -13,7 +14,7 @@ namespace cocr {
         Text = 7
     };
 
-    struct DetectorObject {
+    struct COCR_OCR_EXPORT DetectorObject {
         inline static int maxLabel = 7, minLabel = 0;
 
         static bool isValidLabel(const int &_label);

@@ -1,4 +1,4 @@
-#include "detector_object.hpp"
+#include "ocr/detector_object.hpp"
 
 bool cocr::DetectorObject::isValidLabel(const int &_label) {
     return minLabel <= _label && _label <= maxLabel;

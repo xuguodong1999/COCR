@@ -5,16 +5,6 @@
 #include <opencv2/core/mat.hpp>
 #include <optional>
 
-template<typename _Tp>
-inline _Tp getDistance2D(const cv::Point_<_Tp> &p1, const cv::Point_<_Tp> &p2) {
-    return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
-}
-
-template<typename _Tp>
-inline cv::Point_<_Tp> getRectCenter2D(const cv::Rect_<_Tp> &_rect) {
-    return cv::Point_<_Tp>(_rect.x + _rect.width / 2, _rect.y + _rect.height / 2);
-}
-
 class COCR_STROKE_EXPORT HwController {
     cv::Scalar color;
 public:

@@ -1,5 +1,6 @@
-#include "object_detector.hpp"
-#include "color_types.hpp"
+#include "ocr/object_detector.hpp"
+#include "base/cocr_types.hpp"
+#include "opencv_util/opencv_util.hpp"
 
 #include <opencv2/imgproc.hpp>
 
@@ -42,10 +43,10 @@ cv::Mat cocr::ObjectDetector::preProcess(const cv::Mat &_src) {
         }
     }
     const size_t baseSize_2 = sizeBase / 2;
-    cv::vconcat(procImg, cv::Mat(baseSize_2, procImg.cols, procImg.type(), cvColor(ColorName::rgbWhite)), procImg);
-    cv::vconcat(cv::Mat(baseSize_2, procImg.cols, procImg.type(), cvColor(ColorName::rgbWhite)), procImg, procImg);
-    cv::hconcat(procImg, cv::Mat(procImg.rows, baseSize_2, procImg.type(), cvColor(ColorName::rgbWhite)), procImg);
-    cv::hconcat(cv::Mat(procImg.rows, baseSize_2, procImg.type(), cvColor(ColorName::rgbWhite)), procImg, procImg);
+    cv::vconcat(procImg, cv::Mat(baseSize_2, procImg.cols, procImg.type(), getScalar(ColorName::rgbWhite)), procImg);
+    cv::vconcat(cv::Mat(baseSize_2, procImg.cols, procImg.type(), getScalar(ColorName::rgbWhite)), procImg, procImg);
+    cv::hconcat(procImg, cv::Mat(procImg.rows, baseSize_2, procImg.type(), getScalar(ColorName::rgbWhite)), procImg);
+    cv::hconcat(cv::Mat(procImg.rows, baseSize_2, procImg.type(), getScalar(ColorName::rgbWhite)), procImg, procImg);
     return procImg;
 }
 

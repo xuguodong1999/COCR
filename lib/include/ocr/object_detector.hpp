@@ -1,5 +1,7 @@
 #pragma once
-#include "ocr_item.hpp"
+#include <cocr_ocr_export.h>
+
+#include "ocr/ocr_item.hpp"
 #include <string>
 #include <memory>
 #include <vector>
@@ -7,7 +9,7 @@
 
 namespace cocr {
     // FIXME: 添加对宽度小于1的边框的优化
-    class ObjectDetector {
+    class COCR_OCR_EXPORT ObjectDetector {
     protected:
         bool isInited;
         std::vector<std::string> objectNames;

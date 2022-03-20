@@ -1,6 +1,6 @@
 #include "data/crnn_data.hpp"
 #include "data/linetextdata.hpp"
-#include "data/opencv_util.hpp"
+#include "opencv_util/opencv_util.hpp"
 #include "data/color_def.hpp"
 
 #include "base/cocr_types.hpp"

@@ -1,5 +1,5 @@
 #pragma once
-#include "../ocr/text_recognizer.hpp"
+#include "ocr/text_recognizer.hpp"
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
 #include <string>

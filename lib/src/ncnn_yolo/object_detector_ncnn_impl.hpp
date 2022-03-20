@@ -1,5 +1,5 @@
 #pragma once
-#include "../ocr/object_detector.hpp"
+#include "ocr/object_detector.hpp"
 #include <string>
 #include <memory>
 #include <vector>

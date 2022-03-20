@@ -1,8 +1,15 @@
-#include "data/opencv_util.hpp"
+#include "opencv_util/opencv_util.hpp"
 
 #include "base/std_util.hpp"
+#include "base/cocr_types.hpp"
 
 #include <opencv2/opencv.hpp>
+
+cv::Scalar_<unsigned char> getScalar(const ColorName &_colorName) {
+    const auto&[r, g, b]=
+    predefinedColors[(size_t) _colorName];
+    return {b, g, r};
+}
 
 void  cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
                       const cv::Scalar &_color, const int &_thickness, bool _rotate) {
@@ -36,18 +43,18 @@ cv::Mat  rotateCvMat(const cv::Mat &srcImage, double angle) {
     return destImage;
 }
 
-QImage  binaryAlphaImage(cv::Mat &src) {
-    cv::Mat result;
-    cv::cvtColor(src, result, cv::COLOR_RGBA2GRAY);
-    cv::adaptiveThreshold(result, result, 255.0,
-                          cv::ADAPTIVE_THRESH_GAUSSIAN_C,
-                          cv::THRESH_BINARY, 21, 10);
-    cv::cvtColor(result, result, cv::COLOR_GRAY2BGRA);
-    const uchar *pSrc = (const uchar *) result.data;
-    // Create QImage with same dimensions as input Mat
-    QImage image(pSrc, result.cols, result.rows, result.step, QImage::Format_ARGB32);
-    return image.copy();
-}
+//QImage  binaryAlphaImage(cv::Mat &src) {
+//    cv::Mat result;
+//    cv::cvtColor(src, result, cv::COLOR_RGBA2GRAY);
+//    cv::adaptiveThreshold(result, result, 255.0,
+//                          cv::ADAPTIVE_THRESH_GAUSSIAN_C,
+//                          cv::THRESH_BINARY, 21, 10);
+//    cv::cvtColor(result, result, cv::COLOR_GRAY2BGRA);
+//    const uchar *pSrc = (const uchar *) result.data;
+//    // Create QImage with same dimensions as input Mat
+//    QImage image(pSrc, result.cols, result.rows, result.step, QImage::Format_ARGB32);
+//    return image.copy();
+//}
 
 std::pair<cv::Mat, std::tuple<float, float, float>>
 resizeCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
@@ -131,39 +138,39 @@ std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar
     return cv::Rect2i(xmin, ymin, xmax - xmin + 1, ymax - ymin + 1);
 }
 
-cv::Mat convertQImageToMat(const QImage &_img) {
-    cv::Mat mat;
-    if (_img.isNull()) {
-        std::cerr << "you are converting an empty QImage to cv::Mat" << std::endl;
-        exit(-1);
-    }
-    void *dataPtr = const_cast<uchar *>(_img.constBits());
-    int step = _img.bytesPerLine();
-    switch (_img.format()) {
-        case QImage::Format_RGB32:
-        case QImage::Format_ARGB32:
-        case QImage::Format_ARGB32_Premultiplied:
-            mat = cv::Mat(_img.height(), _img.width(), CV_8UC4, dataPtr, step);
-            break;
-        case QImage::Format_RGB888:
-            mat = cv::Mat(_img.height(), _img.width(), CV_8UC3, dataPtr, step);
-            cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
-            break;
-        case QImage::Format_Indexed8:
-            mat = cv::Mat(_img.height(), _img.width(), CV_8UC1, dataPtr, step);
-            break;
-        default: {
-            std::cerr << "unImpl image format:" << _img.format() << std::endl;
-            exit(-1);
-        }
-    }
-//    std::cout << mat.cols << "x" << mat.rows << std::endl;
-    return std::move(mat);
-}
+//cv::Mat convertQImageToMat(const QImage &_img) {
+//    cv::Mat mat;
+//    if (_img.isNull()) {
+//        std::cerr << "you are converting an empty QImage to cv::Mat" << std::endl;
+//        exit(-1);
+//    }
+//    void *dataPtr = const_cast<uchar *>(_img.constBits());
+//    int step = _img.bytesPerLine();
+//    switch (_img.format()) {
+//        case QImage::Format_RGB32:
+//        case QImage::Format_ARGB32:
+//        case QImage::Format_ARGB32_Premultiplied:
+//            mat = cv::Mat(_img.height(), _img.width(), CV_8UC4, dataPtr, step);
+//            break;
+//        case QImage::Format_RGB888:
+//            mat = cv::Mat(_img.height(), _img.width(), CV_8UC3, dataPtr, step);
+//            cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
+//            break;
+//        case QImage::Format_Indexed8:
+//            mat = cv::Mat(_img.height(), _img.width(), CV_8UC1, dataPtr, step);
+//            break;
+//        default: {
+//            std::cerr << "unImpl image format:" << _img.format() << std::endl;
+//            exit(-1);
+//        }
+//    }
+////    std::cout << mat.cols << "x" << mat.rows << std::endl;
+//    return std::move(mat);
+//}
 
-cv::Mat convertQPixmapToMat(const QPixmap &_img) {
-    return convertQImageToMat(_img.toImage());
-}
+//cv::Mat convertQPixmapToMat(const QPixmap &_img) {
+//    return convertQImageToMat(_img.toImage());
+//}
 
 /**
  *  版权声明：本文为博主原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接和本声明。

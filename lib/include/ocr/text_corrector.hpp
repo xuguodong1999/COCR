@@ -1,11 +1,11 @@
 #pragma once
-
+#include <cocr_ocr_export.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
 
 namespace cocr {
-    class TextCorrector {
+    class COCR_OCR_EXPORT TextCorrector {
         inline static std::string ALPHABET = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty";
     private:
         inline static std::unordered_map<std::string, std::string> c2Map;

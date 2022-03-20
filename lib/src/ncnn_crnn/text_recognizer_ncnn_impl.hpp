@@ -1,7 +1,9 @@
 #pragma once
-#include "../ocr/text_recognizer.hpp"
+#include "ocr/text_recognizer.hpp"
+
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace ncnn {
     class Net;

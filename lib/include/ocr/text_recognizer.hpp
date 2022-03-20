@@ -1,11 +1,12 @@
 #pragma once
+#include <cocr_ocr_export.h>
 #include <opencv2/core/mat.hpp>
 #include <string>
 #include <memory>
 
 
 namespace cocr {
-    class TextRecognizer {
+    class COCR_OCR_EXPORT TextRecognizer {
     protected:
         std::vector<std::string> wordVec;
         const float meanValues = 127.5, normValues = 1.0 / 127.5;

@@ -8,6 +8,8 @@ find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(ncnn REQUIRED)
 
+include_directories(${ncnn_DIR}/../../../include)
+
 include(GenerateExportHeader)
 function(makeDLL TARGET)
     unset(PROJECT_SOURCE)
@@ -38,31 +40,54 @@ function(add3rdDeps TARGET DEPS)
     endforeach ()
 endfunction()
 
+# cocr::base
 makeDLL(base)
 
+# cocr::chem
 makeDLL(chem)
-addDeps(chem base)
+addDeps(chem "base")
 add3rdDeps(chem "openbabel;coordgenlibs")
 
+# cocr::opencv_util
+makeDLL(opencv_util)
+addDeps(opencv_util "base")
+add3rdDeps(opencv_util "opencv_core;opencv_imgproc")
+
+# cocr::stroke
 makeDLL(stroke)
-addDeps(stroke "base;chem")
+addDeps(stroke "base;chem;opencv_util")
 add3rdDeps(stroke "opencv_core;opencv_imgproc")
 target_compile_definitions(${PROJECT_NAME}_stroke PRIVATE
         "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/\")")
 
+# cocr::data
 makeDLL(data)
-addDeps(data "base;chem;stroke")
+addDeps(data "base;chem;stroke;opencv_util")
 add3rdDeps(data "opencv_core;opencv_imgcodecs;opencv_highgui;Qt5::Core;Qt5::Widgets")
 target_compile_definitions(${PROJECT_NAME}_data PRIVATE
         "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/\")")
 
-#makeDLL(ocr)
-#makeDLL(ncnn_crnn)
-## makeDLL(ocv_crnn)
-#addDeps(ocr base chem)
-#
-#if (USE_OPENCV_DNN)
-#    makeDLL(ocv_yolo)
-#else ()
-#    makeDLL(ncnn_yolo)
-#endif ()
+# cocr::ocr, include header def for ncnn or opencv_dnn's impl plugin
+makeDLL(ocr)
+addDeps(ocr "base;chem;opencv_util")
+add3rdDeps(ocr "opencv_core")
+
+# ncnn crnn impl, call by plugin, not header import
+makeDLL(ncnn_crnn)
+addDeps(ncnn_crnn "ocr")
+add3rdDeps(ncnn_crnn "ncnn;Qt5::Core;opencv_imgproc")
+
+# ncnn yolo impl, call by plugin, not header import
+makeDLL(ncnn_yolo)
+addDeps(ncnn_yolo "ocr")
+add3rdDeps(ncnn_yolo "ncnn;Qt5::Core;opencv_imgproc")
+
+# opencv_dnn crnn impl, call by plugin, not header import
+makeDLL(ocv_crnn)
+addDeps(ocv_crnn "ocr")
+add3rdDeps(ocv_crnn "opencv_dnn;Qt5::Core")
+
+# opencv_dnn yolo impl, call by plugin, not header import
+makeDLL(ocv_yolo)
+addDeps(ocv_yolo "ocr")
+add3rdDeps(ocv_yolo "opencv_dnn;Qt5::Core")

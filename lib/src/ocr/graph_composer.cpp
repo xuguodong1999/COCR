@@ -1,7 +1,5 @@
-#include "graph_composer.hpp"
-#include "../chem/jmol_adapter.hpp"
-
-#include <QDebug>
+#include "ocr/graph_composer.hpp"
+#include "chem/jmol_adapter.hpp"
 
 #include <map>
 #include <stdexcept>
@@ -197,9 +195,9 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
                 continue;
             }
 //            for (auto&[feat, id]:distances) {
-//                qDebug() << "[b-b distance]\t" << feat << id;
+//                // qDebug() << "[b-b distance]\t" << feat << id;
 //            }
-//            qDebug() << "[b-b distance]\t" << "**************************";
+//            // qDebug() << "[b-b distance]\t" << "**************************";
             switch (first->second) {
                 case 0:
                     add_feat(fid1, fid2, first->first);
@@ -236,8 +234,8 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
     // 决策过程
     // Input: 候选关系对 {<id1,id2,distance,(maybe)feature_map>, ......}
     // Output: 实际关系对 {<id1,id2>, ......}
-//    qDebug() << "blackList.size()=" << blackList.size();
-//    qDebug() << "feats.size()=" << feats.size();
+//    // qDebug() << "blackList.size()=" << blackList.size();
+//    // qDebug() << "feats.size()=" << feats.size();
     for (auto&[id, vec]:feats) {
         std::sort(vec.begin(), vec.end(), [](const feat_type &_a, const feat_type &_b) -> bool {
             return _a.second < _b.second;
@@ -280,7 +278,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
 //        }
 //        logBuffer.append("\n-------------------------------------\n");
 //    }
-//    qDebug() << logBuffer.toStdString().c_str();
+//    // qDebug() << logBuffer.toStdString().c_str();
     ///////// 日志结束
     // 构造集合节点
     // <集合id，<{item1,item2,...}, center>>
@@ -415,7 +413,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
 //            } else if (type == 1) {
 //                pos += item.getTo();
 //            } else {
-//                qDebug() << "error: type !=0 && type != 1@" << __FILE__ << "@" << __LINE__;
+//                // qDebug() << "error: type !=0 && type != 1@" << __FILE__ << "@" << __LINE__;
 //            }
 //        }
 //        if (!itemSet.empty()) { pos /= static_cast<float>(itemSet.size()); }
@@ -437,7 +435,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
             } else if (type == 1) {
                 pos += item.getTo();
             } else {
-                qDebug() << "error: type !=0 && type != 1@" << __FILE__ << "@" << __LINE__;
+                // qDebug() << "error: type !=0 && type != 1@" << __FILE__ << "@" << __LINE__;
             }
         }
         if (!itemSet.empty()) { pos /= static_cast<float>(itemSet.size()); }
@@ -493,7 +491,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
             auto bond = mol->addBond(
                     from, to, item.getBondType(), offset1, offset2);
             const float dirThresh = 0.6;
-//            qDebug() << offset1 << offset2;
+//            // qDebug() << offset1 << offset2;
             from->setIsLeftToRight(offset1 < dirThresh);
             to->setIsLeftToRight(offset2 < dirThresh);
             if (from->isSuperAtom()) {
@@ -504,7 +502,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
             }
 
         } else {
-            qDebug() << "error: not from && to@" << __FILE__ << "@" << __LINE__;
+            // qDebug() << "error: not from && to@" << __FILE__ << "@" << __LINE__;
         }
     }
     // 如果有一个悬空原子，那么置为左右布局
@@ -546,13 +544,13 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
                 break;
             }
         }
-//        qDebug() << "needAromatic=" << needAromatic;
+//        // qDebug() << "needAromatic=" << needAromatic;
         if (!needAromatic) { continue; }
         // 下面一波操作把环上的边按照深度优先遍历的顺序存进 bondVec2
         // TODO: 这个 O(n^2) 还有 bug 的写法有损形象，有空可以优化下
         std::unordered_set<id_type> aidSet;
         for (auto &id:ring) { aidSet.insert(id); }
-//        qDebug() << "aidSet.size()=" << aidSet.size();
+//        // qDebug() << "aidSet.size()=" << aidSet.size();
         std::vector<id_type> bondVec1, bondVec2;
         // modify_bond
         mol->loopBondVec([&](cocr::JBond &bond) {
@@ -561,7 +559,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
                 bondVec1.push_back(bond.getId());
             }
         });
-//        qDebug() << "bondVec1.size()=" << bondVec1.size();
+//        // qDebug() << "bondVec1.size()=" << bondVec1.size();
         size_t start = 0;
         for (size_t i = 0; i < bondVec1.size(); i++) {
             // 优先从官能团出发搜索
@@ -577,7 +575,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
                 break;
             }
         }
-//        qDebug() << "start idx=" << start;
+//        // qDebug() << "start idx=" << start;
         id_type target = mol->getBond(bondVec1[start])->getFrom()->getId();
         bondVec2.push_back(bondVec1[start]);
         bondVec1.erase(bondVec1.begin() + start);

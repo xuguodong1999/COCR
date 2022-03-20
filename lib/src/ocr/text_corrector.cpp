@@ -1,4 +1,4 @@
-#include "text_corrector.hpp"
+#include "ocr/text_corrector.hpp"
 
 #include <vector>
 #include <algorithm>

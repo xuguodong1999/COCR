@@ -1,7 +1,6 @@
 #include "object_detector_opencv_impl.hpp"
 
 #include <opencv2/imgproc.hpp>
-#include <ncnn/net.h>
 
 #include <iostream>
 

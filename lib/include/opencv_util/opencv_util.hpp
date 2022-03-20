@@ -1,13 +1,23 @@
 #pragma once
-
+#include "base/cocr_types.hpp"
 #include <opencv2/core/mat.hpp>
 
-#include <QImage>
-#include <QPixmap>
+//#include <QImage>
+//#include <QPixmap>
 
 #include <optional>
 #include <string>
 #include <utility>
+
+template<typename _Tp>
+inline _Tp getDistance2D(const cv::Point_<_Tp> &p1, const cv::Point_<_Tp> &p2) {
+    return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
+}
+
+template<typename _Tp>
+inline cv::Point_<_Tp> getRectCenter2D(const cv::Rect_<_Tp> &_rect) {
+    return cv::Point_<_Tp>(_rect.x + _rect.width / 2, _rect.y + _rect.height / 2);
+}
 
 /**
  * 将图像填充到指定尺寸，先进行缩放
@@ -55,9 +65,9 @@ inline _Tp getScalarSum(const cv::Scalar_<_Tp> &_scalar) {
     return sum;
 }
 
-cv::Mat convertQImageToMat(const QImage &_img);
-
-cv::Mat convertQPixmapToMat(const QPixmap &_img);
+//cv::Mat convertQImageToMat(const QImage &_img);
+//
+//cv::Mat convertQPixmapToMat(const QPixmap &_img);
 
 void salt_pepper(cv::Mat image, int n);
 
@@ -67,4 +77,6 @@ void cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const i
 
 cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle);
 
-QImage binaryAlphaImage(cv::Mat &src);
+cv::Scalar_<unsigned char> getScalar(const ColorName &_colorName);
+
+//QImage binaryAlphaImage(cv::Mat &src);

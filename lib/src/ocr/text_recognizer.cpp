@@ -1,4 +1,4 @@
-#include "text_recognizer.hpp"
+#include "ocr/text_recognizer.hpp"
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 

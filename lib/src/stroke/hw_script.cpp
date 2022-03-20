@@ -1,5 +1,6 @@
 #include "stroke/hw_script.hpp"
 #include "base/std_util.hpp"
+#include "opencv_util/opencv_util.hpp"
 #include "stroke/hw_data.hpp"
 #include <opencv2/imgproc.hpp>
 
