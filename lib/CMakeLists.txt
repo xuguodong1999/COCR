@@ -1,7 +1,12 @@
 project(cocr LANGUAGES CXX)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${DEV_INCLUDE_DIR})
+include_directories(${openbabel_INCLUDE_DIR})
+include_directories(${coordgenlibs_INCLUDE_DIR})
+
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(ncnn REQUIRED)
 
 include(GenerateExportHeader)
 function(makeDLL TARGET)
@@ -14,6 +19,7 @@ function(makeDLL TARGET)
     endif ()
     set(TARGET_NAME ${PROJECT_NAME}_${TARGET})
     add_library(${TARGET_NAME} ${PROJECT_SOURCE})
+    add_library(${PROJECT_NAME}::${TARGET} ALIAS ${TARGET_NAME})
     set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
     generate_export_header(${TARGET_NAME})
     target_include_directories(${TARGET_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
@@ -38,14 +44,18 @@ makeDLL(chem)
 addDeps(chem base)
 add3rdDeps(chem "openbabel;coordgenlibs")
 
-#makeDLL(stroke)
-#addDeps(stroke base chem)
-#add3rdDeps(stroke opencv_core opencv_imgproc Qt5::Core)
-#
-#makeDLL(data)
-#addDeps(data base chem stroke)
-#add3rdDeps(stroke opencv_core opencv_imgcodecs opencv_highgui Qt5::Core Qt5::Widgets)
-#
+makeDLL(stroke)
+addDeps(stroke "base;chem")
+add3rdDeps(stroke "opencv_core;opencv_imgproc")
+target_compile_definitions(${PROJECT_NAME}_stroke PRIVATE
+        "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/\")")
+
+makeDLL(data)
+addDeps(data "base;chem;stroke")
+add3rdDeps(data "opencv_core;opencv_imgcodecs;opencv_highgui;Qt5::Core;Qt5::Widgets")
+target_compile_definitions(${PROJECT_NAME}_data PRIVATE
+        "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/\")")
+
 #makeDLL(ocr)
 #makeDLL(ncnn_crnn)
 ## makeDLL(ocv_crnn)

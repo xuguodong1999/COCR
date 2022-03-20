@@ -34,7 +34,12 @@ foreach (PROJECT_SOURCE_FILE_PATH ${PROJECT_SOURCE})
         add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH} ${OpenBabel_QRC})
         # product suffix
         set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
-        target_include_directories(${TARGET_NAME} PRIVATE ${Boost_INCLUDE_DIR} ${DEV_INCLUDE_DIR})
+        target_include_directories(${TARGET_NAME} PRIVATE
+                ${Boost_INCLUDE_DIR}
+                ${coordgenlibs_INCLUDE_DIR}
+                ${maeparser_INCLUDE_DIR}
+                ${inchi_INCLUDE_DIR}
+                ${openbabel_INCLUDE_DIR})
         target_link_libraries(${TARGET_NAME} openbabel coordgenlibs maeparser Qt5::Core ${Boost_LIBRARIES})
         add_dependencies(${TARGET_NAME} openbabel coordgenlibs maeparser)
         continue()
@@ -53,7 +58,7 @@ foreach (PROJECT_SOURCE_FILE_PATH ${PROJECT_SOURCE})
         add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH})
         # product suffix
         set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
-        target_include_directories(${TARGET_NAME} PRIVATE ${TORCH_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${DEV_INCLUDE_DIR})
+        target_include_directories(${TARGET_NAME} PRIVATE ${TORCH_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
         target_link_libraries(${TARGET_NAME} PRIVATE ${TORCH_LIBRARIES} ${OpenCV_LIBS})
         continue()
     endif ()

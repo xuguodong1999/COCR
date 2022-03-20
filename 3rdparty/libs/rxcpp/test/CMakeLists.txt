@@ -1,8 +1,6 @@
 project(test_rxcpp LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
-include_directories(${DEV_INCLUDE_DIR})
-
 GET_SUB_DIR_NAME(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR})
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} PROJECT_SOURCE)
 foreach (PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR_LIST})
@@ -12,6 +10,8 @@ endforeach ()
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/bigobj>)
+target_include_directories(${PROJECT_NAME} PRIVATE
+        ${DEV_HEADER_DIR})
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

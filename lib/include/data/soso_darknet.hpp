@@ -1,9 +1,10 @@
-#ifndef _DARKNET_DATA_HPP_
-#define _DARKNET_DATA_HPP_
+#pragma once
+
+#include <cocr_data_export.h>
 
 #include <string>
 
-class SOSODarknet {
+class COCR_DATA_EXPORT SOSODarknet {
     inline static const std::string imgDir = "/JPEGImages/", labelDir = "/labels/";
     bool isInited;
     std::string imgPath, labelPath;
@@ -16,5 +17,3 @@ public:
 
     void display();
 };
-
-#endif//_DARKNET_DATA_HPP_

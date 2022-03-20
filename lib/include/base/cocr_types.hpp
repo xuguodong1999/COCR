@@ -10,7 +10,6 @@
 using hash_type = uint64_t;
 using node_type = unsigned char;
 
-
 enum class DetectorClasses {
     ItemEmpty = 0,
     ItemSingleBond,
@@ -51,7 +50,7 @@ enum class AtomStereo {
     S
 };
 
-enum class ColorName {
+enum class ColorName:size_t {
     rgbSnow = 0, rgbGhostWhite, rgbWhiteSmoke, rgbGainsboro, rgbFloralWhite,
     rgbOldLace, rgbLinen, rgbAntiqueWhite, rgbPapayaWhip, rgbBlanchedAlmond, rgbBisque, rgbPeachPuff,
     rgbNavajoWhite, rgbMoccasin, rgbCornsilk, rgbIvory, rgbLemonChiffon, rgbSeashell, rgbHoneydew,
@@ -128,6 +127,7 @@ enum class ColorName {
 extern std::vector<std::string> ElementsData;
 extern std::unordered_map<ElementType, frac> ElementValenceData;
 extern std::string POS_CHARGE_TEXT, NEG_CHARGE_TEXT;
+extern const unsigned char predefinedColors[][3];
 
 DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementType);
 

@@ -1,9 +1,11 @@
-#ifndef _MOL_HW_HPP_
-#define _MOL_HW_HPP_
+#pragma once
+#include <cocr_data_export.h>
 
-#include "hw_bond.hpp"
-#include "hw_str.hpp"
-#include "mol_holder.hpp"
+#include "chem/mol_holder.hpp"
+
+#include "stroke/hw_bond.hpp"
+#include "stroke/hw_str.hpp"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -11,7 +13,7 @@
 /**
  * 向JMol填充图元
  */
-class HwMol : public HwBase, public MolHolder {
+class COCR_DATA_EXPORT HwMol : public HwBase, public MolHolder {
     std::vector<std::shared_ptr<HwBase>> mData;
     HwController *hwController;
     std::shared_ptr<MolHolder> mol2dHolder, molOpHolder;
@@ -72,5 +74,3 @@ public:
     void mulK(float _kx, float _ky) override;
 
 };
-
-#endif //_MOL_HW_HPP_

@@ -1,20 +1,21 @@
-#include "hw_mol.hpp"
-#include "hw_data.hpp"
-#include "mol2d.hpp"
-#include "mol_op.hpp"
+#include "data/crnn_data.hpp"
+#include "data/color_def.hpp"
+#include "data/opencv_util.hpp"
+#include "data/hw_mol.hpp"
 
-#include "timer.hpp"
-#include "colors.hpp"
+#include "base/timer.hpp"
+#include "base/cocr_types.hpp"
+#include "base/std_util.hpp"
 
-#include "opencv_util.hpp"
-#include "std_util.hpp"
-#include "crnn_data.hpp"
+#include "chem/mol2d.hpp"
+#include "chem/mol_op.hpp"
+
+#include "stroke/hw_data.hpp"
 
 #include <opencv2/opencv.hpp>
 
 #include <filesystem>
 #include <fstream>
-#include <iomanip>
 
 using namespace std;
 
@@ -87,7 +88,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         sym->setKeepDirection(true);
         float fontSize = avgBondLength * betweenProb(0.2, 0.6);
         sym->resizeTo(fontSize, fontSize);
-        sym->moveCenterTo(mol2d->getPos2D(_aid));
+        const auto&[x,y]=mol2d->getPos2D(_aid);
+        sym->moveCenterTo({x,y});
         if (ElementType::C == atom->getElementType()) {
             explicitAtomMap[_aid] = byProb(_explicitCarbonProb);
         } else {
@@ -151,9 +153,11 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         auto sym = HwBond::GetHwBond(bondType);
 //        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
 //        sym->setUseHandWrittenWChar(true);
-        auto from_ = mol2d->getPos2D(bond->getAtomFrom());
-        auto to_ = mol2d->getPos2D(bond->getAtomTo());
-        cv::Point2f from = from_, to = to_;
+        const auto& [fromX,fromY] = mol2d->getPos2D(bond->getAtomFrom());
+        const auto& [toX,toY] = mol2d->getPos2D(bond->getAtomTo());
+        cv::Point2f from,to,from_,to_;
+        from=from_={fromX,fromY};
+        to=to_={toX,toY};
         const float k = 0.3;
         if (explicitAtomMap[bond->getAtomFrom()]) {
             from = (1 - k) * (from_ - to_) + to_;
@@ -180,7 +184,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
             aids.insert(bond->getAtomTo());
         }
         for (auto &aid:aids) {
-            pts.push_back(mol2d->getPos2D(aid));
+            const auto&[x,y]=mol2d->getPos2D(aid);
+            pts.push_back({x,y});
         }
         sym->setVertices(pts);
         mData.push_back(std::move(sym));
@@ -214,7 +219,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
             }
         }
         // aid is angle atom
-        cv::Point2f A = mol2d->getPos2D(aid);
+        const auto&[x,y]=mol2d->getPos2D(aid);
+        const cv::Point2f A = {x,y};
 //        std::cout << "A=" << A << std::endl;
 //        std::cout << "bbox1=" << item1->getBoundingBox().value() << std::endl;
 //        std::cout << "bbox2=" << item2->getBoundingBox().value() << std::endl;
@@ -729,9 +735,9 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
     auto calc_avg_bond_lenth = [&](const size_t &_bid) -> void {
         auto bond = mol->getBondById(_bid);
         auto atomFrom = mol->getAtomById(bond->getAtomFrom());
-        auto from_ = cv::Point2f(atomFrom->x, atomFrom->y);
+        cv::Point2f from_(atomFrom->x, atomFrom->y);
         auto atomTo = mol->getAtomById(bond->getAtomTo());
-        auto to_ = cv::Point2f(atomTo->x, atomTo->y);
+        cv::Point2f to_(atomTo->x, atomTo->y);
         avgSize += getDistance2D(from_, to_);
     };
     mol->safeTraverseBonds(calc_avg_bond_lenth);

@@ -1,7 +1,6 @@
-#ifndef _HW_DATA_HPP_
-#define _HW_DATA_HPP_
+#pragma once
 
-#include "hw_script.hpp"
+#include "stroke/hw_script.hpp"
 #include <map>
 #include <string>
 #include <vector>
@@ -12,7 +11,7 @@ enum class ShapeType {
     Circle
 };
 
-class HwDataSample {
+class COCR_STROKE_EXPORT HwDataSample {
     std::vector<std::vector<cv::Point2f>> mData;
 public:
     HwDataSample() = default;
@@ -23,7 +22,7 @@ public:
 };
 
 
-class HwDataLoader {
+class COCR_STROKE_EXPORT HwDataLoader {
     std::vector<std::vector<HwDataSample>> mData;
 
     HwDataLoader();
@@ -49,5 +48,3 @@ public:
 
     HwScript GetHwScript(const size_t &_classIndex, const size_t &_sampleIndex);
 };
-
-#endif//_HW_DATA_HPP_

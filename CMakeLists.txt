@@ -21,13 +21,11 @@ set(DEV_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty CACHE INTERNAL "")
 # path to header-only 3rdparty libraries
 set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/header-only CACHE INTERNAL "")
-set(DEV_INCLUDE_DIR
-        ${DEV_DEPS_DIR}/libs/inchi/include
-        ${DEV_DEPS_DIR}/libs/maeparser/include
-        ${DEV_DEPS_DIR}/libs/coordgenlibs/include
-        ${DEV_DEPS_DIR}/libs/openbabel/include
-        ${DEV_HEADER_DIR}
-        CACHE INTERNAL "")
+set(inchi_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/inchi/include CACHE INTERNAL "")
+set(maeparser_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/maeparser/include CACHE INTERNAL "")
+set(coordgenlibs_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/coordgenlibs/include CACHE INTERNAL "")
+set(openbabel_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/openbabel/include CACHE INTERNAL "")
+set(cocr_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/include CACHE INTERNAL "")
 # remember to cite ${OpenBabel_QRC} if you link openbabel
 set(OpenBabel_QRC ${DEV_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
 
@@ -72,6 +70,7 @@ add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 add_subdirectory(3rdparty)
 add_subdirectory(lib)
+add_subdirectory(tools)
 
 # add_subdirectory(tools) # target as ${APP_NAME}
 # add_dependencies(${APP_NAME} openbabel)

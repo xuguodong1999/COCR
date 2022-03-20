@@ -1,6 +1,5 @@
-#include "hw_stroke.hpp"
-#include "opencv_util.hpp"
-#include "std_util.hpp"
+#include "stroke/hw_stroke.hpp"
+#include "base/std_util.hpp"
 #include <opencv2/imgproc.hpp>
 
 void HwStroke::paintTo(cv::Mat &_canvas) const {

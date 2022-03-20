@@ -1,12 +1,11 @@
-#ifndef _HW_SCRIPT_HPP_
-#define _HW_SCRIPT_HPP_
+#pragma once
 
-#include "hw_stroke.hpp"
+#include "stroke/hw_stroke.hpp"
 
 /**
  * 笔迹：笔画的集合
  */
-class HwScript : public HwBase {
+class COCR_STROKE_EXPORT HwScript : public HwBase {
     std::vector<HwStroke> mData;
     HwController *hwController;
 public:
@@ -71,6 +70,3 @@ public:
      */
     void castBy(const std::vector<cv::Point2f> &_from, const std::vector<cv::Point2f> &_to);
 };
-
-
-#endif//_HW_SCRIPT_HPP_

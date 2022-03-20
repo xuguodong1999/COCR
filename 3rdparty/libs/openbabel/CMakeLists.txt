@@ -2,7 +2,6 @@ project(openbabel LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${DEV_INCLUDE_DIR})
 
 if (NOT ANDROID) # use apk_shell for android-qt project
     find_package(Qt5 COMPONENTS Core REQUIRED)
@@ -40,6 +39,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 include(GenerateExportHeader)
 generate_export_header(${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+        ${coordgenlibs_INCLUDE_DIR}
+        ${maeparser_INCLUDE_DIR}
+        ${inchi_INCLUDE_DIR}
+        ${openbabel_INCLUDE_DIR}
+        ${DEV_HEADER_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core coordgenlibs maeparser inchi)
 if (IOS OR ANDROID OR APPLE)

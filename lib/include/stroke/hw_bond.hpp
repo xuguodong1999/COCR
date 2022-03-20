@@ -1,10 +1,9 @@
-#ifndef _HW_BOND_HPP_
-#define _HW_BOND_HPP_
+#pragma once
 
-#include "bond_type.hpp"
-#include "hw_item.hpp"
+#include "chem/bond_type.hpp"
+#include "stroke/hw_item.hpp"
 
-class HwBond : public HwItem {
+class COCR_STROKE_EXPORT HwBond : public HwItem {
 protected:
     virtual void loadHwData() = 0;
 
@@ -18,7 +17,7 @@ public:
     virtual void setVertices(const std::vector<cv::Point2f> &_pts) = 0;
 };
 
-class HwCircleBond : public HwBond {
+class COCR_STROKE_EXPORT HwCircleBond : public HwBond {
     cv::Point2f center;
     float rx, ry;
 
@@ -43,7 +42,7 @@ public:
     void paintTo(cv::Mat &_canvas) const override;
 };
 
-class HwSingleBond : public HwBond {
+class COCR_STROKE_EXPORT HwSingleBond : public HwBond {
 protected:
     cv::Point2f from, to;
 
@@ -65,7 +64,7 @@ public:
     void mulK(float _kx, float _ky);
 };
 
-class HwDoubleBond : public HwSingleBond {
+class COCR_STROKE_EXPORT HwDoubleBond : public HwSingleBond {
 
     void loadHwData() override;
 
@@ -77,7 +76,7 @@ public:
     HwDoubleBond() = default;
 };
 
-class HwTripleBond : public HwSingleBond {
+class COCR_STROKE_EXPORT HwTripleBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
@@ -88,7 +87,7 @@ public:
     HwTripleBond() = default;
 };
 
-class HwSolidWedgeBond : public HwSingleBond {
+class COCR_STROKE_EXPORT HwSolidWedgeBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
@@ -101,7 +100,7 @@ public:
     void paintTo(cv::Mat &_canvas) const override;
 };
 
-class HwDashWedgeBond : public HwSingleBond {
+class COCR_STROKE_EXPORT HwDashWedgeBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
@@ -112,7 +111,7 @@ public:
     HwDashWedgeBond() = default;
 };
 
-class HwWaveBond : public HwSingleBond {
+class COCR_STROKE_EXPORT HwWaveBond : public HwSingleBond {
     void loadHwData() override;
 
 public:
@@ -122,5 +121,3 @@ public:
 
     HwWaveBond() = default;
 };
-
-#endif//_HW_BOND_HPP_

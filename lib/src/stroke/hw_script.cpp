@@ -1,7 +1,6 @@
-#include "hw_script.hpp"
-#include "std_util.hpp"
-#include "opencv_util.hpp"
-#include "hw_data.hpp"
+#include "stroke/hw_script.hpp"
+#include "base/std_util.hpp"
+#include "stroke/hw_data.hpp"
 #include <opencv2/imgproc.hpp>
 
 void HwScript::push_back(HwStroke &_stroke) {

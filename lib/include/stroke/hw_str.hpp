@@ -1,7 +1,6 @@
-#ifndef _HW_STR_HPP_
-#define _HW_STR_HPP_
+#pragma once
 
-#include "hw_item.hpp"
+#include "stroke/hw_item.hpp"
 
 enum class HwCharType {
     Normal,
@@ -27,7 +26,7 @@ enum class HwSpecText {
  * 不存在于 sTextMap 的直接构造 HwScript，
  * 维护一个字符串的水平游标，空格直接移动游标，非空格嵌入字符并移动游标
  */
-class HwStr : public HwItem {
+class COCR_STROKE_EXPORT HwStr : public HwItem {
     std::vector<std::pair<std::string, HwCharType>> richText;
     DetectorClasses label;
     inline static const float
@@ -91,5 +90,3 @@ public:
 
     void loadPlainText(const std::string &_plainText);
 };
-
-#endif//_HW_STR_HPP_

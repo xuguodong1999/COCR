@@ -1,7 +1,6 @@
-#include "hw_bond.hpp"
-#include "opencv_util.hpp"
-#include "std_util.hpp"
-#include "hw_data.hpp"
+#include "stroke/hw_bond.hpp"
+#include "base/std_util.hpp"
+#include "stroke/hw_data.hpp"
 
 #include <memory>
 #include <iostream>

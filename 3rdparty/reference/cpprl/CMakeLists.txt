@@ -2,7 +2,6 @@ project(ref_cpprl LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${DEV_HEADER_DIR})
 
 find_package(Torch QUIET)
 

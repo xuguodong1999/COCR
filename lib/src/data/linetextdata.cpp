@@ -1,8 +1,11 @@
-#include "linetextdata.hpp"
-#include "std_util.hpp"
+#include "data/linetextdata.hpp"
+
+#include "base/std_util.hpp"
+
 #include <QFile>
 #include <QJsonObject>
 #include <QJsonParseError>
+
 #include <sstream>
 #include <vector>
 #include <optional>
@@ -119,32 +122,6 @@ bool SpliceableText::isFull() const {
     return !l && !r;
 }
 
-
-void LineTextDataCreator::loadFromSuperAtom(const char *_filepath) {
-    QFile file(_filepath);
-    file.open(QIODevice::ReadOnly);
-    auto str = file.readAll().toStdString();
-    file.close();
-    std::istringstream iss(str);
-    std::string line;
-    while (std::getline(iss, line)) {
-        std::string a, b;
-        std::istringstream iss_line(line);
-        try {
-            iss_line >> a;
-            if (!a.empty() && '#' == a[0])continue;
-            iss_line >> b;
-            wordSet.insert(a);
-            wordSet.insert(b);
-            wordSet.insert("-" + a);
-            wordSet.insert(b + "-");
-        } catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-    }
-    updateCharSet();
-}
-
 void LineTextDataCreator::loadFromWordDict(const char *_filepath) {
     QFile file(_filepath);
 
@@ -207,7 +184,7 @@ void LineTextDataCreator::updateCharSet() {
 
 
 // 规则限定、连接随意、总量控制
-void LineTextDataCreator::loadFromPattern(const char *_filepath) {
+void LineTextDataCreator::loadFromPattern(const std::string& filepath) {
     std::vector<SpliceableText> originSTVec, tempSTVec;
     std::unordered_set<SpliceableText, HashSpliceableText> originST, tempST;
 
@@ -261,7 +238,7 @@ void LineTextDataCreator::loadFromPattern(const char *_filepath) {
         }
     }
     std::cout << "step1.size=" << originSTVec.size() << std::endl;
-    QFile file(_filepath);
+    QFile file(filepath.c_str());
     file.open(QIODevice::ReadOnly);
     auto str = file.readAll().toStdString();
     file.close();

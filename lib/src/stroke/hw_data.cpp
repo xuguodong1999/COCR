@@ -1,13 +1,12 @@
-#include "hw_data.hpp"
-#include "std_util.hpp"
-#include <QFile>
+#include "stroke/hw_data.hpp"
+#include "base/std_util.hpp"
 #include <sstream>
 #include <fstream>
 #include <iostream>
 #include <random>
 #include <algorithm>
 
-static std::string COUCH_SYM_PATH = TEST_SAMPLES_PATH + "couch-sym.dat";
+static std::string COUCH_SYM_PATH = TEST_SAMPLES_PATH + "/datasets/couch-sym.dat";
 static std::vector<int> sLabelCharLikeLine = {
         8, 24, 53,
         130, 134, 141, 146, 158,
@@ -247,43 +246,29 @@ HwScript HwDataLoader::GetShape(const ShapeType &_shapeType) {
 
 void HwDataLoader::LoadCouchDataSet() {
     mData.clear();
-    std::shared_ptr<std::istream> ism;
-    bool fromQrc = (COUCH_SYM_PATH.length() > 2 && COUCH_SYM_PATH[0] == ':');
-    if (fromQrc) {
-        QFile loader(COUCH_SYM_PATH.c_str());
-        if (!loader.open(QIODevice::ReadOnly)) {
-            std::cerr << "fail to load " << COUCH_SYM_PATH << " with qrc" << std::endl;
-            exit(-1);
-        }
-        ism = std::make_shared<std::stringstream>(loader.readAll().toStdString());
-        loader.close();
-    } else {
-        auto fsm = std::make_shared<std::ifstream>(
-                COUCH_SYM_PATH, std::ios::in | std::ios::binary);
-        ism = fsm;
-        if (!fsm->is_open()) {
-            std::cerr << "fail to load " << COUCH_SYM_PATH << " with ifstream" << std::endl;
-            exit(-1);
-        }
+    std::ifstream ism(COUCH_SYM_PATH, std::ios::in | std::ios::binary);
+    if (!ism.is_open()) {
+        std::cerr << "fail to load " << COUCH_SYM_PATH << " with ifstream" << std::endl;
+        exit(-1);
     }
     int a, b, c, d, e, iii = 0;
     // 【标签索引】、【宽度】、【长度】、【笔画数目】
-    while (ism->read(reinterpret_cast<char *>(&a), 4)) {
+    while (ism.read(reinterpret_cast<char *>(&a), 4)) {
         if (++iii % 10000 == 0) {
             std::cout << iii << std::endl;
         }
-        ism->read(reinterpret_cast<char *>(&b), 4);
-        ism->read(reinterpret_cast<char *>(&c), 4);
-        ism->read(reinterpret_cast<char *>(&d), 4);
+        ism.read(reinterpret_cast<char *>(&b), 4);
+        ism.read(reinterpret_cast<char *>(&c), 4);
+        ism.read(reinterpret_cast<char *>(&d), 4);
         std::vector<std::vector<cv::Point2f>> script;
         script.resize(d);
         for (int i = 0; i < d; i++) {
             // 【点数】
-            ism->read(reinterpret_cast<char *>(&e), 4);
+            ism.read(reinterpret_cast<char *>(&e), 4);
             script[i].resize(e);
             for (int j = 0; j < e; j++) {
-                ism->read(reinterpret_cast<char *>(&script[i][j].x), 4);
-                ism->read(reinterpret_cast<char *>(&script[i][j].y), 4);
+                ism.read(reinterpret_cast<char *>(&script[i][j].x), 4);
+                ism.read(reinterpret_cast<char *>(&script[i][j].y), 4);
             }
         }
         if (a >= mData.size()) {
@@ -291,9 +276,7 @@ void HwDataLoader::LoadCouchDataSet() {
         }
         mData[a].push_back(std::move(script));
     }
-    if (!fromQrc) {
-        std::static_pointer_cast<std::ifstream>(ism)->close();
-    }
+    ism.close();
     for (auto &dat: mData) {
         dat.resize(dat.size());
     }

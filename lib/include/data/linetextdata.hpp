@@ -1,5 +1,4 @@
-#ifndef _LINE_TEXT_DATA_HPP_
-#define _LINE_TEXT_DATA_HPP_
+#pragma once
 
 #include <unordered_set>
 #include <functional>
@@ -53,11 +52,9 @@ public:
 
     const std::unordered_set<std::string> &getWordSet() const;
 
-    void loadFromSuperAtom(const char *_filepath = ":/openbabel/data/superatom.txt");
-
     void loadFromWordDict(const char *_filepath);
 
-    void loadFromPattern(const char *_filepath = ":/openbabel/data/superatom.txt");
+    void loadFromPattern(const std::string&filepath );
 
     void clearSet();
 
@@ -67,5 +64,3 @@ public:
 
     void displaySet();
 };
-
-#endif//_LINE_TEXT_DATA_HPP_

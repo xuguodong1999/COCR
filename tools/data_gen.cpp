@@ -1,8 +1,8 @@
-#include "crnn_data.hpp"
-#include "soso_darknet.hpp"
-#include "hw_data.hpp"
-#include "isomer.hpp"
-#include "polya.hpp"
+#include "data/crnn_data.hpp"
+#include "data/soso_darknet.hpp"
+#include "stroke/hw_data.hpp"
+#include "base/isomer.hpp"
+#include "base/polya.hpp"
 
 #include <QCoreApplication>
 #include <QPainter>
@@ -10,13 +10,10 @@
 #include <QAbstractTextDocumentLayout>
 #include <QLabel>
 #include <QApplication>
-
-#include <opencv2/highgui.hpp>
-
-#include <memory>
-#include <iostream>
 #include <QDebug>
 #include <QDir>
+
+#include <iostream>
 
 extern CRNNDataGenerator crnnDataGenerator;
 

@@ -1,7 +1,6 @@
 project(elslab LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${DEV_INCLUDE_DIR})
 
 find_package(OpenCV QUIET)
 find_package(Torch QUIET)

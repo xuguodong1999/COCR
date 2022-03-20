@@ -1,15 +1,16 @@
-#ifndef _CRNN_DATA_HPP_
-#define _CRNN_DATA_HPP_
+#pragma once
+#include <cocr_data_export.h>
+
+#include "stroke/hw_base.hpp"
 
 #include <string>
 #include <vector>
 #include <memory>
 #include <unordered_set>
-#include "hw_base.hpp"
 
 extern std::string SOSO_ALPHABET;
 
-class CRNNDataGenerator {
+class COCR_DATA_EXPORT CRNNDataGenerator {
     inline static const char *imgKey = "image-%09d", *labelKey = "label-%09d";
     inline static const std::string imgDir = "/JPEGImages/", gtFileName = "labels.txt",
             trainDir = "/train/", testDir = "/test/";
@@ -61,5 +62,3 @@ public:
 
     cv::Mat getStandardLongText();
 };
-
-#endif//_CRNN_DATA_HPP_

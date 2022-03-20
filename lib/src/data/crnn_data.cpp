@@ -1,9 +1,11 @@
-#include "crnn_data.hpp"
-#include "hw_str.hpp"
-#include "linetextdata.hpp"
-#include "colors.hpp"
-#include "std_util.hpp"
-#include "opencv_util.hpp"
+#include "data/crnn_data.hpp"
+#include "data/linetextdata.hpp"
+#include "data/opencv_util.hpp"
+#include "data/color_def.hpp"
+
+#include "base/cocr_types.hpp"
+#include "base/std_util.hpp"
+#include "stroke/hw_str.hpp"
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -12,12 +14,12 @@
 
 #include <QPainter>
 #include <QTextDocument>
+#include <QFontDatabase>
+#include <QDebug>
 
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <QFontDatabase>
-#include <QDebug>
 
 static std::vector<QString> availableFontFamilies = {"Arial"};
 
@@ -315,7 +317,7 @@ void CRNNDataGenerator::display() {
 
 void CRNNDataGenerator::getDictTexts() {
     LineTextDataCreator dc;
-    dc.loadFromWordDict((TEST_SAMPLES_PATH + "words_dictionary.json").c_str());
+    dc.loadFromWordDict((TEST_SAMPLES_PATH + "/datasets/words_dictionary.json").c_str());
     std::unordered_set<std::string> textSet;
     for (auto &text: dc.getWordSet()) {
         if (text.length() <= MAX_TEXT_LENGTH) {
@@ -384,7 +386,7 @@ void CRNNDataGenerator::getRandomTexts(const size_t &_num, const size_t &_len) {
 
 void CRNNDataGenerator::getChemTexts() {
     LineTextDataCreator dc;
-    dc.loadFromPattern();
+    dc.loadFromPattern(TEST_SAMPLES_PATH+"/openbabel/data/superatom.txt");
     std::unordered_set<std::string> textSet;
     for (auto &text: dc.getWordSet()) {
         if (text.length() <= MAX_TEXT_LENGTH) {

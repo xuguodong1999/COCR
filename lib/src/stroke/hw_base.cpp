@@ -1,7 +1,6 @@
-#include "hw_base.hpp"
-#include "std_util.hpp"
-#include "opencv_util.hpp"
-#include "colors.hpp"
+#include "stroke/hw_base.hpp"
+#include "base/std_util.hpp"
+#include "base/cocr_types.hpp"
 #include <opencv2/imgproc.hpp>
 
 const cv::Scalar &HwController::getColor() const {

@@ -1,9 +1,10 @@
-#include "soso_darknet.hpp"
-#include "mol_op.hpp"
-#include "hw_mol.hpp"
-#include "isomer.hpp"
-#include "std_util.hpp"
-//#include "couch_data.hpp"
+#include "data/soso_darknet.hpp"
+#include "data/hw_mol.hpp"
+
+#include "base/isomer.hpp"
+#include "base/std_util.hpp"
+
+#include "chem/mol_op.hpp"
 
 #include <filesystem>
 #include <iostream>

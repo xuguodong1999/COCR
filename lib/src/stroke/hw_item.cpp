@@ -1,4 +1,4 @@
-#include "hw_item.hpp"
+#include "stroke/hw_item.hpp"
 
 void HwItem::setHwController(HwController &_hwController) {
     hwController = &_hwController;

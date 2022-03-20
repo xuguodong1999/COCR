@@ -2,7 +2,7 @@ project(ref_torch LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(${DEV_INCLUDE_DIR})
+include_directories(${DEV_HEADER_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/public)
 
 find_package(OpenCV QUIET)

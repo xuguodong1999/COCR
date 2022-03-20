@@ -1,14 +1,13 @@
-#ifndef _HW_STROKE_HPP_
-#define _HW_STROKE_HPP_
+#pragma once
 
-#include "hw_base.hpp"
+#include "stroke/hw_base.hpp"
 #include <vector>
 #include <functional>
 
 /**
  * 笔画：点的集合
  */
-class HwStroke : public HwBase {
+class COCR_STROKE_EXPORT HwStroke : public HwBase {
     std::vector<cv::Point2f> mData;
     HwController *hwController;
 public:
@@ -41,5 +40,3 @@ public:
 
     void mulK(float _kx, float _ky);
 };
-
-#endif//_HW_STROKE_HPP_

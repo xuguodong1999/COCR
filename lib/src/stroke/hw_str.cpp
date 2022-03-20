@@ -1,6 +1,6 @@
-#include "hw_str.hpp"
-#include "hw_data.hpp"
-#include "std_util.hpp"
+#include "stroke/hw_str.hpp"
+#include "stroke/hw_data.hpp"
+#include "base/std_util.hpp"
 #include <iostream>
 
 

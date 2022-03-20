@@ -1,7 +1,6 @@
 project(test_openbabel LANGUAGES CXX)
 
 set(CMAKE_AUTORCC ON)
-include_directories(${DEV_INCLUDE_DIR})
 
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
@@ -26,6 +25,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 target_compile_definitions(${PROJECT_NAME} PRIVATE "TEST_SAMPLES_PATH=std::string(\"${CMAKE_CURRENT_SOURCE_DIR}/\")")
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core ${Boost_LIBRARIES} openbabel)
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+        ${coordgenlibs_INCLUDE_DIR}
+        ${maeparser_INCLUDE_DIR}
+        ${inchi_INCLUDE_DIR}
+        ${openbabel_INCLUDE_DIR}
+        ${DEV_HEADER_DIR})
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

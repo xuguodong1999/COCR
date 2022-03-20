@@ -1,12 +1,11 @@
-#ifndef _HW_ITEM_HPP_
-#define _HW_ITEM_HPP_
+#pragma once
 
-#include "hw_script.hpp"
+#include "stroke/hw_script.hpp"
 
 /**
  * 图元：笔迹的集合
  */
-class HwItem : public HwBase {
+class COCR_STROKE_EXPORT HwItem : public HwBase {
 protected:
     std::vector<HwScript> mData;
     HwController *hwController;
@@ -35,5 +34,3 @@ public:
 
     void mulK(float _kx, float _ky) override;
 };
-
-#endif//_HW_ITEM_HPP_
