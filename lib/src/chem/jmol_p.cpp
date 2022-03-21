@@ -127,7 +127,7 @@ JMol_p::JMol_p(JMol &_mol) : mol(_mol), isValenceDataLatest(false), last_holder(
 }
 
 std::pair<atom_t, atom_t> JMol_p::makeAbbType(const TokenType &_abb) {
-//    qDebug() << __FUNCTION__ << static_cast<int>(_abb);
+    std::cerr << __FUNCTION__ << static_cast<int>(_abb);
     switch (_abb) {
         case TokenType::Me: {
             return makeAlkane(1);
@@ -341,7 +341,7 @@ std::pair<atom_t, atom_t> JMol_p::makeAcyl(const ElementType &_acyl, const Eleme
 void cocr::initSuperAtomMap() {
     if (!SUPER_ATOM_MAP.empty()) { return; }
     // 元素语义
-    for (auto&[str, data]:STR_ELEMENT_MAP) {
+    for (auto&[str, data]: STR_ELEMENT_MAP) {
         SUPER_ATOM_MAP[str] = TokenType::Element;
     }
     // 数字语义
@@ -394,7 +394,7 @@ void cocr::initSuperAtomMap() {
     SUPER_ATOM_MAP["Ms"] = TokenType::Ms;
 
     // Map 里面最长字符串的长度
-    for (const auto&[str, _]:SUPER_ATOM_MAP) {
+    for (const auto&[str, _]: SUPER_ATOM_MAP) {
         if (MAX_SUPER_ATOM_LENGTH < str.length()) { MAX_SUPER_ATOM_LENGTH = str.length(); }
     }
 }
@@ -437,7 +437,7 @@ std::optional<JMol_p::token_struct> JMol_p::interpret(const std::string &inputNa
 
 std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
         token_struct &tokenStruct, size_t iBeg, size_t iEnd, int suffix, atom_t parent) {
-//    qDebug() << __FUNCTION__ << "suffix=" << suffix;
+    std::cerr << __FUNCTION__ << "suffix=" << suffix;
     auto&[tokens, numbers, elements]=tokenStruct;
     atom_t a_beg0 = nullptr, a_end0 = nullptr;
     // 如果有要被挂载的原子，那么不可能原位修改接入原子
@@ -459,7 +459,7 @@ std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
                     auto &nextToken = tokens[i + 1];
                     if (isNumberToken(nextToken)) {
                         number = numbers[i + 1];
-//                        qDebug() << "number=" << number;
+                        std::cerr << "number=" << number;
                         std::tie(a1, a2) = makeElementType(
                                 elements[i], last_ele, number);
                         i += 1;
@@ -468,20 +468,20 @@ std::pair<atom_t, atom_t> JMol_p::extractNoBracketTokens(
                         std::tie(a1, a2) = makeElementType(elements[i]);
                         if (a1 && a1->getCommonNebNum() > 1) {
                             // 如果遇到可续接的原子，更新主原子信息
-//                            qDebug() << "bind" << a1->getQName();
+                            std::cerr << "bind" << a1->getName();
                             last_ele = a1;
                         }
                     }
                 } else {
                     std::tie(a1, a2) = makeElementType(elements[i]);
                     if (a1 && a1->getCommonNebNum() > 1) {
-//                        qDebug() << "bind" << a1->getQName();
+                        std::cerr << "bind" << a1->getName();
                         last_ele = a1;
                     }
                 }
             } else if (isAbbToken(curToken)) {
                 // 拼接缩略词
-//                qDebug() << __FUNCTION__ << "isAbbToken:" << (int) curToken;
+                std::cerr << __FUNCTION__ << "isAbbToken:" << (int) curToken;
                 std::tie(a1, a2) = makeAbbType(curToken);
             } else if (isChargeToken(curToken)) {
                 // 向主原子划归电荷，FIXME: 这里是一个粗糙的实现
@@ -543,11 +543,11 @@ bool cocr::JMol_p::tryExpand(const id_type &_aid) {
     if (!atom) { return false; }
     if (ElementType::SA != atom->getType()) { return false; }
     std::string inputName = atom->getName();
-//    qDebug() << __FUNCTION__ << inputName.c_str();
+    std::cerr << __FUNCTION__ << inputName.c_str();
     auto opt = interpret(inputName);
     if (!opt) { return false; }
     auto &tokenStruct = opt.value();
-//    qDebug() << "atom->isLeftToRight=" << atom->isLeftToRight();
+    std::cerr << "atom->isLeftToRight=" << atom->isLeftToRight();
     if (!atom->isLeftToRight()) {
         // reverse tokenStruct here
         if (!reverseTokens(tokenStruct)) { return false; }
@@ -556,14 +556,14 @@ bool cocr::JMol_p::tryExpand(const id_type &_aid) {
 //    for (size_t i = 0; i < tokens.size(); i++) {
 //        auto &token = tokens[i];
 //        if (isElementToken(token)) {
-//            qDebug() << "element" << (int) elements[i];
+//    std::cerr << "element" << (int) elements[i];
 //        } else if (isNumberToken(token)) {
-//            qDebug() << "number" << numbers[i];
+//    std::cerr << "number" << numbers[i];
 //        } else {
-//            qDebug() << "token" << (int) token;
+//    std::cerr << "token" << (int) token;
 //        }
 //    }
-//    qDebug() << "**********";
+    std::cerr << "**********";
     bindLastHolder(atom);// 原位修改起始原子
     atom_t a_end = atom, a1, a2;
     int number;
@@ -624,7 +624,7 @@ bool cocr::JMol_p::tryExpand(const id_type &_aid) {
     // TODO: 解决多点接入问题
     if (atom && a_end) {
         auto &bonds = atom->getSaBonds();
-//        qDebug() << "bonds.size()=" << bonds.size();
+        std::cerr << "bonds.size()=" << bonds.size();
         if (bonds.size() > 1) {
             std::sort(bonds.begin(), bonds.end(), [](
                     const std::pair<float, std::shared_ptr<JBond>> &a,
@@ -640,7 +640,7 @@ bool cocr::JMol_p::tryExpand(const id_type &_aid) {
 //            mol.rebuildAllData();
         }
     }
-//    qDebug() << __FUNCTION__ << "return true";
+    std::cerr << __FUNCTION__ << "return true";
     return true;
 }
 
@@ -704,11 +704,11 @@ bool JMol_p::reverseTokens(JMol_p::token_struct &tokenStruct) {
         elements2.size() == elements.size() &&
         tokens2.size() == tokens.size()) {
         std::swap(newStruct, tokenStruct);
-//        qDebug() << __FUNCTION__ << "ret true";
+        std::cerr << __FUNCTION__ << "ret true";
         return true;
     }
-//    qDebug() << __FUNCTION__ << "ret false" << numbers2.size() << numbers.size()
-//             << elements2.size() << elements.size()
-//             << tokens2.size() << tokens.size();
+    std::cerr << __FUNCTION__ << "ret false" << numbers2.size() << numbers.size()
+              << elements2.size() << elements.size()
+              << tokens2.size() << tokens.size();
     return false;
 }

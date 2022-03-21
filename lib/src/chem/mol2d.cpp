@@ -38,7 +38,7 @@ void Mol2D::calcCoord2D() {
     minimizer.initialize(cMol);
     minimizer.runGenerateCoordinates();
     atomPosMap2D.clear();
-    for (auto&[aid, cAtom]:j2cAtomMap) {
+    for (auto&[aid, cAtom]: j2cAtomMap) {
         auto pos = cAtom->getCoordinates();
         atomPosMap2D[aid] = {true, {pos.x(), pos.y()}};
     }

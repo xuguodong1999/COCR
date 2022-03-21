@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QObject>
 #include <QColor>
 #include <QVector3D>

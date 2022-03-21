@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QResizeEvent>
 #include <QCloseEvent>
 #include <QMoveEvent>

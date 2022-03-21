@@ -1,6 +1,15 @@
 #include "ocr/object_detector.hpp"
-#include "base/cocr_types.hpp"
 #include "opencv_util/opencv_util.hpp"
+
+#ifdef USE_OPENCV_DNN
+
+#include "../ocr_impl/object_detector_opencv_impl.hpp"
+
+#else
+
+#include "../ocr_impl/object_detector_ncnn_impl.hpp"
+
+#endif
 
 #include <opencv2/imgproc.hpp>
 
@@ -16,7 +25,7 @@ cv::Mat cocr::ObjectDetector::preProcess(const cv::Mat &_src) {
     int w = _src.cols, h = _src.rows;
     if (w > maxWidth || h > maxHeight) {
         float kw = static_cast<float >(maxWidth) / w, kh = static_cast<float >(maxHeight) / h;
-        float k = std::min(kw, kh);
+        float k = (std::min)(kw, kh);
         w *= k;
         h *= k;
     }
@@ -52,5 +61,33 @@ cv::Mat cocr::ObjectDetector::preProcess(const cv::Mat &_src) {
 
 cocr::ObjectDetector::ObjectDetector() : maxHeight(1280), maxWidth(1280) {
 
+}
+
+const char *ncnnDetModel = ":/models/ncnn/det_8/yolo_3l_c8.bin";
+const char *ncnnDetModelCfg = ":/models/ncnn/det_8/yolo_3l_c8.param";
+
+const char *ocvDetModel = ":/models/darknet/det_8/yolo-3l-c8.weights";
+const char *ocvDetModelCfg = ":/models/darknet/det_8/yolo-3l-c8.cfg";
+
+std::shared_ptr<cocr::ObjectDetector> cocr::ObjectDetector::MakeInstance() {
+#ifdef USE_OPENCV_DNN
+    auto detector = std::make_shared<cocr::ObjectDetectorOpenCVImpl>();
+    detector->setConfThresh(0.25);
+    detector->setIouThresh(0.45);
+    if (!detector->initModel(ocvDetModelCfg, ocvDetModel)) {
+        std::cerr << "fail to init opencv detector" << std::flush;
+        detector->freeModel();
+        return nullptr;
+    }
+#else
+    auto detector = std::make_shared<cocr::ObjectDetectorNcnnImpl>();
+    detector->setNumThread(4);
+    if (!detector->initModel(ncnnDetModel, ncnnDetModelCfg, 1280)) {
+        std::cerr << "fail to init ncnn detector" << std::flush;
+        detector->freeModel();
+        return nullptr;
+    }
+#endif
+    return detector;
 }
 

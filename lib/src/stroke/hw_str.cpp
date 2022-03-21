@@ -123,7 +123,7 @@ HwCharType HwStr::decideHwCharType(const std::string &_text) {
 
 void HwStr::loadRichText(const std::vector<std::string> &_unlabeledText) {
     floatX = 0;
-    for (auto &text:_unlabeledText) {
+    for (auto &text: _unlabeledText) {
         auto it = sTextMap.find(text);
         if (sTextMap.end() == it) {
             pushCommon(text, decideHwCharType(text));
@@ -148,7 +148,7 @@ void HwStr::loadElement(const ElementType &_elementType) {
 void HwStr::loadPlainText(const std::string &_plainText) {
     floatX = 0;
     label = DetectorClasses::ItemHorizontalStr;
-    for (auto &character:_plainText) {
+    for (auto &character: _plainText) {
         pushCommon(std::string(1, character));
     }
 }
@@ -159,7 +159,7 @@ HwStr::HwStr(const ElementType &_elementType) {
 
 void HwStr::loadRichACSII(const std::string &_text) {
     std::vector<std::string> text;
-    for (auto &character:_text) {
+    for (auto &character: _text) {
         text.push_back(std::string(1, character));
     }
     loadRichText(text);
@@ -215,7 +215,7 @@ void HwStr::equalize(const float &_width) {
     auto rect = getBoundingBox().value();
     float w = _width;
     std::vector<cv::Rect2f> rectVec;
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         auto rect0 = script.getBoundingBox().value();
         w -= rect0.width;
         rectVec.push_back(rect0);

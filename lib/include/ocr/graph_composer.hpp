@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_ocr_export.h>
 
 #include "chem/jmol.hpp"

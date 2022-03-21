@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_stroke_export.h>
 #include "base/cocr_types.hpp"
 

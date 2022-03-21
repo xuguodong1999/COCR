@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_chem_export.h>
 #include "chem/atom.hpp"
 #include "chem/bond.hpp"

@@ -154,7 +154,7 @@ void MolOp::randomize(
         auto atom = mol->getAtomById(_aid);
         bool allowThisWedge = true;
         if (neighborAtomsMap[_aid].size() == 4 && ElementType::C == atom->getElementType()) {
-            for (auto &nid:neighborAtomsMap[_aid]) {
+            for (auto &nid: neighborAtomsMap[_aid]) {
                 if (!allowWedge[nid]) {
                     allowThisWedge = false;
                     break;
@@ -163,12 +163,12 @@ void MolOp::randomize(
             if (allowThisWedge) {
                 allowWedge[_aid] = false;
                 std::vector<std::shared_ptr<JBond>> bonds;
-                for (auto &bid:neighborBondsMap[_aid]) {
+                for (auto &bid: neighborBondsMap[_aid]) {
                     bonds.push_back(mol->getBondById(bid));
                 }
                 // 优先为 C-H 键加构型
                 int okNeighbor = 0;
-                for (auto &bond:bonds) {
+                for (auto &bond: bonds) {
                     if (okNeighbor == 2) {
                         break;
                     }
@@ -278,7 +278,7 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                     mol->addAtom(6), mol->addAtom(6)
             };
             std::unordered_set<size_t> atomInRing, bondInRing;
-            for (auto &atom:newAtoms) {
+            for (auto &atom: newAtoms) {
                 atomInRing.insert(atom->getId());
             }
             aromaticRingAids.push_back({std::move(atomInRing)});
@@ -294,7 +294,7 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                     mol->addBond(newAtoms[3]->getId(), newAtoms[4]->getId(),
                                  JBondType::DoubleBond)
             };
-            for (auto &bond:newBonds) {
+            for (auto &bond: newBonds) {
                 bondInRing.insert(bond->getId());
             }
             aromaticRingBids.push_back({std::move(bondInRing)});
@@ -316,7 +316,7 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                     mol->addAtom(randSelect(atomicNumbers))
             };
             std::unordered_set<size_t> atomInRing, bondInRing;
-            for (auto &atom:newAtoms) {
+            for (auto &atom: newAtoms) {
                 atomInRing.insert(atom->getId());
             }
             aromaticRingAids.push_back({std::move(atomInRing)});
@@ -336,7 +336,7 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                     mol->addBond(newAtoms[4]->getId(), newAtoms[5]->getId(),
                                  JBondType::SingleBond)
             };
-            for (auto &bond:newBonds) {
+            for (auto &bond: newBonds) {
                 bondInRing.insert(bond->getId());
             }
             aromaticRingBids.push_back({std::move(bondInRing)});
@@ -383,11 +383,11 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                     {6, 7},
                     {8, 9}
             };
-            for (auto&[a1, a2]:sBond) {
+            for (auto&[a1, a2]: sBond) {
                 newBonds.push_back(mol->addBond(newAtoms[a1 - 1]->getId(),
                                                 newAtoms[a2 - 1]->getId()));
             }
-            for (auto&[a1, a2]:dBond) {
+            for (auto&[a1, a2]: dBond) {
                 newBonds.push_back(mol->addBond(newAtoms[a1 - 1]->getId(),
                                                 newAtoms[a2 - 1]->getId(),
                                                 JBondType::DoubleBond));
@@ -441,11 +441,11 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                     {8,  14},
                     {9,  11}
             };
-            for (auto&[a1, a2]:sBond) {
+            for (auto&[a1, a2]: sBond) {
                 newBonds.push_back(mol->addBond(newAtoms[a1 - 1]->getId(),
                                                 newAtoms[a2 - 1]->getId()));
             }
-            for (auto&[a1, a2]:dBond) {
+            for (auto&[a1, a2]: dBond) {
                 newBonds.push_back(mol->addBond(newAtoms[a1 - 1]->getId(),
                                                 newAtoms[a2 - 1]->getId(),
                                                 JBondType::DoubleBond));
@@ -498,11 +498,11 @@ void MolOp::addAromaticRing(const size_t &_bid) {
                     {9,  10},
                     {11, 12}
             };
-            for (auto&[a1, a2]:sBond) {
+            for (auto&[a1, a2]: sBond) {
                 newBonds.push_back(mol->addBond(newAtoms[a1 - 1]->getId(),
                                                 newAtoms[a2 - 1]->getId()));
             }
-            for (auto&[a1, a2]:dBond) {
+            for (auto&[a1, a2]: dBond) {
                 newBonds.push_back(mol->addBond(newAtoms[a1 - 1]->getId(),
                                                 newAtoms[a2 - 1]->getId(),
                                                 JBondType::DoubleBond));
@@ -735,7 +735,7 @@ void MolOp::removeBond(const size_t &_bid) {
 }
 
 void MolOp::updateAtomValenceMap(const std::vector<std::shared_ptr<JBond>> &_bonds) {
-    for (auto &bond:_bonds) {
+    for (auto &bond: _bonds) {
         addValence4Atom(bond->getAtomFrom(), bond->asValence());
         addValence4Atom(bond->getAtomTo(), bond->asValence());
     }

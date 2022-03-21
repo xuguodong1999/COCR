@@ -98,7 +98,7 @@ void SketchWidget::sync() {
     bufPixmap.fill(*mBgColor);
     if (!currentScript.empty()) {
         beginPenDraw();
-        for (auto &pts : currentScript) {
+        for (auto &pts: currentScript) {
             if (pts.size() > 1) {
                 for (size_t i = 1; i < pts.size(); i++) {
                     painter.drawLine(pts[i - 1], pts[i]);

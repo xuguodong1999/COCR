@@ -1,4 +1,5 @@
 #pragma once
+
 #include "chem/jatom.hpp"
 #include "chem/jbond.hpp"
 #include <unordered_set>
@@ -128,4 +129,4 @@ namespace cocr {
 }
 
 // define it in specific impl
-std::vector<std::string> GetWritableFormats();
+COCR_CHEM_EXPORT std::vector<std::string> GetWritableFormats();

@@ -243,7 +243,7 @@ cocr::JAtom::JAtom(const size_t &_id, const ElementType &_element, const float &
 }
 
 cocr::JAtom::JAtom(const size_t &_id, const std::string &_name,
-                  const float &_x0, const float &_y0, const float &_x1, const float &_y1)
+                   const float &_x0, const float &_y0, const float &_x1, const float &_y1)
         : id(_id), mIsImplicit(false), type(ElementType::SA), x((_x0 + _x1) / 2), y((_y0 + _y1) / 2),
           x0(_x0), y0(_y0), x1(_x1), y1(_y1), xx(0), yy(0), zz(0), charge(0), name(_name), mIsLeftToRight(false) {
 
@@ -296,7 +296,7 @@ static std::unordered_map<ElementType, ColorName> colorMap = {
 ColorName cocr::getAtomColor(const ElementType &_element) {
     auto it = colorMap.find(_element);
     if (colorMap.end() == it) {
-        return  ColorName::rgbPink;
+        return ColorName::rgbPink;
     }
     return it->second;
 }

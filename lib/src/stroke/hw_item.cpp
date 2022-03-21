@@ -2,7 +2,7 @@
 
 void HwItem::setHwController(HwController &_hwController) {
     hwController = &_hwController;
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         script.setHwController(*hwController);
     }
 }
@@ -16,7 +16,7 @@ void HwItem::push_back(HwScript &&_script) {
 }
 
 void HwItem::keepIf(const std::function<bool(const cv::Point2f &)> &_cond) {
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         script.keepIf(_cond);
     }
 }
@@ -28,7 +28,7 @@ HwItem::HwItem(HwController *_hwController) : hwController(_hwController) {
 }
 
 void HwItem::paintTo(cv::Mat &_canvas) const {
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         script.paintTo(_canvas);
     }
 }
@@ -38,7 +38,7 @@ std::optional<cv::Rect2f> HwItem::getBoundingBox() const {
     float minx, miny, maxx, maxy;
     minx = miny = std::numeric_limits<float>::max();
     maxx = maxy = std::numeric_limits<float>::lowest();
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         auto bbox = script.getBoundingBox();
         if (!bbox)continue;
         minx = std::min(minx, bbox->x);
@@ -51,26 +51,26 @@ std::optional<cv::Rect2f> HwItem::getBoundingBox() const {
 }
 
 void HwItem::rotateBy(float _angle, const cv::Point2f &_cent) {
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         script.rotateBy(_angle, _cent);
     }
 }
 
 void HwItem::moveBy(const cv::Point2f &_offset) {
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         script.moveBy(_offset);
     }
 }
 
 void HwItem::mulK(float _kx, float _ky) {
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         script.mulK(_kx, _ky);
     }
 }
 
 HwScript HwItem::asScript() const {
     HwScript hwScript;
-    for (auto &script:mData) {
+    for (auto &script: mData) {
         hwScript.append(script);
     }
     return std::move(hwScript);

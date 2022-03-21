@@ -1,10 +1,9 @@
 #include "ocr/text_corrector.hpp"
-
+#include "chem/jatom.hpp" // extern std::vector<std::string> ELEMENT_NAME_LIST;
 #include <vector>
 #include <algorithm>
 
 namespace cocr {
-    extern std::vector<std::string> ELEMENT_NAME_LIST;
 
     std::string replaceSubStr(const std::string &_target,
                               const std::string &_subStr, const std::string &_newSubStr) {
@@ -60,12 +59,12 @@ std::string cocr::TextCorrector::correct(const std::string &_text) {
     result = cocr::replaceSubStr(result, "CeO", "COO");
     result = cocr::replaceSubStr(result, "eOO", "_OO");
     int lb = 0, rb = 0;
-    for (auto &c:result) {
+    for (auto &c: result) {
         if (c == '(') { ++lb; } else if (c == ')') { ++rb; }
     }
     if (lb < rb) {
         int delta = rb - lb;
-        for (auto &c:result) {
+        for (auto &c: result) {
             if (c == 'C') {
                 c = '(';
                 if (!--delta) { break; }
@@ -73,7 +72,7 @@ std::string cocr::TextCorrector::correct(const std::string &_text) {
         }
     } else if (lb > rb) {
         int delta = lb - rb;
-        for (auto &c:result) {
+        for (auto &c: result) {
             if (c == '(') {
                 c = 'C';
                 if (!--delta) { break; }
@@ -108,7 +107,7 @@ std::vector<std::string> cocr::TextCorrector::similarChar = {
 };
 
 void cocr::TextCorrector::InitData() {
-    for (auto &sim:similarChar) {
+    for (auto &sim: similarChar) {
         for (size_t i = 0; i < sim.length(); i++) {
             for (size_t j = i + 1; j < sim.length(); j++) {
                 char a = sim[i], b = sim[j];

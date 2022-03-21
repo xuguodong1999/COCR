@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QThread>
 #include <memory>
 #include <QPointF>

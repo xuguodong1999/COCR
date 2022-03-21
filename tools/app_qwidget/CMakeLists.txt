@@ -15,14 +15,6 @@ if (NOT ANDROID) # do it in root/CMakeLists.txt
 endif ()
 find_package(OpenCV REQUIRED)
 
-find_package(ncnn REQUIRED)
-# ncnn has not put its include directory in cmake config yet
-include_directories(${ncnn_DIR}/../../../include)
-if (ANDROID)
-    # override no rtti and exceptions in ncnn
-    set_target_properties(ncnn PROPERTIES INTERFACE_COMPILE_OPTIONS "-fexceptions")
-endif ()
-
 # notice that qm file is generated through cmake job
 set(TS_FILES ${DEV_ASSETS_DIR}/leafxy_zh_CN.ts)
 qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
@@ -34,7 +26,6 @@ if (USE_OPENVINO)
 endif (USE_OPENVINO)
 
 if (USE_OPENCV_DNN)
-    add_definitions(-DUSE_OPENCV_DNN)
     qt5_add_big_resources(MODEL_QRC ${DEV_ASSETS_DIR}/leafxy_ocv_dnn.qrc)
 else ()
     qt5_add_big_resources(MODEL_QRC ${DEV_ASSETS_DIR}/leafxy_ncnn.qrc)
@@ -88,26 +79,17 @@ target_link_libraries(${APP_NAME} PRIVATE
         cocr::chem
         cocr::base
         cocr::ocr
-        cocr::ncnn_crnn
         cocr::opencv_util
         openbabel
         coordgenlibs
-        ncnn
         opencv_core
         opencv_imgproc
         opencv_highgui
         ${QT_COMPONENT_TARGETS})
 
-# on desktop, USE opencv_dnn instead of ncnn
-if (USE_OPENCV_DNN)
-    target_link_libraries(${APP_NAME} PRIVATE cocr::ocv_yolo)
-else ()
-    target_link_libraries(${APP_NAME} PRIVATE cocr::ncnn_yolo)
-endif ()
-
 if (MSVC)
     # remove cmd for windows release
     set_target_properties(${APP_NAME} PROPERTIES WIN32_EXECUTABLE YES LINK_FLAGS "/ENTRY:mainCRTStartup")
 elseif (WASM)
-    copyQtWasmTemplates("${CMAKE_CURRENT_SOURCE_DIR}/wasm/*" "${APP_NAME}" "${CMAKE_CURRENT_BINARY_DIR}")
+    copyQtWasmTemplates("${DEV_ASSETS_DIR}/wasm/*" "${APP_NAME}" "${CMAKE_CURRENT_BINARY_DIR}")
 endif ()

@@ -102,13 +102,13 @@ JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false), idBase(0),
 }
 
 void JMol::loopAtomVec(std::function<void(JAtom &)> _func) {
-    for (auto &[aid, atom]:atomMap) {
+    for (auto &[aid, atom]: atomMap) {
         if (atom) { _func(*atom); }
     }
 }
 
 void JMol::loopBondVec(std::function<void(JBond &)> _func) {
-    for (auto &[bid, bond]:bondMap) {
+    for (auto &[bid, bond]: bondMap) {
         if (bond) { _func(*bond); }
     }
 }
@@ -123,17 +123,17 @@ std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
 void JMol::display() {
     onExtraDataNeeded();
     loopAtomVec([&](JAtom &atom) {
-//        qDebug() << atom.getId() << ":" << atom.getName().c_str();
+        std::cerr << atom.getId() << ":" << atom.getName().c_str();
         if (is2DInfoLatest) {
-//            qDebug() << "2d(" << atom.x << "," << atom.y << ")";
+            std::cerr << "2d(" << atom.x << "," << atom.y << ")";
         }
         if (is3DInfoLatest) {
-//            qDebug() << "3d(" << atom.xx << "," << atom.yy << atom.zz << ")";
+            std::cerr << "3d(" << atom.xx << "," << atom.yy << atom.zz << ")";
         }
     });
     loopBondVec([&](JBond &bond) {
-//        qDebug() << bond.getId() << ":" << bond.getBondOrder() << ","
-//                 << bond.getFrom()->getId() << "-" << bond.getTo()->getId();
+        std::cerr << bond.getId() << ":" << bond.getBondOrder() << ","
+                  << bond.getFrom()->getId() << "-" << bond.getTo()->getId();
     });
 }
 
@@ -181,9 +181,9 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
 
 void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
                   const float &_x, const float &_y, const float &_z, bool keepRatio) {
-//    qDebug() << __FUNCTION__;
+    std::cerr << __FUNCTION__;
     if (!is3DInfoLatest) {
-//        qDebug() << __FUNCTION__ << "generate3D=" << generate3D();
+        std::cerr << __FUNCTION__ << "generate3D=" << generate3D();
     }
     float minx, miny, minz, maxx, maxy, maxz;
     minx = miny = minz = std::numeric_limits<float>::max();
@@ -199,7 +199,7 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
     float kx = (_xx - _x * 2) / (maxx - minx), ky = (_yy - _y * 2) / (maxy - miny), kz = (_zz - _z * 2) / (maxz - minz);
     float dx = (minx + maxx) / 2, dy = (miny + maxy) / 2, dz = (minz + maxz) / 2;
     if (keepRatio) {
-        float k = std::min(kx, std::min(ky, kz));
+        float k = (std::min)(kx, (std::min)(ky, kz));
         loopAtomVec([&](JAtom &_atom) {
             _atom.xx = (_atom.xx - dx) * k + _x;
             _atom.yy = (_atom.yy - dy) * k + _y;
@@ -215,10 +215,10 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
 }
 
 float JMol::getAvgBondLength() {
-//    qDebug() << __FUNCTION__;
+    std::cerr << __FUNCTION__;
     if (bondMap.empty()) { return 0; }
     if (!is3DInfoLatest) {
-//        qDebug() << __FUNCTION__ << "generate3D=" << generate3D();
+        std::cerr << __FUNCTION__ << "generate3D=" << generate3D();
     }
     float avgBondLength = 0;
     loopBondVec([&](JBond &bond) {
@@ -294,10 +294,10 @@ void JMol::addAllHydrogens() {
 
 void JMol::loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<JAtom>)> _func) {
     std::vector<std::shared_ptr<JAtom>> currentAtomPtr;
-    for (auto &[aid, atom]:atomMap) {
+    for (auto &[aid, atom]: atomMap) {
         currentAtomPtr.push_back(atom);
     }
-    for (auto &atom:currentAtomPtr) {
+    for (auto &atom: currentAtomPtr) {
         if (atom) { _func(atom); }
     }
 }
@@ -375,7 +375,7 @@ int JMol::getNumHydrogen(const id_type &_aid) {
             }
         }
     }
-//    qDebug() << atom->getQName() << numHs;
+    std::cerr << atom->getName() << numHs;
     return numHs;
 }
 

@@ -10,13 +10,21 @@ class WelcomeWidget;
 class PaintWidget;
 
 class View2DWidget;
+
 #ifndef Q_OS_WASM
+
 class View3DWidget;
+
 #endif
+
 class ImageWidget;
+
 #if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
+
 class CameraWidget;
+
 #endif
+
 class OCRThread;
 
 class QHBoxLayout;
@@ -73,16 +81,22 @@ private:
     void safeAttach2DWidget();
 
     void safeDelete2DWidget();
+
 #ifndef Q_OS_WASM
+
     void safeAttach3DWidget();
 
     void safeDelete3DWidget();
+
 #endif
 #if !defined(Q_OS_WASM) && !defined(Q_OS_ANDROID)
+
     // 拍照窗体存在跨平台兼容问题，也是懒加载
     void safeAttachCamWidget();
 
     void safeDeleteCamWidget();
+
 #endif
+
     void setRecentlyUsedViewer(bool is2D);
 };

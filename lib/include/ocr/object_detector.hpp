@@ -26,12 +26,14 @@ namespace cocr {
          */
         virtual cv::Mat preProcess(const cv::Mat &_src);
 
-    public:
         ObjectDetector();
 
+    public:
         virtual void freeModel() = 0;
 
         virtual std::pair<cv::Mat, std::vector<DetectorObject>>
         detect(const cv::Mat &_originImage) = 0;
+
+        static std::shared_ptr<ObjectDetector> MakeInstance();
     };
 }

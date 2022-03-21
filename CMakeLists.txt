@@ -14,6 +14,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 # data_gen for handwriting ocsr job
 option(BUILD_DATA_GEN "Generate data for yolo and crnn training" ON)
 # backend for yolo and crnn in app
+# on desktop, USE opencv_dnn instead of ncnn
 option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" ON)
 # libtorch playground
 option(BUILD_ELS_LAB "Libtorch is required to build cpp train" OFF)

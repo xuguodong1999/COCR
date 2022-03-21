@@ -39,8 +39,8 @@ void JMol::clear() {
 void JMol::safeTraverseBonds(const std::function<void(const size_t &)> &func) const {
     std::vector<size_t> bids;
     bids.reserve(bondsMap.size());
-    for (auto&[id, _]:bondsMap) bids.push_back(id);
-    for (auto &bid:bids) func(bid);
+    for (auto&[id, _]: bondsMap) bids.push_back(id);
+    for (auto &bid: bids) func(bid);
 }
 
 void JMol::setAlkane(const std::string &_alkaneSMILES) {
@@ -74,8 +74,8 @@ void JMol::setAlkane(const std::string &_alkaneSMILES) {
 void JMol::safeTraverseAtoms(const std::function<void(const size_t &)> &func) const {
     std::vector<size_t> aids;
     aids.reserve(atomsMap.size());
-    for (auto&[id, _]:atomsMap) aids.push_back(id);
-    for (auto &aid:aids) func(aid);
+    for (auto&[id, _]: atomsMap) aids.push_back(id);
+    for (auto &aid: aids) func(aid);
 }
 
 std::shared_ptr<JAtom> JMol::getAtomById(const size_t &_aid) const {
@@ -120,8 +120,8 @@ std::shared_ptr<JMol> JMol::clone() const {
 void JMol::safeTraverseBondsBreakIf(const std::function<bool(const size_t &)> &func) const {
     std::vector<size_t> bids;
     bids.reserve(bondsMap.size());
-    for (auto&[id, _]:bondsMap) bids.push_back(id);
-    for (auto &bid:bids) {
+    for (auto&[id, _]: bondsMap) bids.push_back(id);
+    for (auto &bid: bids) {
         if (!func(bid))return;
     }
 }
@@ -129,8 +129,8 @@ void JMol::safeTraverseBondsBreakIf(const std::function<bool(const size_t &)> &f
 void JMol::safeTraverseAtomsBreakIf(const std::function<bool(const size_t &)> &func) const {
     std::vector<size_t> aids;
     aids.reserve(atomsMap.size());
-    for (auto&[id, _]:atomsMap) aids.push_back(id);
-    for (auto &aid:aids) {
+    for (auto&[id, _]: atomsMap) aids.push_back(id);
+    for (auto &aid: aids) {
         if (!func(aid))return;
     }
 }

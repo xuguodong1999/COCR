@@ -96,7 +96,7 @@ void MultiCylinderWrapper::setId(const size_t &_id) {
 }
 
 void MultiCylinderWrapper::loopMultiWrappers(std::function<void(CylinderWrapper &)> _func) {
-    for (auto &cylinder:cylinders) {
+    for (auto &cylinder: cylinders) {
         if (!cylinder) { continue; }
         _func(*cylinder);
     }

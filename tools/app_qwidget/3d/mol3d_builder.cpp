@@ -86,7 +86,7 @@ void Mol3DBuilder::build() {
         auto collect_neb_pos = [&](const size_t &aid) {
             auto it = neighborMap.find(aid);
             if (it == neighborMap.end()) { return; }
-            for (auto &neb_id:it->second) {
+            for (auto &neb_id: it->second) {
                 auto nebIt = aids.find(neb_id);
                 if (aids.end() != nebIt) { continue; }
                 aids.insert(neb_id);
@@ -101,10 +101,10 @@ void Mol3DBuilder::build() {
             auto collect_neb_2_pos = [&](const size_t &aid) {
                 auto it = neighborMap.find(aid);
                 if (it == neighborMap.end()) { return; }
-                for (auto &neb_id:it->second) {
+                for (auto &neb_id: it->second) {
                     auto it2 = neighborMap.find(neb_id);
                     if (it2 == neighborMap.end()) { continue; }
-                    for (auto &neb_2_id:it2->second) {
+                    for (auto &neb_2_id: it2->second) {
                         auto nebIt = aids.find(neb_2_id);
                         if (aids.end() != nebIt) { continue; }
                         aids.insert(neb_2_id);

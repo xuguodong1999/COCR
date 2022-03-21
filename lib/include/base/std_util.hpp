@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_base_export.h>
 #include <string>
 #include <vector>
@@ -20,7 +21,7 @@ COCR_BASE_EXPORT std::string trim(const std::string &str);
 COCR_BASE_EXPORT std::string deleteSubStr(const std::string &_target, const std::string &_subStr);
 
 COCR_BASE_EXPORT std::string replaceSubStr(const std::string &_target,
-                          const std::string &_subStr, const std::string &_newSubStr);
+                                           const std::string &_subStr, const std::string &_newSubStr);
 
 COCR_BASE_EXPORT extern std::default_random_engine DRE;
 COCR_BASE_EXPORT extern std::uniform_int_distribution<int> UID;
@@ -91,7 +92,7 @@ inline const char &randSelect(const std::string &_container) {
 template<typename T>
 inline T getSum(const std::vector<T> &_container) {
     T t = 0;
-    for (auto &c:_container) {
+    for (auto &c: _container) {
         t += c;
     }
     return std::move(t);

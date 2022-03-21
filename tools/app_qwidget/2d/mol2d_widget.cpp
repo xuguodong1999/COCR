@@ -19,7 +19,7 @@ Mol2DWidget::Mol2DWidget(QWidget *parent) : GestureView(parent) {
 inline static QString getRichText(const std::string &_text) {
     // TODO: 细化实现
     QString str = "<h1>";
-    for (auto &c:_text) {
+    for (auto &c: _text) {
         switch (c) {
             case '_':
                 str.append("<sup>㊀</sup>");

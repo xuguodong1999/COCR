@@ -28,7 +28,7 @@ std::optional<cv::Rect2f> HwStroke::getBoundingBox() const {
     float minx, miny, maxx, maxy;
     minx = miny = std::numeric_limits<float>::max();
     maxx = maxy = std::numeric_limits<float>::lowest();
-    for (auto &pt:mData) {
+    for (auto &pt: mData) {
         minx = std::min(minx, pt.x);
         miny = std::min(miny, pt.y);
         maxx = std::max(maxx, pt.x);
@@ -40,7 +40,7 @@ std::optional<cv::Rect2f> HwStroke::getBoundingBox() const {
 void HwStroke::rotateBy(float _angle, const cv::Point2f &_cent) {
     float theta = -M_PI * _angle / 180;
     float x, y;
-    for (auto &pt:mData) {
+    for (auto &pt: mData) {
         x = (pt.x - _cent.x) * std::cos(theta) + (pt.y - _cent.y) * std::sin(theta) + _cent.x;
         y = (pt.y - _cent.y) * std::cos(theta) - (pt.x - _cent.x) * std::sin(theta) + _cent.y;
         pt.x = x;
@@ -50,12 +50,12 @@ void HwStroke::rotateBy(float _angle, const cv::Point2f &_cent) {
 
 
 void HwStroke::moveBy(const cv::Point2f &_offset) {
-    for (auto &pt:mData) pt += _offset;
+    for (auto &pt: mData) pt += _offset;
 }
 
 
 void HwStroke::mulK(float _kx, float _ky) {
-    for (auto &pt:mData) {
+    for (auto &pt: mData) {
         pt.x *= _kx;
         pt.y *= _ky;
     }
@@ -74,7 +74,7 @@ void HwStroke::push_back(const cv::Point2f &_pt) {
 
 void HwStroke::keepIf(const std::function<bool(const cv::Point2f &)> &_cond) {
     decltype(mData) newData;
-    for (auto &pt:mData) {
+    for (auto &pt: mData) {
         if (_cond(pt)) {
             newData.push_back(pt);
         }

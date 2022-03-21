@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QWidget>
 #include <QGestureEvent>
 

@@ -14,7 +14,7 @@ View3DWidget::View3DWidget(QWidget *parent)
     BaseEntity::SetView3DWidget(this);
 
     auto formatVec = GetWritableFormats();
-    for (auto &format:formatVec) {
+    for (auto &format: formatVec) {
         if (std::string::npos != format.find("Read-only")) { continue; }
         auto suffix = format.substr(0, format.find(" "));
         if (!cocr::JMol::IsValidWritableFormat(suffix)) { continue; }

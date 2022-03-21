@@ -22,14 +22,14 @@ using namespace std;
 CRNNDataGenerator crnnDataGenerator;
 
 void HwMol::paintTo(cv::Mat &canvas) const {
-    for (auto &sym:mData) {
+    for (auto &sym: mData) {
         sym->paintTo(canvas);
     }
 }
 
 void HwMol::rotateBy(float angle, const cv::Point2f &cent) {
     // 骨架直接旋转，字符只做平移
-    for (auto &sym:mData) {
+    for (auto &sym: mData) {
         sym->rotateBy(angle, cent);
         if (sym->isDirectionKept()) {
             sym->rotate(-angle);
@@ -39,14 +39,14 @@ void HwMol::rotateBy(float angle, const cv::Point2f &cent) {
 
 
 void HwMol::mulK(float kx, float ky) {
-    for (auto &s:mData) {
+    for (auto &s: mData) {
         s->mulK(kx, ky);
     }
 }
 
 void HwMol::setHwController(HwController &_hwController) {
     hwController = &_hwController;
-    for (auto &sym:mData) {
+    for (auto &sym: mData) {
         sym->setHwController(*hwController);
     }
 }
@@ -56,7 +56,7 @@ std::optional<cv::Rect2f> HwMol::getBoundingBox() const {
     float minx, miny, maxx, maxy;
     minx = miny = std::numeric_limits<float>::max();
     maxx = maxy = std::numeric_limits<float>::lowest();
-    for (auto &stroke:mData) {
+    for (auto &stroke: mData) {
         auto bbox = stroke->getBoundingBox();
         if (!bbox)continue;
         minx = std::min(minx, bbox->x);
@@ -88,8 +88,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         sym->setKeepDirection(true);
         float fontSize = avgBondLength * betweenProb(0.2, 0.6);
         sym->resizeTo(fontSize, fontSize);
-        const auto&[x,y]=mol2d->getPos2D(_aid);
-        sym->moveCenterTo({x,y});
+        const auto&[x, y]=mol2d->getPos2D(_aid);
+        sym->moveCenterTo({x, y});
         if (ElementType::C == atom->getElementType()) {
             explicitAtomMap[_aid] = byProb(_explicitCarbonProb);
         } else {
@@ -105,11 +105,11 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
 
     std::vector<std::unordered_set<size_t>> kekuleRings;// 记录画圈圈的化学键id
     std::unordered_set<size_t> bondInKekuleRings;// 记录画圈圈的化学键id，用于快速查找
-    for (auto &aromaticStruct:bondInRing) {
+    for (auto &aromaticStruct: bondInRing) {
         if (byProb(0.8)) {
-            for (auto &ring:aromaticStruct) {
+            for (auto &ring: aromaticStruct) {
                 kekuleRings.push_back(ring);// 深拷贝
-                for (auto &bid:ring) {
+                for (auto &bid: ring) {
                     bondInKekuleRings.insert(bid);
                 }
             }
@@ -128,11 +128,11 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         atomBondMap[bond->getAtomTo()].insert(_bid);
     };
     mol->safeTraverseBonds(init_ab_map);
-    for (auto&[aid, bidSet]:atomBondMap) {
+    for (auto&[aid, bidSet]: atomBondMap) {
         if (bidSet.size() != 2 || explicitAtomMap[aid])
             continue;
         std::vector<size_t> tmp;
-        for (auto &bid:bidSet) {
+        for (auto &bid: bidSet) {
             tmp.push_back(bid);
         }
         if (mol->getBondById(tmp[0])->getBondType() != JBondType::SingleBond)
@@ -153,11 +153,11 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         auto sym = HwBond::GetHwBond(bondType);
 //        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
 //        sym->setUseHandWrittenWChar(true);
-        const auto& [fromX,fromY] = mol2d->getPos2D(bond->getAtomFrom());
-        const auto& [toX,toY] = mol2d->getPos2D(bond->getAtomTo());
-        cv::Point2f from,to,from_,to_;
-        from=from_={fromX,fromY};
-        to=to_={toX,toY};
+        const auto&[fromX, fromY] = mol2d->getPos2D(bond->getAtomFrom());
+        const auto&[toX, toY] = mol2d->getPos2D(bond->getAtomTo());
+        cv::Point2f from, to, from_, to_;
+        from = from_ = {fromX, fromY};
+        to = to_ = {toX, toY};
         const float k = 0.3;
         if (explicitAtomMap[bond->getAtomFrom()]) {
             from = (1 - k) * (from_ - to_) + to_;
@@ -173,25 +173,25 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     };
     mol->safeTraverseBonds(add_bond_item);
     // 加环
-    for (auto &ring:kekuleRings) {
+    for (auto &ring: kekuleRings) {
         auto sym = HwBond::GetHwBond(JBondType::CircleBond);
 //        auto sym = BondItem::GetBond(JBondType::CircleBond);
         std::vector<cv::Point2f> pts;
         std::unordered_set<size_t> aids;
-        for (auto &bid:ring) {
+        for (auto &bid: ring) {
             auto bond = mol->getBondById(bid);
             aids.insert(bond->getAtomFrom());
             aids.insert(bond->getAtomTo());
         }
-        for (auto &aid:aids) {
-            const auto&[x,y]=mol2d->getPos2D(aid);
-            pts.push_back({x,y});
+        for (auto &aid: aids) {
+            const auto&[x, y]=mol2d->getPos2D(aid);
+            pts.push_back({x, y});
         }
         sym->setVertices(pts);
         mData.push_back(std::move(sym));
     }
     avgSize = 0;
-    for (auto &sym:mData) {
+    for (auto &sym: mData) {
         auto bBox = sym->getBoundingBox();
         if (!bBox)continue;
         avgSize += std::max(bBox->width, bBox->height);
@@ -201,7 +201,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     // 添加弧线转折
 //    std::cout << "lineBondMap.size()=" << lineBondMap.size() << std::endl;
 //    std::cout << "avgBondLength=" << avgSize << std::endl;
-    for (auto&[bid1, bid2]:lineBondMap) {
+    for (auto&[bid1, bid2]: lineBondMap) {
         auto item1 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid1]]);
         auto item2 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid2]]);
         size_t aid;
@@ -210,7 +210,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
                                     mol->getBondById(bid1)->getAtomTo(),
                                     mol->getBondById(bid2)->getAtomFrom(),
                                     mol->getBondById(bid2)->getAtomTo()};
-        for (auto &id:aids) {
+        for (auto &id: aids) {
             if (notExist(tmp, id)) {
                 tmp.insert(id);
             } else {
@@ -219,8 +219,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
             }
         }
         // aid is angle atom
-        const auto&[x,y]=mol2d->getPos2D(aid);
-        const cv::Point2f A = {x,y};
+        const auto&[x, y]=mol2d->getPos2D(aid);
+        const cv::Point2f A = {x, y};
 //        std::cout << "A=" << A << std::endl;
 //        std::cout << "bbox1=" << item1->getBoundingBox().value() << std::endl;
 //        std::cout << "bbox2=" << item2->getBoundingBox().value() << std::endl;
@@ -399,7 +399,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
             std::cerr << "fail to open " << _labelPath + suffix + ".txt" << std::endl;
             exit(-1);
         }
-        for (auto &sym:target->mData) {
+        for (auto &sym: target->mData) {
             auto name = sym->getItemType();
             auto bBox = sym->getBoundingBox().value();
             bBox.x = bBox.x * k + offsetx;
@@ -410,7 +410,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
             ofsm << fullLabels[name] << " " << centX / fixW << " " << centY / fixH << " "
                  << bBox.width / fixW << " " << bBox.height / fixH << "\n";
         }
-        for (auto &bBox:extraBoxes) {
+        for (auto &bBox: extraBoxes) {
             float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
             ofsm << fullLabels[DetectorClasses::ItemHorizontalStr] << " " << centX / fixW << " " << centY / fixH << " "
                  << bBox.width / fixW << " " << bBox.height / fixH << "\n";
@@ -477,7 +477,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
             fill_rect(free1);
             fill_rect(free2);
         }
-        for (auto &sym:target->mData) {
+        for (auto &sym: target->mData) {
 //            std::cout << fullLabels[sym->getItemType()] << std::endl;
             auto bBox = sym->getBoundingBox().value();
             bBox.x = bBox.x * k + offsetx;
@@ -488,7 +488,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
                 cv::rectangle(resImg, bBox, getScalar(
                         colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
         }
-        for (auto &bBox:extraBoxes) {
+        for (auto &bBox: extraBoxes) {
             if (_showBox)
                 cv::rectangle(resImg, bBox, getScalar(
                         colorIdx((int) DetectorClasses::ItemHorizontalStr)), 1, cv::LINE_AA);
@@ -499,7 +499,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
 }
 
 void HwMol::moveBy(const cv::Point2f &_offset) {
-    for (auto &sym:mData) {
+    for (auto &sym: mData) {
         sym->moveBy(_offset);
     }
 }
@@ -774,11 +774,11 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         atomBondMap[bond->getAtomTo()].insert(_bid);
     };
     mol->safeTraverseBonds(init_ab_map);
-    for (auto&[aid, bidSet]:atomBondMap) {
+    for (auto&[aid, bidSet]: atomBondMap) {
         if (bidSet.size() != 2 || explicitAtomMap[aid])
             continue;
         std::vector<size_t> tmp;
-        for (auto &bid:bidSet) {
+        for (auto &bid: bidSet) {
             tmp.push_back(bid);
         }
         if (mol->getBondById(tmp[0])->getBondType() != JBondType::SingleBond)
@@ -816,7 +816,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         mData.push_back(std::move(sym));
     };
     mol->safeTraverseBonds(add_bond_item);
-    for (auto&[bid1, bid2]:lineBondMap) {
+    for (auto&[bid1, bid2]: lineBondMap) {
         auto item1 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid1]]);
         auto item2 = std::static_pointer_cast<HwSingleBond>(mData[itemBondMap[bid2]]);
         size_t aid;
@@ -825,7 +825,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
                                     mol->getBondById(bid1)->getAtomTo(),
                                     mol->getBondById(bid2)->getAtomFrom(),
                                     mol->getBondById(bid2)->getAtomTo()};
-        for (auto &id:aids) {
+        for (auto &id: aids) {
             if (notExist(tmp, id)) {
                 tmp.insert(id);
             } else {
@@ -908,7 +908,7 @@ void HwMol::showSpecialExample(const size_t &_repeatTimes, bool _showBox) {
 
         auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
         auto&[k, offsetx, offsety]=offset;
-        for (auto &sym:target->mData) {
+        for (auto &sym: target->mData) {
 //            std::cout << fullLabels[sym->getItemType()] << std::endl;
             auto bBox = sym->getBoundingBox().value();
             bBox.x = bBox.x * k + offsetx;

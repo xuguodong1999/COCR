@@ -43,12 +43,12 @@ void HwCircleBond::setVertices(const std::vector<cv::Point2f> &_pts) {
         exit(-1);
     }
     center.x = center.y = 0;
-    for (auto &pt:_pts)
+    for (auto &pt: _pts)
         center += pt;
     center.x /= _pts.size();
     center.y /= _pts.size();
     rx = 0;
-    for (auto &pt:_pts)
+    for (auto &pt: _pts)
         rx += getDistance2D(center, pt);
     rx /= _pts.size();
     // TODO: 分离随即要素
@@ -409,7 +409,7 @@ void HwSolidWedgeBond::paintTo(cv::Mat &_canvas) const {
                     pts[2] = {(int) (_w * down), 0};
                     break;
             }
-            for (auto &pt:pts)pt += cv::Point(_rect.tl());
+            for (auto &pt: pts)pt += cv::Point(_rect.tl());
             cv::fillPoly(_canvas, pts, hwController->getColor(), hwController->getLineType(), hwController->getShift());
         };
         auto rect = getBoundingBox().value();

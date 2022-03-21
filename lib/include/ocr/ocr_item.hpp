@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_ocr_export.h>
 #include "ocr/detector_object.hpp"
 #include "chem/jatom.hpp"

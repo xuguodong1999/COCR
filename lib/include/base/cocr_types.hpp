@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_base_export.h>
 #include "base/fraction.hpp"
 
@@ -50,7 +51,7 @@ enum class AtomStereo {
     S
 };
 
-enum class ColorName:size_t {
+enum class ColorName : size_t {
     rgbSnow = 0, rgbGhostWhite, rgbWhiteSmoke, rgbGainsboro, rgbFloralWhite,
     rgbOldLace, rgbLinen, rgbAntiqueWhite, rgbPapayaWhip, rgbBlanchedAlmond, rgbBisque, rgbPeachPuff,
     rgbNavajoWhite, rgbMoccasin, rgbCornsilk, rgbIvory, rgbLemonChiffon, rgbSeashell, rgbHoneydew,

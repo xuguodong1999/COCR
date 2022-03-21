@@ -1,31 +1,22 @@
 #include "ocr_runnable.hpp"
-#include "ncnn_impl/text_recognizer_ncnn_impl.hpp"
-#include "opencv_util/opencv_util.hpp"
 #include "ocr/text_corrector.hpp"
 #include "ocr/graph_composer.hpp"
+#include "ocr/text_recognizer.hpp"
+#include "ocr/object_detector.hpp"
+
+#include "opencv_util/opencv_util.hpp"
+#include "util.h"
+
+#include <opencv2/highgui.hpp>
+#include <opencv2/core/mat.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/opencv_modules.hpp>
 
 #include <QDebug>
 #include <QDir>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QScreen>
-#include <opencv2/highgui.hpp>
-#include <opencv2/core/mat.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/opencv_modules.hpp>
-
-#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
-
-#include "opencv_dnn_impl/object_detector_opencv_impl.hpp"
-#include "ocr/text_recognizer.hpp"
-#include "ocr/object_detector.hpp"
-//#include "opencv_dnn_impl/text_recognizer_opencv_impl.hpp"// unused, only for performance test
-
-#else
-
-#include "ncnn_impl/object_detector_ncnn_impl.hpp"
-
-#endif
 
 namespace cocr {
     class OCRManager {
@@ -114,7 +105,7 @@ namespace cocr {
 //        cv::dilate(image,image, cv::Mat());
             image = _cvMat;
             copyMakeBorder(image, image, 32, 32, 32, 32, cv::BORDER_CONSTANT, 255);
-            image =  rotateCvMat(image, 2);
+            image = rotateCvMat(image, 2);
         }
 
         void clearImage() {
@@ -234,11 +225,11 @@ void cocr::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat
         std::string info;
         switch (item.type) {
             case OCRItemType::Element: {
-                color = cvColor(ColorName::rgbRed);
+                color = getScalar(ColorName::rgbRed);
                 break;
             }
             case OCRItemType::Group: {
-                color = cvColor(ColorName::rgbBlue);
+                color = getScalar(ColorName::rgbBlue);
                 break;
             }
             case OCRItemType::Line: {
@@ -250,14 +241,14 @@ void cocr::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat
                         {BondType::UpBond,       ColorName::rgbDarkOliveGreen},
                         {BondType::DownBond,     ColorName::rgbDarkKhaki}
                 };
-                color = cvColor(mm[item.getBondType()]);
-                cocr::cross_line(canvas, item.getFrom(), 5, cvColor(ColorName::rgbPink), 2, true);
-                cocr::cross_line(canvas, item.getTo(), 5, cvColor(ColorName::rgbDeepPink), 2, true);
+                color = getScalar(mm[item.getBondType()]);
+                cross_line(canvas, item.getFrom(), 5, getScalar(ColorName::rgbPink), 2, true);
+                cross_line(canvas, item.getTo(), 5, getScalar(ColorName::rgbDeepPink), 2, true);
                 break;
             }
             case OCRItemType::Circle: {
-                color = cvColor(ColorName::rgbBlue);
-                cocr::cross_line(canvas, item.getCenter(), 5, cvColor(ColorName::rgbRed), 2, true);
+                color = getScalar(ColorName::rgbBlue);
+                cross_line(canvas, item.getCenter(), 5, getScalar(ColorName::rgbRed), 2, true);
                 break;
             }
             default: {
@@ -279,46 +270,14 @@ void cocr::OCRManager::display(const std::vector<OCRItem> &_items, const cv::Mat
 OCRThread::OCRThread(QObject *_parent)
         : QThread(_parent) {
     qDebug() << "OCRThread::OCRThread";
-    const char *ncnnTextModel = ":/models/ncnn/text_57/vgg_lstm_57_fp16_mixFont.bin";
-    const char *ncnnTextModelCfg = ":/models/ncnn/text_57/vgg_lstm_57_fp16.param";
-    const char *ncnnDetModel = ":/models/ncnn/det_8/yolo_3l_c8.bin";
-    const char *ncnnDetModelCfg = ":/models/ncnn/det_8/yolo_3l_c8.param";
-    const char *ocvDetModel = ":/models/darknet/det_8/yolo-3l-c8.weights";
-    const char *ocvDetModelCfg = ":/models/darknet/det_8/yolo-3l-c8.cfg";
-/// detector
-#if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
-    static cocr::ObjectDetectorOpenCVImpl detector;
-    if (!detector.initModel(ocvDetModelCfg, ocvDetModel)) {
-        qDebug() << "fail to init opencv detector";
-    }
-    detector.setConfThresh(0.25);
-    detector.setIouThresh(0.45);
-#else
-    static cocr::ObjectDetectorNcnnImpl detector;
-    detector.setNumThread(4);
-    if (!detector.initModel(ncnnDetModel, ncnnDetModelCfg, 1280)) {
-        qDebug() << "fail to init ncnn detector";
-    }
-#endif
-    /// recognizer
-    static cocr::TextRecognizerNcnnImpl recognizer;
-    recognizer.setNumThread(4);
-    if (!recognizer.initModel(ncnnTextModel, ncnnTextModelCfg,
-                              cocr::TextCorrector::GetAlphabet(), 3200)) {
-        qDebug() << "fail to init ncnn recognizer";
-    }
-//    /// recognizer by opencv_dnn
-//    static cocr::TextRecognizerOpenCVImpl recognizer;
-//    if (!recognizer.initModel((modelDir.absolutePath()+ +"/crnn_192_mix_sim.onnx").toStdString(),
-//                              cocr::TextCorrector::GetAlphabet(), 192)) {
-//        qDebug() << "fail to init opencv recognizer";
-//    }
-    /// corrector
+    static auto detector = cocr::ObjectDetector::MakeInstance();
+    static auto recognizer = cocr::TextRecognizer::MakeInstance();
     static cocr::TextCorrector corrector;
-    /// composer
     static cocr::GraphComposer composer;
-    /// manager
-    ocrManager = std::make_shared<cocr::OCRManager>(detector, recognizer, corrector, composer);
+    if (detector && recognizer) {
+        ocrManager = std::make_shared<cocr::OCRManager>(
+                *detector, *recognizer, corrector, composer);
+    }
 }
 
 void OCRThread::run() {

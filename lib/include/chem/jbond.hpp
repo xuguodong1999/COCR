@@ -57,5 +57,5 @@ namespace cocr {
               const BondType &_type = BondType::SingleBond, const float &_offset1 = 0.5, const float &_offset2 = 0.5);
     };
 
-    ColorName getBondColor(const BondType &_bondType);
+    COCR_CHEM_EXPORT ColorName getBondColor(const BondType &_bondType);
 }

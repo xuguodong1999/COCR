@@ -21,5 +21,7 @@ namespace cocr {
         virtual void freeModel() = 0;
 
         virtual std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) = 0;
+
+        static std::shared_ptr<TextRecognizer> MakeInstance();
     };
 }

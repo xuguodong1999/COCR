@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_opencv_util_export.h>
 #include "base/cocr_types.hpp"
 #include <opencv2/core/mat.hpp>
@@ -49,7 +50,8 @@ padCvMatTo(const cv::Mat &_img, const int &_newWidth, const int &_newHeight,
  * @param _bgPixel 背景颜色值
  * @return 正包围盒
  */
-COCR_OPENCV_UTIL_EXPORT std::optional<cv::Rect2i> getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar &_bgPixel = 255);
+COCR_OPENCV_UTIL_EXPORT std::optional<cv::Rect2i>
+getBoundBoxForBWFont(const cv::Mat &_uMat, const uchar &_bgPixel = 255);
 
 template<typename _Tp>
 inline _Tp getDistance3D(const cv::Point3_<_Tp> &p1, const cv::Point3_<_Tp> &p2) {
@@ -74,7 +76,7 @@ COCR_OPENCV_UTIL_EXPORT void salt_pepper(cv::Mat image, int n);
 
 
 COCR_OPENCV_UTIL_EXPORT void cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
-                const cv::Scalar &_color, const int &_thickness = 1, bool _rotate = true);
+                                        const cv::Scalar &_color, const int &_thickness = 1, bool _rotate = true);
 
 COCR_OPENCV_UTIL_EXPORT cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle);
 

@@ -6,9 +6,14 @@ include_directories(${coordgenlibs_INCLUDE_DIR})
 
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(ncnn REQUIRED)
 
+find_package(ncnn REQUIRED)
+# ncnn has not put its include directory in cmake config yet
 include_directories(${ncnn_DIR}/../../../include)
+if (ANDROID)
+    # override no rtti and exceptions in ncnn
+    set_target_properties(ncnn PROPERTIES INTERFACE_COMPILE_OPTIONS "-fexceptions")
+endif ()
 
 include(GenerateExportHeader)
 function(makeDLL TARGET)
@@ -70,24 +75,11 @@ target_compile_definitions(${PROJECT_NAME}_data PRIVATE
 # cocr::ocr, include header def for ncnn or opencv_dnn's impl plugin
 makeDLL(ocr)
 addDeps(ocr "base;chem;opencv_util")
-add3rdDeps(ocr "opencv_core")
+add3rdDeps(ocr "opencv_core;opencv_imgproc;Qt5::Core")
 
-# ncnn crnn impl, call by plugin, not header import
-makeDLL(ncnn_crnn)
-addDeps(ncnn_crnn "ocr")
-add3rdDeps(ncnn_crnn "ncnn;Qt5::Core;opencv_imgproc")
-
-# ncnn yolo impl, call by plugin, not header import
-makeDLL(ncnn_yolo)
-addDeps(ncnn_yolo "ocr")
-add3rdDeps(ncnn_yolo "ncnn;Qt5::Core;opencv_imgproc")
-
-# opencv_dnn crnn impl, call by plugin, not header import
-makeDLL(ocv_crnn)
-addDeps(ocv_crnn "ocr")
-add3rdDeps(ocv_crnn "opencv_dnn;Qt5::Core")
-
-# opencv_dnn yolo impl, call by plugin, not header import
-makeDLL(ocv_yolo)
-addDeps(ocv_yolo "ocr")
-add3rdDeps(ocv_yolo "opencv_dnn;Qt5::Core")
+if (USE_OPENCV_DNN)
+    add3rdDeps(ocr "ncnn;opencv_dnn")
+    target_compile_definitions(${PROJECT_NAME}_ocr PRIVATE USE_OPENCV_DNN)
+else ()
+    add3rdDeps(ocr "ncnn")
+endif ()

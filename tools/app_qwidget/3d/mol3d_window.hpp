@@ -1,4 +1,5 @@
 #pragma once
+
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DCore/QTransform>
 

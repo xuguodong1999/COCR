@@ -64,10 +64,10 @@ bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
                 }
             }
             unordered_set<hash_type> tmpSet2;
-            for (auto &mm:tmpSet) {
+            for (auto &mm: tmpSet) {
                 if (mm != 0) { tmpSet2.insert(mm); }
             }
-            for (auto &mm:tmpSet2) {
+            for (auto &mm: tmpSet2) {
                 curSet.insert(mm);
             }
         }
@@ -79,8 +79,8 @@ bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
             recover(cache_dir, i);
         } else {
             lastSet.clear();
-            for (auto &bucket:curSet.mData) {
-                for (auto &ele:bucket)
+            for (auto &bucket: curSet.mData) {
+                for (auto &ele: bucket)
                     lastSet.push_back(ele);
             }
             curSet.clear();
@@ -142,10 +142,10 @@ void IsomerCounter::calculate_i_from_i_1(const char *save_dir, const int &carbon
                     }
                 }
                 unordered_set<hash_type> tmpSet2;
-                for (auto &mm:tmpSet) {
+                for (auto &mm: tmpSet) {
                     if (mm != 0) { tmpSet2.insert(mm); }
                 }
-                for (auto &mm:tmpSet2) {
+                for (auto &mm: tmpSet2) {
                     curSet.insert(mm);
                 }
             }
@@ -189,10 +189,10 @@ void IsomerCounter::calculate_i_from_i_1(const char *save_dir, const int &carbon
                 }
             }
             unordered_set<hash_type> tmpSet2;
-            for (auto &mm:tmpSet) {
+            for (auto &mm: tmpSet) {
                 if (mm != 0) { tmpSet2.insert(mm); }
             }
-            for (auto &mm:tmpSet2) {
+            for (auto &mm: tmpSet2) {
                 curSet.insert(mm);
             }
             i++;
@@ -209,7 +209,7 @@ void IsomerCounter::calculate_i_from_i_1(const char *save_dir, const int &carbon
 std::vector<std::string> IsomerCounter::getIsomers(
         const vector<int> &_numsOfCarbon, const int &_maxCarbon) {
     std::unordered_set<int> numsOfCarbon;
-    for (auto &num:_numsOfCarbon) {
+    for (auto &num: _numsOfCarbon) {
         if (1 <= num && num <= _maxCarbon) {
             numsOfCarbon.insert(num);
         }
@@ -252,20 +252,20 @@ std::vector<std::string> IsomerCounter::getIsomers(
                 }
             }
             unordered_set<hash_type> tmpSet2;
-            for (auto &mm:tmpSet) {
+            for (auto &mm: tmpSet) {
                 if (mm != 0) { tmpSet2.insert(mm); }
             }
-            for (auto &mm:tmpSet2) {
+            for (auto &mm: tmpSet2) {
                 curSet.insert(mm);
             }
         }
         lastSet.clear();
-        for (auto &bucket:curSet.mData) {
-            for (auto &ele:bucket)
+        for (auto &bucket: curSet.mData) {
+            for (auto &ele: bucket)
                 lastSet.push_back(ele);
         }
         if (numsOfCarbon.end() != numsOfCarbon.find(i)) {
-            for (auto &carbon_hash:lastSet) {
+            for (auto &carbon_hash: lastSet) {
                 auto smiles = cocr::convertAlkaneHashToSMILES<unsigned char>(carbon_hash);
                 smilesVec.push_back(smiles);
             }

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "cocr_base_export.h"
 #include <chrono>
 

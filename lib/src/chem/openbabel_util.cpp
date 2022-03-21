@@ -176,7 +176,7 @@ std::vector<std::vector<size_t>> MolUtilOpenBabelImpl::getLSSR(const JMol &_mol)
     std::vector<std::vector<size_t>> retRings(rings.size());
     for (size_t i = 0; i < rings.size(); i++) {
         auto &ring = rings[i];
-        for (auto &idx:ring->_path) {
+        for (auto &idx: ring->_path) {
             retRings[i].push_back(o2jAtomMap[obMol.GetAtom(idx)->GetId()]);
         }
     }
@@ -189,7 +189,7 @@ std::vector<std::vector<size_t>> MolUtilOpenBabelImpl::getSSSR(const JMol &_mol)
     std::vector<std::vector<size_t>> retRings(rings.size());
     for (size_t i = 0; i < rings.size(); i++) {
         auto &ring = rings[i];
-        for (auto &idx:ring->_path) {
+        for (auto &idx: ring->_path) {
             retRings[i].push_back(o2jAtomMap[obMol.GetAtom(idx)->GetId()]);
         }
     }

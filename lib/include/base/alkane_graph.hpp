@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -31,7 +32,7 @@ namespace cocr {
                  const traverse &before, const traverse &in, const traverse &after) {
             state[current] = GRAY;
             before(current, from);
-            for (auto &neighbor:content[current]) {
+            for (auto &neighbor: content[current]) {
                 if (state[neighbor] == WHITE) {
                     dfs(neighbor, current, before, in, after);
                     in(neighbor, current);
@@ -45,7 +46,7 @@ namespace cocr {
         void dfs_from(const T &current, const T &from,
                       const traverse &before, const traverse &after) {
             before(current, from);
-            for (auto &neighbor:content[current]) {
+            for (auto &neighbor: content[current]) {
                 if (neighbor != from || from == EMPTY_NODE) {
                     dfs_from(neighbor, current, before, after);
                 }
@@ -95,7 +96,7 @@ namespace cocr {
             };
             auto after = [&](const T &current, const T &from) {
                 int now = 0;
-                for (auto &neighbor:content[current]) {
+                for (auto &neighbor: content[current]) {
                     if (neighbor != from || from == EMPTY_NODE) {
                         partSeq[now++] = allSeq[neighbor];
                     }
@@ -235,7 +236,7 @@ namespace cocr {
                     {'7', "111"},
             };
             std::string hash_string;
-            for (auto &i:hash_string_tmp) {
+            for (auto &i: hash_string_tmp) {
                 hash_string.append(table[i]);
             }
             std::reverse(hash_string.begin(), hash_string.end());
@@ -272,7 +273,7 @@ namespace cocr {
          */
         void fromSMILES(const std::string &_smiles) {
             std::string hash_string;
-            for (auto &c:_smiles) {
+            for (auto &c: _smiles) {
                 switch (c) {
                     case ')':
                         hash_string.push_back(suffix);
@@ -313,7 +314,7 @@ namespace cocr {
         alkane.fromHash(hash_value);
         auto s_1_0 = alkane.toString();
         std::string smiles;
-        for (auto &c:s_1_0) {
+        for (auto &c: s_1_0) {
             if (c == alkane.prefix) {
                 smiles.append("(C");
             } else {

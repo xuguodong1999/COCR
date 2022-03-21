@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_data_export.h>
 
 #include "stroke/hw_base.hpp"

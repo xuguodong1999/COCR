@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_chem_export.h>
 #include "base/cocr_types.hpp"
 
@@ -11,12 +12,12 @@
 namespace cocr {
     class JMol;
 
-    extern std::vector<std::string> ELEMENT_NAME_LIST;
-    extern std::vector<float> ELEMENT_ELECTRON_NEG_LIST;
-    extern std::vector<float> ELEMENT_MASS_LIST;
-    extern std::vector<float> ELEMENT_RADIUS_LIST;
-    extern std::unordered_map<std::string, ElementType> STR_ELEMENT_MAP;
-    extern std::unordered_map<ElementType, int> ELEMENT_COMMON_NEB_NUM_MAP;
+    COCR_CHEM_EXPORT extern std::vector<std::string> ELEMENT_NAME_LIST;
+    COCR_CHEM_EXPORT extern std::vector<float> ELEMENT_ELECTRON_NEG_LIST;
+    COCR_CHEM_EXPORT extern std::vector<float> ELEMENT_MASS_LIST;
+    COCR_CHEM_EXPORT extern std::vector<float> ELEMENT_RADIUS_LIST;
+    COCR_CHEM_EXPORT extern std::unordered_map<std::string, ElementType> STR_ELEMENT_MAP;
+    COCR_CHEM_EXPORT extern std::unordered_map<ElementType, int> ELEMENT_COMMON_NEB_NUM_MAP;
 
     using id_type = size_t;
 

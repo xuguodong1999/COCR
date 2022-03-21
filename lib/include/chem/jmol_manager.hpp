@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_chem_export.h>
 #include <memory>
 

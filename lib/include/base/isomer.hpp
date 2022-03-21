@@ -1,4 +1,5 @@
 #pragma once
+
 #include "cocr_base_export.h"
 #include "base/alkane_graph.hpp"
 
@@ -77,7 +78,7 @@ private:
 
         bool exist(const hash_type &_a) const {
             size_t index = hash(_a);
-            for (auto &i:mData[index]) {
+            for (auto &i: mData[index]) {
                 if (i == _a) {
                     return true;
                 }
@@ -96,8 +97,8 @@ private:
             }
             hash_type full_size = mSize;
             ofsm.write(reinterpret_cast<const char *>( &full_size ), sizeof(hash_type));
-            for (auto &i:mData) {
-                for (auto &j:i) {
+            for (auto &i: mData) {
+                for (auto &j: i) {
                     ofsm.write(reinterpret_cast<const char *>( &j ), sizeof(hash_type));
                 }
             }

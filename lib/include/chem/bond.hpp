@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_chem_export.h>
 #include "base/fraction.hpp"
 #include "chem/bond_type.hpp"

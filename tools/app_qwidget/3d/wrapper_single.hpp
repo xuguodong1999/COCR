@@ -1,4 +1,5 @@
 #pragma once
+
 #include "3d/wrapper_base.hpp"
 
 namespace Qt3DExtras {

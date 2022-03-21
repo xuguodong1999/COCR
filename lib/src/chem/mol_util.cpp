@@ -21,13 +21,13 @@ std::vector<std::shared_ptr<JMol>> MolUtil::split(const JMol &_mol) {
         if (!bond)return;
         graph.push_back(j2gAidMap[bond->getAtomFrom()], j2gAidMap[bond->getAtomTo()]);
     });
-    for (auto&[jAid, gAid]:j2gAidMap) g2jMap[gAid] = jAid;
+    for (auto&[jAid, gAid]: j2gAidMap) g2jMap[gAid] = jAid;
     // 保证一个连通片不和其它连通片共享边 or 节点
     std::vector<std::unordered_set<size_t>> groups = graph.dfsTraceGroup();
-    for (auto &group:groups) {
+    for (auto &group: groups) {
         auto mol = std::make_shared<JMol>();
         std::unordered_map<size_t, size_t> aidMap;//<old,new>
-        for (auto &gid:group) {
+        for (auto &gid: group) {
             size_t oldAid = g2jMap[gid];
             auto atom = _mol.getAtomById(oldAid);
             if (!atom) continue;

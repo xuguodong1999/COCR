@@ -54,7 +54,7 @@ public:
 
     void loadFromWordDict(const char *_filepath);
 
-    void loadFromPattern(const std::string&filepath );
+    void loadFromPattern(const std::string &filepath);
 
     void clearSet();
 

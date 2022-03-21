@@ -11,8 +11,8 @@ cv::Scalar_<unsigned char> getScalar(const ColorName &_colorName) {
     return {b, g, r};
 }
 
-void  cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
-                      const cv::Scalar &_color, const int &_thickness, bool _rotate) {
+void cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const int &_length,
+                const cv::Scalar &_color, const int &_thickness, bool _rotate) {
     int x = _center.x, y = _center.y, xx[4], yy[4];
     if (_rotate) {
         xx[0] = xx[3] = x - _length;
@@ -33,7 +33,7 @@ void  cross_line(cv::InputOutputArray &_canvas, const cv::Point &_center, const 
              _color, _thickness, cv::LINE_AA);
 }
 
-cv::Mat  rotateCvMat(const cv::Mat &srcImage, double angle) {
+cv::Mat rotateCvMat(const cv::Mat &srcImage, double angle) {
     cv::Mat destImage;
     cv::Point2f center(srcImage.cols / 2, srcImage.rows / 2);
     cv::Mat M = cv::getRotationMatrix2D(center, angle, 1);

@@ -137,7 +137,7 @@ void LineTextDataCreator::loadFromWordDict(const char *_filepath) {
         throw std::runtime_error(
                 "json:" + err.errorString().toStdString());
 
-    for (auto &key:doc.object().keys()) {
+    for (auto &key: doc.object().keys()) {
         auto text = key.simplified();
         wordSet.insert(text.toLower().toStdString());
         wordSet.insert(text.toUpper().toStdString());
@@ -155,14 +155,14 @@ void LineTextDataCreator::clearSet() {
 }
 
 void LineTextDataCreator::loopOnce(const std::function<void(const std::string &)> &_func) {
-    for (auto &word:wordSet) {
+    for (auto &word: wordSet) {
         _func(word);
     }
 }
 
 void LineTextDataCreator::displaySet() {
     std::cout << "charSet.size=" << charSet.size() << "\n";
-    for (auto &c:charSet) {
+    for (auto &c: charSet) {
         std::cout << c << ", ";
     }
     std::cout << std::endl;
@@ -175,8 +175,8 @@ void LineTextDataCreator::displaySet() {
 
 void LineTextDataCreator::updateCharSet() {
     charSet.clear();
-    for (auto &word:wordSet) {
-        for (auto &c:word) {
+    for (auto &word: wordSet) {
+        for (auto &c: word) {
             charSet.insert(c);
         }
     }
@@ -184,7 +184,7 @@ void LineTextDataCreator::updateCharSet() {
 
 
 // 规则限定、连接随意、总量控制
-void LineTextDataCreator::loadFromPattern(const std::string& filepath) {
+void LineTextDataCreator::loadFromPattern(const std::string &filepath) {
     std::vector<SpliceableText> originSTVec, tempSTVec;
     std::unordered_set<SpliceableText, HashSpliceableText> originST, tempST;
 
@@ -199,7 +199,7 @@ void LineTextDataCreator::loadFromPattern(const std::string& filepath) {
 //    c2 = {"O", "S"};
 //    c1 = {"H"};
     for (int i = 0; i < 1000; i++) {
-        for (auto &str:c4) {
+        for (auto &str: c4) {
             originSTVec.emplace_back(str, 3, 1);
             originSTVec.emplace_back(str, 1, 3);
             originSTVec.emplace_back(str, 2, 2);
@@ -217,7 +217,7 @@ void LineTextDataCreator::loadFromPattern(const std::string& filepath) {
             originSTVec.emplace_back(str + randSelect(c1), 2, 1);//=CH-
             originSTVec.emplace_back(str + randSelect(c1), 1, 2);//-CH=
         }
-        for (auto &str:c3) {
+        for (auto &str: c3) {
             originSTVec.emplace_back(str, 3, 0);//#N
             originSTVec.emplace_back(str, 0, 3);//N#
             originSTVec.emplace_back(str + randSelect(c1) + "2", 1, 0);//-NH2
@@ -226,13 +226,13 @@ void LineTextDataCreator::loadFromPattern(const std::string& filepath) {
             originSTVec.emplace_back(randSelect(c1) + str, 0, 2);//HN=
             originSTVec.emplace_back(str + randSelect(c1), 1, 1);//-NH-
         }
-        for (auto &str:c2) {
+        for (auto &str: c2) {
             originSTVec.emplace_back(str, 0, 2);//O=
             originSTVec.emplace_back(str, 2, 0);//=O
             originSTVec.emplace_back(str + randSelect(c1), 1, 0);//-OH
             originSTVec.emplace_back(randSelect(c1) + str, 0, 1);//HO-
         }
-        for (auto &str:c1) {
+        for (auto &str: c1) {
             originSTVec.emplace_back(str, 1, 0);//H-
             originSTVec.emplace_back(str, 0, 1);//-H
         }
@@ -275,12 +275,12 @@ void LineTextDataCreator::loadFromPattern(const std::string& filepath) {
         }
     }
     std::cout << "step3.size=" << originSTVec.size() << std::endl;
-    for (auto &st:originSTVec) {
+    for (auto &st: originSTVec) {
         originST.insert(st);
     }
     originSTVec.clear();
     originSTVec.reserve(originST.size());
-    for (auto &st:originST) {
+    for (auto &st: originST) {
         originSTVec.push_back(st);
     }
     std::cout << "step4.size=" << originSTVec.size() << std::endl;
@@ -291,7 +291,7 @@ void LineTextDataCreator::loadFromPattern(const std::string& filepath) {
 //    exit(-1);
     tempST = originST;
     tempSTVec = originSTVec;
-    for (auto &st3:originSTVec) {
+    for (auto &st3: originSTVec) {
         auto str = st3.getRaw();
         if (str.length() <= 7) {// 且不存在
             fruits.insert(str);
@@ -343,7 +343,7 @@ void LineTextDataCreator::loadFromPattern(const std::string& filepath) {
             }
         }
     }
-    for (auto &st:fruits) {
+    for (auto &st: fruits) {
 //        std::cout << st << std::endl;
         wordSet.insert(st);
     }

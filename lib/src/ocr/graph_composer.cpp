@@ -115,10 +115,10 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
         kill_common(_aid, cast_side2(_bid));
     };
     // 统计元素边框和键端的距离
-    for (auto &aid:aIds) {
+    for (auto &aid: aIds) {
         auto &ocrAtomItem = _items[aid];
         auto &rect = ocrAtomItem.getRect();
-        for (auto &bid:bIds) {
+        for (auto &bid: bIds) {
 //            if (!is_valid_pair(aid, bid)) { continue; }
             auto &ocrBondItem = _items[bid];
             auto &from = ocrBondItem.getFrom();
@@ -142,10 +142,10 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
         }
     }
     // 统计字符串边框和键端的距离
-    for (auto &gid:gIds) {
+    for (auto &gid: gIds) {
         auto &ocrGroupItem = _items[gid];
         auto &rect = ocrGroupItem.getRect();
-        for (auto &bid:bIds) {
+        for (auto &bid: bIds) {
 //            if (!is_valid_pair(aid, bid)) { continue; }
             auto &ocrBondItem = _items[bid];
             auto &from = ocrBondItem.getFrom();
@@ -236,7 +236,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
     // Output: 实际关系对 {<id1,id2>, ......}
 //    // qDebug() << "blackList.size()=" << blackList.size();
 //    // qDebug() << "feats.size()=" << feats.size();
-    for (auto&[id, vec]:feats) {
+    for (auto&[id, vec]: feats) {
         std::sort(vec.begin(), vec.end(), [](const feat_type &_a, const feat_type &_b) -> bool {
             return _a.second < _b.second;
         });
@@ -351,8 +351,8 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
                 break;
         }
     };
-    for (auto &aid:aIds) { init_atom_node(aid); }
-    for (auto &gid:gIds) { init_group_node(gid); }
+    for (auto &aid: aIds) { init_atom_node(aid); }
+    for (auto &gid: gIds) { init_group_node(gid); }
 
     auto handle_bond_side = [&](const size_t &_bSideId) {
         auto it = feats.find(_bSideId);
@@ -362,7 +362,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
         }
         auto &nebVec = it->second;
         // 遍历所有潜在邻居
-        for (auto&[nebId, feat]:nebVec) {
+        for (auto&[nebId, feat]: nebVec) {
             // 通过 blackList 保证键端集合互斥
             if (is_valid_pair(_bSideId, nebId)) {
                 kill_common(_bSideId, nebId);
@@ -370,7 +370,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
             }
         }
     };
-    for (auto &bid:bIds) {
+    for (auto &bid: bIds) {
         size_t fId = cast_side1(bid);
         size_t tId = cast_side2(bid);
         handle_bond_side(fId);
@@ -383,7 +383,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
 //    std::unordered_map<size_t, std::shared_ptr<cocr::JResidue>> bondSideResidueMap;
 
     // 添加元素图元
-    for (auto&[aid, itemSet]:aNodeMap) {
+    for (auto&[aid, itemSet]: aNodeMap) {
         auto &item = _items[aid];
         auto pos = item.getCenter();
         auto atom = mol->addAtom(item.getElement(), pos.x, pos.y);
@@ -392,14 +392,14 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
 //        atom->y0 = rect.y;
 //        atom->x1 = rect.x + rect.width;
 //        atom->y1 = rect.y + rect.height;
-        for (auto &bSideId:itemSet) {
+        for (auto &bSideId: itemSet) {
             bondSideAtomMap[bSideId] = atom;
         }
     }
     // 如果两个元素图元满足类似 NH 上下临接排布的关系，那么在这两个元素图元之间成键
 
     // 添加字串图元
-    for (auto&[gid, itemSet]:gNodeMap) {
+    for (auto&[gid, itemSet]: gNodeMap) {
         auto &item = _items[gid];
         auto &rect = item.getRect();
 //        auto pos = item.getCenter();
@@ -419,14 +419,14 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
 //        if (!itemSet.empty()) { pos /= static_cast<float>(itemSet.size()); }
         auto superAtom = mol->addSuperAtom(item.getText(), rect.x, rect.y,
                                            rect.x + rect.width, rect.y + rect.height);
-        for (auto &bSideId:itemSet) {
+        for (auto &bSideId: itemSet) {
             bondSideGroupMap[bSideId] = superAtom;
         }
     }
     // 收集键图元的起始原子和结束原子
-    for (auto&[_, itemSet]:bNodeMap) {
+    for (auto&[_, itemSet]: bNodeMap) {
         cv::Point2f pos(0, 0);
-        for (auto &bSideId:itemSet) {
+        for (auto &bSideId: itemSet) {
             int type = get_bond_side_type(bSideId);
             size_t bid = revert_bond_side(bSideId);
             auto &item = _items[bid];
@@ -441,7 +441,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
         if (!itemSet.empty()) { pos /= static_cast<float>(itemSet.size()); }
         auto atom = mol->addAtom(ElementType::C, pos.x, pos.y);
         atom->setImplicit();
-        for (auto &bSideId:itemSet) {
+        for (auto &bSideId: itemSet) {
             bondSideAtomMap[bSideId] = atom;
         }
     }
@@ -462,7 +462,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
         }
     };
     // 添加键图元
-    for (auto &bid:bIds) {
+    for (auto &bid: bIds) {
         auto &item = _items[bid];
         size_t fId = cast_side1(bid);
         size_t tId = cast_side2(bid);
@@ -517,11 +517,11 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
     }
     auto rings = mol->getSSSR();
     if (rings.empty()) { return mol; }
-    for (auto &ring:rings) {
+    for (auto &ring: rings) {
         if (ring.empty()) { continue; }
         // 多边形中心
         cv::Point2f p(0, 0);
-        for (auto &id:ring) {
+        for (auto &id: ring) {
             auto atom = mol->getAtom(id);
             p.x += atom->x;
             p.y += atom->y;
@@ -529,7 +529,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
         p /= static_cast<float>(ring.size());
         // 多边形半径
         float r = 0;
-        for (auto &id:ring) {
+        for (auto &id: ring) {
             auto atom = mol->getAtom(id);
             r += calc_pts_to_pts(p, cv::Point2f(atom->x, atom->y));
         }
@@ -537,7 +537,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
         // 遍历所有检测到的圈，看有没有圈在这个多边形里
         // TODO: 这是个一对一的婚配问题，显然可以优化下
         bool needAromatic = false;
-        for (auto &cid:cIds) {
+        for (auto &cid: cIds) {
             auto &circle = _items[cid];
             if (r - circle.getRadius() > calc_pts_to_pts(p, circle.getCenter())) {
                 needAromatic = true;
@@ -549,7 +549,7 @@ std::shared_ptr<cocr::JMol> cocr::GraphComposer::compose(const std::vector<OCRIt
         // 下面一波操作把环上的边按照深度优先遍历的顺序存进 bondVec2
         // TODO: 这个 O(n^2) 还有 bug 的写法有损形象，有空可以优化下
         std::unordered_set<id_type> aidSet;
-        for (auto &id:ring) { aidSet.insert(id); }
+        for (auto &id: ring) { aidSet.insert(id); }
 //        // qDebug() << "aidSet.size()=" << aidSet.size();
         std::vector<id_type> bondVec1, bondVec2;
         // modify_bond
