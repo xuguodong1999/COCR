@@ -6,6 +6,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# gcc -fvisibility=hidden
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
 option(BUILD_SHARED_LIBS "Build as shared or static libs" ON)

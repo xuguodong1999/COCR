@@ -1,6 +1,5 @@
-#ifndef PROGRESS_HPP
-#define PROGRESS_HPP
-
+#pragma once
+#include <ref_torch_public_export.h>
 #include <string>
 #include <vector>
 #include <chrono>
@@ -12,16 +11,19 @@
 namespace progress {
 
     // Function Prototype
+    REF_TORCH_PUBLIC_EXPORT
     std::string separator();
 
-    std::string separator_center(const std::string word);
+    REF_TORCH_PUBLIC_EXPORT
+    std::string separator_center(const std::string& word);
 
+    REF_TORCH_PUBLIC_EXPORT
     std::string current_date();
 
     // ---------------------------------------
     // namespace{progress} -> class{display}
     // ---------------------------------------
-    class display {
+    class REF_TORCH_PUBLIC_EXPORT display {
     private:
         size_t count;
         size_t count_max;
@@ -52,7 +54,7 @@ namespace progress {
     // ---------------------------------------
     // namespace{progress} -> class{irregular}
     // ---------------------------------------
-    class irregular {
+    class REF_TORCH_PUBLIC_EXPORT irregular {
     private:
         size_t count_start, count_end;
         std::string elap, rem, date, date_fin, sec_per;
@@ -76,6 +78,3 @@ namespace progress {
     };
 
 }
-
-
-#endif

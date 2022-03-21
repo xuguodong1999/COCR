@@ -1,6 +1,6 @@
-#ifndef VISUALIZER_HPP
-#define VISUALIZER_HPP
+#pragma once
 
+#include <ref_torch_public_export.h>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -16,18 +16,22 @@
 namespace visualizer {
 
     // Function Prototype
+    REF_TORCH_PUBLIC_EXPORT
     void save_image(const torch::Tensor image, const std::string path, const std::pair<float, float> range = {0.0, 1.0},
                     const size_t cols = 8, const size_t padding = 2, const size_t bits = 8);
 
+    REF_TORCH_PUBLIC_EXPORT
     void save_label(const torch::Tensor label, const std::string path,
                     const std::vector<std::tuple<unsigned char, unsigned char, unsigned char>> label_palette,
                     const size_t cols = 8, const size_t padding = 2);
 
+    REF_TORCH_PUBLIC_EXPORT
     cv::Mat draw_detections(const torch::Tensor image, const std::tuple<torch::Tensor, torch::Tensor> label,
                             const std::vector<std::string> class_names,
                             const std::vector<std::tuple<unsigned char, unsigned char, unsigned char>> label_palette,
                             const std::pair<float, float> range = {0.0, 1.0});
 
+    REF_TORCH_PUBLIC_EXPORT
     cv::Mat draw_detections_des(const torch::Tensor image, const std::tuple<torch::Tensor, torch::Tensor> label,
                                 const torch::Tensor prob, const std::vector<std::string> class_names,
                                 const std::vector<std::tuple<unsigned char, unsigned char, unsigned char>> label_palette,
@@ -36,7 +40,7 @@ namespace visualizer {
     // -----------------------------------
     // namespace{visualizer} -> class{graph}
     // -----------------------------------
-    class graph {
+    class REF_TORCH_PUBLIC_EXPORT graph {
     private:
         bool flag;
         std::string dir, data_dir;
@@ -52,5 +56,3 @@ namespace visualizer {
     };
 
 }
-
-#endif

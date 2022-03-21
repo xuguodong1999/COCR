@@ -34,7 +34,7 @@ std::string progress::separator() {
 // --------------------------------------------------
 // namespace{progress} -> function{separator_center}
 // --------------------------------------------------
-std::string progress::separator_center(const std::string word) {
+std::string progress::separator_center(const std::string& word) {
     size_t length;
     struct winsize ws;
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) != -1) {

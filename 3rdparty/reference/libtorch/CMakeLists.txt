@@ -34,6 +34,9 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/public PROJECT_SOURCE)
 add_library(${PROJECT_NAME}_public ${PROJECT_SOURCE})
 target_link_libraries(${PROJECT_NAME}_public PRIVATE
         ${TORCH_LIBRARIES} ${OpenCV_LIBS} png)
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME}_public)
+target_include_directories(${PROJECT_NAME}_public PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 GET_SUB_DIR_NAME(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR})
 list(REMOVE_ITEM PROJECT_SOURCE_DIR_LIST public)

@@ -1,6 +1,5 @@
-#ifndef TRANSFORMS_HPP
-#define TRANSFORMS_HPP
-
+#pragma once
+#include <ref_torch_public_export.h>
 #include <vector>
 #include <utility>
 #include <memory>
@@ -23,7 +22,7 @@ namespace transforms {
     // --------------------------------------------
 #define transforms_Compose std::shared_ptr<transforms::ComposeImpl>
 
-    class ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT ComposeImpl {
     public:
         ComposeImpl() {}
 
@@ -44,8 +43,10 @@ namespace transforms {
     };
 
     // Function Prototype
+    REF_TORCH_PUBLIC_EXPORT
     torch::Tensor apply(std::vector<transforms_Compose > &transform, cv::Mat &data_in);
 
+    REF_TORCH_PUBLIC_EXPORT
     torch::Tensor applyT(std::vector<transforms_Compose > &transform, torch::Tensor &data_in);
 
     template<typename T_in, typename T_out>
@@ -63,7 +64,7 @@ namespace transforms {
     // -----------------------------------------------------------
 #define transforms_Normalize1d std::make_shared<transforms::Normalize1dImpl>
 
-    class Normalize1dImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT Normalize1dImpl : public ComposeImpl {
     private:
         torch::Tensor mean, std;
     public:
@@ -93,7 +94,7 @@ namespace transforms {
     // -----------------------------------------------------------
 #define transforms_Grayscale std::make_shared<transforms::GrayscaleImpl>
 
-    class GrayscaleImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT GrayscaleImpl : public ComposeImpl {
     private:
         int channels;
     public:
@@ -112,7 +113,7 @@ namespace transforms {
     // --------------------------------------------------------
 #define transforms_Resize std::make_shared<transforms::ResizeImpl>
 
-    class ResizeImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT ResizeImpl : public ComposeImpl {
     private:
         cv::Size size;
         int interpolation;
@@ -132,7 +133,7 @@ namespace transforms {
     // --------------------------------------------------------------
 #define transforms_ConvertIndex std::make_shared<transforms::ConvertIndexImpl>
 
-    class ConvertIndexImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT ConvertIndexImpl : public ComposeImpl {
     private:
         int before, after;
     public:
@@ -151,7 +152,7 @@ namespace transforms {
     // -----------------------------------------------------------
 #define transforms_ToTensor std::make_shared<transforms::ToTensorImpl>
 
-    class ToTensorImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT ToTensorImpl : public ComposeImpl {
     public:
         ToTensorImpl() {}
 
@@ -166,7 +167,7 @@ namespace transforms {
     // ---------------------------------------------------------------
 #define transforms_ToTensorLabel std::make_shared<transforms::ToTensorLabelImpl>
 
-    class ToTensorLabelImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT ToTensorLabelImpl : public ComposeImpl {
     public:
         ToTensorLabelImpl() {}
 
@@ -181,7 +182,7 @@ namespace transforms {
     // -------------------------------------------------------------
 #define transforms_AddRVINoise std::make_shared<transforms::AddRVINoiseImpl>
 
-    class AddRVINoiseImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT AddRVINoiseImpl : public ComposeImpl {
     private:
         float occur_prob;
         std::pair<float, float> range;
@@ -201,7 +202,7 @@ namespace transforms {
     // ------------------------------------------------------------
 #define transforms_AddSPNoise std::make_shared<transforms::AddSPNoiseImpl>
 
-    class AddSPNoiseImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT AddSPNoiseImpl : public ComposeImpl {
     private:
         float occur_prob;
         float salt_rate;
@@ -223,7 +224,7 @@ namespace transforms {
     // ---------------------------------------------------------------
 #define transforms_AddGaussNoise std::make_shared<transforms::AddGaussNoiseImpl>
 
-    class AddGaussNoiseImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT AddGaussNoiseImpl : public ComposeImpl {
     private:
         float occur_prob;
         float mean, std;
@@ -245,7 +246,7 @@ namespace transforms {
     // -----------------------------------------------------------
 #define transforms_Normalize std::make_shared<transforms::NormalizeImpl>
 
-    class NormalizeImpl : public ComposeImpl {
+    class REF_TORCH_PUBLIC_EXPORT NormalizeImpl : public ComposeImpl {
     private:
         torch::Tensor mean, std;
     public:
@@ -266,5 +267,3 @@ namespace transforms {
 
 
 }
-
-#endif

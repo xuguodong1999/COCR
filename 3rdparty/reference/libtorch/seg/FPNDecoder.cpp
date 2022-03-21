@@ -71,7 +71,9 @@ MergeBlockImpl::MergeBlockImpl(std::string policy) {
 torch::Tensor MergeBlockImpl::forward(std::vector<torch::Tensor> x) {
     if (_policy == "add") return sumTensor(x);
     else if (_policy == "cat") return torch::cat(x, 1);
-    else std::cout << "`merge_policy` must be one of: ['add', 'cat'], got " + _policy;
+    else {
+        throw new std::runtime_error("`merge_policy` must be one of: ['add', 'cat'], got" + _policy);
+    }
 }
 
 FPNDecoderImpl::FPNDecoderImpl(std::vector<int> encoder_channels, int encoder_depth, int pyramid_channels,

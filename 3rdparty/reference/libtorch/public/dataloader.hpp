@@ -1,5 +1,5 @@
-#ifndef DATALOADER_HPP
-#define DATALOADER_HPP
+#pragma once
+#include <ref_torch_public_export.h>
 
 #include <string>
 #include <tuple>
@@ -24,7 +24,7 @@ namespace DataLoader {
     // -----------------------------------------------------
     // namespace{DataLoader} -> class{Data1dFolderWithPaths}
     // -----------------------------------------------------
-    class Data1dFolderWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT Data1dFolderWithPaths {
     private:
         datasets::Data1dFolderWithPaths dataset;
         size_t batch_size;
@@ -54,7 +54,7 @@ namespace DataLoader {
     // ----------------------------------------------------------
     // namespace{DataLoader} -> class{Data1dFolderPairWithPaths}
     // ----------------------------------------------------------
-    class Data1dFolderPairWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT Data1dFolderPairWithPaths {
     private:
         datasets::Data1dFolderPairWithPaths dataset;
         size_t batch_size;
@@ -90,7 +90,7 @@ namespace DataLoader {
     // -----------------------------------------------------
     // namespace{DataLoader} -> class{ImageFolderWithPaths}
     // -----------------------------------------------------
-    class ImageFolderWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderWithPaths {
     private:
         datasets::ImageFolderWithPaths dataset;
         size_t batch_size;
@@ -120,7 +120,7 @@ namespace DataLoader {
     // -----------------------------------------------------
     // namespace{DataLoader} -> class{ImageFolderPairWithPaths}
     // -----------------------------------------------------
-    class ImageFolderPairWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderPairWithPaths {
     private:
         datasets::ImageFolderPairWithPaths dataset;
         size_t batch_size;
@@ -151,7 +151,7 @@ namespace DataLoader {
     // --------------------------------------------------------------------------
     // namespace{DataLoader} -> class{ImageFolderPairAndRandomSamplingWithPaths}
     // --------------------------------------------------------------------------
-    class ImageFolderPairAndRandomSamplingWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderPairAndRandomSamplingWithPaths {
     private:
         datasets::ImageFolderPairAndRandomSamplingWithPaths dataset;
         size_t batch_size;
@@ -184,7 +184,7 @@ namespace DataLoader {
     // -----------------------------------------------------
     // namespace{DataLoader} -> class{ImageFolderSegmentWithPaths}
     // -----------------------------------------------------
-    class ImageFolderSegmentWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderSegmentWithPaths {
     private:
         datasets::ImageFolderSegmentWithPaths dataset;
         size_t batch_size;
@@ -215,7 +215,7 @@ namespace DataLoader {
     // -----------------------------------------------------
     // namespace{DataLoader} -> class{ImageFolderClassesWithPaths}
     // -----------------------------------------------------
-    class ImageFolderClassesWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderClassesWithPaths {
     private:
         datasets::ImageFolderClassesWithPaths dataset;
         size_t batch_size;
@@ -245,7 +245,7 @@ namespace DataLoader {
     // ----------------------------------------------------
     // namespace{DataLoader} -> class{ImageFolderBBWithPaths}
     // ----------------------------------------------------
-    class ImageFolderBBWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderBBWithPaths {
     private:
         datasets::ImageFolderBBWithPaths dataset;
         size_t batch_size;
@@ -274,6 +274,3 @@ namespace DataLoader {
     };
 
 }
-
-
-#endif

@@ -1,6 +1,5 @@
-#ifndef DATASETS_HPP
-#define DATASETS_HPP
-
+#pragma once
+#include <ref_torch_public_export.h>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -17,15 +16,20 @@
 namespace datasets {
 
     // Function Prototype
+    REF_TORCH_PUBLIC_EXPORT
     void collect(const std::string root, const std::string sub, std::vector<std::string> &paths,
                  std::vector<std::string> &fnames);
 
+    REF_TORCH_PUBLIC_EXPORT
     torch::Tensor Data1d_Loader(std::string &path);
 
+    REF_TORCH_PUBLIC_EXPORT
     cv::Mat RGB_Loader(std::string &path);
 
+    REF_TORCH_PUBLIC_EXPORT
     cv::Mat Index_Loader(std::string &path);
 
+    REF_TORCH_PUBLIC_EXPORT
     std::tuple<torch::Tensor, torch::Tensor> BoundingBox_Loader(std::string &path);
 
 
@@ -36,7 +40,7 @@ namespace datasets {
     // ----------------------------------------------------
     // namespace{datasets} -> class{Data1dFolderWithPaths}
     // ----------------------------------------------------
-    class Data1dFolderWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT Data1dFolderWithPaths {
     private:
         std::vector<transforms_Compose > transform;
         std::vector<std::string> paths, fnames;
@@ -53,7 +57,7 @@ namespace datasets {
     // --------------------------------------------------------
     // namespace{datasets} -> class{Data1dFolderPairWithPaths}
     // --------------------------------------------------------
-    class Data1dFolderPairWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT Data1dFolderPairWithPaths {
     private:
         std::vector<transforms_Compose > transformI, transformO;
         std::vector<std::string> paths1, paths2, fnames1, fnames2;
@@ -77,7 +81,7 @@ namespace datasets {
     // ----------------------------------------------------
     // namespace{datasets} -> class{ImageFolderWithPaths}
     // ----------------------------------------------------
-    class ImageFolderWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderWithPaths {
     private:
         std::vector<transforms_Compose > transform;
         std::vector<std::string> paths, fnames;
@@ -94,7 +98,7 @@ namespace datasets {
     // ----------------------------------------------------
     // namespace{datasets} -> class{ImageFolderPairWithPaths}
     // ----------------------------------------------------
-    class ImageFolderPairWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderPairWithPaths {
     private:
         std::vector<transforms_Compose > transformI, transformO;
         std::vector<std::string> paths1, paths2, fnames1, fnames2;
@@ -113,7 +117,7 @@ namespace datasets {
     // ------------------------------------------------------------------------
     // namespace{datasets} -> class{ImageFolderPairAndRandomSamplingWithPaths}
     // ------------------------------------------------------------------------
-    class ImageFolderPairAndRandomSamplingWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderPairAndRandomSamplingWithPaths {
     private:
         std::vector<transforms_Compose > transformI, transformO, transform_rand;
         std::vector<std::string> paths1, paths2, paths_rand, fnames1, fnames2, fnames_rand;
@@ -137,7 +141,7 @@ namespace datasets {
     // ----------------------------------------------------
     // namespace{datasets} -> class{ImageFolderSegmentWithPaths}
     // ----------------------------------------------------
-    class ImageFolderSegmentWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderSegmentWithPaths {
     private:
         std::vector<transforms_Compose > transformI, transformO;
         std::vector<std::string> paths1, paths2, fnames1, fnames2;
@@ -158,7 +162,7 @@ namespace datasets {
     // ----------------------------------------------------------
     // namespace{datasets} -> class{ImageFolderClassesWithPaths}
     // ----------------------------------------------------------
-    class ImageFolderClassesWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderClassesWithPaths {
     private:
         std::vector<transforms_Compose > transform;
         std::vector<std::string> paths, fnames;
@@ -177,7 +181,7 @@ namespace datasets {
     // ----------------------------------------------------
     // namespace{datasets} -> class{ImageFolderBBWithPaths}
     // ----------------------------------------------------
-    class ImageFolderBBWithPaths {
+    class REF_TORCH_PUBLIC_EXPORT ImageFolderBBWithPaths {
     private:
         std::vector<transforms_Compose > transformBB, transformI;
         std::vector<std::string> paths1, paths2, fnames1, fnames2;
@@ -199,6 +203,3 @@ namespace datasets {
     };
 
 }
-
-
-#endif

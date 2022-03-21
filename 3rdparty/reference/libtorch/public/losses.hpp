@@ -1,6 +1,5 @@
-#ifndef LOSSES_HPP
-#define LOSSES_HPP
-
+#pragma once
+#include <ref_torch_public_export.h>
 // For External Library
 #include <torch/types.h>
 
@@ -13,7 +12,7 @@ namespace Losses {
     // -------------------------------------
     // namespace{Losses} -> class{SSIMLoss}
     // -------------------------------------
-    class SSIMLoss {
+    class REF_TORCH_PUBLIC_EXPORT SSIMLoss {
     private:
         size_t nc;
         size_t window_size;
@@ -33,6 +32,3 @@ namespace Losses {
     };
 
 }
-
-
-#endif
