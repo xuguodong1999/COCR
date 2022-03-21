@@ -56,7 +56,7 @@ endif ()
 
 # add exe
 if (ANDROID)
-    set(ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android CACHE INTERNAL "")
+    set(ANDROID_PACKAGE_SOURCE_DIR ${DEV_ASSETS_DIR}/android CACHE INTERNAL "")
     add_library(${APP_NAME} SHARED ${PROJECT_SOURCE} ${ANDROID_PACKAGE_SOURCE_DIR}/AndroidManifest.xml)
 else ()
     add_executable(${APP_NAME} ${PROJECT_SOURCE})

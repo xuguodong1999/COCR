@@ -4,7 +4,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${openbabel_INCLUDE_DIR})
 include_directories(${coordgenlibs_INCLUDE_DIR})
 
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+if (NOT ANDROID) # use apk_shell for android-qt project
+    find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+endif ()
 find_package(OpenCV REQUIRED)
 
 find_package(ncnn REQUIRED)
@@ -58,19 +60,21 @@ makeDLL(opencv_util)
 addDeps(opencv_util "base")
 add3rdDeps(opencv_util "opencv_core;opencv_imgproc")
 
-# cocr::stroke
-makeDLL(stroke)
-addDeps(stroke "base;chem;opencv_util")
-add3rdDeps(stroke "opencv_core;opencv_imgproc")
-target_compile_definitions(${PROJECT_NAME}_stroke PRIVATE
-        "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/\")")
+if (BUILD_DATA_GEN)
+    # cocr::stroke
+    makeDLL(stroke)
+    addDeps(stroke "base;chem;opencv_util")
+    add3rdDeps(stroke "opencv_core;opencv_imgproc")
+    target_compile_definitions(${PROJECT_NAME}_stroke PRIVATE
+            "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/\")")
 
-# cocr::data
-makeDLL(data)
-addDeps(data "base;chem;stroke;opencv_util")
-add3rdDeps(data "opencv_core;opencv_imgcodecs;opencv_highgui;Qt5::Core;Qt5::Widgets")
-target_compile_definitions(${PROJECT_NAME}_data PRIVATE
-        "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/\")")
+    # cocr::data
+    makeDLL(data)
+    addDeps(data "base;chem;stroke;opencv_util")
+    add3rdDeps(data "opencv_core;opencv_imgcodecs;opencv_highgui;Qt5::Core;Qt5::Widgets")
+    target_compile_definitions(${PROJECT_NAME}_data PRIVATE
+            "TEST_SAMPLES_PATH=std::string(\"${DEV_ASSETS_DIR}/\")")
+endif ()
 
 # cocr::ocr, include header def for ncnn or opencv_dnn's impl plugin
 makeDLL(ocr)
