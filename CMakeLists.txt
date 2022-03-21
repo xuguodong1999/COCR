@@ -2,36 +2,50 @@ cmake_minimum_required(VERSION 3.16)
 
 project(dev)
 
+# C11
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+# C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # gcc -fvisibility=hidden
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
-option(BUILD_SHARED_LIBS "Build as shared or static libs" ON)
+# data_gen for handwriting ocsr job
 option(BUILD_DATA_GEN "Generate data for yolo and crnn training" ON)
+# backend for yolo and crnn in app
 option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" ON)
+# libtorch playground
 option(BUILD_ELS_LAB "Libtorch is required to build cpp train" OFF)
+
+# how add_library works
+option(BUILD_SHARED_LIBS "Build as shared or static libs" ON)
+
+# mainly for 3rdparty tests and tutorials
+option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
 option(BUILD_TUTORIALS "Libtorch is required to build 3rdparty code examples" OFF)
+
 # android apk name
 set(APP_NAME leafxy CACHE INTERNAL "")
+
 # path to assets
 set(DEV_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
+# remember to cite ${openbabel_QRC} if you link openbabel
+set(openbabel_QRC ${DEV_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
+
 # path to 3rdparty libraries
 set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty CACHE INTERNAL "")
+
 # path to header-only 3rdparty libraries
 set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/header-only CACHE INTERNAL "")
+# other 3rdparty include dirs
 set(inchi_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/inchi/include CACHE INTERNAL "")
 set(maeparser_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/maeparser/include CACHE INTERNAL "")
 set(coordgenlibs_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/coordgenlibs/include CACHE INTERNAL "")
 set(openbabel_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/openbabel/include CACHE INTERNAL "")
 set(cocr_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/include CACHE INTERNAL "")
-# remember to cite ${OpenBabel_QRC} if you link openbabel
-set(OpenBabel_QRC ${DEV_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
 
-# always need openmp
+# always enable openmp
 find_package(OpenMP)
 if (OPENMP_FOUND AND NOT ANDROID)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -39,21 +53,33 @@ if (OPENMP_FOUND AND NOT ANDROID)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif ()
 
+# allow qt5 deprecated warnings
+add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
+
 if (MSVC)
-    set(Boost_USE_STATIC_LIBS OFF CACHE INTERNAL "")
+    # correct charset
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-    add_compile_definitions(_USE_MATH_DEFINES) # for M_PI macro
-elseif (APPLE)
+    # for M_PI macro
+    add_compile_definitions(_USE_MATH_DEFINES)
+    if (BUILD_SHARED_LIBS)
+        # fix boost config
+        set(Boost_USE_STATIC_LIBS OFF CACHE INTERNAL "")
+    endif ()
+elseif (APPLE AND NOT IOS)
+    # for omp.h
     include_directories(/opt/homebrew/include/)
-elseif (ANDROID) # use apk_shell for android-qt project
+elseif (ANDROID)
+    # notice qt-5.15.2 only support single apk in one cmake project
+    # download ncnn and opencv android-sdk
     include(${CMAKE_SOURCE_DIR}/cmake/FindAndroidDeps.cmake)
 elseif (WASM)
+    # download ncnn and opencv wasm-sdk
     include(${CMAKE_SOURCE_DIR}/cmake/FindWasmDeps.cmake)
 endif ()
 
-if (NOT WASM AND NOT ANDROID)
-    # put all dll and exe in one directory
+if (NOT WASM AND NOT ANDROID AND NOT IOS)
+    # in desktop env, put all dll and exe in one directory, for convenience
     # wasm and android has specific output archive
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
@@ -68,40 +94,9 @@ else ()
     set(BUILD_TUTORIALS OFF)
 endif ()
 
-add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
-
 add_subdirectory(3rdparty)
 add_subdirectory(lib)
 add_subdirectory(tools)
-
-# add_subdirectory(tools) # target as ${APP_NAME}
-# add_dependencies(${APP_NAME} openbabel)
-# add_dependencies(${APP_NAME} coordgenlibs)
-#
-#if (NOT ANDROID AND NOT IOS)
-#    add_subdirectory(tools_qml)
-#endif ()
-#
-#if (BUILD_TESTS)
-#    add_subdirectory(tests/maeparser)
-#    add_subdirectory(tests/coordgenlibs)
-#    add_subdirectory(tests/rxcpp)
-#    add_subdirectory(tests/rxqt)
-#    add_subdirectory(tests/openbabel)
-#endif ()
-#
-#if (BUILD_DATA_GEN)
-#    add_subdirectory(data_gen)
-#    add_dependencies(data_gen openbabel)
-#endif ()
-#
-#if (BUILD_ELS_LAB)
-#    add_subdirectory(elslab)
-#endif ()
-#
-#if (BUILD_TUTORIALS)
-#    add_subdirectory(tutorials)
-#    # standalone proj
-#    add_subdirectory(tutorials/cpprl)
-#    add_subdirectory(tutorials/libtorch)
-#endif ()
+if (BUILD_ELS_LAB)
+    add_subdirectory(elslab)
+endif ()

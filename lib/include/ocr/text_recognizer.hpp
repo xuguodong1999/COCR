@@ -1,6 +1,9 @@
 #pragma once
+
 #include <cocr_ocr_export.h>
+
 #include <opencv2/core/mat.hpp>
+
 #include <string>
 #include <memory>
 

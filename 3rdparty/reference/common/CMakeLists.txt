@@ -31,7 +31,7 @@ foreach (PROJECT_SOURCE_FILE_PATH ${PROJECT_SOURCE})
             continue()
         endif ()
         set(CMAKE_AUTORCC ON)
-        add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH} ${OpenBabel_QRC})
+        add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH} ${openbabel_QRC})
         # product suffix
         set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
         target_include_directories(${TARGET_NAME} PRIVATE

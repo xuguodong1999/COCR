@@ -92,7 +92,7 @@ namespace cocr {
 
     COCR_CHEM_EXPORT ElementType convertNameToElementType(const std::string &_name);
 
-    COCR_CHEM_EXPORT ColorName getColor(const ElementType &_element);
+    COCR_CHEM_EXPORT ColorName getAtomColor(const ElementType &_element);
 
     COCR_CHEM_EXPORT int getCommonNebNum(const ElementType &_type);
 }

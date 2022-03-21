@@ -74,6 +74,27 @@ void JBond::setTo(const std::shared_ptr<JAtom> &to) {
     JBond::to = to;
 }
 
+std::string JBond::getName() const {
+    switch (type) {
+        case BondType::SingleBond:
+            return "Single";
+        case BondType::DoubleBond:
+            return "Double";
+        case BondType::TripleBond:
+            return "Triple";
+        case BondType::DelocalizedBond:
+            return "Delocalized";
+        case BondType::ImplicitBond:
+            return "Implicit";
+        case BondType::UpBond:
+            return "UpBond";
+        case BondType::DownBond:
+            return "Down";
+        default:
+            return "Unknown";
+    }
+}
+
 static std::unordered_map<BondType, ColorName> colorMap = {
         {BondType::SingleBond,      ColorName::rgbLightGoldenrod1},
         {BondType::DoubleBond,      ColorName::rgbDarkGoldenrod1},
@@ -84,10 +105,10 @@ static std::unordered_map<BondType, ColorName> colorMap = {
         {BondType::DownBond,        ColorName::rgbLightGoldenrod4}
 };
 
-ColorName cocr::getColor(const BondType &_bondType) {
+ColorName cocr::getBondColor(const BondType &_bondType) {
     auto it = colorMap.find(_bondType);
     if (colorMap.end() == it) {
-        return  ColorName::rgbBlack ;
+        return ColorName::rgbBlack;
     }
-    return  it->second ;
+    return it->second;
 }

@@ -1,2 +1,4 @@
 add_subdirectory(libs)
-add_subdirectory(reference)
+if (BUILD_TUTORIALS)
+    add_subdirectory(reference)
+endif ()

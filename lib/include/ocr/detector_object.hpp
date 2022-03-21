@@ -1,5 +1,6 @@
 #pragma once
 #include <cocr_ocr_export.h>
+
 #include <opencv2/core/types.hpp>
 
 namespace cocr {

@@ -18,7 +18,7 @@ bool cocr::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, cons
         weightsFile.close();
         net = cv::dnn::readNetFromDarknet(cfg.data(), cfg.length(), weights.data(), weights.length());
 //        net = cv::dnn::readNetFromDarknet(_cfgFile, _weightsFile);
-#ifdef WITH_OPENVINO
+#ifdef USE_OPENVINO
         try {
             net.setPreferableBackend(cv::dnn::DNN_BACKEND_INFERENCE_ENGINE);
             net.setPreferableTarget(cv::dnn::DNN_TARGET_MYRIAD);
@@ -31,7 +31,7 @@ bool cocr::ObjectDetectorOpenCVImpl::initModel(const std::string &_cfgFile, cons
         net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
 //        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
 //        net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-#endif// !WITH_OPENVINO
+#endif// !USE_OPENVINO
         auto outLayers = net.getUnconnectedOutLayers();
         auto layersNames = net.getLayerNames();
         outBlobNames.resize(outLayers.size());

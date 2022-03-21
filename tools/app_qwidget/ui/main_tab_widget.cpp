@@ -17,7 +17,7 @@
 #endif
 
 #include "image_widget.h"
-#include "ocr/ocr_runnable.hpp"
+#include "../ocr_runnable.hpp"
 #include "application.hpp"
 #include "chem/jmol.hpp"
 #include "chem/jmol_manager.hpp"

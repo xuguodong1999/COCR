@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cocr_chem_export.h>
 #include "base/cocr_types.hpp"
 
@@ -22,6 +23,9 @@ namespace cocr {
     using id_type = size_t;
 
     class COCR_CHEM_EXPORT JBond {
+        // 约定：范围[0,1]，表达键端在原子的接入点，用于几何表达层面
+        float offset1, offset2;
+        BondType type;
         id_type id;
         std::shared_ptr<JAtom> from, to;
     public:
@@ -29,11 +33,6 @@ namespace cocr {
 
         void setTo(const std::shared_ptr<JAtom> &to);
 
-    private:
-        // 约定：范围[0,1]，表达键端在原子的接入点，用于几何表达层面
-        float offset1, offset2;
-        BondType type;
-    public:
         std::shared_ptr<JAtom> getFrom() const;
 
         std::shared_ptr<JAtom> getTo() const;
@@ -52,9 +51,11 @@ namespace cocr {
 
         void setOrder(const int &_order);
 
+        std::string getName() const;
+
         JBond(const id_type &_id, std::shared_ptr<JAtom> _from = nullptr, std::shared_ptr<JAtom> _to = nullptr,
               const BondType &_type = BondType::SingleBond, const float &_offset1 = 0.5, const float &_offset2 = 0.5);
     };
 
-    ColorName getColor(const BondType &_bondType);
+    ColorName getBondColor(const BondType &_bondType);
 }

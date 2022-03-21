@@ -1,9 +1,8 @@
 #include "ocr_runnable.hpp"
 #include "ncnn_impl/text_recognizer_ncnn_impl.hpp"
-#include "opencv_util.hpp"
-#include "text_corrector.hpp"
-#include "graph_composer.hpp"
-#include "color_types.hpp"
+#include "opencv_util/opencv_util.hpp"
+#include "ocr/text_corrector.hpp"
+#include "ocr/graph_composer.hpp"
 
 #include <QDebug>
 #include <QDir>
@@ -18,6 +17,8 @@
 #if defined(HAVE_OPENCV_DNN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
 
 #include "opencv_dnn_impl/object_detector_opencv_impl.hpp"
+#include "ocr/text_recognizer.hpp"
+#include "ocr/object_detector.hpp"
 //#include "opencv_dnn_impl/text_recognizer_opencv_impl.hpp"// unused, only for performance test
 
 #else
@@ -113,7 +114,7 @@ namespace cocr {
 //        cv::dilate(image,image, cv::Mat());
             image = _cvMat;
             copyMakeBorder(image, image, 32, 32, 32, 32, cv::BORDER_CONSTANT, 255);
-            image = cocr::rotateCvMat(image, 2);
+            image =  rotateCvMat(image, 2);
         }
 
         void clearImage() {

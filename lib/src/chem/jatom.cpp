@@ -293,7 +293,7 @@ static std::unordered_map<ElementType, ColorName> colorMap = {
         {ElementType::I,  ColorName::rgbPurple}
 };
 
-ColorName cocr::getColor(const ElementType &_element) {
+ColorName cocr::getAtomColor(const ElementType &_element) {
     auto it = colorMap.find(_element);
     if (colorMap.end() == it) {
         return  ColorName::rgbPink;

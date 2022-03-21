@@ -1,10 +1,13 @@
 #include "image_widget.h"
 #include "ui_image_widget.h"
-#include "opencv_util.hpp"
+#include "util.h"
+
 #include <QFileDialog>
 #include <QDebug>
 #include <QImage>
 #include <QMessageBox>
+
+#include <opencv2/core/mat.hpp>
 
 ImageWidget::ImageWidget(QWidget *parent) :
         QWidget(parent),

@@ -17,7 +17,7 @@ link_directories(${Boost_LIB_DIR})
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} TEST_SOURCE)
 #aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/todo TEST_SOURCE)
 
-add_executable(${PROJECT_NAME} ${TEST_SOURCE} ${OpenBabel_QRC})
+add_executable(${PROJECT_NAME} ${TEST_SOURCE} ${openbabel_QRC})
 add_dependencies(${PROJECT_NAME} openbabel)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")

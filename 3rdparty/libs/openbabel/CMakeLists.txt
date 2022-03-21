@@ -28,7 +28,7 @@ if (MSVC)
 endif ()
 
 # generate openbabel qrc
-writeQrcFileBySearchDirectory("${OpenBabel_QRC}" "${DEV_ASSETS_DIR}/openbabel/**" "${DEV_ASSETS_DIR}")
+writeQrcFileBySearchDirectory("${openbabel_QRC}" "${DEV_ASSETS_DIR}/openbabel/**" "${DEV_ASSETS_DIR}")
 
 add_library(${PROJECT_NAME} ${PROJECT_SOURCE})
 add_dependencies(${PROJECT_NAME} inchi)

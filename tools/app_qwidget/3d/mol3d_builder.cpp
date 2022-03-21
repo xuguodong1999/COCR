@@ -8,6 +8,7 @@
 #include "chem/jmol.hpp"
 
 #include "math_util.hpp"
+#include "util.h"
 
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
@@ -53,7 +54,7 @@ void Mol3DBuilder::build() {
 //        qDebug() << getQVector3D(atom);
         wrapper->setId(atom.getId());
         wrapper->setTranslation(getQVector3D(atom));
-        wrapper->setColor(cocr::getColor(atom.getType()));
+        wrapper->setColor(cocr::getColor(cocr::getAtomColor(atom.getType())));
         wrapper->setRadius(atom.getRadius() / atom.getDefaultRadius() * avgBondLength / 3);
         wrapper->setScale(1);
         wrapper->setRindsAndSlices(100, 100);
@@ -172,7 +173,7 @@ void Mol3DBuilder::build() {
         }
         wrapper->setRindsAndSlices(100, 100);
         wrapper->setScale(1);
-        wrapper->setColor(getColor(bond.getType()));
+        wrapper->setColor(cocr::getColor(cocr::getBondColor(bond.getType())));
         wrapper->setId(bond.getId());
         wrapper->setObjectName(QString("bond:%0").arg(bond.getId()));
         bonds[bond.getId()] = wrapper;

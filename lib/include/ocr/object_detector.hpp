@@ -1,7 +1,9 @@
 #pragma once
+
 #include <cocr_ocr_export.h>
 
 #include "ocr/ocr_item.hpp"
+
 #include <string>
 #include <memory>
 #include <vector>

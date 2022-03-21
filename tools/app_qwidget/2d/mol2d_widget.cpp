@@ -3,6 +3,7 @@
 #include "2d/bond_item.hpp"
 #include "ui/waithint_widget.h"
 #include "chem/jmol.hpp"
+#include "util.h"
 #include <QDebug>
 #include <cmath>
 
@@ -115,7 +116,7 @@ QString Mol2DWidget::makeAtomInfo(const size_t &_aid) {
     if (mol) {
         auto atom = mol->getAtom(_aid);
         if (atom) {
-            info.append("\n" + tr("element: ") + atom->getQName());
+            info.append("\n" + tr("element: ") + QString::fromStdString(atom->getName()));
             if (ElementType::SA != atom->getType()) {
                 info.append("\n" + tr("mass: ") + QString::number(atom->getMass(), 'f', 4));
             }
@@ -129,12 +130,12 @@ QString Mol2DWidget::makeBondInfo(const size_t &_bid) {
     if (mol) {
         auto bond = mol->getBond(_bid);
         if (bond) {
-            info.append("\n" + tr("type: ") + bond->getQName());
+            info.append("\n" + tr("type: ") + cocr::getBondName(*bond));
             auto from = bond->getFrom();
             auto to = bond->getTo();
             if (from && to) {
-                info.append("\n" + tr("atom 1: ") + from->getQName());
-                info.append("\n" + tr("atom 2: ") + to->getQName());
+                info.append("\n" + tr("atom 1: ") + QString::fromStdString(from->getName()));
+                info.append("\n" + tr("atom 2: ") + QString::fromStdString(to->getName()));
             }
         }
     }
