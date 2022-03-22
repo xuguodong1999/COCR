@@ -41,71 +41,88 @@ branch is under development as it is not robust enough yet.
 
 ## Architecture
 
+### core lib
+
 ```mermaid
 graph TB
     cocr::chem --> cocr::base
-    cocr::chem --> openbabel
-    cocr::chem --> coordgenlibs
+    cocr::chem --> openbabel:::deps
+    cocr::chem --> coordgenlibs:::deps
     
     cocr::opencv_util --> cocr::base
-    cocr::opencv_util --> opencv_core
-    cocr::opencv_util --> opencv_imgproc
+    cocr::opencv_util --> opencv_core:::deps
+    cocr::opencv_util --> opencv_imgproc:::deps
     
     
     cocr::stroke --> cocr::base
     cocr::stroke --> cocr::chem
     cocr::stroke --> cocr::opencv_util
     
-    cocr::stroke --> opencv_core
-    cocr::stroke --> opencv_imgproc
+    cocr::stroke --> opencv_core:::deps
+    cocr::stroke --> opencv_imgproc:::deps
    
     cocr::data --> cocr::base
     cocr::data --> cocr::chem
     cocr::data --> cocr::stroke
     cocr::data --> cocr::opencv_util
     
-    cocr::data --> opencv_core
-    cocr::data --> opencv_imgcodecs
-    cocr::data --> opencv_highgui
-    cocr::data --> Qt5::Core
-    cocr::data --> Qt5::Widgets
+    cocr::data --> opencv_core:::deps
+    cocr::data --> opencv_imgcodecs:::deps
+    cocr::data --> opencv_highgui:::deps
+    cocr::data --> Qt5::Core:::deps
+    cocr::data --> Qt5::Widgets:::deps
    
     cocr::ocr --> cocr::base
     cocr::ocr --> cocr::chem
     cocr::ocr --> cocr::opencv_util
     
-    cocr::ocr --> ncnn
-    cocr::ocr --> opencv_dnn
-    
-    Qt5::Widgets:::deps --> Qt5::Core:::deps
-    opencv_imgproc:::deps --> opencv_core:::deps
-    opencv_imgcodecs:::deps --> opencv_core
-    opencv_highgui:::deps --> opencv_core
-    opencv_highgui --> Qt5::Widgets
-    
-    openbabel --> coordgenlibs
-    openbabel --> maeparser
-    openbabel:::deps --> inchi:::deps
-    coordgenlibs:::deps --> maeparser:::deps
+    cocr::ocr --> ncnn:::deps
+    cocr::ocr --> opencv_dnn:::deps
     
     classDef deps fill:#6d61ff;
-    
+    classDef app fill:#888888;
+```
+
+### tools
+
+```mermaid
+graph TB
     app_qwidget:::app --> cocr::chem
     app_qwidget --> cocr::base
     app_qwidget --> cocr::ocr
     app_qwidget --> cocr::opencv_util
-    app_qwidget --> openbabel
-    app_qwidget --> coordgenlibs
-    app_qwidget --> opencv_core
-    app_qwidget --> opencv_imgproc
-    app_qwidget --> opencv_highgui
+    app_qwidget --> openbabel:::deps
+    app_qwidget --> coordgenlibs:::deps
+    app_qwidget --> opencv_core:::deps
+    app_qwidget --> opencv_imgproc:::deps
+    app_qwidget --> opencv_highgui:::deps
     
     data_gen:::app --> cocr::data
     data_gen --> cocr::stroke
     data_gen --> cocr::base
-    data_gen --> Qt5::Widgets
-    data_gen --> opencv_highgui
+    data_gen --> Qt5::Widgets:::deps
+    data_gen --> opencv_highgui:::deps
     
+    classDef deps fill:#6d61ff;
+    classDef app fill:#888888;
+```
+
+### 3rdparty
+
+```mermaid
+graph TB
+    Qt5::Widgets:::deps --> Qt5::Core:::deps
+    opencv_imgproc:::deps --> opencv_core:::deps
+    opencv_imgcodecs:::deps --> opencv_core:::deps
+    opencv_highgui:::deps --> opencv_core:::deps
+    opencv_highgui:::deps --> Qt5::Widgets
+    
+    openbabel:::deps --> coordgenlibs:::deps
+    openbabel:::deps --> maeparser:::deps
+    openbabel:::deps --> inchi:::deps
+    coordgenlibs:::deps --> maeparser:::deps
+    
+    classDef deps fill:#6d61ff;
     classDef app fill:#888888;
 ```
 
@@ -141,15 +158,15 @@ cmake --build . -j $(nproc) --config Release
 ```
 
 * Under data/models, YOLO and CRNN weights are both available in ncnn format. Additionally, YOLO in darknet and CRNN in
-onnx are provided.
+  onnx are provided.
 
 ## Data generation
 
 * COCR uses [SCUT-COUCH2009](https://www.hcii-lab.net/data/scutcouch/CN/couch.html) as meta handwriting data, and uses
-QtGui::QTextDocument as rich text renderer.
+  QtGui::QTextDocument as rich text renderer.
 
 * A chemical structure generator for handwriting cases is written to provider training data for YOLO and CRNN models,
-which composes meta-character into random chemical structure formulas. You can find related codes under src/data_gen.
+  which composes meta-character into random chemical structure formulas. You can find related codes under src/data_gen.
 
 * After a minimal build above, a data_gen(.exe) can be found under $(BUILD_DIR)/out. There are following usages:
 
