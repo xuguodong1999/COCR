@@ -6,10 +6,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(QT_COMPONENTS Widgets)
-if (NOT WASM)
-    list(APPEND QT_COMPONENTS MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
+set(QT_COMPONENTS Widgets MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
+if (WASM)
+    list(REMOVE_ITEM QT_COMPONENTS MultimediaWidgets 3DCore 3DExtras 3DRender 3DInput)
+elseif (ANDROID)
+    list(REMOVE_ITEM QT_COMPONENTS MultimediaWidgets)
 endif ()
+
 if (NOT ANDROID) # do it in root/CMakeLists.txt
     find_package(Qt5 COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
 endif ()
