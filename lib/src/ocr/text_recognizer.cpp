@@ -4,6 +4,9 @@
 #include "../ocr_impl/text_recognizer_ncnn_impl.hpp"
 
 #include <opencv2/imgproc.hpp>
+
+#include <QDebug>
+
 #include <iostream>
 
 cv::Mat cocr::TextRecognizer::preProcess(const cv::Mat &_src) {
@@ -25,10 +28,11 @@ std::shared_ptr<cocr::TextRecognizer> cocr::TextRecognizer::MakeInstance() {
     if (!recognizer->initModel(
             ncnnTextModel, ncnnTextModelCfg,
             cocr::TextCorrector::GetAlphabet(), 3200)) {
-        std::cerr << "fail to init ncnn recognizer" << std::flush;
+        qDebug() << "fail to init ncnn recognizer";
         recognizer->freeModel();
         return nullptr;
     }
+    qDebug() << "init ncnn recognizer success";
     return recognizer;
 }
 

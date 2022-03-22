@@ -272,11 +272,11 @@ OCRThread::OCRThread(QObject *_parent)
     qDebug() << "OCRThread::OCRThread";
     static auto detector = cocr::ObjectDetector::MakeInstance();
     static auto recognizer = cocr::TextRecognizer::MakeInstance();
-    static cocr::TextCorrector corrector;
-    static cocr::GraphComposer composer;
+    static auto corrector = std::make_shared<cocr::TextCorrector>();
+    static auto composer = std::make_shared<cocr::GraphComposer>();
     if (detector && recognizer) {
         ocrManager = std::make_shared<cocr::OCRManager>(
-                *detector, *recognizer, corrector, composer);
+                *detector, *recognizer, *corrector, *composer);
     }
 }
 

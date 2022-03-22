@@ -1,6 +1,8 @@
 #include "ocr/object_detector.hpp"
 #include "opencv_util/opencv_util.hpp"
 
+#include <QDebug>
+
 #ifdef USE_OPENCV_DNN
 
 #include "../ocr_impl/object_detector_opencv_impl.hpp"
@@ -75,18 +77,20 @@ std::shared_ptr<cocr::ObjectDetector> cocr::ObjectDetector::MakeInstance() {
     detector->setConfThresh(0.25);
     detector->setIouThresh(0.45);
     if (!detector->initModel(ocvDetModelCfg, ocvDetModel)) {
-        std::cerr << "fail to init opencv detector" << std::flush;
+        qDebug() << "fail to init opencv detector";
         detector->freeModel();
         return nullptr;
     }
+    qDebug() << "init opencv detector success";
 #else
     auto detector = std::make_shared<cocr::ObjectDetectorNcnnImpl>();
     detector->setNumThread(4);
     if (!detector->initModel(ncnnDetModel, ncnnDetModelCfg, 1280)) {
-        std::cerr << "fail to init ncnn detector" << std::flush;
+        qDebug() << "fail to init ncnn detector";
         detector->freeModel();
         return nullptr;
     }
+    qDebug() << "init ncnn detector success";
 #endif
     return detector;
 }

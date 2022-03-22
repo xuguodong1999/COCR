@@ -8,8 +8,10 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 # C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# gcc -fvisibility=hidden
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+# gcc -fvisibility=hidden, but qt-android may need reflection
+if (NOT ANDROID AND NOT IOS)
+    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+endif ()
 
 # data_gen for handwriting ocsr job
 option(BUILD_DATA_GEN "Generate data for yolo and crnn training" ON)
