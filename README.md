@@ -103,14 +103,6 @@ graph TB
     data_gen --> Qt5::Widgets:::deps
     data_gen --> opencv_highgui:::deps
     
-    classDef deps fill:#6d61ff;
-    classDef app fill:#888888;
-```
-
-### 3rdparty
-
-```mermaid
-graph TB
     Qt5::Widgets:::deps --> Qt5::Core:::deps
     opencv_imgproc:::deps --> opencv_core:::deps
     opencv_imgcodecs:::deps --> opencv_core:::deps
