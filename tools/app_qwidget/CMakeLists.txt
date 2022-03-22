@@ -21,14 +21,10 @@ qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
 writeFileIfChanged(${CMAKE_CURRENT_BINARY_DIR}/leafxy_trans.qrc
         "<RCC>\n<qresource prefix=\"/\">\n<file alias=\"leafxy_zh_CN.qm\">leafxy_zh_CN.qm</file>\n</qresource>\n</RCC>")
 
-if (USE_OPENVINO)
-    add_definitions(-DUSE_OPENVINO)
-endif (USE_OPENVINO)
-
 if (USE_OPENCV_DNN)
-    qt5_add_big_resources(MODEL_QRC ${DEV_ASSETS_DIR}/leafxy_ocv_dnn.qrc)
+    qt5_add_big_resources(model_QRC ${DEV_ASSETS_DIR}/leafxy_ocv_dnn.qrc)
 else ()
-    qt5_add_big_resources(MODEL_QRC ${DEV_ASSETS_DIR}/leafxy_ncnn.qrc)
+    qt5_add_big_resources(model_QRC ${DEV_ASSETS_DIR}/leafxy_ncnn.qrc)
 endif ()
 
 GET_SUB_DIR_NAME(PROJECT_SOURCE_DIR_LIST ${CMAKE_CURRENT_SOURCE_DIR})
@@ -39,7 +35,7 @@ elseif (WASM)
 endif ()
 
 set(PROJECT_SOURCE
-        ${MODEL_QRC}
+        ${model_QRC}
         ${openbabel_QRC}
         ${DEV_ASSETS_DIR}/leafxy.qrc
         ${CMAKE_CURRENT_BINARY_DIR}/leafxy_trans.qrc)

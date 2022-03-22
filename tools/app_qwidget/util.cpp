@@ -24,6 +24,7 @@ cv::Mat cocr::convertQImageToMat(const QImage &_img) {
             cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
             break;
         case QImage::Format_Indexed8:
+        case QImage::Format_Grayscale8:
             mat = cv::Mat(_img.height(), _img.width(), CV_8UC1, dataPtr, step);
             break;
         default: {
