@@ -39,6 +39,76 @@ branch is under development as it is not robust enough yet.
 * Support single element symbols: C、H、O、N、P、B、S、F、Cl、Br、I.
 * Support bond types: single, double, triple, hash wedge, solid wedge, circle.
 
+## Architecture
+
+```mermaid
+graph TB
+    cocr::chem --> cocr::base
+    cocr::chem --> openbabel
+    cocr::chem --> coordgenlibs
+    
+    cocr::opencv_util --> cocr::base
+    cocr::opencv_util --> opencv_core
+    cocr::opencv_util --> opencv_imgproc
+    
+    
+    cocr::stroke --> cocr::base
+    cocr::stroke --> cocr::chem
+    cocr::stroke --> cocr::opencv_util
+    
+    cocr::stroke --> opencv_core
+    cocr::stroke --> opencv_imgproc
+   
+    cocr::data --> cocr::base
+    cocr::data --> cocr::chem
+    cocr::data --> cocr::stroke
+    cocr::data --> cocr::opencv_util
+    
+    cocr::data --> opencv_core
+    cocr::data --> opencv_imgcodecs
+    cocr::data --> opencv_highgui
+    cocr::data --> Qt5::Core
+    cocr::data --> Qt5::Widgets
+   
+    cocr::ocr --> cocr::base
+    cocr::ocr --> cocr::chem
+    cocr::ocr --> cocr::opencv_util
+    
+    cocr::ocr --> ncnn
+    cocr::ocr --> opencv_dnn
+    
+    Qt5::Widgets:::deps --> Qt5::Core:::deps
+    opencv_imgproc:::deps --> opencv_core:::deps
+    opencv_imgcodecs:::deps --> opencv_core
+    opencv_highgui:::deps --> opencv_core
+    opencv_highgui --> Qt5::Widgets
+    
+    openbabel --> coordgenlibs
+    openbabel --> maeparser
+    openbabel:::deps --> inchi:::deps
+    coordgenlibs:::deps --> maeparser:::deps
+    
+    classDef deps fill:#6d61ff;
+    
+    app_qwidget:::app --> cocr::chem
+    app_qwidget --> cocr::base
+    app_qwidget --> cocr::ocr
+    app_qwidget --> cocr::opencv_util
+    app_qwidget --> openbabel
+    app_qwidget --> coordgenlibs
+    app_qwidget --> opencv_core
+    app_qwidget --> opencv_imgproc
+    app_qwidget --> opencv_highgui
+    
+    data_gen:::app --> cocr::data
+    data_gen --> cocr::stroke
+    data_gen --> cocr::base
+    data_gen --> Qt5::Widgets
+    data_gen --> opencv_highgui
+    
+    classDef app fill:#888888;
+```
+
 ## Build from source
 
 1. OpenCV ≥4.5.1, Qt =5.15.2, ncnn ≥20210322 but ≤20210720 are required for a minimal build.
