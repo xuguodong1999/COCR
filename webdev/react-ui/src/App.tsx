@@ -2,13 +2,13 @@ import './App.css';
 import React, {Component, useRef, useState,} from 'react';
 
 import {Canvas, useFrame} from '@react-three/fiber';
-import COCR from './unstable/cocr';
+import {SOSO11} from '@cocr/ml/src/soso11';
 
 const CANVAS_IN = 'canvasInput';
 const CANVAS_OUT = 'canvasOutput';
 const enable3D = false;
 
-export default class MyApp extends Component {
+export default class App extends Component {
     constructor(props) {
         super(props);
     }
@@ -76,7 +76,7 @@ export default class MyApp extends Component {
                     </div>
                     <div style={{border: '2px solid red', margin: '10px'}}>
                         <input type={'button'} value={'推理：'} onClick={() => {
-                            COCR.predict(CANVAS_IN, './model.json').then(
+                            SOSO11.predict(CANVAS_IN, './model.json').then(
                                 (result) => drawBoxes(result));
                         }}/>
                         <p>{'输出：'}</p>

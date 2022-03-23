@@ -1,26 +1,46 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
+  "exclude": [
+    "node_modules",
+    // ignore bundle
+    "dist",
+    // ignore js src
     "src"
-  ]
+  ],
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    /* Language and Environment */
+    "target": "es2016",
+    /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "jsx": "react",
+    /* Specify what JSX code is generated. */
+    /* Modules */
+    "module": "commonjs",
+    /* Specify what module code is generated. */
+    /* JavaScript Support */
+    "allowJs": false,
+    /* Enable error reporting in type-checked JavaScript files. */
+    "esModuleInterop": true,
+    /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
+    "forceConsistentCasingInFileNames": true,
+    /* Ensure that casing is correct in imports. */
+    /* Type Checking */
+    "strict": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    /* Enable all strict type-checking options. */
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@cocr/chem/*": [
+        "./chem/*"
+      ],
+      "@cocr/ml": [
+        "./ml/*"
+      ],
+      "@cocr/react-ui": [
+        "./react-ui/*"
+      ]
+    }
+  }
 }

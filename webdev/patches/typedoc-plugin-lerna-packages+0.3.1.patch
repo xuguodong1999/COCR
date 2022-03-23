@@ -1,0 +1,13 @@
+diff --git a/node_modules/typedoc-plugin-lerna-packages/dist/plugin.js b/node_modules/typedoc-plugin-lerna-packages/dist/plugin.js
+index 0513603..0659e5a 100644
+--- a/node_modules/typedoc-plugin-lerna-packages/dist/plugin.js
++++ b/node_modules/typedoc-plugin-lerna-packages/dist/plugin.js
+@@ -98,7 +98,7 @@ let LernaPackagesPlugin = /** @class */ (() => {
+                     }];
+                 reflection.children = [];
+                 const readMePath = path_1.join(fullPath, (_a = this.readme) !== null && _a !== void 0 ? _a : 'README.md');
+-                if (this.readme !== 'none' && fs_1.existsSync(readMePath)) {
++                if (this.readme !== 'none' && fs_1.lstatSync(readMePath).isFile()) {
+                     let readme = fs_1.readFileSync(readMePath);
+                     reflection.comment = new comments_1.Comment('', readme.toString());
+                 }
