@@ -4,6 +4,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(OpenCV QUIET)
 find_package(Torch QUIET)
+find_package(Qt5 COMPONENTS Widgets QUIET)
 
 if (NOT ${Torch_FOUND})
     message(WARNING "Torch not found, ${PROJECT_NAME} will not be built")
@@ -13,6 +14,11 @@ endif ()
 if (NOT ${OpenCV_FOUND})
     message(WARNING "OpenCV not found, ${PROJECT_NAME} will not be built")
     return()
+endif ()
+
+if (NOT ${Qt5_FOUND})
+    message(WARNING "Qt5 not found, ${TARGET_NAME} will not be built")
+    continue()
 endif ()
 
 include_directories(${TORCH_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${DEV_HEADER_DIR})
@@ -26,5 +32,5 @@ foreach (PROJECT_SOURCE ${PROJECT_SOURCES})
     add_executable(${TARGET_NAME} ${PROJECT_SOURCE})
     # product suffix
     set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
-    target_link_libraries(${TARGET_NAME} PRIVATE ${TORCH_LIBRARIES} ${OpenCV_LIBS})
+    target_link_libraries(${TARGET_NAME} PRIVATE ${TORCH_LIBRARIES} ${OpenCV_LIBS} Qt5::Widgets)
 endforeach ()
