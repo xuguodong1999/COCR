@@ -32,7 +32,7 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cocr/chem/*": [
+      "@cocr/chem": [
         "./chem/*"
       ],
       "@cocr/ml": [

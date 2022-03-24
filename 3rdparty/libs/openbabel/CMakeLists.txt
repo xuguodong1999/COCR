@@ -49,7 +49,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core coordgenlibs maeparser inchi)
 if (IOS OR ANDROID OR APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenMP_CXX_FLAGS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
 endif ()
 
 if (BUILD_TESTS)
