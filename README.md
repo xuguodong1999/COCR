@@ -1,6 +1,11 @@
 # COCR
 
-[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE.md)
+[![License](./docs/assets/License-GPLv3-blue.svg)](./LICENSE.md)
+[![support-wasm](./docs/assets/support-wasm.svg)](./docs/Build_wasm.md)
+[![support-android](./docs/assets/support-android.svg)](./docs/Build_android.md)
+[![support-windows](./docs/assets/support-windows.svg)](./docs/Build_desktop.md)
+[![support-linux](./docs/assets/support-linux.svg)](./docs/Build_desktop.md)
+[![support-macos](./docs/assets/support-macos.svg)](./docs/Build_desktop.md)
 
 **COCR** is designed to convert an image of **hand-written** chemical structure to **graph** of that molecule.
 
@@ -8,16 +13,10 @@ COCR, **O**ptical **C**haracter **R**ecognition for **C**hemical Structures, was
 graduation thesis in 2021.6. It brings OCSR(optical chemical structure recognition) capability into handwriting cases.
 Below is a summary of supported items.
 
-|symbol|looks like|supported|
-|---|---|---|
-|strings|**(CH<sub>2</sub>)<sub>2</sub>COOEt**|✔️|
-|rings|**⏣**|✔️|
-|solid wedge|**▲**|✔️|
-|hash wedge|**△**|✔️|
-|wavy bond|**~**|✔️|
-|single bond|**/**|✔️|
-|double bond|**//**|✔️|
-|triple bond|**///**|✔️|
+|symbol|strings|rings|solid wedge|hash wedge|wavy bond|single bond|double bond|triple bond|
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|looks like|**(CH<sub>2</sub>)<sub>2</sub>COOEt**|**⏣**|**▲**|**△**|**~~**|**/**|**//**|**///**|
+|supported|✔️|✔️|✔️|✔️|✔️|✔️|✔️|✔️|
 
 COCR is developed under Qt framework. It handles images with YOLO and CRNN models using opencv or ncnn backend.
 
@@ -33,7 +32,7 @@ branch is under development as it is not robust enough yet.
 ### v1.0
 
 |Input|Detection|Render|
-|---|---|---|
+|:----:|:----:|:----:|
 |![png](./assets/img/origin.png)|![png](./assets/img/soso17.png)|![png](./assets/img/stick-and-ball.png)|
 
 * Support single element symbols: C、H、O、N、P、B、S、F、Cl、Br、I.
@@ -45,56 +44,32 @@ branch is under development as it is not robust enough yet.
 
 ## Build from source
 
-[Build for desktop](./docs/Build_desktop.md)
-
-[Build for android](./docs/Build_android.md)
-
-[Build for wasm](./docs/Build_wasm.md)
-
-[Build opencv from source](./docs/Config_opencv.md)
-
-[Build libtorch from source](./docs/Config_libtorch.md)
-
-1. OpenCV ≥4.5.1, Qt =5.15.2 are required for a minimal build.
+OpenCV ≥4.5.1, Qt =5.15.2 are required for a minimal build.
 
 ```shell
 git clone https://github.com/xuguodong1999/COCR.git
 cd COCR && mkdir build && cd build
 
 cmake .. -G "Ninja" \
--DBUILD_TESTS=OFF \
--DQt5_DIR:PATH=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
--DOpenCV_DIR:PATH=path/to/opencv4/lib/cmake/opencv4
+  -DQt5_DIR:PATH=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
+  -DOpenCV_DIR:PATH=path/to/opencv4/lib/cmake/opencv4
 
-cmake --build . -j $(nproc) --config Release
+cmake --build . --parallel --config Release --target leafxy
 ```
 
-2. For 3rdparty unit tests, add -DBUILD_TESTS=ON option. Boost is required, for example,
+[Build opencv from source](./docs/Config_opencv.md)
 
-```shell
--DBUILD_TESTS=ON \
--DBoost_DIR:PATH=path/to/boost/lib/cmake/Boost-1.77.0
-```
-
-3. For train with cpp codes, add -DBUILD_ELS_LAB=ON option. Libtorch is required, for example,
-
-```shell
--DBUILD_ELS_LAB=ON \
--DTorch_DIR=path/to/libtorch/share/cmake/Torch
-```
-
-* Under data/models, YOLO and CRNN weights are both available in ncnn format. Additionally, YOLO in darknet and CRNN in
-  onnx are provided.
+[Build libtorch from source](./docs/Config_libtorch.md)
 
 ## Data generation
 
-* COCR uses [SCUT-COUCH2009](https://www.hcii-lab.net/data/scutcouch/CN/couch.html) as meta handwriting data, and uses
+COCR uses [SCUT-COUCH2009](https://www.hcii-lab.net/data/scutcouch/CN/couch.html) as meta handwriting data, and uses
   QtGui::QTextDocument as rich text renderer.
 
-* A chemical structure generator for handwriting cases is written to provider training data for YOLO and CRNN models,
+A chemical structure generator for handwriting cases is written to provider training data for YOLO and CRNN models,
   which composes meta-character into random chemical structure formulas. You can find related codes under src/data_gen.
 
-* After a minimal build above, a data_gen(.exe) can be found under $(BUILD_DIR)/out. There are following usages:
+After a minimal build above, a data_gen(.exe) can be found under $(BUILD_DIR)/out. There are following usages:
 
 1. Double click or run from shell WITHOUT arguments
 
