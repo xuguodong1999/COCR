@@ -13,7 +13,7 @@ COCR, **O**ptical **C**haracter **R**ecognition for **C**hemical Structures, was
 graduation thesis in 2021.6. It brings OCSR(optical chemical structure recognition) capability into handwriting cases.
 Below is a summary of supported items.
 
-|symbol|strings|rings|solid wedge|hash wedge|wavy bond|single bond|double bond|triple bond|
+|symbol|strings|ring|solid L|hash L|wavy L|single L|double L|triple L|
 |:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
 |looks like|**(CH<sub>2</sub>)<sub>2</sub>COOEt**|**⏣**|**▲**|**△**|**~~**|**/**|**//**|**///**|
 |supported|✔️|✔️|✔️|✔️|✔️|✔️|✔️|✔️|
