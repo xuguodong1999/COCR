@@ -41,9 +41,19 @@ branch is under development as it is not robust enough yet.
 
 ## Architecture
 
-[flow chart](./docs/arch.md)
+[Flow Chart](./docs/Module.md)
 
 ## Build from source
+
+[Build for desktop](./docs/Build_desktop.md)
+
+[Build for android](./docs/Build_android.md)
+
+[Build for wasm](./docs/Build_wasm.md)
+
+[Build opencv from source](./docs/Config_opencv.md)
+
+[Build libtorch from source](./docs/Config_libtorch.md)
 
 1. OpenCV ≥4.5.1, Qt =5.15.2 are required for a minimal build.
 

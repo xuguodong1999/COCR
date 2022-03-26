@@ -39,7 +39,7 @@ set(DEV_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 set(openbabel_QRC ${DEV_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
 
 # path to 3rdparty libraries
-set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty CACHE INTERNAL "")
+set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty CACHE INTERNAL "")
 
 # path to header-only 3rdparty libraries
 set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/header-only CACHE INTERNAL "")
@@ -48,7 +48,7 @@ set(inchi_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/inchi/include CACHE INTERNAL "")
 set(maeparser_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/maeparser/include CACHE INTERNAL "")
 set(coordgenlibs_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/coordgenlibs/include CACHE INTERNAL "")
 set(openbabel_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/openbabel/include CACHE INTERNAL "")
-set(cocr_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/include CACHE INTERNAL "")
+set(cocr_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cocr_core/include CACHE INTERNAL "")
 # remember to convert <ncnn/header.h> to <header.h>
 set(ncnn_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/ncnn/src)
 
@@ -103,10 +103,10 @@ endif ()
 
 # build ncnn from source
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Dependencies.cmake)
-add_subdirectory(3rdparty)
+add_subdirectory(thirdparty)
 
-add_subdirectory(lib)
-add_subdirectory(tools)
+add_subdirectory(cocr_core)
+add_subdirectory(cocr_tools)
 if (BUILD_ELS_LAB)
     add_subdirectory(elslab)
 endif ()
