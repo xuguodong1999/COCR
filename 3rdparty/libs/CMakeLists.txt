@@ -1,3 +1,4 @@
+add_subdirectory(ncnn)
 add_subdirectory(inchi)
 add_subdirectory(coordgenlibs)
 add_subdirectory(maeparser)

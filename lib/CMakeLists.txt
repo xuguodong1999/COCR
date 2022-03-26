@@ -9,9 +9,9 @@ if (NOT ANDROID) # use apk_shell for android-qt project
 endif ()
 find_package(OpenCV REQUIRED)
 
-find_package(ncnn REQUIRED)
-# ncnn has not put its include directory in cmake config yet
-include_directories(${ncnn_DIR}/../../../include)
+#find_package(ncnn REQUIRED)
+## ncnn has not put its include directory in cmake config yet
+#include_directories(${ncnn_DIR}/../../../include)
 if (ANDROID)
     # override no rtti and exceptions in ncnn
     set_target_properties(ncnn PROPERTIES INTERFACE_COMPILE_OPTIONS "-fexceptions")
@@ -90,3 +90,5 @@ if (USE_OPENCV_DNN)
 else ()
     add3rdDeps(ocr "ncnn")
 endif ()
+add_dependencies(cocr_ocr ncnn)
+target_include_directories(cocr_ocr PRIVATE ${ncnn_INCLUDE_DIR})

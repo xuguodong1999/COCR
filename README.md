@@ -45,7 +45,7 @@ branch is under development as it is not robust enough yet.
 
 ## Build from source
 
-1. OpenCV ≥4.5.1, Qt =5.15.2, ncnn ≥20210322 but ≤20210720 are required for a minimal build.
+1. OpenCV ≥4.5.1, Qt =5.15.2 are required for a minimal build.
 
 ```shell
 git clone https://github.com/xuguodong1999/COCR.git
@@ -54,8 +54,7 @@ cd COCR && mkdir build && cd build
 cmake .. -G "Ninja" \
 -DBUILD_TESTS=OFF \
 -DQt5_DIR:PATH=path/to/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
--DOpenCV_DIR:PATH=path/to/opencv4/lib/cmake/opencv4 \
--Dncnn_DIR:PATH=path/to/ncnn/lib/cmake/ncnn
+-DOpenCV_DIR:PATH=path/to/opencv4/lib/cmake/opencv4
 
 cmake --build . -j $(nproc) --config Release
 ```

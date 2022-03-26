@@ -4,8 +4,8 @@
 
 #include <opencv2/imgproc.hpp>
 
-#include <ncnn/net.h>
-#include <ncnn/datareader.h>
+#include <net.h> // <ncnn/net.h>
+#include <datareader.h> // <ncnn/datareader.h>
 
 #include <QFile>
 #include <QDebug>

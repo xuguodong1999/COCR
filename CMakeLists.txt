@@ -49,6 +49,8 @@ set(maeparser_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/maeparser/include CACHE INTERNAL 
 set(coordgenlibs_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/coordgenlibs/include CACHE INTERNAL "")
 set(openbabel_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/openbabel/include CACHE INTERNAL "")
 set(cocr_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/include CACHE INTERNAL "")
+# remember to convert <ncnn/header.h> to <header.h>
+set(ncnn_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/ncnn/src)
 
 # always enable openmp
 find_package(OpenMP)
@@ -99,7 +101,10 @@ else ()
     set(BUILD_TUTORIALS OFF)
 endif ()
 
+# build ncnn from source
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Dependencies.cmake)
 add_subdirectory(3rdparty)
+
 add_subdirectory(lib)
 add_subdirectory(tools)
 if (BUILD_ELS_LAB)

@@ -32,6 +32,7 @@ void doSomething(const QString &filename) {
             }
         } while (!f.atEnd());
         f.close();
+        qDebug() << result;
 //        if (f.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)) {
 //            f.write(result.toLocal8Bit());
 //            f.close();
