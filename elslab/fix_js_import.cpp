@@ -6,37 +6,61 @@
 
 template<typename T>
 using f = const std::function<T>;
+QSet<QString> allComponents;
+const QString err_import = "import {ErrorCode} from '@xxx/zzz/error-code';";
 
 void doSomething(const QString &filename) {
-    QFile f(QDir::home().absolutePath() + "/workspace/f1/" + filename);
+    QFile f(filename);
     if (f.open(QIODevice::ReadOnly)) {
-        bool startRevert = false, allowIn = false;
-        QString result;
+        QString fileContent;
+        QSet<QString> components;
+        bool needErrorCode = false;
+        bool needRewrite = false;
         do {
-            QString lineResult;
             auto line = f.readLine();
-            if (line.startsWith("<<<<<<<")) { // HEAD Current change
-                startRevert = true;
-                allowIn = false;
-                continue;
-            } else if (line.startsWith(">>>>>>>")) { // Incoming change
-                startRevert = false;
-                allowIn = false;
-                continue;
-            } else if (line.startsWith("=======")) { // split
-                allowIn = true;
-                continue;
-            }
-            if (!startRevert || allowIn) {
-                result.append(lineResult);
+            if (line.startsWith("import") && line.contains("@xxx/yyy") && !line.contains("/img/")) {
+                auto importBeg = line.indexOf("import") + 6;
+                auto fromBeg = line.indexOf("from");
+                auto target = line.mid(importBeg, fromBeg - importBeg);
+                target.replace('{', ' ');
+                target.replace('}', ' ');
+                target.replace(',', ' ');
+                auto words = target.split(' ');
+                for (const auto &word: words) {
+                    if (word == "XXX") {
+                        needErrorCode = true;
+                    } else if (!word.isEmpty()) {
+                        components.insert(word);
+                    }
+                }
+            } else {
+                fileContent.append(line);
             }
         } while (!f.atEnd());
         f.close();
-        qDebug() << result;
-//        if (f.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)) {
-//            f.write(result.toLocal8Bit());
-//            f.close();
-//        }
+        if (!components.empty()) {
+            needRewrite = true;
+            qDebug() << components;
+            allComponents.unite(components);
+            QString yyy_import = "import {";
+            for (const auto &component: components) {
+                yyy_import += component;
+                yyy_import += ", ";
+            }
+            yyy_import += "} from '@xxx/yyy';";
+            fileContent = yyy_import + "\n" + fileContent;
+        }
+        if (needErrorCode) {
+            needRewrite = true;
+            fileContent = err_import + "\n" + fileContent;
+//            qDebug() << fileContent.toStdString().c_str();
+//            std::cin.get();
+        }
+        if (!needRewrite) { return; }
+        if (f.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)) {
+            f.write(fileContent.toLocal8Bit());
+            f.close();
+        }
     }
 }
 
@@ -48,8 +72,9 @@ int main(int argc, char *argv[]) {
     }
     do {
         auto buffer = fileListFile.readLine();
-        qDebug() << buffer;
+//        qDebug() << buffer;
         doSomething(buffer.trimmed());
     } while (!fileListFile.atEnd());
+    qDebug() << allComponents;
     return EXIT_SUCCESS;
 }
