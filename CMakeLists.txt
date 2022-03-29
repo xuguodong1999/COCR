@@ -21,7 +21,7 @@ option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" ON)
 # run on intel NCS 2
 option(USE_OPENVINO "Whether use opencv::dnn with openvino backend" OFF)
 # libtorch playground
-option(BUILD_ELS_LAB "Libtorch is required to build cpp train" OFF)
+option(WITH_LIBTORCH "Libtorch is required to build cpp train" OFF)
 
 # how add_library works
 option(BUILD_SHARED_LIBS "Build as shared or static libs" ON)
@@ -92,12 +92,12 @@ if (NOT WASM AND NOT ANDROID AND NOT IOS)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 else ()
     # disable unrelated project for wasm and android
-    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, BUILD_ELS_LAB and BUILD_TUTORIALS set to OFF")
+    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, WITH_LIBTORCH and BUILD_TUTORIALS set to OFF")
     set(USE_OPENCV_DNN OFF)
 
     set(BUILD_DATA_GEN OFF)
     set(BUILD_TESTS OFF)
-    set(BUILD_ELS_LAB OFF)
+    set(WITH_LIBTORCH OFF)
     set(BUILD_TUTORIALS OFF)
 endif ()
 
@@ -107,6 +107,6 @@ add_subdirectory(thirdparty)
 
 add_subdirectory(cocr_core)
 add_subdirectory(cocr_tools)
-if (BUILD_ELS_LAB)
+if (WITH_LIBTORCH)
     add_subdirectory(elslab)
 endif ()

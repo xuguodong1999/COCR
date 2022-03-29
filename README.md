@@ -7,7 +7,7 @@
 [![support-linux](./docs/assets/support-linux.svg)](./docs/Build_desktop.md)
 [![support-macos](./docs/assets/support-macos.svg)](./docs/Build_desktop.md)
 
-**COCR** is designed to convert an image of **hand-written** chemical structure to **graph** of that molecule.
+COCR is designed to convert an image of hand-writing chemical structure to graph of that molecule.
 
 COCR, **O**ptical **C**haracter **R**ecognition for **C**hemical Structures, was once a demo for my undergraduate
 graduation thesis in 2021.6. It brings OCSR(optical chemical structure recognition) capability into handwriting cases.
