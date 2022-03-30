@@ -38,6 +38,8 @@ class Exp(BaseExp):
         # self.random_size = (14, 26)
         # dir of dataset images, if data_dir is None, this project will use `datasets` dir
         self.data_dir = None
+        # name like train2017
+        self.img_dir_name = None
         # name of annotation file for training
         self.train_ann = "instances_train2017.json"
         # name of annotation file for evaluation
@@ -156,6 +158,7 @@ class Exp(BaseExp):
                     flip_prob=self.flip_prob,
                     hsv_prob=self.hsv_prob),
                 cache=cache_img,
+                name=self.img_dir_name if self.img_dir_name is not None else "train2017"
             )
 
         dataset = MosaicDetection(
@@ -282,7 +285,7 @@ class Exp(BaseExp):
         valdataset = COCODataset(
             data_dir=self.data_dir,
             json_file=self.val_ann if not testdev else self.test_ann,
-            name="val2017" if not testdev else "test2017",
+            name=self.img_dir_name if self.img_dir_name is not None else ("val2017" if not testdev else "test2017"),
             img_size=self.test_size,
             preproc=ValTransform(legacy=legacy),
         )
