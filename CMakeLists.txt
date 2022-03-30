@@ -44,13 +44,13 @@ set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty CACHE INTERNAL "")
 # path to header-only 3rdparty libraries
 set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/header-only CACHE INTERNAL "")
 # other 3rdparty include dirs
-set(inchi_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/inchi/include CACHE INTERNAL "")
-set(maeparser_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/maeparser/include CACHE INTERNAL "")
-set(coordgenlibs_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/coordgenlibs/include CACHE INTERNAL "")
-set(openbabel_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/openbabel/include CACHE INTERNAL "")
+set(inchi_INCLUDE_DIR ${DEV_DEPS_DIR}/libinchi/include CACHE INTERNAL "")
+set(maeparser_INCLUDE_DIR ${DEV_DEPS_DIR}/libmaeparser/include CACHE INTERNAL "")
+set(coordgenlibs_INCLUDE_DIR ${DEV_DEPS_DIR}/libcoordgenlibs/include CACHE INTERNAL "")
+set(openbabel_INCLUDE_DIR ${DEV_DEPS_DIR}/libopenbabel/include CACHE INTERNAL "")
 set(cocr_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cocr_core/include CACHE INTERNAL "")
 # remember to convert <ncnn/header.h> to <header.h>
-set(ncnn_INCLUDE_DIR ${DEV_DEPS_DIR}/libs/ncnn/src)
+set(ncnn_INCLUDE_DIR ${DEV_DEPS_DIR}/libncnn/src)
 
 # always enable openmp
 find_package(OpenMP)
