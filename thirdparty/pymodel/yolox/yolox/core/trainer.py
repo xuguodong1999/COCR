@@ -16,19 +16,15 @@ from ..utils import (
     MeterBuffer,
     ModelEMA,
     WandbLogger,
-    adjust_status,
-    all_reduce_norm,
     get_local_rank,
     get_model_info,
     get_rank,
     get_world_size,
     gpu_mem_usage,
-    is_parallel,
     load_ckpt,
     occupy_mem,
     save_checkpoint,
-    setup_logger,
-    synchronize
+    setup_logger
 )
 
 
@@ -170,10 +166,6 @@ class Trainer:
             self.ema_model.updates = self.max_iter * self.start_epoch
 
         self.model = model
-
-        self.evaluator = self.exp.get_evaluator(
-            batch_size=self.args.batch_size, is_distributed=self.is_distributed
-        )
         # Tensorboard and Wandb loggers
         if self.rank == 0:
             if self.args.logger == "tensorboard":
@@ -200,26 +192,15 @@ class Trainer:
 
     def before_epoch(self):
         logger.info("---> start train epoch{}".format(self.epoch + 1))
-
-        if self.epoch + 1 == self.max_epoch - self.exp.no_aug_epochs or self.no_aug:
-            logger.info("--->No mosaic aug now!")
-            self.train_loader.close_mosaic()
-            logger.info("--->Add additional L1 loss now!")
-            if self.is_distributed:
-                self.model.module.head.use_l1 = True
-            else:
-                self.model.head.use_l1 = True
-            self.exp.eval_interval = 1
-            if not self.no_aug:
-                self.save_ckpt(ckpt_name="last_mosaic_epoch")
+        if self.is_distributed:
+            self.model.module.head.use_l1 = True
+        else:
+            self.model.head.use_l1 = True
 
     def after_epoch(self):
         self.save_ckpt(ckpt_name="latest")
         if self.save_history_ckpt:
             self.save_ckpt(f"epoch_{self.epoch + 1}")
-        if (self.epoch + 1) % self.exp.eval_interval == 0:
-            all_reduce_norm(self.model)
-            self.evaluate_and_save_model()
 
     def before_iter(self):
         pass
@@ -314,37 +295,6 @@ class Trainer:
             self.start_epoch = 0
 
         return model
-
-    def evaluate_and_save_model(self):
-        if self.use_model_ema:
-            evalmodel = self.ema_model.ema
-        else:
-            evalmodel = self.model
-            if is_parallel(evalmodel):
-                evalmodel = evalmodel.module
-
-        with adjust_status(evalmodel, training=False):
-            ap50_95, ap50, summary = self.exp.eval(
-                evalmodel, self.evaluator, self.is_distributed
-            )
-
-        update_best_ckpt = ap50_95 > self.best_ap
-        self.best_ap = max(self.best_ap, ap50_95)
-
-        if self.rank == 0:
-            if self.args.logger == "tensorboard":
-                self.tblogger.add_scalar("val/COCOAP50", ap50, self.epoch + 1)
-                self.tblogger.add_scalar("val/COCOAP50_95", ap50_95, self.epoch + 1)
-            if self.args.logger == "wandb":
-                self.wandb_logger.log_metrics({
-                    "val/COCOAP50": ap50,
-                    "val/COCOAP50_95": ap50_95,
-                    "epoch": self.epoch + 1,
-                })
-            logger.info("\n" + summary)
-        synchronize()
-
-        self.save_ckpt("last_epoch", update_best_ckpt)
 
     def save_ckpt(self, ckpt_name, update_best_ckpt=False):
         if self.rank == 0:

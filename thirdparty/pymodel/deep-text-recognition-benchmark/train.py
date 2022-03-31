@@ -14,9 +14,10 @@ import torch.utils.data
 from dataset import hierarchical_dataset, AlignCollate, Batch_Balanced_Dataset
 from model import Model
 from test import validation
-from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabelConverter, Averager
+from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, Averager
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 def train(opt):
     """ dataset preparation """
@@ -43,13 +44,10 @@ def train(opt):
     log.close()
 
     """ model configuration """
-    if 'CTC' in opt.Prediction:
-        if opt.baiduCTC:
-            converter = CTCLabelConverterForBaiduWarpctc(opt.character)
-        else:
-            converter = CTCLabelConverter(opt.character)
+    if opt.baiduCTC:
+        converter = CTCLabelConverterForBaiduWarpctc(opt.character)
     else:
-        converter = AttnLabelConverter(opt.character)
+        converter = CTCLabelConverter(opt.character)
     opt.num_class = len(converter.character)
 
     if opt.rgb:
@@ -87,15 +85,12 @@ def train(opt):
     print(model)
 
     """ setup loss """
-    if 'CTC' in opt.Prediction:
-        if opt.baiduCTC:
-            # need to install warpctc. see our guideline.
-            from warpctc_pytorch import CTCLoss
-            criterion = CTCLoss()
-        else:
-            criterion = torch.nn.CTCLoss(zero_infinity=True).to(device)
+    if opt.baiduCTC:
+        # need to install warpctc. see our guideline.
+        from warpctc_pytorch import CTCLoss
+        criterion = CTCLoss()
     else:
-        criterion = torch.nn.CrossEntropyLoss(ignore_index=0).to(device)  # ignore [GO] token = ignore index 0
+        criterion = torch.nn.CTCLoss(zero_infinity=True).to(device)
     # loss averager
     loss_avg = Averager()
 
@@ -150,21 +145,14 @@ def train(opt):
         text, length = converter.encode(labels, batch_max_length=opt.batch_max_length)
         batch_size = image.size(0)
 
-        if 'CTC' in opt.Prediction:
-            preds = model(image, text)
-            preds_size = torch.IntTensor([preds.size(0)] * batch_size)
-            if opt.baiduCTC:
-                # preds = preds.permute(1, 0, 2)  # to use CTCLoss format
-                cost = criterion(preds, text, preds_size, length) / batch_size
-            else:
-                preds = preds.log_softmax(2)  # .permute(1, 0, 2)
-                cost = criterion(preds, text, preds_size, length)
-
+        preds = model(image, text)
+        preds_size = torch.IntTensor([preds.size(0)] * batch_size)
+        if opt.baiduCTC:
+            # preds = preds.permute(1, 0, 2)  # to use CTCLoss format
+            cost = criterion(preds, text, preds_size, length) / batch_size
         else:
-            preds = model(image, text[:, :-1])  # align with Attention.forward
-            target = text[:, 1:]  # without [GO] Symbol
-            cost = criterion(preds.view(-1, preds.shape[-1]), target.contiguous().view(-1))
-
+            preds = preds.log_softmax(2)  # .permute(1, 0, 2)
+            cost = criterion(preds, text, preds_size, length)
         model.zero_grad()
         cost.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), opt.grad_clip)  # gradient clipping with 5 (Default)
@@ -265,11 +253,8 @@ if __name__ == '__main__':
     parser.add_argument('--PAD', action='store_true', help='whether to keep ratio then pad for image resize')
     parser.add_argument('--data_filtering_off', action='store_true', help='for data_filtering_off mode')
     """ Model Architecture """
-    parser.add_argument('--Transformation', type=str, required=True, help='Transformation stage. None|TPS')
     parser.add_argument('--FeatureExtraction', type=str, required=True,
                         help='FeatureExtraction stage. VGG|RCNN|ResNet')
-    parser.add_argument('--SequenceModeling', type=str, required=True, help='SequenceModeling stage. None|BiLSTM')
-    parser.add_argument('--Prediction', type=str, required=True, help='Prediction stage. CTC|Attn')
     parser.add_argument('--num_fiducial', type=int, default=20, help='number of fiducial points of TPS-STN')
     parser.add_argument('--input_channel', type=int, default=1,
                         help='the number of input channel of Feature extractor')

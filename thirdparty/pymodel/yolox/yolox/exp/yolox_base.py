@@ -48,22 +48,12 @@ class Exp(BaseExp):
         self.test_ann = "instances_test2017.json"
 
         # --------------- transform config ----------------- #
-        # prob of applying mosaic aug
-        self.mosaic_prob = 1.0
-        # prob of applying mixup aug
-        self.mixup_prob = 1.0
         # prob of applying hsv aug
         self.hsv_prob = 1.0
         # prob of applying flip aug
         self.flip_prob = 0.5
-        # rotation angle range, for example, if set to 2, the true range is (-2, 2)
-        self.degrees = 10.0
         # translate range, for example, if set to 0.1, the true range is (-0.1, 0.1)
         self.translate = 0.1
-        self.mosaic_scale = (0.1, 2)
-        # apply mixup aug or not
-        self.enable_mixup = True
-        self.mixup_scale = (0.5, 1.5)
         # shear angle range, for example, if set to 2, the true range is (-2, 2)
         self.shear = 2.0
 
@@ -91,9 +81,6 @@ class Exp(BaseExp):
         # log period in iter, for example,
         # if set to 1, user could see log every iteration.
         self.print_interval = 10
-        # eval period in epoch, for example,
-        # if set to 1, model will be evaluate after every epoch.
-        self.eval_interval = 10
         # save history checkpoint or not.
         # If set to False, yolox will only save latest and best ckpt.
         self.save_history_ckpt = True
@@ -138,7 +125,6 @@ class Exp(BaseExp):
             YoloBatchSampler,
             DataLoader,
             InfiniteSampler,
-            MosaicDetection,
             worker_init_reset_seed,
         )
         from ..utils import (
@@ -149,37 +135,16 @@ class Exp(BaseExp):
         local_rank = get_local_rank()
 
         with wait_for_the_master(local_rank):
-            dataset = COCODataset(
+            self.dataset = COCODataset(
                 data_dir=self.data_dir,
                 json_file=self.train_ann,
                 img_size=self.input_size,
                 preproc=TrainTransform(
-                    max_labels=50,
+                    max_labels=1024,
                     flip_prob=self.flip_prob,
                     hsv_prob=self.hsv_prob),
-                cache=cache_img,
                 name=self.img_dir_name if self.img_dir_name is not None else "train2017"
             )
-
-        dataset = MosaicDetection(
-            dataset,
-            mosaic=not no_aug,
-            img_size=self.input_size,
-            preproc=TrainTransform(
-                max_labels=120,
-                flip_prob=self.flip_prob,
-                hsv_prob=self.hsv_prob),
-            degrees=self.degrees,
-            translate=self.translate,
-            mosaic_scale=self.mosaic_scale,
-            mixup_scale=self.mixup_scale,
-            shear=self.shear,
-            enable_mixup=self.enable_mixup,
-            mosaic_prob=self.mosaic_prob,
-            mixup_prob=self.mixup_prob,
-        )
-
-        self.dataset = dataset
 
         if is_distributed:
             batch_size = batch_size // dist.get_world_size()
@@ -190,7 +155,6 @@ class Exp(BaseExp):
             sampler=sampler,
             batch_size=batch_size,
             drop_last=False,
-            mosaic=not no_aug,
         )
 
         dataloader_kwargs = {"num_workers": self.data_num_workers, "pin_memory": True}
@@ -278,49 +242,3 @@ class Exp(BaseExp):
             min_lr_ratio=self.min_lr_ratio,
         )
         return scheduler
-
-    def get_eval_loader(self, batch_size, is_distributed, testdev=False, legacy=False):
-        from ..data import COCODataset, ValTransform
-
-        valdataset = COCODataset(
-            data_dir=self.data_dir,
-            json_file=self.val_ann if not testdev else self.test_ann,
-            name=self.img_dir_name if self.img_dir_name is not None else ("val2017" if not testdev else "test2017"),
-            img_size=self.test_size,
-            preproc=ValTransform(legacy=legacy),
-        )
-
-        if is_distributed:
-            batch_size = batch_size // dist.get_world_size()
-            sampler = torch.utils.data.distributed.DistributedSampler(
-                valdataset, shuffle=False
-            )
-        else:
-            sampler = torch.utils.data.SequentialSampler(valdataset)
-
-        dataloader_kwargs = {
-            "num_workers": self.data_num_workers,
-            "pin_memory": True,
-            "sampler": sampler,
-        }
-        dataloader_kwargs["batch_size"] = batch_size
-        val_loader = torch.utils.data.DataLoader(valdataset, **dataloader_kwargs)
-
-        return val_loader
-
-    def get_evaluator(self, batch_size, is_distributed, testdev=False, legacy=False):
-        from ..evaluators import COCOEvaluator
-
-        val_loader = self.get_eval_loader(batch_size, is_distributed, testdev, legacy)
-        evaluator = COCOEvaluator(
-            dataloader=val_loader,
-            img_size=self.test_size,
-            confthre=self.test_conf,
-            nmsthre=self.nmsthre,
-            num_classes=self.num_classes,
-            testdev=testdev,
-        )
-        return evaluator
-
-    def eval(self, model, evaluator, is_distributed, half=False):
-        return evaluator.evaluate(model, is_distributed, half)

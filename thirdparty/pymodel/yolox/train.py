@@ -114,9 +114,11 @@ def main(exp, args):
     trainer = Trainer(exp, args)
     trainer.train()
 
+
 if __name__ == "__main__":
     args = make_parser().parse_args()
-    from yolox.exp.default.yolox_nano_soso8 import Exp
+    from yolox.exp.yolox_nano_soso8 import Exp
+
     exp = Exp()
     exp.merge(args.opts)
 

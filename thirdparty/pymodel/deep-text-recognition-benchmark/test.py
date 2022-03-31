@@ -1,19 +1,20 @@
-import os
-import time
-import string
 import argparse
+import os
 import re
+import string
+import time
 
+import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
-import torch.utils.data
 import torch.nn.functional as F
-import numpy as np
+import torch.utils.data
 from nltk.metrics.distance import edit_distance
 
-from utils import CTCLabelConverter, AttnLabelConverter, Averager
 from dataset import hierarchical_dataset, AlignCollate
 from model import Model
+from utils import CTCLabelConverter, Averager
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
@@ -70,7 +71,7 @@ def benchmark_all_eval(model, criterion, converter, opt, calculate_infer_time=Fa
     for name, accuracy in zip(eval_data_list, list_accuracy):
         evaluation_log += f'{name}: {accuracy}\t'
     evaluation_log += f'total_accuracy: {total_accuracy:0.3f}\t'
-    evaluation_log += f'averaged_infer_time: {averaged_forward_time:0.3f}\t# parameters: {params_num/1e6:0.3f}'
+    evaluation_log += f'averaged_infer_time: {averaged_forward_time:0.3f}\t# parameters: {params_num / 1e6:0.3f}'
     print(evaluation_log)
     log.write(evaluation_log + '\n')
     log.close()
@@ -97,38 +98,24 @@ def validation(model, criterion, evaluation_loader, converter, opt):
         text_for_loss, length_for_loss = converter.encode(labels, batch_max_length=opt.batch_max_length)
 
         start_time = time.time()
-        if 'CTC' in opt.Prediction:
-            preds = model(image, text_for_pred)
-            forward_time = time.time() - start_time
 
-            # Calculate evaluation loss for CTC deocder.
-            preds_size = torch.IntTensor([preds.size(0)] * batch_size)
-            # permute 'preds' to use CTCloss format
-            if opt.baiduCTC:
-                cost = criterion(preds, text_for_loss, preds_size, length_for_loss) / batch_size
-            else:
-                cost = criterion(preds.log_softmax(2), text_for_loss, preds_size, length_for_loss)
-            preds = preds.permute(1, 0, 2)
-            # Select max probabilty (greedy decoding) then decode index to character
-            if opt.baiduCTC:
-                _, preds_index = preds.max(2)
-                preds_index = preds_index.view(-1)
-            else:
-                _, preds_index = preds.max(2)
-            preds_str = converter.decode(preds_index.data, preds_size.data)
-        
+        preds = model(image, text_for_pred)
+        forward_time = time.time() - start_time
+        # Calculate evaluation loss for CTC deocder.
+        preds_size = torch.IntTensor([preds.size(0)] * batch_size)
+        # permute 'preds' to use CTCloss format
+        if opt.baiduCTC:
+            cost = criterion(preds, text_for_loss, preds_size, length_for_loss) / batch_size
         else:
-            preds = model(image, text_for_pred, is_train=False)
-            forward_time = time.time() - start_time
-
-            preds = preds[:, :text_for_loss.shape[1] - 1, :]
-            target = text_for_loss[:, 1:]  # without [GO] Symbol
-            cost = criterion(preds.contiguous().view(-1, preds.shape[-1]), target.contiguous().view(-1))
-
-            # select max probabilty (greedy decoding) then decode index to character
+            cost = criterion(preds.log_softmax(2), text_for_loss, preds_size, length_for_loss)
+        preds = preds.permute(1, 0, 2)
+        # Select max probabilty (greedy decoding) then decode index to character
+        if opt.baiduCTC:
             _, preds_index = preds.max(2)
-            preds_str = converter.decode(preds_index, length_for_pred)
-            labels = converter.decode(text_for_loss[:, 1:], length_for_loss)
+            preds_index = preds_index.view(-1)
+        else:
+            _, preds_index = preds.max(2)
+        preds_str = converter.decode(preds_index.data, preds_size.data)
 
         infer_time += forward_time
         valid_loss_avg.add(cost)
@@ -189,10 +176,7 @@ def validation(model, criterion, evaluation_loader, converter, opt):
 
 def test(opt):
     """ model configuration """
-    if 'CTC' in opt.Prediction:
-        converter = CTCLabelConverter(opt.character)
-    else:
-        converter = AttnLabelConverter(opt.character)
+    converter = CTCLabelConverter(opt.character)
     opt.num_class = len(converter.character)
 
     if opt.rgb:
@@ -214,10 +198,7 @@ def test(opt):
     os.system(f'cp {opt.saved_model} ./result/{opt.exp_name}/')
 
     """ setup loss """
-    if 'CTC' in opt.Prediction:
-        criterion = torch.nn.CTCLoss(zero_infinity=True).to(device)
-    else:
-        criterion = torch.nn.CrossEntropyLoss(ignore_index=0).to(device)  # ignore [GO] token = ignore index 0
+    criterion = torch.nn.CTCLoss(zero_infinity=True).to(device)
 
     """ evaluation """
     model.eval()
@@ -259,10 +240,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_filtering_off', action='store_true', help='for data_filtering_off mode')
     parser.add_argument('--baiduCTC', action='store_true', help='for data_filtering_off mode')
     """ Model Architecture """
-    parser.add_argument('--Transformation', type=str, required=True, help='Transformation stage. None|TPS')
     parser.add_argument('--FeatureExtraction', type=str, required=True, help='FeatureExtraction stage. VGG|RCNN|ResNet')
-    parser.add_argument('--SequenceModeling', type=str, required=True, help='SequenceModeling stage. None|BiLSTM')
-    parser.add_argument('--Prediction', type=str, required=True, help='Prediction stage. CTC|Attn')
     parser.add_argument('--num_fiducial', type=int, default=20, help='number of fiducial points of TPS-STN')
     parser.add_argument('--input_channel', type=int, default=1, help='the number of input channel of Feature extractor')
     parser.add_argument('--output_channel', type=int, default=512,

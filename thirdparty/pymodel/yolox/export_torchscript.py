@@ -8,6 +8,7 @@ import os
 import torch
 from loguru import logger
 
+
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX torchscript deploy")
     parser.add_argument(
@@ -38,7 +39,7 @@ def make_parser():
 def main():
     args = make_parser().parse_args()
     logger.info("args value: {}".format(args))
-    from yolox.exp.default.yolox_nano_soso8 import Exp
+    from yolox.exp.yolox_nano_soso8 import Exp
     exp = Exp()
     exp.merge(args.opts)
 

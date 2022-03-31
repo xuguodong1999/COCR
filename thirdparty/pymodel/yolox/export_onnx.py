@@ -9,7 +9,6 @@ import torch
 from loguru import logger
 from torch import nn
 
-from yolox.exp import get_exp
 from yolox.models.network_blocks import SiLU
 from yolox.utils import replace_module
 
@@ -62,7 +61,7 @@ def make_parser():
 def main():
     args = make_parser().parse_args()
     logger.info("args value: {}".format(args))
-    from yolox.exp.default.yolox_nano_soso8 import Exp
+    from yolox.exp.yolox_nano_soso8 import Exp
     exp = Exp()
     exp.merge(args.opts)
 

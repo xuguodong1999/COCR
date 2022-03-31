@@ -6,10 +6,9 @@ import os
 
 import cv2
 import numpy as np
-from loguru import logger
 from pycocotools.coco import COCO
+from torch.utils.data.dataset import Dataset
 
-from .datasets_wrapper import Dataset
 from ..dataloading import get_yolox_datadir
 
 
@@ -44,7 +43,6 @@ class COCODataset(Dataset):
             name="train2017",
             img_size=(416, 416),
             preproc=None,
-            cache=False,
     ):
         """
         COCO dataset initialization. Annotation data are read into memory by COCO API.
@@ -52,7 +50,7 @@ class COCODataset(Dataset):
             data_dir (str): dataset root directory
             json_file (str): COCO json file name
             name (str): COCO data name (e.g. 'train2017' or 'val2017')
-            img_size (int): target image size after pre-processing
+            img_size (Tuple[int, int]): target image size after pre-processing
             preproc: data augmentation strategy
         """
         super().__init__(img_size)
@@ -72,8 +70,6 @@ class COCODataset(Dataset):
         self.img_size = img_size
         self.preproc = preproc
         self.annotations = self._load_coco_annotations()
-        if cache:
-            self._cache_images()
 
     def __len__(self):
         return len(self.ids)
@@ -83,55 +79,6 @@ class COCODataset(Dataset):
 
     def _load_coco_annotations(self):
         return [self.load_anno_from_ids(_ids) for _ids in self.ids]
-
-    def _cache_images(self):
-        logger.warning(
-            "\n********************************************************************************\n"
-            "You are using cached images in RAM to accelerate training.\n"
-            "This requires large system RAM.\n"
-            "Make sure you have 200G+ RAM and 136G available disk space for training COCO.\n"
-            "********************************************************************************\n"
-        )
-        max_h = self.img_size[0]
-        max_w = self.img_size[1]
-        cache_file = os.path.join(self.data_dir, f"img_resized_cache_{self.name}.array")
-        if not os.path.exists(cache_file):
-            logger.info(
-                "Caching images for the first time. This might take about 20 minutes for COCO"
-            )
-            self.imgs = np.memmap(
-                cache_file,
-                shape=(len(self.ids), max_h, max_w, 3),
-                dtype=np.uint8,
-                mode="w+",
-            )
-            from tqdm import tqdm
-            from multiprocessing.pool import ThreadPool
-
-            NUM_THREADs = min(8, os.cpu_count())
-            loaded_images = ThreadPool(NUM_THREADs).imap(
-                lambda x: self.load_resized_img(x),
-                range(len(self.annotations)),
-            )
-            pbar = tqdm(enumerate(loaded_images), total=len(self.annotations))
-            for k, out in pbar:
-                self.imgs[k][: out.shape[0], : out.shape[1], :] = out.copy()
-            self.imgs.flush()
-            pbar.close()
-        else:
-            logger.warning(
-                "You are using cached imgs! Make sure your dataset is not changed!!\n"
-                "Everytime the self.input_size is changed in your exp file, you need to delete\n"
-                "the cached data and re-generate them.\n"
-            )
-
-        logger.info("Loading cached imgs...")
-        self.imgs = np.memmap(
-            cache_file,
-            shape=(len(self.ids), max_h, max_w, 3),
-            dtype=np.uint8,
-            mode="r+",
-        )
 
     def load_anno_from_ids(self, id_):
         im_ann = self.coco.loadImgs(id_)[0]
@@ -207,7 +154,6 @@ class COCODataset(Dataset):
 
         return img, res.copy(), img_info, np.array([id_])
 
-    @Dataset.mosaic_getitem
     def __getitem__(self, index):
         """
         One image / label pair for the given index is picked up and pre-processed.

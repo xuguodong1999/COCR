@@ -8,7 +8,7 @@ import uuid
 
 import numpy as np
 import torch
-from torch.utils.data.dataloader import DataLoader as torchDataLoader
+from torch.utils.data.dataloader import DataLoader as TorchDataLoader
 from torch.utils.data.dataloader import default_collate
 
 from .samplers import YoloBatchSampler
@@ -23,7 +23,7 @@ def get_yolox_datadir():
     return yolox_datadir
 
 
-class DataLoader(torchDataLoader):
+class DataLoader(TorchDataLoader):
     """
     Lightnet dataloader that enables on the fly resizing of the images.
     See :class:`torch.utils.data.DataLoader` for more information on the arguments.
@@ -78,9 +78,6 @@ class DataLoader(torchDataLoader):
         self.batch_sampler = batch_sampler
 
         self.__initialized = True
-
-    def close_mosaic(self):
-        self.batch_sampler.mosaic = False
 
 
 def list_collate(batch):

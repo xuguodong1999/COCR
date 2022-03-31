@@ -7,14 +7,14 @@ import unittest
 import torch
 from torch import nn
 
-from ..exp import get_exp
-from ..utils import adjust_status, freeze_module
+from yolox.exp.yolox_nano_soso8 import Exp
+from yolox.utils import adjust_status, freeze_module
 
 
 class TestModelUtils(unittest.TestCase):
 
     def setUp(self):
-        self.model: nn.Module = get_exp(exp_name="yolox-s").get_model()
+        self.model: nn.Module = Exp().get_model()
 
     def test_model_state_adjust_status(self):
         data = torch.ones(1, 10, 10, 10)

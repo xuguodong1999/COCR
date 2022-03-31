@@ -2,11 +2,10 @@
 # -*- coding:utf-8 -*-
 # Copyright (c) Megvii, Inc. and its affiliates.
 import os
-import sys
 
 import torch.nn as nn
 
-from ...exp import Exp as MyExp
+from yolox_base import Exp as MyExp
 
 
 class Exp(MyExp):
@@ -33,17 +32,11 @@ class Exp(MyExp):
         self.val_ann = "soso8-coco-test.json"
         # name of annotation file for testing
         self.test_ann = "soso8-coco-test.json"
-        # disable mixup
-        self.mixup_prob = -1
         self.flip_prob = -1
         self.hsv_prob = 0.5
         self.shear = 0
         self.translate = 0
         self.degrees = 0
-        self.mosaic_prob = -1
-        self.enable_mixup = False
-        # never eval
-        self.eval_interval = sys.maxsize
         # save by iter 2000
         self.save_history_ckpt = True
         self.save_iter_interval = 1000
@@ -64,7 +57,7 @@ class Exp(MyExp):
                     m.momentum = 0.03
 
         if "model" not in self.__dict__:
-            from ...models import YOLOX, YOLOPAFPN, YOLOXHead
+            from ..models import YOLOX, YOLOPAFPN, YOLOXHead
             in_channels = [256, 512, 1024]
             # NANO model use depthwise = True, which is main difference.
             backbone = YOLOPAFPN(
@@ -80,17 +73,3 @@ class Exp(MyExp):
         self.model.apply(init_yolo)
         self.model.head.initialize_biases(1e-2)
         return self.model
-
-    def get_evaluator(self, batch_size, is_distributed, testdev=False, legacy=False):
-        from ...evaluators import SOSO8Evaluator
-
-        val_loader = self.get_eval_loader(batch_size, is_distributed, testdev, legacy)
-        evaluator = SOSO8Evaluator(
-            dataloader=val_loader,
-            img_size=self.test_size,
-            confthre=self.test_conf,
-            nmsthre=self.nmsthre,
-            num_classes=self.num_classes,
-            testdev=testdev,
-        )
-        return evaluator

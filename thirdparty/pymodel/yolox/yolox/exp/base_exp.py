@@ -22,7 +22,6 @@ class BaseExp(metaclass=ABCMeta):
         self.seed = None
         self.output_dir = "./out"
         self.print_interval = 100
-        self.eval_interval = 10
         # not save by iter by default
         self.save_iter_interval = sys.maxsize
 
@@ -44,14 +43,6 @@ class BaseExp(metaclass=ABCMeta):
     def get_lr_scheduler(
             self, lr: float, iters_per_epoch: int, **kwargs
     ) -> LRScheduler:
-        pass
-
-    @abstractmethod
-    def get_evaluator(self):
-        pass
-
-    @abstractmethod
-    def eval(self, model, evaluator, weights):
         pass
 
     def __repr__(self):
