@@ -31,6 +31,15 @@ cmake -G "Ninja" ~/git/pytorch \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_DOCS=ON \
     -DCMAKE_INSTALL_DOCDIR=~/shared/libtorch/doc
+
+# config torchvision
+git clone https://github.com/pytorch/vision.git torchvision
+
+cmake -G "Ninja" ~/git/torchvision \
+    -DTorch_DIR:PATH=~/shared/libtorch/share/cmake/Torch \
+    -DCMAKE_INSTALL_PREFIX=~/shared/libtorch \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DUSE_PYTHON=OFF
 ```
 
 ### windows host build for msvc

@@ -10,13 +10,14 @@ cmake .. -G "Ninja" \
     -DOpenCV_DIR:PATH=~/shared/opencv4/lib/cmake/opencv4 \
     -DBoost_DIR:PATH=~/shared/boost/lib/cmake/Boost-1.77.0 \
     -DTorch_DIR:PATH=~/shared/libtorch/share/cmake/Torch \
+    -DTorchVision_DIR:PATH=~/shared/libtorch/share/cmake/TorchVision \
     -DQt5_DIR:PATH=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 \
     -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc
 ```
 
 * Config it in CLion Setting -> Build -> CMake -> cmake options
 
-  `-G "Ninja" -DBUILD_TESTS=ON -DWITH_LIBTORCH=ON -DBUILD_REFERENCES=ON -DOpenCV_DIR:PATH=~/shared/opencv4/lib/cmake/opencv4 -DBoost_DIR:PATH=~/shared/boost/lib/cmake/Boost-1.77.0 -DTorch_DIR:PATH=~/shared/libtorch/share/cmake/Torch -DQt5_DIR:PATH=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc`
+  `-G "Ninja" -DBUILD_TESTS=ON -DWITH_LIBTORCH=ON -DBUILD_REFERENCES=ON -DOpenCV_DIR:PATH=~/shared/opencv4/lib/cmake/opencv4 -DBoost_DIR:PATH=~/shared/boost/lib/cmake/Boost-1.77.0 -DTorch_DIR:PATH=~/shared/libtorch/share/cmake/Torch -DTorchVision_DIR:PATH=~/shared/libtorch/share/cmake/TorchVision -DQt5_DIR:PATH=~/shared/Qt/5.15.2/gcc_64/lib/cmake/Qt5 -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc`
 
 ## windows host build for windows platform
 

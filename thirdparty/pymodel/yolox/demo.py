@@ -12,7 +12,6 @@ from loguru import logger
 
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import COCO_CLASSES
-from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
 IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
@@ -305,6 +304,6 @@ def main(exp, args):
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
-    exp = get_exp(args.exp_file, args.name)
-
+    from yolox.exp.default.yolox_nano_soso8 import Exp
+    exp = Exp()
     main(exp, args)

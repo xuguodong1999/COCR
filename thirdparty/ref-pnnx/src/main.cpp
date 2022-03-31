@@ -374,9 +374,9 @@ int main(int argc, char** argv)
         pnnx::pass_level5(pnnx_graph, foldable_constants);
     }
 
-    pnnx_graph.save(pnnxparampath, pnnxbinpath);
+//    pnnx_graph.save(pnnxparampath, pnnxbinpath);
 
-    pnnx_graph.python(pnnxpypath, pnnxbinpath);
+//    pnnx_graph.python(pnnxpypath, pnnxbinpath);
 
     //     if (optlevel >= 2)
     {

@@ -17,7 +17,7 @@ from yolox.utils import replace_module
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX onnx deploy")
     parser.add_argument(
-        "--output-name", type=str, default="..onnx", help="output name of models"
+        "--output-name", type=str, default="model.onnx", help="output name of models"
     )
     parser.add_argument(
         "--input", default="images", type=str, help="input node name of onnx model"
@@ -62,7 +62,8 @@ def make_parser():
 def main():
     args = make_parser().parse_args()
     logger.info("args value: {}".format(args))
-    exp = get_exp(args.exp_file, args.name)
+    from yolox.exp.default.yolox_nano_soso8 import Exp
+    exp = Exp()
     exp.merge(args.opts)
 
     if not args.experiment_name:
