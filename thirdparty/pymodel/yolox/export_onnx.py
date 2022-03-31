@@ -9,9 +9,9 @@ import torch
 from loguru import logger
 from torch import nn
 
-from ..exp import get_exp
-from ..models.network_blocks import SiLU
-from ..utils import replace_module
+from yolox.exp import get_exp
+from yolox.models.network_blocks import SiLU
+from yolox.utils import replace_module
 
 
 def make_parser():

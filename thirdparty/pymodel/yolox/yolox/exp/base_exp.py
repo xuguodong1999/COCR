@@ -4,6 +4,7 @@
 
 import ast
 import pprint
+import sys
 from abc import ABCMeta, abstractmethod
 from typing import Dict
 
@@ -19,9 +20,11 @@ class BaseExp(metaclass=ABCMeta):
 
     def __init__(self):
         self.seed = None
-        self.output_dir = "./YOLOX_outputs"
+        self.output_dir = "./out"
         self.print_interval = 100
         self.eval_interval = 10
+        # not save by iter by default
+        self.save_iter_interval = sys.maxsize
 
     @abstractmethod
     def get_model(self) -> Module:

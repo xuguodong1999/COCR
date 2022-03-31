@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # Copyright (c) Megvii, Inc. and its affiliates.
 import os
+import sys
 
 import torch.nn as nn
 
@@ -27,6 +28,7 @@ class Exp(MyExp):
         self.img_dir_name = 'JPEGImages'
         # name of annotation file for training
         self.train_ann = "soso8-coco-train.json"  # annotations/soso8-coco-train.json
+        # self.train_ann = "soso8-coco-test.json"  # annotations/soso8-coco-train.json
         # name of annotation file for evaluation
         self.val_ann = "soso8-coco-test.json"
         # name of annotation file for testing
@@ -34,12 +36,24 @@ class Exp(MyExp):
         # disable mixup
         self.mixup_prob = -1
         self.flip_prob = -1
-        self.hsv_prob = -1
+        self.hsv_prob = 0.5
         self.shear = 0
         self.translate = 0
         self.degrees = 0
         self.mosaic_prob = -1
         self.enable_mixup = False
+        # never eval
+        self.eval_interval = sys.maxsize
+        # save by iter 2000
+        self.save_history_ckpt = True
+        self.save_iter_interval = 1000
+        # data loader
+        self.data_num_workers = 8
+        # print interval
+        self.print_interval = 100
+        # only one epoch
+        self.warmup_epochs = 1
+        self.max_epoch = 60
 
     def get_model(self, sublinear=False):
 
@@ -55,7 +69,7 @@ class Exp(MyExp):
             # NANO model use depthwise = True, which is main difference.
             backbone = YOLOPAFPN(
                 self.depth, self.width, in_channels=in_channels,
-                act=self.act, depthwise=True, image_channel=1,
+                act=self.act, depthwise=True, image_channel=3,
             )
             head = YOLOXHead(
                 self.num_classes, self.width, in_channels=in_channels,
@@ -66,3 +80,17 @@ class Exp(MyExp):
         self.model.apply(init_yolo)
         self.model.head.initialize_biases(1e-2)
         return self.model
+
+    def get_evaluator(self, batch_size, is_distributed, testdev=False, legacy=False):
+        from ...evaluators import SOSO8Evaluator
+
+        val_loader = self.get_eval_loader(batch_size, is_distributed, testdev, legacy)
+        evaluator = SOSO8Evaluator(
+            dataloader=val_loader,
+            img_size=self.test_size,
+            confthre=self.test_conf,
+            nmsthre=self.nmsthre,
+            num_classes=self.num_classes,
+            testdev=testdev,
+        )
+        return evaluator

@@ -14,6 +14,7 @@ import torch
 from loguru import logger
 from tabulate import tabulate
 from tqdm import tqdm
+from typing import Tuple
 
 from ..data.datasets import COCO_CLASSES
 from ..utils import (
@@ -83,7 +84,7 @@ class COCOEvaluator:
     def __init__(
             self,
             dataloader,
-            img_size: int,
+            img_size: Tuple[int, int],
             confthre: float,
             nmsthre: float,
             num_classes: int,

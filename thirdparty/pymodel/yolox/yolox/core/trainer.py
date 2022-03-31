@@ -215,7 +215,8 @@ class Trainer:
 
     def after_epoch(self):
         self.save_ckpt(ckpt_name="latest")
-
+        if self.save_history_ckpt:
+            self.save_ckpt(f"epoch_{self.epoch + 1}")
         if (self.epoch + 1) % self.exp.eval_interval == 0:
             all_reduce_norm(self.model)
             self.evaluate_and_save_model()
@@ -229,6 +230,8 @@ class Trainer:
             * log information
             * reset setting of resize
         """
+        if self.save_history_ckpt and (self.iter + 1) % self.exp.save_iter_interval == 0:
+            self.save_ckpt(f"iter_{self.iter + 1}")
         # log needed information
         if (self.iter + 1) % self.exp.print_interval == 0:
             # TODO check ETA logic
@@ -342,8 +345,6 @@ class Trainer:
         synchronize()
 
         self.save_ckpt("last_epoch", update_best_ckpt)
-        if self.save_history_ckpt:
-            self.save_ckpt(f"epoch_{self.epoch + 1}")
 
     def save_ckpt(self, ckpt_name, update_best_ckpt=False):
         if self.rank == 0:

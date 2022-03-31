@@ -65,7 +65,7 @@ class COCODataset(Dataset):
         remove_useless_info(self.coco)
         self.ids = self.coco.getImgIds()
         self.class_ids = sorted(self.coco.getCatIds())
-        cats = self.coco.loadCats(self.coco.getCatIds())
+        cats = self.coco.loadCats(self.class_ids)
         self._classes = tuple([c["name"] for c in cats])
         self.imgs = None
         self.name = name

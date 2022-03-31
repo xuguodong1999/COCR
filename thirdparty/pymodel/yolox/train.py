@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # Copyright (c) Megvii, Inc. and its affiliates.
-
 import argparse
 import random
 import warnings
@@ -10,9 +9,8 @@ import torch
 import torch.backends.cudnn as cudnn
 from loguru import logger
 
-from ..core import Trainer, launch
-from ..exp import get_exp
-from ..utils import configure_nccl, configure_omp, get_num_devices
+from yolox.core import Trainer, launch
+from yolox.utils import configure_nccl, configure_omp, get_num_devices
 
 
 def make_parser():
@@ -30,7 +28,7 @@ def make_parser():
         type=str,
         help="url used to set up distributed training",
     )
-    parser.add_argument("-b", "--batch-size", type=int, default=64, help="batch size")
+    parser.add_argument("-b", "--batch-size", type=int, default=8, help="batch size")
     parser.add_argument(
         "-d", "--devices", default=None, type=int, help="device for training"
     )
@@ -61,7 +59,7 @@ def make_parser():
     parser.add_argument(
         "--fp16",
         dest="fp16",
-        default=False,
+        default=True,
         action="store_true",
         help="Adopting mix precision training.",
     )
@@ -116,10 +114,10 @@ def main(exp, args):
     trainer = Trainer(exp, args)
     trainer.train()
 
-
 if __name__ == "__main__":
     args = make_parser().parse_args()
-    exp = get_exp(args.exp_file, args.name)
+    from yolox.exp.default.yolox_nano_soso8 import Exp
+    exp = Exp()
     exp.merge(args.opts)
 
     if not args.experiment_name:

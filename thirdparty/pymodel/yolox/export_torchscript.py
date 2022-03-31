@@ -8,13 +8,10 @@ import os
 import torch
 from loguru import logger
 
-from ..exp import get_exp
-
-
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX torchscript deploy")
     parser.add_argument(
-        "--output-name", type=str, default="..torchscript.pt", help="output name of models"
+        "--output-name", type=str, default="torchscript.pt", help="output name of models"
     )
     parser.add_argument("--batch-size", type=int, default=1, help="batch size")
     parser.add_argument(
@@ -41,7 +38,8 @@ def make_parser():
 def main():
     args = make_parser().parse_args()
     logger.info("args value: {}".format(args))
-    exp = get_exp(args.exp_file, args.name)
+    from yolox.exp.default.yolox_nano_soso8 import Exp
+    exp = Exp()
     exp.merge(args.opts)
 
     if not args.experiment_name:

@@ -10,10 +10,10 @@ import cv2
 import torch
 from loguru import logger
 
-from ..data.data_augment import ValTransform
-from ..data.datasets import COCO_CLASSES
-from ..exp import get_exp
-from ..utils import fuse_model, get_model_info, postprocess, vis
+from yolox.data.data_augment import ValTransform
+from yolox.data.datasets import COCO_CLASSES
+from yolox.exp import get_exp
+from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
 IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 
