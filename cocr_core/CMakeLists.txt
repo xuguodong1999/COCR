@@ -12,10 +12,10 @@ find_package(OpenCV REQUIRED)
 #find_package(ncnn REQUIRED)
 ## ncnn has not put its include directory in cmake config yet
 #include_directories(${ncnn_DIR}/../../../include)
-if (ANDROID)
-    # override no rtti and exceptions in ncnn
-    set_target_properties(ncnn PROPERTIES INTERFACE_COMPILE_OPTIONS "-fexceptions")
-endif ()
+#if (ANDROID)
+#    # override no rtti and exceptions in ncnn
+#    set_target_properties(ncnn PROPERTIES INTERFACE_COMPILE_OPTIONS "-fexceptions")
+#endif ()
 
 include(GenerateExportHeader)
 function(makeDLL TARGET)

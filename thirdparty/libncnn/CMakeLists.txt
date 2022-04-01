@@ -86,7 +86,7 @@ option(NCNN_BF16 "bf16 inference" ON)
 option(NCNN_FORCE_INLINE "force inline some function" ON)
 
 if(ANDROID OR IOS OR NCNN_SIMPLESTL OR CMAKE_CROSSCOMPILING)
-    option(NCNN_DISABLE_RTTI "disable rtti" ON)
+    option(NCNN_DISABLE_RTTI "disable rtti" OFF) # enable custom layer typeinfo
     option(NCNN_BUILD_TOOLS "build tools" OFF)
     option(NCNN_BUILD_EXAMPLES "build examples" OFF)
 else()
@@ -96,7 +96,7 @@ else()
 endif()
 
 if(ANDROID OR IOS OR LINUX OR NCNN_SIMPLESTL)
-    option(NCNN_DISABLE_EXCEPTION "disable exception" ON)
+    option(NCNN_DISABLE_EXCEPTION "disable exception" OFF) # cocr need exception
 else()
     option(NCNN_DISABLE_EXCEPTION "disable exception" OFF)
 endif()
