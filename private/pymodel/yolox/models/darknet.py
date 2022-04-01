@@ -104,6 +104,8 @@ class CSPDarknet(nn.Module):
             act="silu",
             image_channel=3,
             use_single_out=False,
+            use_focus=True,
+            crnn_last=False
     ):
         super().__init__()
         assert out_features, "please provide output features of Darknet"
@@ -115,8 +117,19 @@ class CSPDarknet(nn.Module):
         base_depth = max(round(dep_mul * 3), 1)  # 3
 
         # stem
-        self.stem = Focus(image_channel, base_channels, ksize=3, act=act)
-
+        if use_focus:
+            self.stem = Focus(image_channel, base_channels, ksize=3, act=act)
+        else:
+            self.stem = nn.Sequential(
+                Conv(image_channel, base_channels, 3, 2, act=act),
+                CSPLayer(
+                    base_channels,
+                    base_channels,
+                    n=base_depth,
+                    depthwise=depthwise,
+                    act=act,
+                ),
+            )
         # dark2
         self.dark2 = nn.Sequential(
             Conv(base_channels, base_channels * 2, 3, 2, act=act),
@@ -155,18 +168,22 @@ class CSPDarknet(nn.Module):
 
         # dark5
         self.out_channel = base_channels * 16
-        self.dark5 = nn.Sequential(
-            Conv(base_channels * 8, base_channels * 16, 3, 2, act=act),
-            SPPBottleneck(base_channels * 16, base_channels * 16, activation=act),
-            CSPLayer(
-                base_channels * 16,
-                self.out_channel,
-                n=base_depth,
-                shortcut=False,
-                depthwise=depthwise,
-                act=act,
-            ),
-        )
+        if crnn_last:
+            # for crnn, input here is bx2x2xc, padding affects a lot
+            self.dark5 = Conv(base_channels * 8, base_channels * 16, 2, 1, act=act)
+        else:
+            self.dark5 = nn.Sequential(
+                Conv(base_channels * 8, base_channels * 16, 3, 2, act=act),
+                SPPBottleneck(base_channels * 16, base_channels * 16, activation=act),
+                CSPLayer(
+                    base_channels * 16,
+                    self.out_channel,
+                    n=base_depth,
+                    shortcut=False,
+                    depthwise=depthwise,
+                    act=act,
+                ),
+            )
 
     def get_out_channel(self):
         return self.out_channel

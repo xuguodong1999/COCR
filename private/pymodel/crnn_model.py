@@ -28,7 +28,7 @@ class Model(nn.Module):
 
         """ FeatureExtraction """
         if opt.FeatureExtraction == 'VGG':
-            self.FeatureExtraction = VGG(opt.input_channel, opt.output_channel)
+            self.FeatureExtraction = VGG(opt.input_channel, opt.output_channel, depthwise=True)
         elif opt.FeatureExtraction == 'CSP':
             self.FeatureExtraction = CSPDarknet(
                 0.33,
@@ -37,7 +37,9 @@ class Model(nn.Module):
                 depthwise=True,
                 act="silu",
                 image_channel=1,
-                use_single_out=True
+                use_single_out=True,
+                use_focus=False,
+                crnn_last=True
             )
             output_channel = self.FeatureExtraction.get_out_channel()
             print('use CSPDarknet and revert output_channel from {} to {}'.format(opt.output_channel, output_channel))
