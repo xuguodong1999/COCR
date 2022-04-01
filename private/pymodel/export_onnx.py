@@ -18,6 +18,7 @@ def make_parser():
     parser.add_argument(
         "--output-name", type=str, default="model.onnx", help="output name of models"
     )
+    parser.add_argument("-i", "--image_channel", default=3, type=int, help="image channel")
     parser.add_argument(
         "--input", default="images", type=str, help="input node name of onnx model"
     )
@@ -86,7 +87,7 @@ def main():
     model.head.decode_in_inference = args.decode_in_inference
 
     logger.info("loading checkpoint done.")
-    dummy_input = torch.randn(args.batch_size, 3, exp.test_size[0], exp.test_size[1])
+    dummy_input = torch.randn(args.batch_size, args.image_channel, exp.test_size[0], exp.test_size[1])
 
     torch.onnx._export(
         model,

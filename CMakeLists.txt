@@ -16,8 +16,7 @@ endif ()
 # data_gen for handwriting ocsr job
 option(BUILD_DATA_GEN "Generate data for yolo and crnn training" ON)
 # backend for yolo and crnn in app
-# on desktop, USE opencv_dnn instead of ncnn
-option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" ON)
+option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" OFF)
 # run on intel NCS 2
 option(USE_OPENVINO "Whether use opencv::dnn with openvino backend" OFF)
 # libtorch playground

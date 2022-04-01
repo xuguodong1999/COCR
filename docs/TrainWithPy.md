@@ -10,7 +10,7 @@
 
 ## export
 
-`python export_torchscript.py -c ./out/yolox_nano_soso8/latest_ckpt.pth --output-name ./out/yolox_nano_soso8/latest_ts.pth`
+`python export_torchscript.py -c ./out/yolox_nano_soso8/latest_ckpt.pth --output-name ./out/yolox_nano_soso8/latest_ts.pth -i 1`
 
 ## demo
 
@@ -32,7 +32,7 @@
 
 ## onnx export
 
-`python onnx_export.py --FeatureExtraction='VGG' --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=3200 --input_channel=1 --output_channel=256 --hidden_size=256 --saved_model='../workspace/VGG-BiLSTM-baidu_ctc_mixFont2/best_accuracy.pth'`
+`python crnn_export_onnx.py --FeatureExtraction='VGG' --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=128 --saved_model='../workspace/VGG-BiLSTM-baidu_ctc_mixFont2/best_accuracy.pth'`
 
 ## ncnn convert
 

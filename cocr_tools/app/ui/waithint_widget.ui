@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>WaitHintWidget</class>
+    <widget class="QWidget" name="WaitHintWidget">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>320</width>
+                <height>320</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Form</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="10,1">
+            <item>
+                <widget class="QLabel" name="gifLabel">
+                    <property name="styleSheet">
+                        <string notr="true">color: rgb(0, 0, 0);
+                            background-color: transparent;
+                        </string>
+                    </property>
+                    <property name="text">
+                        <string/>
+                    </property>
+                    <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                    </property>
+                </widget>
+            </item>
+            <item>
+                <widget class="QLabel" name="hintLabel">
+                    <property name="styleSheet">
+                        <string notr="true">color: rgb(255, 255, 255);
+                            background-color: transparent;
+                        </string>
+                    </property>
+                    <property name="text">
+                        <string>running......</string>
+                    </property>
+                    <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                    </property>
+                </widget>
+            </item>
+        </layout>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>

@@ -6,6 +6,9 @@
 #include <opencv2/dnn.hpp>
 #include <opencv2/imgproc.hpp>
 
+#include <QFile>
+#include <QDebug>
+
 #include <iostream>
 #include <string>
 #include <memory>
@@ -33,9 +36,17 @@ namespace cocr {
 
     public:
         bool initModel(const std::string &_onnxFile, const std::string &_words, int _width = 192) {
+            dstWidth = _width;
+            QFile onnxFile(_onnxFile.c_str());
+            if (!onnxFile.open(QIODevice::ReadOnly)) {
+                qDebug() << "fail in QFile read" << _onnxFile.c_str();
+                return false;
+            }
+            auto buffer = onnxFile.readAll();
+            onnxFile.close();
             try {
-                dstWidth = _width;
-                model = std::make_shared<cv::dnn::TextRecognitionModel>(_onnxFile);
+                auto net = cv::dnn::readNetFromONNX(buffer.data(), buffer.length());
+                model = std::make_shared<cv::dnn::TextRecognitionModel>(net);
                 model->setDecodeType("CTC-greedy");
                 for (auto &c: _words) {
                     wordVec.push_back(std::string(1, c));

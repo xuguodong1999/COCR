@@ -1,0 +1,282 @@
+7767517
+280 310
+Input                    images                   0 1 images
+YoloV5Focus              focus                    1 1 images input
+Convolution              Conv_41                  1 1 input onnx::Sigmoid_1177 0=16 1=3 4=1 5=1 6=576
+Swish                    Mul_43                   1 1 onnx::Sigmoid_1177 input.7
+ConvolutionDepthWise     Conv_44                  1 1 input.7 onnx::Sigmoid_1180 0=16 1=3 3=2 4=1 5=1 6=144 7=16
+Swish                    Mul_46                   1 1 onnx::Sigmoid_1180 input.15
+Convolution              Conv_47                  1 1 input.15 onnx::Sigmoid_1183 0=32 1=1 5=1 6=512
+Swish                    Mul_49                   1 1 onnx::Sigmoid_1183 input.23
+Split                    splitncnn_0              1 2 input.23 input.23_splitncnn_0 input.23_splitncnn_1
+Convolution              Conv_50                  1 1 input.23_splitncnn_1 onnx::Sigmoid_1186 0=16 1=1 5=1 6=512
+Swish                    Mul_52                   1 1 onnx::Sigmoid_1186 input.31
+Split                    splitncnn_1              1 2 input.31 input.31_splitncnn_0 input.31_splitncnn_1
+Convolution              Conv_53                  1 1 input.23_splitncnn_0 onnx::Sigmoid_1189 0=16 1=1 5=1 6=512
+Swish                    Mul_55                   1 1 onnx::Sigmoid_1189 onnx::Concat_703
+Convolution              Conv_56                  1 1 input.31_splitncnn_1 onnx::Sigmoid_1192 0=16 1=1 5=1 6=256
+Swish                    Mul_58                   1 1 onnx::Sigmoid_1192 input.43
+ConvolutionDepthWise     Conv_59                  1 1 input.43 onnx::Sigmoid_1195 0=16 1=3 4=1 5=1 6=144 7=16
+Swish                    Mul_61                   1 1 onnx::Sigmoid_1195 input.51
+Convolution              Conv_62                  1 1 input.51 onnx::Sigmoid_1198 0=16 1=1 5=1 6=256
+Swish                    Mul_64                   1 1 onnx::Sigmoid_1198 onnx::Add_715
+BinaryOp                 Add_65                   2 1 onnx::Add_715 input.31_splitncnn_0 onnx::Concat_716
+Concat                   Concat_66                2 1 onnx::Concat_716 onnx::Concat_703 input.59
+Convolution              Conv_67                  1 1 input.59 onnx::Sigmoid_1201 0=32 1=1 5=1 6=1024
+Swish                    Mul_69                   1 1 onnx::Sigmoid_1201 input.67
+ConvolutionDepthWise     Conv_70                  1 1 input.67 onnx::Sigmoid_1204 0=32 1=3 3=2 4=1 5=1 6=288 7=32
+Swish                    Mul_72                   1 1 onnx::Sigmoid_1204 input.75
+Convolution              Conv_73                  1 1 input.75 onnx::Sigmoid_1207 0=64 1=1 5=1 6=2048
+Swish                    Mul_75                   1 1 onnx::Sigmoid_1207 input.83
+Split                    splitncnn_2              1 2 input.83 input.83_splitncnn_0 input.83_splitncnn_1
+Convolution              Conv_76                  1 1 input.83_splitncnn_1 onnx::Sigmoid_1210 0=32 1=1 5=1 6=2048
+Swish                    Mul_78                   1 1 onnx::Sigmoid_1210 input.91
+Split                    splitncnn_3              1 2 input.91 input.91_splitncnn_0 input.91_splitncnn_1
+Convolution              Conv_79                  1 1 input.83_splitncnn_0 onnx::Sigmoid_1213 0=32 1=1 5=1 6=2048
+Swish                    Mul_81                   1 1 onnx::Sigmoid_1213 onnx::Concat_737
+Convolution              Conv_82                  1 1 input.91_splitncnn_1 onnx::Sigmoid_1216 0=32 1=1 5=1 6=1024
+Swish                    Mul_84                   1 1 onnx::Sigmoid_1216 input.103
+ConvolutionDepthWise     Conv_85                  1 1 input.103 onnx::Sigmoid_1219 0=32 1=3 4=1 5=1 6=288 7=32
+Swish                    Mul_87                   1 1 onnx::Sigmoid_1219 input.111
+Convolution              Conv_88                  1 1 input.111 onnx::Sigmoid_1222 0=32 1=1 5=1 6=1024
+Swish                    Mul_90                   1 1 onnx::Sigmoid_1222 onnx::Add_749
+BinaryOp                 Add_91                   2 1 onnx::Add_749 input.91_splitncnn_0 input.119
+Split                    splitncnn_4              1 2 input.119 input.119_splitncnn_0 input.119_splitncnn_1
+Convolution              Conv_92                  1 1 input.119_splitncnn_1 onnx::Sigmoid_1225 0=32 1=1 5=1 6=1024
+Swish                    Mul_94                   1 1 onnx::Sigmoid_1225 input.127
+ConvolutionDepthWise     Conv_95                  1 1 input.127 onnx::Sigmoid_1228 0=32 1=3 4=1 5=1 6=288 7=32
+Swish                    Mul_97                   1 1 onnx::Sigmoid_1228 input.135
+Convolution              Conv_98                  1 1 input.135 onnx::Sigmoid_1231 0=32 1=1 5=1 6=1024
+Swish                    Mul_100                  1 1 onnx::Sigmoid_1231 onnx::Add_762
+BinaryOp                 Add_101                  2 1 onnx::Add_762 input.119_splitncnn_0 input.143
+Split                    splitncnn_5              1 2 input.143 input.143_splitncnn_0 input.143_splitncnn_1
+Convolution              Conv_102                 1 1 input.143_splitncnn_1 onnx::Sigmoid_1234 0=32 1=1 5=1 6=1024
+Swish                    Mul_104                  1 1 onnx::Sigmoid_1234 input.151
+ConvolutionDepthWise     Conv_105                 1 1 input.151 onnx::Sigmoid_1237 0=32 1=3 4=1 5=1 6=288 7=32
+Swish                    Mul_107                  1 1 onnx::Sigmoid_1237 input.159
+Convolution              Conv_108                 1 1 input.159 onnx::Sigmoid_1240 0=32 1=1 5=1 6=1024
+Swish                    Mul_110                  1 1 onnx::Sigmoid_1240 onnx::Add_775
+BinaryOp                 Add_111                  2 1 onnx::Add_775 input.143_splitncnn_0 onnx::Concat_776
+Concat                   Concat_112               2 1 onnx::Concat_776 onnx::Concat_737 input.167
+Convolution              Conv_113                 1 1 input.167 onnx::Sigmoid_1243 0=64 1=1 5=1 6=4096
+Swish                    Mul_115                  1 1 onnx::Sigmoid_1243 input.175
+Split                    splitncnn_6              1 2 input.175 input.175_splitncnn_0 input.175_splitncnn_1
+ConvolutionDepthWise     Conv_116                 1 1 input.175_splitncnn_1 onnx::Sigmoid_1246 0=64 1=3 3=2 4=1 5=1 6=576 7=64
+Swish                    Mul_118                  1 1 onnx::Sigmoid_1246 input.183
+Convolution              Conv_119                 1 1 input.183 onnx::Sigmoid_1249 0=128 1=1 5=1 6=8192
+Swish                    Mul_121                  1 1 onnx::Sigmoid_1249 input.191
+Split                    splitncnn_7              1 2 input.191 input.191_splitncnn_0 input.191_splitncnn_1
+Convolution              Conv_122                 1 1 input.191_splitncnn_1 onnx::Sigmoid_1252 0=64 1=1 5=1 6=8192
+Swish                    Mul_124                  1 1 onnx::Sigmoid_1252 input.199
+Split                    splitncnn_8              1 2 input.199 input.199_splitncnn_0 input.199_splitncnn_1
+Convolution              Conv_125                 1 1 input.191_splitncnn_0 onnx::Sigmoid_1255 0=64 1=1 5=1 6=8192
+Swish                    Mul_127                  1 1 onnx::Sigmoid_1255 onnx::Concat_797
+Convolution              Conv_128                 1 1 input.199_splitncnn_1 onnx::Sigmoid_1258 0=64 1=1 5=1 6=4096
+Swish                    Mul_130                  1 1 onnx::Sigmoid_1258 input.211
+ConvolutionDepthWise     Conv_131                 1 1 input.211 onnx::Sigmoid_1261 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_133                  1 1 onnx::Sigmoid_1261 input.219
+Convolution              Conv_134                 1 1 input.219 onnx::Sigmoid_1264 0=64 1=1 5=1 6=4096
+Swish                    Mul_136                  1 1 onnx::Sigmoid_1264 onnx::Add_809
+BinaryOp                 Add_137                  2 1 onnx::Add_809 input.199_splitncnn_0 input.227
+Split                    splitncnn_9              1 2 input.227 input.227_splitncnn_0 input.227_splitncnn_1
+Convolution              Conv_138                 1 1 input.227_splitncnn_1 onnx::Sigmoid_1267 0=64 1=1 5=1 6=4096
+Swish                    Mul_140                  1 1 onnx::Sigmoid_1267 input.235
+ConvolutionDepthWise     Conv_141                 1 1 input.235 onnx::Sigmoid_1270 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_143                  1 1 onnx::Sigmoid_1270 input.243
+Convolution              Conv_144                 1 1 input.243 onnx::Sigmoid_1273 0=64 1=1 5=1 6=4096
+Swish                    Mul_146                  1 1 onnx::Sigmoid_1273 onnx::Add_822
+BinaryOp                 Add_147                  2 1 onnx::Add_822 input.227_splitncnn_0 input.251
+Split                    splitncnn_10             1 2 input.251 input.251_splitncnn_0 input.251_splitncnn_1
+Convolution              Conv_148                 1 1 input.251_splitncnn_1 onnx::Sigmoid_1276 0=64 1=1 5=1 6=4096
+Swish                    Mul_150                  1 1 onnx::Sigmoid_1276 input.259
+ConvolutionDepthWise     Conv_151                 1 1 input.259 onnx::Sigmoid_1279 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_153                  1 1 onnx::Sigmoid_1279 input.267
+Convolution              Conv_154                 1 1 input.267 onnx::Sigmoid_1282 0=64 1=1 5=1 6=4096
+Swish                    Mul_156                  1 1 onnx::Sigmoid_1282 onnx::Add_835
+BinaryOp                 Add_157                  2 1 onnx::Add_835 input.251_splitncnn_0 onnx::Concat_836
+Concat                   Concat_158               2 1 onnx::Concat_836 onnx::Concat_797 input.275
+Convolution              Conv_159                 1 1 input.275 onnx::Sigmoid_1285 0=128 1=1 5=1 6=16384
+Swish                    Mul_161                  1 1 onnx::Sigmoid_1285 input.283
+Split                    splitncnn_11             1 2 input.283 input.283_splitncnn_0 input.283_splitncnn_1
+ConvolutionDepthWise     Conv_162                 1 1 input.283_splitncnn_1 onnx::Sigmoid_1288 0=128 1=3 3=2 4=1 5=1 6=1152 7=128
+Swish                    Mul_164                  1 1 onnx::Sigmoid_1288 input.291
+Convolution              Conv_165                 1 1 input.291 onnx::Sigmoid_1291 0=256 1=1 5=1 6=32768
+Swish                    Mul_167                  1 1 onnx::Sigmoid_1291 input.299
+Convolution              Conv_168                 1 1 input.299 onnx::Sigmoid_1294 0=128 1=1 5=1 6=32768
+Swish                    Mul_170                  1 1 onnx::Sigmoid_1294 onnx::MaxPool_853
+Split                    splitncnn_12             1 4 onnx::MaxPool_853 onnx::MaxPool_853_splitncnn_0 onnx::MaxPool_853_splitncnn_1 onnx::MaxPool_853_splitncnn_2 onnx::MaxPool_853_splitncnn_3
+Pooling                  MaxPool_171              1 1 onnx::MaxPool_853_splitncnn_3 onnx::Concat_854 1=5 3=2 5=1
+Pooling                  MaxPool_172              1 1 onnx::MaxPool_853_splitncnn_2 onnx::Concat_855 1=9 3=4 5=1
+Pooling                  MaxPool_173              1 1 onnx::MaxPool_853_splitncnn_1 onnx::Concat_856 1=13 3=6 5=1
+Concat                   Concat_174               4 1 onnx::MaxPool_853_splitncnn_0 onnx::Concat_854 onnx::Concat_855 onnx::Concat_856 input.307
+Convolution              Conv_175                 1 1 input.307 onnx::Sigmoid_1297 0=256 1=1 5=1 6=131072
+Swish                    Mul_177                  1 1 onnx::Sigmoid_1297 input.315
+Split                    splitncnn_13             1 2 input.315 input.315_splitncnn_0 input.315_splitncnn_1
+Convolution              Conv_178                 1 1 input.315_splitncnn_1 onnx::Sigmoid_1300 0=128 1=1 5=1 6=32768
+Swish                    Mul_180                  1 1 onnx::Sigmoid_1300 input.323
+Convolution              Conv_181                 1 1 input.315_splitncnn_0 onnx::Sigmoid_1303 0=128 1=1 5=1 6=32768
+Swish                    Mul_183                  1 1 onnx::Sigmoid_1303 onnx::Concat_869
+Convolution              Conv_184                 1 1 input.323 onnx::Sigmoid_1306 0=128 1=1 5=1 6=16384
+Swish                    Mul_186                  1 1 onnx::Sigmoid_1306 input.335
+ConvolutionDepthWise     Conv_187                 1 1 input.335 onnx::Sigmoid_1309 0=128 1=3 4=1 5=1 6=1152 7=128
+Swish                    Mul_189                  1 1 onnx::Sigmoid_1309 input.343
+Convolution              Conv_190                 1 1 input.343 onnx::Sigmoid_1312 0=128 1=1 5=1 6=16384
+Swish                    Mul_192                  1 1 onnx::Sigmoid_1312 onnx::Concat_881
+Concat                   Concat_193               2 1 onnx::Concat_881 onnx::Concat_869 input.351
+Convolution              Conv_194                 1 1 input.351 onnx::Sigmoid_1315 0=256 1=1 5=1 6=65536
+Swish                    Mul_196                  1 1 onnx::Sigmoid_1315 input.359
+Convolution              Conv_197                 1 1 input.359 onnx::Sigmoid_1318 0=128 1=1 5=1 6=32768
+Swish                    Mul_199                  1 1 onnx::Sigmoid_1318 input.367
+Split                    splitncnn_14             1 2 input.367 input.367_splitncnn_0 input.367_splitncnn_1
+Interp                   Resize_201               1 1 input.367_splitncnn_1 onnx::Concat_895 0=1 1=2.000000e+00 2=2.000000e+00
+Concat                   Concat_202               2 1 onnx::Concat_895 input.283_splitncnn_0 input.371
+Split                    splitncnn_15             1 2 input.371 input.371_splitncnn_0 input.371_splitncnn_1
+Convolution              Conv_203                 1 1 input.371_splitncnn_1 onnx::Sigmoid_1321 0=64 1=1 5=1 6=16384
+Swish                    Mul_205                  1 1 onnx::Sigmoid_1321 input.379
+Convolution              Conv_206                 1 1 input.371_splitncnn_0 onnx::Sigmoid_1324 0=64 1=1 5=1 6=16384
+Swish                    Mul_208                  1 1 onnx::Sigmoid_1324 onnx::Concat_904
+Convolution              Conv_209                 1 1 input.379 onnx::Sigmoid_1327 0=64 1=1 5=1 6=4096
+Swish                    Mul_211                  1 1 onnx::Sigmoid_1327 input.391
+ConvolutionDepthWise     Conv_212                 1 1 input.391 onnx::Sigmoid_1330 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_214                  1 1 onnx::Sigmoid_1330 input.399
+Convolution              Conv_215                 1 1 input.399 onnx::Sigmoid_1333 0=64 1=1 5=1 6=4096
+Swish                    Mul_217                  1 1 onnx::Sigmoid_1333 onnx::Concat_916
+Concat                   Concat_218               2 1 onnx::Concat_916 onnx::Concat_904 input.407
+Convolution              Conv_219                 1 1 input.407 onnx::Sigmoid_1336 0=128 1=1 5=1 6=16384
+Swish                    Mul_221                  1 1 onnx::Sigmoid_1336 input.415
+Convolution              Conv_222                 1 1 input.415 onnx::Sigmoid_1339 0=64 1=1 5=1 6=8192
+Swish                    Mul_224                  1 1 onnx::Sigmoid_1339 input.423
+Split                    splitncnn_16             1 2 input.423 input.423_splitncnn_0 input.423_splitncnn_1
+Interp                   Resize_226               1 1 input.423_splitncnn_1 onnx::Concat_930 0=1 1=2.000000e+00 2=2.000000e+00
+Concat                   Concat_227               2 1 onnx::Concat_930 input.175_splitncnn_0 input.427
+Split                    splitncnn_17             1 2 input.427 input.427_splitncnn_0 input.427_splitncnn_1
+Convolution              Conv_228                 1 1 input.427_splitncnn_1 onnx::Sigmoid_1342 0=32 1=1 5=1 6=4096
+Swish                    Mul_230                  1 1 onnx::Sigmoid_1342 input.435
+Convolution              Conv_231                 1 1 input.427_splitncnn_0 onnx::Sigmoid_1345 0=32 1=1 5=1 6=4096
+Swish                    Mul_233                  1 1 onnx::Sigmoid_1345 onnx::Concat_939
+Convolution              Conv_234                 1 1 input.435 onnx::Sigmoid_1348 0=32 1=1 5=1 6=1024
+Swish                    Mul_236                  1 1 onnx::Sigmoid_1348 input.447
+ConvolutionDepthWise     Conv_237                 1 1 input.447 onnx::Sigmoid_1351 0=32 1=3 4=1 5=1 6=288 7=32
+Swish                    Mul_239                  1 1 onnx::Sigmoid_1351 input.455
+Convolution              Conv_240                 1 1 input.455 onnx::Sigmoid_1354 0=32 1=1 5=1 6=1024
+Swish                    Mul_242                  1 1 onnx::Sigmoid_1354 onnx::Concat_951
+Concat                   Concat_243               2 1 onnx::Concat_951 onnx::Concat_939 input.463
+Convolution              Conv_244                 1 1 input.463 onnx::Sigmoid_1357 0=64 1=1 5=1 6=4096
+Swish                    Mul_246                  1 1 onnx::Sigmoid_1357 input.471
+Split                    splitncnn_18             1 2 input.471 input.471_splitncnn_0 input.471_splitncnn_1
+ConvolutionDepthWise     Conv_247                 1 1 input.471_splitncnn_1 onnx::Sigmoid_1360 0=64 1=3 3=2 4=1 5=1 6=576 7=64
+Swish                    Mul_249                  1 1 onnx::Sigmoid_1360 input.479
+Convolution              Conv_250                 1 1 input.479 onnx::Sigmoid_1363 0=64 1=1 5=1 6=4096
+Swish                    Mul_252                  1 1 onnx::Sigmoid_1363 onnx::Concat_964
+Concat                   Concat_253               2 1 onnx::Concat_964 input.423_splitncnn_0 input.487
+Split                    splitncnn_19             1 2 input.487 input.487_splitncnn_0 input.487_splitncnn_1
+Convolution              Conv_254                 1 1 input.487_splitncnn_1 onnx::Sigmoid_1366 0=64 1=1 5=1 6=8192
+Swish                    Mul_256                  1 1 onnx::Sigmoid_1366 input.495
+Convolution              Conv_257                 1 1 input.487_splitncnn_0 onnx::Sigmoid_1369 0=64 1=1 5=1 6=8192
+Swish                    Mul_259                  1 1 onnx::Sigmoid_1369 onnx::Concat_973
+Convolution              Conv_260                 1 1 input.495 onnx::Sigmoid_1372 0=64 1=1 5=1 6=4096
+Swish                    Mul_262                  1 1 onnx::Sigmoid_1372 input.507
+ConvolutionDepthWise     Conv_263                 1 1 input.507 onnx::Sigmoid_1375 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_265                  1 1 onnx::Sigmoid_1375 input.515
+Convolution              Conv_266                 1 1 input.515 onnx::Sigmoid_1378 0=64 1=1 5=1 6=4096
+Swish                    Mul_268                  1 1 onnx::Sigmoid_1378 onnx::Concat_985
+Concat                   Concat_269               2 1 onnx::Concat_985 onnx::Concat_973 input.523
+Convolution              Conv_270                 1 1 input.523 onnx::Sigmoid_1381 0=128 1=1 5=1 6=16384
+Swish                    Mul_272                  1 1 onnx::Sigmoid_1381 input.531
+Split                    splitncnn_20             1 2 input.531 input.531_splitncnn_0 input.531_splitncnn_1
+ConvolutionDepthWise     Conv_273                 1 1 input.531_splitncnn_1 onnx::Sigmoid_1384 0=128 1=3 3=2 4=1 5=1 6=1152 7=128
+Swish                    Mul_275                  1 1 onnx::Sigmoid_1384 input.539
+Convolution              Conv_276                 1 1 input.539 onnx::Sigmoid_1387 0=128 1=1 5=1 6=16384
+Swish                    Mul_278                  1 1 onnx::Sigmoid_1387 onnx::Concat_998
+Concat                   Concat_279               2 1 onnx::Concat_998 input.367_splitncnn_0 input.547
+Split                    splitncnn_21             1 2 input.547 input.547_splitncnn_0 input.547_splitncnn_1
+Convolution              Conv_280                 1 1 input.547_splitncnn_1 onnx::Sigmoid_1390 0=128 1=1 5=1 6=32768
+Swish                    Mul_282                  1 1 onnx::Sigmoid_1390 input.555
+Convolution              Conv_283                 1 1 input.547_splitncnn_0 onnx::Sigmoid_1393 0=128 1=1 5=1 6=32768
+Swish                    Mul_285                  1 1 onnx::Sigmoid_1393 onnx::Concat_1007
+Convolution              Conv_286                 1 1 input.555 onnx::Sigmoid_1396 0=128 1=1 5=1 6=16384
+Swish                    Mul_288                  1 1 onnx::Sigmoid_1396 input.567
+ConvolutionDepthWise     Conv_289                 1 1 input.567 onnx::Sigmoid_1399 0=128 1=3 4=1 5=1 6=1152 7=128
+Swish                    Mul_291                  1 1 onnx::Sigmoid_1399 input.575
+Convolution              Conv_292                 1 1 input.575 onnx::Sigmoid_1402 0=128 1=1 5=1 6=16384
+Swish                    Mul_294                  1 1 onnx::Sigmoid_1402 onnx::Concat_1019
+Concat                   Concat_295               2 1 onnx::Concat_1019 onnx::Concat_1007 input.583
+Convolution              Conv_296                 1 1 input.583 onnx::Sigmoid_1405 0=256 1=1 5=1 6=65536
+Swish                    Mul_298                  1 1 onnx::Sigmoid_1405 input.591
+Convolution              Conv_299                 1 1 input.471_splitncnn_0 onnx::Sigmoid_1408 0=64 1=1 5=1 6=4096
+Swish                    Mul_301                  1 1 onnx::Sigmoid_1408 input.599
+Split                    splitncnn_22             1 2 input.599 input.599_splitncnn_0 input.599_splitncnn_1
+ConvolutionDepthWise     Conv_302                 1 1 input.599_splitncnn_1 onnx::Sigmoid_1411 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_304                  1 1 onnx::Sigmoid_1411 input.607
+Convolution              Conv_305                 1 1 input.607 onnx::Sigmoid_1414 0=64 1=1 5=1 6=4096
+Swish                    Mul_307                  1 1 onnx::Sigmoid_1414 input.615
+ConvolutionDepthWise     Conv_308                 1 1 input.615 onnx::Sigmoid_1417 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_310                  1 1 onnx::Sigmoid_1417 input.623
+Convolution              Conv_311                 1 1 input.623 onnx::Sigmoid_1420 0=64 1=1 5=1 6=4096
+Swish                    Mul_313                  1 1 onnx::Sigmoid_1420 input.631
+Convolution              Conv_314                 1 1 input.631 onnx::Concat_1065 0=8 1=1 5=1 6=512 9=4
+ConvolutionDepthWise     Conv_315                 1 1 input.599_splitncnn_0 onnx::Sigmoid_1423 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_317                  1 1 onnx::Sigmoid_1423 input.639
+Convolution              Conv_318                 1 1 input.639 onnx::Sigmoid_1426 0=64 1=1 5=1 6=4096
+Swish                    Mul_320                  1 1 onnx::Sigmoid_1426 input.647
+ConvolutionDepthWise     Conv_321                 1 1 input.647 onnx::Sigmoid_1429 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_323                  1 1 onnx::Sigmoid_1429 input.655
+Convolution              Conv_324                 1 1 input.655 onnx::Sigmoid_1432 0=64 1=1 5=1 6=4096
+Swish                    Mul_326                  1 1 onnx::Sigmoid_1432 input.663
+Split                    splitncnn_23             1 2 input.663 input.663_splitncnn_0 input.663_splitncnn_1
+Convolution              Conv_327                 1 1 input.663_splitncnn_1 onnx::Concat_1062 0=4 1=1 5=1 6=256
+Convolution              Conv_328                 1 1 input.663_splitncnn_0 onnx::Concat_1064 0=1 1=1 5=1 6=64 9=4
+Concat                   Concat_331               3 1 onnx::Concat_1062 onnx::Concat_1064 onnx::Concat_1065 onnx::Shape_1066
+Convolution              Conv_332                 1 1 input.531_splitncnn_0 onnx::Sigmoid_1435 0=64 1=1 5=1 6=8192
+Swish                    Mul_334                  1 1 onnx::Sigmoid_1435 input.671
+Split                    splitncnn_24             1 2 input.671 input.671_splitncnn_0 input.671_splitncnn_1
+ConvolutionDepthWise     Conv_335                 1 1 input.671_splitncnn_1 onnx::Sigmoid_1438 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_337                  1 1 onnx::Sigmoid_1438 input.679
+Convolution              Conv_338                 1 1 input.679 onnx::Sigmoid_1441 0=64 1=1 5=1 6=4096
+Swish                    Mul_340                  1 1 onnx::Sigmoid_1441 input.687
+ConvolutionDepthWise     Conv_341                 1 1 input.687 onnx::Sigmoid_1444 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_343                  1 1 onnx::Sigmoid_1444 input.695
+Convolution              Conv_344                 1 1 input.695 onnx::Sigmoid_1447 0=64 1=1 5=1 6=4096
+Swish                    Mul_346                  1 1 onnx::Sigmoid_1447 input.703
+Convolution              Conv_347                 1 1 input.703 onnx::Concat_1107 0=8 1=1 5=1 6=512 9=4
+ConvolutionDepthWise     Conv_348                 1 1 input.671_splitncnn_0 onnx::Sigmoid_1450 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_350                  1 1 onnx::Sigmoid_1450 input.711
+Convolution              Conv_351                 1 1 input.711 onnx::Sigmoid_1453 0=64 1=1 5=1 6=4096
+Swish                    Mul_353                  1 1 onnx::Sigmoid_1453 input.719
+ConvolutionDepthWise     Conv_354                 1 1 input.719 onnx::Sigmoid_1456 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_356                  1 1 onnx::Sigmoid_1456 input.727
+Convolution              Conv_357                 1 1 input.727 onnx::Sigmoid_1459 0=64 1=1 5=1 6=4096
+Swish                    Mul_359                  1 1 onnx::Sigmoid_1459 input.735
+Split                    splitncnn_25             1 2 input.735 input.735_splitncnn_0 input.735_splitncnn_1
+Convolution              Conv_360                 1 1 input.735_splitncnn_1 onnx::Concat_1104 0=4 1=1 5=1 6=256
+Convolution              Conv_361                 1 1 input.735_splitncnn_0 onnx::Concat_1106 0=1 1=1 5=1 6=64 9=4
+Concat                   Concat_364               3 1 onnx::Concat_1104 onnx::Concat_1106 onnx::Concat_1107 onnx::Shape_1108
+Convolution              Conv_365                 1 1 input.591 onnx::Sigmoid_1462 0=64 1=1 5=1 6=16384
+Swish                    Mul_367                  1 1 onnx::Sigmoid_1462 input.743
+Split                    splitncnn_26             1 2 input.743 input.743_splitncnn_0 input.743_splitncnn_1
+ConvolutionDepthWise     Conv_368                 1 1 input.743_splitncnn_1 onnx::Sigmoid_1465 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_370                  1 1 onnx::Sigmoid_1465 input.751
+Convolution              Conv_371                 1 1 input.751 onnx::Sigmoid_1468 0=64 1=1 5=1 6=4096
+Swish                    Mul_373                  1 1 onnx::Sigmoid_1468 input.759
+ConvolutionDepthWise     Conv_374                 1 1 input.759 onnx::Sigmoid_1471 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_376                  1 1 onnx::Sigmoid_1471 input.767
+Convolution              Conv_377                 1 1 input.767 onnx::Sigmoid_1474 0=64 1=1 5=1 6=4096
+Swish                    Mul_379                  1 1 onnx::Sigmoid_1474 input.775
+Convolution              Conv_380                 1 1 input.775 onnx::Concat_1149 0=8 1=1 5=1 6=512 9=4
+ConvolutionDepthWise     Conv_381                 1 1 input.743_splitncnn_0 onnx::Sigmoid_1477 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_383                  1 1 onnx::Sigmoid_1477 input.783
+Convolution              Conv_384                 1 1 input.783 onnx::Sigmoid_1480 0=64 1=1 5=1 6=4096
+Swish                    Mul_386                  1 1 onnx::Sigmoid_1480 input.791
+ConvolutionDepthWise     Conv_387                 1 1 input.791 onnx::Sigmoid_1483 0=64 1=3 4=1 5=1 6=576 7=64
+Swish                    Mul_389                  1 1 onnx::Sigmoid_1483 input.799
+Convolution              Conv_390                 1 1 input.799 onnx::Sigmoid_1486 0=64 1=1 5=1 6=4096
+Swish                    Mul_392                  1 1 onnx::Sigmoid_1486 input.807
+Split                    splitncnn_27             1 2 input.807 input.807_splitncnn_0 input.807_splitncnn_1
+Convolution              Conv_393                 1 1 input.807_splitncnn_1 onnx::Concat_1146 0=4 1=1 5=1 6=256
+Convolution              Conv_394                 1 1 input.807_splitncnn_0 onnx::Concat_1148 0=1 1=1 5=1 6=64 9=4
+Concat                   Concat_397               3 1 onnx::Concat_1146 onnx::Concat_1148 onnx::Concat_1149 output.1
+Reshape                  Reshape_405              1 1 onnx::Shape_1066 onnx::Concat_1158 0=-1 1=13
+Reshape                  Reshape_413              1 1 onnx::Shape_1108 onnx::Concat_1166 0=-1 1=13
+Reshape                  Reshape_421              1 1 output.1 onnx::Concat_1174 0=-1 1=13
+Concat                   Concat_422               3 1 onnx::Concat_1158 onnx::Concat_1166 onnx::Concat_1174 onnx::Transpose_1175 0=1
+Permute                  Transpose_423            1 1 onnx::Transpose_1175 output 0=1

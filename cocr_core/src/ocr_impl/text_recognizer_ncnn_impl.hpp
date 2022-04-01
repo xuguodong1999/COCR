@@ -85,7 +85,7 @@ namespace cocr {
             try {
                 net = std::make_shared<ncnn::Net>();
                 net->opt.num_threads = numThread;
-                net->opt.use_vulkan_compute = false;
+                net->opt.use_vulkan_compute = true;
                 net->opt.use_winograd_convolution = true;
                 net->opt.use_sgemm_convolution = true;
                 net->opt.use_fp16_packed = true;
@@ -129,9 +129,9 @@ namespace cocr {
 
             ncnn::Extractor extractor = net->create_extractor();
             extractor.set_num_threads(numThread);
-            extractor.input("input", in);
+            extractor.input("in0", in);
             ncnn::Mat out;
-            extractor.extract("out", out);
+            extractor.extract("out0", out);
             return recognize((float *) out.data, out.h, out.w);
         }
 

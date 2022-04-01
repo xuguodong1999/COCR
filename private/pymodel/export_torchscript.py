@@ -22,6 +22,7 @@ def make_parser():
         type=str,
         help="expriment description file",
     )
+    parser.add_argument("-i", "--image_channel", default=3, type=int, help="image channel")
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
     parser.add_argument("-n", "--name", type=str, default=None, help="model name")
     parser.add_argument("-c", "--ckpt", default=None, type=str, help="ckpt path")
@@ -63,7 +64,7 @@ def main():
     model.head.decode_in_inference = False
 
     logger.info("loading checkpoint done.")
-    dummy_input = torch.randn(args.batch_size, 3, exp.test_size[0], exp.test_size[1])
+    dummy_input = torch.randn(args.batch_size, args.image_channel, exp.test_size[0], exp.test_size[1])
 
     mod = torch.jit.trace(model, dummy_input)
     mod.save(args.output_name)

@@ -65,11 +65,11 @@ cocr::ObjectDetector::ObjectDetector() : maxHeight(1280), maxWidth(1280) {
 
 }
 
-const char *ncnnDetModel = ":/models/ncnn/det_8/yolo_3l_c8.bin";
-const char *ncnnDetModelCfg = ":/models/ncnn/det_8/yolo_3l_c8.param";
+const char *ncnnDetModel = ":/models/det8.fp16.bin";
+const char *ncnnDetModelCfg = ":/models/det8.fp16.param";
 
-const char *ocvDetModel = ":/models/darknet/det_8/yolo-3l-c8.weights";
-const char *ocvDetModelCfg = ":/models/darknet/det_8/yolo-3l-c8.cfg";
+const char *ocvDetModel = ":/models/deprecated/darknet-yolo-3l-c8.weights";
+const char *ocvDetModelCfg = ":/models/deprecated/darknet-yolo-3l-c8.cfg";
 
 std::shared_ptr<cocr::ObjectDetector> cocr::ObjectDetector::MakeInstance() {
 #ifdef USE_OPENCV_DNN

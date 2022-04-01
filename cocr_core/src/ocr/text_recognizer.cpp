@@ -1,7 +1,15 @@
 #include "ocr/text_recognizer.hpp"
 #include "ocr/text_corrector.hpp"
 
+#ifdef USE_OPENCV_DNN
+
+#include "../ocr_impl/text_recognizer_opencv_impl.hpp"
+
+#else
+
 #include "../ocr_impl/text_recognizer_ncnn_impl.hpp"
+
+#endif
 
 #include <opencv2/imgproc.hpp>
 
@@ -19,10 +27,20 @@ cv::Mat cocr::TextRecognizer::preProcess(const cv::Mat &_src) {
     return procImg;
 }
 
-const char *ncnnTextModel = ":/models/ncnn/text_57/vgg_lstm_57_fp16_mixFont.bin";
-const char *ncnnTextModelCfg = ":/models/ncnn/text_57/vgg_lstm_57_fp16.param";
+const char *ncnnTextModel = ":/models/crnn57.fp16.bin";
+const char *ncnnTextModelCfg = ":/models/crnn57.fp16.param";
+
+const char *onnxTextModel = ":/models/deprecated/onnx-crnn-57.onnx";
 
 std::shared_ptr<cocr::TextRecognizer> cocr::TextRecognizer::MakeInstance() {
+#ifdef USE_OPENCV_DNN
+    auto recognizer = std::make_shared<cocr::TextRecognizerOpenCVImpl>();
+    if (!recognizer->initModel(onnxTextModel, cocr::TextCorrector::GetAlphabet(), 192)) {
+        qDebug() << "fail to init opencv recognizer";
+        recognizer->freeModel();
+        return nullptr;
+    }
+#else
     auto recognizer = std::make_shared<cocr::TextRecognizerNcnnImpl>();
     recognizer->setNumThread(4);
     if (!recognizer->initModel(
@@ -33,6 +51,7 @@ std::shared_ptr<cocr::TextRecognizer> cocr::TextRecognizer::MakeInstance() {
         return nullptr;
     }
     qDebug() << "init ncnn recognizer success";
+#endif
     return recognizer;
 }
 
