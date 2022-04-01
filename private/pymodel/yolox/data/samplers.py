@@ -23,7 +23,7 @@ class YoloBatchSampler(BatchSampler):
 
     def __iter__(self):
         for batch in super().__iter__():
-            yield [(False, idx) for idx in batch]
+            yield [idx for idx in batch]
 
 
 class InfiniteSampler(Sampler):

@@ -24,7 +24,7 @@ def make_parser():
     )
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
     parser.add_argument("-n", "--name", type=str, default=None, help="model name")
-
+    parser.add_argument("-i", "--image_channel", default=3, type=int, help="image channel")
     parser.add_argument(
         "--path", default="./assets/dog.jpg", help="path to images or video"
     )

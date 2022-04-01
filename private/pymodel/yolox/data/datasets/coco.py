@@ -43,6 +43,7 @@ class COCODataset(Dataset):
             name="train2017",
             img_size=(416, 416),
             preproc=None,
+            image_channel=3,
     ):
         """
         COCO dataset initialization. Annotation data are read into memory by COCO API.
@@ -53,7 +54,7 @@ class COCODataset(Dataset):
             img_size (Tuple[int, int]): target image size after pre-processing
             preproc: data augmentation strategy
         """
-        super().__init__(img_size)
+        super().__init__()
         if data_dir is None:
             data_dir = os.path.join(get_yolox_datadir(), "COCO")
         self.data_dir = data_dir
@@ -68,8 +69,23 @@ class COCODataset(Dataset):
         self.imgs = None
         self.name = name
         self.img_size = img_size
+        self.__input_dim = img_size[:2]
         self.preproc = preproc
         self.annotations = self._load_coco_annotations()
+
+    @property
+    def input_dim(self):
+        """
+        Dimension that can be used by transforms to set the correct image size, etc.
+        This allows transforms to have a single source of truth
+        for the input dimension of the network.
+
+        Return:
+            list: Tuple containing the current width,height
+        """
+        if hasattr(self, "_input_dim"):
+            return self._input_dim
+        return self.__input_dim
 
     def __len__(self):
         return len(self.ids)
@@ -139,7 +155,8 @@ class COCODataset(Dataset):
 
         img = cv2.imread(img_file)
         assert img is not None
-
+        # FIXME: add img channel to cli parser
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return img
 
     def pull_item(self, index):
@@ -174,7 +191,8 @@ class COCODataset(Dataset):
             img_id (int): same as the input index. Used for evaluation.
         """
         img, target, img_info, img_id = self.pull_item(index)
-
+        if len(img.shape) == 2:
+            img = np.expand_dims(img, -1)
         if self.preproc is not None:
             img, target = self.preproc(img, target, self.input_dim)
         return img, target, img_info, img_id

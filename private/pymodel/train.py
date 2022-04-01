@@ -43,6 +43,7 @@ def make_parser():
         "--resume", default=False, action="store_true", help="resume training"
     )
     parser.add_argument("-c", "--ckpt", default=None, type=str, help="checkpoint file")
+    parser.add_argument("-i", "--image_channel", default=3, type=int, help="image channel")
     parser.add_argument(
         "-e",
         "--start_epoch",

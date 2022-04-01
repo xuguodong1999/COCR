@@ -11,6 +11,7 @@ http://arxiv.org/abs/1512.02325
 
 import math
 import random
+import sys
 
 import cv2
 import numpy as np
@@ -132,7 +133,10 @@ def random_affine(
 
 
 def _mirror(image, boxes, prob=0.5):
-    _, width, _ = image.shape
+    if len(image.shape) == 2:
+        _, width = image.shape
+    else:
+        _, width, _ = image.shape
     if random.random() < prob:
         image = image[:, ::-1]
         boxes[:, 0::2] = width - boxes[:, 2::-2]
@@ -140,8 +144,10 @@ def _mirror(image, boxes, prob=0.5):
 
 
 def preproc(img, input_size, swap=(2, 0, 1)):
+    channel = 1
     if len(img.shape) == 3:
-        padded_img = np.ones((input_size[0], input_size[1], 3), dtype=np.uint8) * 255  # white
+        channel = img.shape[2]
+        padded_img = np.ones((input_size[0], input_size[1], channel), dtype=np.uint8) * 255  # white
     else:
         padded_img = np.ones(input_size, dtype=np.uint8) * 255  # white
 
@@ -151,6 +157,8 @@ def preproc(img, input_size, swap=(2, 0, 1)):
         (int(img.shape[1] * r), int(img.shape[0] * r)),
         interpolation=cv2.INTER_LINEAR,
     ).astype(np.uint8)
+    if len(resized_img.shape) == 2:
+        resized_img = np.expand_dims(resized_img, -1)
     padded_img[: int(img.shape[0] * r), : int(img.shape[1] * r)] = resized_img
 
     padded_img = padded_img.transpose(swap)
@@ -174,7 +182,10 @@ class TrainTransform:
 
         image_o = image.copy()
         targets_o = targets.copy()
-        height_o, width_o, _ = image_o.shape
+        if len(image_o.shape) == 2:
+            height_o, width_o, = image_o.shape
+        else:
+            height_o, width_o, _ = image_o.shape
         boxes_o = targets_o[:, :4]
         labels_o = targets_o[:, 4]
         # bbox_o: [xyxy] to [c_x,c_y,w,h]
@@ -183,7 +194,10 @@ class TrainTransform:
         if random.random() < self.hsv_prob:
             augment_hsv(image)
         image_t, boxes = _mirror(image, boxes, self.flip_prob)
-        height, width, _ = image_t.shape
+        if len(image_t.shape) == 2:
+            height, width, = image_t.shape
+        else:
+            height, width, _ = image_t.shape
         image_t, r_ = preproc(image_t, input_dim)
         # boxes [xyxy] 2 [cx,cy,w,h]
         boxes = xyxy2cxcywh(boxes)
@@ -203,9 +217,7 @@ class TrainTransform:
 
         targets_t = np.hstack((labels_t, boxes_t))
         padded_labels = np.zeros((self.max_labels, 5))
-        padded_labels[range(len(targets_t))[: self.max_labels]] = targets_t[
-                                                                  : self.max_labels
-                                                                  ]
+        padded_labels[range(len(targets_t))[: self.max_labels]] = targets_t[: self.max_labels]
         padded_labels = np.ascontiguousarray(padded_labels, dtype=np.float32)
         return image_t, padded_labels
 

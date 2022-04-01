@@ -20,9 +20,10 @@ __all__ = [
 ]
 
 
-def get_model_info(model: nn.Module, tsize: Sequence[int]) -> str:
+def get_model_info(model: nn.Module, tsize: Sequence[int], image_channel=3) -> str:
     stride = 64
-    img = torch.zeros((1, 3, stride, stride), device=next(model.parameters()).device)
+    # FIXME: add img channel to parser
+    img = torch.zeros((1, image_channel, stride, stride), device=next(model.parameters()).device)
     flops, params = profile(deepcopy(model), inputs=(img,), verbose=False)
     params /= 1e6
     flops /= 1e9

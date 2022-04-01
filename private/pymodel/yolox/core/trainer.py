@@ -129,7 +129,7 @@ class Trainer:
         torch.cuda.set_device(self.local_rank)
         model = self.exp.get_model()
         logger.info(
-            "Model Summary: {}".format(get_model_info(model, self.exp.test_size))
+            "Model Summary: {}".format(get_model_info(model, self.exp.test_size, self.args.image_channel))
         )
         model.to(self.device)
 
@@ -212,7 +212,7 @@ class Trainer:
             * reset setting of resize
         """
         if self.save_history_ckpt and (self.iter + 1) % self.exp.save_iter_interval == 0:
-            self.save_ckpt(f"iter_{self.iter + 1}")
+            self.save_ckpt(f"epoch_{self.epoch + 1}_iter_{self.iter + 1}")
         # log needed information
         if (self.iter + 1) % self.exp.print_interval == 0:
             # TODO check ETA logic

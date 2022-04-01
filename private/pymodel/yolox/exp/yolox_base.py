@@ -52,10 +52,6 @@ class Exp(BaseExp):
         self.hsv_prob = 1.0
         # prob of applying flip aug
         self.flip_prob = 0.5
-        # translate range, for example, if set to 0.1, the true range is (-0.1, 0.1)
-        self.translate = 0.1
-        # shear angle range, for example, if set to 2, the true range is (-2, 2)
-        self.shear = 2.0
 
         # --------------  training config --------------------- #
         # epoch number used for warmup
@@ -95,6 +91,8 @@ class Exp(BaseExp):
         self.test_conf = 0.01
         # nms threshold
         self.nmsthre = 0.65
+        # img channel
+        self.image_channel = 3
 
     def get_model(self):
         from ..models import YOLOX, YOLOPAFPN, YOLOXHead
@@ -143,7 +141,8 @@ class Exp(BaseExp):
                     max_labels=1024,
                     flip_prob=self.flip_prob,
                     hsv_prob=self.hsv_prob),
-                name=self.img_dir_name if self.img_dir_name is not None else "train2017"
+                name=self.img_dir_name if self.img_dir_name is not None else "train2017",
+                image_channel=self.image_channel
             )
 
         if is_distributed:
