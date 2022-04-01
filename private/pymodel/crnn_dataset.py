@@ -14,7 +14,7 @@ from torch._utils import _accumulate
 from torch.utils.data import Dataset, ConcatDataset, Subset
 
 
-class Batch_Balanced_Dataset(object):
+class BatchBalancedDataset(object):
 
     def __init__(self, opt):
         """

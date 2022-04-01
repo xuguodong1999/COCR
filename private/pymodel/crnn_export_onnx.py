@@ -4,8 +4,8 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 
-from model import Model
-from utils import CTCLabelConverter
+from crnn_model import Model
+from crnn_utils import CTCLabelConverter
 
 
 def onnx_export(opt):

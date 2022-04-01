@@ -16,43 +16,32 @@ limitations under the License.
 
 import torch.nn as nn
 
-from feature_extraction import VGG_FeatureExtractor
-
-
-class BidirectionalLSTM(nn.Module):
-
-    def __init__(self, input_size, hidden_size, output_size):
-        super(BidirectionalLSTM, self).__init__()
-        self.rnn = nn.LSTM(input_size, hidden_size, bidirectional=True, batch_first=True)
-        self.linear = nn.Linear(hidden_size * 2, output_size)
-
-    def forward(self, input):
-        """
-        input : visual feature [batch_size x T x input_size]
-        output : contextual feature [batch_size x T x output_size]
-        """
-        self.rnn.flatten_parameters()
-        # print('in=',input.shape)
-        recurrent, _ = self.rnn(input)  # batch_size x T x input_size -> batch_size x T x (2*hidden_size)
-        # print('out1=',recurrent.shape)
-        # T, b, h = recurrent.size()
-        output = self.linear(recurrent)  # batch_size x T x output_size
-        # print('out2=',output.shape)
-        # output = output.view(T, b, -1)
-        return output
+from yolox.layers.bilstm import BidirectionalLSTM
+from yolox.layers.vgg import VGG
+from yolox.models.darknet import CSPDarknet
 
 
 class Model(nn.Module):
 
     def __init__(self, opt):
         super(Model, self).__init__()
-        self.opt = opt
-        self.stages = {'Trans': opt.Transformation, 'Feat': opt.FeatureExtraction,
-                       'Seq': opt.SequenceModeling, 'Pred': opt.Prediction}
 
         """ FeatureExtraction """
         if opt.FeatureExtraction == 'VGG':
-            self.FeatureExtraction = VGG_FeatureExtractor(opt.input_channel, opt.output_channel)
+            self.FeatureExtraction = VGG(opt.input_channel, opt.output_channel)
+        elif opt.FeatureExtraction == 'CSP':
+            self.FeatureExtraction = CSPDarknet(
+                0.33,
+                0.25,
+                out_features=("dark5"),
+                depthwise=True,
+                act="silu",
+                image_channel=1,
+                use_single_out=True
+            )
+            output_channel = self.FeatureExtraction.get_out_channel()
+            print('use CSPDarknet and revert output_channel from {} to {}'.format(opt.output_channel, output_channel))
+            opt.output_channel = output_channel
         else:
             raise Exception('No FeatureExtraction module specified')
         self.FeatureExtraction_output = opt.output_channel  # int(imgH/16-1) * 512
@@ -68,10 +57,6 @@ class Model(nn.Module):
         self.Prediction = nn.Linear(self.SequenceModeling_output, opt.num_class)
 
     def forward(self, input, text='', is_train=True):
-        """ Transformation stage """
-        if not self.stages['Trans'] == "None":
-            input = self.Transformation(input)
-
         """ Feature extraction stage """
         visual_feature = self.FeatureExtraction(input)  # 0 1 2 3
         # print('self.FeatureExtraction: ', sum(m.numel() for m in self.FeatureExtraction.parameters()))

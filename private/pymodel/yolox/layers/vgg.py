@@ -1,11 +1,11 @@
 import torch.nn as nn
 
 
-class VGG_FeatureExtractor(nn.Module):
+class VGG(nn.Module):
     """ FeatureExtractor of CRNN (https://arxiv.org/pdf/1507.05717.pdf) """
 
     def __init__(self, input_channel, output_channel=512):
-        super(VGG_FeatureExtractor, self).__init__()
+        super(VGG, self).__init__()
         self.output_channel = [int(output_channel / 8), int(output_channel / 4),
                                int(output_channel / 2), output_channel]  # [64, 128, 256, 512]
         self.ConvNet = nn.Sequential(

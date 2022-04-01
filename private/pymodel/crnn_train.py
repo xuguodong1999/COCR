@@ -11,10 +11,10 @@ import torch.nn.init as init
 import torch.optim as optim
 import torch.utils.data
 
-from dataset import hierarchical_dataset, AlignCollate, Batch_Balanced_Dataset
-from model import Model
-from test import validation
-from utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, Averager
+from crnn_dataset import hierarchical_dataset, AlignCollate, BatchBalancedDataset
+from crnn_model import Model
+from crnn_test import validation
+from crnn_utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, Averager
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -28,7 +28,7 @@ def train(opt):
 
     opt.select_data = opt.select_data.split('-')
     opt.batch_ratio = opt.batch_ratio.split('-')
-    train_dataset = Batch_Balanced_Dataset(opt)
+    train_dataset = BatchBalancedDataset(opt)
 
     log = open(f'{opt.model_top_dir}/{opt.exp_name}/log_dataset.txt', 'a')
     AlignCollate_valid = AlignCollate(imgH=opt.imgH, imgW=opt.imgW, keep_ratio_with_pad=opt.PAD)
@@ -44,18 +44,14 @@ def train(opt):
     log.close()
 
     """ model configuration """
-    if opt.baiduCTC:
-        converter = CTCLabelConverterForBaiduWarpctc(opt.character)
-    else:
-        converter = CTCLabelConverter(opt.character)
+    converter = CTCLabelConverter(opt.character)
     opt.num_class = len(converter.character)
 
     if opt.rgb:
         opt.input_channel = 3
     model = Model(opt)
     print('model input parameters', opt.imgH, opt.imgW, opt.num_fiducial, opt.input_channel, opt.output_channel,
-          opt.hidden_size, opt.num_class, opt.batch_max_length, opt.Transformation, opt.FeatureExtraction,
-          opt.SequenceModeling, opt.Prediction)
+          opt.hidden_size, opt.num_class, opt.batch_max_length,   opt.FeatureExtraction, )
 
     # weight initialization
     for name, param in model.named_parameters():
@@ -85,12 +81,7 @@ def train(opt):
     print(model)
 
     """ setup loss """
-    if opt.baiduCTC:
-        # need to install warpctc. see our guideline.
-        from warpctc_pytorch import CTCLoss
-        criterion = CTCLoss()
-    else:
-        criterion = torch.nn.CTCLoss(zero_infinity=True).to(device)
+    criterion = torch.nn.CTCLoss(zero_infinity=True).to(device)
     # loss averager
     loss_avg = Averager()
 
@@ -147,12 +138,8 @@ def train(opt):
 
         preds = model(image, text)
         preds_size = torch.IntTensor([preds.size(0)] * batch_size)
-        if opt.baiduCTC:
-            # preds = preds.permute(1, 0, 2)  # to use CTCLoss format
-            cost = criterion(preds, text, preds_size, length) / batch_size
-        else:
-            preds = preds.log_softmax(2)  # .permute(1, 0, 2)
-            cost = criterion(preds, text, preds_size, length)
+        preds = preds.log_softmax(2)  # .permute(1, 0, 2)
+        cost = criterion(preds, text, preds_size, length)
         model.zero_grad()
         cost.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), opt.grad_clip)  # gradient clipping with 5 (Default)
@@ -196,9 +183,6 @@ def train(opt):
                 head = f'{"Ground Truth":25s} | {"Prediction":25s} | Confidence Score & T/F'
                 predicted_result_log = f'{dashed_line}\n{head}\n{dashed_line}\n'
                 for gt, pred, confidence in zip(labels[:5], preds[:5], confidence_score[:5]):
-                    if 'Attn' in opt.Prediction:
-                        gt = gt[:gt.find('[s]')]
-                        pred = pred[:pred.find('[s]')]
 
                     predicted_result_log += f'{gt:25s} | {pred:25s} | {confidence:0.4f}\t{str(pred == gt)}\n'
                 predicted_result_log += f'{dashed_line}'
@@ -235,7 +219,6 @@ if __name__ == '__main__':
     parser.add_argument('--rho', type=float, default=0.95, help='decay rate rho for Adadelta. default=0.95')
     parser.add_argument('--eps', type=float, default=1e-8, help='eps for Adadelta. default=1e-8')
     parser.add_argument('--grad_clip', type=float, default=5, help='gradient clipping value. default=5')
-    parser.add_argument('--baiduCTC', action='store_true', help='for data_filtering_off mode')
     """ Data processing """
     parser.add_argument('--select_data', type=str, default='MJ-ST',
                         help='select training data (default is MJ-ST, which means MJ and ST used as training data)')
@@ -264,10 +247,6 @@ if __name__ == '__main__':
 
     opt = parser.parse_args()
 
-    if not opt.exp_name:
-        opt.exp_name = f'{opt.Transformation}-{opt.FeatureExtraction}-{opt.SequenceModeling}-{opt.Prediction}'
-        opt.exp_name += f'-Seed{opt.manualSeed}'
-        # print(opt.exp_name)
     os.makedirs(f'{opt.model_top_dir}/{opt.exp_name}', exist_ok=True)
 
     """ vocab / character number configuration """

@@ -2,8 +2,8 @@ import argparse
 
 import torch
 
-from model import Model
-from utils import CTCLabelConverter
+from crnn_model import Model
+from crnn_utils import CTCLabelConverter
 
 
 def onnx_export(opt):

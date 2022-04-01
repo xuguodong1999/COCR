@@ -28,7 +28,7 @@
 
 ## train
 
-`python train.py --train_data='./data/train' --valid_data='./data/test' --model_top_dir='../workspace' --FeatureExtraction='VGG' --baiduCTC --sensitive --select_data / --batch_ratio 1 --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=256 --batch_size=256 --workers=2 --num_iter=100000 --valInterval=5000 --exp_name='VGG-BiLSTM-baidu_ctc_mixFont2'`
+`python crnn_train.py --train_data='/home/xgd/datasets/leafxy-text-57/train' --valid_data='/home/xgd/datasets/leafxy-text-57/test' --model_top_dir='./out' --FeatureExtraction='CSP' --sensitive --select_data / --batch_ratio 1 --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=192 --input_channel=1 --output_channel=-1 --hidden_size=128 --batch_size=512 --workers=4 --num_iter=100000 --valInterval=5000 --exp_name='crnn'`
 
 ## onnx export
 

@@ -11,9 +11,9 @@ import torch.nn.functional as F
 import torch.utils.data
 from nltk.metrics.distance import edit_distance
 
-from dataset import hierarchical_dataset, AlignCollate
-from model import Model
-from utils import CTCLabelConverter, Averager
+from crnn_dataset import hierarchical_dataset, AlignCollate
+from crnn_model import Model
+from crnn_utils import CTCLabelConverter, Averager
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -104,17 +104,10 @@ def validation(model, criterion, evaluation_loader, converter, opt):
         # Calculate evaluation loss for CTC deocder.
         preds_size = torch.IntTensor([preds.size(0)] * batch_size)
         # permute 'preds' to use CTCloss format
-        if opt.baiduCTC:
-            cost = criterion(preds, text_for_loss, preds_size, length_for_loss) / batch_size
-        else:
-            cost = criterion(preds.log_softmax(2), text_for_loss, preds_size, length_for_loss)
+        cost = criterion(preds.log_softmax(2), text_for_loss, preds_size, length_for_loss)
         preds = preds.permute(1, 0, 2)
         # Select max probabilty (greedy decoding) then decode index to character
-        if opt.baiduCTC:
-            _, preds_index = preds.max(2)
-            preds_index = preds_index.view(-1)
-        else:
-            _, preds_index = preds.max(2)
+        _, preds_index = preds.max(2)
         preds_str = converter.decode(preds_index.data, preds_size.data)
 
         infer_time += forward_time
@@ -125,12 +118,6 @@ def validation(model, criterion, evaluation_loader, converter, opt):
         preds_max_prob, _ = preds_prob.max(dim=2)
         confidence_score_list = []
         for gt, pred, pred_max_prob in zip(labels, preds_str, preds_max_prob):
-            if 'Attn' in opt.Prediction:
-                gt = gt[:gt.find('[s]')]
-                pred_EOS = pred.find('[s]')
-                pred = pred[:pred_EOS]  # prune after "end of sentence" token ([s])
-                pred_max_prob = pred_max_prob[:pred_EOS]
-
             # To evaluate 'case sensitive model' with alphanumeric and case insensitve setting.
             if opt.sensitive and opt.data_filtering_off:
                 pred = pred.lower()
@@ -183,8 +170,7 @@ def test(opt):
         opt.input_channel = 3
     model = Model(opt)
     print('model input parameters', opt.imgH, opt.imgW, opt.num_fiducial, opt.input_channel, opt.output_channel,
-          opt.hidden_size, opt.num_class, opt.batch_max_length, opt.Transformation, opt.FeatureExtraction,
-          opt.SequenceModeling, opt.Prediction)
+          opt.hidden_size, opt.num_class, opt.batch_max_length, opt.FeatureExtraction)
     model = torch.nn.DataParallel(model).to(device)
 
     # load model
@@ -238,7 +224,6 @@ if __name__ == '__main__':
     parser.add_argument('--sensitive', action='store_true', help='for sensitive character mode')
     parser.add_argument('--PAD', action='store_true', help='whether to keep ratio then pad for image resize')
     parser.add_argument('--data_filtering_off', action='store_true', help='for data_filtering_off mode')
-    parser.add_argument('--baiduCTC', action='store_true', help='for data_filtering_off mode')
     """ Model Architecture """
     parser.add_argument('--FeatureExtraction', type=str, required=True, help='FeatureExtraction stage. VGG|RCNN|ResNet')
     parser.add_argument('--num_fiducial', type=int, default=20, help='number of fiducial points of TPS-STN')

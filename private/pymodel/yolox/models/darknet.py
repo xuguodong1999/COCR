@@ -103,10 +103,12 @@ class CSPDarknet(nn.Module):
             depthwise=False,
             act="silu",
             image_channel=3,
+            use_single_out=False,
     ):
         super().__init__()
         assert out_features, "please provide output features of Darknet"
         self.out_features = out_features
+        self.use_single_out = use_single_out
         Conv = DWConv if depthwise else BaseConv
 
         base_channels = int(wid_mul * 64)  # 64
@@ -152,18 +154,22 @@ class CSPDarknet(nn.Module):
         )
 
         # dark5
+        self.out_channel = base_channels * 16
         self.dark5 = nn.Sequential(
             Conv(base_channels * 8, base_channels * 16, 3, 2, act=act),
             SPPBottleneck(base_channels * 16, base_channels * 16, activation=act),
             CSPLayer(
                 base_channels * 16,
-                base_channels * 16,
+                self.out_channel,
                 n=base_depth,
                 shortcut=False,
                 depthwise=depthwise,
                 act=act,
             ),
         )
+
+    def get_out_channel(self):
+        return self.out_channel
 
     def forward(self, x):
         outputs = {}
@@ -177,4 +183,6 @@ class CSPDarknet(nn.Module):
         outputs["dark4"] = x
         x = self.dark5(x)
         outputs["dark5"] = x
+        if self.use_single_out:
+            return x
         return {k: v for k, v in outputs.items() if k in self.out_features}
