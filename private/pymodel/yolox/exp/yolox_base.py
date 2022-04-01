@@ -33,7 +33,7 @@ class Exp(BaseExp):
         self.input_size = (640, 640)  # (height, width)
         # Actual multiscale ranges: [640 - 5 * 32, 640 + 5 * 32].
         # To disable multiscale training, set the value to 0.
-        self.multiscale_range = 5
+        self.multiscale_range = 0
         # You can uncomment this line to specify a multiscale range
         # self.random_size = (14, 26)
         # dir of dataset images, if data_dir is None, this project will use `datasets` dir

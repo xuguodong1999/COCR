@@ -14,13 +14,13 @@ class Exp(MyExp):
         self.depth = 0.33
         self.width = 0.25
         self.input_size = (640, 640)
-        self.random_size = (10, 20)
         self.test_size = (640, 640)
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
         # soso 8
         self.num_classes = 8
         # scale
-        self.multiscale_range = 2
+        # self.multiscale_range = 0
+        self.random_size = (13, 22)
         # dir
         self.data_dir = os.path.join(os.path.expanduser('~'), 'datasets/soso-obj-8')
         # image dir
