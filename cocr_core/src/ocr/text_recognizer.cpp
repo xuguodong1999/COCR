@@ -27,13 +27,9 @@ cv::Mat cocr::TextRecognizer::preProcess(const cv::Mat &_src) {
     return procImg;
 }
 
-const char *ncnnTextModel = ":/models/crnn57.fp16.bin";
-const char *ncnnTextModelCfg = ":/models/crnn57.fp16.param";
-
-const char *onnxTextModel = ":/models/deprecated/onnx-crnn-57.onnx";
-
 std::shared_ptr<cocr::TextRecognizer> cocr::TextRecognizer::MakeInstance() {
 #ifdef USE_OPENCV_DNN
+    std::string onnxTextModel = MODEL_DIR + std::string("/deprecated/onnx-crnn-57.onnx");
     auto recognizer = std::make_shared<cocr::TextRecognizerOpenCVImpl>();
     if (!recognizer->initModel(onnxTextModel, cocr::TextCorrector::GetAlphabet(), 192)) {
         qDebug() << "fail to init opencv recognizer";
@@ -41,6 +37,8 @@ std::shared_ptr<cocr::TextRecognizer> cocr::TextRecognizer::MakeInstance() {
         return nullptr;
     }
 #else
+    std::string ncnnTextModel = MODEL_DIR + std::string("/crnn57.fp16.bin");
+    std::string ncnnTextModelCfg = MODEL_DIR + std::string("/crnn57.fp16.param");
     auto recognizer = std::make_shared<cocr::TextRecognizerNcnnImpl>();
     recognizer->setNumThread(4);
     if (!recognizer->initModel(

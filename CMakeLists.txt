@@ -19,7 +19,8 @@ option(BUILD_DATA_GEN "Generate data for yolo and crnn training" ON)
 option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" OFF)
 # run on intel NCS 2
 option(USE_OPENVINO "Whether use opencv::dnn with openvino backend" OFF)
-# libtorch playground
+# 1. build codes under private dir, need libtorch
+# 2. enable load models from local disk instead of qrc file system
 option(BUILD_PRIVATE "Whether build elslab and other private modules, libtorch and Qml are required." OFF)
 
 # how add_library works

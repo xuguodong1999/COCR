@@ -65,14 +65,11 @@ cocr::ObjectDetector::ObjectDetector() : maxHeight(1280), maxWidth(1280) {
 
 }
 
-const char *ncnnDetModel = ":/models/det8.fp16.bin";
-const char *ncnnDetModelCfg = ":/models/det8.fp16.param";
-
-const char *ocvDetModel = ":/models/deprecated/darknet-yolo-3l-c8.weights";
-const char *ocvDetModelCfg = ":/models/deprecated/darknet-yolo-3l-c8.cfg";
 
 std::shared_ptr<cocr::ObjectDetector> cocr::ObjectDetector::MakeInstance() {
 #ifdef USE_OPENCV_DNN
+    std::string ocvDetModel = MODEL_DIR + std::string("/deprecated/darknet-yolo-3l-c8.weights");
+    std::string ocvDetModelCfg = MODEL_DIR + std::string("/deprecated/darknet-yolo-3l-c8.cfg");
     auto detector = std::make_shared<cocr::ObjectDetectorOpenCVImpl>();
     detector->setConfThresh(0.25);
     detector->setIouThresh(0.45);
@@ -83,6 +80,8 @@ std::shared_ptr<cocr::ObjectDetector> cocr::ObjectDetector::MakeInstance() {
     }
     qDebug() << "init opencv detector success";
 #else
+    std::string ncnnDetModel = MODEL_DIR + std::string("/det8.fp16.bin");
+    std::string ncnnDetModelCfg = MODEL_DIR + std::string("/det8.fp16.param");
     auto detector = std::make_shared<cocr::ObjectDetectorNcnnImpl>();
     detector->setNumThread(4);
     if (!detector->initModel(ncnnDetModel, ncnnDetModelCfg, 1280)) {
