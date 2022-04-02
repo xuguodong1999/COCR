@@ -1,14 +1,11 @@
-project(tools_qml LANGUAGES CXX)
+project(app_qml LANGUAGES CXX)
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-
 set(QT_COMPONENTS Core Quick)
-
 find_package(Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
 
 set(QML_SRC_FILE ${CMAKE_CURRENT_SOURCE_DIR}/qml.qrc)
@@ -24,6 +21,7 @@ else ()
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCE})
 endif ()
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_compile_definitions(${PROJECT_NAME}
         PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 

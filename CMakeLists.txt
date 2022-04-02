@@ -9,7 +9,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # gcc -fvisibility=hidden, but qt-android may need reflection
-if (NOT ANDROID AND NOT IOS)
+if (NOT ANDROID)
     set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 endif ()
 
@@ -20,7 +20,7 @@ option(USE_OPENCV_DNN "Whether use opencv::dnn instead of ncnn" OFF)
 # run on intel NCS 2
 option(USE_OPENVINO "Whether use opencv::dnn with openvino backend" OFF)
 # libtorch playground
-option(WITH_LIBTORCH "Libtorch is required to build cpp train" OFF)
+option(BUILD_PRIVATE "Whether build elslab and other private modules, libtorch and Qml are required." OFF)
 
 # how add_library works
 option(BUILD_SHARED_LIBS "Build as shared or static libs" ON)
@@ -91,12 +91,12 @@ if (NOT WASM AND NOT ANDROID AND NOT IOS)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 else ()
     # disable unrelated project for wasm and android
-    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, WITH_LIBTORCH and BUILD_REFERENCES set to OFF")
+    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, BUILD_PRIVATE and BUILD_REFERENCES set to OFF")
     set(USE_OPENCV_DNN OFF)
 
     set(BUILD_DATA_GEN OFF)
     set(BUILD_TESTS OFF)
-    set(WITH_LIBTORCH OFF)
+    set(BUILD_PRIVATE OFF)
     set(BUILD_REFERENCES OFF)
 endif ()
 
@@ -106,6 +106,4 @@ add_subdirectory(thirdparty)
 
 add_subdirectory(cocr_core)
 add_subdirectory(cocr_tools)
-if (WITH_LIBTORCH)
-    add_subdirectory(private/elslab)
-endif ()
+add_subdirectory(private)

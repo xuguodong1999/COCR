@@ -56,7 +56,7 @@ endif ()
 # add exe
 if (ANDROID)
     set(ANDROID_PACKAGE_SOURCE_DIR ${DEV_ASSETS_DIR}/android CACHE INTERNAL "")
-    add_library(${APP_NAME} SHARED ${PROJECT_SOURCE} ${ANDROID_PACKAGE_SOURCE_DIR}/AndroidManifest.xml)
+    add_library(${APP_NAME} SHARED ${ANDROID_PACKAGE_SOURCE_DIR}/AndroidManifest.xml ${PROJECT_SOURCE})
 else ()
     add_executable(${APP_NAME} ${PROJECT_SOURCE})
 endif ()

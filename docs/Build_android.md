@@ -5,6 +5,9 @@
 due to qt-community-lts issues, qt-5.15.2 only support single project-level apk build
 
 ```shell
+# install system glslang
+sudo apt-get install glslang-dev
+
 # config
 cmake .. -G "Ninja" \
     -DQt5_DIR:PATH=~/shared/Qt/5.15.2/android/lib/cmake/Qt5 \
