@@ -171,7 +171,8 @@ else ()
     add_library(ncnn STATIC ${ncnn_SRCS})
 endif ()
 set_target_properties(ncnn PROPERTIES DEBUG_POSTFIX "d")
-set_target_properties(ncnn PROPERTIES VERSION ${NCNN_VERSION_STRING} SOVERSION ${NCNN_VERSION_MAJOR})
+# disable version to avoid .so link
+# set_target_properties(ncnn PROPERTIES VERSION ${NCNN_VERSION_STRING} SOVERSION ${NCNN_VERSION_MAJOR})
 
 include(GenerateExportHeader)
 generate_export_header(ncnn)

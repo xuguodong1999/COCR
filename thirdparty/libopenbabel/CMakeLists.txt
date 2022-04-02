@@ -28,7 +28,7 @@ if (MSVC)
 endif ()
 
 # generate openbabel qrc
-writeQrcFileBySearchDirectory("${openbabel_QRC}" "${DEV_ASSETS_DIR}/openbabel/**" "${DEV_ASSETS_DIR}")
+writeQrcFileBySearchDirectory("${openbabel_QRC}" "${CMAKE_CURRENT_SOURCE_DIR}/data/**" "${CMAKE_CURRENT_SOURCE_DIR}/data")
 
 add_library(${PROJECT_NAME} ${PROJECT_SOURCE})
 add_dependencies(${PROJECT_NAME} inchi)

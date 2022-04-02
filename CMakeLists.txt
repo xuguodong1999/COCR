@@ -35,11 +35,10 @@ set(APP_NAME leafxy CACHE INTERNAL "")
 
 # path to assets
 set(DEV_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
-# remember to cite ${openbabel_QRC} if you link openbabel
-set(openbabel_QRC ${DEV_ASSETS_DIR}/openbabel.qrc CACHE INTERNAL "")
-
 # path to 3rdparty libraries
 set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty CACHE INTERNAL "")
+# remember to cite ${openbabel_QRC} if you link openbabel
+set(openbabel_QRC ${DEV_DEPS_DIR}/libopenbabel/data/openbabel.qrc CACHE INTERNAL "")
 
 # path to header-only 3rdparty libraries
 set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/header-only CACHE INTERNAL "")
