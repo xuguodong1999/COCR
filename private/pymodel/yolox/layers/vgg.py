@@ -21,7 +21,7 @@ class VGG(nn.Module):
                       ), nn.ReLU(True),
             nn.MaxPool2d((2, 1), (2, 1)),  # 256x4x25
             nn.Conv2d(self.output_channel[2], self.output_channel[3], 3, 1, 1, bias=False,
-                      groups=1 if not depthwise else self.output_channel[2]
+                      groups=1 # if not depthwise else self.output_channel[2]
                       ),
             nn.BatchNorm2d(self.output_channel[3]), nn.ReLU(True),  # 512x4x25
             nn.Conv2d(self.output_channel[3], self.output_channel[3], 3, 1, 1, bias=False,

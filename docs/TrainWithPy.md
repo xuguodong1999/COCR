@@ -28,7 +28,7 @@
 
 ## train
 
-`python crnn_train.py --train_data='/home/xgd/datasets/leafxy-text-57/train' --valid_data='/home/xgd/datasets/leafxy-text-57/test' --model_top_dir='./out' --FeatureExtraction='VGG' --sensitive --select_data / --batch_ratio 1 --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=128 --batch_size=128 --workers=4 --num_iter=100000 --valInterval=5000 --exp_name='crnn-vgg'`
+`python crnn_train.py --train_data='/home/xgd/datasets/leafxy-text-57/train' --valid_data='/home/xgd/datasets/leafxy-text-57/test' --model_top_dir='./out' --FeatureExtraction='VGG' --sensitive --select_data / --batch_ratio 1 --character='-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty' --imgH=32 --imgW=192 --input_channel=1 --output_channel=256 --hidden_size=128 --batch_size=416 --workers=4 --num_iter=200000 --valInterval=5000 --exp_name='crnn-vgg-mid'`
 
 ## onnx export
 
