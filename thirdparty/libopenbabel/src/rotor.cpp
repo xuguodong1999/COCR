@@ -26,6 +26,8 @@ GNU General Public License for more details.
 #include <openbabel/graphsym.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
+
 #include <set>
 
 #ifndef M_PI
@@ -65,9 +67,8 @@ namespace OpenBabel
         {
           int ref[4];
           rotor->GetDihedralAtoms(ref);
-          char buffer[BUFF_SIZE];
-          snprintf(buffer, BUFF_SIZE, "The rotor has no associated torsion values -> %d %d %d %d",
-		  ref[0],ref[1],ref[2],ref[3]);
+          auto buffer = fmt::format("The rotor has no associated torsion values -> {:d} {:d} {:d} {:d}",
+                                    ref[0],ref[1],ref[2],ref[3]);
           obErrorLog.ThrowError(__FUNCTION__, buffer, obDebug);
         }
 
@@ -976,9 +977,8 @@ namespace OpenBabel
         char buffer[BUFF_SIZE];
         if (!_quiet)
           {
-            snprintf(buffer,BUFF_SIZE,"%3d%3d%3d%3d %s",
-                     ref[0],ref[1],ref[2],ref[3],
-                     ((*i)->GetSmartsString()).c_str());
+            auto buffer = fmt::format("{:03d}{:03d}{:03d}{:03d} {:s}",
+                                      ref[0],ref[1],ref[2],ref[3], (*i)->GetSmartsString());
             obErrorLog.ThrowError(__FUNCTION__, buffer, obDebug);
           }
         return;

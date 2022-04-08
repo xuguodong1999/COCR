@@ -25,6 +25,9 @@ GNU General Public License for more details.
 #include <openbabel/locale.h>
 #include <openbabel/oberror.h>
 #include <openbabel/elements.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 using namespace std;
 
@@ -118,11 +121,10 @@ namespace OpenBabel
     double Ttol = 0.05; /* Kelvin */
     double Vmodel, Vdhf, S0, HexpT;
     std::vector<OBAtomHOF>::iterator it;
-    char desc[128];
 
     found = 0;
     Vmodel = Vdhf = S0 = HexpT = 0;
-    snprintf(desc,sizeof(desc),"%s(0K)",meth.c_str());
+    std::string desc = meth + "(OK)";
 
     for(it = _atomhof.begin(); it != _atomhof.end(); ++it)
     {

@@ -19,6 +19,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/internalcoord.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -71,7 +73,6 @@ bool FenskeZmatFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     OBMol &mol = *pmol;
 
     OBAtom *atom,*a,*b,*c;
-    char type[16],buffer[BUFF_SIZE];
     vector<OBAtom*>::iterator i;
 
     vector<OBInternalCoord*> vic;
@@ -93,37 +94,31 @@ bool FenskeZmatFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
         w = vic[atom->GetIdx()]->_ang;
         t = vic[atom->GetIdx()]->_tor;
         //  16 = sizeof(type)
-        strncpy(type,OBElements::GetSymbol(atom->GetAtomicNum()), 16);
-        type[15] = '\0';
+        std::string type = OBElements::GetSymbol(atom->GetAtomicNum());
 
         if (atom->GetIdx() == 1)
         {
-            snprintf(buffer, BUFF_SIZE, "%-2s  1\n",type);
-            ofs << buffer;
+            ofs << fmt::format("{:<2s}  1\n", type);
             continue;
         }
 
         if (atom->GetIdx() == 2)
         {
-            snprintf(buffer, BUFF_SIZE, "%-2s%3d%6.3f\n",
-                    type, a->GetIdx(), r);
-            ofs << buffer;
+            ofs << fmt::format("{:<2s}{:03d}{:>6.3f}\n", type, a->GetIdx(), r);
             continue;
         }
 
         if (atom->GetIdx() == 3)
         {
-            snprintf(buffer, BUFF_SIZE, "%-2s%3d%6.3f%3d%8.3f\n",
-                    type, a->GetIdx(), r, b->GetIdx(), w);
-            ofs << buffer;
+            ofs << fmt::format("{:<2s}{:03d}{:>6.3f}{:03d}{:>8.3f}\n",
+                               type, a->GetIdx(), r, b->GetIdx(), w);
             continue;
         }
 
         if (t < 0)
             t += 360;
-        snprintf(buffer, BUFF_SIZE, "%-2s%3d%6.3f%3d%8.3f%3d%6.1f\n",
-                type, a->GetIdx(), r, b->GetIdx(), w, c->GetIdx(), t);
-        ofs << buffer;
+        ofs << fmt::format("{:<2s}{:03d}{:>6.3f}{:03d}{:>8.3f}{:03d}{:>6.1f}",
+                           type, a->GetIdx(), r, b->GetIdx(), w, c->GetIdx(), t);
     }
 
     return(true);

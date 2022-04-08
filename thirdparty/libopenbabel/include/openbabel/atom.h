@@ -66,7 +66,7 @@ namespace OpenBabel
     protected:
       unsigned char                 _ele;       //!< atomic number (type unsigned char to minimize space -- allows for 0..255 elements)
       unsigned char                 _imph;      //!< number of implicit hydrogens
-      char                          _type[OBATOM_TYPE_LEN];   //!< atomic type
+      std::string                   _type;      //!< atomic type
       short                         _fcharge;   //!< formal charge
       unsigned short                _isotope;   //!< isotope (0 = most abundant)
       short                         _spinmultiplicity;//!< atomic spin, e.g., 2 for radical  1 or 3 for carbene
@@ -202,7 +202,7 @@ namespace OpenBabel
       //! \return The number of heteroatoms connected to an atom
       unsigned int GetHeteroDegree()   const;
       //! \return the atomic type (e.g., for molecular mechanics)
-      char        *GetType();
+      const char        *GetType();
 
       //! \return the x coordinate
       double      GetX() const   {        return(x());    }

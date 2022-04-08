@@ -17,6 +17,8 @@ GNU General Public License for more details.
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -142,7 +144,6 @@ bool UniChemFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     OBMol &mol = *pmol;
 
     unsigned int i;
-    char buffer[BUFF_SIZE];
 
     ofs << mol.GetTitle() << endl;
     ofs << mol.NumAtoms() << endl;
@@ -152,13 +153,11 @@ bool UniChemFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     for(i = 1;i <= mol.NumAtoms(); i++)
     {
         atom = mol.GetAtom(i);
-        snprintf(buffer, BUFF_SIZE,
-		"%3d%15.5f%15.5f%15.5f",
-                atom->GetAtomicNum(),
-                atom->GetX(),
-                atom->GetY(),
-                atom->GetZ());
-        ofs << buffer << endl;
+        ofs << fmt::format("{:03d}{:>15.5f}{:>15.5f}{:>15.5f}",
+                           atom->GetAtomicNum(),
+                           atom->GetX(),
+                           atom->GetY(),
+                           atom->GetZ()) << endl;
     }
 
     return(true);

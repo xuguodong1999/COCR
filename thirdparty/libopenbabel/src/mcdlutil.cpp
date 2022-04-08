@@ -28,6 +28,8 @@ GNU General Public License for more details.
 #include <openbabel/stereo/stereo.h>
 #include <openbabel/stereo/cistrans.h>
 
+#include <fmt/format.h>
+
 #include <cmath>
 
 using namespace std;
@@ -326,15 +328,6 @@ namespace OpenBabel {
 
   const string fsastart="{SA:";
   const string fsbstart="{SB:";
-
-
-  string intToStr(int k) {
-    char temp[16];
-    sprintf(temp,"%d",k);
-    string line=temp;
-    return line;
-  };
-
 
   //-------------------------------------------------------------------
   class Rect {
@@ -2662,14 +2655,13 @@ namespace OpenBabel {
 
 
   void TSimpleMolecule::getMolfile(std::ostream & data) {
-    char buff[BUFF_SIZE];
     TSingleAtom * sa;
     TSingleBond * sb;
     int charge,bondType,stereoType;
 
-    data<<endl<<endl<<endl;  //three empty lines
-    snprintf(buff,BUFF_SIZE,"%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d V2000",nAtoms(),nBonds(),0,0,0,0,0,0,0,0,999);
-    data << buff << endl;
+    data << endl << endl << endl;  //three empty lines
+    data << fmt::format("{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d} V2000",
+                        nAtoms(),nBonds(),0,0,0,0,0,0,0,0,999) << endl;
     for (int i=0; i<nAtoms(); i++) {
       sa=getAtom(i);
       switch (sa->nc) {
@@ -2681,9 +2673,8 @@ namespace OpenBabel {
       case -3: charge = 7; break;
       default: charge=0; break;
       }
-      snprintf(buff, BUFF_SIZE, "%10.4f%10.4f%10.4f %-3s%2d%3d%3d%3d%3d",
-               sa->rx, sa->ry, 0.0, (aSymb[sa->na]).c_str(), 0,charge,0,0,0);
-      data << buff << endl;
+      data << fmt::format("{:10.4f}{:10.4f}{:10.4f} {:<3s}{:2d}{:3d}{:3d}{:3d}{:3d}",
+                          sa->rx, sa->ry, 0.0, aSymb[sa->na], 0,charge,0,0,0) << endl;
     };
     for (int i=0; i<nBonds(); i++) {
       sb=getBond(i);
@@ -2699,8 +2690,8 @@ namespace OpenBabel {
         bondType=1;
         stereoType=4;
       };
-      snprintf(buff, BUFF_SIZE, "%3d%3d%3d%3d%3d%3d",(sb->at[0]+1), (sb->at[1]+1), bondType, stereoType, 0, 0);
-      data << buff << endl;
+      data << fmt::format("{:3d}{:3d}{:3d}{:3d}{:3d}{:3d}",
+                          sb->at[0]+1, sb->at[1]+1, bondType, stereoType, 0, 0) << endl;
     };
   };
 
@@ -5881,7 +5872,7 @@ namespace OpenBabel {
         };
       };
 
-    for (i=0; i<smCopy.nAtoms(); i++) smCopy.getAtom(i)->anum=intToStr(i);
+    for (i=0; i<smCopy.nAtoms(); i++) smCopy.getAtom(i)->anum=std::to_string(i);
 
     for (i=0; i<smCopy.nAtoms(); i++) atomTested[i]=0;
 
@@ -6310,7 +6301,7 @@ namespace OpenBabel {
     bool test;
 
     //result=aSymb[sm.getAtom(atAtom)->na];
-    //result="at="+intToStr(atAtom)+" nt="+intToStr(sm.nAtoms())+" na="+intToStr(sm.getAtom(atAtom)->na);
+    //result="at="+std::to_string(atAtom)+" nt="+std::to_string(sm.nAtoms())+" na="+std::to_string(sm.getAtom(atAtom)->na);
 
     for (i=0; i<sm.getAtom(atAtom)->nb; i++) {
       n=sm.getAtom(atAtom)->ac[i];
@@ -6532,14 +6523,14 @@ namespace OpenBabel {
     for (i=0; i<ntatoms; i++) {
       n=ix[i];        //new numeration
       atn=aNumber[i]; //numeration in sm
-      sm.getAtom(atn)->anum=intToStr(n);
+      sm.getAtom(atn)->anum=std::to_string(n);
     };
 
     for (i=0; i<ntatoms; i++) {
       atn=aNumber[i]; //atom number in sm (initial molecule)
       if (atomStereoList[atn] != 0) {  //Contains stereo information
         n=ix[i];        //central atom, new numeration
-        data=""+intToStr(n);
+        data=""+std::to_string(n);
         for (j=0; j<priority.size(); j++) priority[j]=0;
         as1=""; as2="";
         //cleaning fragIndex - addition from June 2008
@@ -6686,7 +6677,7 @@ namespace OpenBabel {
     for (i=0; i<ntatoms; i++) {
       n=ix[i];        //new numeration
       k=aNumber[i];   //numeration in sm
-      sm.getAtom(k)->anum=intToStr(n);
+      sm.getAtom(k)->anum=std::to_string(n);
     };
 
 
@@ -6706,7 +6697,7 @@ namespace OpenBabel {
           n1=ix[bonds[i][0]-1];
           n2=ix[bonds[i][1]-1];
 
-          data=""+intToStr(n1)+"d"+intToStr(n2);
+          data=""+std::to_string(n1)+"d"+std::to_string(n2);
           n1=-1;  //to 1-st atom
           n2=-1;
           n3=-1;  //to 2-nd atom
@@ -6737,21 +6728,21 @@ namespace OpenBabel {
             };
           //Now n1,n2 contains bond numbers in bonds array, connected to bonds[i][0] atom. n3,n4-bond numbers, connected to bonds[i][1] atom.
           //I have to use corresponding elements bonds[n1][3] to determine bond numbers in initial molecule sm.
-          if (an1 >= 0) as1=""+intToStr(an1); else {
+          if (an1 >= 0) as1=""+std::to_string(an1); else {
             //Hydrogens MUST not be...
             as1=getAtomSymbol(sm,aNumber[bonds[i][0]-1],aNumber[bonds[i][1]-1],1,"zz");
           };
-          if (an2 >= 0) as2=""+intToStr(an2); else {
+          if (an2 >= 0) as2=""+std::to_string(an2); else {
             as2=getAtomSymbol(sm,aNumber[bonds[i][0]-1],aNumber[bonds[i][1]-1],2,"zz");
             if (as2.compare("zz") == 0) {
               as2="00";
             };
           };
-          if (an3 >= 0) as3=""+intToStr(an3); else {
+          if (an3 >= 0) as3=""+std::to_string(an3); else {
             //Hydrogens MUST not be...
             as3=getAtomSymbol(sm,aNumber[bonds[i][1]-1],aNumber[bonds[i][0]-1],1,"zz");
           };
-          if (an4 >= 0) as4=""+intToStr(an4); else {
+          if (an4 >= 0) as4=""+std::to_string(an4); else {
             as4=getAtomSymbol(sm,aNumber[bonds[i][1]-1],aNumber[bonds[i][0]-1],2,"zz");
             if (as4.compare("zz") == 0) {
               as4="00";

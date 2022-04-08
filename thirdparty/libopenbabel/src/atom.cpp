@@ -140,7 +140,7 @@ namespace OpenBabel
     _spinmultiplicity=0; // CM 18 Sept 2003
     _imph = 0;
     _fcharge = 0;
-    _type[0] = '\0';
+    _type.clear();
     _pcharge = 0.0;
     _vbond.clear();
     _vbond.reserve(4);
@@ -172,8 +172,7 @@ namespace OpenBabel
     _isotope = src->_isotope;
     _fcharge = src->_fcharge;
     _spinmultiplicity = src->_spinmultiplicity;
-    strncpy(_type,src->_type, sizeof(_type) - 1);
-    _type[sizeof(_type) - 1] = '\0';
+    _type = src->_type;
     _pcharge = src->_pcharge;
     _v = src->GetVector();
     _flags = src->_flags;
@@ -416,16 +415,14 @@ namespace OpenBabel
 
   void OBAtom::SetType(const char *type)
   {
-    strncpy(_type,type, sizeof(_type) - 1);
-    _type[sizeof(_type) - 1] = '\0';
+    _type = type;
     if (_ele == 1 && type[0] == 'D')
       _isotope = 2;
   }
 
   void OBAtom::SetType(const string &type)
   {
-    strncpy(_type,type.c_str(), sizeof(_type) - 1);
-    _type[sizeof(_type) - 1] = '\0';
+      _type = type;
     if (_ele == 1 && type[0] == 'D')
       _isotope = 2;
   }
@@ -457,31 +454,29 @@ namespace OpenBabel
     return OBElements::GetExactMass(_ele, _isotope);
   }
 
-  char *OBAtom::GetType()
+  const char *OBAtom::GetType()
   {
     OBMol *mol = (OBMol*)GetParent();
     if (mol)
       if (!mol->HasAtomTypesPerceived())
         atomtyper.AssignTypes(*((OBMol*)GetParent()));
 
-    if (strlen(_type) == 0) // Somehow we still don't have a type!
+    if (_type.length() == 0) // Somehow we still don't have a type!
       {
-        char num[6];
         string fromType = ttab.GetFromType(); // save previous types
         string toType = ttab.GetToType();
 
         ttab.SetFromType("ATN");
         ttab.SetToType("INT");
-        snprintf(num, 6, "%d", GetAtomicNum());
-        ttab.Translate(_type, num);
+        ttab.Translate(_type, std::to_string(GetAtomicNum()));
 
         ttab.SetFromType(fromType.c_str());
         ttab.SetToType(toType.c_str());
       }
-    if (_ele == 1 && _isotope == 2)
-      snprintf(_type, 6, "%s", "D");
-
-    return(_type);
+    if (_ele == 1 && _isotope == 2) {
+      _type = "D";
+    }
+    return _type.c_str();
   }
 
   unsigned int OBAtom::GetHyb() const

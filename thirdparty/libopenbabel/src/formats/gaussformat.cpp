@@ -313,7 +313,6 @@ namespace OpenBabel
     OpenBabel::OBAtomicHeatOfFormationTable *ahof = new OpenBabel::OBAtomicHeatOfFormationTable();
     OpenBabel::OBAtomIterator OBai;
     OpenBabel::OBAtom *OBa;
-    char valbuf[128];
     int ii,atomid,atomicnumber,found,foundall;
     double dhofM0, dhofMT, S0MT, DeltaSMT;
     double eFactor = HARTEE_TO_KCALPERMOL;
@@ -385,23 +384,18 @@ namespace OpenBabel
         for(ii=0; (ii<5); ii++)
         {
             // Add to molecule properties
-            sprintf(valbuf,"%f", result[ii]);
-            add_unique_pairdata_to_mol(mol, attr[ii], valbuf, 0);
+            add_unique_pairdata_to_mol(mol, attr[ii], std::to_string(result[ii]), 0);
         }
-        sprintf(valbuf, "%f", ezpe*eFactor);
-        add_unique_pairdata_to_mol(mol, "zpe", valbuf, 0);
-        sprintf(valbuf, "%f", CV);
-        add_unique_pairdata_to_mol(mol, "cv", valbuf, 0);
-        sprintf(valbuf, "%f", CV+Rgas);
-        add_unique_pairdata_to_mol(mol, "cp", valbuf, 0);
+        add_unique_pairdata_to_mol(mol, "zpe", std::to_string(ezpe * eFactor), 0);
+        add_unique_pairdata_to_mol(mol, "cv", std::to_string(CV), 0);
+        add_unique_pairdata_to_mol(mol, "cp", std::to_string(CV + Rgas), 0);
         // Entropy components
         if (Scomponents.size() == 3)
         {
             const char *comps[3] = { "Strans", "Srot", "Svib" };
             for(int i=0; (i<3); i++)
             {
-                sprintf(valbuf, "%f", Scomponents[i]);
-                add_unique_pairdata_to_mol(mol, comps[i], valbuf, 0);
+                add_unique_pairdata_to_mol(mol, comps[i], std::to_string(Scomponents[i]), 0);
             }
         }
         // Finally store the energy in internal data structures as well.
