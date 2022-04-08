@@ -49,7 +49,7 @@ set(coordgenlibs_INCLUDE_DIR ${DEV_DEPS_DIR}/libcoordgenlibs/include CACHE INTER
 set(openbabel_INCLUDE_DIR ${DEV_DEPS_DIR}/libopenbabel/include CACHE INTERNAL "")
 set(cocr_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cocr_core/include CACHE INTERNAL "")
 # remember to convert <ncnn/header.h> to <header.h>
-set(ncnn_INCLUDE_DIR ${DEV_DEPS_DIR}/libncnn/src)
+set(ncnn_INCLUDE_DIR ${DEV_DEPS_DIR}/libncnn/include)
 
 # always enable openmp
 find_package(OpenMP)

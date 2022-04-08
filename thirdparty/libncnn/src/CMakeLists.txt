@@ -192,7 +192,8 @@ target_include_directories(ncnn
         $<INSTALL_INTERFACE:include/ncnn>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/layer>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/layer>
+        ${ncnn_INCLUDE_DIR}/ncnn)
 
 if (NCNN_OPENMP)
     if (NOT NCNN_SIMPLEOMP)
