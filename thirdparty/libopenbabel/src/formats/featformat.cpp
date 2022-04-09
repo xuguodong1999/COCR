@@ -19,6 +19,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/obutil.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -137,8 +139,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-
     ofs << mol.NumAtoms() << endl;
     ofs << mol.GetTitle() << endl;
 
@@ -146,12 +146,11 @@ namespace OpenBabel
     vector<OBAtom*>::iterator i;
     for(atom = mol.BeginAtom(i);atom;atom = mol.NextAtom(i))
       {
-        snprintf(buffer, BUFF_SIZE, "%-3s %8.5f  %8.5f  %8.5f ",
+        ofs << fmt::format("{:<3s} {:8.5f}  {:8.5f}  {:8.5f} ",
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  atom->x(),
                  atom->y(),
-                 atom->z());
-        ofs << buffer << endl;
+                 atom->z())<< endl;
       }
 
     return(true);

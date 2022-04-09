@@ -104,20 +104,20 @@ bool FenskeZmatFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 
         if (atom->GetIdx() == 2)
         {
-            ofs << fmt::format("{:<2s}{:03d}{:>6.3f}\n", type, a->GetIdx(), r);
+            ofs << fmt::format("{:<2s}{:3d}{:>6.3f}\n", type, a->GetIdx(), r);
             continue;
         }
 
         if (atom->GetIdx() == 3)
         {
-            ofs << fmt::format("{:<2s}{:03d}{:>6.3f}{:03d}{:>8.3f}\n",
+            ofs << fmt::format("{:<2s}{:3d}{:>6.3f}{:3d}{:>8.3f}\n",
                                type, a->GetIdx(), r, b->GetIdx(), w);
             continue;
         }
 
         if (t < 0)
             t += 360;
-        ofs << fmt::format("{:<2s}{:03d}{:>6.3f}{:03d}{:>8.3f}{:03d}{:>6.1f}",
+        ofs << fmt::format("{:<2s}{:3d}{:>6.3f}{:3d}{:>8.3f}{:3d}{:>6.1f}",
                            type, a->GetIdx(), r, b->GetIdx(), w, c->GetIdx(), t);
     }
 

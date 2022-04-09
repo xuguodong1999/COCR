@@ -20,6 +20,8 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -175,7 +177,6 @@ namespace OpenBabel
 
     unsigned int i, file_num = 1;
     string str,str1;
-    char buffer[BUFF_SIZE];
     OBAtom *atom;
     OBBond *bond;
     vector<OBBond*>::iterator j;
@@ -188,7 +189,7 @@ namespace OpenBabel
     for(i = 1;i <= mol.NumAtoms(); i++)
       {
         atom = mol.GetAtom(i);
-        snprintf(buffer, BUFF_SIZE, "atom %d - %-3s **  - %8.5f %8.5f  %8.5f  %8.5f %d ",
+        ofs << fmt::format("atom {:d} - {:<3s} **  - {:8.5f} {:8.5f}  {:8.5f}  {:8.5f} {:d} ",
                 i,
                 OBElements::GetSymbol(atom->GetAtomicNum()),
                 atom->GetPartialCharge(),
@@ -196,7 +197,6 @@ namespace OpenBabel
                 atom->GetY(),
                 atom->GetZ(),
                 atom->GetExplicitDegree());
-        ofs << buffer;
         for (bond = atom->BeginBond(j); bond; bond = atom->NextBond(j))
           {
             switch(bond->GetBondOrder())
@@ -219,9 +219,7 @@ namespace OpenBabel
               }
             if (bond->IsAromatic())
               bond_char = 'a';
-
-            snprintf(buffer,BUFF_SIZE, "%d %c ", (bond->GetNbrAtom(atom))->GetIdx(), bond_char);
-            ofs << buffer;
+            ofs << fmt::format("{:d} {:c} ", bond->GetNbrAtom(atom)->GetIdx(), bond_char);
           }
         ofs << endl;
       }

@@ -17,6 +17,7 @@
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
 
 #include <algorithm>
 
@@ -265,7 +266,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     double factor = 1.0f;
     bool writeatomicunit = pConv->IsOption("a", OBConversion::OUTOPTIONS) != nullptr;
     const char *keywords = pConv->IsOption("k",OBConversion::OUTOPTIONS);
@@ -331,18 +331,16 @@ namespace OpenBabel
       {
         atomtype = atom->GetAtomicNum();
         atomtypes++;
-        snprintf(buffer, BUFF_SIZE, "Charge=%d.0 Atoms=%i%s",
+        ofs << fmt::format("Charge={:d}.0 Atoms={:d}{:s}",
                  groupcharges[atomtypes-1],
                  groupcounts[atomtypes-1],
-                 atombasis_str.c_str());
-        ofs << buffer << endl;
+                 atombasis_str.c_str()) << endl;
       }
-      snprintf(buffer, BUFF_SIZE, "%-3s %22.10f  %14.10f  %14.10f ",
+      ofs << fmt::format("{:<3s} {:22.10f}  {:14.10f}  {:14.10f} ",
                OBElements::GetSymbol(atom->GetAtomicNum()),
                atom->GetX()*factor,
                atom->GetY()*factor,
-               atom->GetZ()*factor);
-      ofs << buffer << endl;
+               atom->GetZ()*factor) << endl;
     }
     return(true);
   }

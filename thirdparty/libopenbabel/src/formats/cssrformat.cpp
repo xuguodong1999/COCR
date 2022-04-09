@@ -20,6 +20,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -71,34 +73,20 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-
     if (!mol.HasData(OBGenericDataType::UnitCell))
       {
-        snprintf(buffer, BUFF_SIZE,
-                 " REFERENCE STRUCTURE = 00000   A,B,C =%8.3f%8.3f%8.3f",
-                 1.0,1.0,1.0);
-        ofs << buffer << endl;
-        snprintf(buffer, BUFF_SIZE,
-                 "   ALPHA,BETA,GAMMA =%8.3f%8.3f%8.3f    SPGR =    P1"
-                 , 90.0f, 90.0f, 90.0f);
-        ofs << buffer << endl;
+        ofs << fmt::format(" REFERENCE STRUCTURE = 00000   A,B,C ={:8.3f}{:8.3f}{:8.3f}", 1.0, 1.0, 1.0) << endl;
+        ofs << fmt::format("   ALPHA,BETA,GAMMA ={:8.3f}{:8.3f}{:8.3f}    SPGR =    P1", 90.0f, 90.0f, 90.0f) << endl;
       }
     else
       {
         OBUnitCell *uc = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
-        snprintf(buffer, BUFF_SIZE,
-                 " REFERENCE STRUCTURE = 00000   A,B,C =%8.3f%8.3f%8.3f",
-                 uc->GetA(), uc->GetB(), uc->GetC());
-        ofs << buffer << endl;
-        snprintf(buffer, BUFF_SIZE,
-                 "   ALPHA,BETA,GAMMA =%8.3f%8.3f%8.3f    SPGR =    P1",
-                 uc->GetAlpha() , uc->GetBeta(), uc->GetGamma());
-        ofs << buffer << endl;
+        ofs << fmt::format(" REFERENCE STRUCTURE = 00000   A,B,C ={:8.3f}{:8.3f}{:8.3f}",
+                 uc->GetA(), uc->GetB(), uc->GetC()) << endl;
+        ofs << fmt::format("   ALPHA,BETA,GAMMA ={:8.3f}{:8.3f}{:8.3f}    SPGR =    P1",
+                 uc->GetAlpha() , uc->GetBeta(), uc->GetGamma()) << endl;
       }
-
-    snprintf(buffer, BUFF_SIZE, "%4d   1 %s\n",mol.NumAtoms(), mol.GetTitle());
-    ofs << buffer << endl << endl;
+    ofs << fmt::format("{:4d}   1 {:s}\n", mol.NumAtoms(), mol.GetTitle()) << endl << endl;
 
     OBAtom *atom,*nbr;
     vector<OBAtom*>::iterator i;
@@ -110,29 +98,25 @@ namespace OpenBabel
       {
         //assign_pdb_number(pdb_types,atom->GetIdx());
         vtmp[atom->GetAtomicNum()]++;
-        snprintf(buffer, BUFF_SIZE, "%4d%2s%-3d  %9.5f %9.5f %9.5f ",
+        ofs << fmt::format("{:4d}{:2s}{:<3d}  {:9.5f} {:9.5f} {:9.5f} ",
                  atom->GetIdx(),
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  vtmp[atom->GetAtomicNum()],
                  atom->x(),
                  atom->y(),
                  atom->z());
-        ofs << buffer;
         bonds = 0;
         for (nbr = atom->BeginNbrAtom(j); nbr; nbr = atom->NextNbrAtom(j))
           {
             if (bonds > 8) break;
-            snprintf(buffer, BUFF_SIZE, "%4d",nbr->GetIdx());
-            ofs << buffer;
+            ofs << fmt::format("{:4d}", nbr->GetIdx());
             bonds++;
           }
         for (; bonds < 8; bonds ++)
           {
-            snprintf(buffer, BUFF_SIZE, "%4d",0);
-            ofs << buffer;
+            ofs << fmt::format("{:4d}", 0);
           }
-        snprintf(buffer, BUFF_SIZE, " %7.3f%4d", atom->GetPartialCharge(), 1);
-        ofs << buffer << endl;
+        ofs << fmt::format(" {:7.3f}{:4d}", atom->GetPartialCharge(), 1) << endl;
       }
 
     return(true);

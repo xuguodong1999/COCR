@@ -19,6 +19,9 @@ GNU General Public License for more details.
 #include <openbabel/atom.h>
 #include <openbabel/elements.h>
 #include <openbabel/data.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -276,7 +279,7 @@ namespace OpenBabel
   {
     int atnum;
     int type_num;
-    char buffer[BUFF_SIZE],type_name[16],ele_type[16];
+    char type_name[16],ele_type[16];
 
     ofs << mol.NumAtoms();
     if (EQ(mol_typ,"MMADS"))
@@ -298,29 +301,26 @@ namespace OpenBabel
       {
         if (!ttab.Translate(type_name,atom->GetType()))
           {
-            snprintf(buffer, BUFF_SIZE,
-                     "Unable to assign %s type to atom %d type = %s\n",
-                     mol_typ,atom->GetIdx(),atom->GetType());
-            obErrorLog.ThrowError(__FUNCTION__, buffer, obInfo);
+            obErrorLog.ThrowError(__FUNCTION__, fmt::format(
+                    "Unable to assign {:s} type to atom {:d} type = {:s}\n",
+                     mol_typ,atom->GetIdx(),atom->GetType()), obInfo);
             atnum = atom->GetAtomicNum();
             type_num = atnum * 10 + atom->GetExplicitDegree();
             snprintf(type_name, sizeof(type_num), "%d",type_num);
           }
         strncpy(ele_type, OBElements::GetSymbol(atom->GetAtomicNum()), sizeof(ele_type));
         ele_type[sizeof(ele_type) - 1] = '\0';
-        snprintf(buffer, BUFF_SIZE, "%-3s %-5d %8.4f  %8.4f  %8.4f %5s",
+        ofs << fmt::format("{:<3s} {:<5d} {:8.4f}  {:8.4f}  {:8.4f} {:5s}",
                 ele_type,
                 atom->GetIdx(),
                 atom->x(),
                 atom->y(),
                 atom->z(),
                 type_name);
-        ofs << buffer;
 
         for (nbr = atom->BeginNbrAtom(j);nbr;nbr = atom->NextNbrAtom(j))
           {
-            snprintf(buffer, BUFF_SIZE, "%6d",nbr->GetIdx());
-            ofs << buffer;
+            ofs << fmt::format("{:6d}", nbr->GetIdx());
           }
         ofs << endl;
       }

@@ -40,6 +40,7 @@
 #include <openbabel/generic.h>
 #include <openbabel/obiter.h>
 
+#include <fmt/format.h>
 
 #define BOHR_TO_ANGSTROM 0.529177249
 #define ANGSTROM_TO_BOHR 1.889725989
@@ -364,7 +365,6 @@ bool OBMoldenFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     int i = 1;
 
     ofs << "[Molden Format]" << endl;
@@ -372,14 +372,13 @@ bool OBMoldenFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "%2s%6d%3d%13.6f%13.6f%13.6f\n",
+        ofs << fmt::format("{:2s}{:6d}{:3d}{:13.6f}{:13.6f}{:13.6f}\n",
                 OBElements::GetSymbol(atom->GetAtomicNum()),
-		i++,
+                i++,
                 atom->GetAtomicNum(),
                 atom->GetX(),
                 atom->GetY(),
-                atom->GetZ());
-        ofs << buffer;
+                atom->GetZ());;
       }
 
     OBVibrationData *vib = (OBVibrationData *) mol.GetData(OBGenericDataType::VibrationData);
@@ -388,36 +387,30 @@ bool OBMoldenFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
       vector<double> frequencies = vib->GetFrequencies();
       vector<double> intensities = vib->GetIntensities();
       for (unsigned int i = 0; i < vib->GetNumberOfFrequencies(); i++) {
-	snprintf(buffer, BUFF_SIZE, "%10.4f\n", frequencies[i]);
-        ofs << buffer;
+        ofs << fmt::format("{:10.4f}\n", frequencies[i]);
       }
       if (intensities.size() > 0) {
         ofs << "[INT]" << endl;
 	for (unsigned int i = 0; i < vib->GetNumberOfFrequencies(); i++) {
-	  snprintf(buffer, BUFF_SIZE, "%10.4f\n", intensities[i]);
-	  ofs << buffer;
+	  ofs << fmt::format("{:10.4f}\n", intensities[i]);
         }
       }
       ofs << "[FR-COORD]" << endl;
       FOR_ATOMS_OF_MOL(atom, mol)
         {
-          snprintf(buffer, BUFF_SIZE, "%2s%13.6f%13.6f%13.6f\n",
+          ofs << fmt::format("{:2s}{:13.6f}{:13.6f}{:13.6f}\n",
                   OBElements::GetSymbol(atom->GetAtomicNum()),
                   atom->GetX()*ANGSTROM_TO_BOHR,
                   atom->GetY()*ANGSTROM_TO_BOHR,
                   atom->GetZ()*ANGSTROM_TO_BOHR);
-          ofs << buffer;
         }
       ofs << "[FR-NORM-COORD]" << endl;
       for (unsigned int mode = 0; mode < vib->GetNumberOfFrequencies(); mode++) {
-	snprintf(buffer, BUFF_SIZE, "vibration%6d\n", mode+1);
-	ofs << buffer;
+	ofs << fmt::format("vibration{:6d}\n", mode + 1);
         vector<vector3> lx = vib->GetLx()[mode];
 	for (unsigned int i = 0; i < mol.NumAtoms(); i++) {
 	  vector3 disp = lx[i];
-	  snprintf(buffer, BUFF_SIZE, "%12.6f%13.6f%13.6f\n",
-		  disp[0], disp[1], disp[2]);
-	  ofs << buffer;
+	  ofs << fmt::format("{:12.6f}{:13.6f}{:13.6f}\n", disp[0], disp[1], disp[2]);
 	}
       }
     } // vib

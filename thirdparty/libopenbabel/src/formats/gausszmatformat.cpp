@@ -22,6 +22,8 @@ GNU General Public License for more details.
 #include <openbabel/internalcoord.h>
 #include <openbabel/generic.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 #ifdef _MSC_VER
@@ -102,7 +104,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     const char *keywords = pConv->IsOption("k",OBConversion::OUTOPTIONS);
     const char *keywordsEnable = pConv->IsOption("k",OBConversion::GENOPTIONS);
     const char *keywordFile = pConv->IsOption("f",OBConversion::OUTOPTIONS);
@@ -154,11 +155,7 @@ namespace OpenBabel
     }
     ofs << "\n"; // blank line after keywords
     ofs << " " << mol.GetTitle() << "\n\n";
-
-    snprintf(buffer, BUFF_SIZE, "%d  %d",
-             mol.GetTotalCharge(),
-             mol.GetTotalSpinMultiplicity());
-    ofs << buffer << "\n";
+    ofs << fmt::format("{:d}  {:d}", mol.GetTotalCharge(), mol.GetTotalSpinMultiplicity())<< "\n";
 
 		// OK, now that we set the keywords, charge, etc. we generate the z-matrix
 
@@ -181,37 +178,31 @@ namespace OpenBabel
 
 				type = OBElements::GetSymbol(atom->GetAtomicNum());
 				if (atom->GetIsotope() != 0) {
-					snprintf(buffer, BUFF_SIZE, "(Iso=%d)", atom->GetIsotope());
-					type += buffer;
+					type += fmt::format("(Iso={:d})", atom->GetIsotope());
 				}
 
 				switch(atom->GetIdx())
           {
 					case 1:
-            snprintf(buffer, BUFF_SIZE, "%-s\n",type.c_str());
-            ofs << buffer;
+            ofs << fmt::format("{:<s}\n", type);
             continue;
             break;
 
 					case 2:
-            snprintf(buffer, BUFF_SIZE, "%-s  %d  r%d\n",
-                     type.c_str(), a->GetIdx(), atom->GetIdx());
-            ofs << buffer;
+            ofs << fmt::format("{:<s}  {:d}  r{:d}\n", type, a->GetIdx(), atom->GetIdx());
             continue;
             break;
 
 					case 3:
-            snprintf(buffer, BUFF_SIZE, "%-s  %d  r%d  %d  a%d\n",
-                     type.c_str(), a->GetIdx(), atom->GetIdx(), b->GetIdx(), atom->GetIdx());
-            ofs << buffer;
+            ofs << fmt::format("{:<s}  {:d}  r{:d}  {:d}  a{:d}\n",
+                     type, a->GetIdx(), atom->GetIdx(), b->GetIdx(), atom->GetIdx());
             continue;
             break;
 
 					default:
-            snprintf(buffer, BUFF_SIZE, "%-s  %d  r%d  %d  a%d  %d  d%d\n",
-                     type.c_str(), a->GetIdx(), atom->GetIdx(),
+            ofs << fmt::format("{:<s}  {:d}  r{:d}  {:d}  a{:d}  {:d}  d}{:d}\n",
+                     type, a->GetIdx(), atom->GetIdx(),
                      b->GetIdx(), atom->GetIdx(), c->GetIdx(), atom->GetIdx());
-            ofs << buffer;
           }
       }
 
@@ -234,21 +225,18 @@ namespace OpenBabel
             break;
 
 					case 2:
-            snprintf(buffer, BUFF_SIZE, "r2= %6.4f\n", r);
-            ofs << buffer;
+            ofs << fmt::format("r2= {:6.4f}\n", r);
             continue;
             break;
 
 					case 3:
-            snprintf(buffer, BUFF_SIZE, "r3= %6.4f\na3= %6.2f\n", r, w);
-            ofs << buffer;
+            ofs << fmt::format("r3= {:6.4f}\na3= {:6.2f}\n", r, w);
             continue;
             break;
 
 					default:
-            snprintf(buffer, BUFF_SIZE, "r%d= %6.4f\na%d= %6.2f\nd%d= %6.2f\n",
+            ofs << fmt::format("r{:d}= {:6.4f}\na{:d}= {:6.2f}\nd{:d}= {:6.2f}\n",
                      atom->GetIdx(), r, atom->GetIdx(), w, atom->GetIdx(), t);
-            ofs << buffer;
           }
       }
 

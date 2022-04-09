@@ -34,6 +34,8 @@ GNU General Public License for more details.
 #include <openbabel/stereo/tetrahedral.h>
 #include <openbabel/stereo/cistrans.h>
 
+#include <fmt/format.h>
+
 #include <sstream>
 #include <set>
 
@@ -1020,9 +1022,8 @@ namespace OpenBabel
         if(anum==0)
           continue;
         if(anum > (NumElements-2)) {
-          char buffer[BUFF_SIZE];  // error buffer
-          snprintf(buffer, BUFF_SIZE, "Skipping unknown element with atomic number %d", anum);
-          obErrorLog.ThrowError(__FUNCTION__, buffer, obWarning);
+          obErrorLog.ThrowError(__FUNCTION__, fmt::format(
+                  "Skipping unknown element with atomic number {:d}", anum), obWarning);
           continue;
         }
         bool IsHiso = anum == 1 && a->GetIsotope()>=2;

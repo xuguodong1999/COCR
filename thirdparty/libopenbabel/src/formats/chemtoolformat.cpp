@@ -22,6 +22,8 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -73,7 +75,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     int w, h, x, y; 	// to calculate the geometry
     int bondtype;		// type of bond
     int conv_factor = 50;	// please adjust
@@ -113,13 +114,12 @@ namespace OpenBabel
         if (bond->GetBondOrder() == 3)
           bondtype = 3;
         // @todo: use flag-info, too
-        snprintf(buffer, BUFF_SIZE, "%d\t%d\t%d\t%d\t%1d",
+        ofs << fmt::format("{:d}\t{:d}\t{:d}\t{:d}\t{:1d}",
                  (int)floor(atom1->GetX() * conv_factor + 0.5),
                  (int)floor(atom1->GetY() * conv_factor + 0.5),
                  (int)floor(atom2->GetX() * conv_factor + 0.5),
                  (int)floor(atom2->GetY() * conv_factor + 0.5),
-                 bondtype);
-        ofs << buffer << endl;
+                 bondtype)  << endl;
       }
 
     // start over, write additional atoms
@@ -129,13 +129,12 @@ namespace OpenBabel
         // Carbon does not need to be treated
         if (atom->GetAtomicNum() != 6)
           {
-            snprintf(buffer, BUFF_SIZE, "%d\t%d\t%s\t%d",
-                     (int)floor(atom->GetX() * conv_factor + 0.5),
-                     (int)floor(atom->GetY() * conv_factor + 0.5),
-                     OBElements::GetSymbol(atom->GetAtomicNum()),
-                     -1 // assume centered Text
-                     );
-            ofs << buffer << endl;
+            ofs << fmt::format("{:d}\t{:d}\t{:s}\t{:d}",
+                      (int)floor(atom->GetX() * conv_factor + 0.5),
+                      (int)floor(atom->GetY() * conv_factor + 0.5),
+                      OBElements::GetSymbol(atom->GetAtomicNum()),
+                      // assume centered Text
+                      -1) << endl;
           }
       }
 

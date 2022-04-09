@@ -17,6 +17,9 @@ GNU General Public License for more details.
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/elements.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -167,7 +170,6 @@ bool ViewMolFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     OBMol &mol = *pmol;
 
     unsigned int i;
-    char buffer[BUFF_SIZE];
 
     if (strlen(mol.GetTitle()) > 0)
         ofs << "$title" << endl << mol.GetTitle() << endl;
@@ -178,12 +180,11 @@ bool ViewMolFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     for(i = 1;i <= mol.NumAtoms(); i++)
     {
         atom = mol.GetAtom(i);
-        snprintf(buffer, BUFF_SIZE, "%22.14f%22.14f%22.14f %s",
+        ofs << fmt::format("{:22.14f}{:22.14f}{:22.14f} {:s}",
                 atom->GetX(),
                 atom->GetY(),
                 atom->GetZ(),
-                OBElements::GetSymbol(atom->GetAtomicNum()));
-        ofs << buffer << endl;
+                OBElements::GetSymbol(atom->GetAtomicNum())) << endl;
     }
 
     ofs << "$end" << endl;

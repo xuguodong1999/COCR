@@ -17,6 +17,9 @@ GNU General Public License for more details.
 #include <openbabel/obmolecformat.h>
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -124,7 +127,6 @@ bool BoxFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     //margin hardwired in new framework. Also was in old fileformat
     double margin=1.0;
 
-    char buffer[BUFF_SIZE];
     vector3 vcenter,vmin,vmax,vmid,vdim;
 
     OBAtom *atom;
@@ -159,12 +161,10 @@ bool BoxFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     vmid /= 2.0;
 
     ofs << "HEADER    CORNERS OF BOX" << endl;
-    snprintf(buffer, BUFF_SIZE, "REMARK    CENTER (X Y Z)      %10.3f %10.3f %10.3f",
-            vmid.x(),vmid.y(),vmid.z());
-    ofs << buffer << endl;
-    snprintf(buffer, BUFF_SIZE, "REMARK    DIMENSIONS (X Y Z)  %10.3f %10.3f %10.3f",
-            vdim.x(),vdim.y(),vdim.z());
-    ofs << buffer << endl;
+    ofs << fmt::format("REMARK    CENTER (X Y Z)      {:10.3f} {:10.3f} {:10.3f}",
+            vmid.x(),vmid.y(),vmid.z()) << endl;
+    ofs << fmt::format("REMARK    DIMENSIONS (X Y Z)  {:10.3f} {:10.3f} {:10.3f}",
+            vdim.x(),vdim.y(),vdim.z()) << endl;
     vdim /= 2.0;
 
     vector3 vtmp;
@@ -200,9 +200,8 @@ bool BoxFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
             vtmp.SetX(vmid.x()-vdim.x());
             break;
         }
-        snprintf(buffer, BUFF_SIZE, "ATOM      %d  DUA BOX     1    %8.3f%8.3f%8.3f",
-                j,vtmp.x(),vtmp.y(),vtmp.z());
-        ofs << buffer << endl;
+        ofs << fmt::format("ATOM      {:d}  DUA BOX     1    {:8.3f}{:8.3f}{:8.3f}",
+                j,vtmp.x(),vtmp.y(),vtmp.z()) << endl;
     }
 
     ofs << "CONECT    1    2    4    5" << endl;

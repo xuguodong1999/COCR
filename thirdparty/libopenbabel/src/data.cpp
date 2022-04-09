@@ -26,8 +26,6 @@ GNU General Public License for more details.
 #include <openbabel/oberror.h>
 #include <openbabel/elements.h>
 
-#include <fmt/format.h>
-
 #include <cstdlib>
 using namespace std;
 

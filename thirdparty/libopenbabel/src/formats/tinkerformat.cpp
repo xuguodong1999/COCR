@@ -21,6 +21,9 @@ GNU General Public License for more details.
 #include <openbabel/data.h>
 #include <openbabel/generic.h>
 #include <openbabel/forcefield.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -166,7 +169,6 @@ namespace OpenBabel
     bool classTypes = pConv->IsOption("c", OBConversion::OUTOPTIONS) != nullptr;
 
     unsigned int i;
-    char buffer[BUFF_SIZE];
     OBBond *bond;
     vector<OBBond*>::iterator j;
 
@@ -178,16 +180,15 @@ namespace OpenBabel
       mmffTypes = false; // either the force field isn't available, or it doesn't work
 
     if (!mmffTypes && !mm3Types && !classTypes) {
-      snprintf(buffer, BUFF_SIZE, "%6d %-20s   MM2 parameters\n",mol.NumAtoms(),mol.GetTitle());
+      ofs << fmt::format("{:6d} {:<20s}   MM2 parameters\n", mol.NumAtoms(), mol.GetTitle());
       mm2Types = true;
     }
     else if (mm3Types)
-      snprintf(buffer, BUFF_SIZE, "%6d %-20s   MM3 parameters\n",mol.NumAtoms(),mol.GetTitle());
+      ofs << fmt::format("{:6d} {:<20s}   MM3 parameters\n", mol.NumAtoms(), mol.GetTitle());
     else if (classTypes)
-      snprintf(buffer, BUFF_SIZE, "%6d %-20s   Custom parameters\n",mol.NumAtoms(),mol.GetTitle());
+      ofs << fmt::format("{:6d} {:<20s}   Custom parameters\n", mol.NumAtoms(), mol.GetTitle());
     else
-      snprintf(buffer, BUFF_SIZE, "%6d %-20s   MMFF94 parameters\n",mol.NumAtoms(),mol.GetTitle());
-    ofs << buffer;
+      ofs << fmt::format("{:6d} {:<20s}   MMFF94 parameters\n", mol.NumAtoms(), mol.GetTitle());
 
     ttab.SetFromType("INT");
 
@@ -230,19 +231,17 @@ namespace OpenBabel
           }
         }
 
-        snprintf(buffer, BUFF_SIZE, "%6d %2s  %12.6f%12.6f%12.6f %5d",
+        ofs << fmt::format("{:6d} {:2s}  {:12.6f}{:12.6f}{:12.6f} {:5d}",
                  i,
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  atom->GetX(),
                  atom->GetY(),
                  atom->GetZ(),
                  atomType);
-        ofs << buffer;
 
         for (bond = atom->BeginBond(j); bond; bond = atom->NextBond(j))
           {
-            snprintf(buffer, BUFF_SIZE, "%6d", (bond->GetNbrAtom(atom))->GetIdx());
-            ofs << buffer;
+            ofs << fmt::format("{:6d}", bond->GetNbrAtom(atom)->GetIdx());
           }
 
         ofs << endl;

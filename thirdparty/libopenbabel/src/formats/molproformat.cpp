@@ -24,6 +24,9 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 
@@ -292,8 +295,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-
     ofs << "*** " << mol.GetTitle() << endl;
     ofs << "!file,2,INSERT WAVEFUNCTION FILE LOCATION HERE" << endl;
     ofs << "!memory,INSERT MEMORY HERE" << endl;
@@ -306,12 +307,11 @@ namespace OpenBabel
 
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "%3s,%15.5f,%15.5f,%15.5f\n",
+        ofs << fmt::format("{:3s},{:15.5f},{:15.5f},{:15.5f}\n",
                 OBElements::GetSymbol(atom->GetAtomicNum()),
                 atom->GetX(),
                 atom->GetY(),
                 atom->GetZ());
-        ofs << buffer;
       }
 
     ofs << "}\n\n";

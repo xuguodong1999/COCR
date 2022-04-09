@@ -19,6 +19,8 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <openbabel/data.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -73,7 +75,6 @@ bool XEDFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     OBMol &mol = *pmol;
 
     unsigned int i;
-    char buffer[BUFF_SIZE];
     int type_name, mass;
     OBAtom *atom;
     OBBond *bond;
@@ -81,18 +82,13 @@ bool XEDFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 
     ttab.SetFromType("INT");
     ttab.SetToType("XED");
-    snprintf(buffer, BUFF_SIZE, "%10.3f%10i%10i",
-            mol.GetEnergy(),mol.NumAtoms(),mol.NumBonds());
-    ofs << buffer << endl;
+    ofs << fmt::format("{:10.3f}{:10d}{:10d}", mol.GetEnergy(),mol.NumAtoms(),mol.NumBonds()) << endl;
     ofs << "File conversion by Open Babel" << endl;
 
     for (i = 0; i < mol.NumBonds(); i++)
     {
         bond = mol.GetBond(i);
-        snprintf(buffer, BUFF_SIZE, "%8i%8i",
-                bond->GetBeginAtomIdx(),
-                bond->GetEndAtomIdx());
-        ofs << buffer;
+        ofs << fmt::format("{:8d}{:8d}", bond->GetBeginAtomIdx(), bond->GetEndAtomIdx());
         if ( !((i+1) % 5) )
             ofs << endl;
     }
@@ -156,9 +152,8 @@ bool XEDFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
             mass=0;
         }
 
-        snprintf(buffer, BUFF_SIZE, "%6i%15.6f%15.6f%15.6f%6i%12.4f",
-                mass, atom->GetX(),atom->GetY(),atom->GetZ(), type_name, 0.0);
-        ofs << buffer << endl;
+        ofs << fmt::format("{:6d}{:15.6f}{:15.6f}{:15.6f}{:6d}{:12.4f}",
+                mass, atom->GetX(),atom->GetY(),atom->GetZ(), type_name, 0.0) << endl;
     }
     ofs << "    1         0.0000    0         0.0000" << endl;
 

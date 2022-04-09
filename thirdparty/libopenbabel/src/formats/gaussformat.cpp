@@ -24,6 +24,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -136,7 +138,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     const char *keywords = pConv->IsOption("k",OBConversion::OUTOPTIONS);
     const char *keywordsEnable = pConv->IsOption("k",OBConversion::GENOPTIONS);
     const char *keywordFile = pConv->IsOption("f",OBConversion::OUTOPTIONS);
@@ -198,24 +199,21 @@ namespace OpenBabel
     ofs << endl; // blank line after keywords
     ofs << " " << mol.GetTitle() << endl << endl;
 
-    snprintf(buffer, BUFF_SIZE, "%d  %d",
+    ofs << fmt::format("{:d}  {:d}",
              mol.GetTotalCharge(),
-             mol.GetTotalSpinMultiplicity());
-    ofs << buffer << endl;
+             mol.GetTotalSpinMultiplicity())<< endl;
 
     FOR_ATOMS_OF_MOL(atom, mol)
       {
         if (atom->GetIsotope() == 0)
-          snprintf(buffer, BUFF_SIZE, "%-3s      %10.5f      %10.5f      %10.5f",
+          ofs << fmt::format("{:<3s}      {:10.5f}      {:10.5f}      {:10.5f}",
                    OBElements::GetSymbol(atom->GetAtomicNum()),
-                   atom->GetX(), atom->GetY(), atom->GetZ());
+                   atom->GetX(), atom->GetY(), atom->GetZ()) << endl;
         else
-          snprintf(buffer, BUFF_SIZE, "%-3s(Iso=%d) %10.5f      %10.5f      %10.5f",
+          ofs << fmt::format("{:<3s}(Iso={:d}) {:10.5f}      {:10.5f}      {:10.5f}",
                    OBElements::GetSymbol(atom->GetAtomicNum()),
                    atom->GetIsotope(),
-                   atom->GetX(), atom->GetY(), atom->GetZ());
-
-        ofs << buffer << endl;
+                   atom->GetX(), atom->GetY(), atom->GetZ()) << endl;
       }
     // Translation vectors
     OBUnitCell *uc = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
@@ -224,11 +222,7 @@ namespace OpenBabel
 
       vector<vector3> cellVectors = uc->GetCellVectors();
       for (vector<vector3>::iterator i = cellVectors.begin(); i != cellVectors.end(); ++i) {
-          snprintf(buffer, BUFF_SIZE, "TV       %10.5f      %10.5f      %10.5f",
-                   i->x(),
-                   i->y(),
-                   i->z());
-        ofs << buffer << '\n';
+        ofs << fmt::format("TV       {:10.5f}      {:10.5f}      {:10.5f}", i->x(), i->y(), i->z()) << '\n';
       }
     }
 
@@ -259,8 +253,7 @@ namespace OpenBabel
           for (bond = mol.BeginBond(j); bond; bond = mol.NextBond(j))
             {
               if (bond->GetBeginAtomIdx() == atom->GetIdx()) {
-                snprintf(buffer, BUFF_SIZE, "%d %1.1f ", bond->GetEndAtomIdx(), (float) bond->GetBondOrder());
-                ofs << buffer;
+                ofs << fmt::format("{:d} {:1.1f} ", bond->GetEndAtomIdx(), (float) bond->GetBondOrder());
               }
             }
         } // iterate through atoms
@@ -363,21 +356,16 @@ namespace OpenBabel
       {
         std::string attr[5];
         double result[5];
-        char buf[32];
 
         attr[0].assign("DeltaHform(0K)");
         result[0] = dhofM0;
-        snprintf(buf, sizeof(buf), "DeltaHform(%gK)", temperature);
-        attr[1].assign(buf);
+        attr[1].assign(fmt::format("DeltaHform({:g}K)", temperature));
         result[1] = dhofMT;
-        snprintf(buf, sizeof(buf), "DeltaSform(%gK)", temperature);
-        attr[2].assign(buf);
+        attr[2].assign(fmt::format("DeltaSform({:g}K)", temperature));
         result[2] = DeltaSMT;
-        snprintf(buf, sizeof(buf), "DeltaGform(%gK)", temperature);
-        attr[3].assign(buf);
+        attr[3].assign(fmt::format("DeltaGform({:g}K)", temperature));
         result[3] = dhofMT - temperature*result[2]/1000;
-        snprintf(buf, sizeof(buf), "S0(%gK)", temperature);
-        attr[4].assign(buf);
+        attr[4].assign(fmt::format("S0({:g}K)", temperature));
         result[4] = S0MT;
 
         add_unique_pairdata_to_mol(mol, "method", method, 0);

@@ -26,6 +26,8 @@ GNU General Public License for more details.
 #include <openbabel/generic.h>
 #include <cstdlib>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -272,18 +274,15 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-
     ofs << mol.GetTitle() << "\n";
 
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "%3s%15.5f%15.5f%15.5f\n",
+        ofs << fmt::format("{:3s}{:15.5f}{:15.5f}{:15.5f}\n",
                 OBElements::GetSymbol(atom->GetAtomicNum()),
                 atom->GetX(),
                 atom->GetY(),
                 atom->GetZ());
-        ofs << buffer;
       }
 
     ofs << "\n*ACES2(__ADD_SETUP_HERE__)\n\n";

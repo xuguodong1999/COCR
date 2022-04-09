@@ -977,7 +977,7 @@ namespace OpenBabel
         char buffer[BUFF_SIZE];
         if (!_quiet)
           {
-            auto buffer = fmt::format("{:03d}{:03d}{:03d}{:03d} {:s}",
+            auto buffer = fmt::format("{:3d}{:3d}{:3d}{:3d} {:s}",
                                       ref[0],ref[1],ref[2],ref[3], (*i)->GetSmartsString());
             obErrorLog.ThrowError(__FUNCTION__, buffer, obDebug);
           }
@@ -1008,10 +1008,8 @@ namespace OpenBabel
 
         if (!_quiet)
           {
-            char buffer[BUFF_SIZE];
-            snprintf(buffer,BUFF_SIZE,"%3d%3d%3d%3d %s",
-                     ref[0],ref[1],ref[2],ref[3],"sp3-sp3");
-            obErrorLog.ThrowError(__FUNCTION__, buffer, obDebug);
+            obErrorLog.ThrowError(__FUNCTION__, fmt::format("{:3d}{:3d}{:3d}{:3d} {:s}",
+                     ref[0],ref[1],ref[2],ref[3],"sp3-sp3"), obDebug);
           }
       }
     else
@@ -1021,10 +1019,8 @@ namespace OpenBabel
 
           if (!_quiet)
             {
-              char buffer[BUFF_SIZE];
-              snprintf(buffer,BUFF_SIZE,"%3d%3d%3d%3d %s",
-                       ref[0],ref[1],ref[2],ref[3],"sp2-sp2");
-              obErrorLog.ThrowError(__FUNCTION__, buffer, obDebug);
+              obErrorLog.ThrowError(__FUNCTION__, fmt::format("{:3d}{:3d}{:3d}{:3d} {:s}",
+                       ref[0],ref[1],ref[2],ref[3],"sp2-sp2"), obDebug);
             }
         }
       else //must be sp2-sp3
@@ -1033,10 +1029,8 @@ namespace OpenBabel
 
           if (!_quiet)
             {
-              char buffer[BUFF_SIZE];
-              snprintf(buffer,BUFF_SIZE,"%3d%3d%3d%3d %s",
-                       ref[0],ref[1],ref[2],ref[3],"sp2-sp3");
-              obErrorLog.ThrowError(__FUNCTION__, buffer, obDebug);
+              obErrorLog.ThrowError(__FUNCTION__, fmt::format("{:3d}{:3d}{:3d}{:3d} {:s}",
+                       ref[0],ref[1],ref[2],ref[3],"sp2-sp3"), obDebug);
             }
         }
   }

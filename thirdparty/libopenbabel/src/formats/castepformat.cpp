@@ -21,6 +21,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 #define EV_TO_KCAL_PER_MOL 23.060538
@@ -92,7 +94,7 @@ namespace OpenBabel {
     bool hasVolumeData = false;
     bool hasEnthalpyData = false;
     double pressure, volume, enthalpy;
-    char buffer[BUFF_SIZE], tag[BUFF_SIZE];
+    char buffer[BUFF_SIZE];
     double x,y,z,a,b,c,alpha,beta,gamma;
     vector<string> vs;
     matrix3x3 ortho;
@@ -208,14 +210,10 @@ namespace OpenBabel {
         opd_enthalpy_ev->SetAttribute("Enthalpy (eV)");
         opd_enthalpy_pv_ev->SetAttribute("Enthalpy PV term (eV)");
 
-        snprintf(tag, BUFF_SIZE, "%f", enthalpy);
-        opd_enthalpy->SetValue(tag);
-        snprintf(tag, BUFF_SIZE, "%f", pv);
-        opd_enthalpy_pv->SetValue(tag);
-        snprintf(tag, BUFF_SIZE, "%f", enthalpy_ev);
-        opd_enthalpy_ev->SetValue(tag);
-        snprintf(tag, BUFF_SIZE, "%f", pv_ev);
-        opd_enthalpy_pv_ev->SetValue(tag);
+        opd_enthalpy->SetValue(fmt::format("{:f}", enthalpy));
+        opd_enthalpy_pv->SetValue(fmt::format("{:f}", pv));
+        opd_enthalpy_ev->SetValue(fmt::format("{:f}", enthalpy_ev));
+        opd_enthalpy_pv_ev->SetValue(fmt::format("{:f}", pv_ev));
 
         pmol->SetData(opd_enthalpy);
         pmol->SetData(opd_enthalpy_pv);

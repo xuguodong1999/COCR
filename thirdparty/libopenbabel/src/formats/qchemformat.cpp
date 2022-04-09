@@ -20,6 +20,9 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
+
+#include <fmt/format.h>
+
 #include <iostream>
 #include <cstdlib>
 
@@ -114,7 +117,7 @@ namespace OpenBabel
     OBMol &mol = *pmol;
     const char* title = pConv->GetTitle();
 
-    char buffer[BUFF_SIZE], tag[BUFF_SIZE];
+    char buffer[BUFF_SIZE];
     string str,str1;
     double x,y,z;
     OBAtom *atom;
@@ -212,8 +215,7 @@ namespace OpenBabel
                 // We want to round this to 2 decimals
                 // So convert to a float and print it as a new string
                 float shift = static_cast<float> (atof(vs[3].c_str()));
-                snprintf(tag, BUFF_SIZE, "%7.2f", shift);
-
+                std::string tag = fmt::format("{:7.2f}", shift);
                 nmrShift->SetValue(tag);
                 atom->SetData(nmrShift);
 

@@ -19,6 +19,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/obiter.h>
 
+#include <fmt/format.h>
+
 #include <sstream>
 #include <cstdlib>
 
@@ -293,27 +295,20 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-
-    snprintf(buffer, BUFF_SIZE, "%d\n", mol.NumAtoms());
-    ofs << buffer;
+    ofs << fmt::format("{:d}\n", mol.NumAtoms());
     if (fabs(mol.GetEnergy()) > 1.0e-3) // nonzero energy field
-      snprintf(buffer, BUFF_SIZE, "%s\tEnergy: %15.7f\n",
-               mol.GetTitle(), mol.GetEnergy());
+      ofs << fmt::format("{:s}\tEnergy: {:15.7f}\n", mol.GetTitle(), mol.GetEnergy());
     else
-      snprintf(buffer, BUFF_SIZE, "%s\n", mol.GetTitle());
-    ofs << buffer;
+      ofs << fmt::format("{:s}\n", mol.GetTitle());
 
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "%-3s%15.5f%15.5f%15.5f\n",
+        ofs << fmt::format("{:<3s}{:15.5f}{:15.5f}{:15.5f}\n",
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  atom->GetX(),
                  atom->GetY(),
                  atom->GetZ());
-        ofs << buffer;
       }
-
     return(true);
   }
 

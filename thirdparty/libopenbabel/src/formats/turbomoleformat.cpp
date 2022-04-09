@@ -21,6 +21,8 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
+
 const double AAU = 0.5291772108;  // �ngstr�m per bohr (CODATA 2002)
 
 using namespace std;
@@ -140,17 +142,6 @@ bool TurbomoleFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
 
 ////////////////////////////////////////////////////////////////
 
-char *strlwr(char *s)
-{
-    if (s != nullptr)
-      {
-        char *p;
-        for (p = s; *p; ++p)
-            *p = tolower(*p);
-      }
-    return s;
-}
-
 
 bool TurbomoleFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 {
@@ -172,14 +163,14 @@ bool TurbomoleFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     vector<OBAtom*>::iterator i;
     for (atom = mol.BeginAtom(i);atom;atom = mol.NextAtom(i))
     {
-      char symb[8];
-      strcpy(symb,OBElements::GetSymbol(atom->GetAtomicNum()));
-        snprintf(buffer, BUFF_SIZE, "%20.14f  %20.14f  %20.14f      %s",
-                atom->GetX()/UnitConv,
-                atom->GetY()/UnitConv,
-                atom->GetZ()/UnitConv,
-                strlwr(symb) );
-        ofs << buffer << endl;
+        std::string symb = OBElements::GetSymbol(atom->GetAtomicNum());
+        std::transform(symb.begin(), symb.end(), symb.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+        ofs << fmt::format("{:20.14f}  {:20.14f}  {:20.14f}      {:s}",
+                           atom->GetX()/UnitConv,
+                           atom->GetY()/UnitConv,
+                           atom->GetZ()/UnitConv,
+                           symb) << endl;
     }
     ofs << "$end" << endl;
 

@@ -21,6 +21,9 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <openbabel/data.h>
 #include <openbabel/generic.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 
@@ -216,10 +219,8 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-    snprintf(buffer, BUFF_SIZE, " %5d %6s      E = %7.3f KJ/mol",
-            mol.NumAtoms(),mol.GetTitle(),4.184*mol.GetEnergy());
-    ofs << buffer << endl;
+    ofs << fmt::format(" {:5d} {:6s}      E = {:7.3f} KJ/mol",
+            mol.NumAtoms(),mol.GetTitle(),4.184*mol.GetEnergy()) << endl;
 
     int type,k;
     OBAtom *atom,*nbr;
@@ -245,23 +246,19 @@ namespace OpenBabel
             ttab.Translate(to,from);
             type = atoi((char*)to.c_str());
         }
-        snprintf(buffer, BUFF_SIZE, "%4d",type);
-        ofs << buffer;
+        ofs << fmt::format("{:4d}", type);
         for (nbr = atom->BeginNbrAtom(j);nbr;nbr = atom->NextNbrAtom(j))
           {
-            snprintf(buffer, BUFF_SIZE, " %5d %1d",nbr->GetIdx(),(*j)->GetBondOrder());
-            ofs << buffer;
+            ofs << fmt::format(" {:5d} {:1d}", nbr->GetIdx(),(*j)->GetBondOrder());
           }
         for (k=atom->GetExplicitDegree();k < 6;k++)
           {
-            snprintf(buffer, BUFF_SIZE," %5d %1d",0,0);
-            ofs << buffer;
+            ofs << fmt::format(" {:5d} {:1d}", 0, 0);
           }
 
-        snprintf(buffer, BUFF_SIZE, " %11.6f %11.6f %11.6f %5d %5d %8.5f \n",
+        ofs << fmt::format(" {:11.6f} {:11.6f} {:11.6f} {:5d} {:5d} {:8.5f} \n",
                 atom->x(), atom->y(),atom->z(),0,0,
                 atom->GetPartialCharge());
-        ofs << buffer;
       }
 
     return(true);

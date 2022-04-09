@@ -18,6 +18,8 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <openbabel/obiter.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -71,7 +73,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     int orbitals, valenceE = 0;
     vector<OBAtom*>::iterator i;
     OBAtom *atom;
@@ -146,25 +147,21 @@ namespace OpenBabel
           ofs << '\n';
           ofs << " NOP = 1 " << '\n';
           ofs << " NDT = 1 " << '\n';
-          snprintf(buffer, BUFF_SIZE, " FOP(1) =% 4d% 10.6f",
-                   valenceE - 1, 1.0);
-          ofs << buffer << '\n';
+          ofs << fmt::format(" FOP(1) ={: 4d}{: 10.6f}", valenceE - 1, 1.0) << '\n';
         }
 
-      snprintf(buffer, BUFF_SIZE, " NAT          %4d   NEL        %4d   MULT           1",
+      ofs << fmt::format(" NAT          {:4d}   NEL        {:4d}   MULT           1",
                mol.NumAtoms(),
-               valenceE);
-      ofs << buffer << '\n';
+               valenceE) << '\n';
       ofs << " IPRINT         -1   ITMAX       100" << '\n';
       ofs << '\n';
       ofs << "! ***** BASIS SET AND C. I. SIZE INFORMATION ***** " << '\n';
       ofs << '\n';
 
-      snprintf(buffer, BUFF_SIZE, " DYNAL(1) =     0%5d%5d    0    0 1200%5d",
+      ofs << fmt::format(" DYNAL(1) =     0{:5d}{:5d}    0    0 1200{:5d}",
                mol.NumAtoms() - mol.NumHvyAtoms(),
                mol.NumHvyAtoms(),
-               orbitals + 25);
-      ofs << buffer << '\n';
+               orbitals + 25) << '\n';
 
       ofs << '\n';
       ofs << " INTFA(1) =   1.000000 1.267000  0.680000  1.000000  1.000000 " << '\n';
@@ -182,12 +179,11 @@ namespace OpenBabel
 
     for (atom = mol.BeginAtom(i); atom; atom = mol.NextAtom(i))
       {
-        snprintf(buffer, BUFF_SIZE, "% 10.6f% 10.6f% 10.6f%5d",
+        ofs <<fmt::format("{: 10.6f}{: 10.6f}{: 10.6f}{:5d}",
                  atom->GetX(),
                  atom->GetY(),
                  atom->GetZ(),
-                 atom->GetAtomicNum());
-        ofs << buffer << '\n';
+                 atom->GetAtomicNum()) << '\n';
       }
 
     ofs << '\n' << '\n';
@@ -205,18 +201,15 @@ namespace OpenBabel
       ofs << '\n';
 
       if (charged)
-        snprintf(buffer, BUFF_SIZE, "%5d%5d%5d%5d", 1, orbitals, orbitals, orbitals + 1);
+        ofs << fmt::format("{:5d}{:5d}{:5d}{:5d}",1, orbitals, orbitals, orbitals + 1) << '\n';
       else
-        snprintf(buffer, BUFF_SIZE, "%5d%5d%5d", 1, orbitals, orbitals);
-      ofs << buffer << '\n';
+        ofs << fmt::format("{:5d}{:5d}{:5d}", 1, orbitals, orbitals) << '\n';
       if (charged)
-        snprintf(buffer, BUFF_SIZE, "%5d%5d%5d%5d%5d",
-                 21, (orbitals - 8), orbitals + 1, orbitals + 1, orbitals + 11);
+        ofs << fmt::format("{:5d}{:5d}{:5d}{:5d}{:5d}",
+                           21, (orbitals - 8), orbitals + 1, orbitals + 1, orbitals + 11);
       else
-        snprintf(buffer, BUFF_SIZE, "%5d%5d%5d%5d%5d",
-                 21, (orbitals - 9), orbitals, orbitals + 1, orbitals + 10);
-      ofs << buffer << "\n\n";
-      ofs << " $END \n";
+        ofs << fmt::format("{:5d}{:5d}{:5d}{:5d}{:5d}", 21, (orbitals - 9), orbitals, orbitals + 1, orbitals + 10);
+      ofs << "\n\n $END \n";
     }
 
     return(true);

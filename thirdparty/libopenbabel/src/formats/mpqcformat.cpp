@@ -19,6 +19,7 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/obiter.h>
 
+#include <fmt/format.h>
 
 using namespace std;
 namespace OpenBabel
@@ -187,8 +188,7 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    //   unsigned int i;
-    char buffer[BUFF_SIZE];
+    //   unsigned int i;=
 
     ofs << "% " << mol.GetTitle() << "\n";
     ofs << "\n"; // keywords/direction lines here
@@ -196,12 +196,11 @@ namespace OpenBabel
 
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "%4s  %8.5f  %8.5f  %8.5f \n",
+        ofs << fmt::format("{:4s}  {:8.5f}  {:8.5f}  {:8.5f} \n",
                 OBElements::GetSymbol(atom->GetAtomicNum()),
                 atom->GetX(),
                 atom->GetY(),
                 atom->GetZ());
-        ofs << buffer;
       }
 
     ofs << "\n\n\n";

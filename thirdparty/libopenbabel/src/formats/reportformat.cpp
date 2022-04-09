@@ -27,6 +27,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -214,26 +216,21 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     ofs << "FILENAME: " << mol.GetTitle() << "\n";
     ofs << "FORMULA: " << mol.GetFormula() << "\n";
     ofs << "MASS: ";
-    snprintf(buffer, BUFF_SIZE, "%5.4f\n", mol.GetMolWt());
-    ofs << buffer;
+    ofs << fmt::format("{:5.4f}\n", mol.GetMolWt());
     ofs << "EXACT MASS: ";
-    snprintf(buffer, BUFF_SIZE, "%5.7f", mol.GetExactMass());
-    ofs << buffer << "\n";
+    ofs << fmt::format("{:5.7f}", mol.GetExactMass()) << "\n";
     if (mol.GetTotalCharge() != 0)
       {
         ofs << "TOTAL CHARGE: ";
-        snprintf(buffer, BUFF_SIZE, "%d", mol.GetTotalCharge());
-        ofs << buffer << "\n";
+        ofs << fmt::format("{:d}", mol.GetTotalCharge()) << "\n";
       }
     if (mol.GetTotalSpinMultiplicity() != 1)
       {
         ofs << "TOTAL SPIN: ";
-        snprintf(buffer, BUFF_SIZE, "%d", mol.GetTotalSpinMultiplicity());
-        ofs << buffer << "\n";
+        ofs << fmt::format("{:d}", mol.GetTotalSpinMultiplicity()) << "\n";
       }
     ofs << "INTERATOMIC DISTANCES" << "\n";
     WriteDistanceMatrix(ofs, mol);
@@ -263,17 +260,14 @@ namespace OpenBabel
   {
     unsigned int i;
     OBAtom *atom;
-    char buffer[BUFF_SIZE];
 
     for(i = 1;i <= mol.NumAtoms(); i++)
       {
         atom = mol.GetAtom(i);
-        snprintf(buffer, BUFF_SIZE, "%4s%4d   % 2.10f",
+        ofs << fmt::format("{:4s}{:4d}   {: 2.10f}",
                 OBElements::GetSymbol(atom->GetAtomicNum()),
                 i,
-                atom->GetPartialCharge());
-
-        ofs << buffer << "\n";
+                atom->GetPartialCharge()) << "\n";
       }
   }
 
@@ -284,7 +278,6 @@ namespace OpenBabel
     unsigned int i,j;
     string type;
     OBAtom *atom, *atom2;
-    char buffer[BUFF_SIZE];
     double dst;
 
     max = columns;
@@ -294,25 +287,21 @@ namespace OpenBabel
         if (min > mol.NumAtoms())
           break;
         atom = mol.GetAtom(min);
-
-        snprintf(buffer,BUFF_SIZE,"%15s%4d",
+        ofs << fmt::format("{:15s}{:4d}",
                 OBElements::GetSymbol(atom->GetAtomicNum()),
                 min);
-        ofs << buffer;
 
         for (i = min + 1; ((i < max) && (i <= mol.NumAtoms())); i++)
           if (i <= mol.NumAtoms())
             {
               atom = mol.GetAtom(i);
-              snprintf(buffer,BUFF_SIZE, "%7s%4d",
+              ofs << fmt::format("{:7s}{:4d}",
                       OBElements::GetSymbol(atom->GetAtomicNum()),
                       i);
-              ofs << buffer;
             }
         ofs << "\n";
 
-        snprintf(buffer, BUFF_SIZE, "%14s","");
-        ofs << buffer;
+        ofs << fmt::format("{:14s}", "");
         for (i = min; i < max; i++)
           if (i <= mol.NumAtoms())
             {
@@ -323,10 +312,9 @@ namespace OpenBabel
         for (i = min; i <= mol.NumAtoms(); i++)
           {
             atom = mol.GetAtom(i);
-            snprintf(buffer, BUFF_SIZE, "%4s%4d",
+            ofs << fmt::format("{:4s}{:4d}",
                     OBElements::GetSymbol(atom->GetAtomicNum()),
                     i);
-            ofs << buffer;
             for (j = min; j < max; j++)
               if (j <= i)
                 {
@@ -335,8 +323,7 @@ namespace OpenBabel
                   dst += SQUARE(atom->GetY() - atom2->GetY());
                   dst += SQUARE(atom->GetZ() - atom2->GetZ());
                   dst = sqrt(dst);
-                  snprintf(buffer, BUFF_SIZE, "%10.4f ",dst);
-                  ofs << buffer;
+                  ofs << fmt::format("{:10.4f} ", dst);
                 }
             ofs << "\n";
           }
@@ -351,7 +338,6 @@ namespace OpenBabel
     vector<OBBond*>::iterator bi1,bi2,bi3;
     OBBond* bond;
     OBAtom *a,*b,*c,*d;
-    char buffer[BUFF_SIZE];
 
     //loop through all bonds generating torsions
     for(bond = mol.BeginBond(bi1); bond; bond = mol.NextBond(bi1))
@@ -368,11 +354,9 @@ namespace OpenBabel
               {
                 if(d == b)
                   continue;
-
-                snprintf(buffer, BUFF_SIZE, "%4d %4d %4d %4d %10.3f",
+                ofs << fmt::format("{:4d} {:4d} {:4d} {:4d} {:10.3f}",
                         a->GetIdx(), b->GetIdx(),c->GetIdx(),d->GetIdx(),
-                        mol.GetTorsion(&*a, &*b, &*c, &*d));
-                ofs << buffer << "\n";
+                        mol.GetTorsion(&*a, &*b, &*c, &*d))  << "\n";
               }
           }
       }
@@ -381,7 +365,6 @@ namespace OpenBabel
   void ReportFormat::WriteAngles(ostream &ofs,OBMol &mol)
   {
     OBAtom *a, *b, *c;
-    char buffer[BUFF_SIZE];
     double ang;
 
     FOR_ANGLES_OF_MOL(angle, mol)
@@ -390,12 +373,10 @@ namespace OpenBabel
       a = mol.GetAtom((*angle)[1] + 1);
       c = mol.GetAtom((*angle)[2] + 1);
       ang = a->GetAngle(b->GetIdx(), c->GetIdx());
-
-      snprintf(buffer, BUFF_SIZE, "%4d %4d %4d %4s %4s %4s %10.3f",
+      ofs << fmt::format("{:4d} {:4d} {:4d} {:4s} {:4s} {:4s} {:10.3f}",
                 a->GetIdx(),b->GetIdx(),c->GetIdx(),
                 a->GetType(),b->GetType(),c->GetType(),
-                ang);
-      ofs << buffer << "\n";
+                ang) << "\n";
     }
   }
 
@@ -403,20 +384,18 @@ namespace OpenBabel
   {
     OBAtom *atom;
     vector<OBAtom*>::iterator i;
-    char buffer[BUFF_SIZE];
 
     for (atom = mol.BeginAtom(i);atom;atom = mol.NextAtom(i))
       {
         if (atom->IsChiral())
           {
-            /* @todo
-            snprintf(buffer, BUFF_SIZE, "%4s %5d is chiral: %s",
-                    OBElements::GetSymbol(atom->GetAtomicNum()),
-                    atom->GetIdx(),
-                    (atom->IsClockwise() ? "clockwise" : "counterclockwise"));
-                    */
-
-            ofs << buffer << "\n";
+            ofs
+            // TODO
+//                << fmt::format("{:4s} {:5d} d}s} chiral: {:s}",
+//                    OBElements::GetSymbol(atom->GetAtomicNum()),
+//                    atom->GetIdx(),
+//                    (atom->IsClockwise() ? "clockwise" : "counterclockwise"))
+                << "\n";
           }
       }
   }

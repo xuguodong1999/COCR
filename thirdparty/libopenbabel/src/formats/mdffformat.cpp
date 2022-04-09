@@ -20,6 +20,8 @@ GNU General Public License for more details.
 #include <openbabel/generic.h>
 #include <openbabel/obiter.h>
 
+#include <fmt/format.h>
+
 #include <locale> // For isalpha(int)
 #include <map>
 #include <stdexcept>
@@ -350,9 +352,7 @@ namespace OpenBabel {
     {
       OBUnitCell *uc = static_cast<OBUnitCell*>(mol.GetData(OBGenericDataType::UnitCell));
       uc->FillUnitCell(&mol);
-    }            
-
-    char buffer[BUFF_SIZE];
+    }
     OBUnitCell *uc = nullptr;
     vector<vector3> cell;
 
@@ -413,8 +413,7 @@ namespace OpenBabel {
       // the unit cell has not been defined. Leave as all zeros so the user
       // can fill it in themselves
       for (int ii = 0; ii < 3; ii++) {
-        snprintf(buffer, BUFF_SIZE, "0.0  0.0  0.0");
-        ofs << buffer << endl;
+        ofs << "0.0  0.0  0.0" << endl;
       }
     }
     else
@@ -424,9 +423,7 @@ namespace OpenBabel {
       cell = uc->GetCellVectors();
       for (vector<vector3>::const_iterator i = cell.begin();
            i != cell.end(); ++i) {
-        snprintf(buffer, BUFF_SIZE, "%20.15f%20.15f%20.15f",
-                 i->x(), i->y(), i->z());
-        ofs << buffer << endl;
+        ofs << fmt::format("{:20.15f}{:20.15f}{:20.15f}", i->x(), i->y(), i->z()) << endl;
       }
     }
     //Print the number of atoms types
@@ -434,15 +431,13 @@ namespace OpenBabel {
     
     for (int i = 0; i < atypes_def.size(); i++)
     {
-      snprintf(buffer, BUFF_SIZE, "%-3s ", atypes_def[i].first.c_str());
-      ofs << buffer ;
+      ofs << fmt::format("{:<3s} ", atypes_def[i].first);
     }
     ofs << endl;
     
     for (int i = 0; i < atypes_def.size(); i++)
     {
-      snprintf(buffer, BUFF_SIZE, "%-3u ", atypes_def[i].second);
-      ofs << buffer ;
+      ofs << fmt::format("{:<3d} ", atypes_def[i].second);
     }
     ofs << endl;
 
@@ -457,16 +452,14 @@ namespace OpenBabel {
     {  
       // Print coordinates
       string smb = OpenBabel::OBElements::GetSymbol(it->second->GetAtomicNum());
-      snprintf(buffer, BUFF_SIZE, "%-3s %26.19f %26.19f %26.19f", smb.c_str(),
-               it->second->GetX(), it->second->GetY(), it->second->GetZ());
+      ofs << fmt::format("{:<3s} {:26.19f} {:26.19f} {:26.19f}",
+                    smb, it->second->GetX(), it->second->GetY(), it->second->GetZ())<< endl;
       
       if(charge_smb.find(smb) == charge_smb.end() )
         charge_smb[smb] = it->second->GetFormalCharge();
       else
         if(charge_smb[smb] != it->second->GetFormalCharge())
           charge_smb[smb] = NAN;
-      
-      ofs << buffer << endl;
     }
     
     if (writeIONS == nullptr)

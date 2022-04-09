@@ -19,6 +19,9 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 #define EV_TO_KCAL_PER_MOL 23.060538
@@ -84,7 +87,7 @@ namespace OpenBabel {
     istream &ifs = *pConv->GetInStream();
 
     bool coordsAreFractional = false;
-    char buffer[BUFF_SIZE], tag[BUFF_SIZE];
+    char buffer[BUFF_SIZE];
     double x,y,z,a,b,c,alpha,beta,gamma;
     vector<string> vs;
     matrix3x3 ortho;
@@ -356,14 +359,10 @@ namespace OpenBabel {
       enthalpyPD_pv_eV->SetAttribute("Enthalpy PV term (eV)");
       double en_kcal_per_mole = enthalpy_eV * EV_TO_KCAL_PER_MOL;
       double pv_kcal_per_mole = pv_eV * EV_TO_KCAL_PER_MOL;
-      snprintf(tag, BUFF_SIZE, "%f", en_kcal_per_mole);
-      enthalpyPD->SetValue(tag);
-      snprintf(tag, BUFF_SIZE, "%f", pv_kcal_per_mole);
-      enthalpyPD_pv->SetValue(tag);
-      snprintf(tag, BUFF_SIZE, "%f", enthalpy_eV);
-      enthalpyPD_eV->SetValue(tag);
-      snprintf(tag, BUFF_SIZE, "%f", pv_eV);
-      enthalpyPD_pv_eV->SetValue(tag);
+      enthalpyPD->SetValue(fmt::format("{:f}", en_kcal_per_mole));
+      enthalpyPD_pv->SetValue(fmt::format("{:f}", pv_kcal_per_mole));
+      enthalpyPD_eV->SetValue(fmt::format("{:f}", enthalpy_eV));
+      enthalpyPD_pv_eV->SetValue(fmt::format("{:f}", pv_eV));
       pmol->SetData(enthalpyPD);
       pmol->SetData(enthalpyPD_pv);
       pmol->SetData(enthalpyPD_eV);

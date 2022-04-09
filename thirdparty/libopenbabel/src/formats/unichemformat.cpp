@@ -153,7 +153,7 @@ bool UniChemFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     for(i = 1;i <= mol.NumAtoms(); i++)
     {
         atom = mol.GetAtom(i);
-        ofs << fmt::format("{:03d}{:>15.5f}{:>15.5f}{:>15.5f}",
+        ofs << fmt::format("{:3d}{:>15.5f}{:>15.5f}{:>15.5f}",
                            atom->GetAtomicNum(),
                            atom->GetX(),
                            atom->GetY(),

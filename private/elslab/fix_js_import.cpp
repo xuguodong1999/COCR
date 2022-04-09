@@ -1,3 +1,6 @@
+/**
+ * a tool to simplify es6 import
+ */
 #include <QDir>
 #include <QDebug>
 #include <QCoreApplication>

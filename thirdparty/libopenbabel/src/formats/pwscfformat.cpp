@@ -19,6 +19,9 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 #define RYDBERG_TO_KCAL_PER_MOL 313.755026
@@ -85,7 +88,7 @@ namespace OpenBabel {
     //Define some references so we can use the old parameter names
     istream &ifs = *pConv->GetInStream();
 
-    char buffer[BUFF_SIZE], tag[BUFF_SIZE];
+    char buffer[BUFF_SIZE];
     double x,y,z;
     double alat = 1.0;
     vector<string> vs;
@@ -277,14 +280,10 @@ namespace OpenBabel {
       double pv_kcal_per_mole = pv;
       double en_eV = enthalpy / EV_TO_KCAL_PER_MOL;
       double pv_eV = pv / EV_TO_KCAL_PER_MOL;
-      snprintf(tag, BUFF_SIZE, "%f", en_kcal_per_mole);
-      enthalpyPD->SetValue(tag);
-      snprintf(tag, BUFF_SIZE, "%f", pv_kcal_per_mole);
-      enthalpyPD_pv->SetValue(tag);
-      snprintf(tag, BUFF_SIZE, "%f", en_eV);
-      enthalpyPD_eV->SetValue(tag);
-      snprintf(tag, BUFF_SIZE, "%f", pv_eV);
-      enthalpyPD_pv_eV->SetValue(tag);
+      enthalpyPD->SetValue(fmt::format("{:f}", en_kcal_per_mole));
+      enthalpyPD_pv->SetValue(fmt::format("{:f}", pv_kcal_per_mole));
+      enthalpyPD_eV->SetValue(fmt::format("{:f}", en_eV));
+      enthalpyPD_pv_eV->SetValue(fmt::format("{:f}", pv_eV));
       pmol->SetData(enthalpyPD);
       pmol->SetData(enthalpyPD_pv);
       pmol->SetData(enthalpyPD_eV);

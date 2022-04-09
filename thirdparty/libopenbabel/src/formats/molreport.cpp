@@ -25,6 +25,8 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -102,45 +104,39 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     ofs << "TITLE: " << mol.GetTitle() << "\n";
     ofs << "FORMULA: " << mol.GetFormula() << "\n";
     ofs << "MASS: ";
-    snprintf(buffer, BUFF_SIZE, "%5.4f\n", mol.GetMolWt());
-    ofs << buffer;
+    ofs << fmt::format("{:5.4f}\n", mol.GetMolWt());
 
     if (mol.GetTotalCharge() != 0)
       {
         ofs << "TOTAL CHARGE: ";
-        snprintf(buffer, BUFF_SIZE, "%d", mol.GetTotalCharge());
-        ofs << buffer << "\n";
+        ofs << fmt::format("{:d}", mol.GetTotalCharge()) << "\n";
       }
     if (mol.GetTotalSpinMultiplicity() != 1)
       {
         ofs << "TOTAL SPIN: ";
-        snprintf(buffer, BUFF_SIZE, "%d", mol.GetTotalSpinMultiplicity());
-        ofs << buffer << "\n";
+        ofs << fmt::format("{:d}", mol.GetTotalSpinMultiplicity()) << "\n";
       }
 
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "ATOM: %9d %3s TYPE: %-6s HYB: %2d CHARGE: %8.4f",
+        ofs << fmt::format("ATOM: {:9d} {:3s} TYPE: {:<6s} HYB: {:2d} CHARGE: {:8.4f}",
                  atom->GetIdx(),
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  atom->GetType(),
                  atom->GetHyb(),
-                 atom->GetPartialCharge());
-        ofs << buffer << "\n";
+                 atom->GetPartialCharge()) << "\n";
       }
 
     FOR_BONDS_OF_MOL(bond, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "BOND: %9d START: %9d END: %9d ORDER: %3d",
+        ofs << fmt::format("BOND: {:9d} START: {:9d} END: {:9d} ORDER: {:3d}",
                  bond->GetIdx(),
                  bond->GetBeginAtomIdx(),
                  bond->GetEndAtomIdx(),
-                 bond->GetBondOrder());
-        ofs << buffer << "\n";
+                 bond->GetBondOrder()) << "\n";
       }
 
     return(true);

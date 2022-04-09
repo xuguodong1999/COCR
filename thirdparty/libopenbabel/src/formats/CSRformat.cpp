@@ -18,6 +18,8 @@ GNU General Public License for more details.
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -126,15 +128,13 @@ namespace OpenBabel
   {
     int the_size,jconf;
     double x,y,z,energy;
-    char title[100];
 
     the_size = sizeof(int) + sizeof(double) + (80 * sizeof(char));
 
     jconf = 1;
     energy = -2.584565;
 
-    snprintf(title, 80, "%s:%d",mol.GetTitle(),MolCount);
-    std::string tag = PadString(title,80);
+    std::string tag = PadString(fmt::format("{:s}:{:d}", mol.GetTitle(), MolCount),80);
 
     WriteSize(the_size,ofs);
     ofs.write((char*)&jconf,sizeof(int));

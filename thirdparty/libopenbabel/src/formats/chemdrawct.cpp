@@ -19,6 +19,8 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -74,8 +76,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-
     ofs << mol.GetTitle() << endl;
     ofs << " " << mol.NumAtoms() << " " << mol.NumBonds() << endl;
 
@@ -84,11 +84,10 @@ namespace OpenBabel
 
     for(atom = mol.BeginAtom(i);atom;atom = mol.NextAtom(i))
       {
-        snprintf(buffer, BUFF_SIZE, " %9.4f %9.4f    0.0000 %-1s",
+        ofs << fmt::format(" {:9.4f} {:9.4f}    0.0000 {:<1s}",
                  atom->x(),
                  atom->y(),
-                 OBElements::GetSymbol(atom->GetAtomicNum()));
-        ofs << buffer << endl;
+                 OBElements::GetSymbol(atom->GetAtomicNum())) << endl;
       }
 
     OBBond *bond;
@@ -96,11 +95,10 @@ namespace OpenBabel
 
     for(bond = mol.BeginBond(j);bond;bond = mol.NextBond(j))
       {
-        snprintf(buffer, BUFF_SIZE, "%3d%3d%3d%3d",
+        ofs << fmt::format("{:3d}{:3d}{:3d}{:3d}",
                  bond->GetBeginAtomIdx(),
                  bond->GetEndAtomIdx(),
-                 bond->GetBondOrder(), bond->GetBondOrder());
-        ofs << buffer << endl;
+                 bond->GetBondOrder(), bond->GetBondOrder()) << endl;
       }
     return(true);
   }

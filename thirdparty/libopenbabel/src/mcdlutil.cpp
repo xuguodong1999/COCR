@@ -2660,7 +2660,7 @@ namespace OpenBabel {
     int charge,bondType,stereoType;
 
     data << endl << endl << endl;  //three empty lines
-    data << fmt::format("{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d}{:03d} V2000",
+    data << fmt::format("{:3d}{:3d}{:3d}{:3d}{:3d}{:3d}{:3d}{:3d}{:3d}{:3d}{:3d} V2000",
                         nAtoms(),nBonds(),0,0,0,0,0,0,0,0,999) << endl;
     for (int i=0; i<nAtoms(); i++) {
       sa=getAtom(i);

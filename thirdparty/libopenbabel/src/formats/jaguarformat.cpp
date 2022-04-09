@@ -22,6 +22,8 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
+#include <fmt/format.h>
+
 #include <cctype>
 #include <cstdlib>
 
@@ -211,7 +213,6 @@ namespace OpenBabel
     OBMol &mol = *pmol;
 
     unsigned int i;
-    char buffer[BUFF_SIZE];
     OBAtom *atom;
 
     ofs << mol.GetTitle() << endl << endl;
@@ -222,12 +223,11 @@ namespace OpenBabel
     for (i = 1;i <= mol.NumAtoms(); i++)
       {
         atom = mol.GetAtom(i);
-        snprintf(buffer, BUFF_SIZE, "  %s%d   %12.7f  %12.7f  %12.7f",
+        ofs << fmt::format("  {:s}{:d}   {:12.7f}  {:12.7f}  {:12.7f}",
                  OBElements::GetSymbol(atom->GetAtomicNum()), i,
                  atom->GetX(),
                  atom->GetY(),
-                 atom->GetZ());
-        ofs << buffer << endl;
+                 atom->GetZ()) << endl;
       }
 
     ofs << "&" << endl;

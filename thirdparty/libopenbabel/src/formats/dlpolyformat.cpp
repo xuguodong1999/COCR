@@ -18,6 +18,8 @@ GNU General Public License for more details.
 #include <openbabel/generic.h>
 #include <openbabel/obiter.h>
 
+#include <fmt/format.h>
+
 #include <iomanip>
 #include <map>
 
@@ -57,7 +59,6 @@ namespace OpenBabel
     
     std::stringstream errorMsg;
 
-    char buffer[BUFF_SIZE];
     std::string line; // For convenience so we can refer to lines from the iterator as 'line'
     std::vector<std::string> tokens; // list of lines and list of tokens on a line
 
@@ -101,7 +102,7 @@ namespace OpenBabel
   
   bool DlpolyInputReader::ParseHeader( std::istream &ifs, OBMol &mol )
   {
-
+    char buffer[BUFF_SIZE];
     // Title line
     if ( ! ifs.getline(buffer,BUFF_SIZE) )
       {
@@ -149,6 +150,7 @@ namespace OpenBabel
     //ifs.getline(buffer,BUFF_SIZE);
     //return true;
 
+    char buffer[BUFF_SIZE];
     bool ok;
     double x,y,z;
     ifs.getline(buffer,BUFF_SIZE);
@@ -194,7 +196,7 @@ namespace OpenBabel
     double x,y,z;
     OBAtom *atom;
     bool ok;
-
+    char buffer[BUFF_SIZE];
     // Line with AtomLabel, AtomIndex & AtomicNumber - only AtomLabel required
     if ( ! ifs.getline(buffer,BUFF_SIZE) ) return false;
     //std::cout << "Got Atom line " << buffer << std::endl;
@@ -372,12 +374,7 @@ namespace OpenBabel
       {
         
         ofs << std::setw(8) << OBElements::GetSymbol(atom->GetAtomicNum()) << std::setw(10) << ++idx << std::setw(10) << atom->GetAtomicNum() << std::endl;
-        snprintf(buffer, BUFF_SIZE, "%20.15f %20.15f %20.15f\n",
-                 atom->GetX(),
-                 atom->GetY(),
-                 atom->GetZ()
-                 );
-        ofs << buffer;
+        ofs << fmt::format("{:20.15f} {:20.15f} {:20.15f}\n", atom->GetX(), atom->GetY(), atom->GetZ());
       }
 
     return(true);
@@ -448,6 +445,7 @@ public:
      * Read the trajectory line - this tells us how many atoms we read in and
      * also the timestep which we use to set the title
      */
+    char buffer[BUFF_SIZE];
     if ( ! ifs.getline(buffer,BUFF_SIZE) ) return false;
     tokenize(tokens, buffer, " \t\n");
     if ( tokens.size() < 6  )
