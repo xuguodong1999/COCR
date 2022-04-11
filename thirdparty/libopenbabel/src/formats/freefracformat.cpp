@@ -20,6 +20,8 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/math/matrix3x3.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 
@@ -243,7 +245,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     OBUnitCell *uc = nullptr;
 
     ofs << mol.GetTitle() << endl;
@@ -253,11 +254,10 @@ namespace OpenBabel
     else
       {
         uc = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
-        snprintf(buffer, BUFF_SIZE,
+        ofs << fmt::format("{:10.5f}{:10.5f}{:10.5f}{:10.5f}{:10.5f}{:10.5f}\n",
                  "%10.5f%10.5f%10.5f%10.5f%10.5f%10.5f",
                  uc->GetA(), uc->GetB(), uc->GetC(),
                  uc->GetAlpha() , uc->GetBeta(), uc->GetGamma());
-        ofs << buffer << "\n";
       }
 
     vector3 v;
@@ -267,12 +267,11 @@ namespace OpenBabel
         if (uc != nullptr)
           v = uc->CartesianToFractional(v);
 
-        snprintf(buffer, BUFF_SIZE, "%s %10.5f%10.5f%10.5f",
+        ofs << fmt::format("{:s} {:10.5f}{:10.5f}{:10.5f}\n",
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  v.x(),
                  v.y(),
                  v.z());
-        ofs << buffer << endl;
       }
     ofs << endl; // add a blank line between molecules
     return(true);

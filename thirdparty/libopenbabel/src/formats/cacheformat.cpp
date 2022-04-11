@@ -19,6 +19,8 @@ GNU General Public License for more details.
 #include <openbabel/bond.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
+
 using namespace std;
 namespace OpenBabel
 {
@@ -75,9 +77,6 @@ namespace OpenBabel
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char type_name[16];
-    char buffer[BUFF_SIZE];
-
     ofs << "molstruct88_Apr_30_1993_11:02:29 <molecule> 0x1d00\n";
     ofs << "Written by Molecular Editor on <date>\n";
     ofs << "Using data dictionary         9/9/93  4:47 AM\n";
@@ -99,20 +98,14 @@ namespace OpenBabel
     vector<OBAtom*>::iterator i;
     for(atom = mol.BeginAtom(i);atom;atom = mol.NextAtom(i))
       {
-        // 16 = sizeof(type_name)
-        strncpy(type_name,OBElements::GetSymbol(atom->GetAtomicNum()), 16);
-        // sizeof(type_name) - 1)
-        type_name[15] = '\0';
-
-        snprintf(buffer, BUFF_SIZE, "%3d %10.6f %10.6f %10.6f %2d %2s %2d 0x7052",
+        ofs << fmt::format("{:3d} {:10.6f} {:10.6f} {:10.6f} {:2d} {:2s} {:2d} 0x7052",
                 atom->GetIdx(),
                 atom->x(),
                 atom->y(),
                 atom->z(),
                 atom->GetAtomicNum(),
-                type_name,
-                atom->GetFormalCharge());
-        ofs << buffer << endl;
+                OBElements::GetSymbol(atom->GetAtomicNum()),
+                atom->GetFormalCharge()) << endl;
       }
 
     ofs << "property_flags:\n";
@@ -141,9 +134,7 @@ namespace OpenBabel
           default:
             strcpy(bstr,"weak");
           }
-
-        snprintf(buffer, BUFF_SIZE, "%3d 0x7005 %s\n", bond->GetIdx()+1,bstr);
-        ofs << buffer;
+        ofs << fmt::format("{:3d} 0x7005 {:s}\n", bond->GetIdx()+1, bstr);
       }
 
     ofs << "property_flags:\n";
@@ -159,12 +150,8 @@ namespace OpenBabel
     int k;
     for (bond = mol.BeginBond(j),k=1;bond;bond = mol.NextBond(j))
       {
-        snprintf(buffer, BUFF_SIZE, "%3d 0xa1 atom bond %d %d\n",
-                k++,bond->GetBeginAtomIdx(),bond->GetIdx()+1);
-        ofs << buffer;
-        snprintf(buffer, BUFF_SIZE, "%3d 0xa1 atom bond %d %d\n",
-                k++,bond->GetEndAtomIdx(),bond->GetIdx()+1);
-        ofs << buffer;
+        ofs << fmt::format("{:3d} 0xa1 atom bond {:d} {:d}\n", k++, bond->GetBeginAtomIdx(), bond->GetIdx() + 1);
+        ofs << fmt::format("{:3d} 0xa1 atom bond {:d} {:d}\n", k++, bond->GetEndAtomIdx(), bond->GetIdx() + 1);
       }
 
     ofs << "property_flags:\n";

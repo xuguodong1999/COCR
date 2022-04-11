@@ -17,6 +17,8 @@ GNU General Public License for more details.
 #include <openbabel/atom.h>
 #include <openbabel/elements.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 #include <cctype>
 #include <cstring>
@@ -325,19 +327,17 @@ namespace OpenBabel
     OBMol &mol = *pmol;
 
     unsigned int i;
-    char buffer[BUFF_SIZE];
     OBAtom *atom;
     ofs<<"TEXT="<<mol.GetTitle()<<endl;
     ofs<<"GEOM=PQS"<<endl;
     for (i=1; i<=mol.NumAtoms(); i++)
       {
         atom=mol.GetAtom(i);
-        snprintf(buffer, BUFF_SIZE, "%s           %10.6lf   %10.6lf   %10.6lf",
+        ofs << fmt::format("{:s}           {:10.6f}   {:10.6f}   {:10.6f}",
                 OBElements::GetSymbol(atom->GetAtomicNum()),
                 atom->GetX(),
                 atom->GetY(),
-                atom->GetZ());
-        ofs<<buffer<<endl;
+                atom->GetZ()) << endl;
       }
     return(true);
   }

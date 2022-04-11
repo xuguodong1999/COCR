@@ -34,6 +34,9 @@
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 #include <openbabel/griddata.h>
+
+#include <fmt/format.h>
+
 #include <string>
 #include <vector>
 #include <sstream>
@@ -299,32 +302,26 @@ namespace OpenBabel {
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-
-    snprintf(buffer, BUFF_SIZE, "TITLE %s\n\n", mol.GetTitle());
-    ofs << buffer;
+    ofs << fmt::format("TITLE {:s}\n\n", mol.GetTitle());
 
     // Output CHARGE and spin
     // Note that ADF expects the spin parameter to be the # of unpaired spins
     // (i.e., singlet = 0, doublet = 1, etc.)
-    snprintf(buffer, BUFF_SIZE, "CHARGE %d  %d\n\n",
+    ofs << fmt::format("CHARGE {:d}  {:d}\n\n",
              mol.GetTotalCharge(),
              mol.GetTotalSpinMultiplicity() - 1);
-    ofs << buffer;
 
     // Cartesian input -- change this if you want a z-matrix format
-    snprintf(buffer, BUFF_SIZE, "Number of atoms\n %d\n\n", mol.NumAtoms());
-    ofs << buffer;
+    ofs << fmt::format("Number of atoms\n {:d}\n\n", mol.NumAtoms());
 
     ofs << "ATOMS Cartesian\n";
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "%-3s%15.5f%15.5f%15.5f\n",
+        ofs << fmt::format("{:<3s}{:15.5f}{:15.5f}{:15.5f}\n",
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  atom->GetX(),
                  atom->GetY(),
                  atom->GetZ());
-        ofs << buffer;
       }
     ofs << "End\n\n";
 

@@ -279,7 +279,7 @@ namespace OpenBabel
   {
     int atnum;
     int type_num;
-    char type_name[16],ele_type[16];
+    std::string type_name, ele_type;
 
     ofs << mol.NumAtoms();
     if (EQ(mol_typ,"MMADS"))
@@ -306,10 +306,9 @@ namespace OpenBabel
                      mol_typ,atom->GetIdx(),atom->GetType()), obInfo);
             atnum = atom->GetAtomicNum();
             type_num = atnum * 10 + atom->GetExplicitDegree();
-            snprintf(type_name, sizeof(type_num), "%d",type_num);
+            type_name = std::to_string(type_num);
           }
-        strncpy(ele_type, OBElements::GetSymbol(atom->GetAtomicNum()), sizeof(ele_type));
-        ele_type[sizeof(ele_type) - 1] = '\0';
+        ele_type = OBElements::GetSymbol(atom->GetAtomicNum());
         ofs << fmt::format("{:<3s} {:<5d} {:8.4f}  {:8.4f}  {:8.4f} {:5s}",
                 ele_type,
                 atom->GetIdx(),

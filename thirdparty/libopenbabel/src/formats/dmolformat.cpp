@@ -19,6 +19,9 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -181,7 +184,6 @@ namespace OpenBabel
     OBMol &mol = *pmol;
 
     unsigned int i;
-    char buffer[BUFF_SIZE];
 
     if (mol.HasData(OBGenericDataType::UnitCell))
       {
@@ -191,17 +193,11 @@ namespace OpenBabel
 
         ofs << "$cell vectors" << endl;
         v1 = v[0] * ANGSTROM_TO_BOHR;
-        snprintf(buffer, BUFF_SIZE,
-                 "%-3s% 27.14f% 20.14f% 20.14f","", v1.x(), v1.y(), v1.z());
-        ofs << buffer << endl;
+        ofs << fmt::format("{:<3s}{: 27.14f}{: 20.14f}{: 20.14f}\n","", v1.x(), v1.y(), v1.z());
         v1 = v[1] * ANGSTROM_TO_BOHR;
-        snprintf(buffer, BUFF_SIZE,
-                 "%-3s% 27.14f% 20.14f% 20.14f","", v1.x(), v1.y(), v1.z());
-        ofs << buffer << endl;
+        ofs << fmt::format("{:<3s}{: 27.14f}{: 20.14f}{: 20.14f}\n","", v1.x(), v1.y(), v1.z());
         v1 = v[2] * ANGSTROM_TO_BOHR;
-        snprintf(buffer, BUFF_SIZE,
-                 "%-3s% 27.14f% 20.14f% 20.14f","", v1.x(), v1.y(), v1.z());
-        ofs << buffer << endl;
+        ofs << fmt::format("{:<3s}{: 27.14f}{: 20.14f}{: 20.14f}\n","", v1.x(), v1.y(), v1.z());
       }
 
     ofs << "$coordinates" << endl;
@@ -210,12 +206,11 @@ namespace OpenBabel
     for(i = 1;i <= mol.NumAtoms(); i++)
       {
         atom = mol.GetAtom(i);
-        snprintf(buffer, BUFF_SIZE, "%-3s% 27.14f% 20.14f% 20.14f",
+        ofs << fmt::format("{:<3s}{: 27.14f}{: 20.14f}{: 20.14f}",
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  atom->GetX() * ANGSTROM_TO_BOHR,
                  atom->GetY() * ANGSTROM_TO_BOHR,
-                 atom->GetZ() * ANGSTROM_TO_BOHR);
-        ofs << buffer << endl;
+                 atom->GetZ() * ANGSTROM_TO_BOHR) << endl;
       }
 
     ofs << "$end" << endl;

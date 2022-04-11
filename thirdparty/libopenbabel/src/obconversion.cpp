@@ -1187,9 +1187,7 @@ namespace OpenBabel {
     string::size_type pos = ofname.find('*');
     if(pos!=string::npos)
       {
-        char num[33];
-        snprintf(num, 33, "%d", Count);
-        ofname.replace(pos,1, num);
+        ofname.replace(pos,1, std::to_string(Count));
       }
     return ofname;
   }

@@ -22,6 +22,9 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/internalcoord.h>
 #include <openbabel/generic.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -771,7 +774,6 @@ namespace OpenBabel
     OBMol &mol = *pmol;
 
     //    unsigned int i;
-    char buffer[BUFF_SIZE];
 
     const char *keywords = pConv->IsOption("k",OBConversion::OUTOPTIONS);
     const char *keywordFile = pConv->IsOption("f",OBConversion::OUTOPTIONS);
@@ -806,12 +808,11 @@ namespace OpenBabel
     string str,str1;
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer,BUFF_SIZE,"%-3s%8.5f 1 %8.5f 1 %8.5f 1",
+        ofs << fmt::format("{:<3s}{:8.5f} 1 {:8.5f} 1 {:8.5f} 1",
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  atom->GetX(),
                  atom->GetY(),
-                 atom->GetZ());
-        ofs << buffer << "\n";
+                 atom->GetZ()) << "\n";
       }
 
     OBUnitCell *uc = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
@@ -820,11 +821,10 @@ namespace OpenBabel
 
       vector<vector3> cellVectors = uc->GetCellVectors();
       for (vector<vector3>::iterator i = cellVectors.begin(); i != cellVectors.end(); ++i) {
-        snprintf(buffer,BUFF_SIZE,"Tv %8.5f 1 %8.5f 1 %8.5f 1",
+        ofs << fmt::format("Tv {:8.5f} 1 {:8.5f} 1 {:8.5f} 1",
                  i->x(),
                  i->y(),
                  i->z());
-        ofs << buffer << "\n";
       }
     }
 

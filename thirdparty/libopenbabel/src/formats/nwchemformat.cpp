@@ -20,6 +20,7 @@ GNU General Public License for more details.
 #include <openbabel/elements.h>
 #include <openbabel/generic.h>
 
+#include <fmt/format.h>
 
 // Required for imaginary frequencies detection
 #include <cmath>
@@ -1080,8 +1081,6 @@ static const char* OPTIMIZATION_END_PATTERN = "  Optimization converged";
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
-
     ofs << "start molecule" << "\n\n";
     ofs << "title " << endl << " " << mol.GetTitle() << "\n\n";
 
@@ -1089,12 +1088,11 @@ static const char* OPTIMIZATION_END_PATTERN = "  Optimization converged";
 
     FOR_ATOMS_OF_MOL(atom, mol)
       {
-        snprintf(buffer, BUFF_SIZE, "%3s%15.5f%15.5f%15.5f\n",
+        ofs << fmt::format("{:3s}{:15.5f}{:15.5f}{:15.5f}\n",
                 OBElements::GetSymbol(atom->GetAtomicNum()),
                 atom->GetX(),
                 atom->GetY(),
                 atom->GetZ());
-        ofs << buffer;
       }
 
     ofs << "end\n";

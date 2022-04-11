@@ -2,7 +2,9 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
-    std::string s = fmt::format("The answer is**- {: 3d}{:03d}{:g}{:c}", 42, 42, 420000000000000000000.,'c');
+    std::string hello = "hello";
+    std::cout << hello.substr(1);
+    std::string s = fmt::format("The answer is**- {:+d}:{:03d},{:10.6f},{:c}", 42, 42, 4200., 'c');
     std::string ss = fmt::format("The answer is {:<10.2f}", 42.2);
     std::string sss = fmt::format("{:>60s}", std::string("hello, fmt"));
     std::cout << s << "\n";

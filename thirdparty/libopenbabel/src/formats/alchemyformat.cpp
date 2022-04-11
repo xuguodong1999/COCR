@@ -18,6 +18,9 @@ GNU General Public License for more details.
 #include <openbabel/atom.h>
 #include <openbabel/bond.h>
 #include <openbabel/data.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -172,13 +175,10 @@ namespace OpenBabel
     OBMol &mol = *pmol;
 
     unsigned int i;
-    char buffer[BUFF_SIZE];
-    char bond_string[10];
 
-    snprintf(buffer, BUFF_SIZE, "%5d ATOMS, %5d BONDS,     0 CHARGES",
+    ofs << fmt::format("{:5d} ATOMS, {:5d} BONDS,     0 CHARGES",
              mol.NumAtoms(),
-             mol.NumBonds());
-    ofs << buffer << endl;
+             mol.NumBonds()) << endl;
 
     OBAtom *atom;
     string str,str1;
@@ -189,13 +189,12 @@ namespace OpenBabel
         ttab.SetFromType("INT");
         ttab.SetToType("ALC");
         ttab.Translate(str1,str);
-        snprintf(buffer, BUFF_SIZE, "%5d %-6s%8.4f %8.4f %8.4f     0.0000",
-                 i,
-                 (char*)str1.c_str(),
-                 atom->GetX(),
-                 atom->GetY(),
-                 atom->GetZ());
-        ofs << buffer << endl;
+        ofs << fmt::format("{:5d} {:<6s}{:8.4f} {:8.4f} {:8.4f}     0.0000",
+                  i,
+                  str1,
+                  atom->GetX(),
+                  atom->GetY(),
+                  atom->GetZ()) << endl;
       }
 
     OBBond *bond;
@@ -203,29 +202,29 @@ namespace OpenBabel
 
     for (bond = mol.BeginBond(j);bond;bond = mol.NextBond(j))
       {
+        std::string bond_string;
         switch(bond->GetBondOrder())
           {
           case 1 :
-            strcpy(bond_string,"SINGLE");
+            bond_string = "SINGLE";
             break;
           case 2 :
-            strcpy(bond_string,"DOUBLE");
+            bond_string = "DOUBLE";
             break;
           case 3 :
-            strcpy(bond_string,"TRIPLE");
+            bond_string = "TRIPLE";
             break;
           case 5 :
-            strcpy(bond_string,"AROMATIC");
+            bond_string = "AROMATIC";
             break;
           default :
-            strcpy(bond_string,"SINGLE");
+            bond_string = "SINGLE";
           }
-        snprintf(buffer, BUFF_SIZE, "%5d  %4d  %4d  %s",
+        ofs << fmt::format("{:5d}  {:4d}  {:4d}  {:s}",
                  bond->GetIdx()+1,
                  bond->GetBeginAtomIdx(),
                  bond->GetEndAtomIdx(),
-                 bond_string);
-        ofs << buffer << endl;
+                 bond_string) << endl;
       }
     return(true);
   }

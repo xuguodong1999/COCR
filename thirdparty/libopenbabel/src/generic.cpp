@@ -29,6 +29,9 @@ GNU General Public License for more details.
 
 // needed for msvc to have at least one reference to AtomClass, AliasData in openbabel library
 #include <openbabel/alias.h>
+
+#include <fmt/format.h>
+
 #include <string>
 #include <set>
 using namespace std;
@@ -618,7 +621,6 @@ namespace OpenBabel
     list<OBAtom*>::iterator deleteIter, atomIter;
     OBAtom *newAtom;
     list<OBAtom*> atoms, atomsToDelete;
-    char hash[22];
     set<string> coordinateSet;
 
     // Check original mol for duplicates
@@ -626,7 +628,8 @@ namespace OpenBabel
       baseV = atom->GetVector();
       baseV = CartesianToFractional(baseV);
       baseV = WrapFractionalCoordinate(baseV);
-      snprintf(hash, 22, "%03d,%.3f,%.3f,%.3f", atom->GetAtomicNum(), baseV.x(), baseV.y(), baseV.z());
+      std::string hash = fmt::format("{:03d},{:.3f},{:.3f},{:.3f}",
+                                     atom->GetAtomicNum(), baseV.x(), baseV.y(), baseV.z());
       if (coordinateSet.insert(hash).second) { // True if new entry
         atoms.push_back(&(*atom));
       } else {
@@ -647,10 +650,10 @@ namespace OpenBabel
       for (transformIter = transformedVectors.begin();
         transformIter != transformedVectors.end(); ++transformIter) {
         updatedCoordinate = WrapFractionalCoordinate(*transformIter);
-
         // Check if the transformed coordinate is a duplicate of an atom
-        snprintf(hash, 22, "%03d,%.3f,%.3f,%.3f", (*atomIter)->GetAtomicNum(), updatedCoordinate.x(),
-                 updatedCoordinate.y(), updatedCoordinate.z());
+          std::string hash = fmt::format("{:03d},{:.3f},{:.3f},{:.3f}",
+                    (*atomIter)->GetAtomicNum(), updatedCoordinate.x(),
+                    updatedCoordinate.y(), updatedCoordinate.z());
         if (coordinateSet.insert(hash).second) {
           newAtom = mol->NewAtom();
           newAtom->Duplicate(*atomIter);

@@ -24,6 +24,9 @@ GNU General Public License for more details.
 #include <openbabel/kekulize.h>
 #include <openbabel/obfunctions.h>
 #include <openbabel/data.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -614,8 +617,6 @@ namespace OpenBabel
 
     //The old code follows....
     string str,str1;
-    char buffer[BUFF_SIZE],label[BUFF_SIZE];
-    char rnum[BUFF_SIZE],rlabel[BUFF_SIZE];
 
     //Check if UCSF Dock style coments are on
     if (pConv->IsOption("c", OBConversion::OUTOPTIONS) != nullptr) {
@@ -640,8 +641,7 @@ namespace OpenBabel
     else
       ofs << str << endl;
 
-    snprintf(buffer, BUFF_SIZE," %d %d 0 0 0", mol.NumAtoms(),mol.NumBonds());
-    ofs << buffer << endl;
+    ofs << fmt::format(" {:d} {:d} 0 0 0", mol.NumAtoms(), mol.NumBonds()) << endl;
     ofs << "SMALL" << endl; // TODO: detect if we have protein, biopolymer, etc.
 
     OBPairData *dp = (OBPairData*)mol.GetData("PartialCharges");
@@ -693,12 +693,12 @@ namespace OpenBabel
         //
         //  Use sequentially numbered atom names if no residues
         //
-
-        snprintf(label,BUFF_SIZE, "%s%d",
+        std::string label, rlabel, rnum;
+        label = fmt::format("{:s}{:d}",
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  ++labelcount[atom->GetAtomicNum()]);
-        strcpy(rlabel,"<1>");
-        strcpy(rnum,"1");
+        rlabel = "<1>";
+        rnum = "1";
 
         str = atom->GetType();
         ttab.Translate(str1,str);
@@ -711,19 +711,18 @@ namespace OpenBabel
         if (!ligandsOnly && (res = atom->GetResidue()) )
           {
             // use original atom names defined by residue
-            snprintf(label,BUFF_SIZE,"%s",(char*)res->GetAtomID(atom).c_str());
+            label = res->GetAtomID(atom);
             // make sure that residue name includes its number
-            snprintf(rlabel,BUFF_SIZE,"%s%d",res->GetName().c_str(), res->GetNum());
-            snprintf(rnum,BUFF_SIZE,"%d",res->GetNum());
+            rlabel = fmt::format("{:s}{:d}", res->GetName(), res->GetNum());
+            rnum = std::to_string(res->GetNum());
           }
 
-        snprintf(buffer,BUFF_SIZE,"%7d %-6s   %9.4f %9.4f %9.4f %-5s %3s  %-8s %9.4f",
+        ofs << fmt::format("{:7d} {:<6s}   {:9.4f} {:9.4f} {:9.4f} {:<5s} {:3s}  {:<8s} {:9.4f}",
                  atom->GetIdx(),label,
                  atom->GetX(),atom->GetY(),atom->GetZ(),
                  str1.c_str(),
                  rnum,rlabel,
-                 atom->GetPartialCharge());
-        ofs << buffer << endl;
+                 atom->GetPartialCharge()) << endl;
       }
 
     //store formal charge info; put before bonds so we don't have
@@ -750,17 +749,17 @@ namespace OpenBabel
       {
         s1 = bond->GetBeginAtom()->GetType();
         s2 = bond->GetEndAtom()->GetType();
+        std::string label;
         if (bond->IsAromatic() || s1 == "O.co2" || s2 == "O.co2")
-          strcpy(label,"ar");
+          label = "ar";
         else if (bond->IsAmide())
-          strcpy(label,"am");
+          label = "am";
         else
-          snprintf(label,BUFF_SIZE,"%d",bond->GetBondOrder());
+          label = std::to_string(bond->GetBondOrder());
 
-        snprintf(buffer, BUFF_SIZE,"%6d %5d %5d   %2s",
+        ofs << fmt::format("{:6d} {:5d} {:5d}   {:2s}",
                  bond->GetIdx()+1,bond->GetBeginAtomIdx(),bond->GetEndAtomIdx(),
-                 label);
-        ofs << buffer << endl;
+                 label) << endl;
       }
     // NO trailing blank line (PR#1868929).
     //    ofs << endl;

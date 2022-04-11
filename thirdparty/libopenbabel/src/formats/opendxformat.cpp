@@ -22,6 +22,9 @@ GNU General Public License for more details.
 #include <openbabel/mol.h>
 #include <openbabel/atom.h>
 #include <openbabel/griddata.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 #include <sstream>
 using namespace std;
@@ -243,7 +246,6 @@ bool OBOpenDXCubeFormat::ReadMolecule( OBBase* pOb, OBConversion* pConv )
     ostream &ofs = *pConv->GetOutStream();
     OBMol &mol = *pmol;
 
-    char buffer[BUFF_SIZE];
     string str;
     stringstream errorMsg;
 
@@ -270,36 +272,25 @@ bool OBOpenDXCubeFormat::ReadMolecule( OBBase* pOb, OBConversion* pConv )
     gd->GetOriginVector(origin);
 
     // data line 1: # of points in x, y, z (nx, ny, nz)
-    snprintf(buffer, BUFF_SIZE, "object 1 class gridpositions counts %5d %5d %5d", nx, ny, nz);
-    ofs << buffer << "\n";
+    ofs << fmt::format("object 1 class gridpositions counts {:5d} {:5d} {:5d}", nx, ny, nz) << "\n";
 
     // data line 2: origin (x, y, z)
-    snprintf(buffer, BUFF_SIZE,"origin %12.6f %12.6f %12.6f",
-        origin[0], origin[1], origin[2]);
-    ofs << buffer << "\n";
+    ofs << fmt::format("origin {:12.6f} {:12.6f} {:12.6f}", origin[0], origin[1], origin[2]) << "\n";
 
     // data line 3: x-displacement
-    snprintf(buffer, BUFF_SIZE,"delta %12.6f %12.6f %12.6f",
-        xAxis[0], xAxis[1], xAxis[2]);
-    ofs << buffer << "\n";
+    ofs << fmt::format("delta {:12.6f} {:12.6f} {:12.6f}",  xAxis[0], xAxis[1], xAxis[2]) << "\n";
 
     // data line 4: y-displacement
-    snprintf(buffer, BUFF_SIZE,"delta %12.6f %12.6f %12.6f",
-        yAxis[0], yAxis[1], yAxis[2]);
-    ofs << buffer << "\n";
+    ofs << fmt::format("delta {:12.6f} {:12.6f} {:12.6f}", yAxis[0], yAxis[1], yAxis[2]) << "\n";
 
     // data line 5: z-displacement
-    snprintf(buffer, BUFF_SIZE,"delta %12.6f %12.6f %12.6f",
-        zAxis[0], zAxis[1], zAxis[2]);
-    ofs << buffer << "\n";
+    ofs << fmt::format("delta {:12.6f} {:12.6f} {:12.6f}", zAxis[0], zAxis[1], zAxis[2]) << "\n";
 
     // data line 6: # of points in x, y, z (nx, ny, nz)
-    snprintf(buffer, BUFF_SIZE, "object 2 class gridconnections counts %5d %5d %5d", nx, ny, nz);
-    ofs << buffer << "\n";
+    ofs << fmt::format("object 2 class gridconnections counts {:5d} {:5d} {:5d}", nx, ny, nz) << "\n";
 
     // data line 7: total # of points
-    snprintf(buffer, BUFF_SIZE, "object 3 class array type double rank 0 items %5d data follows", nx*ny*nz);
-    ofs << buffer << "\n";
+    ofs << fmt::format("object 3 class array type double rank 0 items {:5d} data follows", nx*ny*nz) << "\n";
 
     // The cube(s)
     double value;
@@ -311,7 +302,7 @@ bool OBOpenDXCubeFormat::ReadMolecule( OBBase* pOb, OBConversion* pConv )
         for (int k = 0; k < nz; ++k)
         {
           value = gd->GetValue(i, j, k);
-          snprintf(buffer, BUFF_SIZE," %12.5E", value);
+          std::string buffer = fmt::format(" {:12.5E}", value);
           if (count % 3 == 0)
             ofs << buffer << "\n";
           else

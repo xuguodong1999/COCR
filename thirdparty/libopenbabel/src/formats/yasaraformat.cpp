@@ -29,6 +29,9 @@ GNU General Public License for more details.
 #include <openbabel/atom.h>
 #include <openbabel/elements.h>
 #include <openbabel/bond.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 #define mem_alloc malloc
@@ -566,7 +569,8 @@ bool YOBFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
         if (strlen(mob_elementsym[element])==1||strncasecmp(mob_elementsym[element],atomname,2)) pos=5; }
       str_copy(&buffer[pos],atomname);
       str_copy(&buffer[8],(char*)res->GetName().c_str());
-      snprintf(&buffer[12], 4, "%4d",res->GetNum()); }
+      std::string num = fmt::format("{:4d}", res->GetNum());
+      str_copy(&buffer[12], num.c_str()); }
     else
     { str_copy(&buffer[4],OBElements::GetSymbol(element));
       str_copy(&buffer[8],"UNK    1"); }

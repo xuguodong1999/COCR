@@ -29,6 +29,8 @@ GNU General Public License for more details.
 #include <openbabel/obiter.h>
 #include <openbabel/typer.h>
 
+#include <fmt/format.h>
+
 #include <cstdlib>
 #include <vector>
 #include <map>
@@ -317,9 +319,7 @@ namespace OpenBabel
   /////////////////////////////////////////////////////////////////////////
   void OutputAtom(OBAtom* atom, ostream& ofs, const unsigned int index)
   {
-    char buffer[BUFF_SIZE];
-    char type_name[10], padded_name[10];
-    char the_res[10];
+    std::string type_name, the_res;
     char the_chain = ' ';
     char the_icode = ' ';
     const char *element_name;
@@ -328,23 +328,15 @@ namespace OpenBabel
     bool het=false;
 
     OBResidue *res;
-    strncpy(type_name, OBElements::GetSymbol(atom->GetAtomicNum()), sizeof(type_name));
-    type_name[sizeof(type_name) - 1] = '\0';
+    type_name = fmt::format(
+            " {:<3s}", OBElements::GetSymbol(atom->GetAtomicNum()));
     //two char. elements are on position 13 and 14 one char. start at 14
-
-    if (strlen(type_name) > 1)
+    if(type_name.size() > 1)
       type_name[1] = toupper(type_name[1]);
-    else
-    {
-      char tmp[10];
-      strncpy(tmp, type_name, 9); // Make sure to null-terminate
-      snprintf(type_name, sizeof(type_name), " %-3s", tmp);
-    }
-
     if ((res = atom->GetResidue()) != nullptr)
     {
-      snprintf(the_res,4,"%s",(char*)res->GetName().c_str());
-      snprintf(type_name,5,"%s",(char*)res->GetAtomID(atom).c_str());
+      the_res = res->GetName();
+      type_name = res->GetAtomID(atom);
       the_chain = res->GetChain();
       the_icode = res->GetInsertionCode();
       if(the_icode == 0) the_icode = ' ';
@@ -352,27 +344,21 @@ namespace OpenBabel
       //two char. elements are on position 13 and 14 one char. start at 14
       if (strlen(OBElements::GetSymbol(atom->GetAtomicNum())) == 1)
       {
-        if (strlen(type_name) < 4)
+        if (type_name.size() < 4)
         {
-          char tmp[10];
-          strncpy(tmp, type_name, 9); // make sure to null-terminate
-          snprintf(padded_name, sizeof(padded_name), " %-3s", tmp);
-          strncpy(type_name,padded_name,4);
-          type_name[4] = '\0';
+          type_name = fmt::format(" {:<4s}", type_name);
         }
         else
         {
-          type_name[4] = '\0';
+          type_name.resize(4);
         }
       }
       res_num = res->GetNum();
     }
     else
     {
-      strcpy(the_res,"UNK");
-      snprintf(padded_name,sizeof(padded_name), "%s",type_name);
-      strncpy(type_name,padded_name,4);
-      type_name[4] = '\0';
+      the_res = "UNK";
+      type_name.resize(4, ' ');
       res_num = 1;
     }
 
@@ -394,20 +380,19 @@ namespace OpenBabel
     }
 
     double charge = atom->GetPartialCharge();
-    snprintf(buffer, BUFF_SIZE, "%s%5d %-4s %-3s %c%4d%c   %8.3f%8.3f%8.3f  0.00  0.00    %+5.3f %.2s",
-      het?"HETATM":"ATOM  ",
-      index,
-      type_name,
-      the_res,
-      the_chain,
-      res_num,
-      the_icode,
-      atom->GetX(),
-      atom->GetY(),
-      atom->GetZ(),
-      charge,
-      element_name_final);
-    ofs << buffer;
+    ofs << fmt::format("{:s}{:5d} {:<4s} {:<3s} {:c}{:4d}{:c}   {:8.3f}{:8.3f}{:8.3f}  0.00  0.00    {:+5.3f} {:.2s}",
+       het?"HETATM":"ATOM  ",
+       index,
+       type_name,
+       the_res,
+       the_chain,
+       res_num,
+       the_icode,
+       atom->GetX(),
+       atom->GetY(),
+       atom->GetZ(),
+       charge,
+       element_name_final);
     ofs << endl;
   }
 
@@ -875,20 +860,17 @@ namespace OpenBabel
       }
 
       int model_num = 0;
-      char buffer[BUFF_SIZE];
       if (!residue)
       {
         if (!pConv->IsLast() || pConv->GetOutputIndex() > 1)
         { // More than one molecule record
           model_num = pConv->GetOutputIndex(); // MODEL 1-based index
-          snprintf(buffer, BUFF_SIZE, "MODEL %8d", model_num);
-          ofs << buffer << endl;
+          ofs << fmt::format("MODEL {:8d}", model_num) << endl;
         }
         ofs << "REMARK  Name = " << mol.GetTitle(true) << endl;
 //        ofs << "USER    Name = " << mol.GetTitle(true) << endl;
         if (!(pConv->IsOption("r",OBConversion::OUTOPTIONS)))
         {
-          char type_name[10];
           int nRotBond=RotBond_count(mol);
           OBAtom ***rotBondTable = new OBAtom **[nRotBond];
           int rotBondId=0;
@@ -911,27 +893,23 @@ namespace OpenBabel
           ofs << "REMARK  status: ('A' for Active; 'I' for Inactive)" << endl;
           for (rotBondId=0; rotBondId < nRotBond; rotBondId++)
           {
-            snprintf(buffer, BUFF_SIZE, "REMARK  %3d  A    between atoms: ", rotBondId + 1);
-            ofs << buffer;
+            ofs << fmt::format("REMARK  {:3d}  A    between atoms: ", rotBondId + 1);
             for (bondAtomNum=0; bondAtomNum < 2; bondAtomNum++)
             {
-              memset(type_name, 0, sizeof(type_name));
-              strncpy(type_name, OBElements::GetSymbol(rotBondTable[rotBondId][bondAtomNum]->GetAtomicNum()), sizeof(type_name));
-              if (strlen(type_name) > 1)
+              std::string type_name = OBElements::GetSymbol(rotBondTable[rotBondId][bondAtomNum]->GetAtomicNum());
+              if (type_name.size() > 1)
                 type_name[1] = toupper(type_name[1]);
               if ((res = rotBondTable[rotBondId][bondAtomNum]->GetResidue()) != nullptr)
               {
-                snprintf(type_name,5,"%s",(char*)res->GetAtomID(rotBondTable[rotBondId][bondAtomNum]).c_str());
+                type_name = res->GetAtomID(rotBondTable[rotBondId][bondAtomNum]);
                 // AtomIDs may start with space if read from a PDB file (rather than perceived)
-                end = isspace(type_name[0]) ? 1 : 0;
-                // Use sizeof() - 1 to ensure there's room for the NULL termination!
-                while (end < sizeof(type_name) - 1 && type_name[end] && !isspace(type_name[end]))
-                  end++;
-                type_name[end] = '\0';
+                type_name.erase(type_name.begin(), std::find_if(
+                        type_name.begin(), type_name.end(), [](unsigned char ch) {
+                   return !std::isspace(ch);
+                }));
               }
-              snprintf(buffer, BUFF_SIZE, "%s_%d", type_name + (isspace(type_name[0]) ? 1 : 0),
+              ofs << fmt::format("{:s}_{:d}", type_name,
                 rotBondTable[rotBondId][bondAtomNum]->GetIdx());
-              ofs << buffer;
               if (bondAtomNum == 0)
                 ofs << "  and  ";
             }

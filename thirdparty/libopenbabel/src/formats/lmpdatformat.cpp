@@ -20,6 +20,8 @@ GNU General Public License for more details.
 
 #include <openbabel/obiter.h>
 
+#include <fmt/format.h>
+
 #include <sstream>
 #include <map>
 #include <cstdlib>
@@ -89,9 +91,6 @@ namespace OpenBabel
     OBAtom *c;
     OBAtom *d;
 
-    char buffer[BUFF_SIZE];
-
-
     //Very basic atom typing by element only
     //TODO: The maps should become smarts strings instead of element names
     double ThisMass;
@@ -115,7 +114,6 @@ namespace OpenBabel
 
     //Determine unique bonds
     mol.ConnectTheDots();
-    char BondString[BUFF_SIZE];
     map<string, int> BondType;
     FOR_BONDS_OF_MOL(bond,mol)
     {
@@ -124,19 +122,18 @@ namespace OpenBabel
 
 	    //To let the unordered map determine unique keys,
 	    //always put the heavier atom first
+        std::string BondString;
 	    if(b->GetAtomicNum() > a->GetAtomicNum() )
 	    {
-		    snprintf(BondString,BUFF_SIZE,
-				    "%2s:%2s",
-				    OBElements::GetSymbol(b->GetAtomicNum()),
-				    OBElements::GetSymbol(a->GetAtomicNum()));
+            BondString = fmt::format("{:2s}:{:2s}",
+                    OBElements::GetSymbol(b->GetAtomicNum()),
+                    OBElements::GetSymbol(a->GetAtomicNum()));
 	    }
 	    else
 	    {
-		    snprintf(BondString,BUFF_SIZE,
-				    "%2s:%2s",
-				    OBElements::GetSymbol(a->GetAtomicNum()),
-				    OBElements::GetSymbol(b->GetAtomicNum()));
+            BondString = fmt::format("{:2s}:{:2s}",
+                    OBElements::GetSymbol(a->GetAtomicNum()),
+                    OBElements::GetSymbol(b->GetAtomicNum()));
 	    }
 	    BondType[BondString] = 0;
     }
@@ -152,7 +149,6 @@ namespace OpenBabel
     //Determine unique angles
     mol.FindAngles();
     int anglecount=0;
-    char AngleString[BUFF_SIZE];
     map<string, int> AngleType;
     FOR_ANGLES_OF_MOL(angle,mol)
     {
@@ -163,18 +159,17 @@ namespace OpenBabel
 	    //Origanization trick:
 	    //1. The atom "a" is acutally the middle
 	    //2. Always write the heavy element first
+        std::string AngleString;
 	    if(b->GetAtomicNum() > c->GetAtomicNum() ) 
 	    {
-		    snprintf(AngleString,BUFF_SIZE,
-				    "%2s:%2s:%2s",
+		    AngleString = fmt::format("{:2s}:{:2s}:{:2s}",
 				    OBElements::GetSymbol(b->GetAtomicNum()),
 				    OBElements::GetSymbol(a->GetAtomicNum()),
 				    OBElements::GetSymbol(c->GetAtomicNum()));
 	    }
 	    else
 	    {
-		    snprintf(AngleString,BUFF_SIZE,
-				    "%2s:%2s:%2s",
+            AngleString = fmt::format("{:2s}:{:2s}:{:2s}",
 				    OBElements::GetSymbol(c->GetAtomicNum()),
 				    OBElements::GetSymbol(a->GetAtomicNum()),
 				    OBElements::GetSymbol(b->GetAtomicNum()));
@@ -192,7 +187,6 @@ namespace OpenBabel
     //dihedrals
     mol.FindTorsions();
     int dihedralcount=0;
-    char DihedralString[BUFF_SIZE];
     map<string, int>DihedralType;
     FOR_TORSIONS_OF_MOL(dihedral, mol)
     {
@@ -203,10 +197,10 @@ namespace OpenBabel
 	    d = mol.GetAtom((*dihedral)[3]+1);
 	    //place the heavier element first
 	    //the same may have to be done with the inner two as well
+        std::string DihedralString;
 	    if(a->GetAtomicNum() > d->GetAtomicNum() )
 	    {
-		    snprintf(DihedralString,BUFF_SIZE,
-				    "%2s:%2s:%2s:%2s",
+		    DihedralString = fmt::format("{:2s}:{:2s}:{:2s}:{:2s}",
 				    OBElements::GetSymbol(a->GetAtomicNum()),
 				    OBElements::GetSymbol(b->GetAtomicNum()),
 				    OBElements::GetSymbol(c->GetAtomicNum()),
@@ -214,8 +208,7 @@ namespace OpenBabel
 	    }
 	    else
 	    {
-		    snprintf(DihedralString,BUFF_SIZE,
-				    "%2s:%2s:%2s:%2s",
+		    DihedralString = fmt::format("{:2s}:{:2s}:{:2s}:{:2s}",
 				    OBElements::GetSymbol(d->GetAtomicNum()),
 				    OBElements::GetSymbol(b->GetAtomicNum()),
 				    OBElements::GetSymbol(c->GetAtomicNum()),
@@ -356,9 +349,8 @@ namespace OpenBabel
     int molcount=0;
     ofs << endl;
     ofs << "Atoms" << endl << endl;
-    snprintf(buffer,BUFF_SIZE,"#%3s %4s %4s %10s %10s %10s %10s\n",
-		    "idx","mol","type","charge","x","y","z");
-    //ofs << buffer;
+//    ofs << fmt::format("#{:3s} {:4s} {:4s} {:10s} {:10s} {:10s} {:10s}\n",
+//            "idx","mol","type","charge","x","y","z");
     for(molitr=mols.begin();molitr!=mols.end();++molitr)
     {
 	    molcount++;
@@ -368,15 +360,14 @@ namespace OpenBabel
 		    double charge=0.5;
 		    atomcount++;
 		    ThisAtom=OBElements::GetSymbol(atom->GetAtomicNum());
-		    snprintf(buffer,BUFF_SIZE,"%-4d %4d %4d %10.5f %10.5f %10.5f %10.5f # %3s\n",
-				    atomcount,molcount,
-				    AtomType[ThisAtom],
-				    AtomCharge[ThisAtom],
-				    atom->GetX(),
-				    atom->GetY(),
-				    atom->GetZ(),
-				    ThisAtom.c_str());
-		    ofs << buffer;
+		    ofs << fmt::format("{:<4d} {:4d} {:4d} {:10.5f} {:10.5f} {:10.5f} {:10.5f} # {:3s}\n",
+                    atomcount,molcount,
+                    AtomType[ThisAtom],
+                    AtomCharge[ThisAtom],
+                    atom->GetX(),
+                    atom->GetY(),
+                    atom->GetZ(),
+                    ThisAtom.c_str());
 	    }
     } 
 
@@ -386,10 +377,8 @@ namespace OpenBabel
     ofs << endl << endl;
     ofs << "Bonds" << endl;
     ofs << endl;
-    snprintf(buffer,BUFF_SIZE,
-		    "#%3s %4s %4s %4s\n",
-		    "idx","type","atm1","atom2");
-    //ofs << buffer;
+//    ofs << fmt::format("#{:3s} {:4s} {:4s} {:4s}\n",
+//             "idx","type","atm1","atom2");
     FOR_BONDS_OF_MOL(bond,mol)
     {
 	    BondIndex++;
@@ -397,14 +386,14 @@ namespace OpenBabel
 	    b = bond->GetEndAtom();
 	    //To let the unordered map determine unique keys,
 	    //always put the heavier atom first
+        std::string BondString;
+        std::string buffer;
 	    if(b->GetAtomicNum() > a->GetAtomicNum() )
 	    {
-		    snprintf(BondString,BUFF_SIZE,
-				    "%2s:%2s",
-				    OBElements::GetSymbol(b->GetAtomicNum()),
-				    OBElements::GetSymbol(a->GetAtomicNum()));
-		    snprintf(buffer,BUFF_SIZE,
-				    "%-4d %4d %4d %4d # %5s\n",
+            BondString = fmt::format("{:2s}:{:2s}",
+                    OBElements::GetSymbol(b->GetAtomicNum()),
+                    OBElements::GetSymbol(a->GetAtomicNum()));
+            buffer = fmt::format("{:<4d} {:4d} {:4d} {:4d} # {:5s}\n",
 				    BondIndex,
 				    BondType[BondString],
 				    bond->GetEndAtomIdx(),
@@ -413,12 +402,10 @@ namespace OpenBabel
 	    }
 	    else
 	    {
-		    snprintf(BondString,BUFF_SIZE,
-				    "%2s:%2s",
+            BondString = fmt::format("{:2s}:{:2s}",
 				    OBElements::GetSymbol(a->GetAtomicNum()),
 				    OBElements::GetSymbol(b->GetAtomicNum()));
-		    snprintf(buffer,BUFF_SIZE,
-				    "%-4d %4d %4d %4d # %5s\n",
+            buffer = fmt::format("{:<4d} {:4d} {:4d} {:4d} # {:5s}\n",
 				    BondIndex,
 				    BondType[BondString],
 				    bond->GetBeginAtomIdx(),
@@ -434,10 +421,8 @@ namespace OpenBabel
     ofs << endl;
     ofs << "Angles" << endl;
     ofs << endl;
-    snprintf(buffer,BUFF_SIZE,
-		    "#%3s %4s %4s %4s %4s\n",
-		    "idx","type","atm1","atm2","atm3");
-    //ofs << buffer;
+//    ofs << fmt::format("#{:3s} {:4s} {:4s} {:4s} {:4s}\n",
+//            "idx","type","atm1","atm2","atm3");
     FOR_ANGLES_OF_MOL(angle,mol)
     {
 	    AngleIndex++;
@@ -447,15 +432,15 @@ namespace OpenBabel
 	    //Origanization trick:
 	    //1. The atom "a" is acutally the middle
 	    //2. Always write the heavy element first
-	    if(b->GetAtomicNum() > c->GetAtomicNum() ) 
+        std::string AngleString;
+        std::string buffer;
+	    if(b->GetAtomicNum() > c->GetAtomicNum() )
 	    {
-		    snprintf(AngleString,BUFF_SIZE,
-				    "%2s:%2s:%2s",
+		    AngleString = fmt::format("{:2s}:{:2s}:{:2s}",
 				    OBElements::GetSymbol(b->GetAtomicNum()),
 				    OBElements::GetSymbol(a->GetAtomicNum()),
 				    OBElements::GetSymbol(c->GetAtomicNum()));
-		    snprintf(buffer,BUFF_SIZE,
-				    "%-4d %4d %4d %4d %4d # %8s\n",
+		    buffer = fmt::format("{:<4d} {:4d} {:4d} {:4d} {:4d} # {:8s}\n",
 				    AngleIndex,
 				    AngleType[AngleString],
 				    b->GetIdx(),
@@ -465,13 +450,11 @@ namespace OpenBabel
 	    }
 	    else
 	    {
-		    snprintf(AngleString,BUFF_SIZE,
-				    "%2s:%2s:%2s",
+            AngleString = fmt::format("{:2s}:{:2s}:{:2s}",
 				    OBElements::GetSymbol(c->GetAtomicNum()),
 				    OBElements::GetSymbol(a->GetAtomicNum()),
 				    OBElements::GetSymbol(b->GetAtomicNum()));
-		    snprintf(buffer,BUFF_SIZE,
-				    "%-4d %4d %4d %4d %4d # %8s\n",
+            buffer = fmt::format("{:<4d} {:4d} {:4d} {:4d} {:4d} # {:8s}\n",
 				    AngleIndex,
 				    AngleType[AngleString],
 				    c->GetIdx(),
@@ -490,10 +473,8 @@ namespace OpenBabel
 	    ofs << endl;
 	    ofs << "Dihedrals" << endl;
 	    ofs << endl;
-	    snprintf(buffer,BUFF_SIZE,
-			    "#%3s %4s %4s %4s %4s %4s\n",
-			    "idx","type","atm1","atm2","atm3","atm4");
-	    //ofs << buffer;
+//	    ofs << fmt::format("#{:3s} {:4s} {:4s} {:4s} {:4s} {:4s}\n",
+//                 "idx","type","atm1","atm2","atm3","atm4");
 	    DihedralIndex=0;
 	    FOR_TORSIONS_OF_MOL(dihedral, mol)
 	    {
@@ -504,16 +485,16 @@ namespace OpenBabel
 		    d = mol.GetAtom((*dihedral)[3]+1);
 		    //place the heavier element first
 		    //the same may have to be done with the inner two as well
+            std::string DihedralString;
+            std::string buffer;
 		    if(a->GetAtomicNum() > d->GetAtomicNum() )
 		    {
-			    snprintf(DihedralString,BUFF_SIZE,
-					    "%2s:%2s:%2s:%2s",
+			    DihedralString = fmt::format("{:2s}:{:2s}:{:2s}:{:2s}",
 					    OBElements::GetSymbol(a->GetAtomicNum()),
 					    OBElements::GetSymbol(b->GetAtomicNum()),
 					    OBElements::GetSymbol(c->GetAtomicNum()),
 					    OBElements::GetSymbol(d->GetAtomicNum()));
-			    snprintf(buffer,BUFF_SIZE,
-					    "%-4d %4d %4d %4d %4d %4d # %11s\n",
+			    buffer = fmt::format("{:<4d} {:4d} {:4d} {:4d} {:4d} {:4d} # {:11s}\n",
 					    DihedralIndex,
 					    DihedralType[DihedralString],
 					    a->GetIdx(),
@@ -524,14 +505,12 @@ namespace OpenBabel
 		    }
 		    else
 		    {
-			    snprintf(DihedralString,BUFF_SIZE,
-					    "%2s:%2s:%2s:%2s",
+			    DihedralString = fmt::format("{:2s}:{:2s}:{:2s}:{:2s}",
 					    OBElements::GetSymbol(d->GetAtomicNum()),
 					    OBElements::GetSymbol(b->GetAtomicNum()),
 					    OBElements::GetSymbol(c->GetAtomicNum()),
 					    OBElements::GetSymbol(a->GetAtomicNum()));
-			    snprintf(buffer,BUFF_SIZE,
-					    "%-4d %4d %4d %4d %4d %4d # %11s\n",
+			    buffer = fmt::format("{:<4d} {:4d} {:4d} {:4d} {:4d} {:4d} # {:11s}\n",
 					    DihedralIndex,
 					    DihedralType[DihedralString],
 					    d->GetIdx(),

@@ -20,6 +20,9 @@ GNU General Public License for more details.
 #include <openbabel/generic.h>
 #include <openbabel/internalcoord.h>
 #include <openbabel/math/matrix3x3.h>
+
+#include <fmt/format.h>
+
 #include <cstdlib>
 
 using namespace std;
@@ -169,33 +172,28 @@ namespace OpenBabel
     OBMol &mol = *pmol;
 
     OBAtom *atom;
-    char buffer[BUFF_SIZE];
     vector<OBAtom*>::iterator i;
 
-    snprintf(buffer, BUFF_SIZE, "%s\n",mol.GetTitle());
-    ofs << buffer;
-    snprintf(buffer, BUFF_SIZE, "%3d   DIST  0  0  0\n",mol.NumAtoms());
-    ofs << buffer;
+    ofs << fmt::format("{:s}\n", mol.GetTitle());
+    ofs << fmt::format("{:3d}   DIST  0  0  0\n", mol.NumAtoms());
 
     if (!mol.HasData(OBGenericDataType::UnitCell))
       ofs << "CELL 1.,1.,1.,90.,90.,90.\n";
     else
       {
         OBUnitCell *uc = (OBUnitCell*)mol.GetData(OBGenericDataType::UnitCell);
-        snprintf(buffer, BUFF_SIZE, "CELL %f,%f,%f,%f,%f,%f\n",
+        ofs << fmt::format("CELL {:f},{:f},{:f},{:f},{:f},{:f}\n",
                  uc->GetA(), uc->GetB(), uc->GetC(),
                  uc->GetAlpha(), uc->GetBeta(), uc->GetGamma());
-        ofs << buffer;
       }
 
     for (atom = mol.BeginAtom(i);atom;atom = mol.NextAtom(i))
       {
-        snprintf(buffer,BUFF_SIZE,"%2s %7.4f, %7.4f, %7.4f\n",
+        ofs << fmt::format("{:2s} {:7.4f}, {:7.4f}, {:7.4f}\n",
                  OBElements::GetSymbol(atom->GetAtomicNum()),
                  atom->x(),
                  atom->y(),
                  atom->z());
-        ofs << buffer;
       }
 
     return(true);
@@ -327,7 +325,6 @@ namespace OpenBabel
 
     unsigned int i;
     vector3 v;
-    char tmptype[16],buffer[BUFF_SIZE];
 
     if (mol.Empty())
       return(false);
@@ -339,27 +336,22 @@ namespace OpenBabel
 
     vector<OBInternalCoord*> vit;
     CacaoFormat::SetHilderbrandt(mol,vit);
-    strncpy(tmptype,OBElements::GetSymbol(mol.GetAtom(1)->GetAtomicNum()), sizeof(tmptype));
-    tmptype[sizeof(tmptype) - 1] = '\0';
 
     ofs << " # TITLE\n";
-    snprintf(buffer, BUFF_SIZE, "%3d  0DIST  0  0  0\n",mol.NumAtoms());
+    ofs << fmt::format("{:3d}  0DIST  0  0  0\n", mol.NumAtoms());
     ofs << "  EL\n";
-    snprintf(buffer, BUFF_SIZE, "0.,0.,0., %s\n",tmptype);
-    ofs << buffer;
+    ofs << fmt::format("0.,0.,0., {:s}\n", OBElements::GetSymbol(mol.GetAtom(1)->GetAtomicNum()));
     for (i = 2; i <= mol.NumAtoms(); i++)
       {
-        strncpy(tmptype,OBElements::GetSymbol(mol.GetAtom(i)->GetAtomicNum()), sizeof(tmptype));
-        tmptype[sizeof(tmptype) - 1] = '\0';
-
         if (vit[i]->_tor < 0.0)
           vit[i]->_tor += 360.0;
-        snprintf(buffer, BUFF_SIZE, "%2d,%d,%2s%7.3f,%7.3f,%7.3f",
-                 vit[i]->_a->GetIdx(),i,tmptype,
+        ofs << fmt::format("{:2d},{:d},{:2s}{:7.3f},{:7.3f},{:7.3f}",
+                 vit[i]->_a->GetIdx(),
+                 i,
+                 OBElements::GetSymbol(mol.GetAtom(i)->GetAtomicNum()),
                  vit[i]->_dst,
                  vit[i]->_ang,
-                 vit[i]->_tor);
-        ofs << buffer << endl;
+                 vit[i]->_tor) << endl;
       }
 
     vector<OBInternalCoord*>::iterator j;

@@ -44,6 +44,7 @@ inline std::string c2fmt(const std::string &format) {
                 break;
             case 'f':
             case 'g':
+            case 'E':
             case 's':
             case 'c':
                 if (token.empty()) {

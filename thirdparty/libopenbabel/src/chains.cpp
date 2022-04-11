@@ -30,6 +30,9 @@ GNU General Public License for more details.
 #include <openbabel/oberror.h>
 #include <openbabel/obiter.h>
 #include <openbabel/elements.h>
+
+#include <fmt/format.h>
+
 #include <cstring>
 #include <cstdio>
 #include <cctype>
@@ -852,7 +855,6 @@ namespace OpenBabel
 
   void OBChainsParser::SetResidueInformation(OBMol &mol, bool nukeSingleResidue)
   {
-    char buffer[BUFF_SIZE];
     const char *symbol;
     string atomid, name;
 
@@ -875,12 +877,15 @@ namespace OpenBabel
           }
         }
     }
-
+    std::string buffer;
     for ( unsigned int i = 0 ; i < numAtoms ; i++ ) {
       atom = mol.GetAtom(i+1); // WARNING: ATOM INDEX ISSUE
 
       if (atomids[i] == -1) {
         symbol = OBElements::GetSymbol(atom->GetAtomicNum());
+        if(buffer.size() != 4) {
+            buffer.resize(4);
+        }
         if ( symbol[1] ) {
           buffer[0] = symbol[0];
           buffer[1] = (char) toupper(symbol[1]);
@@ -890,30 +895,30 @@ namespace OpenBabel
         }
         buffer[2] = ' ';
         buffer[3] = ' ';
-        buffer[4] = '\0';
       } else if (atom->GetAtomicNum() == OBElements::Hydrogen) {
         if (hcounts[i]) {
-          snprintf(buffer, BUFF_SIZE, "H%.2s%c", ChainsAtomName[atomids[i]]+2, hcounts[i]+'0');
+          buffer = fmt::format("H{:.2s}{:c}", ChainsAtomName[atomids[i]]+2, hcounts[i]+'0');
           if (buffer[1] == ' ') {
             buffer[1] = buffer[3];
-            buffer[2] = '\0';
+            buffer.resize(2);
           }
           else if (buffer[2] == ' ') {
             buffer[2] = buffer[3];
-            buffer[3] = '\0';
+            buffer.resize(3);
           }
         } else {
-          snprintf(buffer, BUFF_SIZE, "H%.2s", ChainsAtomName[atomids[i]]+2);
+          buffer = fmt::format("H{:.2s}", ChainsAtomName[atomids[i]]+2);
         }
       } else
-        snprintf(buffer, BUFF_SIZE, "%.4s", ChainsAtomName[atomids[i]]);
+        buffer = fmt::format("{:.4s}", ChainsAtomName[atomids[i]]);
 
-      if (buffer[3] == ' ')
-        buffer[3] = '\0';
+      if (buffer[3] == ' ') {
+          buffer.resize(3);
+      }
 
       //cout << "  (2) --> = " << buffer << endl;
 
-      atomid = (buffer[0] == ' ') ? buffer + 1 : buffer;
+      atomid = (buffer[0] == ' ') ? buffer.substr(1) : buffer;
 
       //cout << "  (3) --> = " << buffer << endl;
 
