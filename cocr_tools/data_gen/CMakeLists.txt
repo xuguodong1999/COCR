@@ -1,4 +1,5 @@
 project(data_gen)
+include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(OpenCV REQUIRED)

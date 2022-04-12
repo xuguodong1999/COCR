@@ -1,4 +1,5 @@
 project(app LANGUAGES CXX)
+
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 set(CMAKE_AUTOUIC ON)
@@ -49,44 +50,23 @@ foreach (PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR_LIST})
     aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_SOURCE_DIR} PROJECT_SOURCE)
 endforeach ()
 
-# include windows exe info
-if (MSVC)
-    list(APPEND PROJECT_SOURCE ${DEV_ASSETS_DIR}/windows/leafxy.rc)
-    include_directories(${DEV_ASSETS_DIR}/windows)
-endif ()
-
 # add exe
 if (ANDROID)
     set(ANDROID_PACKAGE_SOURCE_DIR ${DEV_ASSETS_DIR}/android CACHE INTERNAL "")
     add_library(${APP_NAME} SHARED ${ANDROID_PACKAGE_SOURCE_DIR}/AndroidManifest.xml ${PROJECT_SOURCE})
 else ()
-    add_executable(${APP_NAME} ${PROJECT_SOURCE})
+    addExecutable(${APP_NAME} "${PROJECT_SOURCE}")
 endif ()
 
-# product suffix
-set_target_properties(${APP_NAME} PROPERTIES DEBUG_POSTFIX "d")
-
-unset(QT_COMPONENT_TARGETS)
-foreach (QT_COMPONENT ${QT_COMPONENTS})
-    list(APPEND QT_COMPONENT_TARGETS Qt5::${QT_COMPONENT})
-endforeach ()
-
-target_include_directories(${APP_NAME} PRIVATE
-        ${DEV_INCLUDE_DIR}
-        ${cocr_INCLUDE_DIR})
-
-# link opencv, patched openbabel and qt here
+target_include_directories(${APP_NAME} PRIVATE ${cocr_INCLUDE_DIR})
 target_link_libraries(${APP_NAME} PRIVATE
         cocr::chem
         cocr::base
         cocr::ocr
-        cocr::opencv_util
-        openbabel
-        coordgenlibs
-        opencv_core
-        opencv_imgproc
-        opencv_highgui
-        ${QT_COMPONENT_TARGETS})
+        cocr::opencv_util)
+
+linkOpenCV(${APP_NAME})
+linkQt(${APP_NAME} "${QT_COMPONENTS}")
 
 if (MSVC)
     # remove cmd for windows release

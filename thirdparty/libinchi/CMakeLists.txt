@@ -1,21 +1,12 @@
 project(inchi LANGUAGES C)
 
+include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
+
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src PROJECT_SOURCE)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src/ixa PROJECT_SOURCE)
 
-# include windows dll info
-if (MSVC)
-    list(APPEND PROJECT_SOURCE ${DEV_ASSETS_DIR}/windows/3rd.rc)
-    include_directories(${DEV_ASSETS_DIR}/windows)
-endif ()
-
-add_library(${PROJECT_NAME} ${PROJECT_SOURCE})
-set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
+addLibrary(${PROJECT_NAME} "${PROJECT_SOURCE}")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE TARGET_API_LIB)
 
-include(GenerateExportHeader)
-generate_export_header(${PROJECT_NAME})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/inchi)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/inchi)

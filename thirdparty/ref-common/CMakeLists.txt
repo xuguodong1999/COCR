@@ -1,4 +1,5 @@
 project(ref LANGUAGES CXX)
+include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
 include_directories(${DEV_HEADER_DIR})
 
@@ -22,60 +23,34 @@ foreach (PROJECT_SOURCE_FILE_PATH ${PROJECT_SOURCE})
     ## ob: try build openbabel with boost, coordgenlibs and maeparser
     string(FIND "${PROJECT_SOURCE_FILE}" "ob" PREFIX_POS)
     if (NOT PREFIX_POS) # ==0
-        if (NOT ${Boost_FOUND})
-            message(WARNING "Boost not found, ${TARGET_NAME} will not be fully built")
-            continue()
-        endif ()
-         if (NOT ${Qt5_FOUND})
-            message(WARNING "Qt5 not found, ${TARGET_NAME} will not be built")
-            continue()
-        endif ()
+        CHECK_CONTINUE_BOOST(${TARGET_NAME})
+        CHECK_CONTINUE_QT(${TARGET_NAME} "Widgets")
         set(CMAKE_AUTORCC ON)
-        add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH} ${openbabel_QRC})
-        # product suffix
-        set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
-        target_include_directories(${TARGET_NAME} PRIVATE
-                ${Boost_INCLUDE_DIR}
-                ${coordgenlibs_INCLUDE_DIR}
-                ${maeparser_INCLUDE_DIR}
-                ${inchi_INCLUDE_DIR}
-                ${openbabel_INCLUDE_DIR})
-        target_link_libraries(${TARGET_NAME} openbabel coordgenlibs maeparser Qt5::Core ${Boost_LIBRARIES})
-        add_dependencies(${TARGET_NAME} openbabel coordgenlibs maeparser)
+        addExecutable(${TARGET_NAME} "${PROJECT_SOURCE_FILE_PATH};${openbabel_QRC}")
+        linkOpenBabel(${TARGET_NAME})
+        linkCoordgenlibs(${TARGET_NAME})
+        linkMaeparser(${TARGET_NAME})
+        linkQt(${TARGET_NAME} "Widgets")
+        linkBoost(${TARGET_NAME})
         continue()
     endif ()
     ## torch
     string(FIND "${PROJECT_SOURCE_FILE}" "torch" PREFIX_POS)
     if (NOT PREFIX_POS) # ==0
-        if (NOT ${Torch_FOUND})
-            message(WARNING "Torch not found, ${TARGET_NAME} will not be built")
-            continue()
-        endif ()
-        if (NOT ${OpenCV_FOUND})
-            message(WARNING "OpenCV not found, ${TARGET_NAME} will not be fully built")
-            continue()
-        endif ()
-        add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH})
-        # product suffix
-        set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
-        target_include_directories(${TARGET_NAME} PRIVATE ${TORCH_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
-        target_link_libraries(${TARGET_NAME} PRIVATE ${TORCH_LIBRARIES} ${OpenCV_LIBS})
+        CHECK_CONTINUE_LIBTORCH(${TARGET_NAME})
+        CHECK_CONTINUE_OPENCV(${TARGET_NAME})
+        addExecutable(${TARGET_NAME} "${PROJECT_SOURCE_FILE_PATH}")
+        linkOpenCV(${TARGET_NAME})
+        linkLibtorch(${TARGET_NAME})
         continue()
     endif ()
     ## qt
     string(FIND "${PROJECT_SOURCE_FILE}" "qt" PREFIX_POS)
     if (NOT PREFIX_POS) # ==0
-        if (NOT ${Qt5_FOUND})
-            message(WARNING "Qt5 not found, ${TARGET_NAME} will not be built")
-            continue()
-        endif ()
-        add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH})
-        # product suffix
-        set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
-        target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Widgets)
+        CHECK_CONTINUE_QT(${TARGET_NAME} "Widgets")
+        addExecutable(${TARGET_NAME} "${PROJECT_SOURCE_FILE_PATH}")
+        linkQt(${TARGET_NAME} "Widgets")
         continue()
     endif ()
-    add_executable(${TARGET_NAME} ${PROJECT_SOURCE_FILE_PATH})
-    # product suffix
-    set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "d")
+    addExecutable(${TARGET_NAME} "${PROJECT_SOURCE_FILE_PATH}")
 endforeach ()
