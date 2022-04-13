@@ -1,23 +1,23 @@
 #pragma once
 
-#include "cocr_base_export.h"
-#include "base/alkane_graph.hpp"
-
+#include "els_math_export.h"
+#include "math/alkane_graph.h"
+#include "base/bignumber.h"
 #include <fstream>
 #include <map>
+#include <iostream>
 #include <algorithm>
 
-using cocr::AlkaneGraph;
-using cocr::node_type;
-using cocr::hash_type;
-
-class COCR_BASE_EXPORT IsomerCounter {
-    using graph = AlkaneGraph<node_type>;
+class ELS_MATH_EXPORT IsomerCounter {
+    using hash_type = uint64_t;
+    using node_type = unsigned char;
+    using graph = AlkaneGraph<node_type, hash_type, node_type>;
     const int thread_num = 11;
+    static size_t cache_size_mb;
 public:
     static IsomerCounter &GetInstance();
 
-    bool calculate(const int &numOfCarbon, const char *cache_dir = nullptr);
+    std::optional<UnsignedInteger> calculate(const int &numOfCarbon, const char *cache_dir = nullptr);
 
     void calculate_i_from_i_1(const char *save_dir, const int &carbonNum);
 
@@ -42,22 +42,25 @@ private:
     int n;
     std::vector<hash_type> lastSet;
 
+    template<size_t MB>
     class quick_set {
+        using bucket = std::vector<hash_type>;
     public:
-        std::vector<std::vector<hash_type>> mData;
+        std::vector<bucket> mData;
         size_t mSize;
         // 536870923ULL for c1-28,1024ULL*1024ULL*512ULL,12G
         // 1073741824ULL for c29 and c30, 24G
-        const size_t max_size = 102400ULL;
+        const size_t max_size = MB * 1024ULL * 1024ULL / sizeof(bucket);
 
         quick_set() : mSize(0) {
             mData.resize(max_size);
+            mData.shrink_to_fit();
         }
 
         void clear() {
             mSize = 0;
             mData.clear();
-            mData.resize(max_size, std::vector<hash_type>());
+            mData.resize(max_size, bucket());
             mData.shrink_to_fit();
         }
 
@@ -104,5 +107,7 @@ private:
             }
             ofsm.close();
         }
-    } curSet;
+    };
+
+    quick_set<1024> curSet;
 };

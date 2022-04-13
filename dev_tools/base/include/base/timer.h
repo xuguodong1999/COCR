@@ -1,11 +1,10 @@
 #pragma once
 
-#include "cocr_base_export.h"
+#include "els_base_export.h"
 #include <chrono>
 
-class COCR_BASE_EXPORT Timer {
-    decltype(std::chrono::system_clock::now())
-            start_stamp, end_stamp, last_stamp;
+class ELS_BASE_EXPORT Timer {
+    decltype(std::chrono::system_clock::now()) start_stamp, end_stamp, last_stamp;
 public:
     void start(bool _display = false);
 

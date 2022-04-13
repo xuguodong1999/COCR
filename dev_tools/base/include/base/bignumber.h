@@ -4,14 +4,15 @@
  */
 #pragma once
 
-#include "cocr_base_export.h"
+#include "els_base_export.h"
+
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <string>
 #include <vector>
 
-class COCR_BASE_EXPORT UnsignedInteger {
+class ELS_BASE_EXPORT UnsignedInteger {
     unsigned char buffer[256];
     size_t bufferSize;
 public:
@@ -55,5 +56,5 @@ public:
 
     UnsignedInteger operator/=(const UnsignedInteger &b);
 
-    friend std::ostream &operator<<(std::ostream &os, const UnsignedInteger &num);
+    friend ELS_BASE_EXPORT std::ostream &operator<<(std::ostream &os, const UnsignedInteger &num);
 };

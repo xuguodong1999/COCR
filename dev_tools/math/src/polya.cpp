@@ -1,7 +1,7 @@
 /**
  * https://github.com/snljty/CountAlkylIsomer
  */
-#include "base/polya.hpp"
+#include "math/polya.h"
 
 void PolyaIsomerCounter::a_i(const size_t &m) {
     /*  m >= 0 for A[m]  */
@@ -111,7 +111,19 @@ PolyaIsomerCounter &PolyaIsomerCounter::GetInstance() {
     return e;
 }
 
-void PolyaIsomerCounter::count(const size_t &carbonNum) {
+PolyaIsomerCounter::data_pair PolyaIsomerCounter::count(const size_t &carbonNum) {
+    mkSpace(carbonNum + 1);
+    a_i(0);
+    for (size_t i = 1; i <= carbonNum; i++) {
+        a_i(i);
+        p_i(i);
+        q_i(i);
+        c_i(i);
+    }
+    return {C[carbonNum], A[carbonNum]};
+}
+
+void PolyaIsomerCounter::log(const size_t &carbonNum) {
     mkSpace(carbonNum + 1);
     a_i(0);
     for (size_t i = 1; i <= carbonNum; i++) {

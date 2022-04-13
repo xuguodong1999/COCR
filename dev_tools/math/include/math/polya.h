@@ -1,13 +1,14 @@
 /**
  * https://github.com/snljty/CountAlkylIsomer
  */
-#include "cocr_base_export.h"
-#include "base/bignumber.hpp"
+#include "els_math_export.h"
+#include "base/bignumber.h"
 #include <iostream>
 #include <vector>
 
-class COCR_BASE_EXPORT PolyaIsomerCounter {
+class ELS_MATH_EXPORT PolyaIsomerCounter {
     using count_type = UnsignedInteger;
+    using data_pair = std::pair<count_type, count_type>;
     std::vector<count_type> A, P, Q, C;
     const count_type two = 2, three = 3, six = 6, eight = 8, twenty_four = 24;
 
@@ -24,14 +25,19 @@ class COCR_BASE_EXPORT PolyaIsomerCounter {
 public:
     static PolyaIsomerCounter &GetInstance();
 
-    void count(const size_t &carbonNum);
+    /**
+     * @return <烷烃，自由基>计数
+     */
+    data_pair count(const size_t &carbonNum);
+
+    void log(const size_t &carbonNum);
+
+    PolyaIsomerCounter(const PolyaIsomerCounter &) = delete;
 
 private:
     PolyaIsomerCounter() = default;
 
     ~PolyaIsomerCounter() = default;
-
-    PolyaIsomerCounter(const PolyaIsomerCounter &) = delete;
 
     const PolyaIsomerCounter &operator=(const PolyaIsomerCounter &) = delete;
 };

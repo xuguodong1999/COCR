@@ -1,5 +1,5 @@
-#include "base/isomer.hpp"
-#include "base/timer.hpp"
+#include "math/isomer.h"
+#include "base/timer.h"
 #include <fstream>
 #include <unordered_set>
 
@@ -30,16 +30,17 @@ void IsomerCounter::recover(const char *save_dir, const int &carbonNum) {
     ifsm.close();
 }
 
-bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
+std::optional<UnsignedInteger> IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
     if (numOfCarbon <= 0) {
-        return false;
+        return std::nullopt;
     } else if (numOfCarbon >= 28) {
         cerr << "numOfCarbon=" << numOfCarbon << ">=28" << endl;
     }
     n = numOfCarbon;
     lastSet.clear();
     lastSet.push_back(graph::GetInstance().hash());
-    if (n == 1) return true;
+    UnsignedInteger result{1};
+    if (n == 1) return result;
     for (int i = 2; i <= n; i++) {        // 由少到多迭代地计算
         Timer timer;
         timer.start();
@@ -71,7 +72,8 @@ bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
                 curSet.insert(mm);
             }
         }
-        cout << "c-" << i << ": " << curSet.size() << endl;
+        result = curSet.size();
+        cout << "c-" << i << ": " << result << endl;
         timer.stop(true);
         if (nullptr != cache_dir) {
             curSet.dump(cache_dir, i);
@@ -86,7 +88,7 @@ bool IsomerCounter::calculate(const int &numOfCarbon, const char *cache_dir) {
             curSet.clear();
         }
     }
-    return true;
+    return result;
 }
 
 IsomerCounter::IsomerCounter() {
@@ -266,7 +268,7 @@ std::vector<std::string> IsomerCounter::getIsomers(
         }
         if (numsOfCarbon.end() != numsOfCarbon.find(i)) {
             for (auto &carbon_hash: lastSet) {
-                auto smiles = cocr::convertAlkaneHashToSMILES<unsigned char>(carbon_hash);
+                auto smiles = convertAlkaneHashToSMILES<unsigned char, hash_type>(carbon_hash);
                 smilesVec.push_back(smiles);
             }
         }

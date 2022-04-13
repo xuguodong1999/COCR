@@ -2,36 +2,13 @@ project(dev_tools LANGUAGES CXX)
 
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
-find_package(OpenCV QUIET)
-find_package(Torch QUIET)
-find_package(Qt5 COMPONENTS Widgets QUIET)
-
-CHECK_OPENCV(${PROJECT_NAME})
-CHECK_LIBTORCH(${PROJECT_NAME})
-CHECK_QT(${PROJECT_NAME} "Widgets")
-
-addExecutable(c2fmt c2fmt.cpp)
-
-addExecutable(data_loader_compare data_loader_compare.cpp)
-linkLibtorch(data_loader_compare)
-
-addExecutable(fix_js_import fix_js_import.cpp)
-linkQt(fix_js_import "Core")
-
-addExecutable(hello_gemm hello_gemm.cpp)
-
-addExecutable(hello_world hello_world.cpp)
-linkLibtorch(hello_world)
-
-addExecutable(molecular_gnn_smiles molecular_gnn_smiles.cpp)
-linkLibtorch(molecular_gnn_smiles)
-
-addExecutable(simplify_torch_import simplify_torch_import.cpp)
-linkQt(simplify_torch_import "Core")
-
 add_subdirectory(app_qml)
+add_subdirectory(standalone)
 
 makeLibrary(base els_base)
+
 makeLibrary(math els_math)
-makeLibrary(ckit els_ckit)
-addLibraryDeps(els_ckit els_base)
+addLibraryDeps(els_math els_base)
+
+#makeLibrary(ckit els_ckit)
+#addLibraryDeps(els_ckit els_base)

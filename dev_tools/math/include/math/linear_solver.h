@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base/fraction.hpp"
+#include "base/fraction.h"
 #include <vector>
 #include <iostream>
 #include <cassert>
@@ -16,12 +16,12 @@ template<typename T>
 inline std::vector<T> linearSolve(const std::vector<std::vector<T>> &in) {
     std::vector<T> out;
     size_t rowSize = in.size();
-    if (rowSize < 1) { return std::move(out); }
+    if (rowSize < 1) { return out; }
     size_t colSize = in.at(0).size();
-    if (colSize < 2) { return std::move(out); }
+    if (colSize < 2) { return out; }
     std::vector<std::vector<T>> aMatrix(rowSize, std::vector<T>(colSize));
     for (size_t row = 0; row < rowSize; row++) {
-        if (in[row].size() != colSize) { return std::move(out); }
+        if (in[row].size() != colSize) { return out; }
         for (auto col = 0; col < colSize; col++) {
             aMatrix[row][col] = in[row][col];
         }
@@ -36,7 +36,7 @@ inline std::vector<T> linearSolve(const std::vector<std::vector<T>> &in) {
         }
         auto maxEleThisCol = aMatrix.at(index)[i];// 取对角线上的元素
         if (maxEleThisCol == 0) {
-            return std::move(out);
+            return out;
         }
         if (index != i) {// 做行交换，把最大的元素交换到当前对角线位置
             swap(aMatrix[index], aMatrix[i]);
@@ -63,5 +63,5 @@ inline std::vector<T> linearSolve(const std::vector<std::vector<T>> &in) {
     for (size_t i = 0; i < n; i++) {
         out[i] *= den;
     }
-    return std::move(out);
+    return out;
 }
