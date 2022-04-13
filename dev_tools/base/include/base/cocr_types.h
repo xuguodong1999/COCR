@@ -1,4 +1,5 @@
 #pragma once
+
 #include "els_base_export.h"
 #include "element_type.h"
 #include <cstdint>
@@ -33,5 +34,6 @@ enum class DetectorClasses {
 };
 
 class ELS_BASE_EXPORT DetectorUtil {
+public:
     static DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementType);
 };

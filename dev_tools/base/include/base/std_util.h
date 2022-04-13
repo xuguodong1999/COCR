@@ -11,7 +11,7 @@
 class ELS_BASE_EXPORT StdUtil {
     inline static std::default_random_engine DRE{171860633};
     inline static std::uniform_int_distribution<int> UID{0, RAND_MAX};
-
+public:
     template<typename T>
     static std::string to_string_with_precision(const T _fValue, const int n = 2) {
         std::ostringstream out;

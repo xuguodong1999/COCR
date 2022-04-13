@@ -16,6 +16,7 @@ enum class ElementType : size_t {
 };
 
 class ELS_BASE_EXPORT ElementUtil{
+public:
     static frac GetElementValence(const ElementType&element);
     // 返回建议比例，以碳为基准
     static float atomRadius(const ElementType &_element);

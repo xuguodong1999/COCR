@@ -74,16 +74,14 @@ float ElementUtil::atomRadius(const ElementType &_element) {
     }
 }
 
-std::string POS_CHARGE_TEXT{"⊕"};
-
-std::string NEG_CHARGE_TEXT{"㊀"};
-
 const std::string &ElementUtil::GetPosChargeText() {
-    return POS_CHARGE_TEXT;
+    static std::string s{"⊕"};
+    return s;
 }
 
 const std::string &ElementUtil::GetNegChargeText() {
-    return NEG_CHARGE_TEXT;
+    static std::string s{"㊀"};
+    return s;
 }
 
 const std::string &ElementUtil::convertElementTypeToString(const ElementType &_elementType) {

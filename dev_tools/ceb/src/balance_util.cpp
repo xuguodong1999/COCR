@@ -1,6 +1,7 @@
-#include "balance_util.hpp"
-#include "std_util.hpp"
-#include "fraction.hpp"
+#include "balance_util.h"
+#include "base/std_util.h"
+#include "base/fraction.h"
+
 using namespace std;
 
 int Get_proton_num(string &ele) {
@@ -1164,8 +1165,17 @@ double Get_electronegativity(int proton_num) {
 }
 
 string add_html(const string &_tar) {
-    auto tar = replaceSubStr(replaceSubStr(replaceSubStr(replaceSubStr(replaceSubStr(
-            _tar, "·", "."), "[", "("), "{", "("), "]", ")"), "}", ")");
+    auto tar = StdUtil::replaceSubStr(
+            StdUtil::replaceSubStr(
+                    StdUtil::replaceSubStr(
+                            StdUtil::replaceSubStr(
+                                    StdUtil::replaceSubStr(
+                                            _tar,
+                                            "·", "."),
+                                    "[", "("),
+                            "{", "("),
+                    "]", ")"),
+            "}", ")");
     string res;
     int n = (int) tar.length();
     for (int i = 0; i < n; i++) {

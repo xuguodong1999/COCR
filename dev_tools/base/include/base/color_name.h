@@ -1,4 +1,5 @@
 #pragma once
+
 #include "els_base_export.h"
 #include <cstddef>
 #include <tuple>
@@ -460,8 +461,11 @@ enum class ColorName : size_t {
     rgbDarkRed,
     rgbLightGreen = 454
 };
+using rgb = std::tuple<unsigned char, unsigned char, unsigned char>;
+using rgba = std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>;
 
-class ELS_BASE_EXPORT ColorUtil{
-    using rgb = std::tuple<unsigned char,unsigned char,unsigned char>;
-    static rgb GetRGB(const ColorName&color);
+class ELS_BASE_EXPORT ColorUtil {
+    static rgb GetRGB(const ColorName &color);
+
+    static rgba GetRGBA(const ColorName &color);
 };

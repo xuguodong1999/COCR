@@ -1,6 +1,6 @@
-#include "matter.hpp"
-#include "std_util.hpp"
-#include "balance_util.hpp"
+#include "matter.h"
+#include "base/std_util.h"
+#include "balance_util.h"
 #include <iomanip>
 
 using namespace std;
@@ -278,8 +278,18 @@ bool Matter::CallastBlock(vector<MatNode> &matlist) {
 
 bool Matter::preProcess(string &_tar) {
     //  去空格 统一分隔符样式
-    auto tar = replaceSubStr(replaceSubStr(replaceSubStr(replaceSubStr(replaceSubStr(deleteSubStr(
-            _tar, " "), "·", "."), "{", "("), "[", "("), "]", ")"), "}", ")");
+    auto tar = StdUtil::replaceSubStr(
+            StdUtil::replaceSubStr(
+            StdUtil::replaceSubStr(
+            StdUtil::replaceSubStr(
+            StdUtil::replaceSubStr(
+            StdUtil::deleteSubStr(
+            _tar, " "),
+            "·", "."),
+            "{", "("),
+            "[", "("),
+            "]", ")"),
+            "}", ")");
     int j = 0;
     for (j = 0; j < (int) tar.size(); j++) {
         if (!((tar[j] >= '0' && tar[j] <= '9') || (tar[j] >= 'A' && tar[j] <= 'Z') ||
@@ -300,7 +310,7 @@ bool Matter::preProcess(string &_tar) {
             if (j == tar.length())tar.push_back(')');
         }
     }
-    tar = deleteSubStr(tar, ".");
+    tar = StdUtil::deleteSubStr(tar, ".");
     //  去电荷标识符，规定，机内正电荷用@，负电荷用$表示，就近结合
     size_t pos = 0;
     string positive = "@";
@@ -336,7 +346,7 @@ bool Matter::preProcess(string &_tar) {
         if (cq == 0)cq = 1;
     }
     q -= cq;
-    _tar = deleteSubStr(deleteSubStr(tar, "@"), "$");
+    _tar = StdUtil::deleteSubStr(StdUtil::deleteSubStr(tar, "@"), "$");
     return 1;
 }
 

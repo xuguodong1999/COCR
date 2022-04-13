@@ -1,7 +1,7 @@
-#include "equation.hpp"
-#include "balance_util.hpp"
-#include "std_util.hpp"
-#include "solver.hpp"
+#include "equation.h"
+#include "balance_util.h"
+#include "base/std_util.h"
+#include "math/linear_solver.h"
 #include <algorithm>
 
 using namespace std;
@@ -39,7 +39,7 @@ void Equation::getState() {
 }
 
 bool Equation::checkFormat() {
-    mInput = deleteSubStr(mInput, " ");
+    mInput = StdUtil::deleteSubStr(mInput, " ");
     int len = (int) mInput.length();
     if (len < 3)
         return 0;
