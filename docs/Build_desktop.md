@@ -41,3 +41,9 @@ cmake .. -G "Ninja" ^
 `cmake --build . -j $(nproc) --config Release --target leafxy`
 
 `cmake --build . --parallel --config Release --target leafxy`
+
+## macos qtcreator build for m1
+
+`-DBUILD_TESTS=ON -DBUILD_PRIVATE=ON -DBUILD_REFERENCES=ON -DQt5_DIR:PATH=/opt/homebrew/Cellar/qt@5/5.15.2_2/lib/cmake/Qt5`
+
+`export PATH=/opt/homebrew/bin:$PATH`

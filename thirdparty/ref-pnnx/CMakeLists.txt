@@ -7,7 +7,7 @@ endif ()
 option(PNNX_COVERAGE "build for coverage" OFF)
 
 find_package(Torch REQUIRED)
-find_package(TorchVision QUIET)
+# find_package(TorchVision QUIET)
 
 if (TorchVision_FOUND)
     message(STATUS "Building with TorchVision")
