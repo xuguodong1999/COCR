@@ -2,7 +2,7 @@
 #include <map>
 #include "base/element_type.h"
 
-const std::map<std::string, int> sStr2IntMap{
+static const std::map<std::string, int> sStr2IntMap{
         {"!",  183},
         {"Ⅴ",  182},
         {"\"", 181},

@@ -5,6 +5,7 @@
 #include "base/bignumber.h"
 #include <fstream>
 #include <map>
+#include <optional>
 #include <iostream>
 #include <algorithm>
 

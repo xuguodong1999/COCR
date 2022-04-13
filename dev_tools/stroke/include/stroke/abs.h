@@ -5,6 +5,7 @@
 #include "stroke/controller.h"
 #include "ocv_wrapper/mat.h"
 #include <memory>
+#include <optional>
 class ELS_STROKE_EXPORT HwBase {
         protected:
         bool keepDirection;

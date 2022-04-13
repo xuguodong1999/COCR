@@ -1,6 +1,6 @@
 #include "stroke/couch_sym.h"
 #include "base/std_util.h"
-#include "base/element_type.h"
+#include "couch_sym_label.h" // const std::map<std::string, int> sStr2IntMap
 #include <map>
 #include <fstream>
 
@@ -11,7 +11,6 @@ static const std::vector<int> sLabelCharLikeLine = {
         172
 };
 static const std::vector<int> sLabelCharLikeCircle = {9, 21, 47};
-extern const std::map<std::string, int> sStr2IntMap;
 
 HwScript HwDataLoader::GetByIntLabel(int label) {
     if (label >= mData.size()) {

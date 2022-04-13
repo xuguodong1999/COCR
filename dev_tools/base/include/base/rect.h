@@ -27,5 +27,5 @@ const point2f getCenter(const rect<Number> &_rect) {
     const auto&[lt, br]=_rect;
     const auto&[x0, y0]=lt;
     const auto&[x1, y1]=br;
-    return {std::round((x1 + x0) / 2.0), std::round((y1 + y0) / 2.0)};
+    return {(float)std::round((x1 + x0) / 2.0), (float)std::round((y1 + y0) / 2.0)};
 }

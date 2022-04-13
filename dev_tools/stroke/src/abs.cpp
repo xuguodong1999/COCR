@@ -29,7 +29,7 @@ void HwBase::resizeTo(float _w, float _h, bool _keepRatio) {
     float kx = _w / width;
     float ky = _h / height;
     auto oldCenter = ::getCenter(bbox.value());
-    moveLeftTopTo(point2f(0, 0));
+    moveLeftTopTo({0.0, 0.0});
     if (_keepRatio) {
         kx = ky = std::min(kx, ky);
     }
