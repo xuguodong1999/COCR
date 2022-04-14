@@ -1,4 +1,5 @@
 #pragma once
+
 #include "els_base_export.h"
 #include <string>
 #include <vector>
@@ -139,6 +140,8 @@ public:
 
     static std::string replaceSubStr(const std::string &_target,
                                      const std::string &_subStr, const std::string &_newSubStr);
+
+    static std::vector<std::string_view> split(std::string_view strv, std::string_view delims = " ");
 };
 
 

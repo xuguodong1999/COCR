@@ -33,3 +33,18 @@ std::string StdUtil::replaceSubStr(
     }
     return ret;
 }
+
+// https://www.cppstories.com/2018/07/string-view-perf-followup/
+std::vector<std::string_view> StdUtil::split(std::string_view strv, std::string_view delims) {
+    std::vector<std::string_view> output;
+    size_t first = 0;
+    while (first < strv.size()) {
+        const auto second = strv.find_first_of(delims, first);
+        if (first != second)
+            output.emplace_back(strv.substr(first, second - first));
+        if (second == std::string_view::npos)
+            break;
+        first = second + 1;
+    }
+    return output;
+}
