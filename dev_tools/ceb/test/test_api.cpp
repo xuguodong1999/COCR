@@ -1,16 +1,26 @@
 #include <catch2/catch.hpp>
 #include <fstream>
+#include <iostream>
 #include "ceb/api.h"
 
 const std::string TEST_FILE = TEST_SAMPLES_PATH + std::string("/datasets/easy-equations.txt");
 
 TEST_CASE("balance chemical equations", "loop") {
-    std::ifstream ifm(TEST_FILE);
+    std::ifstream ifs(TEST_FILE, std::ios_base::in);
+    REQUIRE(ifs.good());
     std::string line;
-    while (std::getline(ifm, line)) {
+    while (std::getline(ifs, line) && !line.empty()) {
         auto result = CebApi::balance(line);
-        REQUIRE(result);
-        auto arr = result.value();
-        REQUIRE(!arr.empty());
+        if (!result) {
+            INFO(line + " failed");
+            FAIL();
+        } else {
+            auto arr = result.value();
+            REQUIRE(!arr.empty());
+            auto html = CebApi::balanceAndRenderToHtml(line);
+            INFO(html.value());
+            REQUIRE(html);
+        }
     }
+    ifs.close();
 }

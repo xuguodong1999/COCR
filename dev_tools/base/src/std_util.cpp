@@ -15,7 +15,7 @@ std::string StdUtil::deleteSubStr(const std::string &_target, const std::string 
     size_t pos = 0;
     std::string ret = _target;
     while (true) {
-        pos = _target.find(_subStr);
+        pos = ret.find(_subStr);
         if (pos == std::string::npos)
             return ret;
         ret.erase(pos, nSize);

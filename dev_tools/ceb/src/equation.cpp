@@ -3,7 +3,6 @@
 #include "base/std_util.h"
 #include "math/linear_solver.h"
 #include <algorithm>
-
 using namespace std;
 
 Equation::Equation() {
@@ -96,7 +95,7 @@ bool Equation::intoMatter() {
 #endif
         return 0;
     }
-    if (mInput.find("@") != string::npos || mInput.find("$") != string::npos)
+    if (mInput.find("^\\oplus") != string::npos || mInput.find("^\\ominus") != string::npos)
         isChargeContained = 1;
     else
         isChargeContained = 0;
@@ -205,14 +204,14 @@ bool Equation::intoElement() {
     for (int i = 0; i < (int) leftMatters.size(); i++)
         if (!leftMatters[i].intoElement()) {
 #ifdef TESTCEI
-            cout << "字串 " << mRList[i].name << " 解析失败！" << endl;
+            cout << "字串 " << leftMatters[i].name << " 解析失败！" << endl;
 #endif
             return 0;
         }
     for (int i = 0; i < (int) rightMatters.size(); i++)
         if (!rightMatters[i].intoElement()) {
 #ifdef TESTCEI
-            cout << "字串 " << mPList[i].name << " 解析失败！" << endl;
+            cout << "字串 " << rightMatters[i].name << " 解析失败！" << endl;
 #endif
             return 0;
         }
@@ -294,14 +293,22 @@ bool Equation::balance() {
         inMatrix.push_back(std::vector<frac>(col, 0));
         row += 1;
         inMatrix.back().at(0) = 1;
-        inMatrix.back().at(1) = -1;
+        inMatrix.back().at(1) = 1;
     }
     if (row < col - 1) {
         return false;
     }
     auto outMatrix = linearSolve(inMatrix);
     if (outMatrix.size() != getMattersNum()) {
-        return false;
+        // 添加随机系数
+        inMatrix.push_back(std::vector<frac>(col, 0));
+        row += 1;
+        inMatrix.back().at(0) = 1;
+        inMatrix.back().at(1) = 1;
+        outMatrix = linearSolve(inMatrix);
+        if (outMatrix.size() != getMattersNum()) {
+            return false;
+        }
     }
     ratioList.clear();
     for (size_t i = 0; i < outMatrix.size(); i++) {
@@ -317,14 +324,14 @@ bool Equation::getRedox() {
     for (i = 0; i < cr; i++)
         if (!leftMatters[i].getValence()) {
 #ifdef TESTCEI
-            cout << "无法获得 " << mRList[i].name << " 的化合价，配平失败！" << endl;
+            cout << "无法获得 " << leftMatters[i].name << " 的化合价，配平失败！" << endl;
 #endif
             return 0;
         }
     for (i = 0; i < cp; i++)
         if (!rightMatters[i].getValence()) {
 #ifdef TESTCEI
-            cout << "无法获得 " << mPList[i].name << " 的化合价，配平失败！" << endl;
+            cout << "无法获得 " << rightMatters[i].name << " 的化合价，配平失败！" << endl;
 #endif
             return 0;
         }
@@ -394,7 +401,7 @@ bool Equation::getRedox() {
     for (i = 0; i < cr; i++) {
         for (j = 0; j < (int) leftMatters[i].eleList.size(); j++)
             if (leftMatters[i].eleList[j].Reduced) {//  如果该元素参与了反应
-//                tmp.a = mRList[i].eleList[j].amount;
+//                tmp.a = leftMatters[i].eleList[j].amount;
 //                tmp.b = 1;
                 tmp.set(leftMatters[i].eleList[j].amount, 1);
                 redox[i] =
@@ -404,7 +411,7 @@ bool Equation::getRedox() {
 #ifdef TESTCEI
     cout << "氧化还原守恒向量：[";
     for (int i = 0; i < cr + cp; i++)
-        printf("%4d", redox[i].a);
+        printf("%4d", redox[i].intValue());
     cout << "      ]" << endl;
 #endif
     return 1;
@@ -449,30 +456,9 @@ int Equation::getEleIndex(string &tarelenam) {
     return -1;
 }
 
-bool Equation::exec(string &_content) {
+bool Equation::exec(const string &_content) {
     mInput = _content;
-    if (!intoMatter()) {
-#ifdef TESTCEI
-        cout << "字符串拆分失败！未完成物质级拆分。" << endl;
-#endif
-        return 0;
-    }
-    if (!balance()) {
-#ifdef TESTCEI
-        cout << "方程式配平失败！" << endl;
-#endif
-        return 0;
-    }
-    addStateInfo();
-    if (!IsConversed(ratioList)) {
-#ifdef TESTCEI
-        cout << "机器配平错误！" << endl;
-#endif
-        return 0;
-    }
-    cout << p() << endl;
-    clear();
-    return 1;
+    return exec();
 }
 
 bool Equation::exec() {
@@ -496,4 +482,12 @@ bool Equation::exec() {
         return 0;
     }
     return 1;
+}
+
+const size_t Equation::getMattersNum() const {
+    return leftMatters.size() + rightMatters.size();
+}
+
+std::vector<int> Equation::getRatioList() const {
+    return ratioList;
 }

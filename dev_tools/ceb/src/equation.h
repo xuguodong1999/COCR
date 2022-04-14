@@ -22,18 +22,17 @@ public:
 
     bool IsConversed(const std::vector<int> &raw);
 
-    std::vector<int> oRatioList;
-    std::vector<int> ratioList;
-
-    bool exec(std::string &_content);
+    bool exec(const std::string &_content);
 
     bool exec();
 
-    const size_t getMattersNum() const {
-        return leftMatters.size() + rightMatters.size();
-    }
+    const size_t getMattersNum() const;
+
+    std::vector<int> getRatioList() const;
 
 private:
+    std::vector<int> oRatioList;
+    std::vector<int> ratioList;
     std::string mEquation;
     bool isChargeContained;
     std::vector<Matter> leftMatters;

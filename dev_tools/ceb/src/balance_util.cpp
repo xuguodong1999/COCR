@@ -1169,9 +1169,7 @@ string add_html(const string &_tar) {
             StdUtil::replaceSubStr(
                     StdUtil::replaceSubStr(
                             StdUtil::replaceSubStr(
-                                    StdUtil::replaceSubStr(
                                             _tar,
-                                            "·", "."),
                                     "[", "("),
                             "{", "("),
                     "]", ")"),
