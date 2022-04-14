@@ -21,8 +21,11 @@ addLibraryDeps(els_math els_base)
 makeLibrary(ceb els_ceb)
 addLibraryDeps(els_ceb els_math)
 
-#makeLibrary(ckit els_ckit)
-#addLibraryDeps(els_ckit els_base)
+makeLibrary(ckit els_ckit)
+addLibraryDeps(els_ckit els_base)
+addLibraryDeps(els_ckit els_math)
+linkOpenBabel(els_ckit)
+linkCoordgenlibs(els_ckit)
 
 makeLibrary(ocv_wrapper els_ocv_wrapper)
 addLibraryDeps(els_ocv_wrapper els_base)

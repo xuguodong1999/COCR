@@ -7,8 +7,6 @@
 #include <vector>
 #include <unordered_map>
 
-using hash_type = uint64_t;
-using node_type = unsigned char;
 
 enum class DetectorClasses {
     ItemEmpty = 0,

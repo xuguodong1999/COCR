@@ -1,5 +1,29 @@
 #include "d_rgb_table.h"
 
+const std::unordered_map<BondType, ColorName> bondColorMap{
+        {BondType::SingleBond,      ColorName::rgbLightGoldenrod1},
+        {BondType::DoubleBond,      ColorName::rgbDarkGoldenrod1},
+        {BondType::TripleBond,      ColorName::rgbDarkMagenta},
+        {BondType::DelocalizedBond, ColorName::rgbYellow},
+        {BondType::WaveBond,        ColorName::rgbLightGoldenrod2},
+        {BondType::SolidWedgeBond,  ColorName::rgbLightGoldenrod3},
+        {BondType::DashWedgeBond,   ColorName::rgbLightGoldenrod4}
+};
+
+const std::unordered_map<ElementType, ColorName> atomColorMap{
+        {ElementType::H,  ColorName::rgbLightBlue},
+        {ElementType::B,  ColorName::rgbLightCyan},
+        {ElementType::C,  ColorName::rgbOrange},
+        {ElementType::N,  ColorName::rgbYellow},
+        {ElementType::O,  ColorName::rgbDarkSlateBlue},
+        {ElementType::F,  ColorName::rgbLightSeaGreen},
+        {ElementType::P,  ColorName::rgbDarkGrey},
+        {ElementType::S,  ColorName::rgbDarkGoldenrod},
+        {ElementType::Cl, ColorName::rgbLightGreen},
+        {ElementType::Br, ColorName::rgbDarkRed},
+        {ElementType::I,  ColorName::rgbPurple}
+};
+
 const unsigned char predefinedColors[][3] = {
         {255, 250, 250},
         {248, 248, 255},

@@ -2,7 +2,13 @@
 #include "base/fraction.h"
 #include "d/d_element_name.h"
 #include "d/d_element_valence.h"
+#include "d/d_element_mass.h"
+#include "d/d_element_electron.h"
+#include "d/d_rgb_table.h"
+#include "d/d_element_neb.h"
+#include "d/d_atom_radius.h"
 #include <string>
+#include <algorithm>
 
 frac ElementUtil::GetElementValence(const ElementType &element) {
     auto it = ElementValenceData.find(element);
@@ -54,3 +60,65 @@ const std::string &ElementUtil::GetNegChargeText() {
 const std::string &ElementUtil::convertElementTypeToString(const ElementType &_elementType) {
     return ElementsData[static_cast<size_t>(_elementType)];
 }
+
+ElementType ElementUtil::convertStringToElementType(const std::string &_elementName) {
+    auto it = std::find(ElementsData.begin(), ElementsData.end(), _elementName);
+    if (ElementsData.end() == it) {
+        std::cerr << "convertStringToElementType: miss " << _elementName;
+        return ElementType::SA;
+    }
+    return static_cast<ElementType>(std::distance(ElementsData.begin(), it));
+}
+
+float ElementUtil::GetElementMass(const ElementType &_elementType) {
+    if ((size_t) _elementType >= ELEMENT_MASS_LIST.size()) {
+        std::cerr << "GetElementMass: miss " << (size_t) _elementType;
+        return 0;
+    }
+    return ELEMENT_MASS_LIST[(size_t) _elementType];
+}
+
+float ElementUtil::GetElementElectron(const ElementType &_elementType) {
+    if ((size_t) _elementType >= ELEMENT_ELECTRON_NEG_LIST.size()) {
+        std::cerr << "GetElementMass: miss " << (size_t) _elementType;
+        return 0;
+    }
+    return ELEMENT_ELECTRON_NEG_LIST[(size_t) _elementType];
+}
+
+ColorName ElementUtil::GetElementColor(const ElementType &_elementType) {
+    auto it = atomColorMap.find(_elementType);
+    if (it == atomColorMap.end()) {
+        return ColorName::rgbAliceBlue;
+    }
+    return it->second;
+}
+
+std::optional<int> ElementUtil::GetElementNebNum(const ElementType &_elementType) {
+    auto it = ELEMENT_COMMON_NEB_NUM_MAP.find(_elementType);
+    if (ELEMENT_COMMON_NEB_NUM_MAP.end() == it) {
+        return std::nullopt;
+    }
+    return it->second;
+}
+
+std::optional<float> ElementUtil::GetElementRadius(const ElementType &_elementType) {
+    if ((size_t) _elementType >= ELEMENT_RADIUS_LIST.size()) {
+        std::cerr << "GetElementRadius: miss " << (size_t) _elementType;
+        return std::nullopt;
+    }
+    return ELEMENT_RADIUS_LIST[(size_t) _elementType];
+}
+
+ColorName ElementUtil::GetBondColor(const BondType &bondType) {
+    auto it = bondColorMap.find(bondType);
+    if (it == bondColorMap.end()) {
+        return ColorName::rgbAliceBlue;
+    }
+    return it->second;
+}
+
+const std::vector<std::string> &ElementUtil::GetElements() {
+    return ElementsData;
+}
+

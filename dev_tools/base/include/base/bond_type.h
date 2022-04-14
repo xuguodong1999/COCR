@@ -1,5 +1,5 @@
 #pragma once
-enum class JBondType {
+enum class BondType {
     NoneBond = 0,// 错误类型
     SingleBond = 1,// 单键，常规
     DoubleBond = 2,// 双键

@@ -465,6 +465,7 @@ using rgb = std::tuple<unsigned char, unsigned char, unsigned char>;
 using rgba = std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>;
 
 class ELS_BASE_EXPORT ColorUtil {
+public:
     static rgb GetRGB(const ColorName &color);
 
     static rgba GetRGBA(const ColorName &color);

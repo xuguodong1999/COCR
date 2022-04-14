@@ -1,8 +1,11 @@
 #pragma once
 #include "els_base_export.h"
 #include "base/fraction.h"
+#include "base/color_name.h"
+#include "bond_type.h"
 #include <unordered_map>
 #include <cstddef>
+#include <vector>
 
 // 约定：元素类型 0 表示 OCRA 所谓的超原子、即未解析的字符串
 enum class ElementType : size_t {
@@ -23,4 +26,12 @@ public:
     static const std::string&GetPosChargeText();
     static const std::string&GetNegChargeText();
     static const std::string &convertElementTypeToString(const ElementType &_elementType);
+    static ElementType convertStringToElementType(const std::string &_elementName);
+    static float GetElementMass(const ElementType&_elementType);
+    static float GetElementElectron(const ElementType&_elementType);
+    static ColorName GetElementColor(const ElementType&_elementType);
+    static ColorName GetBondColor(const BondType&bondType);
+    static std::optional<int> GetElementNebNum(const ElementType&_elementType);
+    static std::optional<float> GetElementRadius(const ElementType&_elementType);
+    static const std::vector<std::string>&GetElements();
 };
