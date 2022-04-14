@@ -256,7 +256,7 @@ function(makeLibrary DIRECTORY_NAME LIBRARY_NAME)
     target_link_libraries(test_${LIBRARY_NAME} PRIVATE ${LIBRARY_NAME})
     target_compile_definitions(test_${LIBRARY_NAME} PRIVATE
             "DEV_ASSETS_DIR=\"${DEV_ASSETS_DIR}/\"")
-    add_test(NAME test_${LIBRARY_NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${LIBRARY_NAME}
+    add_test(NAME test_${LIBRARY_NAME} COMMAND test_${LIBRARY_NAME}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endfunction()
 
