@@ -243,7 +243,7 @@ function(makeLibrary DIRECTORY_NAME LIBRARY_NAME)
     set(${LIBRARY_NAME}_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${DIRECTORY_NAME}/include CACHE INTERNAL "")
     target_include_directories(${LIBRARY_NAME} PRIVATE ${${LIBRARY_NAME}_INCLUDE_DIR})
     target_compile_definitions(${LIBRARY_NAME} PRIVATE
-            "TEST_SAMPLES_PATH=\"${DEV_ASSETS_DIR}/\"")
+            "DEV_ASSETS_DIR=\"${DEV_ASSETS_DIR}/\"")
 
     unset(DIRS)
     unset(TEST_LIBRARY_SOURCE)
@@ -255,7 +255,7 @@ function(makeLibrary DIRECTORY_NAME LIBRARY_NAME)
     target_include_directories(test_${LIBRARY_NAME} PRIVATE ${${LIBRARY_NAME}_INCLUDE_DIR})
     target_link_libraries(test_${LIBRARY_NAME} PRIVATE ${LIBRARY_NAME})
     target_compile_definitions(test_${LIBRARY_NAME} PRIVATE
-            "TEST_SAMPLES_PATH=\"${DEV_ASSETS_DIR}/\"")
+            "DEV_ASSETS_DIR=\"${DEV_ASSETS_DIR}/\"")
     add_test(NAME test_${LIBRARY_NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${LIBRARY_NAME}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endfunction()

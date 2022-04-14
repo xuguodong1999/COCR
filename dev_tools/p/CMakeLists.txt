@@ -45,7 +45,7 @@ if (BUILD_DATA_GEN)
     addDeps(stroke "base;chem;opencv_util")
     linkOpenCV(${PROJECT_NAME}_stroke)
     target_compile_definitions(${PROJECT_NAME}_stroke PRIVATE
-            "TEST_SAMPLES_PATH=\"${DEV_ASSETS_DIR}/\"")
+            "DEV_ASSETS_DIR=\"${DEV_ASSETS_DIR}/\"")
 
     # cocr::data
     makeDLL(data)
@@ -53,7 +53,7 @@ if (BUILD_DATA_GEN)
     linkOpenCV(${PROJECT_NAME}_data)
     linkQt(${PROJECT_NAME}_data "Widgets;Core")
     target_compile_definitions(${PROJECT_NAME}_data PRIVATE
-            "TEST_SAMPLES_PATH=\"${DEV_ASSETS_DIR}/\"")
+            "DEV_ASSETS_DIR=\"${DEV_ASSETS_DIR}/\"")
 endif ()
 
 # cocr::ocr, include header def for ncnn or opencv_dnn's impl plugin

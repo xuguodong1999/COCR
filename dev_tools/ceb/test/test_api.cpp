@@ -3,7 +3,7 @@
 #include <iostream>
 #include "ceb/api.h"
 
-const std::string TEST_FILE = TEST_SAMPLES_PATH + std::string("/datasets/easy-equations.txt");
+const std::string TEST_FILE = DEV_ASSETS_DIR + std::string("/datasets/easy-equations.txt");
 
 TEST_CASE("balance chemical equations", "loop") {
     std::ifstream ifs(TEST_FILE, std::ios_base::in);

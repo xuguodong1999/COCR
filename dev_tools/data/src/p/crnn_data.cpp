@@ -317,7 +317,7 @@ void CRNNDataGenerator::display() {
 
 void CRNNDataGenerator::getDictTexts() {
     LineTextDataCreator dc;
-    const std::string dict = TEST_SAMPLES_PATH + std::string("/datasets/words_dictionary.json");
+    const std::string dict = DEV_ASSETS_DIR + std::string("/datasets/words_dictionary.json");
     dc.loadFromWordDict(dict.c_str());
     std::unordered_set<std::string> textSet;
     for (auto &text: dc.getWordSet()) {
@@ -387,7 +387,7 @@ void CRNNDataGenerator::getRandomTexts(const size_t &_num, const size_t &_len) {
 
 void CRNNDataGenerator::getChemTexts() {
     LineTextDataCreator dc;
-    dc.loadFromPattern(TEST_SAMPLES_PATH + std::string("/openbabel/data/superatom.txt"));
+    dc.loadFromPattern(DEV_ASSETS_DIR + std::string("/openbabel/data/superatom.txt"));
     std::unordered_set<std::string> textSet;
     for (auto &text: dc.getWordSet()) {
         if (text.length() <= MAX_TEXT_LENGTH) {

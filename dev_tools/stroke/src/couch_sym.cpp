@@ -4,7 +4,7 @@
 #include <map>
 #include <fstream>
 
-static const std::string COUCH_SYM_PATH = TEST_SAMPLES_PATH + std::string("/datasets/couch-sym.dat");
+static const std::string COUCH_SYM_PATH = DEV_ASSETS_DIR + std::string("/datasets/couch-sym.dat");
 static const std::vector<int> sLabelCharLikeLine = {
         8, 24, 53,
         130, 134, 141, 146, 158,
