@@ -170,7 +170,7 @@ void test_with_queue() {
             if (quit) break;
             int delta = cached_batch - q.size_approx();
             if (delta > 0) {
-#pragma omp parallel for default(none) shared(delta, q)
+#pragma omp parallel for default(none)
                 for (int i = 0; i < delta; i++) {
                     auto[batch_input, batch_label]=get_data_with_samples(
                             batch_size, runtime_device);

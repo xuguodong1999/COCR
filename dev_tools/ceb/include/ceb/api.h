@@ -3,6 +3,7 @@
 #include "els_ceb_export.h"
 #include <vector>
 #include <optional>
+#include <string>
 
 class ELS_CEB_EXPORT CebApi {
 public:

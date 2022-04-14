@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <functional>
 #include <iostream>
+#include <optional>
 
 template<typename T>
 using f = const std::function<T>;

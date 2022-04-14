@@ -2,22 +2,22 @@
 #include "base/std_util.h"
 #include "stroke/couch_sym.h"
 
-std::shared_ptr<HwBond> HwBond::GetHwBond(const JBondType &_bondType) {
+std::shared_ptr<HwBond> HwBond::GetHwBond(const BondType &_bondType) {
     switch (_bondType) {
-        case JBondType::SolidWedgeBond:
+        case BondType::SolidWedgeBond:
             return std::make_shared<HwSolidWedgeBond>();
-        case JBondType::DashWedgeBond:
+        case BondType::DashWedgeBond:
             return std::make_shared<HwDashWedgeBond>();
-        case JBondType::WaveBond:
+        case BondType::WaveBond:
             return std::make_shared<HwWaveBond>();
-        case JBondType::SingleBond :
-        case JBondType::DelocalizedBond:// 离域键只画骨架，环另画
+        case BondType::SingleBond :
+        case BondType::DelocalizedBond:// 离域键只画骨架，环另画
             return std::make_shared<HwSingleBond>();
-        case JBondType::DoubleBond:
+        case BondType::DoubleBond:
             return std::make_shared<HwDoubleBond>();
-        case JBondType::TripleBond:
+        case BondType::TripleBond:
             return std::make_shared<HwTripleBond>();
-        case JBondType::CircleBond:
+        case BondType::CircleBond:
             return std::make_shared<HwCircleBond>();
         default: {
             std::cerr << "Bond::GetBond: unknown bond type "

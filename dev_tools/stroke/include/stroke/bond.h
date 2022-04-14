@@ -13,7 +13,7 @@ public:
     static void setUseHwCharProb(float useHwCharProb);
 
     static std::shared_ptr<HwBond> GetHwBond(
-            const JBondType &_bondType = JBondType::SingleBond);
+            const BondType &_bondType = BondType::SingleBond);
 
     virtual void setVertices(const std::vector<point2f> &_pts) = 0;
 };

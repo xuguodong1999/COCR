@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <cstddef>
 #include <vector>
+#include <optional>
 
 // 约定：元素类型 0 表示 OCRA 所谓的超原子、即未解析的字符串
 enum class ElementType : size_t {

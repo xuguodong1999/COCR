@@ -17,7 +17,7 @@ static std::optional<frac> to_frac(const std::string &_src) {
     if (vec.size() != 2) {
         return std::nullopt;
     }
-    return frac{std::stoi(vec[0].begin()), std::stoi(vec[1].begin())};
+    return frac{std::stoi(vec[0].data()), std::stoi(vec[1].data())};
 }
 static const std::vector<frac>EMPTY_VALENCE;
 static const std::string EMPTY_STATE_INFO;
