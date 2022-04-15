@@ -2,6 +2,11 @@
 #include "ocv/algorithm.h"
 #include <opencv2/highgui.hpp>
 
+static cv::Scalar convertToScalar(const rgb &color) {
+    const auto&[r, g, b]=color;
+    return {(double) b, (double) g, (double) r};
+}
+
 static void sync(std::vector<cv::Point2f> &dst, const std::vector<point2f> &src) {
     dst.resize(src.size());
     for (size_t i = 0; i < src.size(); i++) {
@@ -104,8 +109,8 @@ Mat CvUtil::ResizeWithBlock(const Mat &mat, const Size<int> &dstSize, const Size
     bW /= 2;
     bH /= 2;
     // TODO: check if vconcat work as expected
-    const auto&[r, g, b]=ColorUtil::GetRGB(ColorName::rgbWhite);
-    cv::copyMakeBorder(procImg, procImg, bW, bW, bH, bH, cv::BORDER_CONSTANT, (r + g + b) / 3.0);
+    const auto& rgb=ColorUtil::GetRGB(ColorName::rgbWhite);
+    cv::copyMakeBorder(procImg, procImg, bW, bW, bH, bH, cv::BORDER_CONSTANT, convertToScalar(rgb));
 //    cv::vconcat(procImg, cv::Mat(bW, procImg.cols, procImg.type(), color), procImg);
 //    cv::vconcat(cv::Mat(bW, procImg.cols, procImg.type(), color), procImg, procImg);
 //    cv::hconcat(procImg, cv::Mat(procImg.rows, bH, procImg.type(), color), procImg);

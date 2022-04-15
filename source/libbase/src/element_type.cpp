@@ -103,8 +103,8 @@ std::optional<int> ElementUtil::GetElementNebNum(const ElementType &_elementType
 }
 
 std::optional<float> ElementUtil::GetElementRadius(const ElementType &_elementType) {
-    if ((size_t) _elementType >= ELEMENT_RADIUS_LIST.size()) {
-        std::cerr << "GetElementRadius: miss " << (size_t) _elementType;
+    if ((size_t) _elementType >= ELEMENT_RADIUS_LIST.size() || _elementType == ElementType::SA) {
+//        std::cerr << "GetElementRadius: miss " << (size_t) _elementType;
         return std::nullopt;
     }
     return ELEMENT_RADIUS_LIST[(size_t) _elementType];

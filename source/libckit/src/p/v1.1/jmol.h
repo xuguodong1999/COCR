@@ -19,7 +19,6 @@ namespace v1_1 {
         std::unordered_map<id_type, std::shared_ptr<Atom>> atomMap;
         std::unordered_map<id_type, std::shared_ptr<Bond>> bondMap;
         bool is3DInfoLatest, is2DInfoLatest;
-        static std::unordered_set<std::string> FORMAT_WRITE_WHITE_LIST;
 
         inline static std::unordered_set<std::string> sAvailableOutputFormat;
         inline static std::unordered_set<std::string> sAvailableInputFormat;
