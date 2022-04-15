@@ -154,6 +154,9 @@ void BondItem::updateBond() {
             }
             break;
         }
+        case BondType::CircleBond:
+        default:
+            break;
     }
     mPathItem->setPath(path);
 }

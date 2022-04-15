@@ -2,13 +2,6 @@ project(dev_tools LANGUAGES CXX)
 
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
-add_subdirectory(app)
-add_subdirectory(app_qml)
-if (BUILD_DATA_GEN)
-    add_subdirectory(data_gen)
-endif ()
-add_subdirectory(standalone)
-
 find_package(OpenCV QUIET)
 find_package(Torch QUIET)
 find_package(Qt5 COMPONENTS Widgets QUIET)
@@ -46,11 +39,6 @@ addLibraryDeps(els_cocr els_ckit)
 addLibraryDeps(els_cocr els_ocv)
 linkOpenCV(els_cocr)
 linkQt(els_cocr "Core")
-# data module
-makeLibrary(data els_data)
-addLibraryDeps(els_data els_stroke)
-addLibraryDeps(els_data els_ocv)
-
 if (NOT USE_OPENCV_DNN)
     linkNcnn(els_cocr)
 endif ()
@@ -61,3 +49,16 @@ else ()
     target_compile_definitions(els_cocr PRIVATE
             MODEL_DIR=\":/models\")
 endif ()
+
+# data module
+makeLibrary(data els_data)
+addLibraryDeps(els_data els_stroke)
+addLibraryDeps(els_data els_ocv)
+
+# executable
+add_subdirectory(app)
+add_subdirectory(app_qml)
+if (BUILD_DATA_GEN)
+    add_subdirectory(data_gen)
+endif ()
+add_subdirectory(standalone)

@@ -6,6 +6,7 @@
 #include <QImage>
 #include "ocv/mat.h"
 
+
 class OCRManager;
 
 class GuiMol;
