@@ -49,7 +49,6 @@ set(inchi_INCLUDE_DIR ${DEV_DEPS_DIR}/libinchi/include CACHE INTERNAL "")
 set(maeparser_INCLUDE_DIR ${DEV_DEPS_DIR}/libmaeparser/include CACHE INTERNAL "")
 set(coordgenlibs_INCLUDE_DIR ${DEV_DEPS_DIR}/libcoordgenlibs/include CACHE INTERNAL "")
 set(openbabel_INCLUDE_DIR ${DEV_DEPS_DIR}/libopenbabel/include CACHE INTERNAL "")
-set(cocr_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cocr_core/include CACHE INTERNAL "")
 # remember to convert <ncnn/header.h> to <header.h>
 set(ncnn_INCLUDE_DIR ${DEV_DEPS_DIR}/libncnn/include)
 
@@ -104,8 +103,7 @@ endif ()
 
 # build ncnn from source
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Dependencies.cmake)
+
 add_subdirectory(thirdparty)
 
-#add_subdirectory(cocr_core)
-add_subdirectory(cocr_tools)
-add_subdirectory(dev_tools)
+add_subdirectory(source)

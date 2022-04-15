@@ -2,7 +2,11 @@ project(dev_tools LANGUAGES CXX)
 
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
+add_subdirectory(app)
 add_subdirectory(app_qml)
+if (BUILD_DATA_GEN)
+    add_subdirectory(data_gen)
+endif ()
 add_subdirectory(standalone)
 
 find_package(OpenCV QUIET)
@@ -10,7 +14,7 @@ find_package(Torch QUIET)
 find_package(Qt5 COMPONENTS Widgets QUIET)
 
 CHECK_OPENCV(${PROJECT_NAME})
-CHECK_LIBTORCH(${PROJECT_NAME})
+#CHECK_LIBTORCH(${PROJECT_NAME})
 CHECK_QT(${PROJECT_NAME} "Widgets")
 
 ## els modules are linked with PUBLIC config
@@ -42,6 +46,11 @@ addLibraryDeps(els_cocr els_ckit)
 addLibraryDeps(els_cocr els_ocv)
 linkOpenCV(els_cocr)
 linkQt(els_cocr "Core")
+# data module
+makeLibrary(data els_data)
+addLibraryDeps(els_data els_stroke)
+addLibraryDeps(els_data els_ocv)
+
 if (NOT USE_OPENCV_DNN)
     linkNcnn(els_cocr)
 endif ()

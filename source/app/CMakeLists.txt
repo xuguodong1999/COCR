@@ -58,13 +58,11 @@ else ()
     addExecutable(${APP_NAME} "${PROJECT_SOURCE}")
 endif ()
 
-target_include_directories(${APP_NAME} PRIVATE ${cocr_INCLUDE_DIR})
 addLibraryDeps(${APP_NAME} els_ckit)
 addLibraryDeps(${APP_NAME} els_base)
 addLibraryDeps(${APP_NAME} els_cocr)
 addLibraryDeps(${APP_NAME} els_ocv)
 
-linkOpenCV(${APP_NAME})
 linkQt(${APP_NAME} "${QT_COMPONENTS}")
 
 if (MSVC)
