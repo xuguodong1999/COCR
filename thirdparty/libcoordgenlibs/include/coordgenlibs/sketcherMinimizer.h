@@ -31,11 +31,11 @@ namespace schrodinger::mae {
         class Block;
     } // namespace schrodinger
 
-typedef struct {
+struct proximityData{
     std::vector<sketcherMinimizerPointF> additionVectors;
     std::vector<sketcherMinimizerPointF> centers;
     std::vector<int> counters;
-} proximityData;
+};
 
 /* class to handle templates of common difficult ring structures */
 class CoordgenTemplates {
