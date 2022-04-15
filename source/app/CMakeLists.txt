@@ -17,7 +17,6 @@ endif ()
 if (NOT ANDROID) # do it in root/CMakeLists.txt
     find_package(Qt5 COMPONENTS ${QT_COMPONENTS} LinguistTools REQUIRED)
 endif ()
-find_package(OpenCV REQUIRED)
 
 # notice that qm file is generated through cmake job
 set(TS_FILES ${DEV_ASSETS_DIR}/leafxy_zh_CN.ts)

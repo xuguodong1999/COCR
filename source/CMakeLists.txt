@@ -12,33 +12,40 @@ CHECK_QT(${PROJECT_NAME} "Widgets")
 
 ## els modules are linked with PUBLIC config
 ## els and 3rdparty modules are linked with PRIVATE config
+
 # base
-makeLibrary(base els_base)
+makeLibrary(libbase els_base)
+
 # math
-makeLibrary(math els_math)
+makeLibrary(libmath els_math)
 addLibraryDeps(els_math els_base)
+
 # balance
-makeLibrary(ceb els_ceb)
+makeLibrary(libceb els_ceb)
 addLibraryDeps(els_ceb els_math)
+
 # chem kit
-makeLibrary(ckit els_ckit)
+makeLibrary(libckit els_ckit)
 addLibraryDeps(els_ckit els_math)
 linkOpenBabel(els_ckit)
 linkCoordgenlibs(els_ckit)
+
 # opencv wrapper
-makeLibrary(ocv els_ocv)
+makeLibrary(libocv els_ocv)
 addLibraryDeps(els_ocv els_base)
 linkOpenCV(els_ocv)
 linkQt(els_ocv "Gui") # access to QImage
+
 # stroke
-makeLibrary(stroke els_stroke)
+makeLibrary(libstroke els_stroke)
 addLibraryDeps(els_stroke els_ocv)
+
 # ocr module
-makeLibrary(cocr els_cocr)
+makeLibrary(libcocr els_cocr)
 addLibraryDeps(els_cocr els_ckit)
 addLibraryDeps(els_cocr els_ocv)
 linkOpenCV(els_cocr)
-linkQt(els_cocr "Core")
+linkQt(els_cocr "Gui") # access to QImage
 if (NOT USE_OPENCV_DNN)
     linkNcnn(els_cocr)
 endif ()
@@ -51,9 +58,14 @@ else ()
 endif ()
 
 # data module
-makeLibrary(data els_data)
+makeLibrary(libdata els_data)
 addLibraryDeps(els_data els_stroke)
 addLibraryDeps(els_data els_ocv)
+addLibraryDeps(els_data els_ckit)
+addLibraryDeps(els_data els_math)
+linkOpenBabel(els_data)
+linkCoordgenlibs(els_data)
+linkQt(els_data "Gui")
 
 # executable
 add_subdirectory(app)
