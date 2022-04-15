@@ -3,7 +3,7 @@
 #include "base/cocr_types.h"
 #include "base/rect.h"
 #include "stroke/controller.h"
-#include "ocv_wrapper/mat.h"
+#include "ocv/mat.h"
 #include <memory>
 #include <optional>
 class ELS_STROKE_EXPORT HwBase {

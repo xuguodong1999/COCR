@@ -1,7 +1,7 @@
-#include "math_util.hpp"
+#include "math_util.h"
 #include <cmath>
 
-using namespace cocr;
+
 
 QPointF MathUtil::getZero() { return QPointF(0, 0); }
 

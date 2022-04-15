@@ -5,9 +5,8 @@
 namespace Ui {
     class View2DWidget;
 }
-namespace cocr {
-    class JMol;
-}
+    class GuiMol;
+
 class Mol2DWidget;
 
 class View2DWidget : public QWidget {
@@ -17,7 +16,7 @@ public:
 
     ~View2DWidget();
 
-    void syncMolToScene(std::shared_ptr<cocr::JMol> _mol);
+    void syncMolToScene(std::shared_ptr<GuiMol> _mol);
 
     void startWaitHint();
 

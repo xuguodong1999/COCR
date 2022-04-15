@@ -31,3 +31,27 @@ DetectorClasses DetectorUtil::convertElementTypeToDetectorClasses(const ElementT
         }
     }
 }
+
+bool DetectorObject::isValidLabel(const int &_label) {
+    return minLabel <= _label && _label <= maxLabel;
+}
+
+const rectf &DetectorObject::asRect() const {
+    return mRect;
+}
+
+float DetectorObject::x() const {
+    return mRect.first.first;
+}
+
+float DetectorObject::y() const {
+    return mRect.first.second;
+}
+
+float DetectorObject::w() const {
+    return mRect.second.first - mRect.first.first;
+}
+
+float DetectorObject::h() const {
+    return mRect.second.second - mRect.first.second;
+}

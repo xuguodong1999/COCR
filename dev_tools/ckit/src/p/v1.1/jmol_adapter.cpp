@@ -30,9 +30,9 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
 //    std::cerr << __FUNCTION__ << "const&";
     id = _jMolAdapter.id + 1;
     idBase = _jMolAdapter.idBase;
-    std::unordered_multimap<id_type, std::pair<float, std::shared_ptr<JAtom>>> saMap;
-    const_cast<JMolAdapter &>(_jMolAdapter).loopAtomVec([&](JAtom &_atom) {
-        auto atom = std::make_shared<JAtom>(_atom.getId(), ElementType::SA);
+    std::unordered_multimap<id_type, std::pair<float, std::shared_ptr<Atom>>> saMap;
+    const_cast<JMolAdapter &>(_jMolAdapter).loopAtomVec([&](Atom &_atom) {
+        auto atom = std::make_shared<Atom>(_atom.getId(), ElementType::SA);
         *atom = _atom;
         atom->clearSABonds();
         auto &sa = _atom.getSaBonds();
@@ -41,8 +41,8 @@ JMolAdapter::JMolAdapter(const JMolAdapter &_jMolAdapter) :
         }
         atomMap[atom->getId()] = atom;
     });
-    const_cast<JMolAdapter &>(_jMolAdapter).loopBondVec([&](JBond &_bond) {
-        auto bond = std::make_shared<JBond>(
+    const_cast<JMolAdapter &>(_jMolAdapter).loopBondVec([&](Bond &_bond) {
+        auto bond = std::make_shared<Bond>(
                 _bond.getId(), atomMap[_bond.getFrom()->getId()], atomMap[_bond.getTo()->getId()],
                 _bond.getType(), _bond.getFromOffset(), _bond.getToOffset());
         bondMap[bond->getId()] = bond;
@@ -61,20 +61,20 @@ JMolAdapter::JMolAdapter(JMolAdapter &&_jMolAdapter) {
     obMol = _jMolAdapter.obMol;
 }
 
-std::shared_ptr<JAtom> JMolAdapter::removeAtom(const size_t &_aid) {
+std::shared_ptr<Atom> JMolAdapter::removeAtom(const size_t &_aid) {
     onMolUpdated();
     isOBMolLatest = false;
     return JMol::removeAtom(_aid);
 }
 
-std::shared_ptr<JBond> JMolAdapter::removeBond(const size_t &_bid) {
+std::shared_ptr<Bond> JMolAdapter::removeBond(const size_t &_bid) {
     onMolUpdated();
     isOBMolLatest = false;
     return JMol::removeBond(_bid);
 }
 
-std::shared_ptr<JBond> JMolAdapter::addBond(
-        std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type,
+std::shared_ptr<Bond> JMolAdapter::addBond(
+        std::shared_ptr<Atom> _a1, std::shared_ptr<Atom> _a2, const BondType &_type,
         const float &_offset1, const float &_offset2) {
     onMolUpdated();
     checkOBMol();
@@ -84,7 +84,7 @@ std::shared_ptr<JBond> JMolAdapter::addBond(
     return bond;
 }
 
-std::shared_ptr<JAtom> JMolAdapter::addAtom(
+std::shared_ptr<Atom> JMolAdapter::addAtom(
         const ElementType &_element, const float &_x, const float &_y) {
     onMolUpdated();
     checkOBMol();
@@ -94,7 +94,7 @@ std::shared_ptr<JAtom> JMolAdapter::addAtom(
     return atom;
 }
 
-std::shared_ptr<JAtom> JMolAdapter::addAtom(
+std::shared_ptr<Atom> JMolAdapter::addAtom(
         const ElementType &_element, const float &_x, const float &_y, const float &_z) {
     auto atom = addAtom(_element, _x, _y);
     if (!atom)return nullptr;
@@ -192,7 +192,7 @@ bool JMolAdapter::runForcefield() {
     return true;
 }
 
-void JMolAdapter::syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _func) {
+void JMolAdapter::syncAtoms(std::function<void(Atom &, OpenBabel::OBAtom *)> _func) {
     for (auto&[aid, obAtomId]: atomIdMap) {
         auto atom = getAtom(aid);
         auto obAtom = obMol->GetAtomById(obAtomId);
@@ -202,7 +202,7 @@ void JMolAdapter::syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _f
     }
 }
 
-void JMolAdapter::syncBonds(std::function<void(JBond &, OpenBabel::OBBond *)> _func) {
+void JMolAdapter::syncBonds(std::function<void(Bond &, OpenBabel::OBBond *)> _func) {
     for (auto&[bid, obBondId]: bondIdMap) {
         auto bond = getBond(bid);
         auto obBond = obMol->GetBondById(obBondId);
@@ -214,7 +214,7 @@ void JMolAdapter::syncBonds(std::function<void(JBond &, OpenBabel::OBBond *)> _f
 
 void JMolAdapter::sync3D() {
     std::cerr << __FUNCTION__;
-    syncAtoms([](JAtom &atom, OpenBabel::OBAtom *obAtom) {
+    syncAtoms([](Atom &atom, OpenBabel::OBAtom *obAtom) {
         atom.set3D(obAtom->x(), obAtom->y(), obAtom->z());
     });
     is3DInfoLatest = true;
@@ -226,14 +226,14 @@ bool JMolAdapter::generate2D() {
     try {
         sketcherMinimizer minimizer;
         auto cMol = new sketcherMinimizerMolecule();
-        std::unordered_map<JAtom *, sketcherMinimizerAtom *> tmpAtomMap;
-        loopAtomVec([&](JAtom &atom) {
+        std::unordered_map<Atom *, sketcherMinimizerAtom *> tmpAtomMap;
+        loopAtomVec([&](Atom &atom) {
             auto cAtom = cMol->addNewAtom();
             cAtom->setAtomicNumber(atom.getAtomicNumber());
             tmpAtomMap[&atom] = cAtom;
         });
         std::vector<sketcherMinimizerBond *> cBondVec;
-        loopBondVec([&](JBond &bond) {
+        loopBondVec([&](Bond &bond) {
             auto cBond = cMol->addNewBond(tmpAtomMap[&*bond.getFrom()], tmpAtomMap[&*bond.getTo()]);
             cBond->setBondOrder(bond.getBondOrder());
             cBondVec.push_back(cBond);
@@ -302,7 +302,7 @@ void JMolAdapter::checkOBMol() {
     isOBMolLatest = true;
 }
 
-void JMolAdapter::addOBAtom(JAtom &_atom) {
+void JMolAdapter::addOBAtom(Atom &_atom) {
     OpenBabel::OBAtom obAtom;
     if (ElementType::SA == _atom.getType()) {
         // FIXME: 选择砹元素作为字符串的代理，这个元素的特点是价态足够、且一般没人写
@@ -331,7 +331,7 @@ void JMolAdapter::addOBAtom(JAtom &_atom) {
 //    std::cerr << obAtom->GetAtomicMass();
 }
 
-void JMolAdapter::addOBBond(JBond &_bond) {
+void JMolAdapter::addOBBond(Bond &_bond) {
 //    auto obBond = obMol->NewBond();
     OpenBabel::OBBond obBond;
     int obBondOrder;
@@ -407,15 +407,15 @@ void JMolAdapter::resetOBMol() {
     atomIdMap2.clear();
     obMol = std::make_shared<OpenBabel::OBMol>();
     onMolUpdated();
-    loopAtomVec([&](JAtom &atom) {
+    loopAtomVec([&](Atom &atom) {
         addOBAtom(atom);
     });
-    loopBondVec([&](JBond &bond) {
+    loopBondVec([&](Bond &bond) {
         addOBBond(bond);
     });
 }
 
-std::shared_ptr<JAtom>
+std::shared_ptr<Atom>
 JMolAdapter::addSuperAtom(const std::string &_name, const float &_x0, const float &_y0, const float &_x1,
                           const float &_y1) {
 //    std::cerr << __FUNCTION__;
@@ -430,11 +430,11 @@ JMolAdapter::addSuperAtom(const std::string &_name, const float &_x0, const floa
 void JMolAdapter::display() {
     JMol::display();
     std::cerr << "ob atom info:";
-    syncAtoms([](JAtom &atom, OpenBabel::OBAtom *obAtom) {
+    syncAtoms([](Atom &atom, OpenBabel::OBAtom *obAtom) {
         std::cerr << obAtom->GetId() << obAtom->GetIdx() << obAtom->GetAtomicNum();
     });
     std::cerr << "ob bond info:";
-    syncBonds([](JBond &bond, OpenBabel::OBBond *obBond) {
+    syncBonds([](Bond &bond, OpenBabel::OBBond *obBond) {
         std::cerr << bond.getId();
         std::cerr << obBond->GetBeginAtom()->GetId() << obBond->GetEndAtom()->GetId() << obBond->GetBondOrder();
     });
@@ -488,22 +488,16 @@ void JMolAdapter::rebuildAllData() {
     resetOBMol();
 }
 
-std::vector<std::string> GetWritableFormats() {
-    std::vector<std::string> result;
-    OpenBabel::OBPlugin::ListAsVector("formats", nullptr, result);
-    return result;
-}
-
 
 std::vector<std::shared_ptr<JMol>> JMolAdapter::split() {
     AlkaneGraph<size_t> graph;
     std::unordered_map<id_type, size_t> j2gAidMap, g2jMap;
     std::vector<std::shared_ptr<JMol>> result;
     size_t gAidIdx = 0;
-    loopAtomVec([&](JAtom &atom) {
+    loopAtomVec([&](Atom &atom) {
         j2gAidMap[atom.getId()] = gAidIdx++;
     });
-    loopBondVec([&](JBond &bond) {
+    loopBondVec([&](Bond &bond) {
         auto from = bond.getFrom(), to = bond.getTo();
         if (from && to) {
             graph.push_back(j2gAidMap[from->getId()], j2gAidMap[to->getId()]);

@@ -1,11 +1,11 @@
 #include "util.h"
-#include "chem/jbond.hpp"
+#include "ckit/bond.h"
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 
 
-cv::Mat cocr::convertQImageToMat(const QImage &_img) {
+cv::Mat convertQImageToMat(const QImage &_img) {
     cv::Mat mat;
     if (_img.isNull()) {
         std::cerr << "you are converting an empty QImage to cv::Mat" << std::endl;
@@ -36,12 +36,11 @@ cv::Mat cocr::convertQImageToMat(const QImage &_img) {
     return std::move(mat);
 }
 
-cv::Mat cocr::convertQPixmapToMat(const QPixmap &_img) {
-    return cocr::convertQImageToMat(_img.toImage());
+cv::Mat convertQPixmapToMat(const QPixmap &_img) {
+    return convertQImageToMat(_img.toImage());
 }
 
-QString cocr::getBondName(const cocr::JBond &bond) {
-    using cocr::BondType;
+QString getBondName(const Bond &bond) {
     switch (bond.getType()) {
         case BondType::SingleBond:
             return QObject::tr("Single");
@@ -51,24 +50,18 @@ QString cocr::getBondName(const cocr::JBond &bond) {
             return QObject::tr("Triple");
         case BondType::DelocalizedBond:
             return QObject::tr("Delocalized");
-        case BondType::ImplicitBond:
+        case BondType::WaveBond:
             return QObject::tr("Implicit");
-        case BondType::UpBond:
+        case BondType::SolidWedgeBond:
             return QObject::tr("UpBond");
-        case BondType::DownBond:
+        case BondType::DashWedgeBond:
             return QObject::tr("Down");
         default:
             return QObject::tr("Unknown");
     }
 }
 
-QColor cocr::getColor(const ColorName &color) {
-    const auto&[r, g, b]=
-    predefinedColors[(size_t) color];
-    return {r, g, b};
-}
-
-QImage cocr::binaryAlphaImage(cv::Mat &src) {
+QImage binaryAlphaImage(cv::Mat &src) {
     cv::Mat result;
     cv::cvtColor(src, result, cv::COLOR_RGBA2GRAY);
     cv::adaptiveThreshold(result, result, 255.0,
@@ -79,4 +72,9 @@ QImage cocr::binaryAlphaImage(cv::Mat &src) {
     // Create QImage with same dimensions as input Mat
     QImage image(pSrc, result.cols, result.rows, result.step, QImage::Format_ARGB32);
     return image.copy();
+}
+
+QColor getColor(const ColorName &color) {
+    const auto&[r, g, b]= ColorUtil::GetRGB(color);
+    return {r, g, b};
 }

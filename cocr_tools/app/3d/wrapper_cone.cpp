@@ -1,12 +1,12 @@
-#include "3d/wrapper_cone.hpp"
-#include "3d/entity_base.hpp"
+#include "3d/wrapper_cone.h"
+#include "3d/entity_base.h"
 
-#include "math_util.hpp"
+#include "math_util.h"
 
 #include <Qt3DCore/QTransform>
 #include <Qt3DExtras/QConeMesh>
 
-using cocr::MathUtil;
+
 
 ConeWrapper::ConeWrapper(Qt3DCore::QEntity *_root) : SingleWrapper(_root), cone(new Qt3DExtras::QConeMesh()) {
     entity->addComponent(cone);

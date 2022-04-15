@@ -107,5 +107,5 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Dependencies.cmake)
 add_subdirectory(thirdparty)
 
 #add_subdirectory(cocr_core)
-#add_subdirectory(cocr_tools)
+add_subdirectory(cocr_tools)
 add_subdirectory(dev_tools)

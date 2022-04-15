@@ -29,9 +29,9 @@ namespace v1_1 {
 
         void onMolUpdated();
 
-        void syncAtoms(std::function<void(JAtom &, OpenBabel::OBAtom *)> _func);
+        void syncAtoms(std::function<void(Atom &, OpenBabel::OBAtom *)> _func);
 
-        void syncBonds(std::function<void(JBond &, OpenBabel::OBBond *)> _func);
+        void syncBonds(std::function<void(Bond &, OpenBabel::OBBond *)> _func);
 
         void sync3D();
 
@@ -42,9 +42,9 @@ namespace v1_1 {
 
         void resetOBMol();
 
-        void addOBAtom(JAtom &_atom);
+        void addOBAtom(Atom &_atom);
 
-        void addOBBond(JBond &_bond);
+        void addOBBond(Bond &_bond);
 
 
     public:
@@ -69,22 +69,22 @@ namespace v1_1 {
         JMolAdapter &operator=(const JMolAdapter &) = delete;
 
         // FIXME: 必须先调用 removeBond 再调用 removeAtom，因为 OBAtom 持有 OBBond，删除 OBBond 的时候会调用 OBAtom
-        std::shared_ptr<JAtom> removeAtom(const size_t &_aid) override;
+        std::shared_ptr<Atom> removeAtom(const size_t &_aid) override;
 
-        std::shared_ptr<JBond> removeBond(const size_t &_bid) override;
+        std::shared_ptr<Bond> removeBond(const size_t &_bid) override;
 
 
-        std::shared_ptr<JBond> addBond(std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2,
+        std::shared_ptr<Bond> addBond(std::shared_ptr<Atom> _a1, std::shared_ptr<Atom> _a2,
                                        const BondType &_type = BondType::SingleBond,
                                        const float &_offset1 = 0.5, const float &_offset2 = 0.5) override;
 
-        std::shared_ptr<JAtom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0) override;
+        std::shared_ptr<Atom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0) override;
 
-        std::shared_ptr<JAtom> addSuperAtom(
+        std::shared_ptr<Atom> addSuperAtom(
                 const std::string &_name, const float &_x0 = 0, const float &_y0 = 0,
                 const float &_x1 = 0, const float &_y1 = 0) override;
 
-        std::shared_ptr<JAtom> addAtom(
+        std::shared_ptr<Atom> addAtom(
                 const ElementType &_element, const float &_x, const float &_y, const float &_z) override;
 
         std::string writeAsPDB() override;

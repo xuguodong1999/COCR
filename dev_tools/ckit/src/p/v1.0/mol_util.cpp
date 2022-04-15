@@ -3,6 +3,7 @@
 #include "base/std_util.h"
 
 #include "openbabel_util.h"
+
 using namespace v1_0;
 std::shared_ptr<MolUtil> molUtil;
 

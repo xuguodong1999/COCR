@@ -5,18 +5,18 @@
 
 #include <random>
 using namespace v1_0;
-std::shared_ptr<JAtom> JMol::addAtom(const size_t &_atomicNumber, const float &_x, const float &_y) {
+std::shared_ptr<Atom> JMol::addAtom(const size_t &_atomicNumber, const float &_x, const float &_y) {
     auto aid = mAids++;
-    auto atom = std::make_shared<JAtom>(aid, _atomicNumber);
+    auto atom = std::make_shared<Atom>(aid, _atomicNumber);
     atom->setCoord2d(_x, _y);
     atomsMap[aid] = atom;
     return std::move(atom);
 }
 
-std::shared_ptr<JBond> JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId,
+std::shared_ptr<Bond> JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId,
                                      const BondType &_bondType) {
     auto bid = mBids++;
-    auto bond = std::make_shared<JBond>(bid, _atomFromId, _atomToId, _bondType);
+    auto bond = std::make_shared<Bond>(bid, _atomFromId, _atomToId, _bondType);
     bondsMap[bid] = bond;
     return std::move(bond);
 }
@@ -75,13 +75,13 @@ void JMol::safeTraverseAtoms(const std::function<void(const size_t &)> &func) co
     for (auto &aid: aids) func(aid);
 }
 
-std::shared_ptr<JAtom> JMol::getAtomById(const size_t &_aid) const {
+std::shared_ptr<Atom> JMol::getAtomById(const size_t &_aid) const {
     auto itr = atomsMap.find(_aid);
     if (itr == atomsMap.end()) return nullptr;
     return itr->second;
 }
 
-std::shared_ptr<JBond> JMol::getBondById(const size_t &_bid) const {
+std::shared_ptr<Bond> JMol::getBondById(const size_t &_bid) const {
     auto itr = bondsMap.find(_bid);
     if (itr == bondsMap.end()) return nullptr;
     return itr->second;
@@ -136,6 +136,6 @@ void JMol::removeBond(const size_t &_bid) {
     bondsMap.erase(_bid);
 }
 
-std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_elementType) {
+std::shared_ptr<Atom> JMol::addAtom(const ElementType &_elementType) {
     return addAtom(static_cast<size_t>(_elementType));
 }

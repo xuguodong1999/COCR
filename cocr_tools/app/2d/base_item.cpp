@@ -1,4 +1,4 @@
-#include "2d/base_item.hpp"
+#include "2d/base_item.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>

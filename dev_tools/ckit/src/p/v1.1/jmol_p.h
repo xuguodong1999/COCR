@@ -7,7 +7,6 @@
 #include <queue>
 
 namespace v1_1 {
-    class JAtom;
 
     enum class TokenType {
         // 空白语义
@@ -58,7 +57,7 @@ namespace v1_1 {
     void initSuperAtomMap();
 
     class JMol_p {
-        using atom_t = std::shared_ptr<JAtom>;
+        using atom_t = std::shared_ptr<Atom>;
 
         using token_struct = std::tuple<std::vector<TokenType>,
                 std::unordered_map<size_t, int>, std::unordered_map<size_t, ElementType>>;

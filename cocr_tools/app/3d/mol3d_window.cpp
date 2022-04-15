@@ -1,5 +1,5 @@
-#include "3d/mol3d_window.hpp"
-#include "math_util.hpp"
+#include "3d/mol3d_window.h"
+#include "math_util.h"
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QPointLight>
 #include <Qt3DRender/QRenderSettings>
@@ -11,8 +11,6 @@
 #include <QApplication>
 #include <QWidget>
 #include <cmath>
-
-using cocr::MathUtil;
 
 enum class SimpleGesture {
     GestureNone,

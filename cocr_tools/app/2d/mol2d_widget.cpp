@@ -1,8 +1,8 @@
-#include "2d/mol2d_widget.hpp"
-#include "2d/atom_item.hpp"
-#include "2d/bond_item.hpp"
+#include "2d/mol2d_widget.h"
+#include "2d/atom_item.h"
+#include "2d/bond_item.h"
 #include "ui/waithint_widget.h"
-#include "chem/jmol.hpp"
+#include "ckit/mol.h"
 #include "util.h"
 #include <QDebug>
 #include <cmath>
@@ -38,7 +38,7 @@ inline static QString getRichText(const std::string &_text) {
     return str;
 }
 
-void Mol2DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
+void Mol2DWidget::syncMolToScene(std::shared_ptr<GuiMol> _mol) {
     endWaitHint();
     mol = _mol;
     scene->clear();
@@ -47,7 +47,7 @@ void Mol2DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
     float delta = (std::min)(width(), height()) * 0.1;
     mol->norm2D(width(), height(), delta, delta);
     std::unordered_map<size_t, AtomItem *> atomItemMap;
-    mol->loopAtomVec([&](cocr::JAtom &_atom) {
+    mol->loopAtomVec([&](Atom &_atom) {
         auto atomItem = new AtomItem(_atom.getId());
         atomItem->setHTML(getRichText(_atom.getName()));
         if (std::isnan(_atom.x0) || std::isnan(_atom.y0)) {
@@ -62,7 +62,7 @@ void Mol2DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
 //        qDebug() << __FUNCTION__ << "add atom, implicit=" << _atom.isImplicit();
         scene->addItem(atomItem);
     });
-    mol->loopBondVec([&](cocr::JBond &_bond) {
+    mol->loopBondVec([&](Bond &_bond) {
         auto bondItem = new BondItem(_bond.getId());
         auto from = _bond.getFrom(), to = _bond.getTo();
         if (!(from && to)) { return; }
@@ -130,7 +130,7 @@ QString Mol2DWidget::makeBondInfo(const size_t &_bid) {
     if (mol) {
         auto bond = mol->getBond(_bid);
         if (bond) {
-            info.append("\n" + tr("type: ") + cocr::getBondName(*bond));
+            info.append("\n" + tr("type: ") + getBondName(*bond));
             auto from = bond->getFrom();
             auto to = bond->getTo();
             if (from && to) {

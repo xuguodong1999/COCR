@@ -1,8 +1,8 @@
-#include "3d/wrapper_multi_cylinder.hpp"
-#include "3d/entity_base.hpp"
-#include "3d/wrapper_cylinder.hpp"
+#include "3d/wrapper_multi_cylinder.h"
+#include "3d/entity_base.h"
+#include "3d/wrapper_cylinder.h"
 
-#include "math_util.hpp"
+#include "math_util.h"
 
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DCore/QTransform>
@@ -10,7 +10,7 @@
 #include <cmath>
 #include <optional>
 
-using cocr::MathUtil;
+
 
 std::unordered_map<decltype(MultiCylinderWrapper::cylinders.size()), std::vector<QVector3D>>
         MultiCylinderWrapper::sTransStrategy = {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "jatom.h"
-#include "jbond.h"
+#include "ckit/atom.h"
+#include "ckit/bond.h"
 #include <unordered_set>
 #include <vector>
 #include <memory>
@@ -16,15 +16,15 @@ namespace v1_1 {
         id_type id;
         id_type idBase;
         std::shared_ptr<JMol_p> _p;
-        std::unordered_map<id_type, std::shared_ptr<JAtom>> atomMap;
-        std::unordered_map<id_type, std::shared_ptr<JBond>> bondMap;
+        std::unordered_map<id_type, std::shared_ptr<Atom>> atomMap;
+        std::unordered_map<id_type, std::shared_ptr<Bond>> bondMap;
         bool is3DInfoLatest, is2DInfoLatest;
         static std::unordered_set<std::string> FORMAT_WRITE_WHITE_LIST;
 
         inline static std::unordered_set<std::string> sAvailableOutputFormat;
         inline static std::unordered_set<std::string> sAvailableInputFormat;
 
-        std::shared_ptr<JAtom> addAtom(const int &_atomicNumber);
+        std::shared_ptr<Atom> addAtom(const int &_atomicNumber);
 
         int getNumHydrogen(const id_type &_aid);
 
@@ -50,11 +50,11 @@ namespace v1_1 {
 
         virtual std::vector<std::shared_ptr<JMol>> split() = 0;
 
-        void loopAtomVec(std::function<void(JAtom &_atom)> _func);
+        void loopAtomVec(std::function<void(Atom &_atom)> _func);
 
-        void loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<JAtom>)> _func);
+        void loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<Atom>)> _func);
 
-        void loopBondVec(std::function<void(JBond &_bond)> _func);
+        void loopBondVec(std::function<void(Bond &_bond)> _func);
 
         virtual void display();
 
@@ -66,23 +66,23 @@ namespace v1_1 {
 
         id_type getId();
 
-        virtual std::shared_ptr<JAtom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0);
+        virtual std::shared_ptr<Atom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0);
 
         // 水平原始字符串、矩形左上角和右下角坐标、关键接入点
-        virtual std::shared_ptr<JAtom> addSuperAtom(
+        virtual std::shared_ptr<Atom> addSuperAtom(
                 const std::string &_name, const float &_x0 = 0, const float &_y0 = 0,
                 const float &_x1 = 0, const float &_y1 = 0);
 
-        virtual std::shared_ptr<JAtom> addAtom(
+        virtual std::shared_ptr<Atom> addAtom(
                 const ElementType &_element, const float &_x, const float &_y, const float &_z);
 
-        virtual std::shared_ptr<JBond> addBond(
-                std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2,
+        virtual std::shared_ptr<Bond> addBond(
+                std::shared_ptr<Atom> _a1, std::shared_ptr<Atom> _a2,
                 const BondType &_type = BondType::SingleBond, const float &_offset1 = 0.5, const float &_offset2 = 0.5);
 
-        std::shared_ptr<JAtom> getAtom(const id_type &_aid);
+        std::shared_ptr<Atom> getAtom(const id_type &_aid);
 
-        std::shared_ptr<JBond> getBond(const id_type &_bid);
+        std::shared_ptr<Bond> getBond(const id_type &_bid);
 
         /**
          * 添加使用Mol对象前的回调，设计用作同步适配器和适配者的数据
@@ -96,9 +96,9 @@ namespace v1_1 {
 
         virtual void rebuildAllData() = 0;
 
-        virtual std::shared_ptr<JAtom> removeAtom(const id_type &_aid);
+        virtual std::shared_ptr<Atom> removeAtom(const id_type &_aid);
 
-        virtual std::shared_ptr<JBond> removeBond(const id_type &_bid);
+        virtual std::shared_ptr<Bond> removeBond(const id_type &_bid);
 
         virtual std::string writeAsPDB() = 0;
 
@@ -125,6 +125,3 @@ namespace v1_1 {
         void tryMarkDoubleBond(const id_type &_bid);
     };
 }
-
-// define it in specific impl
-std::vector<std::string> GetWritableFormats();

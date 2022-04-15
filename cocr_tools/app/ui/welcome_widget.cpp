@@ -1,6 +1,6 @@
 #include "welcome_widget.h"
 #include "ui_welcome_widget.h"
-#include "application.hpp"
+#include "application.h"
 #include <QCheckBox>
 #include <QFile>
 #include <QScrollBar>

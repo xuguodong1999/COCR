@@ -45,27 +45,27 @@ std::unordered_set<std::string>v1_1::JMol::FORMAT_WRITE_WHITE_LIST = {
         "zin"
 };
 
-std::shared_ptr<JAtom> v1_1::JMol::getAtom(const id_type &_aid) {
+std::shared_ptr<Atom> v1_1::JMol::getAtom(const id_type &_aid) {
     auto it = atomMap.find(_aid);
     if (atomMap.end() == it) { return nullptr; }
     return it->second;
 }
 
-std::shared_ptr<JBond> v1_1::JMol::getBond(const id_type &_bid) {
+std::shared_ptr<Bond> v1_1::JMol::getBond(const id_type &_bid) {
     auto it = bondMap.find(_bid);
     if (bondMap.end() == it) { return nullptr; }
     return it->second;
 }
 
 
-std::shared_ptr<JAtom> JMol::addAtom(const ElementType &_element, const float &_x, const float &_y) {
+std::shared_ptr<Atom> JMol::addAtom(const ElementType &_element, const float &_x, const float &_y) {
     _p->exceedValence();
-    auto atom = std::make_shared<JAtom>(idBase++, _element, _x, _y);
+    auto atom = std::make_shared<Atom>(idBase++, _element, _x, _y);
     atomMap[atom->getId()] = atom;
     return atom;
 }
 
-std::shared_ptr<JAtom> JMol::addAtom(
+std::shared_ptr<Atom> JMol::addAtom(
         const ElementType &_element, const float &_x, const float &_y, const float &_z) {
     auto atom = addAtom(_element, _x, _y);
     if (!atom)return nullptr;
@@ -74,14 +74,14 @@ std::shared_ptr<JAtom> JMol::addAtom(
 }
 
 
-std::shared_ptr<JAtom> JMol::removeAtom(const id_type &_aid) {
+std::shared_ptr<Atom> JMol::removeAtom(const id_type &_aid) {
     _p->exceedValence();
     auto atom = getAtom(_aid);
     if (atom) { atomMap.erase(_aid); }
     return atom;
 }
 
-std::shared_ptr<JBond> JMol::removeBond(const id_type &_bid) {
+std::shared_ptr<Bond> JMol::removeBond(const id_type &_bid) {
     _p->exceedValence();
     auto bond = getBond(_bid);
     if (bond) { bondMap.erase(_bid); }
@@ -101,28 +101,28 @@ JMol::JMol() : id(0), is3DInfoLatest(false), is2DInfoLatest(false), idBase(0),
 
 }
 
-void JMol::loopAtomVec(std::function<void(JAtom &)> _func) {
+void JMol::loopAtomVec(std::function<void(Atom &)> _func) {
     for (auto &[aid, atom]: atomMap) {
         if (atom) { _func(*atom); }
     }
 }
 
-void JMol::loopBondVec(std::function<void(JBond &)> _func) {
+void JMol::loopBondVec(std::function<void(Bond &)> _func) {
     for (auto &[bid, bond]: bondMap) {
         if (bond) { _func(*bond); }
     }
 }
 
-std::shared_ptr<JAtom> JMol::addAtom(const int &_atomicNumber) {
+std::shared_ptr<Atom> JMol::addAtom(const int &_atomicNumber) {
     _p->exceedValence();
-    auto atom = std::make_shared<JAtom>(idBase++, static_cast<ElementType>(_atomicNumber));
+    auto atom = std::make_shared<Atom>(idBase++, static_cast<ElementType>(_atomicNumber));
     atomMap[atom->getId()] = atom;
     return atom;
 }
 
 void JMol::display() {
     onExtraDataNeeded();
-    loopAtomVec([&](JAtom &atom) {
+    loopAtomVec([&](Atom &atom) {
         std::cerr << atom.getId() << ":" << atom.getName().c_str();
         if (is2DInfoLatest) {
             std::cerr << "2d(" << atom.x << "," << atom.y << ")";
@@ -131,7 +131,7 @@ void JMol::display() {
             std::cerr << "3d(" << atom.xx << "," << atom.yy << atom.zz << ")";
         }
     });
-    loopBondVec([&](JBond &bond) {
+    loopBondVec([&](Bond &bond) {
         std::cerr << bond.getId() << ":" << bond.getBondOrder() << ","
                   << bond.getFrom()->getId() << "-" << bond.getTo()->getId();
     });
@@ -148,7 +148,7 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
     float minx, miny, maxx, maxy;
     minx = miny = std::numeric_limits<float>::max();
     maxx = maxy = std::numeric_limits<float>::lowest();
-    loopAtomVec([&](JAtom &_atom) {
+    loopAtomVec([&](Atom &_atom) {
         minx = std::min(minx, _atom.x);
         miny = std::min(miny, _atom.y);
         maxx = std::max(maxx, _atom.x);
@@ -157,7 +157,7 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
     float kw = (_w - _x * 3) / (maxx - minx), kh = (_h - _y * 3) / (maxy - miny);
     if (keepRatio) {
         float k = std::min(kw, kh);
-        loopAtomVec([&](JAtom &_atom) {
+        loopAtomVec([&](Atom &_atom) {
             _atom.x = (_atom.x - minx) * k + _x;
             _atom.y = (_atom.y - miny) * k + _y;
 
@@ -167,7 +167,7 @@ void JMol::norm2D(const float &_w, const float &_h, const float &_x, const float
             _atom.y1 = (_atom.y1 - miny) * k + _y;
         });
     } else {
-        loopAtomVec([&](JAtom &_atom) {
+        loopAtomVec([&](Atom &_atom) {
             _atom.x = (_atom.x - minx) * kw + _x;
             _atom.y = (_atom.y - miny) * kh + _y;
 
@@ -188,7 +188,7 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
     float minx, miny, minz, maxx, maxy, maxz;
     minx = miny = minz = std::numeric_limits<float>::max();
     maxx = maxy = maxz = std::numeric_limits<float>::lowest();
-    loopAtomVec([&](JAtom &_atom) {
+    loopAtomVec([&](Atom &_atom) {
         minx = std::min(minx, _atom.xx);
         miny = std::min(miny, _atom.yy);
         minz = std::min(minz, _atom.zz);
@@ -200,13 +200,13 @@ void JMol::norm3D(const float &_xx, const float &_yy, const float &_zz,
     float dx = (minx + maxx) / 2, dy = (miny + maxy) / 2, dz = (minz + maxz) / 2;
     if (keepRatio) {
         float k = (std::min)(kx, (std::min)(ky, kz));
-        loopAtomVec([&](JAtom &_atom) {
+        loopAtomVec([&](Atom &_atom) {
             _atom.xx = (_atom.xx - dx) * k + _x;
             _atom.yy = (_atom.yy - dy) * k + _y;
             _atom.zz = (_atom.zz - dz) * k + _z;
         });
     } else {
-        loopAtomVec([&](JAtom &_atom) {
+        loopAtomVec([&](Atom &_atom) {
             _atom.xx = (_atom.xx - dx) * kx + _x;
             _atom.yy = (_atom.yy - dy) * ky + _y;
             _atom.zz = (_atom.zz - dz) * kz + _y;
@@ -221,7 +221,7 @@ float JMol::getAvgBondLength() {
         std::cerr << __FUNCTION__ << "generate3D=" << generate3D();
     }
     float avgBondLength = 0;
-    loopBondVec([&](JBond &bond) {
+    loopBondVec([&](Bond &bond) {
         auto from = bond.getFrom(), to = bond.getTo();
         avgBondLength += std::sqrt(std::pow(from->xx - to->xx, 2) +
                                    std::pow(from->yy - to->yy, 2) +
@@ -232,7 +232,7 @@ float JMol::getAvgBondLength() {
 
 float JMol::getAvgBondLength2D() {
     float avgBondLength = 0;
-    loopBondVec([&](JBond &bond) {
+    loopBondVec([&](Bond &bond) {
         auto from = bond.getFrom(), to = bond.getTo();
         avgBondLength += std::sqrt(std::pow(from->x - to->x, 2) +
                                    std::pow(from->y - to->y, 2));
@@ -253,20 +253,20 @@ void JMol::set2DInfoLatest(bool _is2DInfoLatest) {
 }
 
 
-std::shared_ptr<JBond> JMol::addBond(
-        std::shared_ptr<JAtom> _a1, std::shared_ptr<JAtom> _a2, const BondType &_type,
+std::shared_ptr<Bond> JMol::addBond(
+        std::shared_ptr<Atom> _a1, std::shared_ptr<Atom> _a2, const BondType &_type,
         const float &_offset1, const float &_offset2) {
     _p->exceedValence();
-    auto bond = std::make_shared<JBond>(idBase++, _a1, _a2, _type, _offset1, _offset2);
+    auto bond = std::make_shared<Bond>(idBase++, _a1, _a2, _type, _offset1, _offset2);
     bondMap[bond->getId()] = bond;
     return bond;
 }
 
-std::shared_ptr<JAtom> JMol::addSuperAtom(
+std::shared_ptr<Atom> JMol::addSuperAtom(
         const std::string &_name, const float &_x0, const float &_y0,
         const float &_x1, const float &_y1) {
     _p->exceedValence();
-    auto atom = std::make_shared<JAtom>(idBase++, _name, _x0, _y0, _x1, _y1);
+    auto atom = std::make_shared<Atom>(idBase++, _name, _x0, _y0, _x1, _y1);
     atomMap[atom->getId()] = atom;
     return atom;
 }
@@ -278,7 +278,7 @@ void JMol::addAllHydrogens() {
     // 1、ELEMENT_COMMON_NEB_NUM_MAP 里没有记录的，一律不加氢
     // 2、硬编码特别处理常用原子带电荷的情况，如铵正离子、碳正离子、碳负离子、氧负离子
     // 3、其它情况按照 ELEMENT_COMMON_NEB_NUM_MAP 的记录默认处理
-    loopCurrentAtomPtrVec([&](std::shared_ptr<JAtom> _atom) -> void {
+    loopCurrentAtomPtrVec([&](std::shared_ptr<Atom> _atom) -> void {
         int numHs = getNumHydrogen(_atom->getId());
         if (numHs < 1) { return; }
         while (numHs--) {
@@ -292,8 +292,8 @@ void JMol::addAllHydrogens() {
     _p->confirmValence();
 }
 
-void JMol::loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<JAtom>)> _func) {
-    std::vector<std::shared_ptr<JAtom>> currentAtomPtr;
+void JMol::loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<Atom>)> _func) {
+    std::vector<std::shared_ptr<Atom>> currentAtomPtr;
     for (auto &[aid, atom]: atomMap) {
         currentAtomPtr.push_back(atom);
     }
@@ -304,7 +304,7 @@ void JMol::loopCurrentAtomPtrVec(std::function<void(std::shared_ptr<JAtom>)> _fu
 
 bool JMol::tryExpand() {
     bool ok = true;
-    auto expand = [&](std::shared_ptr<JAtom> atom) {
+    auto expand = [&](std::shared_ptr<Atom> atom) {
         if (!atom) { return; }
         if (ElementType::SA != atom->getType()) { return; }
         if (!_p->tryExpand(atom->getId())) { ok = false; }

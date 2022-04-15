@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mol_holder.h"
+#include <unordered_set>
 namespace v1_0 {
     class MolOp : public MolHolder {
         //<原子id，化合价or当前键级>
@@ -95,7 +96,7 @@ namespace v1_0 {
          * 增量更新化合价表
          * @param _bonds 引起化合价变动的化学键数组
          */
-        void updateAtomValenceMap(const std::vector<std::shared_ptr<JBond>> &_bonds);
+        void updateAtomValenceMap(const std::vector<std::shared_ptr<Bond>> &_bonds);
 
         /**
          * 全量更新原子邻居表，包括原子表和键表

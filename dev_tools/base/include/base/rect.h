@@ -15,7 +15,7 @@ using rectf = rect<float>;
 using recti = rect<int>;
 
 template<typename Number>
-const Size<Number> getSize(const rect<Number> &_rect) {
+Size<Number> getSize(const rect<Number> &_rect) {
     const auto&[lt, br]=_rect;
     const auto&[x0, y0]=lt;
     const auto&[x1, y1]=br;
@@ -23,9 +23,17 @@ const Size<Number> getSize(const rect<Number> &_rect) {
 }
 
 template<typename Number>
-const point2f getCenter(const rect<Number> &_rect) {
+Number getAvgWidth(const rect<Number> &_rect) {
     const auto&[lt, br]=_rect;
     const auto&[x0, y0]=lt;
     const auto&[x1, y1]=br;
-    return {(float)std::round((x1 + x0) / 2.0), (float)std::round((y1 + y0) / 2.0)};
+    return std::round((std::abs(x1 - x0) + std::abs(y1 - y0)) / 2.0);
+}
+
+template<typename Number>
+point2f getCenter(const rect<Number> &_rect) {
+    const auto&[lt, br]=_rect;
+    const auto&[x0, y0]=lt;
+    const auto&[x1, y1]=br;
+    return {(float) std::round((x1 + x0) / 2.0), (float) std::round((y1 + y0) / 2.0)};
 }

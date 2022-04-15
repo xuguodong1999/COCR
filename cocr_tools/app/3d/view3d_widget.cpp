@@ -1,11 +1,13 @@
 #include <QMessageBox>
 #include "3d/view3d_widget.h"
-#include "chem/jmol_manager.hpp"
-#include "chem/jmol.hpp"
-#include "3d/entity_base.hpp"
+#include "ckit/mol_manager.h"
+#include "ckit/mol.h"
+#include "3d/entity_base.h"
 #include "ui_view3d_widget.h"
-#include "3d/mol3d_widget.hpp"
+#include "3d/mol3d_widget.h"
 #include "ui/format_dialog.h"
+#include "ckit/mol_util.h"
+#include "ckit/atom.h"
 
 View3DWidget::View3DWidget(QWidget *parent)
         : QWidget(parent), ui(new Ui::View3DWidget), expBtnClickTimes(0) {
@@ -13,11 +15,11 @@ View3DWidget::View3DWidget(QWidget *parent)
 
     BaseEntity::SetView3DWidget(this);
 
-    auto formatVec = GetWritableFormats();
+    auto formatVec = MolUtil::GetWritableFormats();
     for (auto &format: formatVec) {
         if (std::string::npos != format.find("Read-only")) { continue; }
         auto suffix = format.substr(0, format.find(" "));
-        if (!cocr::JMol::IsValidWritableFormat(suffix)) { continue; }
+        if (!MolUtil::IsValidWritableFormat(suffix)) { continue; }
         ui->format_box->addItem(QString::fromStdString(suffix));
     }
     connect(ui->format_box, &QComboBox::currentTextChanged, [&](const QString &formatName) {
@@ -41,7 +43,7 @@ View3DWidget::~View3DWidget() {
     delete ui;
 }
 
-void View3DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
+void View3DWidget::syncMolToScene(std::shared_ptr<GuiMol> _mol) {
     mol3DWidget->syncMolToScene(_mol);
 }
 
@@ -64,10 +66,10 @@ void View3DWidget::showFormatDialog() {
     formatDialog->resize(size() * 0.8);
     formatDialog->setModal(true);
     formatDialog->setWindowTitle(QString::fromStdString(currentFormat));
-    auto mol = cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol(false);
+    auto mol = MolManager::GetInstance().getFullHydrogenExpandedMol(false);
     if (mol) {
         bool hasSuperAtom = false;
-        mol->loopAtomVec([&](cocr::JAtom &atom) {
+        mol->loopAtomVec([&](Atom &atom) {
             if (ElementType::SA == atom.getType()) {
                 hasSuperAtom = true;
                 return;
@@ -95,16 +97,16 @@ void View3DWidget::showFormatDialog() {
 
 
 void View3DWidget::switchSuperAtomState() {
-    std::shared_ptr<cocr::JMol> mol;
+    std::shared_ptr<GuiMol> mol;
     if (++expBtnClickTimes % 2) {
-        mol = cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol();
+        mol = MolManager::GetInstance().getFullHydrogenExpandedMol();
     } else {
-        mol = cocr::JMolManager::GetInstance().getFullHydrogenInputMol();
+        mol = MolManager::GetInstance().getFullHydrogenInputMol();
     }
     syncMolToScene(mol);
 }
 
 void View3DWidget::reformatInputState() {
-    auto mol = cocr::JMolManager::GetInstance().getCurrentMol();
+    auto mol = MolManager::GetInstance().getCurrentMol();
     syncMolToScene(mol);
 }

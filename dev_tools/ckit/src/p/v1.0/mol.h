@@ -1,8 +1,8 @@
 #pragma once
 
  #include "ckit/config.h"
-#include "atom.h"
-#include "bond.h"
+#include "ckit/atom.h"
+#include "ckit/bond.h"
 
 #include <memory>
 #include <functional>
@@ -16,9 +16,9 @@ namespace v1_0 {
         // 维护原子和键的自增 id
         size_t mAids, mBids;
         //<原子id，原子>
-        std::unordered_map<size_t, std::shared_ptr<JAtom>> atomsMap;
+        std::unordered_map<size_t, std::shared_ptr<Atom>> atomsMap;
         //<键id，键>
-        std::unordered_map<size_t, std::shared_ptr<JBond>> bondsMap;
+        std::unordered_map<size_t, std::shared_ptr<Bond>> bondsMap;
     public:
         JMol(const JMol &_mol);
 
@@ -34,9 +34,9 @@ namespace v1_0 {
 
         void setAlkane(const std::string &_alkaneSMILES);
 
-        std::shared_ptr<JAtom> getAtomById(const size_t &_aid) const;
+        std::shared_ptr<Atom> getAtomById(const size_t &_aid) const;
 
-        std::shared_ptr<JBond> getBondById(const size_t &_bid) const;
+        std::shared_ptr<Bond> getBondById(const size_t &_bid) const;
 
         bool IsBondsEmpty() const;
 
@@ -67,11 +67,11 @@ namespace v1_0 {
 
         void removeBond(const size_t &_bid);
 
-        std::shared_ptr<JAtom> addAtom(const size_t &_atomicNumber, const float &_x = -1, const float &_y = -1);
+        std::shared_ptr<Atom> addAtom(const size_t &_atomicNumber, const float &_x = -1, const float &_y = -1);
 
-        std::shared_ptr<JAtom> addAtom(const ElementType &_elementType);
+        std::shared_ptr<Atom> addAtom(const ElementType &_elementType);
 
-        std::shared_ptr<JBond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
+        std::shared_ptr<Bond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
                                        const BondType &_bondType = BondType::SingleBond);
 
     };

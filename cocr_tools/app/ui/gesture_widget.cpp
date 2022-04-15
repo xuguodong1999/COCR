@@ -1,4 +1,4 @@
-#include "gesture_widget.hpp"
+#include "gesture_widget.h"
 #include <QDebug>
 
 GestureWidget::GestureWidget(QWidget *parent) : QWidget(parent) {

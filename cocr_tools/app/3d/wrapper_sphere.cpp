@@ -1,5 +1,5 @@
-#include "3d/wrapper_sphere.hpp"
-#include "3d/entity_base.hpp"
+#include "3d/wrapper_sphere.h"
+#include "3d/entity_base.h"
 
 #include <Qt3DExtras/QSphereMesh>
 

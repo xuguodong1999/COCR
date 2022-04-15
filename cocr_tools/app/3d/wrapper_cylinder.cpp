@@ -1,12 +1,12 @@
-#include "3d/wrapper_cylinder.hpp"
-#include "3d/entity_base.hpp"
+#include "3d/wrapper_cylinder.h"
+#include "3d/entity_base.h"
 
-#include "math_util.hpp"
+#include "math_util.h"
 
 #include <Qt3DExtras/QCylinderMesh>
 #include <Qt3DCore/QTransform>
 
-using cocr::MathUtil;
+
 
 CylinderWrapper::CylinderWrapper(Qt3DCore::QEntity *_root) :
         SingleWrapper(_root), cylinder(new Qt3DExtras::QCylinderMesh(entity)) {

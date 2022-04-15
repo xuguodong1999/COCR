@@ -1,8 +1,8 @@
-#include "data/crnn_data.hpp"
-#include "data/soso_darknet.hpp"
-#include "stroke/hw_data.hpp"
-#include "base/isomer.hpp"
-#include "base/polya.hpp"
+#include "data/crnn_data.h"
+#include "data/soso_darknet.h"
+#include "stroke/hw_data.h"
+#include "base/isomer.h"
+#include "base/polya.h"
 
 #include <QCoreApplication>
 #include <QPainter>

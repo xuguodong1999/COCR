@@ -162,7 +162,7 @@ void MolOp::randomize(
             }
             if (allowThisWedge) {
                 allowWedge[_aid] = false;
-                std::vector<std::shared_ptr<JBond>> bonds;
+                std::vector<std::shared_ptr<Bond>> bonds;
                 for (auto &bid: neighborBondsMap[_aid]) {
                     bonds.push_back(mol->getBondById(bid));
                 }
@@ -224,8 +224,8 @@ void MolOp::addHs(const size_t &_aid) {
 }
 
 void MolOp::addGroup(const size_t &_aid) {
-    std::vector<std::shared_ptr<JAtom>> newAtoms;
-    std::vector<std::shared_ptr<JBond>> newBonds;
+    std::vector<std::shared_ptr<Atom>> newAtoms;
+    std::vector<std::shared_ptr<Bond>> newBonds;
     int index = StdUtil::randInt() % 1;
     switch (index) {
         case 0: {// 羰基、酰基、醛基、羧基、巯基
@@ -260,8 +260,8 @@ void MolOp::addGroup(const size_t &_aid) {
 }
 
 void MolOp::addAromaticRing(const size_t &_bid) {
-    std::vector<std::shared_ptr<JAtom>> newAtoms;
-    std::vector<std::shared_ptr<JBond>> newBonds;
+    std::vector<std::shared_ptr<Atom>> newAtoms;
+    std::vector<std::shared_ptr<Bond>> newBonds;
     auto bond = mol->getBondById(_bid);
     auto from = bond->getAtomFrom(), to = bond->getAtomTo();
     removeBond(_bid);
@@ -530,8 +530,8 @@ void MolOp::addAromaticRing(const size_t &_bid) {
 }
 
 void MolOp::addCommonRing(const size_t &_bid) {
-    std::vector<std::shared_ptr<JAtom>> newAtoms;
-    std::vector<std::shared_ptr<JBond>> newBonds;
+    std::vector<std::shared_ptr<Atom>> newAtoms;
+    std::vector<std::shared_ptr<Bond>> newBonds;
     auto bond = mol->getBondById(_bid);
     auto from = bond->getAtomFrom(), to = bond->getAtomTo();
     removeBond(_bid);
@@ -734,7 +734,7 @@ void MolOp::removeBond(const size_t &_bid) {
     }
 }
 
-void MolOp::updateAtomValenceMap(const std::vector<std::shared_ptr<JBond>> &_bonds) {
+void MolOp::updateAtomValenceMap(const std::vector<std::shared_ptr<Bond>> &_bonds) {
     for (auto &bond: _bonds) {
         addValence4Atom(bond->getAtomFrom(), bond->asValence());
         addValence4Atom(bond->getAtomTo(), bond->asValence());

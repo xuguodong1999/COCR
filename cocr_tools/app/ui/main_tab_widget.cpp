@@ -17,10 +17,10 @@
 #endif
 
 #include "image_widget.h"
-#include "../ocr_runnable.hpp"
-#include "application.hpp"
-#include "chem/jmol.hpp"
-#include "chem/jmol_manager.hpp"
+#include "../ocr_runnable.h"
+#include "application.h"
+#include "ckit/mol.h"
+#include "ckit/mol_manager.h"
 #include <QTimer>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -179,8 +179,8 @@ void MainTabWidget::resizeEvent(QResizeEvent *e) {
 
 void MainTabWidget::onOcrJobReady() {
     isMolLatest = true;
-    cocr::JMolManager::GetInstance().setInputMol(ocrThread->getMol());
-    auto mol = cocr::JMolManager::GetInstance().getInputMol();
+    MolManager::GetInstance().setInputMol(ocrThread->getMol());
+    auto mol = MolManager::GetInstance().getInputMol();
     if (!mol) {
         QMessageBox::information(
                 this, tr("No Molecule Detected"),
@@ -193,7 +193,7 @@ void MainTabWidget::onOcrJobReady() {
     }
 #ifndef Q_OS_WASM
     else if (ui->tabWidget->currentIndex() == 3) {
-        mol = cocr::JMolManager::GetInstance().getFullHydrogenInputMol();
+        mol = MolManager::GetInstance().getFullHydrogenInputMol();
         if (!mol) {
             QMessageBox::information(
                     this, tr("3D Molecule build failed"),

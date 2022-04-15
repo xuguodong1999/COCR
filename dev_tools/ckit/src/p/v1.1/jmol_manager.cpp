@@ -4,7 +4,7 @@
 using namespace v1_1;
 
 JMolManager::JMolManager(JMolManager::mol_type _inputMol) :
-        inputMol(std::move(_inputMol)), currentMol(_inputMol), expandedMol(nullptr),
+        inputMol(_inputMol), currentMol(_inputMol), expandedMol(nullptr),
         fullHydrogenExpandedMol(nullptr), fullHydrogenInputMol(nullptr) {
 
 }

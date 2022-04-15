@@ -1,7 +1,7 @@
-#include "2d/atom_item.hpp"
+#include "2d/atom_item.h"
 #include "2d/view2d_widget.h"
 
-AtomItem::AtomItem(const cocr::id_type &_aid, QGraphicsItem *parent) :
+AtomItem::AtomItem(const id_type &_aid, QGraphicsItem *parent) :
         aid(_aid), BaseItem(parent) {
     mTextItem = new QGraphicsTextItem(this);
     setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);

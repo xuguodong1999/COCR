@@ -1,7 +1,7 @@
 #include "stroke/script.h"
 #include "base/std_util.h"
 #include "stroke/couch_sym.h"
-#include "ocv_wrapper/algorithm.h"
+#include "ocv/algorithm.h"
 
 void HwScript::push_back(HwStroke &_stroke) {
     mData.push_back(std::move(_stroke));

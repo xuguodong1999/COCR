@@ -1,15 +1,16 @@
-#include "3d/mol3d_builder.hpp"
-#include "3d/entity_base.hpp"
-#include "3d/wrapper_cone.hpp"
-#include "3d/wrapper_sphere.hpp"
-#include "3d/wrapper_cylinder.hpp"
-#include "3d/wrapper_multi_cylinder.hpp"
+#include "3d/mol3d_builder.h"
+#include "3d/entity_base.h"
+#include "3d/wrapper_cone.h"
+#include "3d/wrapper_sphere.h"
+#include "3d/wrapper_cylinder.h"
+#include "3d/wrapper_multi_cylinder.h"
 
-#include "chem/jmol.hpp"
+#include "ckit/mol.h"
 
-#include "math_util.hpp"
+#include "math_util.h"
 #include "util.h"
-
+#include "ckit/atom.h"
+#include "ckit/bond.h"
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
 #include <Qt3DExtras/QCylinderMesh>
@@ -19,18 +20,17 @@
 
 #include <optional>
 
-using cocr::MathUtil;
 
-inline QVector3D getQVector3D(const cocr::JAtom &_atom) {
+inline QVector3D getQVector3D(const Atom &_atom) {
     return {_atom.xx, _atom.yy, _atom.zz};
 }
 
-inline QVector3D getQVector3D(const std::shared_ptr<cocr::JAtom> &_atom) {
+inline QVector3D getQVector3D(const std::shared_ptr<Atom> &_atom) {
     return getQVector3D(*_atom);
 }
 
 
-void Mol3DBuilder::prepare(std::shared_ptr<cocr::JMol> _mol, const QVector3D &_viewSize, const QVector3D &_blankArea) {
+void Mol3DBuilder::prepare(std::shared_ptr<GuiMol> _mol, const QVector3D &_viewSize, const QVector3D &_blankArea) {
     qDebug() << __FUNCTION__;
     mol = std::move(_mol);
     mol->norm3D(_viewSize.x(), _viewSize.y(), _viewSize.z(),
@@ -40,21 +40,21 @@ void Mol3DBuilder::prepare(std::shared_ptr<cocr::JMol> _mol, const QVector3D &_v
 
 void Mol3DBuilder::build() {
     qDebug() << __FUNCTION__;
-    using namespace cocr;
+
     // 坐标系
 //    buildAxis(0, 0, 0, 100);
     resetMolRoot();
     float avgBondLength = mol->getAvgBondLength();
     if (avgBondLength < 1)avgBondLength = 20;
     // 添加3D原子球
-    mol->loopAtomVec([&](cocr::JAtom &atom) {
+    mol->loopAtomVec([&](Atom &atom) {
 //        return;
         auto wrapper = std::make_shared<SphereWrapper>(molRoot);
         atoms[atom.getId()] = wrapper;
 //        qDebug() << getQVector3D(atom);
         wrapper->setId(atom.getId());
         wrapper->setTranslation(getQVector3D(atom));
-        wrapper->setColor(cocr::getColor(cocr::getAtomColor(atom.getType())));
+        wrapper->setColor(getColor(ElementUtil::GetElementColor(atom.getType())));
         wrapper->setRadius(atom.getRadius() / atom.getDefaultRadius() * avgBondLength / 3);
         wrapper->setScale(1);
         wrapper->setRindsAndSlices(100, 100);
@@ -64,13 +64,13 @@ void Mol3DBuilder::build() {
     std::unordered_map<size_t, QVector3D> normVecMap;
     std::unordered_map<size_t, std::vector<size_t>> neighborMap;
     // 初始化原子的邻接原子
-    mol->loopBondVec([&](JBond &bond) {
+    mol->loopBondVec([&](Bond &bond) {
         auto from = bond.getFrom()->getId(), to = bond.getTo()->getId();
         neighborMap[from].push_back(to);
         neighborMap[to].push_back(from);
     });
     // 寻找需要共面的共轭键
-    mol->loopBondVec([&](JBond &bond) {
+    mol->loopBondVec([&](Bond &bond) {
         std::vector<QVector3D> poses;
         switch (bond.getType()) {
             case BondType::DoubleBond:
@@ -123,7 +123,7 @@ void Mol3DBuilder::build() {
         }
     });
     float bondRadius = avgBondLength / 30;
-    mol->loopBondVec([&](JBond &bond) {
+    mol->loopBondVec([&](Bond &bond) {
 //        return;
         auto fromAtom = bond.getFrom(), toAtom = bond.getTo();
         QVector3D from = getQVector3D(fromAtom), to = getQVector3D(toAtom);
@@ -131,9 +131,9 @@ void Mol3DBuilder::build() {
         switch (bond.getType()) {
             case BondType::SingleBond:
             case BondType::DelocalizedBond:
-            case BondType::DownBond:
-            case BondType::UpBond:
-            case BondType::ImplicitBond: {
+            case BondType::DashWedgeBond:
+            case BondType::SolidWedgeBond:
+            case BondType::WaveBond: {
                 auto cWrapper = std::make_shared<CylinderWrapper>(molRoot);
                 cWrapper->setDirection(from, to);
                 cWrapper->setRadius(bondRadius);
@@ -173,7 +173,7 @@ void Mol3DBuilder::build() {
         }
         wrapper->setRindsAndSlices(100, 100);
         wrapper->setScale(1);
-        wrapper->setColor(cocr::getColor(cocr::getBondColor(bond.getType())));
+        wrapper->setColor(getColor(ElementUtil::GetBondColor(bond.getType())));
         wrapper->setId(bond.getId());
         wrapper->setObjectName(QString("bond:%0").arg(bond.getId()));
         bonds[bond.getId()] = wrapper;

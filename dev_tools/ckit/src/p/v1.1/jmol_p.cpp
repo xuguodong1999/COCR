@@ -1,8 +1,8 @@
 #include "jmol_p.h"
-#include "jatom.h"
+#include "ckit/atom.h"
 
 using namespace v1_1;
-using atom_t = std::shared_ptr<JAtom>;
+using atom_t = std::shared_ptr<Atom>;
 
 std::unordered_map<std::string, TokenType> v1_1::SUPER_ATOM_MAP;
 
@@ -102,7 +102,7 @@ void JMol_p::updateValenceMap() {
     atomTotalBondOrderMap.clear();
     atomDoubleBondNum.clear();
     // 初始化原子邻接键的键级累加表
-    mol.loopBondVec([&](JBond &_bond) {
+    mol.loopBondVec([&](Bond &_bond) {
         int order = _bond.getBondOrder();
         auto from = _bond.getFrom();
         auto to = _bond.getTo();
@@ -627,8 +627,8 @@ bool v1_1::JMol_p::tryExpand(const id_type &_aid) {
         std::cerr << "bonds.size()=" << bonds.size();
         if (bonds.size() > 1) {
             std::sort(bonds.begin(), bonds.end(), [](
-                    const std::pair<float, std::shared_ptr<JBond>> &a,
-                    const std::pair<float, std::shared_ptr<JBond>> &b) {
+                    const std::pair<float, std::shared_ptr<Bond>> &a,
+                    const std::pair<float, std::shared_ptr<Bond>> &b) {
                 return a.first < b.first;
             });
 //            mol.exceedAllData();

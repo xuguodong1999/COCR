@@ -1,4 +1,4 @@
-#include "gesture_view.hpp"
+#include "gesture_view.h"
 #include <QDebug>
 #include <QGuiApplication>
 

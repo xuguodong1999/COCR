@@ -7,8 +7,6 @@
 #include <QImage>
 #include <QMessageBox>
 
-#include <opencv2/core/mat.hpp>
-
 ImageWidget::ImageWidget(QWidget *parent) :
         QWidget(parent),
         ui(new Ui::ImageWidget) {
@@ -61,14 +59,14 @@ void ImageWidget::openImage() {
 
 void ImageWidget::binaryImage() {
     if (!image) { return; }
-    cv::Mat cvImage = cocr::convertQImageToMat(*image);
-    int w = ui->display_label->width(), h = ui->display_label->height();
-    if (image->width() > w || image->height() > h) {
-        ui->display_label->setPixmap(QPixmap::fromImage(cocr::binaryAlphaImage(cvImage).scaled(
-                w * 0.7, h * 0.7, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
-    } else {
-        ui->display_label->setPixmap(QPixmap::fromImage(cocr::binaryAlphaImage(cvImage)));
-    }
+//    cv::Mat cvImage = convertQImageToMat(*image);
+//    int w = ui->display_label->width(), h = ui->display_label->height();
+//    if (image->width() > w || image->height() > h) {
+//        ui->display_label->setPixmap(QPixmap::fromImage(binaryAlphaImage(cvImage).scaled(
+//                w * 0.7, h * 0.7, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+//    } else {
+//        ui->display_label->setPixmap(QPixmap::fromImage(binaryAlphaImage(cvImage)));
+//    }
 }
 
 void ImageWidget::showImage() {

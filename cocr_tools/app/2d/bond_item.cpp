@@ -1,21 +1,19 @@
-#include "2d/bond_item.hpp"
-#include "2d/atom_item.hpp"
+#include "2d/bond_item.h"
+#include "2d/atom_item.h"
 #include "2d/view2d_widget.h"
-#include "math_util.hpp"
+#include "math_util.h"
 
 #include <QDebug>
 #include <QPainter>
 #include <cmath>
 
-using cocr::MathUtil;
-
-BondItem::BondItem(const cocr::id_type &_bid, QGraphicsItem *parent)
-        : BaseItem(parent), bid(_bid), mFrom(nullptr), mTo(nullptr), mType(cocr::BondType::SingleBond) {
+BondItem::BondItem(const id_type &_bid, QGraphicsItem *parent)
+        : BaseItem(parent), bid(_bid), mFrom(nullptr), mTo(nullptr), mType(BondType::SingleBond) {
     mPathItem = new QGraphicsPathItem(this);
     setFlags(QGraphicsItem::ItemIsSelectable);
 }
 
-void BondItem::setBond(AtomItem *_from, AtomItem *_to, const cocr::BondType &_type,
+void BondItem::setBond(AtomItem *_from, AtomItem *_to, const BondType &_type,
                        const float &_offset1, const float &_offset2) {
     mFrom = _from;
     mTo = _to;
@@ -28,7 +26,7 @@ void BondItem::setBond(AtomItem *_from, AtomItem *_to, const cocr::BondType &_ty
 }
 
 void BondItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    if (cocr::BondType::UpBond == mType) {
+    if (BondType::SolidWedgeBond == mType) {
         painter->fillPath(mPathItem->path(), QBrush(Qt::black));
     }
     mPathItem->paint(painter, option, widget);
@@ -39,7 +37,7 @@ QRectF BondItem::boundingRect() const {
 }
 
 void BondItem::updateBond() {
-    using namespace cocr;
+
     auto c1 = mFrom->pos(), c2 = mTo->pos();
     auto r1 = mFrom->boundingRect(), r2 = mTo->boundingRect();
     QPointF from(c1.x() + r1.width() * offset1, c1.y() + r2.height() / 2),
@@ -85,7 +83,7 @@ void BondItem::updateBond() {
             path.lineTo(o2 - offset * v);
             break;
         }
-        case BondType::UpBond: {
+        case BondType::SolidWedgeBond: {
             length = MathUtil::getDistance(o1, o2);
             QPointF v = MathUtil::getVerticalUnitVec(o1 - o2);
             float offset = std::min(
@@ -98,7 +96,7 @@ void BondItem::updateBond() {
             path.closeSubpath();
             break;
         }
-        case BondType::DownBond: {// 虚楔形键
+        case BondType::DashWedgeBond: {// 虚楔形键
             length = MathUtil::getDistance(o1, o2);
             QPointF v = MathUtil::getVerticalUnitVec(o1 - o2);
             float offset = std::min(
@@ -118,7 +116,7 @@ void BondItem::updateBond() {
             }
             break;
         }
-        case BondType::ImplicitBond: {// 波浪线
+        case BondType::WaveBond: {// 波浪线
             length = MathUtil::getDistance(o1, o2);
             QPointF v = MathUtil::getVerticalUnitVec(o1 - o2);
             float offset = std::min(

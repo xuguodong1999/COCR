@@ -1,5 +1,5 @@
-#include "sketch_widget.hpp"
-#include "application.hpp"
+#include "sketch_widget.h"
+#include "application.h"
 #include <QPainter>
 #include <QDebug>
 #include <QMessageBox>

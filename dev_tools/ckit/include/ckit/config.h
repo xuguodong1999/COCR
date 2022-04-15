@@ -7,4 +7,12 @@
 #include <cstddef>
 #include <memory>
 
-using id_type=size_t;
+using id_type = size_t;
+
+class Atom;
+
+class Bond;
+
+class GuiMol;
+
+using gui_mol = std::shared_ptr<GuiMol>;

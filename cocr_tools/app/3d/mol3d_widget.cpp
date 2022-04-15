@@ -1,7 +1,8 @@
-#include "3d/mol3d_widget.hpp"
-#include "chem/jmol.hpp"
-#include "3d/mol3d_window.hpp"
-#include "3d/mol3d_builder.hpp"
+#include "3d/mol3d_widget.h"
+#include "ckit/mol.h"
+#include "ckit/atom.h"
+#include "3d/mol3d_window.h"
+#include "3d/mol3d_builder.h"
 #include "ui/waithint_widget.h"
 #include "util.h"
 #include <Qt3DCore/QEntity>
@@ -32,7 +33,7 @@ Mol3DWidget::Mol3DWidget(QWidget *parent) : QWidget(parent), mol(nullptr), minVi
     connect(builder, &Mol3DBuilder::sig_mol_build_done, this, &Mol3DWidget::endWaitHint);
 }
 
-void Mol3DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
+void Mol3DWidget::syncMolToScene(std::shared_ptr<GuiMol> _mol) {
     mol = std::move(_mol);
     window->reset();
     qDebug() << __FUNCTION__;
@@ -77,7 +78,7 @@ QString Mol3DWidget::makeBondInfo(const size_t &_bid) {
     if (mol) {
         auto bond = mol->getBond(_bid);
         if (bond) {
-            info.append("\n" + tr("type: ") + cocr::getBondName(*bond));
+            info.append("\n" + tr("type: ") + getBondName(*bond));
             auto from = bond->getFrom();
             auto to = bond->getTo();
             if (from && to) {

@@ -1,10 +1,12 @@
 #include "2d/view2d_widget.h"
 #include "ui_view2d_widget.h"
-#include "2d/mol2d_widget.hpp"
-#include "chem/jmol.hpp"
-#include "chem/jmol_manager.hpp"
+#include "2d/mol2d_widget.h"
+#include "ckit/mol.h"
+#include "ckit/atom.h"
+#include "ckit/mol_manager.h"
 #include "ui/format_dialog.h"
-#include "2d/base_item.hpp"
+#include "2d/base_item.h"
+#include "ckit/mol_util.h"
 #include <QTimer>
 #include <QDebug>
 #include <QMessageBox>
@@ -15,11 +17,11 @@ View2DWidget::View2DWidget(QWidget *parent)
 
     BaseItem::SetView2DWidget(this);
 
-    auto formatVec = GetWritableFormats();
+    auto formatVec = MolUtil::GetWritableFormats();
     for (auto &format: formatVec) {
         if (std::string::npos != format.find("Read-only")) { continue; }
         auto suffix = format.substr(0, format.find(" "));
-        if (!cocr::JMol::IsValidWritableFormat(suffix)) { continue; }
+        if (!MolUtil::IsValidWritableFormat(suffix)) { continue; }
         ui->format_box->addItem(QString::fromStdString(suffix));
     }
     connect(ui->format_box, &QComboBox::currentTextChanged, [&](const QString &formatName) {
@@ -42,7 +44,7 @@ View2DWidget::~View2DWidget() {
     delete ui;
 }
 
-void View2DWidget::syncMolToScene(std::shared_ptr<cocr::JMol> _mol) {
+void View2DWidget::syncMolToScene(std::shared_ptr<GuiMol> _mol) {
     mol2DWidget->syncMolToScene(_mol);
 }
 
@@ -56,10 +58,10 @@ void View2DWidget::showFormatDialog() {
     formatDialog->resize(size() * 0.8);
     formatDialog->setModal(true);
     formatDialog->setWindowTitle(QString::fromStdString(currentFormat));
-    auto mol = cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol(false);
+    auto mol = MolManager::GetInstance().getFullHydrogenExpandedMol(false);
     if (mol) {
         bool hasSuperAtom = false;
-        mol->loopAtomVec([&](cocr::JAtom &atom) {
+        mol->loopAtomVec([&](Atom &atom) {
             if (ElementType::SA == atom.getType()) {
                 hasSuperAtom = true;
                 return;
@@ -86,29 +88,29 @@ void View2DWidget::showFormatDialog() {
 }
 
 void View2DWidget::switchHydrogenState() {
-    std::shared_ptr<cocr::JMol> mol;
+    std::shared_ptr<GuiMol> mol;
     if ((++hyBtnClickTimes) % 2) {
-        mol = !(expBtnClickTimes % 2) ? cocr::JMolManager::GetInstance().getFullHydrogenInputMol()
-                                      : cocr::JMolManager::GetInstance().getFullHydrogenExpandedMol();
+        mol = !(expBtnClickTimes % 2) ? MolManager::GetInstance().getFullHydrogenInputMol()
+                                      : MolManager::GetInstance().getFullHydrogenExpandedMol();
     } else {
-        mol = !(expBtnClickTimes % 2) ? cocr::JMolManager::GetInstance().getInputMol()
-                                      : cocr::JMolManager::GetInstance().getExpandedMol();
+        mol = !(expBtnClickTimes % 2) ? MolManager::GetInstance().getInputMol()
+                                      : MolManager::GetInstance().getExpandedMol();
     }
     syncMolToScene(mol);
 }
 
 void View2DWidget::switchSuperAtomState() {
-    std::shared_ptr<cocr::JMol> mol;
+    std::shared_ptr<GuiMol> mol;
     if ((++expBtnClickTimes) % 2) {
-        mol = cocr::JMolManager::GetInstance().getExpandedMol();
+        mol = MolManager::GetInstance().getExpandedMol();
     } else {
-        mol = cocr::JMolManager::GetInstance().getInputMol();
+        mol = MolManager::GetInstance().getInputMol();
     }
     syncMolToScene(mol);
 }
 
 void View2DWidget::reformatInputState() {
-    auto mol = cocr::JMolManager::GetInstance().getCurrentMol();
+    auto mol = MolManager::GetInstance().getCurrentMol();
     syncMolToScene(mol);
 }
 

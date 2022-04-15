@@ -1,7 +1,7 @@
 #include "paint_widget.h"
 #include "ui_paint_widget.h"
-#include "application.hpp"
-#include "sketch_widget.hpp"
+#include "application.h"
+#include "sketch_widget.h"
 #include <QDebug>
 #include <QTimer>
 #include <QPainterPath>
