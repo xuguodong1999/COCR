@@ -6,9 +6,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_set>
-
-extern std::string SOSO_ALPHABET;
-
+class HwBase;
 class ELS_DATA_EXPORT CRNNDataGenerator {
     inline static const char *imgKey = "image-%09d";
     inline static const char *labelKey = "label-%09d";

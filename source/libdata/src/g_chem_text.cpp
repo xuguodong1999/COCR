@@ -8,8 +8,13 @@
 #include <sstream>
 #include <vector>
 #include <optional>
+#include "base/std_util.h"
 
-extern std::vector<std::string> ElementsData;
+struct HashSpliceableText {
+    size_t operator()(const SpliceableText &_st) const {
+        return std::hash<std::string>()(_st.getRaw());
+    }
+};
 
 SpliceableText::SpliceableText() : l(0), r(0) {}
 
@@ -22,13 +27,13 @@ const std::string &SpliceableText::getRaw() const {
 }
 
 std::string SpliceableText::getRand() const {
-    if (l && r && byProb(0.6)) {
-        return cons[randInt() % std::min(l, 3)] + text + cons[randInt() % std::min(r, 3)];
-    } else if (l && byProb(0.6)) {
-        return cons[randInt() % std::min(l, 3)] + text;
-    } else if (r && byProb(0.6)) {
+    if (l && r && StdUtil::byProb(0.6)) {
+        return cons[StdUtil::randInt() % std::min(l, 3)] + text + cons[StdUtil::randInt() % std::min(r, 3)];
+    } else if (l && StdUtil::byProb(0.6)) {
+        return cons[StdUtil::randInt() % std::min(l, 3)] + text;
+    } else if (r && StdUtil::byProb(0.6)) {
         // 右侧有自由基
-        return text + cons[randInt() % std::min(r, 3)];
+        return text + cons[StdUtil::randInt() % std::min(r, 3)];
     } else {
         return text;
     }
@@ -81,7 +86,7 @@ SpliceableText operator+(const SpliceableText &_st, int i) {
     }
     auto st = _st;
     st.r = i;
-    if (i == 1 && byProb(0.5)) {
+    if (i == 1 && StdUtil::byProb(0.5)) {
         // ignore -
     } else {
         st.text = st.text + SpliceableText::cons[i];
@@ -96,7 +101,7 @@ SpliceableText operator+(int i, const SpliceableText &_st) {
     }
     auto st = _st;
     st.l = i;
-    if (i == 1 && byProb(0.5)) {
+    if (i == 1 && StdUtil::byProb(0.5)) {
         // ignore -
     } else {
         st.text = SpliceableText::cons[i] + st.text;
@@ -202,34 +207,34 @@ void LineTextDataCreator::loadFromPattern(const std::string &filepath) {
             originSTVec.emplace_back(str, 3, 1);
             originSTVec.emplace_back(str, 1, 3);
             originSTVec.emplace_back(str, 2, 2);
-            originSTVec.emplace_back(str + randSelect(c1) + "3", 1, 0);//-CH3
-            originSTVec.emplace_back(str + "(" + str + randSelect(c1) + "3)3", 1, 0);//-C(CH3)3
-            originSTVec.emplace_back(str + "H(" + str + randSelect(c1) + "3)2", 1, 0);//-CH(CH3)2
-            originSTVec.emplace_back(str + "(" + str + randSelect(c1) + "3)2", 2, 0);//=C(CH3)2
-            originSTVec.emplace_back(str + randSelect(c1) + "3", 0, 1);//CH3-
-            originSTVec.emplace_back(randSelect(c1) + "3" + str, 0, 1);//H3C-
-            originSTVec.emplace_back(str + randSelect(c1) + "2", 2, 0);//=CH2
-            originSTVec.emplace_back(randSelect(c1) + "2" + str, 0, 2);//H2C=
-            originSTVec.emplace_back(str + randSelect(c1) + "2", 1, 1);//-CH2-
-            originSTVec.emplace_back(str + randSelect(c1), 3, 0);// #CH
-            originSTVec.emplace_back(randSelect(c1) + str, 0, 3);//HC#
-            originSTVec.emplace_back(str + randSelect(c1), 2, 1);//=CH-
-            originSTVec.emplace_back(str + randSelect(c1), 1, 2);//-CH=
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1) + "3", 1, 0);//-CH3
+            originSTVec.emplace_back(str + "(" + str + StdUtil::randSelect(c1) + "3)3", 1, 0);//-C(CH3)3
+            originSTVec.emplace_back(str + "H(" + str + StdUtil::randSelect(c1) + "3)2", 1, 0);//-CH(CH3)2
+            originSTVec.emplace_back(str + "(" + str + StdUtil::randSelect(c1) + "3)2", 2, 0);//=C(CH3)2
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1) + "3", 0, 1);//CH3-
+            originSTVec.emplace_back(StdUtil::randSelect(c1) + "3" + str, 0, 1);//H3C-
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1) + "2", 2, 0);//=CH2
+            originSTVec.emplace_back(StdUtil::randSelect(c1) + "2" + str, 0, 2);//H2C=
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1) + "2", 1, 1);//-CH2-
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1), 3, 0);// #CH
+            originSTVec.emplace_back(StdUtil::randSelect(c1) + str, 0, 3);//HC#
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1), 2, 1);//=CH-
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1), 1, 2);//-CH=
         }
         for (auto &str: c3) {
             originSTVec.emplace_back(str, 3, 0);//#N
             originSTVec.emplace_back(str, 0, 3);//N#
-            originSTVec.emplace_back(str + randSelect(c1) + "2", 1, 0);//-NH2
-            originSTVec.emplace_back(randSelect(c1) + "2" + str, 0, 1);//H2N-
-            originSTVec.emplace_back(str + randSelect(c1), 2, 0);//=NH
-            originSTVec.emplace_back(randSelect(c1) + str, 0, 2);//HN=
-            originSTVec.emplace_back(str + randSelect(c1), 1, 1);//-NH-
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1) + "2", 1, 0);//-NH2
+            originSTVec.emplace_back(StdUtil::randSelect(c1) + "2" + str, 0, 1);//H2N-
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1), 2, 0);//=NH
+            originSTVec.emplace_back(StdUtil::randSelect(c1) + str, 0, 2);//HN=
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1), 1, 1);//-NH-
         }
         for (auto &str: c2) {
             originSTVec.emplace_back(str, 0, 2);//O=
             originSTVec.emplace_back(str, 2, 0);//=O
-            originSTVec.emplace_back(str + randSelect(c1), 1, 0);//-OH
-            originSTVec.emplace_back(randSelect(c1) + str, 0, 1);//HO-
+            originSTVec.emplace_back(str + StdUtil::randSelect(c1), 1, 0);//-OH
+            originSTVec.emplace_back(StdUtil::randSelect(c1) + str, 0, 1);//HO-
         }
         for (auto &str: c1) {
             originSTVec.emplace_back(str, 1, 0);//H-
@@ -266,11 +271,11 @@ void LineTextDataCreator::loadFromPattern(const std::string &filepath) {
     for (int j = 0; j < 1000; j++) {
         for (size_t i = 2; i <= maxLoop; i++) {
             originSTVec.emplace_back(
-                    randSelect(c4) + std::to_string(i) +
-                    randSelect(c1) + std::to_string(2 * i), 1, 1);
+                    StdUtil::randSelect(c4) + std::to_string(i) +
+                    StdUtil::randSelect(c1) + std::to_string(2 * i), 1, 1);
             originSTVec.emplace_back(
-                    randSelect(c3) + std::to_string(i) +
-                    randSelect(c1) + std::to_string(i), 1, 1);
+                    StdUtil::randSelect(c3) + std::to_string(i) +
+                    StdUtil::randSelect(c1) + std::to_string(i), 1, 1);
         }
     }
     std::cout << "step3.size=" << originSTVec.size() << std::endl;
@@ -329,13 +334,13 @@ void LineTextDataCreator::loadFromPattern(const std::string &filepath) {
         }
     }
     while (fruits.size() < 10000) {
-        auto st1 = randSelect(originSTVec);
-        auto st2 = randSelect(tempSTVec);
-        if (byProb(0.5))std::swap(st1, st2);
+        auto st1 = StdUtil::randSelect(originSTVec);
+        auto st2 = StdUtil::randSelect(tempSTVec);
+        if (StdUtil::byProb(0.5))std::swap(st1, st2);
         auto st3 = joinSpliceableText(st1, st2);
         if (st3 && !st3->isFull()) {// 满足新建条件
             auto str = st3->getNeutral();
-            if (str.length() <= 7 && notExist(tempST, st3.value())) {// 且不存在
+            if (str.length() <= 7 && StdUtil::notExist(tempST, st3.value())) {// 且不存在
                 tempST.insert(st3.value());
                 tempSTVec.push_back(st3.value());
                 fruits.insert(std::move(str));

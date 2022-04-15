@@ -1,12 +1,13 @@
 #pragma once
 
+#include "els_data_export.h"
 #include <unordered_set>
 #include <functional>
 #include <string>
 #include <vector>
 #include <optional>
 
-class SpliceableText {
+class ELS_DATA_EXPORT SpliceableText {
     int l, r;
     std::string text;
     inline static std::vector<std::string> cons = {"", "-", "=", "#"};
@@ -37,13 +38,7 @@ public:
     std::string getNeutral() const;
 };
 
-struct HashSpliceableText {
-    size_t operator()(const SpliceableText &_st) const {
-        return std::hash<std::string>()(_st.getRaw());
-    }
-};
-
-class LineTextDataCreator {
+class ELS_DATA_EXPORT LineTextDataCreator {
     std::unordered_set<char> charSet;
 
     std::unordered_set<std::string> wordSet;
