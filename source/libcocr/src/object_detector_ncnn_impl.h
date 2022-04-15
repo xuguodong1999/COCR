@@ -299,6 +299,7 @@ public:
         ncnn::Mat in = ncnn::Mat::from_pixels(
                 input.getData(), ncnn::Mat::PIXEL_GRAY,
                 img_w, img_h);
+
         ncnn::Extractor ex = net->create_extractor();
 
         ex.input("images", in);

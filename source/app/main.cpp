@@ -3,10 +3,10 @@
 
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+    Application::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     Application app(argc, argv);
     MainTabWidget w;
-    w.show();
-    return app.exec();
+    w.showMaximized();
+    return Application::exec();
 }

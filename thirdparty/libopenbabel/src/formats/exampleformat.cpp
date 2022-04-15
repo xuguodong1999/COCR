@@ -167,7 +167,7 @@ bool XXXFormat::ReadMolecule(OBBase* pOb, OBConversion* pConv)
 
 	/* If the molecule has other than 3D coordinates for its atoms, it
 	is necessary to set the dimension to 0, or 2 */
-	int dim;
+	int dim{0};
 	pmol->SetDimension(dim);
 
 	pmol->EndModify();

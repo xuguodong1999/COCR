@@ -9,6 +9,7 @@ static cv::Scalar convertToScalar(const rgb &color) {
 
 Mat::Mat(const MatChannel &channel, const DataType &dataType, const int &w, const int &h)
         : mChannel(channel), mDataType(dataType), mWidth(w), mHeight(h), holder(nullptr) {
+    reset();
 }
 
 Mat::Mat(Mat &&mat) : Mat(mat.mChannel, mat.mDataType, mat.mWidth, mat.mHeight) {
@@ -89,7 +90,7 @@ void Mat::drawFill(const std::vector<point2i> &pts, const rgb &color) {
 
 void Mat::reset() {
     holder = std::make_shared<cv::Mat>(
-            mHeight, mWidth, getOpenCVDataTypeMacro(), 0);
+            mHeight, mWidth, getOpenCVDataTypeMacro(), 255);
 }
 
 void Mat::drawEllipse(
@@ -187,4 +188,12 @@ Mat Mat::operator()(const recti &box) const {
     mat.holder = std::make_shared<cv::Mat>();
     *(mat.holder) = (*holder)(cv::Rect2i(x0, y0, w, h));
     return mat;
+}
+
+void Mat::sync() {
+    if (!holder) {
+        return;
+    }
+    mWidth = holder->cols;
+    mHeight = holder->rows;
 }

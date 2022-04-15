@@ -1,5 +1,6 @@
 #include <opencv2/imgproc.hpp>
 #include "ocv/algorithm.h"
+#include <opencv2/highgui.hpp>
 
 static void sync(std::vector<cv::Point2f> &dst, const std::vector<point2f> &src) {
     dst.resize(src.size());
@@ -84,6 +85,7 @@ Mat CvUtil::Resize(const Mat &mat, const Size<int> &dstSize) {
     auto resPtr = result.getHolder();
     assert(resPtr);
     cv::resize(*matPtr, *resPtr, cv::Size{dstW, dstH}, 0, 0, cv::INTER_CUBIC);
+    result.sync();
     return result;
 }
 
@@ -97,16 +99,20 @@ Mat CvUtil::ResizeWithBlock(const Mat &mat, const Size<int> &dstSize, const Size
     cv::resize(*matPtr, *resPtr, cv::Size{dstW, dstH}, 0, 0, cv::INTER_CUBIC);
     auto &procImg = *resPtr;
     auto[bW, bH]=dstBlock;
+    bW -= dstW % bW;
+    bH -= dstH % bH;
     bW /= 2;
     bH /= 2;
     // TODO: check if vconcat work as expected
     const auto&[r, g, b]=ColorUtil::GetRGB(ColorName::rgbWhite);
-    const auto color = cv::Scalar(b, g, r);
     cv::copyMakeBorder(procImg, procImg, bW, bW, bH, bH, cv::BORDER_CONSTANT, (r + g + b) / 3.0);
 //    cv::vconcat(procImg, cv::Mat(bW, procImg.cols, procImg.type(), color), procImg);
 //    cv::vconcat(cv::Mat(bW, procImg.cols, procImg.type(), color), procImg, procImg);
 //    cv::hconcat(procImg, cv::Mat(procImg.rows, bH, procImg.type(), color), procImg);
 //    cv::hconcat(cv::Mat(procImg.rows, bH, procImg.type(), color), procImg, procImg);
+//    cv::imshow("", procImg);
+//    cv::waitKey(0);
+    result.sync();
     return result;
 }
 
@@ -134,6 +140,7 @@ Mat CvUtil::Rotate(const Mat &mat, const float &angle) {
                    cv::Scalar(255, 255, 255));
 //    cv::erode(destImage, destImage, cv::Mat());
 //    cv::dilate(destImage, destImage, cv::Mat());
+    result.sync();
     return result;
 }
 

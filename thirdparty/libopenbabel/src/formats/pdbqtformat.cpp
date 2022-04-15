@@ -632,7 +632,7 @@ namespace OpenBabel
             sprog.rigid_with.insert(sprog.index);
 
             (*tree.find(position)).second.children.insert(tree.size()); //tells the current parent it has an extra child
-                        tree.insert(pair<unsigned int, branch> (tree.size(), sprog)); //adds the current branch to the tree
+                        tree.insert({(unsigned int)tree.size(), sprog}); //adds the current branch to the tree
 
             rigid_fragments.erase(rigid_fragments.begin() + i);
             sterile=false;

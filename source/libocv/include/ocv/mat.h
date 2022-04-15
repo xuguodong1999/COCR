@@ -82,7 +82,7 @@ public:
     void drawFill(const std::vector<point2i> &pts, const rgb &color);
 
     void reset();
-
+    void sync();
     decltype(holder) getHolder() const;
 
 };
