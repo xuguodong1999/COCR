@@ -1,10 +1,9 @@
 #include "data/soso_crnn.h"
 
-
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+#include "base/std_util.h"
+#include "stroke/str.h"
+#include "data/g_chem_text.h"
+#include "ocv/algorithm.h"
 
 #include <QPainter>
 #include <QTextDocument>
@@ -15,39 +14,7 @@
 #include <fstream>
 #include <iostream>
 
-static std::vector<QString> availableFontFamilies = {"Arial"};
-
-static cv::Mat GetFont(const QString &_text, const QString &_fontFamily = "Arial") {
-//    return cv::Mat(32,32,CV_8UC1,cv::Scalar(0));
-    QFont font;
-    font.setFamily(_fontFamily);
-    font.setWeight(1);
-    font.setItalic(byProb(0.5));
-
-    QImage image(1280, 164, QImage::Format_Grayscale8);
-    image.fill(Qt::white);
-    QPainter painter(&image);
-    painter.setFont(font);
-    QTextDocument td;
-    td.setDefaultFont(font);
-    td.setHtml(_text);
-    float k = 5;
-    painter.scale(k, k);
-    painter.translate(0, 0);
-    // FIXME: why QTextDocument.drawContents cant run as parallel job through openmp?
-    td.drawContents(&painter);
-    cv::Mat cvImg(image.height(), image.width(),
-                  CV_8UC1, (void *) image.constBits(), image.bytesPerLine());
-    auto rectPtr = getBoundBoxForBWFont(cvImg);
-    if (rectPtr) {
-        cvImg = cvImg(cv::Rect(rectPtr.value()));
-    }
-//    cv::imshow("1",cvImg);
-//    cv::waitKey(0);
-    return cvImg.clone();
-}
-
-std::string SOSO_ALPHABET = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty";
+static std::vector<std::string> availableFontFamilies;
 
 CRNNDataGenerator::CRNNDataGenerator() : isInited(false) {
     alphabetSet.clear();
@@ -89,9 +56,10 @@ bool CRNNDataGenerator::initData() {
     std::cout << "chemTexts.size()=" << chemTexts.size() << ", dictTexts.size()="
               << dictTexts.size() << std::endl;
     getRandomTexts(10 * (chemTexts.size() + dictTexts.size()));
+//    getRandomTexts(100);
     if (availableFontFamilies.empty()) {
         auto allSystemFonts = QFontDatabase().families();
-        static QSet<QString> whiteList = {
+        static std::unordered_set<std::string> whiteList{
                 "Arial", "Arial Narrow", "Arial Rounded MT Bold",
 
                 "LM Mono 10", "LM Mono 12", "LM Mono 8", "LM Mono 9", "LM Mono Caps 10", "LM Mono Light 10",
@@ -111,18 +79,14 @@ bool CRNNDataGenerator::initData() {
                 "华文中宋", "华文仿宋", "华文宋体", "华文新魏", "华文楷体", "华文细黑", "幼圆", "文鼎ＰＬ简中楷", "文鼎ＰＬ简报宋",
                 "方正姚体", "隶书"};
         for (auto &font: allSystemFonts) {
-            if (whiteList.contains(font)) {
-                availableFontFamilies.push_back(font);
+            if (!StdUtil::notExist(whiteList,font.toStdString())) {
+                availableFontFamilies.push_back(font.toStdString());
             }
         }
     }
     isInited = true;
     return true;
 }
-
-static const std::vector<int> fontChoices = {
-        cv::FONT_HERSHEY_SIMPLEX, cv::FONT_HERSHEY_DUPLEX, cv::FONT_HERSHEY_COMPLEX,
-        cv::FONT_HERSHEY_TRIPLEX};
 
 void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
     if (!isInited) {
@@ -140,21 +104,21 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
     std::ofstream trainOfsm(trainLabelFile), testOfsm(testLabelFile);
 //    dbi.put(wtxn, "num-samples", std::to_string(_trainNum).c_str());
     for (size_t idx = 0; idx < _trainNum; idx++) {
-        if (byProb(0.4)) { // 4:6
-            text = randSelect(chemTexts);
+        if (StdUtil::byProb(0.4)) { // 4:6
+            text = StdUtil::randSelect(chemTexts);
             textType = 2;
-        } else if (byProb(0.5)) { // 4:3:3
-            text = randSelect(randomTexts);
+        } else if (StdUtil::byProb(0.5)) { // 4:3:3
+            text = StdUtil::randSelect(randomTexts);
             textType = 0;
         } else {
-            text = randSelect(dictTexts);
+            text = StdUtil::randSelect(dictTexts);
             textType = 1;
         }
         auto[buffer, label]=getSample(text, textType);
-        auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
+        auto img = CvUtil::BufferToGrayMat(buffer);
         std::string filename = std::to_string(idx) + ".jpg";
         std::string file_path = topDir + trainDir + imgDir + filename;
-        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 70 + randInt() % 30});
+        img.saveJPG(file_path);
         trainOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
@@ -170,21 +134,21 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
     }
     trainOfsm.close();
     for (size_t idx = 0; idx < _testNum; idx++) {
-        if (byProb(0.6)) {
-            text = randSelect(chemTexts);
+        if (StdUtil::byProb(0.6)) {
+            text = StdUtil::randSelect(chemTexts);
             textType = 2;
-        } else if (byProb(0.5)) {//五五开
-            text = randSelect(randomTexts);
+        } else if (StdUtil::byProb(0.5)) {//五五开
+            text = StdUtil::randSelect(randomTexts);
             textType = 0;
         } else {
-            text = randSelect(dictTexts);
+            text = StdUtil::randSelect(dictTexts);
             textType = 1;
         }
         auto[buffer, label]=getSample(text, textType);
-        auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
+        auto img = CvUtil::BufferToGrayMat(buffer);
         std::string filename = std::to_string(idx) + ".jpg";
         std::string file_path = topDir + testDir + imgDir + filename;
-        cv::imwrite(file_path, img, {cv::IMWRITE_JPEG_QUALITY, 60 + randInt() % 40});
+        img.saveJPG(file_path);
         testOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
@@ -209,36 +173,25 @@ static std::vector<HwController> comm = {
 
 std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         const std::string &_text, int _type, bool _revertColor, bool _gaussianNoise, bool _saltNoise) {
-    float k = betweenProb(1.5, 2.2);
-    cv::Mat img = cv::Mat(height * k, width * k, CV_8UC3,
-                          getScalar(ColorName::rgbWhite));
-    if (byProb(0.5) && std::string::npos == _text.find("#") &&
+    float k = StdUtil::betweenProb(1.5, 2.2);
+    Mat img(MatChannel::GRAY, DataType::UINT8, width * k, height * k);
+    if (StdUtil::byProb(0.5) && std::string::npos == _text.find("#") &&
         std::string::npos == _text.find("_") &&
         std::string::npos == _text.find("+")) {// 机打数据
-        if (byProb(0.7)) {// 走 Qt 的富文本渲染
-            QString qData;
-            for (auto &c: _text) {
-                if ('0' <= c && c <= '9') {
-                    qData.push_back(QString("<sub>") + c + "</sub>");
-                } else {
-                    qData.append(c);
-                }
-            }
-            auto rawText = GetFont(qData, availableFontFamilies[randInt() % availableFontFamilies.size()]);
-            cv::cvtColor(rawText, rawText, cv::COLOR_GRAY2BGR);
-            auto[img2, _]=resizeCvMatTo(rawText, img.cols, img.rows);
-            img = img2;
+        if (StdUtil::byProb(0.7)) {// 走 Qt 的富文本渲染
+            auto rawText = CvUtil::GetFont(
+                    _text, StdUtil::randSelect(availableFontFamilies));
+            auto[tmpImg, _]= CvUtil::ResizeKeepRatio(rawText, img.getSize());
+            img = std::move(tmpImg);
         } else {// 走 OpenCV 的常规字体渲染
-            cv::putText(img, _text, cv::Point(0, height * k / 1.25),
-                        randSelect(fontChoices), 1.5, getScalar(ColorName::rgbBlack),
-                        1, cv::LINE_AA, false);
+            img.drawText(_text, {0, height * k / 1.2}, 1.5, ColorUtil::GetRGB(ColorName::rgbBlack), 1);
         }
     } else {// 手写数据
         HwStr hwStr;
         if (0 == _type) {// 随机字符
             hwStr.loadRichACSII(_text);
         } else if (1 == _type) {// 字典内容
-            if (byProb(0.1)) {
+            if (StdUtil::byProb(0.1)) {
                 hwStr.loadRichACSII(_text);
             } else {
                 hwStr.loadPlainText(_text);
@@ -248,34 +201,30 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         }
         hwStr.resizeTo(width * k - 4, height * k - 4, true);
         auto rect = hwStr.getBoundingBox().value();
-        if (rect.width > width * k - 4) {
+        const auto[rW, rH]=getSize(rect);
+        if (rW > width * k - 4) {
             hwStr.resizeTo(width * k - 4, height * k - 4, false);
         }
-        if (byProb(0.2)) {// 均匀化间隔
+        if (StdUtil::byProb(0.2)) {// 均匀化间隔
             hwStr.equalize(width * k - 4);
         }
-        hwStr.setHwController(comm[randInt() % comm.size()]);
-        hwStr.moveLeftTopTo(cv::Point2f(1, 1));
+        hwStr.setHwController(comm[StdUtil::randInt() % comm.size()]);
+        hwStr.moveLeftTopTo({1, 1});
         hwStr.paintTo(img);
     }
-    cv::resize(img, img, cv::Size(width, height), 0, 0, cv::INTER_CUBIC);
-    if (_revertColor && byProb(0.5)) {// 反转颜色
-        cv::bitwise_not(img, img);
+//    img.display("fuck");
+    img = CvUtil::Resize(img, {width, height});
+    if (_revertColor && StdUtil::byProb(0.5)) {// 反转颜色
+        img = CvUtil::RevertColor(img);
     }
-    img.convertTo(img, CV_32F, 1. / 255);
-    if (_gaussianNoise && byProb(0.2)) {
-        cv::Mat noise(img.size(), CV_32FC3);
-        cv::randn(noise, 0, belowProb(0.1));
-        img = img + noise;
-        cv::normalize(img, img, 1.0, 0, cv::NORM_MINMAX, CV_32F);
+    if (_gaussianNoise && StdUtil::byProb(0.2)) {
+        img = CvUtil::AddGaussianNoise(img);
     }
-    img.convertTo(img, CV_8U, 255);
-    if (_saltNoise && byProb(0.6)) {
-        salt_pepper(img, randInt() % 400);
+    if (_saltNoise && StdUtil::byProb(0.6)) {
+        img = CvUtil::AddSaltPepperNoise(img, StdUtil::randInt() % 400);
     }
-    std::vector<uchar> buffer;
-    cv::imencode(".jpg", img, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
-    return {std::move(buffer), std::move(convertToKey(_text))};
+
+    return {img.toBuffer(), convertToKey(_text)};
 }
 
 void CRNNDataGenerator::display() {
@@ -286,14 +235,14 @@ void CRNNDataGenerator::display() {
     std::string text;
     int textType;
     for (size_t idx = 0; idx <= 500000; idx++) {
-        if (byProb(0.4)) {//四六开
-            text = randSelect(chemTexts);
+        if (StdUtil::byProb(0.4)) {//四六开
+            text = StdUtil::randSelect(chemTexts);
             textType = 2;
-        } else if (byProb(0.5)) {//五五开
-            text = randSelect(randomTexts);
+        } else if (StdUtil::byProb(0.5)) {//五五开
+            text = StdUtil::randSelect(randomTexts);
             textType = 0;
         } else {
-            text = randSelect(dictTexts);
+            text = StdUtil::randSelect(dictTexts);
             textType = 1;
         }
         auto[buffer, label]=getSample(text, textType);
@@ -303,9 +252,8 @@ void CRNNDataGenerator::display() {
         std::cout << "image-key=" << a << std::endl;
         sprintf(a, labelKey, idx);
         std::cout << "label-key=" << a << std::endl;
-        auto img = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
-        cv::imshow("fuck", img);
-        cv::waitKey(0);
+        auto img = CvUtil::BufferToGrayMat(buffer);
+        img.display("CRNNDataGenerator::display");
     }
 }
 
@@ -349,7 +297,7 @@ std::string CRNNDataGenerator::convertToKey(const std::string &_key) const {
     std::string key;
     key.reserve(_key.size());
     for (auto &c: _key) {
-        if (notExist(alphabetSet, c)) {
+        if (StdUtil::notExist(alphabetSet, c)) {
             if (std::isalpha(c)) {
                 key.push_back(std::toupper(c));
             } else {
@@ -369,7 +317,7 @@ void CRNNDataGenerator::getRandomTexts(const size_t &_num, const size_t &_len) {
     tmp.resize(_len);
     while (tmpTextSet.size() < _num) {
         for (size_t i = 0; i < _len; i++) {
-            tmp[i] = randSelect(SOSO_ALPHABET);
+            tmp[i] = StdUtil::randSelect(SOSO_ALPHABET);
         }
         tmpTextSet.insert(tmp);
     }
@@ -381,7 +329,7 @@ void CRNNDataGenerator::getRandomTexts(const size_t &_num, const size_t &_len) {
 
 void CRNNDataGenerator::getChemTexts() {
     LineTextDataCreator dc;
-    dc.loadFromPattern(DEV_ASSETS_DIR + std::string("/openbabel/data/superatom.txt"));
+    dc.loadFromPattern(DEV_ASSETS_DIR + std::string("/../thirdparty/libopenbabel/data/openbabel/data/superatom.txt"));
     std::unordered_set<std::string> textSet;
     for (auto &text: dc.getWordSet()) {
         if (text.length() <= MAX_TEXT_LENGTH) {
@@ -423,28 +371,33 @@ static std::vector<std::vector<std::string>> rGroupCandidates = {
         {       "HC",   "C_", "C+", "HN+", "H+N"},//3
 };
 
-std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect2f &_freeRect, const int &_val, bool _isLeft) {
+std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const rectf &_freeRect, const int &_val, bool _isLeft) {
     if (_val <= 0 || _val > 3)
         return nullptr;
     std::string str;
     if (_isLeft) {
-        str = randSelect(lGroupCandidates[randInt() % _val]);
+        str = StdUtil::randSelect(lGroupCandidates[StdUtil::randInt() % _val]);
     } else {
-        str = randSelect(rGroupCandidates[randInt() % _val]);
+        str = StdUtil::randSelect(rGroupCandidates[StdUtil::randInt() % _val]);
     }
     auto hwStr = std::make_shared<HwStr>();
     hwStr->loadRichACSII(str);
     auto rect0 = hwStr->getBoundingBox().value();
-    float k0 = rect0.width / rect0.height;
-    float k1 = _freeRect.width / _freeRect.height;
-    float height = _freeRect.height;
-    float width = (std::min)(_freeRect.width, height * k0);
+    const auto[w0, h0]=getSize(rect0);
+    float k0 = w0 / h0;
+    const auto[w1, h1]=getSize(_freeRect);
+    float k1 = w1 / h1;
+    float height = h1;
+    float width = (std::min)(w1, height * k0);
     if (k0 / 1.5 < k1) {// 允许水平1.5倍的压缩
         hwStr->resizeTo(width, height, false);
+        const auto&[tl, br]=_freeRect;
         if (_isLeft) {
-            hwStr->moveLeftTopTo(_freeRect.tl());
+            hwStr->moveLeftTopTo(tl);
         } else {
-            hwStr->moveLeftTopTo(cv::Point2f(_freeRect.x + _freeRect.width - width, _freeRect.y));
+            const auto&[x0, y0]=tl;
+            const auto&[x1, y1]=br;
+            hwStr->moveLeftTopTo({x1 - width, y0});
         }
     } else {
         return nullptr;
@@ -452,60 +405,37 @@ std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const cv::Rect2f &_freeRec
     return hwStr;
 }
 
-cv::Mat CRNNDataGenerator::getStandardLongText() {
+Mat CRNNDataGenerator::getStandardLongText() {
     std::string text;
     int textType;
-    int MAX_LEN = 200 + randInt() % 400;
+    int MAX_LEN = 200 + StdUtil::randInt() % 400;
     int curLength = 0;
-    int height = 18 + randInt() % 32;
-    cv::Mat result;
+    int height = 18 + StdUtil::randInt() % 32;
+    Mat result(MatChannel::GRAY, DataType::UINT8, 0, 0);
     while (curLength < MAX_LEN) {
-        if (byProb(0.4)) {//四六开
-            text = randSelect(chemTexts);
+        if (StdUtil::byProb(0.4)) {//四六开
+            text = StdUtil::randSelect(chemTexts);
             textType = 2;
-        } else if (byProb(0.5)) {//五五开
-            text = randSelect(randomTexts);
+        } else if (StdUtil::byProb(0.5)) {//五五开
+            text = StdUtil::randSelect(randomTexts);
             textType = 0;
         } else {
-            text = randSelect(dictTexts);
+            text = StdUtil::randSelect(dictTexts);
             textType = 1;
         }
-        QString qData;
-        for (auto &c: text) {
-            if ('0' <= c && c <= '9') {
-                qData.push_back(QString("<sub>") + c + "</sub>");
-            } else if ('#' == c) {
-                qData.append("≡");
-            } else if ('+' == c) {
-                if (byProb(0.5))
-                    qData.append(QString("<sup>+</sup>"));
-                else
-                    qData.append(QString("<sup>⊕</sup>"));
-            } else if ('-' == c) {
-                if (byProb(0.5))
-                    qData.append(QString("<sup>-</sup>"));
-                else
-                    qData.append(QString("<sup>㊀</sup>"));
-            } else {
-                qData.append(c);
-            }
-        }
-        auto img = GetFont(qData, availableFontFamilies[randInt() % availableFontFamilies.size()]);
-        cv::resize(img, img, cv::Size(((float) height / img.rows * img.cols), height),
-                   0, 0, cv::INTER_CUBIC);
-        int originW = result.cols, curW = img.cols;
+        auto img = CvUtil::GetFont(text, availableFontFamilies[StdUtil::randInt() % availableFontFamilies.size()]);
+        img = CvUtil::Resize(img, {(float) height / img.getHeight() * img.getWidth(), height});
+        int originW = result.getWidth(), curW = img.getWidth();
         if (originW + curW < MAX_LEN) {
-            if (result.empty()) {
+            if (result.getWidth() == 0) {
                 result = img;
             } else {
-                cv::hconcat(result, img, result);
+                result = CvUtil::HConcat(result, img);
             }
         } else {
             break;
         }
-        curLength = result.cols;
+        curLength = result.getWidth();
     }
-    if (!result.empty())
-        cv::cvtColor(result, result, cv::COLOR_GRAY2BGR);
     return result;
 }

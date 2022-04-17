@@ -110,5 +110,5 @@ private:
         }
     };
 
-    quick_set<1024> curSet;
+    quick_set<10> curSet;
 };

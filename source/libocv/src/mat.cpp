@@ -1,6 +1,11 @@
 #include "ocv/mat.h"
+#include "base/std_util.h"
+
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
 
 static cv::Scalar convertToScalar(const rgb &color) {
     const auto&[r, g, b]=color;
@@ -110,7 +115,7 @@ decltype(Mat::holder) Mat::getHolder() const {
 unsigned char *Mat::getData() const {
     return holder->data;
 }
-
+#ifdef QT_GUI_LIB
 QImage Mat::toQImage() const {
     // TODO:
     return QImage();
@@ -137,7 +142,7 @@ Mat::Mat(const QImage &qimage, const MatChannel &channel, const DataType &dataTy
     holder = std::make_shared<cv::Mat>(
             qimage2.height(), qimage2.width(), getOpenCVDataTypeMacro(), dataPtr, step);
 }
-
+#endif
 int Mat::getOpenCVDataTypeMacro() const {
     int DATA_TYPE_MACRO;
     switch (mDataType) {
@@ -196,4 +201,77 @@ void Mat::sync() {
     }
     mWidth = holder->cols;
     mHeight = holder->rows;
+}
+
+void Mat::drawCrossLine(const point2i &center, const int &length, const rgb &color, const int &thickness, bool rotate) {
+    if (!holder) { return; }
+    auto &canvas = *holder;
+    const auto&[x, y]=center;
+    int xx[4], yy[4];
+    if (rotate) {
+        xx[0] = xx[3] = x - length;
+        xx[1] = xx[2] = x + length;
+        yy[0] = yy[2] = y - length;
+        yy[1] = yy[3] = y + length;
+    } else {
+        xx[0] = xx[1] = x;
+        xx[2] = x - length;
+        xx[3] = x + length;
+        yy[2] = yy[3] = y;
+        yy[0] = y - length;
+        yy[1] = y + length;
+    }
+    cv::line(canvas, cv::Point(xx[0], yy[0]), cv::Point(xx[1], yy[1]),
+             convertToScalar(color), thickness, cv::LINE_AA);
+    cv::line(canvas, cv::Point(xx[2], yy[2]), cv::Point(xx[3], yy[3]),
+             convertToScalar(color), thickness, cv::LINE_AA);
+}
+
+std::vector<unsigned char> Mat::toBuffer() const {
+    std::vector<uchar> buffer;
+    if (!holder) { return buffer; }
+    auto &canvas = *holder;
+    cv::imencode(".jpg", *holder, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
+    return buffer;
+}
+
+bool Mat::saveJPG(const std::string &fileName) const {
+    // 60 + StdUtil::randInt() % 40 for crnn test sample, yolo all
+    // 70 + StdUtil::randInt() % 30 for crnn train sample
+    return cv::imwrite(fileName, *holder, {cv::IMWRITE_JPEG_QUALITY, 60 + StdUtil::randInt() % 40});
+}
+
+void Mat::drawText(
+        const std::string &text, const point2i &org, const float &scale, const rgb &color, const int &thickness) {
+    if (!holder) { return; }
+    auto &canvas = *holder;
+    const auto&[x, y]=org;
+    static const std::vector<int> fontChoices{
+            cv::FONT_HERSHEY_SIMPLEX, cv::FONT_HERSHEY_DUPLEX, cv::FONT_HERSHEY_COMPLEX,
+            cv::FONT_HERSHEY_TRIPLEX};
+    cv::putText(
+            canvas, text, cv::Point{x, y},
+            StdUtil::randSelect(fontChoices), 1.5, convertToScalar(color),
+            thickness, cv::LINE_AA, false);
+}
+
+void Mat::display(const std::string &name) const {
+    cv::imshow(name, *holder);
+    cv::waitKey(0);
+}
+
+void Mat::drawImage(const Mat &mat, const recti &pos) {
+    const auto &src = *(mat.getHolder());
+    auto &dst = *holder;
+    const auto&[tl, br]=pos;
+    src.copyTo(dst(cv::Rect2i(cv::Point2i{tl.first, tl.second}, cv::Point2i{br.first, br.second})));
+}
+
+void Mat::drawRectangle(const rectf &box, const rgb &color, const int &thickness) {
+    auto &dst = *holder;
+    const auto&[tl, br]=box;
+    const auto&[x0, y0]=tl;
+    const auto&[x1, y1]=br;
+    cv::rectangle(dst, cv::Point{(int)x0, (int)y0}, cv::Point{(int)x1, (int)y1},
+                  convertToScalar(color), thickness, cv::LINE_AA, 0);
 }

@@ -1,16 +1,16 @@
 #include "data/g_chem_text.h"
-
+#include "base/std_util.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonParseError>
 
-#include <sstream>
+#include <iosfwd>
 #include <vector>
 #include <optional>
-#include "base/std_util.h"
 
-struct HashSpliceableText {
+
+struct HashSpliceableText  {
     size_t operator()(const SpliceableText &_st) const {
         return std::hash<std::string>()(_st.getRaw());
     }
@@ -244,23 +244,25 @@ void LineTextDataCreator::loadFromPattern(const std::string &filepath) {
     std::cout << "step1.size=" << originSTVec.size() << std::endl;
     QFile file(filepath.c_str());
     file.open(QIODevice::ReadOnly);
-    auto str = file.readAll().toStdString();
+    QString str = file.readAll();
     file.close();
-    std::istringstream iss(str);
-    std::string line;
-    while (std::getline(iss, line)) {
-        std::string a, b;
-        std::istringstream iss_line(line);
+    QTextStream iss(&str);
+//    std::istringstream iss(str);
+    QString line;
+    while (!iss.atEnd()) {
+        line=iss.readLine();
+        QString a, b;
+        QTextStream iss_line(&line);
         try {
             iss_line >> a;
-            if (!a.empty() && '#' == a[0])continue;
+            if (!a.isEmpty() && '#' == a[0])continue;
             iss_line >> b;
 //            std::cout << "\"" << b << "\",";
             if ('-' != a.front() && '-' != a.back()) {
-                originSTVec.emplace_back(a, 1, 0);//CO2H
+                originSTVec.emplace_back(a.toStdString(), 1, 0);//CO2H
             }
             if ('-' != b.front() && '-' != b.back()) {
-                originSTVec.emplace_back(b, 0, 1);//HO2C
+                originSTVec.emplace_back(b.toStdString(), 0, 1);//HO2C
             }
         } catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
@@ -336,7 +338,9 @@ void LineTextDataCreator::loadFromPattern(const std::string &filepath) {
     while (fruits.size() < 10000) {
         auto st1 = StdUtil::randSelect(originSTVec);
         auto st2 = StdUtil::randSelect(tempSTVec);
-        if (StdUtil::byProb(0.5))std::swap(st1, st2);
+        if (StdUtil::byProb(0.5)){
+            std::swap(st1, st2);
+        }
         auto st3 = joinSpliceableText(st1, st2);
         if (st3 && !st3->isFull()) {// 满足新建条件
             auto str = st3->getNeutral();

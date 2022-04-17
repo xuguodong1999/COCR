@@ -2,12 +2,16 @@
 
 #include "els_data_export.h"
 
+#include "ocv/mat.h"
+
 #include <string>
 #include <vector>
 #include <memory>
 #include <unordered_set>
+
 class HwBase;
 class ELS_DATA_EXPORT CRNNDataGenerator {
+    inline static std::string SOSO_ALPHABET = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty";
     inline static const char *imgKey = "image-%09d";
     inline static const char *labelKey = "label-%09d";
     inline static const std::string imgDir = "/JPEGImages/";
@@ -59,9 +63,9 @@ public:
      * @param _isLeft 自由基在左侧
      * @return
      */
-    std::shared_ptr<HwBase> getRectStr(const cv::Rect2f &_freeRect, const int &_val, bool _isLeft);
+    std::shared_ptr<HwBase> getRectStr(const rectf &_freeRect, const int &_val, bool _isLeft);
 
-    cv::Mat getStandardLongText();
+     Mat getStandardLongText();
 };
 
 ELS_DATA_EXPORT extern CRNNDataGenerator crnnDataGenerator;

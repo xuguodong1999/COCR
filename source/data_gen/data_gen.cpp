@@ -1,8 +1,8 @@
-#include "data/crnn_data.h"
-#include "data/soso_darknet.h"
-#include "stroke/hw_data.h"
-#include "base/isomer.h"
-#include "base/polya.h"
+#include "data/soso_crnn.h"
+#include "data/soso_obj.h"
+#include "math/isomer.h"
+#include "math/polya.h"
+#include "stroke/couch_sym.h"
 
 #include <QCoreApplication>
 #include <QPainter>
@@ -62,14 +62,15 @@ static const char *USAGE_MEG = "data_gen usage:\n"
                                "(4)\t./data_gen -isomer [number of samples] [an empty, existing directory path]\n";
 
 int main(int argc, char **argv) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
+//#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+//    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+//#endif
     QApplication a(argc, argv);
     auto arguments = a.arguments();
     if (arguments.size() == 1) { // display something
         HwDataLoader::getInstance();
-        displayYoloData();
+//        displayYoloData();
+        displayCRNNData();
         return a.exec();
     } else if (arguments.size() == 4) {
         const auto dataType = arguments.at(1).toLower();

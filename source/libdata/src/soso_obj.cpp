@@ -1,8 +1,13 @@
 #include "data/soso_obj.h"
-
+#include "math/isomer.h"
+#include "base/std_util.h"
+#include "p/v1.0/hw_mol.h"
+#include "p/v1.0/mol_op.h"
 #include <filesystem>
 #include <iostream>
 #include <random>
+
+using namespace v1_0;
 
 SOSODarknet::SOSODarknet() : isInited(false) {
 }
@@ -50,20 +55,20 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
 //#pragma omp parallel for num_threads(8)
     for (int i = 0; i < loopTime; i++) {
         std::shared_ptr<HwMol> hwMol(nullptr);
-        if (byProb(0.1)) {
+        if (StdUtil::byProb(0.1)) {
             hwMol = HwMol::GetSpecialExample(0.1);
         } else {
             auto mol = std::make_shared<JMol>();
             mol->setAlkane(alkanes[i % alkanes.size()]);
             auto molOp = std::make_shared<MolOp>(mol);
-            bool add_aro = byProb(0.5), add_com = byProb(0.5);
+            bool add_aro = StdUtil::byProb(0.5), add_com = StdUtil::byProb(0.5);
             if (alkanes[i % alkanes.size()].length() > 40) {
                 add_com = false;
             }
             if (alkanes[i % alkanes.size()].length() > 30) {
                 add_aro = false;
             }
-            molOp->randomize(0.1, byProb(0.95), byProb(0.95),
+            molOp->randomize(0.1, StdUtil::byProb(0.95), StdUtil::byProb(0.95),
                              add_aro, add_com);
             hwMol = std::make_shared<HwMol>(molOp);
         }
@@ -96,20 +101,20 @@ void SOSODarknet::display() {
     std::shuffle(alkanes.begin(), alkanes.end(), std::default_random_engine());
     for (int i = 0; i < loopTime; i++) {
         std::shared_ptr<HwMol> hwMol(nullptr);
-        if (byProb(0.1)) {
+        if (StdUtil::byProb(0.1)) {
             hwMol = HwMol::GetSpecialExample(0.1);
         } else {
             auto mol = std::make_shared<JMol>();
             mol->setAlkane(alkanes[i % alkanes.size()]);
             auto molOp = std::make_shared<MolOp>(mol);
-            bool add_aro = byProb(0.5), add_com = byProb(0.5);
+            bool add_aro = StdUtil::byProb(0.5), add_com = StdUtil::byProb(0.5);
             if (alkanes[i % alkanes.size()].length() > 40) {
                 add_com = false;
             }
             if (alkanes[i % alkanes.size()].length() > 30) {
                 add_aro = false;
             }
-            molOp->randomize(0.1, byProb(0.95), byProb(0.95),
+            molOp->randomize(0.1, StdUtil::byProb(0.95), StdUtil::byProb(0.95),
                              add_aro, add_com);
             hwMol = std::make_shared<HwMol>(molOp);
         }

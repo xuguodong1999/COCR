@@ -1,20 +1,34 @@
 #include "hw_mol.h"
-
+#include "ocv/algorithm.h"
+#include "ocv/mat.h"
+#include "base/std_util.h"
+#include "stroke/stroke.h"
+#include "stroke/script.h"
+#include "stroke/bond.h"
+#include "ckit/bond.h"
+#include "ckit/atom.h"
+#include "mol_op.h"
+#include "mol2d.h"
+#include "data/soso_crnn.h"
 
 #include <filesystem>
 #include <fstream>
+#include <unordered_set>
+#include <optional>
+#include <stroke/couch_sym.h>
+#include <stroke/str.h>
 
-using namespace std;
+using namespace v1_0;
 
 CRNNDataGenerator crnnDataGenerator;
 
-void HwMol::paintTo(cv::Mat &canvas) const {
+void HwMol::paintTo(Mat &canvas) const {
     for (auto &sym: mData) {
         sym->paintTo(canvas);
     }
 }
 
-void HwMol::rotateBy(float angle, const cv::Point2f &cent) {
+void HwMol::rotateBy(float angle, const point2f &cent) {
     // 骨架直接旋转，字符只做平移
     for (auto &sym: mData) {
         sym->rotateBy(angle, cent);
@@ -38,7 +52,7 @@ void HwMol::setHwController(HwController &_hwController) {
     }
 }
 
-std::optional<cv::Rect2f> HwMol::getBoundingBox() const {
+std::optional<rectf> HwMol::getBoundingBox() const {
     if (mData.empty())return std::nullopt;
     float minx, miny, maxx, maxy;
     minx = miny = std::numeric_limits<float>::max();
@@ -46,13 +60,17 @@ std::optional<cv::Rect2f> HwMol::getBoundingBox() const {
     for (auto &stroke: mData) {
         auto bbox = stroke->getBoundingBox();
         if (!bbox)continue;
-        minx = std::min(minx, bbox->x);
-        miny = std::min(miny, bbox->y);
-        maxx = std::max(maxx, bbox->x + bbox->width);
-        maxy = std::max(maxy, bbox->y + bbox->height);
+        const auto&[tl, br]=bbox.value();
+        const auto&[x0, y0]=tl;
+        const auto&[x1, y1]=br;
+        minx = std::min(minx, x0);
+        miny = std::min(miny, y0);
+        maxx = std::max(maxx, x1);
+        maxy = std::max(maxy, y1);
     }
     if (minx > maxx)return std::nullopt;
-    return cv::Rect2f(minx, miny, maxx - minx, maxy - miny);
+    return rectf{{minx, miny},
+                 {maxx, maxy}};
 }
 
 float HwMol::reloadHWData(const float &_explicitCarbonProb) {
@@ -73,12 +91,12 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         auto atom = mol->getAtomById(_aid);
         auto sym = std::make_shared<HwStr>(atom->getElementType());
         sym->setKeepDirection(true);
-        float fontSize = avgBondLength * betweenProb(0.2, 0.6);
+        float fontSize = avgBondLength * StdUtil::betweenProb(0.2, 0.6);
         sym->resizeTo(fontSize, fontSize);
         const auto&[x, y]=mol2d->getPos2D(_aid);
         sym->moveCenterTo({x, y});
         if (ElementType::C == atom->getElementType()) {
-            explicitAtomMap[_aid] = byProb(_explicitCarbonProb);
+            explicitAtomMap[_aid] = StdUtil::byProb(_explicitCarbonProb);
         } else {
             explicitAtomMap[_aid] = true;
         }
@@ -93,7 +111,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     std::vector<std::unordered_set<size_t>> kekuleRings;// 记录画圈圈的化学键id
     std::unordered_set<size_t> bondInKekuleRings;// 记录画圈圈的化学键id，用于快速查找
     for (auto &aromaticStruct: bondInRing) {
-        if (byProb(0.8)) {
+        if (StdUtil::byProb(0.8)) {
             for (auto &ring: aromaticStruct) {
                 kekuleRings.push_back(ring);// 深拷贝
                 for (auto &bid: ring) {
@@ -122,9 +140,9 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         for (auto &bid: bidSet) {
             tmp.push_back(bid);
         }
-        if (mol->getBondById(tmp[0])->getBondType() != JBondType::SingleBond)
+        if (mol->getBondById(tmp[0])->getBondType() != BondType::SingleBond)
             continue;
-        if (mol->getBondById(tmp[1])->getBondType() != JBondType::SingleBond)
+        if (mol->getBondById(tmp[1])->getBondType() != BondType::SingleBond)
             continue;
         if (tmp[0] < tmp[1])std::swap(tmp[0], tmp[1]);
         lineBondMap.insert({tmp[0], tmp[1]});
@@ -133,16 +151,16 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     // 添加键坐标
     auto add_bond_item = [&](const size_t &_bid) {
         auto bond = mol->getBondById(_bid);
-        JBondType bondType = bond->getBondType();
+        BondType bondType = bond->getBondType();
         if (bondInKekuleRings.end() != bondInKekuleRings.find(_bid)) {
-            bondType = JBondType::DelocalizedBond;  // 不能影响 JMol 里的数据
+            bondType = BondType::DelocalizedBond;  // 不能影响 JMol 里的数据
         }
         auto sym = HwBond::GetHwBond(bondType);
 //        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
 //        sym->setUseHandWrittenWChar(true);
         const auto&[fromX, fromY] = mol2d->getPos2D(bond->getAtomFrom());
         const auto&[toX, toY] = mol2d->getPos2D(bond->getAtomTo());
-        cv::Point2f from, to, from_, to_;
+        point2f from, to, from_, to_;
         from = from_ = {fromX, fromY};
         to = to_ = {toX, toY};
         const float k = 0.3;
@@ -153,7 +171,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
             to = (1 - k) * (to_ - from_) + from_;
         }
         sym->setVertices({from, to});
-        if (bondType == JBondType::SingleBond) {
+        if (bondType == BondType::SingleBond) {
             itemBondMap[_bid] = mData.size();
         }
         mData.push_back(std::move(sym));
@@ -161,9 +179,9 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     mol->safeTraverseBonds(add_bond_item);
     // 加环
     for (auto &ring: kekuleRings) {
-        auto sym = HwBond::GetHwBond(JBondType::CircleBond);
-//        auto sym = BondItem::GetBond(JBondType::CircleBond);
-        std::vector<cv::Point2f> pts;
+        auto sym = HwBond::GetHwBond(BondType::CircleBond);
+//        auto sym = BondItem::GetBond(BondType::CircleBond);
+        std::vector<point2f> pts;
         std::unordered_set<size_t> aids;
         for (auto &bid: ring) {
             auto bond = mol->getBondById(bid);
@@ -181,7 +199,8 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
     for (auto &sym: mData) {
         auto bBox = sym->getBoundingBox();
         if (!bBox)continue;
-        avgSize += std::max(bBox->width, bBox->height);
+        const auto[bw, bh]=getSize(bBox.value());
+        avgSize += (std::max)(bw, bh);
     }
     if (!mData.empty()) avgSize /= mData.size();
 //    return avgSize;
@@ -198,7 +217,7 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
                                     mol->getBondById(bid2)->getAtomFrom(),
                                     mol->getBondById(bid2)->getAtomTo()};
         for (auto &id: aids) {
-            if (notExist(tmp, id)) {
+            if (StdUtil::notExist(tmp, id)) {
                 tmp.insert(id);
             } else {
                 aid = id;
@@ -207,16 +226,16 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         }
         // aid is angle atom
         const auto&[x, y]=mol2d->getPos2D(aid);
-        const cv::Point2f A = {x, y};
+        const point2f A = {x, y};
 //        std::cout << "A=" << A << std::endl;
 //        std::cout << "bbox1=" << item1->getBoundingBox().value() << std::endl;
 //        std::cout << "bbox2=" << item2->getBoundingBox().value() << std::endl;
         const float threshDis = avgBondLength / 4.0;
         // 1、排除影响范围里的所有点
-        cv::Point2f nearestPt, B, C;
+        point2f nearestPt, B, C;
         float minDis;
-        auto keep_condition = [&](const cv::Point2f &_pt) -> bool {
-            const float curDis = getDistance2D(_pt, A);
+        auto keep_condition = [&](const point2f &_pt) -> bool {
+            const float curDis = getDistance(_pt, A);
             bool res = (curDis > threshDis);
             if (res && curDis < minDis) {
                 minDis = curDis;
@@ -234,15 +253,14 @@ float HwMol::reloadHWData(const float &_explicitCarbonProb) {
         auto D = (B + C) / 2.0;
         auto h = A - D;
         // 2、添加圆弧: 斜边 from-to，垂足 D
-        auto add_arc = [&](const cv::Point2f &_from, const cv::Point2f &_to) -> HwScript {
+        auto add_arc = [&](const point2f &_from, const point2f &_to) -> HwScript {
             HwStroke s;
-            float sx = _from.x, sy = _from.y;
+            point2f base = _from;
             float k = 10;
-            float dx = (D.x - _from.x) / k, dy = (D.y - _from.y) / k;
+            point2f d = (D - _from) / k;
             for (int i = 0; i <= k; i++) {
-                s.push_back(cv::Point2f(sx, sy) + h * std::sin(M_PI_2 * i / k));
-                sx += dx;
-                sy += dy;
+                s.push_back(base + h * std::sin(M_PI_2 * i / k));
+                base += d;
             }
             HwScript arc;
             arc.push_back(s);
@@ -319,67 +337,70 @@ static std::vector<HwController> crude = {
 void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_labelPath,
                           const size_t &_repeatTimes) {
     reloadHWData(0.1);
-    setHwController(thin[randInt() % thin.size()]);
+    setHwController(thin[StdUtil::randInt() % thin.size()]);
     float k = 100.0f / (std::max)(0.01f, avgSize);
     this->mulK(k, k);
     size_t fixW, fixH;
     fixW = fixH = 640;
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
-        target->rotate(randInt() % 360);
+        target->rotate(StdUtil::randInt() % 360);
         target->replaceCharWithText(0.25);
         if (target->getMol()->bondsNum() <= 6) {
-            target->setHwController(thin[randInt() % thin.size()]);
+            target->setHwController(thin[StdUtil::randInt() % thin.size()]);
         } else {
-            target->setHwController(crude[randInt() % thin.size()]);
+            target->setHwController(crude[StdUtil::randInt() % thin.size()]);
         }
         auto bBox = target->getBoundingBox().value();
-        int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        const auto[bw, bh]=getSize(bBox);
+        int minWidth = 8 + bw, minHeight = 8 + bh;
         if (target->getMol()->bondsNum() <= 6) {
-            float scale = betweenProb(1.5, 3);
+            float scale = StdUtil::betweenProb(1.5, 3);
             minHeight *= scale;
             minWidth *= scale;
         }
-        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
-                              getScalar(ColorName::rgbWhite));
-        target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
+        Mat img = Mat(MatChannel::GRAY, DataType::UINT8, minWidth, minHeight);
+        target->moveCenterTo(point2f(minWidth / 2, minHeight / 2));
         target->paintTo(img);
-        auto paddingColor = getScalar(ColorName::rgbWhite);
-        auto[resImg0, offset]=resizeCvMatTo(img, fixW, fixH, paddingColor);
-        cv::Mat resImg = resImg0;
+        const Size<int>targetSize{(int)fixW,(int)fixH};
+        auto[resImg0, offset]=CvUtil::ResizeKeepRatio(img, targetSize, ColorName::rgbWhite);
+        Mat resImg = resImg0;
         auto&[k, offsetx, offsety]=offset;
-        int ow = bBox.width, oh = bBox.height;
+        int ow = bw, oh = bh;
         ow = ow * k;
         oh = oh * k;
-        std::vector<cv::Rect2f> extraBoxes;
-        auto fill_rect = [&](const cv::Rect2i &_rect) -> void {
+        std::vector<rectf> extraBoxes;
+        auto fill_rect = [&](const recti &_rect) -> void {
             auto textImg = crnnDataGenerator.getStandardLongText();
-            if (textImg.empty())return;
-            int tw = textImg.cols, th = textImg.rows;
-            int mw = _rect.width - 10, mh = _rect.height - 10;
+            if (textImg.getWidth() == 0)return;
+            int tw = textImg.getWidth(), th = textImg.getHeight();
+            const auto[rw, rh]=getSize(_rect);
+            const auto&[tl, br]=_rect;
+            const auto&[x0, y0]=tl;
+            const auto&[x1, y1]=br;
+            int mw = rw - 10, mh = rh - 10;
             if (tw < mw && th < mh) {
-                int tx = 5 + randInt() % (mw - tw), ty = 5 + randInt() % (mh - th);
-                tx += _rect.x;
-                ty += _rect.y;
-                cv::Rect2i roi(tx, ty, tw, th);
-                textImg.copyTo(resImg(roi));
-                extraBoxes.emplace_back(tx, ty, tw, th);
+                int tx = 5 + StdUtil::randInt() % (mw - tw), ty = 5 + StdUtil::randInt() % (mh - th);
+                tx += x0;
+                ty += y0;
+                resImg.drawImage(textImg, rectf{{tx,      ty},
+                                                {tx + tw, ty + th}});
+                extraBoxes.push_back(rectf({tx, ty}, {tx+tw, ty+th}));
             }
         };
         if (ow > oh) {
             int deltaH = (fixH - oh) / 2;
-            cv::Rect2i free1(0, 0, fixW, deltaH), free2(0, fixH - deltaH, fixW, deltaH);
-            fill_rect(free1);
-            fill_rect(free2);
+            fill_rect(recti{{0,    0},
+                            {fixW, fixH}});
+            fill_rect(recti{{0,    fixH - deltaH},
+                            {fixW, fixH}});
         }
 
         std::string suffix = "_" + std::to_string(i);
-        if (byProb(hwController->getRevertColorProb())) {// 反转颜色
-            cv::bitwise_not(resImg, resImg);
+        if (StdUtil::byProb(hwController->getRevertColorProb())) {// 反转颜色
+            resImg = CvUtil::RevertColor(resImg);
         }
-        cv::cvtColor(resImg, resImg, cv::COLOR_BGR2GRAY);
-        cv::imwrite(_imgPath + suffix + ".jpg", resImg,
-                    {cv::IMWRITE_JPEG_QUALITY, 60 + randInt() % 40});
+        resImg.saveJPG(_imgPath + suffix + ".jpg");
         std::ofstream ofsm(_labelPath + suffix + ".txt");
         ofsm.precision(6);
         if (!ofsm.is_open()) {
@@ -388,19 +409,27 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         }
         for (auto &sym: target->mData) {
             auto name = sym->getItemType();
-            auto bBox = sym->getBoundingBox().value();
-            bBox.x = bBox.x * k + offsetx;
-            bBox.y = bBox.y * k + offsety;
-            bBox.width *= k;
-            bBox.height *= k;
-            float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
-            ofsm << fullLabels[name] << " " << centX / fixW << " " << centY / fixH << " "
-                 << bBox.width / fixW << " " << bBox.height / fixH << "\n";
+            const auto bBox0 = sym->getBoundingBox().value();
+            const auto&[tl, br]=bBox0;
+            const auto&[x0, y0]=tl;
+            const auto&[x1, y1]=br;
+            float x, y, w, h;
+            x = x0 * k + offsetx;
+            y = y0 * k + offsety;
+            w = std::abs(x1 - x0) * k;
+            h = std::abs(y1 - y0) * k;
+            float centX = x + w / 2, centY = y + h / 2;
+            ofsm << fullLabels[name] << " "
+                 << centX / fixW << " " << centY / fixH << " "
+                 << w / fixW << " " << h / fixH << "\n";
         }
-        for (auto &bBox: extraBoxes) {
-            float centX = bBox.x + bBox.width / 2, centY = bBox.y + bBox.height / 2;
+        for (auto &bBox0: extraBoxes) {
+            const auto&[tl, br]=bBox0;
+            const auto&[x0, y0]=tl;
+            const auto&[x1, y1]=br;
+            float centX = (x0 + x1) / 2, centY = (y0 + y1) / 2;
             ofsm << fullLabels[DetectorClasses::ItemHorizontalStr] << " " << centX / fixW << " " << centY / fixH << " "
-                 << bBox.width / fixW << " " << bBox.height / fixH << "\n";
+                 << std::abs(x1 - x0) / fixW << " " << std::abs(y1 - y0) / fixH << "\n";
         }
         ofsm.close();
     }
@@ -418,74 +447,84 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     };
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
-        target->rotate(randInt() % 360);
+        target->rotate(StdUtil::randInt() % 360);
         target->replaceCharWithText(0.25);
         if (target->getMol()->bondsNum() <= 6) {
-            target->setHwController(thin[randInt() % thin.size()]);
+            target->setHwController(thin[StdUtil::randInt() % thin.size()]);
         } else {
-            target->setHwController(crude[randInt() % thin.size()]);
+            target->setHwController(crude[StdUtil::randInt() % thin.size()]);
         }
         auto bBox = target->getBoundingBox().value();
-        int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+        const auto[bw, bh]=getSize(bBox);
+        int minWidth = 8 + bw, minHeight = 8 + bh;
         if (target->getMol()->bondsNum() <= 6) {
-            float scale = betweenProb(1.5, 3);
+            float scale = StdUtil::betweenProb(1.5, 3);
             minHeight *= scale;
             minWidth *= scale;
         }
-        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
-                              getScalar(ColorName::rgbWhite));
-        target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
+        Mat img = Mat(MatChannel::GRAY, DataType::UINT8, minWidth, minHeight);
+        target->moveCenterTo(point2f(minWidth / 2, minHeight / 2));
         target->paintTo(img);
-
-        auto[resImg0, offset]=resizeCvMatTo(img, fixW, fixH);
-        cv::Mat resImg = resImg0;
+        auto[resImg0, offset]=CvUtil::ResizeKeepRatio(img, {fixW, fixH}, ColorName::rgbWhite);
+        Mat resImg = resImg0;
         auto&[k, offsetx, offsety]=offset;
-        int ow = bBox.width, oh = bBox.height;
+        int ow = bw, oh = bh;
         ow = ow * k;
         oh = oh * k;
-        std::vector<cv::Rect2f> extraBoxes;
-        auto fill_rect = [&](const cv::Rect2i &_rect) -> void {
+        std::vector<rectf> extraBoxes;
+        auto fill_rect = [&](const recti &_rect) -> void {
             auto textImg = crnnDataGenerator.getStandardLongText();
-            if (textImg.empty())return;
-            int tw = textImg.cols, th = textImg.rows;
-            int mw = _rect.width - 10, mh = _rect.height - 10;
+            if (textImg.getWidth() == 0)return;
+            int tw = textImg.getWidth(), th = textImg.getHeight();
+            const auto[rw, rh]=getSize(_rect);
+            const auto&[tl, br]=_rect;
+            const auto&[x0, y0]=tl;
+            const auto&[x1, y1]=br;
+            int mw = rw - 10, mh = rh - 10;
             if (tw < mw && th < mh) {
-                int tx = 5 + randInt() % (mw - tw), ty = 5 + randInt() % (mh - th);
-                tx += _rect.x;
-                ty += _rect.y;
-                cv::Rect2i roi(tx, ty, tw, th);
-                textImg.copyTo(resImg(roi));
-                extraBoxes.emplace_back(tx, ty, tw, th);
+                int tx = 5 + StdUtil::randInt() % (mw - tw), ty = 5 + StdUtil::randInt() % (mh - th);
+                tx += x0;
+                ty += y0;
+                resImg.drawImage(textImg, rectf{{tx,      ty},
+                                                {tx + tw, ty + th}});
+                extraBoxes.push_back(rectf({tx, ty}, {tx+tw, ty+th}));
             }
         };
         if (ow > oh) {
             int deltaH = (fixH - oh) / 2;
-            cv::Rect2i free1(0, 0, fixW, deltaH), free2(0, fixH - deltaH, fixW, deltaH);
-            fill_rect(free1);
-            fill_rect(free2);
+            fill_rect(recti{{0,    0},
+                            {fixW, fixH}});
+            fill_rect(recti{{0,    fixH - deltaH},
+                            {fixW, fixH}});
         }
         for (auto &sym: target->mData) {
 //            std::cout << fullLabels[sym->getItemType()] << std::endl;
-            auto bBox = sym->getBoundingBox().value();
-            bBox.x = bBox.x * k + offsetx;
-            bBox.y = bBox.y * k + offsety;
-            bBox.width *= k;
-            bBox.height *= k;
-            if (_showBox)
-                cv::rectangle(resImg, bBox, getScalar(
-                        colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
+            const auto bBox0 = sym->getBoundingBox().value();
+            const auto&[tl, br]=bBox0;
+            const auto&[x0, y0]=tl;
+            const auto&[x1, y1]=br;
+            float x, y, w, h;
+            x = x0 * k + offsetx;
+            y = y0 * k + offsety;
+            w = std::abs(x1 - x0) * k;
+            h = std::abs(y1 - y0) * k;
+            if (_showBox) {
+                resImg.drawRectangle(
+                        rectf{{x,     y},
+                              {x + w, y + h}},
+                        ColorUtil::GetRGB(colorIdx((int) sym->getItemType())), 1);
+            }
         }
         for (auto &bBox: extraBoxes) {
-            if (_showBox)
-                cv::rectangle(resImg, bBox, getScalar(
-                        colorIdx((int) DetectorClasses::ItemHorizontalStr)), 1, cv::LINE_AA);
+            if (_showBox) {
+                resImg.drawRectangle(bBox, ColorUtil::GetRGB(colorIdx((int) DetectorClasses::ItemHorizontalStr)), 1);
+            }
         }
-        cv::imshow("MolHwItem::showOnScreen", resImg);
-        cv::waitKey(0);
+        resImg.display("MolHwItem::showOnScreen");
     }
 }
 
-void HwMol::moveBy(const cv::Point2f &_offset) {
+void HwMol::moveBy(const point2f &_offset) {
     for (auto &sym: mData) {
         sym->moveBy(_offset);
     }
@@ -525,18 +564,19 @@ static std::unordered_set<DetectorClasses> bondClassSet = {
 void HwMol::replaceCharWithText(const float &_prob) {
     auto molOp = std::static_pointer_cast<MolOp>(molOpHolder);
 //    molOp->updateAtomValenceMap();
-    std::vector<cv::Rect2f> rects(mData.size());
+    std::vector<rectf> rects(mData.size());
     float avgSize = 0;
     for (size_t i = 0; i < mData.size(); i++) {
         auto &item = mData[i];
         rects[i] = item->getBoundingBox().value();
-        avgSize += (std::max)(rects[i].width, rects[i].height);
+        const auto[w, h]=getSize(rects[i]);
+        avgSize += (std::max)(w, h);
     }
     avgSize /= mData.size();
     /**
      * 为第idx个边框水平向左右搜索空白空间，返回可利用的空间，如果空间小于预定尺寸，则返回空值
      */
-    auto calc_free_space = [&](const size_t &_curIdx) -> std::optional<std::pair<cv::Rect2f, bool>> {
+    auto calc_free_space = [&](const size_t &_curIdx) -> std::optional<std::pair<rectf, bool>> {
         /**
          * 规则：
          * 1、新空间不小于原空间
@@ -544,15 +584,23 @@ void HwMol::replaceCharWithText(const float &_prob) {
          * 3、
          */
         auto &curRect = rects[_curIdx];
-        float xBegin = -10000, xMid = curRect.x + curRect.width / 2,
+        const auto&[tl, br]=curRect;
+        const auto&[x0, y0]=tl;
+        const auto&[x1, y1]=br;
+
+        float xBegin = -10000, xMid = (x0 + x1) / 2,
                 xEnd = 10000;
-        float yBegin = curRect.y, yEnd = curRect.y + curRect.height;
+        float yBegin = y0, yEnd = y1;
         for (size_t i = 0; i < mData.size(); i++) {
             if (i == _curIdx)continue;
             auto &cmpRect = rects[i];
-            float yBegin2 = cmpRect.y, yEnd2 = cmpRect.y + cmpRect.height;
+            const auto&[_tl, _br]=cmpRect;
+            const auto&[_x0, _y0]=_tl;
+            const auto&[_x1, _y1]=_br;
+
+            float yBegin2 = _y0, yEnd2 = _y1;
             if (yBegin2 > yEnd || yEnd2 < yBegin)continue;// 不在水平线上
-            float xBegin2 = cmpRect.x, xEnd2 = cmpRect.x + cmpRect.width;
+            float xBegin2 = _x0, xEnd2 = _x1;
             if (xEnd2 < xMid) {
                 xBegin = (std::max)(xBegin, xEnd2);
             }
@@ -563,22 +611,27 @@ void HwMol::replaceCharWithText(const float &_prob) {
         }
 //        std::cout << xBegin << "," << xMid << "," << xEnd << std::endl;
         if (xBegin < xMid || xMid < xEnd) {
-            bool isLeft = (curRect.width + curRect.x) < xEnd;
+            bool isLeft = x1 < xEnd;
             if (xBegin == -10000)isLeft = false;
-            cv::Rect2f rect = curRect;
+            rectf rect = curRect;
             if (isLeft) {
-                rect.width = xEnd - curRect.x;
+                rect.second.first = xEnd;
+//                rect.width = xEnd - curRect.x;
             } else {
-                rect.x = xBegin;
-                rect.width = curRect.x + curRect.width - xBegin;
+                rect.first.first = xBegin;
+//                rect.x = xBegin;
+                rect.second.first = x1 - xBegin;
+//                rect.width = curRect.x + curRect.width - xBegin;
             }
-            if (rect.width / curRect.width < 2)return std::nullopt;
+            if (std::abs(rect.second.first - rect.first.first) / std::abs(x0 - x1) < 2) {
+                return std::nullopt;
+            }
             return std::make_pair(rect, isLeft);
         } else {
             return std::nullopt;
         }
     };
-    auto fill_rect_with_text = [&](const cv::Rect &_freeRect, bool _isLeft, const size_t &_curIdx) -> void {
+    auto fill_rect_with_text = [&](const rectf &_freeRect, bool _isLeft, const size_t &_curIdx) -> void {
         auto aid = hwToAtomMap[_curIdx];
         auto atom = mol->getAtomById(aid);
         frac val = molOp->getValByAtomId(aid);
@@ -592,8 +645,8 @@ void HwMol::replaceCharWithText(const float &_prob) {
     };
 //    std::cout << "*****************\n";
     for (size_t i = 0; i < mData.size(); i++) {
-        if (!notExist(bondClassSet, mData[i]->getItemType()))continue;
-        if (!byProb(_prob))continue;
+        if (!StdUtil::notExist(bondClassSet, mData[i]->getItemType()))continue;
+        if (!StdUtil::byProb(_prob))continue;
         auto freeRectOpt = calc_free_space(i);
         if (!freeRectOpt)continue;
         auto &[freeRect, isLeft] = freeRectOpt.value();
@@ -601,7 +654,7 @@ void HwMol::replaceCharWithText(const float &_prob) {
     }
 }
 
-shared_ptr<HwBase> HwMol::clone() const {
+std::shared_ptr<HwBase> HwMol::clone() const {
     auto sister = std::make_shared<HwMol>(molOpHolder, mol2dHolder, hwController);
     sister->keepDirection = keepDirection;
     sister->mData.resize(mData.size());
@@ -617,14 +670,14 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
     auto molOp = std::make_shared<MolOp>(mol);
     auto example = std::make_shared<HwMol>(molOp);
     std::vector<size_t> atomicNumbers;
-    std::vector<std::shared_ptr<JAtom>> newAtoms;
-    std::vector<std::shared_ptr<JBond>> newBonds;
+    std::vector<std::shared_ptr<Atom>> newAtoms;
+    std::vector<std::shared_ptr<Bond>> newBonds;
     auto add_c6 = [&]() {
         atomicNumbers = {5, 6, 7, 8, 15, 16};
         newAtoms = {
                 mol->addAtom(6), mol->addAtom(6),
                 mol->addAtom(6), mol->addAtom(6),
-                mol->addAtom(6), mol->addAtom(randSelect(atomicNumbers))
+                mol->addAtom(6), mol->addAtom(StdUtil::randSelect(atomicNumbers))
         };
         std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
         newBonds = {
@@ -640,7 +693,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
                 {{433, 231}, {522, 260}, {643, 221}, {699, 318}, {615, 286}, {483, 328}},
                 {{475, 317}, {522, 371}, {583, 371}, {629, 321}, {608, 415}, {500, 413}}
         };
-        const auto &coord_template = randSelect(c6Coords2d);
+        const auto &coord_template = StdUtil::randSelect(c6Coords2d);
         for (size_t i = 0; i < 6; i++) {
             const auto&[x, y]=coord_template[i];
             newAtoms[i]->setCoord2d(x, y);
@@ -649,39 +702,39 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
     auto add_grid2 = [&]() {
         atomicNumbers = {5, 6, 6, 6, 6, 6, 6, 6, 7, 8, 15, 16};
         std::vector<size_t> beginAtomicNumbers = {1, 3, 11, 19, 9, 17, 35, 53, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 8, 15, 16};
-        size_t loop = randInt() % 5 + 2;
-        cv::Point2f pos1(11, 10), pos2(10, 11), offset1(0, 1), offset2(1, 0);
-        auto last1 = mol->addAtom(randSelect(beginAtomicNumbers), pos1.x, pos1.y);
-        auto last2 = mol->addAtom(randSelect(beginAtomicNumbers), pos2.x, pos2.y);;
+        size_t loop = StdUtil::randInt() % 5 + 2;
+        point2f pos1(11, 10), pos2(10, 11), offset1(0, 1), offset2(1, 0);
+        auto last1 = mol->addAtom(StdUtil::randSelect(beginAtomicNumbers), pos1.first, pos1.second);
+        auto last2 = mol->addAtom(StdUtil::randSelect(beginAtomicNumbers), pos2.first, pos2.second);;
         for (size_t i = 0; i < loop; i++) {
             pos1 += offset1;
-            auto ab = mol->addAtom(6, pos1.x, pos1.y);
-            JBondType bt1, bt2;
-            bt1 = bt2 = JBondType::SingleBond;
-            if (byProb(0.35)) {
-                bt1 = JBondType::SolidWedgeBond;
-                bt2 = JBondType::DashWedgeBond;
-            } else if (byProb(0.25)) {
-                bt1 = JBondType::WaveBond;
+            auto ab = mol->addAtom(6, pos1.first, pos1.second);
+            BondType bt1, bt2;
+            bt1 = bt2 = BondType::SingleBond;
+            if (StdUtil::byProb(0.35)) {
+                bt1 = BondType::SolidWedgeBond;
+                bt2 = BondType::DashWedgeBond;
+            } else if (StdUtil::byProb(0.25)) {
+                bt1 = BondType::WaveBond;
             }
-            if (byProb(0.5)) {
+            if (StdUtil::byProb(0.5)) {
                 std::swap(bt1, bt2);
             }
             mol->addBond(ab->getId(), last1->getId(), bt1);
             mol->addBond(ab->getId(), last2->getId(), bt2);
             pos1 += offset1;
-            auto a = mol->addAtom(randSelect(atomicNumbers), pos1.x, pos1.y);
-            pos2 += 2 * offset2;
-            auto b = mol->addAtom(randSelect(atomicNumbers), pos2.x, pos2.y);
+            auto a = mol->addAtom(StdUtil::randSelect(atomicNumbers), pos1.first, pos1.second);
+            pos2 += offset2 * 2;
+            auto b = mol->addAtom(StdUtil::randSelect(atomicNumbers), pos2.first, pos2.second);
             mol->addBond(a->getId(), ab->getId());
             mol->addBond(b->getId(), ab->getId());
             std::swap(offset1, offset2);
             last1 = a;
             last2 = b;
         }
-        if (byProb(0.5)) {
+        if (StdUtil::byProb(0.5)) {
             pos1 += offset1;
-            auto ab = mol->addAtom(randSelect(atomicNumbers), pos1.x, pos1.y);
+            auto ab = mol->addAtom(StdUtil::randSelect(atomicNumbers), pos1.first, pos1.second);
             mol->addBond(last1->getId(), ab->getId());
             mol->addBond(last2->getId(), ab->getId());
         }
@@ -691,7 +744,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         newAtoms = {
                 mol->addAtom(6), mol->addAtom(6),
                 mol->addAtom(6), mol->addAtom(6),
-                mol->addAtom(randSelect(atomicNumbers))
+                mol->addAtom(StdUtil::randSelect(atomicNumbers))
         };
         std::shuffle(newAtoms.begin(), newAtoms.end(), std::default_random_engine());
         newBonds = {
@@ -703,14 +756,14 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         static std::vector<std::vector<std::pair<float, float>>> c5Coords2d = {
                 {{348, 328}, {348, 265}, {299, 356}, {387, 368}, {408, 341}}
         };
-        const auto &coord_template = randSelect(c5Coords2d);
+        const auto &coord_template = StdUtil::randSelect(c5Coords2d);
         for (size_t i = 0; i < 5; i++) {
             const auto&[x, y]=coord_template[i];
             newAtoms[i]->setCoord2d(x, y);
         }
     };
     std::vector<std::function<void(void)>> func_list = {add_c6, add_tetrahedral, add_grid2};
-    randSelect(func_list)();
+    StdUtil::randSelect(func_list)();
     auto &mData = example->mData;
     auto &hwToAtomMap = example->hwToAtomMap;
     auto &avgSize = example->avgSize;
@@ -722,10 +775,10 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
     auto calc_avg_bond_lenth = [&](const size_t &_bid) -> void {
         auto bond = mol->getBondById(_bid);
         auto atomFrom = mol->getAtomById(bond->getAtomFrom());
-        cv::Point2f from_(atomFrom->x, atomFrom->y);
+        point2f from_(atomFrom->x, atomFrom->y);
         auto atomTo = mol->getAtomById(bond->getAtomTo());
-        cv::Point2f to_(atomTo->x, atomTo->y);
-        avgSize += getDistance2D(from_, to_);
+        point2f to_(atomTo->x, atomTo->y);
+        avgSize += getDistance(from_, to_);
     };
     mol->safeTraverseBonds(calc_avg_bond_lenth);
     avgSize /= mol->bondsNum();
@@ -734,11 +787,11 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         auto atom = mol->getAtomById(_aid);
         auto sym = std::make_shared<HwStr>(atom->getElementType());
         sym->setKeepDirection(true);
-        float fontSize = avgSize * betweenProb(0.2, 0.6);
+        float fontSize = avgSize * StdUtil::betweenProb(0.2, 0.6);
         sym->resizeTo(fontSize, fontSize);
-        sym->moveCenterTo(cv::Point2f(atom->x, atom->y));
+        sym->moveCenterTo(point2f(atom->x, atom->y));
         if (ElementType::C == atom->getElementType()) {
-            explicitAtomMap[_aid] = byProb(_explicitCarbonProb);
+            explicitAtomMap[_aid] = StdUtil::byProb(_explicitCarbonProb);
         } else {
             explicitAtomMap[_aid] = true;
         }
@@ -768,9 +821,9 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         for (auto &bid: bidSet) {
             tmp.push_back(bid);
         }
-        if (mol->getBondById(tmp[0])->getBondType() != JBondType::SingleBond)
+        if (mol->getBondById(tmp[0])->getBondType() != BondType::SingleBond)
             continue;
-        if (mol->getBondById(tmp[1])->getBondType() != JBondType::SingleBond)
+        if (mol->getBondById(tmp[1])->getBondType() != BondType::SingleBond)
             continue;
         if (tmp[0] < tmp[1])std::swap(tmp[0], tmp[1]);
         lineBondMap.insert({tmp[0], tmp[1]});
@@ -779,16 +832,16 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
     // 添加键坐标
     auto add_bond_item = [&](const size_t &_bid) {
         auto bond = mol->getBondById(_bid);
-        JBondType bondType = bond->getBondType();
+        BondType bondType = bond->getBondType();
         auto sym = HwBond::GetHwBond(bondType);
 //        shared_ptr<BondItem> sym = BondItem::GetBond(bondType);
 //        sym->setUseHandWrittenWChar(true);
         auto atomFrom = mol->getAtomById(bond->getAtomFrom());
-        auto from_ = cv::Point2f(atomFrom->x, atomFrom->y);
+        auto from_ = point2f(atomFrom->x, atomFrom->y);
         auto atomTo = mol->getAtomById(bond->getAtomTo());
-        auto to_ = cv::Point2f(atomTo->x, atomTo->y);
+        auto to_ = point2f(atomTo->x, atomTo->y);
 //        std::cout << "from=" << from_ << ",to=" << to_ << std::endl;
-        cv::Point2f from = from_, to = to_;
+        point2f from = from_, to = to_;
         const float k = 0.3;
         if (explicitAtomMap[bond->getAtomFrom()]) {
             from = (1 - k) * (from_ - to_) + to_;
@@ -797,7 +850,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
             to = (1 - k) * (to_ - from_) + from_;
         }
         sym->setVertices({from, to});
-        if (bondType == JBondType::SingleBond) {
+        if (bondType == BondType::SingleBond) {
             itemBondMap[_bid] = mData.size();
         }
         mData.push_back(std::move(sym));
@@ -813,7 +866,7 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
                                     mol->getBondById(bid2)->getAtomFrom(),
                                     mol->getBondById(bid2)->getAtomTo()};
         for (auto &id: aids) {
-            if (notExist(tmp, id)) {
+            if (StdUtil::notExist(tmp, id)) {
                 tmp.insert(id);
             } else {
                 aid = id;
@@ -822,16 +875,16 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         }
         // aid is angle atom
         auto curAtom = mol->getAtomById(aid);
-        cv::Point2f A(curAtom->x, curAtom->y);
+        point2f A(curAtom->x, curAtom->y);
 //        std::cout << "A=" << A << std::endl;
 //        std::cout << "bbox1=" << item1->getBoundingBox().value() << std::endl;
 //        std::cout << "bbox2=" << item2->getBoundingBox().value() << std::endl;
         const float threshDis = avgSize / 4.0;
         // 1、排除影响范围里的所有点
-        cv::Point2f nearestPt, B, C;
+        point2f nearestPt, B, C;
         float minDis;
-        auto keep_condition = [&](const cv::Point2f &_pt) -> bool {
-            const float curDis = getDistance2D(_pt, A);
+        auto keep_condition = [&](const point2f &_pt) -> bool {
+            const float curDis = getDistance(_pt, A);
             bool res = (curDis > threshDis);
             if (res && curDis < minDis) {
                 minDis = curDis;
@@ -849,15 +902,14 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
         auto D = (B + C) / 2.0;
         auto h = A - D;
         // 2、添加圆弧: 斜边 from-to，垂足 D
-        auto add_arc = [&](const cv::Point2f &_from, const cv::Point2f &_to) -> HwScript {
+        auto add_arc = [&](const point2f &_from, const point2f &_to) -> HwScript {
             HwStroke s;
-            float sx = _from.x, sy = _from.y;
+            point2f base = _from;
             float k = 10;
-            float dx = (D.x - _from.x) / k, dy = (D.y - _from.y) / k;
+            point2f d = (D - _from) / k;
             for (int i = 0; i <= k; i++) {
-                s.push_back(cv::Point2f(sx, sy) + h * std::sin(M_PI_2 * i / k));
-                sx += dx;
-                sy += dy;
+                s.push_back(base + h * std::sin(M_PI_2 * i / k));
+                base += d;
             }
             HwScript arc;
             arc.push_back(s);
@@ -873,40 +925,39 @@ std::shared_ptr<HwMol> HwMol::GetSpecialExample(float _explicitCarbonProb) {
 }
 
 void HwMol::showSpecialExample(const size_t &_repeatTimes, bool _showBox) {
-//    std::cout << "avgSize=" << avgSize << std::endl;
-    float k0 = 100.0f / (std::max)(0.01f, avgSize);
-    this->mulK(k0, k0);
-    size_t fixW, fixH;
-    fixW = fixH = 640;
-    auto colorIdx = [](const int &_a) -> ColorName {
-        return static_cast<const ColorName>((7 + _a) * 13 % 455);
-    };
-    for (size_t i = 0; i < _repeatTimes; i++) {
-        auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
-        target->rotate(randInt() % 360);
-//        target->replaceCharWithText(1);
-        target->setHwController(thin[randInt() % thin.size()]);
-        auto bBox = target->getBoundingBox().value();
-        int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
-        cv::Mat img = cv::Mat(minHeight, minWidth, CV_8UC3,
-                              getScalar(ColorName::rgbWhite));
-        target->moveCenterTo(cv::Point2f(minWidth / 2, minHeight / 2));
-        target->paintTo(img);
-
-        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
-        auto&[k, offsetx, offsety]=offset;
-        for (auto &sym: target->mData) {
-//            std::cout << fullLabels[sym->getItemType()] << std::endl;
-            auto bBox = sym->getBoundingBox().value();
-            bBox.x = bBox.x * k + offsetx;
-            bBox.y = bBox.y * k + offsety;
-            bBox.width *= k;
-            bBox.height *= k;
-            if (_showBox)
-                cv::rectangle(resImg, bBox, getScalar(
-                        colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
-        }
-        cv::imshow("MolHwItem::showOnScreen", resImg);
-        cv::waitKey(0);
-    }
+////    std::cout << "avgSize=" << avgSize << std::endl;
+//    float k0 = 100.0f / (std::max)(0.01f, avgSize);
+//    this->mulK(k0, k0);
+//    size_t fixW, fixH;
+//    fixW = fixH = 640;
+//    auto colorIdx = [](const int &_a) -> ColorName {
+//        return static_cast<const ColorName>((7 + _a) * 13 % 455);
+//    };
+//    for (size_t i = 0; i < _repeatTimes; i++) {
+//        auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
+//        target->rotate(StdUtil::randInt() % 360);
+////        target->replaceCharWithText(1);
+//        target->setHwController(thin[StdUtil::randInt() % thin.size()]);
+//        auto bBox = target->getBoundingBox().value();
+//        int minWidth = 8 + bBox.width, minHeight = 8 + bBox.height;
+//        Mat img = Mat(minHeight, minWidth, CV_8UC3,
+//                              getScalar(ColorName::rgbWhite));
+//        target->moveCenterTo(point2f(minWidth / 2, minHeight / 2));
+//        target->paintTo(img);
+//
+//        auto[resImg, offset]=resizeCvMatTo(img, fixW, fixH);
+//        auto&[k, offsetx, offsety]=offset;
+//        for (auto &sym: target->mData) {
+////            std::cout << fullLabels[sym->getItemType()] << std::endl;
+//            auto bBox = sym->getBoundingBox().value();
+//            bBox.x = bBox.x * k + offsetx;
+//            bBox.y = bBox.y * k + offsety;
+//            bBox.width *= k;
+//            bBox.height *= k;
+//            if (_showBox)
+//                cv::rectangle(resImg, bBox, getScalar(
+//                        colorIdx((int) sym->getItemType())), 1, cv::LINE_AA);
+//        }
+//        resImg.display("HwMol::showSpecialExample");
+//    }
 }
