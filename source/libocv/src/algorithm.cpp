@@ -39,7 +39,6 @@ void AffineHelper::calc(const std::vector<point2f> &from, const std::vector<poin
     auto matrix = cv::getAffineTransform(_from.data(), _to.data());
     affine = std::make_shared<cv::Mat>();
     *affine = matrix;
-//    std::swap(*affine, matrix);
 }
 
 point2f AffineHelper::transform(const point2f &p) {

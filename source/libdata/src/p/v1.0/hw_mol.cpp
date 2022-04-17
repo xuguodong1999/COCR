@@ -68,7 +68,10 @@ std::optional<rectf> HwMol::getBoundingBox() const {
         maxx = std::max(maxx, x1);
         maxy = std::max(maxy, y1);
     }
-    if (minx > maxx)return std::nullopt;
+    if (minx > maxx){
+        throw std::runtime_error("fuck");
+        return std::nullopt;
+    }
     return rectf{{minx, miny},
                  {maxx, maxy}};
 }
@@ -391,7 +394,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         if (ow > oh) {
             int deltaH = (fixH - oh) / 2;
             fill_rect(recti{{0,    0},
-                            {fixW, fixH}});
+                            {fixW, deltaH}});
             fill_rect(recti{{0,    fixH - deltaH},
                             {fixW, fixH}});
         }
@@ -448,7 +451,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
         target->rotate(StdUtil::randInt() % 360);
-        target->replaceCharWithText(0.25);
+//        target->replaceCharWithText(0.25);
         if (target->getMol()->bondsNum() <= 6) {
             target->setHwController(thin[StdUtil::randInt() % thin.size()]);
         } else {
@@ -492,10 +495,10 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
         };
         if (ow > oh) {
             int deltaH = (fixH - oh) / 2;
-            fill_rect(recti{{0,    0},
-                            {fixW, fixH}});
-            fill_rect(recti{{0,    fixH - deltaH},
-                            {fixW, fixH}});
+//            fill_rect(recti{{0,    0},
+//                            {fixW, deltaH}});
+//            fill_rect(recti{{0,    fixH - deltaH},
+//                            {fixW, fixH}});
         }
         for (auto &sym: target->mData) {
 //            std::cout << fullLabels[sym->getItemType()] << std::endl;

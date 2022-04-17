@@ -69,8 +69,8 @@ int main(int argc, char **argv) {
     auto arguments = a.arguments();
     if (arguments.size() == 1) { // display something
         HwDataLoader::getInstance();
-//        displayYoloData();
-        displayCRNNData();
+        displayYoloData();
+//        displayCRNNData();
         return a.exec();
     } else if (arguments.size() == 4) {
         const auto dataType = arguments.at(1).toLower();

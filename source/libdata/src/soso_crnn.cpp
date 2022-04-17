@@ -55,8 +55,8 @@ bool CRNNDataGenerator::initData() {
     getDictTexts();
     std::cout << "chemTexts.size()=" << chemTexts.size() << ", dictTexts.size()="
               << dictTexts.size() << std::endl;
-    getRandomTexts(10 * (chemTexts.size() + dictTexts.size()));
-//    getRandomTexts(100);
+//    getRandomTexts(10 * (chemTexts.size() + dictTexts.size()));
+    getRandomTexts(100);
     if (availableFontFamilies.empty()) {
         auto allSystemFonts = QFontDatabase().families();
         static std::unordered_set<std::string> whiteList{
