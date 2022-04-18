@@ -78,10 +78,12 @@ elseif (APPLE AND NOT IOS)
     include_directories(/opt/homebrew/include/)
 elseif (ANDROID)
     # notice qt-5.15.2 only support single apk in one cmake project
-    # download ncnn and opencv android-sdk
+    # find_package(Qt5) will load lib${PROJECT_NAME}_${ANDROID_ABI}.so as entrance in main function
+    # currently, APP_NAME macro is set for source/app as "leafxy"
+    # download opencv android-sdk
     include(${CMAKE_SOURCE_DIR}/cmake/FindAndroidDeps.cmake)
 elseif (WASM)
-    # download ncnn and opencv wasm-sdk
+    # download opencv wasm-sdk
     include(${CMAKE_SOURCE_DIR}/cmake/FindWasmDeps.cmake)
 endif ()
 
@@ -108,6 +110,6 @@ add_subdirectory(3rdparty)
 
 add_subdirectory(source)
 
-if(BUILD_REFERENCES)
+if (BUILD_REFERENCES)
     add_subdirectory(3rdreference)
-endif()
+endif ()
