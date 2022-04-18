@@ -1,13 +1,14 @@
 #pragma once
 
- #include "ckit/config.h"
+#include "ckit/config.h"
 #include "ckit/atom.h"
 #include "ckit/bond.h"
 
 #include <memory>
 #include <functional>
 #include <unordered_map>
-namespace v1_0 {
+
+namespace data_deprecated {
 /**
  * JMol 维护自己管理的原子和键的 id
  * 辅助类一律采用持有 JMol 的智能指针的方式进行开发
@@ -72,7 +73,7 @@ namespace v1_0 {
         std::shared_ptr<Atom> addAtom(const ElementType &_elementType);
 
         std::shared_ptr<Bond> addBond(const size_t &_atomFromId, const size_t &_atomToId,
-                                       const BondType &_bondType = BondType::SingleBond);
+                                      const BondType &_bondType = BondType::SingleBond);
 
     };
 }

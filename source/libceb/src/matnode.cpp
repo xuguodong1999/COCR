@@ -1,5 +1,6 @@
 #include "matnode.h"
 #include <algorithm>
+
 using namespace std;
 
 MatNode::MatNode() {

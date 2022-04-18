@@ -1,6 +1,7 @@
 #include "mol_holder.h"
 
-using namespace v1_0;
+using namespace data_deprecated;
+
 std::shared_ptr<JMol> MolHolder::getMol() {
     return mol;
 }

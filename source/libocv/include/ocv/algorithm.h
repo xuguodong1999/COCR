@@ -28,8 +28,8 @@ public:
     static Mat Resize(const Mat &mat, const Size<int> &dstSize);
 
     // 将图像填充到指定尺寸，先进行缩放
-    static std::pair<Mat, point3f>ResizeKeepRatio(
-            const Mat &mat, const Size<int> &dstSize, const ColorName&color=ColorName::rgbWhite);
+    static std::pair<Mat, point3f> ResizeKeepRatio(
+            const Mat &mat, const Size<int> &dstSize, const ColorName &color = ColorName::rgbWhite);
 
     // 将图像填充到更大尺寸，不进行缩放
     static std::pair<Mat, point3f> PadTo(

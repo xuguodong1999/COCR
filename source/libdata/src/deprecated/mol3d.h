@@ -4,7 +4,7 @@
 #include "base/point3.h"
 #include <unordered_map>
 
-namespace v1_0 {
+namespace data_deprecated {
     class Mol3D : public MolHolder {
     protected:
         //3D 原子坐标

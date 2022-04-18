@@ -18,7 +18,7 @@
 #include <stroke/couch_sym.h>
 #include <stroke/str.h>
 
-using namespace v1_0;
+using namespace data_deprecated;
 
 CRNNDataGenerator crnnDataGenerator;
 
@@ -68,7 +68,7 @@ std::optional<rectf> HwMol::getBoundingBox() const {
         maxx = std::max(maxx, x1);
         maxy = std::max(maxy, y1);
     }
-    if (minx > maxx){
+    if (minx > maxx) {
         throw std::runtime_error("fuck");
         return std::nullopt;
     }
@@ -365,7 +365,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         Mat img = Mat(MatChannel::GRAY, DataType::UINT8, minWidth, minHeight);
         target->moveCenterTo(point2f(minWidth / 2, minHeight / 2));
         target->paintTo(img);
-        const Size<int>targetSize{(int)fixW,(int)fixH};
+        const Size<int> targetSize{(int) fixW, (int) fixH};
         auto[resImg0, offset]=CvUtil::ResizeKeepRatio(img, targetSize, ColorName::rgbWhite);
         Mat resImg = resImg0;
         auto&[k, offsetx, offsety]=offset;
@@ -388,7 +388,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
                 ty += y0;
                 resImg.drawImage(textImg, rectf{{tx,      ty},
                                                 {tx + tw, ty + th}});
-                extraBoxes.push_back(rectf({tx, ty}, {tx+tw, ty+th}));
+                extraBoxes.push_back(rectf({tx, ty}, {tx + tw, ty + th}));
             }
         };
         if (ow > oh) {
@@ -490,7 +490,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
                 ty += y0;
                 resImg.drawImage(textImg, rectf{{tx,      ty},
                                                 {tx + tw, ty + th}});
-                extraBoxes.push_back(rectf({tx, ty}, {tx+tw, ty+th}));
+                extraBoxes.push_back(rectf({tx, ty}, {tx + tw, ty + th}));
             }
         };
         if (ow > oh) {

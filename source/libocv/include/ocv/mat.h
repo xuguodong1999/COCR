@@ -7,8 +7,11 @@
 #include "base/rect.h"
 #include <memory>
 #include <vector>
+
 #ifdef QT_GUI_LIB
+
 #include <QtGui/QImage>
+
 #endif
 namespace cv {
     class Mat;
@@ -35,11 +38,15 @@ class ELS_OCV_EXPORT Mat {
 
 public:
     void clear();
+
 #ifdef QT_GUI_LIB
+
     QImage toQImage() const;
 
     Mat(const QImage &qimage, const MatChannel &channel, const DataType &dataType);
+
 #endif
+
     MatChannel getChannel() const;
 
     DataType getDataType() const;
@@ -86,7 +93,7 @@ public:
             const point2f &center, const float &w, const float &h, const float &deg,
             const rgb &color, const int &thickness);
 
-    void drawRectangle(const rectf&box,const rgb &color, const int &thickness);
+    void drawRectangle(const rectf &box, const rgb &color, const int &thickness);
 
     void drawFill(const std::vector<point2i> &pts, const rgb &color);
 
@@ -94,7 +101,7 @@ public:
             const std::string &text, const point2i &org,
             const float &scale, const rgb &color, const int &thickness);
 
-    void drawImage(const Mat&mat,const recti&pos);
+    void drawImage(const Mat &mat, const recti &pos);
 
     void reset();
 

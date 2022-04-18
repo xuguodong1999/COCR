@@ -5,7 +5,7 @@
 namespace Ui {
     class View3DWidget;
 }
-    class GuiMol;
+class GuiMol;
 
 class Mol3DWidget;
 

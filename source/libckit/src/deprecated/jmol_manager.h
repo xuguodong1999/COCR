@@ -1,9 +1,9 @@
 #pragma once
 
- #include "ckit/config.h"
+#include "ckit/config.h"
 #include <memory>
 
-namespace v1_1 {
+namespace ckit_deprecated {
     class JMol;
 
     class JMolManager {

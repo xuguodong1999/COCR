@@ -41,7 +41,7 @@ std::optional<rectf> HwScript::getBoundingBox() const {
         maxx = std::max(maxx, x1);
         maxy = std::max(maxy, y1);
     }
-    if (minx > maxx){
+    if (minx > maxx) {
         throw std::runtime_error("fuck");
         return std::nullopt;
     }
@@ -103,7 +103,7 @@ void HwScript::castToLine(const point2f &_p1, const point2f &_p2, const float _l
         mData = std::move(dataLoader.GetShape(ShapeType::Line).mData);
         goto L;
     }
-    point2f vec = p1 - p2, vecT({0,1});
+    point2f vec = p1 - p2, vecT({0, 1});
     if (fabs(vec.second) > std::numeric_limits<float>::epsilon()) {
         vecT = point2f(-1, vec.first / vec.second);
         vecT /= ::norm(vecT);

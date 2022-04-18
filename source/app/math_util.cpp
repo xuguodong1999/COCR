@@ -2,7 +2,6 @@
 #include <cmath>
 
 
-
 QPointF MathUtil::getZero() { return QPointF(0, 0); }
 
 QPointF MathUtil::getOneX() { return QPointF(1, 0); }

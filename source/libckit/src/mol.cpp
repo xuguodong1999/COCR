@@ -1,11 +1,11 @@
 #include "ckit/mol.h"
-#include "p/v1.1/jmol_adapter.h"
+#include "deprecated/jmol_adapter.h"
 #include <memory>
 
-GuiMol::GuiMol() : m(std::make_shared<v1_1::JMolAdapter>()) {
+GuiMol::GuiMol() : m(std::make_shared<ckit_deprecated::JMolAdapter>()) {
 }
 
-GuiMol::GuiMol(GuiMol &&mol) noexcept : m(std::move(mol.m)) {
+GuiMol::GuiMol(GuiMol &&mol) noexcept: m(std::move(mol.m)) {
 }
 
 GuiMol::GuiMol(const GuiMol &mol) : m(mol.m->deepClone()) {

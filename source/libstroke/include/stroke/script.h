@@ -1,7 +1,7 @@
 #pragma once
 
 #include "els_stroke_export.h"
-#include "stroke/abs.h"
+#include "stroke/abc.h"
 #include "stroke/stroke.h"
 
 /**

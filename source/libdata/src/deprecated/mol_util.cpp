@@ -4,11 +4,11 @@
 
 #include "openbabel_util.h"
 
-using namespace v1_0;
+using namespace data_deprecated;
 std::shared_ptr<MolUtil> molUtil;
 
 std::vector<std::shared_ptr<JMol>> MolUtil::split(const JMol &_mol) {
-    AlkaneGraph<size_t> graph;
+    AlkaneGraph <size_t> graph;
     std::unordered_map<size_t, size_t> j2gAidMap, g2jMap;
     std::vector<std::shared_ptr<JMol>> result;
     size_t gAidIdx = 0;

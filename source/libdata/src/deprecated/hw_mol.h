@@ -5,10 +5,10 @@
 #include <vector>
 #include <map>
 #include "stroke/controller.h"
-#include "stroke/abs.h"
+#include "stroke/abc.h"
 #include "mol_holder.h"
 
-namespace v1_0 {
+namespace data_deprecated {
 
 /**
  * 向JMol填充图元

@@ -7,7 +7,6 @@
 #include <Qt3DCore/QTransform>
 
 
-
 CylinderWrapper::CylinderWrapper(Qt3DCore::QEntity *_root) :
         SingleWrapper(_root), cylinder(new Qt3DExtras::QCylinderMesh(entity)) {
     entity->addComponent(cylinder);

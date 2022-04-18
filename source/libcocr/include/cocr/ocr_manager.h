@@ -27,7 +27,7 @@ public:
 
     Mat &getImage();
 
-    void setImage(const QList<QList<QPointF>> &_script, const int&screenWidth);
+    void setImage(const QList<QList<QPointF>> &_script, const int &screenWidth);
 
     void setImage(const QImage &_image);
 

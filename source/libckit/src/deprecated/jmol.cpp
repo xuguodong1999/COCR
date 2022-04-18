@@ -5,15 +5,15 @@
 #include <exception>
 #include <ckit/mol_util.h>
 
-using namespace v1_1;
+using namespace ckit_deprecated;
 
-std::shared_ptr<Atom> v1_1::JMol::getAtom(const id_type &_aid) {
+std::shared_ptr<Atom> ckit_deprecated::JMol::getAtom(const id_type &_aid) {
     auto it = atomMap.find(_aid);
     if (atomMap.end() == it) { return nullptr; }
     return it->second;
 }
 
-std::shared_ptr<Bond> v1_1::JMol::getBond(const id_type &_bid) {
+std::shared_ptr<Bond> ckit_deprecated::JMol::getBond(const id_type &_bid) {
     auto it = bondMap.find(_bid);
     if (bondMap.end() == it) { return nullptr; }
     return it->second;

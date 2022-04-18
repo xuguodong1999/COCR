@@ -115,7 +115,9 @@ decltype(Mat::holder) Mat::getHolder() const {
 unsigned char *Mat::getData() const {
     return holder->data;
 }
+
 #ifdef QT_GUI_LIB
+
 QImage Mat::toQImage() const {
     // TODO:
     return QImage();
@@ -142,7 +144,9 @@ Mat::Mat(const QImage &qimage, const MatChannel &channel, const DataType &dataTy
     holder = std::make_shared<cv::Mat>(
             qimage2.height(), qimage2.width(), getOpenCVDataTypeMacro(), dataPtr, step);
 }
+
 #endif
+
 int Mat::getOpenCVDataTypeMacro() const {
     int DATA_TYPE_MACRO;
     switch (mDataType) {
@@ -272,6 +276,6 @@ void Mat::drawRectangle(const rectf &box, const rgb &color, const int &thickness
     const auto&[tl, br]=box;
     const auto&[x0, y0]=tl;
     const auto&[x1, y1]=br;
-    cv::rectangle(dst, cv::Point{(int)x0, (int)y0}, cv::Point{(int)x1, (int)y1},
+    cv::rectangle(dst, cv::Point{(int) x0, (int) y0}, cv::Point{(int) x1, (int) y1},
                   convertToScalar(color), thickness, cv::LINE_AA, 0);
 }

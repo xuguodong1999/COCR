@@ -31,7 +31,7 @@ Mat ObjectDetector::preProcess(const Mat &_src) {
     h += (sizeBase - h % sizeBase);
     if (w > maxWidth) w -= sizeBase;
     if (h > maxHeight)h -= sizeBase;
-    return CvUtil::ResizeWithBlock(_src,{w,h},{sizeBase,sizeBase});
+    return CvUtil::ResizeWithBlock(_src, {w, h}, {sizeBase, sizeBase});
 }
 
 ObjectDetector::ObjectDetector() : maxHeight(1280), maxWidth(1280) {

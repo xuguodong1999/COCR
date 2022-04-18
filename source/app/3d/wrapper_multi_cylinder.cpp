@@ -11,7 +11,6 @@
 #include <optional>
 
 
-
 std::unordered_map<decltype(MultiCylinderWrapper::cylinders.size()), std::vector<QVector3D>>
         MultiCylinderWrapper::sTransStrategy = {
         {2, {MathUtil::getOneZ3(), -MathUtil::getOneZ3()}},

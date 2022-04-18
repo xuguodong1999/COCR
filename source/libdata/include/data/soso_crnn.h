@@ -10,6 +10,7 @@
 #include <unordered_set>
 
 class HwBase;
+
 class ELS_DATA_EXPORT CRNNDataGenerator {
     inline static std::string SOSO_ALPHABET = "-=#+_()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghijnqrty";
     inline static const char *imgKey = "image-%09d";
@@ -65,7 +66,7 @@ public:
      */
     std::shared_ptr<HwBase> getRectStr(const rectf &_freeRect, const int &_val, bool _isLeft);
 
-     Mat getStandardLongText();
+    Mat getStandardLongText();
 };
 
 ELS_DATA_EXPORT extern CRNNDataGenerator crnnDataGenerator;

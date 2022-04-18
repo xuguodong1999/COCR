@@ -4,7 +4,9 @@
 #include "base/std_util.h"
 
 #include <random>
-using namespace v1_0;
+
+using namespace data_deprecated;
+
 std::shared_ptr<Atom> JMol::addAtom(const size_t &_atomicNumber, const float &_x, const float &_y) {
     auto aid = mAids++;
     auto atom = std::make_shared<Atom>(aid, _atomicNumber);
@@ -14,7 +16,7 @@ std::shared_ptr<Atom> JMol::addAtom(const size_t &_atomicNumber, const float &_x
 }
 
 std::shared_ptr<Bond> JMol::addBond(const size_t &_atomFromId, const size_t &_atomToId,
-                                     const BondType &_bondType) {
+                                    const BondType &_bondType) {
     auto bid = mBids++;
     auto bond = std::make_shared<Bond>(bid, _atomFromId, _atomToId, _bondType);
     bondsMap[bid] = bond;

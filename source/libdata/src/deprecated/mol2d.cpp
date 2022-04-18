@@ -1,6 +1,8 @@
 #include "mol2d.h"
 #include <coordgenlibs/sketcherMinimizer.h>
-using namespace v1_0;
+
+using namespace data_deprecated;
+
 Mol2D::Mol2D(std::shared_ptr<JMol> _mol) : MolHolder(std::move(_mol)) {
 
 }

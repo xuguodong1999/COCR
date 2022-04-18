@@ -5,6 +5,7 @@
 
 struct OCRDataItem {
     rectf mRect;
+
     OCRDataItem(rectf _rect);
 
     virtual ElementType getElement() const;

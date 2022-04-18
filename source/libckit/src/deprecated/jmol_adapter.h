@@ -11,7 +11,7 @@ namespace OpenBabel {
 
     class OBBond;
 }
-namespace v1_1 {
+namespace ckit_deprecated {
     /**
      * 适配目标：
      * 1、使用 OpenBabel 实现三维标准化和其它需求
@@ -75,8 +75,8 @@ namespace v1_1 {
 
 
         std::shared_ptr<Bond> addBond(std::shared_ptr<Atom> _a1, std::shared_ptr<Atom> _a2,
-                                       const BondType &_type = BondType::SingleBond,
-                                       const float &_offset1 = 0.5, const float &_offset2 = 0.5) override;
+                                      const BondType &_type = BondType::SingleBond,
+                                      const float &_offset1 = 0.5, const float &_offset2 = 0.5) override;
 
         std::shared_ptr<Atom> addAtom(const ElementType &_element, const float &_x = 0, const float &_y = 0) override;
 

@@ -1,6 +1,7 @@
 #include "cocr/text_recognizer.h"
 #include "cocr/text_corrector.h"
 #include "ocv/algorithm.h"
+
 #ifdef USE_OPENCV_DNN
 
 #include "text_recognizer_opencv_impl.h"

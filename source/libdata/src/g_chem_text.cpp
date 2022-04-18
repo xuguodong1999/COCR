@@ -10,7 +10,7 @@
 #include <optional>
 
 
-struct HashSpliceableText  {
+struct HashSpliceableText {
     size_t operator()(const SpliceableText &_st) const {
         return std::hash<std::string>()(_st.getRaw());
     }
@@ -250,7 +250,7 @@ void LineTextDataCreator::loadFromPattern(const std::string &filepath) {
 //    std::istringstream iss(str);
     QString line;
     while (!iss.atEnd()) {
-        line=iss.readLine();
+        line = iss.readLine();
         QString a, b;
         QTextStream iss_line(&line);
         try {
@@ -338,7 +338,7 @@ void LineTextDataCreator::loadFromPattern(const std::string &filepath) {
     while (fruits.size() < 10000) {
         auto st1 = StdUtil::randSelect(originSTVec);
         auto st2 = StdUtil::randSelect(tempSTVec);
-        if (StdUtil::byProb(0.5)){
+        if (StdUtil::byProb(0.5)) {
             std::swap(st1, st2);
         }
         auto st3 = joinSpliceableText(st1, st2);

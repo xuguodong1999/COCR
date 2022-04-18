@@ -8,7 +8,7 @@
 #include <functional>
 #include <string>
 
-namespace v1_1 {
+namespace ckit_deprecated {
     class JMol_p;
 
     class JMol {

@@ -4,7 +4,8 @@
 #include "base/cocr_types.h"
 #include "mol_op.h"
 #include "openbabel_util.h"
-using namespace v1_0;
+
+using namespace data_deprecated;
 extern std::shared_ptr<MolUtil> molUtil;
 
 bool Mol3D::calcCoord3D_addHs() {

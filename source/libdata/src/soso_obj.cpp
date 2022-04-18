@@ -1,13 +1,13 @@
 #include "data/soso_obj.h"
 #include "math/isomer.h"
 #include "base/std_util.h"
-#include "p/v1.0/hw_mol.h"
-#include "p/v1.0/mol_op.h"
+#include "deprecated/hw_mol.h"
+#include "deprecated/mol_op.h"
 #include <filesystem>
 #include <iostream>
 #include <random>
 
-using namespace v1_0;
+using namespace data_deprecated;
 
 SOSODarknet::SOSODarknet() : isInited(false) {
 }

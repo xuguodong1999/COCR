@@ -1,6 +1,7 @@
 #include "mol_graph.h"
 #include "mol_util.h"
-using namespace v1_0;
+
+using namespace data_deprecated;
 extern std::shared_ptr<MolUtil> molUtil;
 
 std::vector<std::shared_ptr<JMol>> MolGraph::iSplit() const {

@@ -6,7 +6,7 @@
 
 class BondItem;
 
-    class Atom;
+class Atom;
 
 class AtomItem : public BaseItem {
     QGraphicsTextItem *mTextItem;

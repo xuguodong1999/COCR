@@ -13,7 +13,7 @@ namespace Qt3DCore {
     class QEntity;
 }
 
-    class GuiMol;
+class GuiMol;
 
 
 class SphereWrapper;

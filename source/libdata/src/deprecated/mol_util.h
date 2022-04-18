@@ -3,7 +3,7 @@
 #include "mol.h"
 #include "mol3d.h"
 
-namespace v1_0 {
+namespace data_deprecated {
     class MolUtil {
     public:
         /**

@@ -10,7 +10,7 @@
 
 class AtomItem;
 
-    class Bond;
+class Bond;
 
 
 class BondItem : public BaseItem {

@@ -10,7 +10,7 @@ namespace Qt3DCore {
 }
 class WaitHintWidget;
 
-    class GuiMol;
+class GuiMol;
 
 // Qt3DWindow 无法生成 QGestureEvent
 class Mol3DWidget : public QWidget {

@@ -49,7 +49,7 @@ std::optional<rectf> HwItem::getBoundingBox() const {
         maxx = std::max(maxx, x1);
         maxy = std::max(maxy, y1);
     }
-    if (minx > maxx){
+    if (minx > maxx) {
         throw std::runtime_error("fuck");
         return std::nullopt;
     }

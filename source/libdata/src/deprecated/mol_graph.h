@@ -5,7 +5,7 @@
 #include <vector>
 
 class Ring;
-namespace v1_0 {
+namespace data_deprecated {
 /**
  * 不添加辅助数据结构完成图算法
  * 考虑到代码冗余，这里不和烷烃计数器共享图结构

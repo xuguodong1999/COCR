@@ -2,7 +2,8 @@
 
 #include "mol_holder.h"
 #include <unordered_set>
-namespace v1_0 {
+
+namespace data_deprecated {
     class MolOp : public MolHolder {
         //<原子id，化合价or当前键级>
         std::unordered_map<size_t, frac> atomValenceMap;

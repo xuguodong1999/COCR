@@ -14,7 +14,7 @@
 
 #include <coordgenlibs/sketcherMinimizer.h>
 
-using namespace v1_1;
+using namespace ckit_deprecated;
 
 
 JMolAdapter::JMolAdapter() : isOBMolLatest(true), obMol(std::make_shared<OpenBabel::OBMol>()) {

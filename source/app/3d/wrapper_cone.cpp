@@ -7,7 +7,6 @@
 #include <Qt3DExtras/QConeMesh>
 
 
-
 ConeWrapper::ConeWrapper(Qt3DCore::QEntity *_root) : SingleWrapper(_root), cone(new Qt3DExtras::QConeMesh()) {
     entity->addComponent(cone);
     entity->setType(EntityType::ConeMesh);

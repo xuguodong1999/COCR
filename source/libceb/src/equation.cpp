@@ -3,6 +3,7 @@
 #include "base/std_util.h"
 #include "math/linear_solver.h"
 #include <algorithm>
+
 using namespace std;
 
 Equation::Equation() {

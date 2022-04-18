@@ -1,4 +1,5 @@
 #pragma once
+
 #include "els_base_export.h"
 #include "base/fraction.h"
 #include "base/color_name.h"
@@ -19,20 +20,32 @@ enum class ElementType : size_t {
     Db, Sg, Bh, Hs, Mt, Ds, Rg, Cn
 };
 
-class ELS_BASE_EXPORT ElementUtil{
+class ELS_BASE_EXPORT ElementUtil {
 public:
-    static frac GetElementValence(const ElementType&element);
+    static frac GetElementValence(const ElementType &element);
+
     // 返回建议比例，以碳为基准
     static float atomRadius(const ElementType &_element);
-    static const std::string&GetPosChargeText();
-    static const std::string&GetNegChargeText();
+
+    static const std::string &GetPosChargeText();
+
+    static const std::string &GetNegChargeText();
+
     static const std::string &convertElementTypeToString(const ElementType &_elementType);
+
     static ElementType convertStringToElementType(const std::string &_elementName);
-    static float GetElementMass(const ElementType&_elementType);
-    static float GetElementElectron(const ElementType&_elementType);
-    static ColorName GetElementColor(const ElementType&_elementType);
-    static ColorName GetBondColor(const BondType&bondType);
-    static std::optional<int> GetElementNebNum(const ElementType&_elementType);
-    static std::optional<float> GetElementRadius(const ElementType&_elementType);
-    static const std::vector<std::string>&GetElements();
+
+    static float GetElementMass(const ElementType &_elementType);
+
+    static float GetElementElectron(const ElementType &_elementType);
+
+    static ColorName GetElementColor(const ElementType &_elementType);
+
+    static ColorName GetBondColor(const BondType &bondType);
+
+    static std::optional<int> GetElementNebNum(const ElementType &_elementType);
+
+    static std::optional<float> GetElementRadius(const ElementType &_elementType);
+
+    static const std::vector<std::string> &GetElements();
 };

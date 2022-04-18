@@ -6,7 +6,7 @@
 
 class WaitHintWidget;
 
-    class GuiMol;
+class GuiMol;
 
 class Mol2DWidget : public GestureView {
 Q_OBJECT

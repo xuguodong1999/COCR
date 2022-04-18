@@ -6,7 +6,7 @@
 #include <optional>
 #include <queue>
 
-namespace v1_1 {
+namespace ckit_deprecated {
 
     enum class TokenType {
         // 空白语义

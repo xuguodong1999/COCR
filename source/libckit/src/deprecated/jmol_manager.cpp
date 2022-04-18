@@ -1,7 +1,7 @@
 #include "jmol_manager.h"
 #include "jmol_adapter.h"
 
-using namespace v1_1;
+using namespace ckit_deprecated;
 
 JMolManager::JMolManager(JMolManager::mol_type _inputMol) :
         inputMol(_inputMol), currentMol(_inputMol), expandedMol(nullptr),

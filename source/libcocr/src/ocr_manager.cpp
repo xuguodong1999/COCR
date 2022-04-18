@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QtGui/QImage>
 #include <QtGui/QPixmap>
+
 OCRManager::OCRManager(ObjectDetector &_detector, TextRecognizer &_recognizer,
                        TextCorrector &_corrector, GraphComposer &_composer)
         : detector(_detector), recognizer(_recognizer), corrector(_corrector), composer(_composer),
@@ -141,7 +142,7 @@ Mat &OCRManager::getImage() {
     return image;
 }
 
-void OCRManager::setImage(const QList<QList<QPointF>> &_script, const int&screenWidth) {
+void OCRManager::setImage(const QList<QList<QPointF>> &_script, const int &screenWidth) {
     if (_script.empty()) {
         image = Mat(MatChannel::GRAY, DataType::UINT8, 32, 32);
         return;

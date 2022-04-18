@@ -16,7 +16,7 @@ namespace v1_0 {
     class JMol;
 }
 
-namespace v1_1 {
+namespace ckit_deprecated {
     class JMol;
 }
 
@@ -25,7 +25,7 @@ class ELS_CKIT_EXPORT Mol {
 };
 
 class ELS_CKIT_EXPORT GuiMol {
-    std::shared_ptr<v1_1::JMol> m;
+    std::shared_ptr<ckit_deprecated::JMol> m;
 public:
     GuiMol();
 
@@ -62,7 +62,7 @@ public:
     std::shared_ptr<Bond> getBond(const id_type &bid);
 
     std::shared_ptr<Atom> addAtom(
-            const ElementType &element, const float &x, const float &y, const float &z=0);
+            const ElementType &element, const float &x, const float &y, const float &z = 0);
 
     std::shared_ptr<Bond> addBond(
             std::shared_ptr<Atom> a1, std::shared_ptr<Atom> a2,

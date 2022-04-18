@@ -57,6 +57,7 @@ struct ELS_BASE_EXPORT DetectorObject {
     DetectorObjectType label;
     inline static int maxLabel = 7;
     inline static int minLabel = 0;
+
     static bool isValidLabel(const int &_label);
 
     template<class RectFloatType, class ProbFloatType>
@@ -83,5 +84,6 @@ struct ELS_BASE_EXPORT DetectorObject {
 class ELS_BASE_EXPORT DetectorUtil {
 public:
     static DetectorClasses convertElementTypeToDetectorClasses(const ElementType &_elementType);
+
     static BondType toBondType(const DetectorObjectType &_objType);
 };

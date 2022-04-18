@@ -131,7 +131,7 @@ std::pair<Mat, point3f> CvUtil::PadTo(
     return {std::move(result), {1.0f, dw / 2.f, dh / 2.f}};
 }
 
-std::pair<Mat, point3f> CvUtil::ResizeKeepRatio(const Mat &mat, const Size<int> &dstSize, const ColorName&color) {
+std::pair<Mat, point3f> CvUtil::ResizeKeepRatio(const Mat &mat, const Size<int> &dstSize, const ColorName &color) {
     const auto &src = *(mat.getHolder());
     Mat result(mat.getChannel(), mat.getDataType(), mat.getWidth(), mat.getHeight());
     auto &dst = *(result.getHolder());
@@ -558,12 +558,12 @@ Mat CvUtil::AddGaussianNoise(const Mat &mat) {
     cv::Mat noise(src.size(), CV_32F);
     cv::randn(noise, 0, StdUtil::belowProb(0.1));
     cv::Mat tmp;
-    src.convertTo(tmp,CV_32F);
+    src.convertTo(tmp, CV_32F);
     src /= 255;
     tmp += noise;
-    cv::normalize(tmp,tmp, 1.0, 0, cv::NORM_MINMAX, CV_32F);
+    cv::normalize(tmp, tmp, 1.0, 0, cv::NORM_MINMAX, CV_32F);
     tmp *= 255;
-    tmp.convertTo(dst,CV_8U);
+    tmp.convertTo(dst, CV_8U);
     return result;
 }
 

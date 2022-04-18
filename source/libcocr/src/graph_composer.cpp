@@ -93,10 +93,10 @@ std::shared_ptr<GuiMol> GraphComposer::compose(const std::vector<OCRItem> &_item
         }
     };
     auto calc_pts_to_rect = [](const point2f &_p, const rectf &_r) -> float {
-        const auto& [r0,r1]=_r;
-        const auto&[rx0,ry0]=r0;
-        const auto&[rx1,ry1]=r1;
-        const auto&[px,py]=_p;
+        const auto&[r0, r1]=_r;
+        const auto&[rx0, ry0]=r0;
+        const auto&[rx1, ry1]=r1;
+        const auto&[px, py]=_p;
         float dx = (std::max)((std::max)(rx0 - px, px - rx1), 0.f);
         float dy = (std::max)((std::max)(ry0 - py, py - ry1), 0.f);
         return std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
@@ -118,8 +118,8 @@ std::shared_ptr<GuiMol> GraphComposer::compose(const std::vector<OCRItem> &_item
             auto &ocrBondItem = _items[bid];
             auto &from = ocrBondItem.getFrom();
             auto &to = ocrBondItem.getTo();
-            const auto&[p0,p1]=rect;
-            float length = (std::max)(p1.second-p0.second, bLength[bid]);
+            const auto&[p0, p1]=rect;
+            float length = (std::max)(p1.second - p0.second, bLength[bid]);
             float d1 = calc_pts_to_rect(from, rect) / length;
             float d2 = calc_pts_to_rect(to, rect) / length;
             if (d1 > sAtomBondThresh && d2 > sAtomBondThresh) {
@@ -146,8 +146,8 @@ std::shared_ptr<GuiMol> GraphComposer::compose(const std::vector<OCRItem> &_item
             auto &ocrBondItem = _items[bid];
             auto &from = ocrBondItem.getFrom();
             auto &to = ocrBondItem.getTo();
-            const auto&[p0,p1]=rect;
-            float length = (std::max)(p1.second-p0.second, bLength[bid]);
+            const auto&[p0, p1]=rect;
+            float length = (std::max)(p1.second - p0.second, bLength[bid]);
             float d1 = calc_pts_to_rect(from, rect) / length;
             float d2 = calc_pts_to_rect(to, rect) / length;
             if (d1 > sGroupBondThresh && d2 > sGroupBondThresh) {
@@ -414,8 +414,8 @@ std::shared_ptr<GuiMol> GraphComposer::compose(const std::vector<OCRItem> &_item
 //            }
 //        }
 //        if (!itemSet.empty()) { pos /= static_cast<float>(itemSet.size()); }
-const auto&[p0,p1]=rect;
-        auto superAtom = mol->addSuperAtom(item.getText(), p0.first,p0.second,p1.first,p1.second);
+        const auto&[p0, p1]=rect;
+        auto superAtom = mol->addSuperAtom(item.getText(), p0.first, p0.second, p1.first, p1.second);
         for (auto &bSideId: itemSet) {
             bondSideGroupMap[bSideId] = superAtom;
         }
@@ -480,7 +480,7 @@ const auto&[p0,p1]=rect;
             if (to) {
                 // 按照字符串计算键端偏移量
                 float width = to->x1 - to->x0;
-                float offset = width ? (item.getTo().first- to->x0) / width : 0.5;
+                float offset = width ? (item.getTo().first - to->x0) / width : 0.5;
                 offset2 = (std::min)(1.f, (std::max)(0.f, offset));
             }
         }
@@ -520,7 +520,7 @@ const auto&[p0,p1]=rect;
         point2f p(0, 0);
         for (auto &id: ring) {
             auto atom = mol->getAtom(id);
-            p.first+= atom->x;
+            p.first += atom->x;
             p.second += atom->y;
         }
         p /= static_cast<float>(ring.size());

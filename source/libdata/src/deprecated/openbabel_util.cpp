@@ -8,7 +8,8 @@
 #include <openbabel/builder.h>
 #include <openbabel/forcefield.h>
 #include <openbabel/obconversion.h>
-using namespace v1_0;
+
+using namespace data_deprecated;
 static std::unordered_map<size_t, OpenBabel::OBAtom *> j2oAtomMap;
 static std::unordered_map<unsigned long, size_t> o2jAtomMap;
 
@@ -43,11 +44,13 @@ std::shared_ptr<JMol> convertOBMolToJMol(const OpenBabel::OBMol &_obMol) {
     auto jMol = std::make_shared<JMol>();
     // TODO: 转换
     o2jAtomMap.clear();
-    FOR_ATOMS_OF_MOL(obAtom, const_cast<OpenBabel::OBMol &>(_obMol)) {
+    FOR_ATOMS_OF_MOL(obAtom, const_cast<OpenBabel::OBMol &>(_obMol))
+    {
         auto atom = jMol->addAtom(obAtom->GetAtomicNum());
         o2jAtomMap[obAtom->GetId()] = atom->getId();
     }
-    FOR_BONDS_OF_MOL(obBond, const_cast<OpenBabel::OBMol &>(_obMol)) {
+    FOR_BONDS_OF_MOL(obBond, const_cast<OpenBabel::OBMol &>(_obMol))
+    {
         auto aid1 = o2jAtomMap[obBond->GetBeginAtom()->GetId()];
         auto aid2 = o2jAtomMap[obBond->GetEndAtom()->GetId()];
         BondType bondType;
@@ -126,7 +129,8 @@ bool MolUtilOpenBabelImpl::getCoord3D(Mol3D &_mol3d) {
         return false;
     }
     _mol3d.reset(convertOBMolToJMol(obMol));
-    FOR_ATOMS_OF_MOL(obAtom, const_cast<OpenBabel::OBMol &>(obMol)) {
+    FOR_ATOMS_OF_MOL(obAtom, const_cast<OpenBabel::OBMol &>(obMol))
+    {
         _mol3d.setAtomPos3DById(o2jAtomMap[obAtom->GetId()],
                                 obAtom->x(), obAtom->y(), obAtom->z());
     }

@@ -1,7 +1,8 @@
 #include "mol_op.h"
 #include "base/std_util.h"
 #include <random>
-using namespace v1_0;
+
+using namespace data_deprecated;
 
 void MolOp::clear() {
     MolHolder::clear();

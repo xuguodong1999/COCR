@@ -1,8 +1,9 @@
 #pragma once
 
- #include "ckit/config.h"
+#include "ckit/config.h"
 #include "mol.h"
-namespace v1_0 {
+
+namespace data_deprecated {
     class MolHolder {
     protected:
         std::shared_ptr<JMol> mol;

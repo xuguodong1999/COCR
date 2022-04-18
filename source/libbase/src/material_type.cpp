@@ -19,8 +19,10 @@ static std::optional<frac> to_frac(const std::string &_src) {
     }
     return frac{std::stoi(vec[0].data()), std::stoi(vec[1].data())};
 }
-static const std::vector<frac>EMPTY_VALENCE;
+
+static const std::vector<frac> EMPTY_VALENCE;
 static const std::string EMPTY_STATE_INFO;
+
 const std::vector<frac> &MaterialUtil::QueryValence(const std::string &name) {
     auto it0 = KNOWN_VAL_FRAC_MAP.find(name);
     if (it0 != KNOWN_VAL_FRAC_MAP.end()) {

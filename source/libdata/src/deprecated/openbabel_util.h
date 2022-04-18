@@ -4,7 +4,8 @@
 
 #include <string>
 #include <vector>
-namespace v1_0 {
+
+namespace data_deprecated {
     class MolUtilOpenBabelImpl : public MolUtil {
     public:
         std::string getSMILES(const JMol &_jMol);
