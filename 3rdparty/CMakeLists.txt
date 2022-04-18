@@ -6,10 +6,3 @@ add_subdirectory(libopenbabel)
 
 add_subdirectory(librxcpp)
 add_subdirectory(librxqt)
-
-#if (BUILD_REFERENCES)
-#    add_subdirectory(ref-pnnx)
-#    add_subdirectory(ref-common)
-#    add_subdirectory(ref-cpprl)
-#    add_subdirectory(ref-libtorch)
-#endif ()

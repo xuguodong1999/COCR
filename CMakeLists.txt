@@ -38,7 +38,7 @@ set(APP_NAME leafxy CACHE INTERNAL "")
 # path to assets
 set(DEV_ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 # path to 3rdparty libraries
-set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty CACHE INTERNAL "")
+set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty CACHE INTERNAL "")
 # remember to cite ${openbabel_QRC} if you link openbabel
 set(openbabel_QRC ${DEV_DEPS_DIR}/libopenbabel/data/openbabel.qrc CACHE INTERNAL "")
 
@@ -104,6 +104,10 @@ endif ()
 # build ncnn from source
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Dependencies.cmake)
 
-add_subdirectory(thirdparty)
+add_subdirectory(3rdparty)
 
 add_subdirectory(source)
+
+if(BUILD_REFERENCES)
+    add_subdirectory(3rdreference)
+endif()

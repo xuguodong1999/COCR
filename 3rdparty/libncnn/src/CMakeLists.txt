@@ -36,7 +36,6 @@ set(ncnn_SRCS
         paramdict.cpp
         pipeline.cpp
         pipelinecache.cpp
-        simpleocv.cpp
         simpleomp.cpp
         simplestl.cpp
         )
@@ -446,7 +445,6 @@ if (NCNN_INSTALL_SDK)
             paramdict.h
             pipeline.h
             pipelinecache.h
-            simpleocv.h
             simpleomp.h
             simplestl.h
             vulkan_header_fix.h
