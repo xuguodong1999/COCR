@@ -4,11 +4,10 @@
 #include "nn/mv3.h"
 #include "nn/dataset_cifar.h"
 #include <torch/torch.h>
+#include <ATen/autocast_mode.h>
 
-extern std::string WEIGHTS_DIR;
-
-const std::string cifar100_root = "~/source/COCR/data/cifar-100";
-const std::string cifar10_root = "~/source/COCR/data/cifar-10";
+const char *CIFAR100_ROOT = DATASET_PATH "/cifar100";
+const char *CIFAR10_ROOT = DATASET_PATH "/cifar10";
 
 struct TrainConfig {
     int64_t BATCH_SIZE = 512;
@@ -16,6 +15,7 @@ struct TrainConfig {
     double LR_BEGIN = 0.001, LR_CURRENT;
     size_t LR_CHANGE_TIMES = 10;
     double LR_DECAY_FACTOR = 0.8;
+    size_t WORKER_NUM = 12;
 
     TrainConfig() {
         std::cout << std::fixed << std::setprecision(6);
@@ -24,23 +24,28 @@ struct TrainConfig {
 
 void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
     int num_classes(10);
-    std::string task_name("cifar10"), data_root(cifar10_root);
+    std::string task_name("cifar10"), data_root(CIFAR10_ROOT);
     if (_cifarType == CifarType::CIFAR100) {
         num_classes = 100;
         task_name = "cifar100";
-        data_root = cifar100_root;
+        data_root = CIFAR100_ROOT;
     }
     auto model = std::make_shared<Mv3Large>(num_classes, 1.0);
-    torch::save(model, "/tmp/mv3-large.pth");
+//    torch::save(model, "/tmp/mv3-large.pth");
     model->setName(task_name + "-mv3large");
     model->to(_device);
+//    auto imgTensor = torch::zeros({1024, 3, 32,32}).to(_device);
+//    while (true){
+//        model->forward(imgTensor);
+//    }
     TrainConfig cfg;
     auto make_dataset = [&](const CifarDataSet::Mode &_mode) {
         auto dataset = CifarDataSet(_cifarType, data_root, _mode)
                 .map(torch::data::transforms::Stack<>());
         auto num_samples = dataset.size().value();
         auto data_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
-                std::move(dataset), cfg.BATCH_SIZE);
+                std::move(dataset), torch::data::DataLoaderOptions()
+                        .batch_size(cfg.BATCH_SIZE).workers(cfg.WORKER_NUM));
         return std::make_pair(num_samples, std::move(data_loader));
     };
 
@@ -60,7 +65,13 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
             auto data = batch.data.to(_device);
             auto target = batch.target.to(_device);
             // Forward pass
-            auto output = model->forward(data);
+            torch::Tensor output;
+            {  // mixed precision link amp
+                at::autocast::set_enabled(true);
+                output = model->forward(data);
+                at::autocast::clear_cache();
+                at::autocast::set_enabled(false);
+            }
             // Calculate prediction
             auto prediction = output.argmax(1);
             // Update number of correctly classified samples

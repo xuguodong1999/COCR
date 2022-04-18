@@ -4,8 +4,6 @@
 #include "dataset_cifar.h"
 #include <torch/torch.h>
 
-extern std::string WEIGHTS_DIR;
-
 void transferCouch2Cifar(torch::Device &device) {
     auto model = std::make_shared<Mv3Large>(100);
 //    model->setName("gb-6946");
