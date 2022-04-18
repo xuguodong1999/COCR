@@ -5,7 +5,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core.hpp>
 
-#if not defined(Q_OS_WASM)
+#ifndef Q_OS_WASM
 #include <opencv2/imgcodecs.hpp>
 #endif
 #include <opencv2/highgui.hpp>
@@ -588,7 +588,7 @@ Mat CvUtil::RevertColor(const Mat &mat) {
     cv::bitwise_not(src, dst);
     return result;
 }
-#if not defined(Q_OS_WASM)
+#ifndef Q_OS_WASM
 Mat CvUtil::BufferToGrayMat(std::vector<unsigned char> &buffer) {
     cv::Mat mat = cv::imdecode(buffer, cv::IMREAD_GRAYSCALE);
     Mat result(MatChannel::GRAY, DataType::UINT8, mat.cols, mat.rows);

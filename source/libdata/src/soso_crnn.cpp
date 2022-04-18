@@ -329,7 +329,7 @@ void CRNNDataGenerator::getRandomTexts(const size_t &_num, const size_t &_len) {
 
 void CRNNDataGenerator::getChemTexts() {
     LineTextDataCreator dc;
-    dc.loadFromPattern(DEV_ASSETS_DIR + std::string("/../thirdparty/libopenbabel/data/openbabel/data/superatom.txt"));
+    dc.loadFromPattern(DEV_ASSETS_DIR + std::string("/../3rdparty/libopenbabel/data/openbabel/data/superatom.txt"));
     std::unordered_set<std::string> textSet;
     for (auto &text: dc.getWordSet()) {
         if (text.length() <= MAX_TEXT_LENGTH) {

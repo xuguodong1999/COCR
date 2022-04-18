@@ -7,6 +7,10 @@ int main(int argc, char *argv[]) {
 #endif
     Application app(argc, argv);
     MainTabWidget w;
+#ifndef Q_OS_WASM
     w.showMaximized();
+#else
+    w.show();
+#endif
     return Application::exec();
 }

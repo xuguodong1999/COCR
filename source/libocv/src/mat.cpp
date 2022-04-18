@@ -4,7 +4,7 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core.hpp>
-#if not defined(Q_OS_WASM)
+#ifndef Q_OS_WASM
 #include <opencv2/imgcodecs.hpp>
 #endif
 #include <opencv2/highgui.hpp>
@@ -242,7 +242,7 @@ std::vector<unsigned char> Mat::toBuffer() const {
 }
 
 bool Mat::saveJPG(const std::string &fileName) const {
-#if not defined(Q_OS_WASM)
+#ifndef Q_OS_WASM
     // 60 + StdUtil::randInt() % 40 for crnn test sample, yolo all
     // 70 + StdUtil::randInt() % 30 for crnn train sample
     return cv::imwrite(fileName, *holder, {cv::IMWRITE_JPEG_QUALITY, 60 + StdUtil::randInt() % 40});
