@@ -48,8 +48,8 @@ public:
     static Mat AddSaltPepperNoise(const Mat &mat, const int &n);
 
     static Mat RevertColor(const Mat &mat);
-
+#if not defined(Q_OS_WASM)
     static Mat BufferToGrayMat(std::vector<unsigned char> &buffer);
-
+#endif
     static Mat HConcat(const Mat &m1, const Mat &m2);
 };
