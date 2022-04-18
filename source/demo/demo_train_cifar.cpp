@@ -16,6 +16,7 @@ struct TrainConfig {
     size_t LR_CHANGE_TIMES = 10;
     double LR_DECAY_FACTOR = 0.8;
     size_t WORKER_NUM = 12;
+    size_t WIDTH = 96;
 
     TrainConfig() {
         std::cout << std::fixed << std::setprecision(6);
@@ -40,7 +41,7 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
 //    }
     TrainConfig cfg;
     auto make_dataset = [&](const CifarDataSet::Mode &_mode) {
-        auto dataset = CifarDataSet(_cifarType, data_root, _mode)
+        auto dataset = CifarDataSet(_cifarType, data_root, _mode, cfg.WIDTH, cfg.WIDTH)
                 .map(torch::data::transforms::Stack<>());
         auto num_samples = dataset.size().value();
         auto data_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(

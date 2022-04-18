@@ -3,6 +3,8 @@
 #include <opencv2/opencv.hpp>
 
 class CifarUtil {
+    const int imageWidth;
+    const int imageHeight;
 public:
     inline static const uint32_t batchWidth = 32;
 
@@ -23,7 +25,8 @@ public:
     }
 
 protected:
-    CifarUtil() : isTrain(false) {}
+    CifarUtil(const int &w = 32, const int &h = 32)
+            : isTrain(false), imageWidth(w), imageHeight(h) {}
 
     virtual uint32_t trainNumPerFile() = 0;
 
@@ -44,6 +47,8 @@ public:
 
 class Cifar10Util : public CifarUtil {
 public:
+    Cifar10Util(const int &w = 32, const int &h = 32) : CifarUtil(w, h) {}
+
     uint32_t trainNumPerFile() override;
 
     uint32_t testNumPerFile() override;
@@ -59,6 +64,8 @@ public:
 
 class Cifar100Util : public CifarUtil {
 public:
+    Cifar100Util(const int &w = 32, const int &h = 32) : CifarUtil(w, h) {}
+
     uint32_t trainNumPerFile() override;
 
     uint32_t testNumPerFile() override;
@@ -72,12 +79,13 @@ public:
     const std::vector<std::string> testFiles() override;
 };
 
-CifarDataSet::CifarDataSet(const CifarType &cifarType,
-                           const std::string &root, Mode mode) : mMode(mode) {
+CifarDataSet::CifarDataSet(
+        const CifarType &cifarType, const std::string &root, Mode mode,
+        const int &w, const int &h) : mMode(mode), imageWidth(w), imageHeight(h) {
     if (CifarType::CIFAR10 == cifarType) {
-        p = std::make_shared<Cifar10Util>();
+        p = std::make_shared<Cifar10Util>(imageWidth, imageHeight);
     } else if (CifarType::CIFAR100 == cifarType) {
-        p = std::make_shared<Cifar100Util>();
+        p = std::make_shared<Cifar100Util>(imageWidth, imageHeight);
     }
     auto[images, targets]=p->loadData(root, isTrainMode());
     p->mImages = std::move(images);
@@ -161,7 +169,7 @@ std::pair<std::vector<cv::Mat>, torch::Tensor> CifarUtil::loadData(
                  cv::Mat(32, 32, CV_8UC1, imgBegin)//r
                 }), img);
         img.convertTo(img, CV_32F, 1.0 / 255);
-        cv::resize(img, img, cv::Size(128, 128), 0, 0, cv::INTER_CUBIC);
+        cv::resize(img, img, cv::Size(imageWidth, imageHeight), 0, 0, cv::INTER_CUBIC);
         images.push_back(std::move(img));
     }
     return {std::move(images), targets.to(torch::kInt64)};

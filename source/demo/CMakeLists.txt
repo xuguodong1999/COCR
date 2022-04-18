@@ -34,7 +34,7 @@ function(addNNExecutable CPP_NAME)
     addLibraryDeps(${CPP_NAME} els_nn)
     linkLibtorch(${CPP_NAME})
     target_compile_definitions(${CPP_NAME} PRIVATE
-            "DATASET_PATH=\"$ENV{HOME}/datasets\"")
+            "DATASET_PATH=\"${DEV_ASSETS_DIR}/datasets\"")
 endfunction()
 
 addNNExecutable(demo_crnn)

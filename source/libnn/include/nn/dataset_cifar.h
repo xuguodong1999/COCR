@@ -14,12 +14,16 @@ enum class CifarType {
 class CifarUtil;
 
 class ELS_NN_EXPORT CifarDataSet : public torch::data::datasets::Dataset<CifarDataSet> {
+    const int imageWidth;
+    const int imageHeight;
 public:
     enum Mode {
         kTrain, kTest
     };
 
-    explicit CifarDataSet(const CifarType &cifarType, const std::string &root, Mode mode = Mode::kTrain);
+    explicit CifarDataSet(
+            const CifarType &cifarType, const std::string &root, Mode mode = Mode::kTrain,
+            const int& w=32,const int&h=32);
 
     torch::data::Example<> get(size_t index) override;
 
