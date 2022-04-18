@@ -74,8 +74,7 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
         }
         if (hwMol) {
             auto idxStr = std::to_string(i);
-//            auto subDir = "/" + std::to_string(i % 100) + "/";
-            auto subDir = "/";
+            auto subDir = "/" + std::to_string(i % 100) + "/";
             if (!std::filesystem::exists(imgPath + subDir)) {
                 std::filesystem::create_directory(imgPath + subDir);
             }
