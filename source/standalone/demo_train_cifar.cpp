@@ -1,8 +1,8 @@
 
-#include "timer.hpp"
-#include "torch_util.hpp"
-#include "torch_mv3.hpp"
-#include "dataset_cifar.hpp"
+#include "base/timer.h"
+#include "nn/util.h"
+#include "nn/mv3.h"
+#include "nn/dataset_cifar.h"
 #include <torch/torch.h>
 
 extern std::string WEIGHTS_DIR;
@@ -30,8 +30,8 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
         task_name = "cifar100";
         data_root = cifar100_root;
     }
-    auto model = std::make_shared<Mv3Large>(num_classes,1.0);
-    torch::save(model,"/tmp/fuck.pth");
+    auto model = std::make_shared<Mv3Large>(num_classes, 1.0);
+    torch::save(model, "/tmp/mv3-large.pth");
     model->setName(task_name + "-mv3large");
     model->to(_device);
     TrainConfig cfg;
@@ -47,7 +47,7 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
     auto[num_train_samples, train_loader]=make_dataset(CifarDataSet::Mode::kTrain);
     auto[num_test_samples, test_loader]=make_dataset(CifarDataSet::Mode::kTest);
 
-    cfg.LR_CURRENT=cfg.LR_BEGIN;
+    cfg.LR_CURRENT = cfg.LR_BEGIN;
     torch::optim::Adam optimizer(model->parameters(), torch::optim::AdamOptions(cfg.LR_CURRENT));
 //    torch::optim::SGD optimizer(model->parameters(), torch::optim::SGDOptions(cfg.LR_CURRENT));
     std::cout << "Training...\n";
@@ -55,7 +55,7 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
     for (size_t epoch = 1; epoch <= cfg.MAX_EPOCHS; epoch++) {
         double running_loss = 0.0;
         size_t num_correct = 0;
-        for (auto &batch : *train_loader) {
+        for (auto &batch: *train_loader) {
             // Transfer images and target labels to device
             auto data = batch.data.to(_device);
             auto target = batch.target.to(_device);
@@ -89,7 +89,7 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
             model->eval();
             double test_loss = 0.0;
             size_t test_correct = 0;
-            for (const auto &batch : *test_loader) {
+            for (const auto &batch: *test_loader) {
                 auto data = batch.data.to(_device);
                 auto target = batch.target.to(_device);
                 auto output = model->forward(data);
@@ -121,28 +121,28 @@ int main() {
     return 0;
 }
 
-//void test() {
-//    torch::Device device(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU);
-//    auto model = std::make_shared<Mv3Large>(6946);
-//    model->setName("gb-6946");
-//    model->to(device);
-////    torch::load(model, WEIGHTS_DIR + "/gb_classification/mv3-epoch-0.pth", device);
-////    model->saveClassifier("D:/","in","bneck","out");
-//    model->loadClassifier("D:/", "in", "bneck", "out", device);
-//    model->freezeInLayer(true);
-//    model->eval();
-//    Timer timer;
-//    timer.start();
-//    auto input = loadImgTensor("~/source/COCR/cache/simple_test/liang.png");
-//    auto output = model->forward(input.to(device));
-//    int topk = 5;
-//    auto prediction = output.topk(topk, 1);
-//    std::cout << std::get<0>(prediction).squeeze() << std::endl;
-//    auto indices = std::get<1>(prediction).squeeze(0);
-//    for (int i = 0; i < topk; i++) {
-//        std::cout << indices[i].item().toInt() << std::endl;
-//    }
-//    timer.stop();
-//    output.print();
-////    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-//}
+void test() {
+    torch::Device device(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU);
+    auto model = std::make_shared<Mv3Large>(6946);
+    model->setName("gb-6946");
+    model->to(device);
+//    torch::load(model, WEIGHTS_DIR + "/gb_classification/mv3-epoch-0.pth", device);
+//    model->saveClassifier("/tmp/","in","bneck","out");
+    model->loadClassifier("/tmp/", "in", "bneck", "out", device);
+    model->freezeInLayer(true);
+    model->eval();
+    Timer timer;
+    timer.start();
+    auto input = NNUtil::loadImgTensor("/tmp/liang.png");
+    auto output = model->forward(input.to(device));
+    int topk = 5;
+    auto prediction = output.topk(topk, 1);
+    std::cout << std::get<0>(prediction).squeeze() << std::endl;
+    auto indices = std::get<1>(prediction).squeeze(0);
+    for (int i = 0; i < topk; i++) {
+        std::cout << indices[i].item().toInt() << std::endl;
+    }
+    timer.stop();
+    output.print();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+}

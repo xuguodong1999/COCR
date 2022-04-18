@@ -1,6 +1,6 @@
-#include "torch_mv3.hpp"
-#include "torch_activation.hpp"
-#include "torch_module.hpp"
+#include "nn/mv3.h"
+#include "nn/activation.h"
+#include "nn/module.h"
 
 using namespace torch;
 using namespace torch::nn;
@@ -53,7 +53,7 @@ void Mv3Small::registerModule() {
 
 Tensor Mv3Small::forward(Tensor x) {
     x = layerIn->forward(x);
-    for (auto &bneck:bnecks) {
+    for (auto &bneck: bnecks) {
         x = bneck->forward(x);
     }
     x = layerOut->forward(x);

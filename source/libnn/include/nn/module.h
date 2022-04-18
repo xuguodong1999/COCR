@@ -1,6 +1,6 @@
-#ifndef _TORCH_MODULE_HPP_
-#define _TORCH_MODULE_HPP_
+#pragma once
 
+#include "els_nn_export.h"
 #include <torch/nn.h>
 
 class SeModuleImpl : public torch::nn::Module {
@@ -73,5 +73,3 @@ public:
 };
 
 TORCH_MODULE(BidirectionalLSTM);
-
-#endif //_MODULE_HPP_

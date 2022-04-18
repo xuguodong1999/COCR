@@ -1,10 +1,11 @@
-#ifndef _TORCH_MV3_HPP_
-#define _TORCH_MV3_HPP_
+#pragma once
 
-#include "torch_classifier.hpp"
+#include "els_nn_export.h"
+
+#include "nn/classifier.h"
 #include <vector>
 
-class Mv3Small : public torch::nn::Module, public BaseClassifier {
+class ELS_NN_EXPORT Mv3Small : public torch::nn::Module, public BaseClassifier {
 public:
     Mv3Small(const int &_numOfClass);
 
@@ -13,7 +14,7 @@ public:
     void registerModule();
 };
 
-class Mv3Large : public torch::nn::Module, public BaseClassifier {
+class ELS_NN_EXPORT Mv3Large : public torch::nn::Module, public BaseClassifier {
 public:
     Mv3Large(const int &_numOfClass, const float &_mv3Scale = 1.0);
 
@@ -21,5 +22,3 @@ public:
 
     void registerModule();
 };
-
-#endif//_TORCH_MV3_HPP_

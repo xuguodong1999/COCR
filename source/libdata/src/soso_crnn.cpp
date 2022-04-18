@@ -122,11 +122,11 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
         trainOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
-//        dbi.put(wtxn, a,"fuck");
+//        dbi.put(wtxn, a,"key-tmp");
 //        dbi.put(wtxn, a, buffer.data(), buffer.size()+1, true);
 //        sprintf(a, labelKey, idx);
 //        dbi.put(wtxn, a, label.c_str(), label.length()+1, true);
-//        dbi.put(wtxn, a,"fuck");
+//        dbi.put(wtxn, a,"key-tmp");
         if (idx % blockSize == blockSize - 1) {
 //            wtxn.commit();
             std::cout << "idx=" << idx << std::endl;
@@ -152,11 +152,11 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
         testOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
-//        dbi.put(wtxn, a,"fuck");
+//        dbi.put(wtxn, a,"key-tmp");
 //        dbi.put(wtxn, a, buffer.data(), buffer.size()+1, true);
 //        sprintf(a, labelKey, idx);
 //        dbi.put(wtxn, a, label.c_str(), label.length()+1, true);
-//        dbi.put(wtxn, a,"fuck");
+//        dbi.put(wtxn, a,"key-tmp");
         if (idx % (_testNum / 20) == _testNum / 20 - 1) {
 //            wtxn.commit();
             std::cout << "idx=" << idx << std::endl;
@@ -212,7 +212,7 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         hwStr.moveLeftTopTo({1, 1});
         hwStr.paintTo(img);
     }
-//    img.display("fuck");
+//    img.display("key-tmp");
     img = CvUtil::Resize(img, {width, height});
     if (_revertColor && StdUtil::byProb(0.5)) {// 反转颜色
         img = CvUtil::RevertColor(img);

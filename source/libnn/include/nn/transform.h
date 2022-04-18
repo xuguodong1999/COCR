@@ -1,9 +1,11 @@
+#pragma once
+
+#include "els_nn_export.h"
 /**
  * https://github.com/prabhuomkar/pytorch-cpp.git
  * Copyright 2020-present pytorch-cpp Authors
  */
-#ifndef _TORCH_TRANSFORM_HPP_
-#define _TORCH_TRANSFORM_HPP_
+
 /**
  * 仅留做参考，！！！不要使用，不要使用，不要使用！！！
  * 已知问题：
@@ -59,5 +61,3 @@ public:
 private:
     std::vector<int64_t> size_;
 };
-
-#endif//_TORCH_TRANSFORM_HPP_

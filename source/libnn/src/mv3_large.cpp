@@ -1,10 +1,12 @@
-#include "torch_mv3.hpp"
-#include "torch_activation.hpp"
-#include "torch_module.hpp"
+#include "nn/mv3.h"
+#include "nn/activation.h"
+#include "nn/module.h"
 #include <torch/torch.h>
 
 using namespace torch;
 using namespace torch::nn;
+
+#define RESCALE(a) static_cast<int>(std::lround((a)*_mv3Scale))
 
 Mv3Large::Mv3Large(const int &_numOfClass, const float &_mv3Scale) : BaseClassifier(
         Sequential(
@@ -73,7 +75,7 @@ void Mv3Large::registerModule() {
 
 Tensor Mv3Large::forward(Tensor x) {
     x = layerIn->forward(x);
-    for (auto &bneck:bnecks) {
+    for (auto &bneck: bnecks) {
         x = bneck->forward(x);
     }
     x = layerOut->forward(x);

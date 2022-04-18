@@ -28,3 +28,15 @@ linkLibtorch(molecular_gnn_smiles)
 
 addExecutable(simplify_torch_import simplify_torch_import.cpp)
 linkQt(simplify_torch_import "Core")
+
+function(addNNExecutable CPP_NAME)
+    addExecutable(${CPP_NAME} ${CPP_NAME}.cpp)
+    addLibraryDeps(${CPP_NAME} els_nn)
+    linkLibtorch(${CPP_NAME})
+endfunction()
+
+addNNExecutable(demo_crnn)
+addNNExecutable(demo_train_cifar)
+#addNNExecutable(demo_train_couch)
+#addNNExecutable(demo_train_object365)
+addNNExecutable(demo_yolov4)

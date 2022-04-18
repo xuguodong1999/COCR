@@ -2,7 +2,7 @@
  * https://github.com/prabhuomkar/pytorch-cpp.git
  * Copyright 2020-present pytorch-cpp Authors
  */
-#include "torch_transform.hpp"
+#include "nn/transform.h"
 
 static double rand_double() {
     return torch::rand(1)[0].item<double>();

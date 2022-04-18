@@ -1,4 +1,4 @@
-#include "torch_classifier.hpp"
+#include "nn/classifier.h"
 #include <torch/torch.h>
 #include <filesystem>
 
@@ -75,7 +75,7 @@ void BaseClassifier::setName(const std::string &name) {
 
 void BaseClassifier::freezeInLayer(bool _freeze) {
     bool requireGrad = !_freeze;
-    for (auto &parm:layerIn->parameters(true)) {
+    for (auto &parm: layerIn->parameters(true)) {
         parm.set_requires_grad(requireGrad);
     }
 }
@@ -87,14 +87,14 @@ void BaseClassifier::freezeBneck(const size_t &i, bool _freeze) {
         exit(-1);
     }
     bool requireGrad = !_freeze;
-    for (auto &parm:bnecks[i]->parameters(true)) {
+    for (auto &parm: bnecks[i]->parameters(true)) {
         parm.set_requires_grad(requireGrad);
     }
 }
 
 void BaseClassifier::freezeOutLayer(bool _freeze) {
     bool requireGrad = !_freeze;
-    for (auto &parm:layerOut->parameters(true)) {
+    for (auto &parm: layerOut->parameters(true)) {
         parm.set_requires_grad(requireGrad);
     }
 }

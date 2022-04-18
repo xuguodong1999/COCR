@@ -1,6 +1,6 @@
-#include "torch_yolov4.hpp"
-#include "torch_activation.hpp"
-#include "torch_module.hpp"
+#include "nn/yolov4.h"
+#include "nn/activation.h"
+#include "nn/module.h"
 
 #include <torch/serialize.h>
 #include <cmath>
@@ -8,6 +8,8 @@
 
 using namespace torch;
 using namespace torch::nn;
+
+#define RESCALE(a) static_cast<int>(std::lround((a)*_mv3Scale))
 
 Yolov4::Yolov4(const int &_numOfClass, const float &_mv3Scale) : BaseClassifier(
         Sequential(
@@ -121,7 +123,7 @@ void Yolov4::registerModule() {
         register_module("bneck-" + std::to_string(i), bnecks[i]);
     }
     // detector
-    for (auto&[name, layer]:prnLayerMap) {
+    for (auto&[name, layer]: prnLayerMap) {
         register_module(name, layer);
     }
     register_module("h32x", h32x);
@@ -193,7 +195,7 @@ void Yolov4::saveClassifier(const string &_saveDir, const string &_inPrefix,
         torch::save(h8x, prefix + _outPrefix + "-h8x.pth");
         torch::save(h16x, prefix + _outPrefix + "-h16x.pth");
         torch::save(h32x, prefix + _outPrefix + "-h32x.pth");
-        for (auto&[name, layer]:prnLayerMap) {
+        for (auto&[name, layer]: prnLayerMap) {
             torch::save(layer, prefix + _outPrefix + "-" + name + ".pth");
         }
     } catch (std::exception &e) {

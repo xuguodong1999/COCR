@@ -1,9 +1,10 @@
-#ifndef _TORCH_YOLOV4_HPP_
-#define _TORCH_YOLOV4_HPP_
+#pragma once
 
-#include "torch_classifier.hpp"
+#include "els_nn_export.h"
 
-class Yolov4 : public torch::nn::Module, public BaseClassifier {
+#include "nn/classifier.h"
+
+class ELS_NN_EXPORT Yolov4 : public torch::nn::Module, public BaseClassifier {
     std::unordered_map<std::string, torch::nn::Sequential> prnLayerMap;
     torch::nn::Sequential &h32x;    // 指向 BaseClassifier::layerOut
     torch::nn::Sequential h16x, h8x;
@@ -22,5 +23,3 @@ public:
                         const std::string &_outPrefix = "detector") override;
 
 };
-
-#endif//_TORCH_YOLOV4_HPP_

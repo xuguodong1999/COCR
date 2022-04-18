@@ -1,5 +1,6 @@
-#ifndef _TORCH_CLASSIFIER_HPP_
-#define _TORCH_CLASSIFIER_HPP_
+#pragma once
+
+#include "els_nn_export.h"
 
 #include <torch/nn/modules/container/sequential.h>
 #include <memory>
@@ -7,16 +8,12 @@
 #include <utility>
 #include <cmath>
 
-#ifndef RESCALE
-#define RESCALE(a) static_cast<int>(std::lround((a)*_mv3Scale))
-#endif
-
 /**
  * 将分类器看作三个部分：输入-若干次下采样-分类
  * 表达为 Sequential、Sequential[]、Sequential
  * 以 Sequential 为粒度提供权重冻结、解冻、分离保存、分离加载
  */
-class BaseClassifier {
+class ELS_NN_EXPORT BaseClassifier {
     std::string name;
 protected:
     torch::nn::Sequential layerIn;
@@ -65,5 +62,3 @@ public:
     virtual void registerModule() = 0;
 
 };
-
-#endif//_TORCH_CLASSIFIER_HPP_

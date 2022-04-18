@@ -1,5 +1,6 @@
-#ifndef _TORCH_ACTIVATION_HPP_
-#define _TORCH_ACTIVATION_HPP_
+#pragma once
+
+#include "els_nn_export.h"
 
 #include <torch/nn.h>
 #include <torch/nn/cloneable.h>
@@ -82,5 +83,3 @@ TORCH_MODULE(Relu);
 //};
 //
 //TORCH_MODULE(MemoryEfficientSwish);
-
-#endif//_TORCH_ACTIVATION_HPP_

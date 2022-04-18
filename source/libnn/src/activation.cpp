@@ -1,4 +1,4 @@
-#include "torch_activation.hpp"
+#include "nn/activation.h"
 #include <iostream>
 
 using namespace torch;

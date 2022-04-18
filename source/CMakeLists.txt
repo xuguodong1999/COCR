@@ -67,6 +67,15 @@ linkOpenBabel(els_data)
 linkCoordgenlibs(els_data)
 linkQt(els_data "Gui")
 
+# nn module
+makeLibrary(libnn els_nn)
+addLibraryDeps(els_nn els_base)
+addLibraryDeps(els_nn els_math)
+addLibraryDeps(els_nn els_ocv)
+linkLibtorch(els_nn)
+linkOpenCV(els_nn)
+linkQt(els_nn "Gui")
+
 # executable
 add_subdirectory(app)
 add_subdirectory(app_qml)

@@ -1,9 +1,10 @@
-#include "torch_util.hpp"
-#include <opencv2/opencv.hpp>
+#include "nn/util.h"
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <torch/torch.h>
 
-torch::Tensor loadImgTensor(const std::string &_imgPath,
-                            const int &_width, const int &_height) {
+torch::Tensor NNUtil::loadImgTensor(const std::string &_imgPath,
+                                    const int &_width, const int &_height) {
     auto cvImg = cv::imread(_imgPath);
     if (3 != cvImg.channels()) {
         std::cerr << _imgPath << " is not a 3-channel img" << std::endl;

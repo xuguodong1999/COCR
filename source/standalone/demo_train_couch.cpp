@@ -1,7 +1,7 @@
-#include "timer.hpp"
-#include "torch_util.hpp"
-#include "torch_mv3.hpp"
-#include "dataset_cifar.hpp"
+#include "base/timer.h"
+#include "nn/util.h"
+#include "nn/mv3.h"
+#include "dataset_cifar.h"
 #include <torch/torch.h>
 
 extern std::string WEIGHTS_DIR;

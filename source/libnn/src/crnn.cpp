@@ -1,9 +1,11 @@
-#include "torch_crnn.hpp"
-#include "torch_activation.hpp"
-#include "torch_module.hpp"
+#include "nn/crnn.h"
+#include "nn/activation.h"
+#include "nn/module.h"
 
 using namespace torch;
 using namespace torch::nn;
+
+#define RESCALE(a) static_cast<int>(std::lround((a)*_mv3Scale))
 
 CRNN::CRNN(const int &_numOfClass, const float &_mv3Scale) : BaseClassifier(
         Sequential(
@@ -52,7 +54,7 @@ CRNN::CRNN(const int &_numOfClass, const float &_mv3Scale) : BaseClassifier(
 
 torch::Tensor CRNN::forward(torch::Tensor x) {
     x = layerIn->forward(x);
-    for (auto &bneck:bnecks) {
+    for (auto &bneck: bnecks) {
         x = bneck->forward(x);
     }
 //    std::cout<<"fSize="<<x.sizes()<<std::endl;

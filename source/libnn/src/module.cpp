@@ -1,5 +1,5 @@
-#include "torch_module.hpp"
-#include "torch_activation.hpp"
+#include "nn/module.h"
+#include "nn/activation.h"
 
 #include <torch/torch.h>
 

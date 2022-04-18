@@ -42,7 +42,6 @@ std::optional<rectf> HwScript::getBoundingBox() const {
         maxy = std::max(maxy, y1);
     }
     if (minx > maxx) {
-        throw std::runtime_error("fuck");
         return std::nullopt;
     }
     return rectf{{minx, miny},
