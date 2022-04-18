@@ -55,8 +55,7 @@ bool CRNNDataGenerator::initData() {
     getDictTexts();
     std::cout << "chemTexts.size()=" << chemTexts.size() << ", dictTexts.size()="
               << dictTexts.size() << std::endl;
-//    getRandomTexts(10 * (chemTexts.size() + dictTexts.size()));
-    getRandomTexts(100);
+    getRandomTexts(10 * (chemTexts.size() + dictTexts.size()));
     if (availableFontFamilies.empty()) {
         auto allSystemFonts = QFontDatabase().families();
         static std::unordered_set<std::string> whiteList{
@@ -79,7 +78,7 @@ bool CRNNDataGenerator::initData() {
                 "华文中宋", "华文仿宋", "华文宋体", "华文新魏", "华文楷体", "华文细黑", "幼圆", "文鼎ＰＬ简中楷", "文鼎ＰＬ简报宋",
                 "方正姚体", "隶书"};
         for (auto &font: allSystemFonts) {
-            if (!StdUtil::notExist(whiteList,font.toStdString())) {
+            if (!StdUtil::notExist(whiteList, font.toStdString())) {
                 availableFontFamilies.push_back(font.toStdString());
             }
         }
@@ -103,6 +102,7 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
     std::string trainLabelFile = topDir + trainDir + gtFileName, testLabelFile = topDir + testDir + gtFileName;
     std::ofstream trainOfsm(trainLabelFile), testOfsm(testLabelFile);
 //    dbi.put(wtxn, "num-samples", std::to_string(_trainNum).c_str());
+    size_t blockSize = 1 + _trainNum / 20;
     for (size_t idx = 0; idx < _trainNum; idx++) {
         if (StdUtil::byProb(0.4)) { // 4:6
             text = StdUtil::randSelect(chemTexts);
@@ -127,7 +127,7 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
 //        sprintf(a, labelKey, idx);
 //        dbi.put(wtxn, a, label.c_str(), label.length()+1, true);
 //        dbi.put(wtxn, a,"fuck");
-        if (idx % (_trainNum / 20) == _trainNum / 20 - 1) {
+        if (idx % blockSize == blockSize - 1) {
 //            wtxn.commit();
             std::cout << "idx=" << idx << std::endl;
         }
@@ -188,7 +188,7 @@ std::pair<std::vector<uchar>, std::string> CRNNDataGenerator::getSample(
         }
     } else {// 手写数据
         HwStr hwStr;
-        if (0 == _type) {// 随机字符
+        if (0 == _type) { // 随机字符
             hwStr.loadRichACSII(_text);
         } else if (1 == _type) {// 字典内容
             if (StdUtil::byProb(0.1)) {
@@ -387,17 +387,17 @@ std::shared_ptr<HwBase> CRNNDataGenerator::getRectStr(const rectf &_freeRect, co
     float k0 = w0 / h0;
     const auto[w1, h1]=getSize(_freeRect);
     float k1 = w1 / h1;
-    float height = h1;
-    float width = (std::min)(w1, height * k0);
+    float height0 = h1;
+    float width0 = (std::min)(w1, height0 * k0);
     if (k0 / 1.5 < k1) {// 允许水平1.5倍的压缩
-        hwStr->resizeTo(width, height, false);
+        hwStr->resizeTo(width0, height0, false);
         const auto&[tl, br]=_freeRect;
         if (_isLeft) {
             hwStr->moveLeftTopTo(tl);
         } else {
             const auto&[x0, y0]=tl;
             const auto&[x1, y1]=br;
-            hwStr->moveLeftTopTo({x1 - width, y0});
+            hwStr->moveLeftTopTo({x1 - width0, y0});
         }
     } else {
         return nullptr;
@@ -410,7 +410,7 @@ Mat CRNNDataGenerator::getStandardLongText() {
     int textType;
     int MAX_LEN = 200 + StdUtil::randInt() % 400;
     int curLength = 0;
-    int height = 18 + StdUtil::randInt() % 32;
+    int height0 = 18 + StdUtil::randInt() % 32;
     Mat result(MatChannel::GRAY, DataType::UINT8, 0, 0);
     while (curLength < MAX_LEN) {
         if (StdUtil::byProb(0.4)) {//四六开
@@ -424,7 +424,7 @@ Mat CRNNDataGenerator::getStandardLongText() {
             textType = 1;
         }
         auto img = CvUtil::GetFont(text, availableFontFamilies[StdUtil::randInt() % availableFontFamilies.size()]);
-        img = CvUtil::Resize(img, {(float) height / img.getHeight() * img.getWidth(), height});
+        img = CvUtil::Resize(img, {(float) height0 / img.getHeight() * img.getWidth(), height0});
         int originW = result.getWidth(), curW = img.getWidth();
         if (originW + curW < MAX_LEN) {
             if (result.getWidth() == 0) {

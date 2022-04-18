@@ -41,7 +41,7 @@ public:
 
     static Mat Rotate(const Mat &mat, const float &angle);
 
-    static Mat CvUtil::GetFont(const std::string &_text, const std::string &_fontFamily = "Arial");
+    static Mat GetFont(const std::string &_text, const std::string &_fontFamily = "Arial");
 
     static Mat AddGaussianNoise(const Mat &mat);
 

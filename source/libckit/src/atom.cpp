@@ -50,8 +50,8 @@ bool Atom::isCoord2dEmbedded() const {
 }
 
 void Atom::setCoord2d(const float &_x, const float &_y) {
-    xx = _x;
-    yy = _y;
+    x = xx = _x;
+    y = yy = _y;
     zz = -1;
 }
 

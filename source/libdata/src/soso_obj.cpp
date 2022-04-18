@@ -74,7 +74,8 @@ void SOSODarknet::dump(const size_t &_numOfSamples, const size_t &_repeatTimes) 
         }
         if (hwMol) {
             auto idxStr = std::to_string(i);
-            auto subDir = "/" + std::to_string(i % 100) + "/";
+//            auto subDir = "/" + std::to_string(i % 100) + "/";
+            auto subDir = "/";
             if (!std::filesystem::exists(imgPath + subDir)) {
                 std::filesystem::create_directory(imgPath + subDir);
             }
@@ -94,7 +95,7 @@ void SOSODarknet::display() {
     auto &isomer = IsomerCounter::GetInstance();
     auto alkanes = isomer.getIsomers({
                                              2, 3, 4, 5, 6, 7,
-//                                             8, 9, 10, 11, 12, 13, 14, 15,
+                                             8, 9, 10, 11, 12, 13, 14, 15,
 //                                             16
                                      });
     const int loopTime = 10000;

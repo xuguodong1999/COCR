@@ -62,9 +62,9 @@ static const char *USAGE_MEG = "data_gen usage:\n"
                                "(4)\t./data_gen -isomer [number of samples] [an empty, existing directory path]\n";
 
 int main(int argc, char **argv) {
-//#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-//    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
-//#endif
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    qApp->setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     QApplication a(argc, argv);
     auto arguments = a.arguments();
     if (arguments.size() == 1) { // display something

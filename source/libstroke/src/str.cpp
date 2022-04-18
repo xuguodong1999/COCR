@@ -228,8 +228,9 @@ void HwStr::equalize(const float &_width) {
     floatX = rect.first.first + w;
     for (size_t i = 0; i < mData.size(); i++) {
         auto &rect0 = rectVec[i];
+        const auto[width0, height0]=getSize(rect0);
         mData[i].moveLeftTopTo(point2f(floatX, rect0.first.second));
-        floatX += (width + w);
+        floatX += (width0 + w);
     }
 }
 

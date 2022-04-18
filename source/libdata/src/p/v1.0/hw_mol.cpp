@@ -451,7 +451,7 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
     for (size_t i = 0; i < _repeatTimes; i++) {
         auto target = std::dynamic_pointer_cast<HwMol>(this->clone());
         target->rotate(StdUtil::randInt() % 360);
-//        target->replaceCharWithText(0.25);
+        target->replaceCharWithText(0.25);
         if (target->getMol()->bondsNum() <= 6) {
             target->setHwController(thin[StdUtil::randInt() % thin.size()]);
         } else {
@@ -495,10 +495,10 @@ void HwMol::showOnScreen(const size_t &_repeatTimes, bool _showBox) {
         };
         if (ow > oh) {
             int deltaH = (fixH - oh) / 2;
-//            fill_rect(recti{{0,    0},
-//                            {fixW, deltaH}});
-//            fill_rect(recti{{0,    fixH - deltaH},
-//                            {fixW, fixH}});
+            fill_rect(recti{{0,    0},
+                            {fixW, deltaH}});
+            fill_rect(recti{{0,    fixH - deltaH},
+                            {fixW, fixH}});
         }
         for (auto &sym: target->mData) {
 //            std::cout << fullLabels[sym->getItemType()] << std::endl;
@@ -623,7 +623,7 @@ void HwMol::replaceCharWithText(const float &_prob) {
             } else {
                 rect.first.first = xBegin;
 //                rect.x = xBegin;
-                rect.second.first = x1 - xBegin;
+                rect.second.first = x1;
 //                rect.width = curRect.x + curRect.width - xBegin;
             }
             if (std::abs(rect.second.first - rect.first.first) / std::abs(x0 - x1) < 2) {
