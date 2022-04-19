@@ -110,6 +110,6 @@ add_subdirectory(3rdparty)
 
 add_subdirectory(source)
 
-if (BUILD_REFERENCES)
-    add_subdirectory(3rdreference)
-endif ()
+#if (BUILD_REFERENCES)
+#    add_subdirectory(3rdreference)
+#endif ()

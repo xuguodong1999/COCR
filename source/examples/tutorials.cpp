@@ -1,3 +1,5 @@
+#include <iostream>
+
 // copy from https://www.cnblogs.com/yanghailin/p/12901586.html
 #pragma once
 
@@ -930,4 +932,10 @@ void test_deal_mask_index22() {
     std::cout << aim << std::endl;
 
     deal_mask_index22(aim, ind_mask);
+}
+
+
+int main() {
+    std::cout << "hello, world" << std::endl;
+    return 0;
 }

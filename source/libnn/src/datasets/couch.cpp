@@ -1,4 +1,4 @@
-#include "nn/dataset_couch.h"
+#include "nn/datasets/couch.h"
 #include "ocv/algorithm.h"
 
 #include <opencv2/imgproc.hpp>

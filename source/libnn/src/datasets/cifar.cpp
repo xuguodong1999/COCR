@@ -1,4 +1,4 @@
-#include "nn/dataset_cifar.h"
+#include "nn/datasets/cifar.h"
 #include "base/std_util.h"
 #include <opencv2/opencv.hpp>
 

@@ -47,7 +47,7 @@ void transferCouch2Cifar(torch::Device &device) {
         double running_loss = 0.0;
         size_t num_correct = 0;
 
-        for (const auto &batch : *test_loader) {
+        for (const auto &batch: *test_loader) {
             auto data = batch.data.to(device);
             auto target = batch.target.to(device);
 
@@ -82,7 +82,7 @@ void transferCouch2Cifar(torch::Device &device) {
         // Initialize running metrics
 //        double running_loss = 0.0;
         size_t num_correct = 0;
-        for (auto &batch : *train_loader) {
+        for (auto &batch: *train_loader) {
             // Transfer images and target labels to device
             auto data = batch.data.to(device);
             auto target = batch.target.to(device);

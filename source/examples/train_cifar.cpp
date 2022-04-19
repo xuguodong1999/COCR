@@ -2,7 +2,7 @@
 #include "base/timer.h"
 #include "nn/util.h"
 #include "nn/mv3.h"
-#include "nn/dataset_cifar.h"
+#include "nn/datasets/cifar.h"
 #include <torch/torch.h>
 #include <ATen/autocast_mode.h>
 

@@ -84,7 +84,7 @@ public:
             std::cerr << "fail to open " << darknet_label_path << std::endl;
             exit(-1);
         }
-        for (auto &annotation:annotations) {
+        for (auto &annotation: annotations) {
             float x = (annotation.x + annotation.w / 2.0) / image.w;
             float y = (annotation.y + annotation.h / 2.0) / image.h;
             float w = annotation.w / image.w;
@@ -103,7 +103,7 @@ public:
         _ost.write(_dataBlob.image.filepath.data(), path_length * sizeof(char));
         int annotation_num = _dataBlob.annotations.size();
         _ost.write((char *) &annotation_num, sizeof(int));
-        for (auto &annotation:_dataBlob.annotations) {
+        for (auto &annotation: _dataBlob.annotations) {
             _ost.write((char *) &(annotation.label), sizeof(int));
             _ost.write((char *) &(annotation.x), sizeof(float));
             _ost.write((char *) &(annotation.y), sizeof(float));
@@ -168,7 +168,7 @@ public:
     bool isValidSizeAndObj() const {
         auto mat = cv::imread(getTruePath());
         if (mat.cols != image.w || mat.rows != image.h || mat.channels() != 3)return false;
-        for (auto &annotation:annotations) {
+        for (auto &annotation: annotations) {
             float tlx, tly, brx, bry;
             tlx = annotation.x;
             tly = annotation.y;
@@ -177,7 +177,7 @@ public:
             if (tlx < 0 || tly < 0 || brx < 0 || bry < 0 ||
                 tlx > image.w || tly > image.h || brx > image.w || bry > image.h)
                 return false;
-            if(annotation.w<0.0001||annotation.h<0.0001)return false;
+            if (annotation.w < 0.0001 || annotation.h < 0.0001)return false;
         }
         return true;
     }
@@ -188,7 +188,7 @@ public:
 
     void display() {
         cv::Mat canvas = cv::imread(getTruePath());
-        for (auto &annotation:annotations) {
+        for (auto &annotation: annotations) {
             float tlx, tly, brx, bry;
             tlx = annotation.x;
             tly = annotation.y;
@@ -221,7 +221,7 @@ public:
             std::cerr << "fail to open " << train_annotations_path << std::endl;
             exit(-1);
         }
-        for (auto &imgBlob:ObjDataBlob::sDataBlob) {
+        for (auto &imgBlob: ObjDataBlob::sDataBlob) {
             if (imgBlob.second->isValid()) {
                 ofs << *(imgBlob.second);
 //                imgBlob.second->display();
@@ -236,14 +236,14 @@ public:
             exit(-1);
         }
         std::vector<std::pair<int, std::string>> labels;
-        for (auto&[id, name]:categories) {
+        for (auto&[id, name]: categories) {
             labels.push_back({id, name});
         }
         std::sort(labels.begin(), labels.end(),
                   [](const std::pair<int, std::string> &a, const std::pair<int, std::string> &b) {
                       return a.first < b.first;
                   });
-        for (auto&[id, name]:labels) {
+        for (auto&[id, name]: labels) {
             ofs << name << std::endl;
         }
         ofs.close();
@@ -255,18 +255,18 @@ public:
         IStreamWrapper isw(ifs);
         Document d;
         d.ParseStream(isw);
-        for (auto &obj:d.GetObject()) {
+        for (auto &obj: d.GetObject()) {
             std::string tag = obj.name.GetString();
             if ("images" == tag) {
-                for (auto &image:obj.value.GetArray()) {
+                for (auto &image: obj.value.GetArray()) {
                     ObjDataBlob::AddImageBlob(image["id"].GetInt(), image["width"].GetInt(),
                                               image["height"].GetInt(), image["file_name"].GetString());
                 }
             } else if ("annotations" == tag) {
-                for (auto &annotation:obj.value.GetArray()) {
+                for (auto &annotation: obj.value.GetArray()) {
                     float pos[4];
                     size_t i = 0;
-                    for (auto &num:annotation["bbox"].GetArray()) {
+                    for (auto &num: annotation["bbox"].GetArray()) {
                         pos[i++] = num.GetFloat();
                     }
                     auto imgDataPtr = ObjDataBlob::GetImgBlobById(annotation["image_id"].GetInt());
@@ -278,7 +278,7 @@ public:
                     }
                 }
             } else if ("categories" == tag) {
-                for (auto &category:obj.value.GetArray()) {
+                for (auto &category: obj.value.GetArray()) {
                     ObjDataBlob::addCategory(category["id"].GetInt(), category["name"].GetString());
                 }
             }

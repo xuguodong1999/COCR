@@ -11,9 +11,9 @@
 #include <iostream>
 #include <iomanip>
 #include <torch/nn/functional/loss.h>
-#include "image_io.h"
+//#include "image_io.h"
 
-using image_io::save_image;
+//using image_io::save_image;
 
 int main() {
     std::cout << "Generative Adversarial Network\n\n";
@@ -154,12 +154,12 @@ int main() {
         // Save real images once
         if (epoch == 0) {
             images = denorm(images.reshape({images.size(0), 1, 28, 28}));
-            save_image(images, sample_output_dir_path + "real_images.png");
+//            save_image(images, sample_output_dir_path + "real_images.png");
         }
 
         // Save generated fake images
         fake_images = denorm(fake_images.reshape({fake_images.size(0), 1, 28, 28}));
-        save_image(fake_images, sample_output_dir_path + "fake_images-" + std::to_string(epoch + 1) + ".png");
+//        save_image(fake_images, sample_output_dir_path + "fake_images-" + std::to_string(epoch + 1) + ".png");
     }
 
     std::cout << "Training finished!\n";
