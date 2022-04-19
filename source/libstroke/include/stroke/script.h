@@ -19,7 +19,6 @@ public:
 
     void append(const HwScript &_hwScript);
 
-
     float getAvgPtsNum() const;
 
     void clear();
@@ -30,25 +29,25 @@ public:
 
     void keepIf(const std::function<bool(const point2f &)> &_cond);
 
-    HwScript(HwController *_hwController = nullptr);
+    explicit HwScript(HwController *_hwController = nullptr);
 
     HwScript(const HwScript &_hwScript) = default;
 
-    HwScript(HwScript &&_hwScript);
+    HwScript(HwScript &&_hwScript) noexcept;
 
     HwScript &operator=(HwScript &&_hwScript) = default;
 
     HwScript &operator=(const HwScript &_hwScript) = default;
 
-    void paintTo(Mat &_canvas) const;
+    void paintTo(Mat &_canvas) const override;
 
-    std::optional<rectf> getBoundingBox() const;
+    std::optional<rectf> getBoundingBox() const override;
 
-    void rotateBy(float _angle, const point2f &_cent);
+    void rotateBy(float _angle, const point2f &_cent) override;
 
-    void moveBy(const point2f &_offset);
+    void moveBy(const point2f &_offset) override;
 
-    void mulK(float _kx, float _ky);
+    void mulK(float _kx, float _ky) override;
 
     /**
     * 算一个映射：从【最小矩形】向【等比例的以(p1,p2)为中长轴的矩形】，为所有点做这个映射，指向随机

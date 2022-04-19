@@ -65,4 +65,6 @@ int main() {
     x = torch::randn(1);
     std::cout << "x:\n" << x << '\n';
     std::cout << "x.item():\n" << x.item<float>() << '\n';
+
+    return EXIT_SUCCESS;
 }

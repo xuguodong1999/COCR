@@ -531,5 +531,5 @@ int main() {
     TestChapter3Section1();   // 会生成一张图片，titiled  "result.bmp"
 
     TestChapter3Section2();
-    return 0;
+    return EXIT_SUCCESS;
 }

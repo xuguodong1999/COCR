@@ -151,4 +151,6 @@ auto main() -> int {
         train(epoch, model, device, *train_loader, optimizer, train_dataset_size);
         test(model, device, *test_loader, test_dataset_size);
     }
+
+    return EXIT_SUCCESS;
 }

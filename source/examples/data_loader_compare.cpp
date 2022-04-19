@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
 //    test_with_fixed_data();
 //    test_with_torch_dataset();
     test_with_queue();
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void test_with_fixed_data() {

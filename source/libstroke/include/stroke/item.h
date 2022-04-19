@@ -23,7 +23,7 @@ public:
 
     void keepIf(const std::function<bool(const point2f &)> &_cond);
 
-    HwItem(HwController *_hwController = nullptr);
+    explicit HwItem(HwController *_hwController = nullptr);
 
     void paintTo(Mat &_canvas) const override;
 

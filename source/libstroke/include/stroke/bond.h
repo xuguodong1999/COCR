@@ -34,11 +34,11 @@ public:
 
     void setVertices(const std::vector<point2f> &_pts) override;
 
-    void rotateBy(float _angle, const point2f &_cent);
+    void rotateBy(float _angle, const point2f &_cent) override;
 
-    void moveBy(const point2f &_offset);
+    void moveBy(const point2f &_offset) override;
 
-    void mulK(float _kx, float _ky);
+    void mulK(float _kx, float _ky) override;
 
     void paintTo(Mat &_canvas) const override;
 };
@@ -58,11 +58,11 @@ public:
 
     void setVertices(const std::vector<point2f> &_pts) override;
 
-    void rotateBy(float _angle, const point2f &_cent);
+    void rotateBy(float _angle, const point2f &_cent) override;
 
-    void moveBy(const point2f &_offset);
+    void moveBy(const point2f &_offset) override;
 
-    void mulK(float _kx, float _ky);
+    void mulK(float _kx, float _ky) override;
 };
 
 class ELS_STROKE_EXPORT HwDoubleBond : public HwSingleBond {

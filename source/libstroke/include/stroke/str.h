@@ -87,7 +87,7 @@ public:
 
     HwStr();
 
-    HwStr(const ElementType &_elementType);
+    explicit HwStr(const ElementType &_elementType);
 
     std::string getShownText() const;
 

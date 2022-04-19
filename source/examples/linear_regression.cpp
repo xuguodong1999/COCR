@@ -49,4 +49,6 @@ int main() {
     }
 
     std::cout << "Training finished!\n";
+
+    return EXIT_SUCCESS;
 }

@@ -182,7 +182,7 @@ float HwScript::getAvgPtsNum() const {
     return mmSize / mData.size();
 }
 
-HwScript::HwScript(HwScript &&_hwScript) {
+HwScript::HwScript(HwScript &&_hwScript) noexcept{
     mData = std::move(_hwScript.mData);
 }
 

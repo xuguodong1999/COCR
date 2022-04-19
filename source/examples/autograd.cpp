@@ -67,4 +67,6 @@ int main() {
     y = x.detach();
     std::cout << "y.requires_grad:\n" << y.requires_grad() << '\n';
     std::cout << "x.eq(y).all():\n" << x.eq(y).all() << '\n';
+
+    return EXIT_SUCCESS;
 }

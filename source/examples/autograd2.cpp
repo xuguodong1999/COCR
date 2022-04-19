@@ -188,4 +188,6 @@ int main() {
     std::cout << "\n";
 
     custom_autograd_function_example();
+
+    return EXIT_SUCCESS;
 }

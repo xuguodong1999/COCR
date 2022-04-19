@@ -10,5 +10,5 @@ int main(int argc, char **argv) {
     std::cout << vec.size();
     std::cout << vec[0].sizes();
     std::cout << vec[1].sizes();
-    return 0;
+    return EXIT_SUCCESS;
 }

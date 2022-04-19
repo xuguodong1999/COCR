@@ -212,5 +212,5 @@ int main() {
     Transform<double, 3, Isometry> Isometry_transform;   //等距
     Transform<double, 3, Projective> Projective_transform; // 射影变换
     Affine_transform.prerotate(AngleAxisd(3.14, Vector3d::UnitX()));
-    return 0;
+    return EXIT_SUCCESS;
 }

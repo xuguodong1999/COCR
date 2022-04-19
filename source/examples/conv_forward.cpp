@@ -48,5 +48,5 @@ int main(int argc, char *argv[]) {
     auto output = model->forward(input);
     std::cout << output << std::endl;
 
-    return 0;
+    return EXIT_SUCCESS;
 }

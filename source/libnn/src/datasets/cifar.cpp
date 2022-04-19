@@ -94,30 +94,45 @@ CifarDataSet::CifarDataSet(
 
 torch::data::Example<> CifarDataSet::get(size_t index) {
     cv::Mat cvImg = p->mImages[index];
-    if (isTrainMode() && StdUtil::byProb(0.5)) {
+    auto randomize = [&]() -> bool {
+        return isTrainMode() && StdUtil::byProb(0.5);
+    };
+    if (randomize()) {
+        // 翻转
         // 0 竖直 1 水平 -1 同时
-        cv::flip(p->mImages[index], cvImg, 1);
-    } else {
-        cvImg = p->mImages[index].clone();
+        cv::flip(p->mImages[index], cvImg, StdUtil::randSelect({0, 1, -1}));
     }
     const int padSize = 4;
     const int padSize_2 = padSize / 2;
-    if (isTrainMode() && StdUtil::byProb(0.5)) {
+    if (randomize()) {
+        // 缩放
         cv::resize(p->mImages[index], cvImg,
                    cv::Size(cvImg.cols - padSize, cvImg.rows - padSize), 0, 0, cv::INTER_CUBIC);
         cv::copyMakeBorder(cvImg, cvImg,
                            padSize_2, padSize_2, padSize_2, padSize_2,
                            cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
     }
-    if (isTrainMode() && StdUtil::byProb(0.1)) {
-        cv::Mat noise(cvImg.size(), CV_32FC3);
-        cv::randn(noise, 0, StdUtil::belowProb(0.05));
-        cvImg += noise;
-        cv::normalize(cvImg, cvImg, 0.0, 1.0, cv::NORM_MINMAX, CV_32F);
+//    if (randomize()) {
+//        // 高斯噪音
+//        cv::Mat noise(cvImg.size(), CV_32FC3);
+//        cv::randn(noise, 0, StdUtil::belowProb(0.05));
+//        cvImg += noise;
+//        cv::normalize(cvImg, cvImg, 0.0, 1.0, cv::NORM_MINMAX, CV_32F);
+//    }
+    if (randomize()) {
+        // 随机掩盖
+        const int scale = 2 + StdUtil::randInt() % 8;
+        const int pw = cvImg.cols / scale;
+        const int ph = cvImg.rows / scale;
+        const int x = StdUtil::randInt() % (cvImg.cols - pw);
+        const int y = StdUtil::randInt() % (cvImg.rows - ph);
+        cv::Mat patch(cv::Size{pw, ph}, CV_32FC3, {0, 0, 0});
+        patch.copyTo(cvImg(cv::Rect2i(x, y, pw, ph)));
     }
 //    cv::imshow("", cvImg);
 //    cv::waitKey(0);
 //    cv::resize(cvImg, cvImg, cv::Size(128, 128), 0, 0, cv::INTER_CUBIC);
+
     return {torch::from_blob(
             cvImg.data, {cvImg.cols, cvImg.rows, cvImg.channels()}, torch::kFloat
     ).permute({2, 0, 1}).contiguous(), mTargets[index]};
@@ -169,7 +184,9 @@ std::pair<std::vector<cv::Mat>, torch::Tensor> CifarUtil::loadData(
                  cv::Mat(32, 32, CV_8UC1, imgBegin)//r
                 }), img);
         img.convertTo(img, CV_32F, 1.0 / 255);
-        cv::resize(img, img, cv::Size(imageWidth, imageHeight), 0, 0, cv::INTER_CUBIC);
+        if (img.cols != imageWidth || img.rows != imageHeight) {
+            cv::resize(img, img, cv::Size(imageWidth, imageHeight), 0, 0, cv::INTER_CUBIC);
+        }
         images.push_back(std::move(img));
     }
     return {std::move(images), targets.to(torch::kInt64)};

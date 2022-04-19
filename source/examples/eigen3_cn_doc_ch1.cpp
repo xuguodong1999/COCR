@@ -2022,5 +2022,5 @@ int main() {
     TestChapter1Section10();
 
     //TODO:add the program of TestChapter1Section11()
-    return 0;
+    return EXIT_SUCCESS;
 }

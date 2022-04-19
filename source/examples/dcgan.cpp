@@ -198,4 +198,6 @@ int main(int argc, const char *argv[]) {
     }
 
     std::cout << "Training complete!" << std::endl;
+
+    return EXIT_SUCCESS;
 }

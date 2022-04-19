@@ -11,10 +11,10 @@ void testCRNN() {
     crnn->to(device);
     while (true) {
         // mixed precision link amp
-//        at::autocast::set_enabled(true);
+        at::autocast::set_enabled(true);
         crnn->forward(imgTensor);
-//        at::autocast::clear_cache();
-//        at::autocast::set_enabled(false);
+        at::autocast::clear_cache();
+        at::autocast::set_enabled(false);
     }
     auto output = crnn->forward(imgTensor);
     std::cout << "outSize=" << output.sizes() << std::endl;

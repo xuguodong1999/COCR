@@ -153,5 +153,5 @@ int main(int argc, char **argv) {
 
     } // end for loop
 
-    return (1);
+    return EXIT_SUCCESS;
 }

@@ -131,4 +131,6 @@ int main() {
     auto test_sample_mean_loss = running_loss / num_test_samples;
 
     std::cout << "Testset - Loss: " << test_sample_mean_loss << ", Accuracy: " << test_accuracy << '\n';
+
+    return EXIT_SUCCESS;
 }

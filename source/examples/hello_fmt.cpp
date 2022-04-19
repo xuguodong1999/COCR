@@ -14,5 +14,5 @@ int main(int argc, char **argv) {
     snprintf(a, 1024 + 1, "%3s%09d", "hello", 12345);
 //    snprintf(a, 1024 + 1, "%+60s", "hello, fmt");
     std::cout << a << std::endl;
-    return 0;
+    return EXIT_SUCCESS;
 }

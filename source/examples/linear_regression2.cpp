@@ -87,5 +87,5 @@ int main() {
     std::cout << "==> Actual function:\t"
               << poly_desc(W_target.view({-1}), b_target) << std::endl;
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -27,15 +27,15 @@ public:
 
     void keepIf(const std::function<bool(const point2f &)> &_cond);
 
-    HwStroke(HwController *_hwController = nullptr);
+    explicit HwStroke(HwController *_hwController = nullptr);
 
-    void paintTo(Mat &_canvas) const;
+    void paintTo(Mat &_canvas) const override;
 
-    std::optional<rectf> getBoundingBox() const;
+    std::optional<rectf> getBoundingBox() const override;
 
-    void rotateBy(float _angle, const point2f &_cent);
+    void rotateBy(float _angle, const point2f &_cent) override;
 
-    void moveBy(const point2f &_offset);
+    void moveBy(const point2f &_offset) override;
 
-    void mulK(float _kx, float _ky);
+    void mulK(float _kx, float _ky) override;
 };

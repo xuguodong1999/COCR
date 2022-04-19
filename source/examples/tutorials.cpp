@@ -1,7 +1,6 @@
 #include <iostream>
 
 // copy from https://www.cnblogs.com/yanghailin/p/12901586.html
-#pragma once
 
 #include <torch/cuda.h>
 #include <torch/nn/init.h>
@@ -937,5 +936,5 @@ void test_deal_mask_index22() {
 
 int main() {
     std::cout << "hello, world" << std::endl;
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -604,5 +604,5 @@ int main() {
 
     // build pass
     TestChapter2Section4();
-    return 0;
+    return EXIT_SUCCESS;
 }

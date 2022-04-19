@@ -10,13 +10,13 @@ const char *CIFAR100_ROOT = DATASET_PATH "/cifar100";
 const char *CIFAR10_ROOT = DATASET_PATH "/cifar10";
 
 struct TrainConfig {
-    int64_t BATCH_SIZE = 512;
+    int64_t BATCH_SIZE = 128;
     size_t MAX_EPOCHS = 200;
     double LR_BEGIN = 0.001, LR_CURRENT;
     size_t LR_CHANGE_TIMES = 10;
     double LR_DECAY_FACTOR = 0.8;
     size_t WORKER_NUM = 12;
-    size_t WIDTH = 96;
+    size_t WIDTH = 32;
 
     TrainConfig() {
         std::cout << std::fixed << std::setprecision(6);
@@ -78,7 +78,7 @@ void train_cifar(torch::Device &_device, const CifarType &_cifarType) {
             // Update number of correctly classified samples
             num_correct += prediction.eq(target).sum().item<int64_t>();
             // Calculate loss
-            auto loss = torch::nn::functional::nll_loss(output, target);
+            auto loss = torch::nn::functional::cross_entropy(output, target);
             // Update running loss
             running_loss += loss.item<double>() * data.size(0);
             // Backward pass and optimize
@@ -130,7 +130,7 @@ int main() {
         std::cerr << e.what() << std::endl;
         exit(-1);
     }
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void test() {
