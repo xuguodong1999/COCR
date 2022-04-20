@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cocr/object_detector.h"
+#include "ocv/mat.h"
 
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core/mat.hpp>
@@ -74,10 +75,10 @@ public:
 
     }
 
-    std::pair<cv::Mat, std::vector<DetectorObject>>
-    detect(const cv::Mat &_originImage) override {
+    std::pair<Mat, std::vector<DetectorObject>> detect(const Mat &_originImage) override {
         cv::Mat blob;
-        cv::Mat input = preProcess(_originImage);
+        Mat input0 = preProcess(_originImage);
+        cv::Mat input = *(input0.getHolder());
         cv::dnn::blobFromImage(input, blob, 1 / 255.0);
         net.setInput(blob);
         std::vector<cv::Mat> outputBlobs;
@@ -113,6 +114,6 @@ public:
             objects.emplace_back(boxes[i].x, boxes[i].y, boxes[i].width, boxes[i].height,
                                  labels[i], confs[i]);
         }
-        return {input, objects};
+        return {input0, objects};
     }
 };

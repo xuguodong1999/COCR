@@ -28,7 +28,7 @@ linkBoost(bgl_example)
 
 addNNExecutable(conv_forward)
 addNNExecutable(crnn)
-addNNExecutable(custom-dataset)
+addNNExecutable(custom_dataset)
 addNNExecutable(data_loader_compare)
 addNNExecutable(dcgan)
 

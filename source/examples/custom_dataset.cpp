@@ -1,10 +1,13 @@
-#include <opencv2/opencv.hpp>
-#include <stdint.h>
-#include <torch/torch.h>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <random>
+
+#include <torch/torch.h>
+#include <opencv2/opencv.hpp>
 
 struct Options {
     int image_size = 224;
@@ -87,8 +90,8 @@ std::pair<Data, Data> readInfo() {
             break;
     }
 
-    std::random_shuffle(train.begin(), train.end());
-    std::random_shuffle(test.begin(), test.end());
+    std::shuffle(train.begin(), train.end(), std::default_random_engine());
+    std::shuffle(test.begin(), test.end(), std::default_random_engine());
     return std::make_pair(train, test);
 }
 

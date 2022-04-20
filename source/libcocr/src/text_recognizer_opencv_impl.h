@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cocr/text_recognizer.h"
+#include "ocv/mat.h"
 
 #include <opencv2/core/mat.hpp>
 #include <opencv2/dnn.hpp>
@@ -21,15 +22,16 @@ class TextRecognizerOpenCVImpl : public TextRecognizer {
     std::shared_ptr<cv::dnn::TextRecognitionModel> model;
     int dstWidth;
 
-    cv::Mat preProcess(const cv::Mat &_src) override {
-        cv::Mat srcResized = TextRecognizer::preProcess(_src);
+    Mat preProcess(const Mat &_src) override {
+        Mat srcResized0 = TextRecognizer::preProcess(_src);
+        cv::Mat& srcResized = *(srcResized0.getHolder());
         if (srcResized.cols < dstWidth) {
             cv::hconcat(srcResized, cv::Mat(dstHeight, dstWidth - srcResized.cols, CV_8UC1, cv::Scalar(255)),
                         srcResized);
         } else if (srcResized.cols > dstWidth) {
             cv::resize(srcResized, srcResized, cv::Size(dstWidth, dstHeight), 0, 0, cv::INTER_CUBIC);
         }
-        return srcResized;
+        return srcResized0;
     }
 
 
@@ -65,9 +67,9 @@ public:
         model = nullptr;
     }
 
-    std::pair<std::string, std::vector<float>> recognize(const cv::Mat &_originImage) override {
-        cv::Mat srcResized = preProcess(_originImage);
-        std::string recognitionResult = model->recognize(srcResized);
+    std::pair<std::string, std::vector<float>> recognize(const Mat &_originImage) override {
+        Mat srcResized = preProcess(_originImage);
+        std::string recognitionResult = model->recognize(*(srcResized.getHolder()));
         std::vector<float> scores(recognitionResult.size(), -1);
         return {recognitionResult, scores};
     }
