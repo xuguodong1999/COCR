@@ -9,13 +9,14 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
+    engine.addImportPath(QStringLiteral(QML_PREFIX));
+    const QUrl url(QStringLiteral(QML_PREFIX "main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
                 if (!obj && url == objUrl)
-                    QCoreApplication::exit(-1);
+                    QGuiApplication::exit(EXIT_FAILURE);
             }, Qt::QueuedConnection);
     engine.load(url);
 
-    return app.exec();
+    return QGuiApplication::exec();
 }
