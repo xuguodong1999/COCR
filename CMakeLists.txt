@@ -43,7 +43,7 @@ set(DEV_DEPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty CACHE INTERNAL "")
 set(openbabel_QRC ${DEV_DEPS_DIR}/libopenbabel/data/openbabel.qrc CACHE INTERNAL "")
 
 # path to header-only 3rdparty libraries
-set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/header-only CACHE INTERNAL "")
+set(DEV_HEADER_DIR ${DEV_DEPS_DIR}/include CACHE INTERNAL "")
 # other 3rdparty include dirs
 set(inchi_INCLUDE_DIR ${DEV_DEPS_DIR}/libinchi/include CACHE INTERNAL "")
 set(maeparser_INCLUDE_DIR ${DEV_DEPS_DIR}/libmaeparser/include CACHE INTERNAL "")
@@ -108,7 +108,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Dependencies.cmake)
 
 add_subdirectory(3rdparty)
 
-add_subdirectory(source)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_subdirectory(src)
 
 #if (BUILD_REFERENCES)
 #    add_subdirectory(3rdreference)
