@@ -1,5 +1,5 @@
 // Copyright 2020-present pytorch-cpp Authors
-#include "cifar10.h"
+#include "nn/datasets/cifar10.h"
 
 namespace {
 // CIFAR10 dataset description can be found at https://www.cs.toronto.edu/~kriz/cifar.html.

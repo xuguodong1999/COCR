@@ -1,5 +1,6 @@
 // Copyright 2020-present pytorch-cpp Authors
 #pragma once
+#include "els_nn_export.h"
 
 #include <torch/data/datasets/base.h>
 #include <torch/data/example.h>
@@ -11,7 +12,7 @@
 
 // CIFAR10 dataset
 // based on: https://github.com/pytorch/pytorch/blob/master/torch/csrc/api/include/torch/data/datasets/mnist.h.
-class CIFAR10 : public torch::data::datasets::Dataset<CIFAR10> {
+class ELS_NN_EXPORT CIFAR10 : public torch::data::datasets::Dataset<CIFAR10> {
 public:
     // The mode in which the dataset is loaded
     enum Mode {

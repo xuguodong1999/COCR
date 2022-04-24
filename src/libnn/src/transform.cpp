@@ -1,16 +1,19 @@
-/**
- * https://github.com/prabhuomkar/pytorch-cpp.git
- * Copyright 2020-present pytorch-cpp Authors
- */
+// Copyright 2020-present pytorch-cpp Authors
 #include "nn/transform.h"
+#include <torch/types.h>
 
-static double rand_double() {
-    return torch::rand(1)[0].item<double>();
-}
+using torch::indexing::Slice;
+using torch::indexing::Ellipsis;
 
-static int64_t rand_int(int64_t max) {
-    return torch::randint(max, 1)[0].item<int64_t>();
-}
+namespace {
+    double rand_double() {
+        return torch::rand(1)[0].item<double>();
+    }
+
+    int64_t rand_int(int64_t max) {
+        return torch::randint(max, 1)[0].item<int64_t>();
+    }
+}  // namespace
 
 // RandomHorizontalFlip
 RandomHorizontalFlip::RandomHorizontalFlip(double p) : p_(p) {}
@@ -44,8 +47,7 @@ torch::Tensor RandomCrop::operator()(torch::Tensor input) {
     auto height_offset = rand_int(height_offset_length);
     auto width_offset = rand_int(width_offset_length);
 
-    return input.index(
-            {torch::indexing::Ellipsis,
-             torch::indexing::Slice(height_offset, height_offset + size_[0]),
-             torch::indexing::Slice(width_offset, width_offset + size_[1])});
+    return input.index({Ellipsis,
+                        Slice(height_offset, height_offset + size_[0]),
+                        Slice(width_offset, width_offset + size_[1])});
 }

@@ -7,15 +7,12 @@
 #include <torch/cuda.h>
 #include <iostream>
 #include <iomanip>
-#include "resnet.h"
-#include "cifar10.h"
-#include "transform.h"
+#include "nn/resnet.h"
+#include "nn/datasets/cifar10.h"
+#include "nn/transform.h"
 
-using resnet::ResNet;
-using resnet::ResidualBlock;
-using transform::ConstantPad;
-using transform::RandomCrop;
-using transform::RandomHorizontalFlip;
+const char *CIFAR100_ROOT = DATASET_PATH "/cifar100";
+const char *CIFAR10_ROOT = DATASET_PATH "/cifar10";
 
 int main() {
     std::cout << "Deep Residual Network\n\n";
@@ -27,13 +24,13 @@ int main() {
 
     // Hyper parameters
     const int64_t num_classes = 10;
-    const int64_t batch_size = 100;
-    const size_t num_epochs = 20;
+    const int64_t batch_size = 256;
+    const size_t num_epochs = 40;
     const double learning_rate = 0.001;
     const size_t learning_rate_decay_frequency = 8;  // number of epochs after which to decay the learning rate
     const double learning_rate_decay_factor = 1.0 / 3.0;
 
-    const std::string CIFAR_data_path = "../../../../data/cifar10/";
+    const std::string CIFAR_data_path{CIFAR10_ROOT};
 
     // CIFAR10 custom dataset
     auto train_dataset = CIFAR10(CIFAR_data_path)
@@ -53,14 +50,15 @@ int main() {
 
     // Data loader
     auto train_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
-            std::move(train_dataset), batch_size);
+            std::move(train_dataset), torch::data::DataLoaderOptions()
+                    .batch_size(batch_size).workers(8));
 
     auto test_loader = torch::data::make_data_loader<torch::data::samplers::SequentialSampler>(
             std::move(test_dataset), batch_size);
 
     // Model
     std::array<int64_t, 3> layers{2, 2, 2};
-    ResNet<ResidualBlock> model(layers, num_classes);
+    auto model = std::make_shared<ResNet>(layers, num_classes);
     model->to(device);
 
     // Optimizer
@@ -148,4 +146,5 @@ int main() {
     auto test_sample_mean_loss = running_loss / num_test_samples;
 
     std::cout << "Testset - Loss: " << test_sample_mean_loss << ", Accuracy: " << test_accuracy << '\n';
+    return EXIT_SUCCESS;
 }
