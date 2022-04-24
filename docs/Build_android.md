@@ -12,11 +12,11 @@ sudo apt-get install glslang-dev
 cmake .. -G "Ninja" \
     -DQt5_DIR:PATH=~/shared/Qt/5.15.2/android/lib/cmake/Qt5 \
     -DCMAKE_TOOLCHAIN_FILE=~/Android/Sdk/ndk/21.4.7075529/build/cmake/android.toolchain.cmake \
-    -DANDROID_PLATFORM=30 \
+    -DANDROID_PLATFORM=25 \
     -DANDROID=ON \
     -DANDROID_ABI=armeabi-v7a \
     -DJAVA_HOME=~/shared/jdk1.8.0_30 \
-    -DANDROID_NATIVE_API_LEVEL=24 \
+    -DANDROID_NATIVE_API_LEVEL=25 \
     -DANDROID_NDK_MAJOR=21 \
     -DANDROID_BUILD_ABI_armeabi-v7a=ON \
     -DANDROID_DEPLOY_QT:FILEPATH=~/shared/Qt/5.15.2/android/bin/androiddeployqt \

@@ -244,7 +244,9 @@ public:
         try {
             net = std::make_shared<ncnn::Net>();
             net->opt.num_threads = numThread;
+#if defined(__ANDROID__) && __ANDROID_API__ >= 26
             net->opt.use_vulkan_compute = true;
+#endif
             net->opt.use_winograd_convolution = true;
             net->opt.use_sgemm_convolution = true;
             net->opt.use_fp16_packed = true;
