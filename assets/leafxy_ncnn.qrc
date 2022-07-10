@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>models/det8.fp16.param</file>
-        <file>models/det8.fp16.bin</file>
+        <file>models/yolo_3l_c8.param</file>
+        <file>models/yolo_3l_c8.bin</file>
         <file>models/crnn57.fp16.bin</file>
         <file>models/crnn57.fp16.param</file>
     </qresource>

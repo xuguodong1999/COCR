@@ -13,7 +13,8 @@
 #include <string>
 #include <memory>
 #include <vector>
-
+//#define USE_YOLOX
+#ifdef USE_YOLOX
 #define YOLOX_NMS_THRESH  0.45 // nms threshold
 #define YOLOX_CONF_THRESH 0.25 // threshold of bounding box prob
 
@@ -271,7 +272,6 @@ public:
                 return false;
             }
 
-            std::vector<Mat> outs;
             Mat emptyBlob(MatChannel::GRAY, DataType::UINT8, 32, 32);
             ncnn::Mat in = ncnn::Mat::from_pixels(
                     emptyBlob.getData(), ncnn::Mat::PIXEL_GRAY,
@@ -357,3 +357,116 @@ public:
         return {input, objects};
     }
 };
+#else
+
+class ObjectDetectorNcnnImpl : public ObjectDetector {
+    int numThread;
+
+    std::shared_ptr<ncnn::Net> net;
+
+public:
+    void setNumThread(int numThread) {
+        ObjectDetectorNcnnImpl::numThread = numThread;
+        if (net) { net->opt.num_threads = numThread; }
+    }
+
+    ObjectDetectorNcnnImpl() : numThread(4), net(nullptr) {
+
+    }
+
+    bool initModel(const std::string &_ncnnBin, const std::string &_ncnnParam, const int &_maxWidth) {
+        maxWidth = maxHeight = _maxWidth - sizeBase;
+        QFile cfgFile(_ncnnParam.c_str()), weightsFile(_ncnnBin.c_str());
+        if (!cfgFile.open(QIODevice::ReadOnly) || !weightsFile.open(QIODevice::ReadOnly)) {
+            qDebug() << "fail in QFile read" << _ncnnBin.c_str() << "and" << _ncnnParam.c_str();
+            return false;
+        }
+        QByteArray cfg = cfgFile.readAll();
+        cfgFile.close();
+        QByteArray weights = weightsFile.readAll();
+        weightsFile.close();
+
+        try {
+            net = std::make_shared<ncnn::Net>();
+            net->opt.num_threads = numThread;
+#if defined(__ANDROID__) && __ANDROID_API__ >= 26
+            net->opt.use_vulkan_compute = true;
+#endif
+            net->opt.use_winograd_convolution = true;
+            net->opt.use_sgemm_convolution = true;
+            net->opt.use_fp16_packed = true;
+            net->opt.use_fp16_storage = true;
+            net->opt.use_fp16_arithmetic = true;
+            net->opt.use_packing_layout = true;
+            net->opt.use_shader_pack8 = false;
+            net->opt.use_image_storage = false;
+            const unsigned char *cfgMem = (const unsigned char *) cfg.data();
+            ncnn::DataReaderFromMemory cfgReader(cfgMem);
+            int ret_param = net->load_param(cfgReader);
+            if (ret_param != 0) {
+                qDebug() << "net->load_param(cfgReader) dies";
+                return false;
+            }
+            const unsigned char *weightsMem = (const unsigned char *) weights.data();
+            ncnn::DataReaderFromMemory weightsReader(weightsMem);
+            int ret_bin = net->load_model(weightsReader);
+            if (ret_bin != 0) {
+                qDebug() << "net->load_model(weightsReader) dies";
+                return false;
+            }
+
+            Mat emptyBlob(MatChannel::GRAY, DataType::UINT8, 32, 32);
+            ncnn::Mat in = ncnn::Mat::from_pixels(
+                    emptyBlob.getData(), ncnn::Mat::PIXEL_GRAY,
+                    emptyBlob.getWidth(), emptyBlob.getHeight());
+            ncnn::Extractor ex = net->create_extractor();
+            ex.input("data", in);
+            ncnn::Mat out;
+            ex.extract("output", out);
+        } catch (std::exception &e) {
+            qDebug() << __FUNCTION__ << "catch" << e.what();
+            return false;
+        }
+        return true;
+    }
+
+    void freeModel() override {
+        net->clear();
+        net = nullptr;
+    }
+
+
+    std::pair<Mat, std::vector<DetectorObject>>
+    detect(const Mat &_originImage) override {
+        Mat input = preProcess(_originImage);
+        int img_w = input.getWidth();
+        int img_h = input.getHeight();
+        ncnn::Mat in = ncnn::Mat::from_pixels(
+                input.getData(), ncnn::Mat::PIXEL_GRAY,
+                img_w, img_h);
+
+        const float mean_vals[3] = {0, 0, 0};
+        const float norm_vals[3] = {1 / 255.f, 1 / 255.f, 1 / 255.f};
+        in.substract_mean_normalize(mean_vals, norm_vals);
+        ncnn::Extractor ex = net->create_extractor();
+        ex.input("data", in);
+        ncnn::Mat out;
+        ex.extract("output", out);
+        std::vector<DetectorObject> objects;
+        for (int i = 0; i < out.h; i++) {
+            const float *vec = out.row(i);
+            int label = vec[0] - 1;
+            if (DetectorObject::isValidLabel(label)) {
+                float x = vec[2] * img_w;
+                float y = vec[3] * img_h;
+                float w = vec[4] * img_w - x;
+                float h = vec[5] * img_h - y;
+                float prob = vec[1];
+                objects.emplace_back(x, y, w, h, label, prob);
+            }
+        }
+        return {input, objects};
+
+    }
+};
+#endif

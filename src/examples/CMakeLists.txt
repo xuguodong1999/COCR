@@ -19,8 +19,6 @@ function(addNNExecutable CPP_NAME)
             "DATASET_PATH=\"${DEV_ASSETS_DIR}/datasets\"")
 endfunction()
 
-addExecutable(test_header test_header.cpp)
-
 addNNExecutable(autograd)
 addNNExecutable(autograd2)
 

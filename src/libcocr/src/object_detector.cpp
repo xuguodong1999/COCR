@@ -53,8 +53,8 @@ std::shared_ptr<ObjectDetector> ObjectDetector::MakeInstance() {
     }
     qDebug() << "init opencv detector success";
 #else
-    std::string ncnnDetModel = MODEL_DIR + std::string("/det8.fp16.bin");
-    std::string ncnnDetModelCfg = MODEL_DIR + std::string("/det8.fp16.param");
+    std::string ncnnDetModel = MODEL_DIR + std::string("/yolo_3l_c8.bin");
+    std::string ncnnDetModelCfg = MODEL_DIR + std::string("/yolo_3l_c8.param");
     auto detector = std::make_shared<ObjectDetectorNcnnImpl>();
     detector->setNumThread(4);
     if (!detector->initModel(ncnnDetModel, ncnnDetModelCfg, 1280)) {
