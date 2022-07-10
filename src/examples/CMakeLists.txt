@@ -43,9 +43,7 @@ addExecutable(eigen3_cn_doc_ch4 eigen3_cn_doc_ch4.cpp)
 addNNExecutable(gan)
 
 addExecutable(hello_eigen3 hello_eigen3.cpp)
-addExecutable(hello_fdeep hello_fdeep.cpp)
 addExecutable(hello_fmt hello_fmt.cpp)
-addExecutable(hello_rx hello_rx.cpp)
 
 addNNExecutable(hello_torch)
 addNNExecutable(linear_regression)

@@ -30,7 +30,6 @@ option(BUILD_SHARED_LIBS "Build as shared or static libs" ON)
 
 # mainly for 3rdparty tests and tutorials
 option(BUILD_TESTS "Boost is required to build 3rd tests" OFF)
-option(BUILD_REFERENCES "Libtorch is required to build 3rdparty code examples" OFF)
 
 # android apk name
 set(APP_NAME leafxy CACHE INTERNAL "")
@@ -94,13 +93,12 @@ if (NOT WASM AND NOT ANDROID AND NOT IOS)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 else ()
     # disable unrelated project for wasm and android
-    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS, BUILD_PRIVATE and BUILD_REFERENCES set to OFF")
+    message(WARNING "Target non-desktop platform, USE_OPENCV_DNN, BUILD_DATA_GEN, BUILD_TESTS and BUILD_PRIVATE set to OFF")
     set(USE_OPENCV_DNN OFF)
 
     set(BUILD_DATA_GEN OFF)
     set(BUILD_TESTS OFF)
     set(BUILD_PRIVATE OFF)
-    set(BUILD_REFERENCES OFF)
 endif ()
 
 # build ncnn from source
@@ -110,7 +108,3 @@ add_subdirectory(3rdparty)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_subdirectory(src)
-
-#if (BUILD_REFERENCES)
-#    add_subdirectory(3rdreference)
-#endif ()
