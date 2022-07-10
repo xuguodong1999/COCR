@@ -55,8 +55,8 @@ public:
             model->setVocabulary(wordVec);
             model->setInputParams(normValues, cv::Size(dstWidth, dstHeight), cv::Scalar(meanValues));
             // FIXME: opencv_dnn's crnn work at fixed image width, which is slow for most cases
-            model->setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-            model->setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+            model->setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+            model->setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
         } catch (...) {
             return false;
         }

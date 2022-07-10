@@ -50,8 +50,8 @@ public:
                 net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
             }
 #else
-            net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-            net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+            net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+            net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
 #endif // !USE_OPENVINO
             auto outLayers = net.getUnconnectedOutLayers();
             auto layersNames = net.getLayerNames();
