@@ -15,15 +15,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
+#if defined(__CYGWIN__) || defined(__MINGW32__)
+#include <openbabel/op.h>
 
 namespace OpenBabel
 {
-#if defined(__CYGWIN__) || defined(__MINGW32__)
   // macro to implement static OBPlugin::PluginMapType& Map()
   PLUGIN_CPP_FILE(OBOp)
-#endif
 }
-
+#endif
 
 //! \file op.cpp
 //! \brief Base plugin class for operations on molecules

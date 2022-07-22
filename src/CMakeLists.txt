@@ -1,14 +1,8 @@
-project(dev_tools LANGUAGES CXX)
-
 include(${CMAKE_SOURCE_DIR}/cmake/Utils.cmake)
 
-find_package(OpenCV QUIET)
+find_package(OpenCV REQUIRED)
 find_package(Torch QUIET)
-find_package(Qt5 COMPONENTS Widgets QUIET)
-
-CHECK_OPENCV(${PROJECT_NAME})
-#CHECK_LIBTORCH(${PROJECT_NAME})
-CHECK_QT(${PROJECT_NAME} "Widgets")
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 ## els modules are linked with PUBLIC config
 ## els and 3rdparty modules are linked with PRIVATE config
@@ -70,13 +64,15 @@ linkCoordgenlibs(els_data)
 linkQt(els_data "Gui")
 
 # nn module
-makeLibrary(libnn els_nn)
-addLibraryDeps(els_nn els_base)
-addLibraryDeps(els_nn els_math)
-addLibraryDeps(els_nn els_ocv)
-linkLibtorch(els_nn)
-linkOpenCV(els_nn)
-linkQt(els_nn "Gui")
+if (Torch_FOUND)
+    makeLibrary(libnn els_nn)
+    addLibraryDeps(els_nn els_base)
+    addLibraryDeps(els_nn els_math)
+    addLibraryDeps(els_nn els_ocv)
+    linkLibtorch(els_nn)
+    linkOpenCV(els_nn)
+    linkQt(els_nn "Gui")
+endif (Torch_FOUND)
 
 # executable
 add_subdirectory(app)

@@ -26,7 +26,7 @@ GNU General Public License for more details.
 
 #include <cstdlib>
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__CYGWIN__) || defined(__MINGW32__)
 #define strcasestr _strcasestr
 //Possible replacement for strcasestr.
 const char *_strcasestr(const char *s, const char *pattern);

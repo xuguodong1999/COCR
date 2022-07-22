@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(dev)
+project(COCR)
 
 enable_testing()
 
