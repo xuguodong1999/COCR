@@ -1,0 +1,11 @@
+cmake-build-*/
+__pycache__
+.idea/
+.vscode/
+.DS_Store
+.vs/
+node_modules
+yarn.lock
+*.log
+*.pdf
+pnpm-lock.yaml
