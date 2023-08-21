@@ -1,0 +1,12 @@
+*/src/main/java/org/qtproject/qt/android/bindings/*.java
+.idea/
+.vscode/
+.gradle/
+build/
+.cxx/
+.externalNativeBuild/
+captures/
+jniLibs/
+libs
+local.properties
+.DS_Store

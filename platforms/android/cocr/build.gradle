@@ -1,0 +1,151 @@
+plugins {
+    id 'com.android.application'
+}
+def androidSdkDir = android.getSdkDirectory().getAbsolutePath()
+
+// Qt BEGIN
+def qtAndroidPath = QT_ANDROID_PATH.toString()
+def qtSdkABI = QT_ANDROID_ABI.toString()
+def qtHostPath = QT_HOST_PATH.toString()
+try {
+    assert (new File(qtAndroidPath)).exists()
+    assert (new File(qtHostPath)).exists()
+    println('Build ABI: ' + qtSdkABI)
+    println('Use Android SDK: ' + androidSdkDir)
+    println('Use Qt Android SDK: ' + qtAndroidPath)
+    println('Use Qt Host SDK : ' + qtHostPath)
+} catch (Exception ignored) {
+    println(project.rootDir + "/gradle.properties" + ' is not a valid config, see examples below:')
+    println('FIXME: write "QT_HOST_PATH=/path/to/Qt/6.5.2/mingw_64" to gradle.properties')
+    println('FIXME: write "QT_ANDROID_ABI=arm64-v8a" to gradle.properties')
+    println('FIXME: write "QT_ANDROID_PATH=/path/to/Qt/6.5.2/android_arm64_v8a" to gradle.properties')
+    throw ignored
+}
+task copyQtJar(type: Copy) {
+    from qtAndroidPath + '/jar'
+    into 'src/main/libs'
+}
+task copyQtJavaSource(type: Copy) {
+    from qtAndroidPath + '/src/android/java/src'
+    into 'src/main/java'
+}
+task copyQtPlugin(type: Copy) {
+    from(qtAndroidPath + '/plugins/platforms') {
+        include '*.so'
+    }
+    from(qtAndroidPath + '/plugins/geometryloaders') {
+        include '*.so'
+    }
+    from(qtAndroidPath + '/plugins/imageformats') {
+        include '*.so'
+    }
+    from(qtAndroidPath + '/plugins/sceneparsers') {
+        include '*.so'
+    }
+    from(qtAndroidPath + '/plugins/renderers') {
+        include '*.so'
+    }
+    from(qtAndroidPath + '/plugins/networkinformation') {
+        include '*.so'
+    }
+    from(qtAndroidPath + '/plugins/tls') {
+        include '*.so'
+    }
+    from(qtAndroidPath + '/lib') {
+        include 'libQt6Test_arm64-v8a.so'
+        include 'libQt6ShaderTools_arm64-v8a.so'
+    }
+    into 'src/main/jniLibs/arm64-v8a/'
+}
+// Qt END
+
+android {
+    namespace 'io.github.xuguodong1999.qtapp'
+    compileSdk 33
+    ndkVersion NDK_VERSION.toString()
+    // extract native libraries to /lib/arm64/
+    packagingOptions.jniLibs.useLegacyPackaging true
+    defaultConfig {
+        applicationId "io.github.xuguodong1999.qtapp"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_shared',
+                        '-DCMAKE_PREFIX_PATH:PATH=' + qtAndroidPath,
+                        '-DCMAKE_FIND_ROOT_PATH:PATH=' + qtAndroidPath,
+                        '-DQT_HOST_PATH:PATH=' + qtHostPath,
+                        '-DBUILD_SHARED_LIBS:BOOL=ON',
+                        '-DXGD_BUILD_WITH_GRADLE:BOOL=ON',
+                        '-DANDROID_SDK_ROOT:PATH=' + androidSdkDir,
+                        '-DANDROID_NDK:PATH=' + androidSdkDir + '/ndk/' + NDK_VERSION.toString()
+                abiFilters qtSdkABI
+                targets 'COCR'
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    externalNativeBuild {
+        cmake {
+            path file(rootDir.absolutePath + '/../../CMakeLists.txt')
+            version '3.22.1'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    tasks.withType(JavaCompile) {
+        // Qt
+        options.incremental = true
+    }
+    lintOptions {
+        abortOnError false
+    }
+    aaptOptions {
+        // Qt
+        noCompress 'rcc'
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.caverock:androidsvg-aar:1.4'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    // Qt
+    implementation fileTree(dir: 'src/main/libs', include: ['*.jar', '*.aar'])
+    implementation 'androidx.test:rules:1.5.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+afterEvaluate {
+    tasks.matching {
+        it.name.startsWith('javaPreCompile')
+    }.each { task ->
+        {
+            task.dependsOn(copyQtJar)
+            task.dependsOn(copyQtJavaSource)
+            task.dependsOn(copyQtPlugin)
+        }
+    }
+}
