@@ -1,0 +1,46 @@
+{
+  "name": "@xgd/cmake-builder",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "cmake-build": "ts-node ./src/ts-cmake/cmake-build.ts --config",
+    "build-linux-tire1": "npm run build-linux-gcc-shared && npm run build-linux-mxe-w64 && npm run build-linux-emcc && npm run build-linux-ndk-shared",
+    "build-linux-tire2": "npm run build-linux-gcc-static && npm run build-linux-ndk-static && npm run build-linux-emcc-node",
+    "build-linux-wine-msvc": "npm run build-linux-msvc-shared && npm run build-linux-msvc-static",
+    "build-linux-clang": "npm run build-linux-clang-shared && npm run build-linux-clang-static",
+    "build-win-tire1": "npm run build-win-msvc-shared && npm run build-win-msvc-static && npm run build-win-ndk-shared && npm run build-win-mingw-static",
+    "build-win-all": "npm run build-win-msvc-shared && npm run build-win-msvc-static && npm run build-win-emcc && npm run build-win-ndk-shared && npm run build-win-mingw-static",
+    "build-wsl-all": "npm run build-linux-gcc-shared && npm run build-linux-gcc-static && npm run build-linux-mxe-w64",
+    "build-apple-all": "npm run build-apple-clang-shared && npm run build-apple-emcc && npm run build-apple-clang-static-arm && npm run build-apple-clang-static-x86",
+    "build-linux-emcc": "npm run cmake-build ./src/cfg-linux/emcc.ts",
+    "build-linux-mxe-w64": "npm run cmake-build ./src/cfg-linux/mxe-w64.ts",
+    "build-linux-gcc-shared": "npm run cmake-build ./src/cfg-linux/gcc-shared.ts",
+    "build-linux-ndk-shared": "npm run cmake-build ./src/cfg-linux/ndk-shared.ts",
+    "build-linux-gcc-static": "npm run cmake-build ./src/cfg-linux/gcc-static.ts",
+    "build-linux-ndk-static": "npm run cmake-build ./src/cfg-linux/ndk-static.ts",
+    "build-linux-msvc-shared": "npm run cmake-build ./src/cfg-linux/msvc-shared.ts",
+    "build-linux-msvc-static": "npm run cmake-build ./src/cfg-linux/msvc-static.ts",
+    "build-linux-emcc-node": "npm run cmake-build ./src/cfg-linux/emcc-node.ts",
+    "build-linux-clang-shared": "npm run cmake-build ./src/cfg-linux/clang-shared.ts",
+    "build-linux-clang-static": "npm run cmake-build ./src/cfg-linux/clang-static.ts",
+    "build-win-emcc": "npm run cmake-build ./src/cfg-win/emcc.ts",
+    "build-win-ndk-shared": "npm run cmake-build ./src/cfg-win/ndk-shared.ts",
+    "build-win-ndk-static": "npm run cmake-build ./src/cfg-win/ndk-static.ts",
+    "build-win-mingw-static": "npm run cmake-build ./src/cfg-win/mingw-static.ts",
+    "build-win-msvc-shared": "npm run cmake-build ./src/cfg-win/msvc-2022-shared.ts",
+    "build-win-msvc-static": "npm run cmake-build ./src/cfg-win/msvc-2022-static.ts",
+    "build-apple-emcc": "npm run cmake-build ./src/cfg-apple/emcc.ts",
+    "build-apple-clang-shared": "npm run cmake-build ./src/cfg-apple/clang-shared.ts",
+    "build-apple-clang-static-arm": "npm run cmake-build ./src/cfg-apple/clang-static-arm.ts",
+    "build-apple-clang-static-x86": "npm run cmake-build ./src/cfg-apple/clang-static-x86.ts"
+  },
+  "keywords": [],
+  "author": "xuguodong1999",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/yargs": "^17.0.24"
+  }
+}

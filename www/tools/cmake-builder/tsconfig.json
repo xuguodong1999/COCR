@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "downlevelIteration": true
+  },
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
