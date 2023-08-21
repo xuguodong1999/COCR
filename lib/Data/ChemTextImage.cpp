@@ -118,9 +118,9 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
         }
         auto [buffer, label] = getSample(text, textType);
         auto img = CvUtil::BufferToGrayMat(buffer);
-        std::string filename = std::to_string(idx) + ".jpg";
+        std::string filename = std::to_string(idx) + ".png";
         std::string file_path = topDir + trainDir + imgDir + filename;
-        img.saveJPG(file_path);
+        img.savePNG(file_path);
         trainOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);
@@ -148,9 +148,9 @@ void CRNNDataGenerator::dump(const size_t &_trainNum, const size_t &_testNum) {
         }
         auto [buffer, label] = getSample(text, textType);
         auto img = CvUtil::BufferToGrayMat(buffer);
-        std::string filename = std::to_string(idx) + ".jpg";
+        std::string filename = std::to_string(idx) + ".png";
         std::string file_path = topDir + testDir + imgDir + filename;
-        img.saveJPG(file_path);
+        img.savePNG(file_path);
         testOfsm << filename << "\t" << label << "\n";
 //        char a[100];
 //        sprintf(a, imgKey, idx);

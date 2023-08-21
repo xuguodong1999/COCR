@@ -112,7 +112,7 @@ public:
 
     std::vector<unsigned char> toBuffer() const;
 
-    bool saveJPG(const std::string &fileName) const;
+    bool savePNG(const std::string &fileName) const;
 
     void display(const std::string &name = "") const;
 };

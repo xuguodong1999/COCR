@@ -188,14 +188,14 @@ A chemical structure generator for handwriting cases is written to provide train
 2. For CLI, add `-yolo` `[number of samples]` `[an empty, existing directory path]`, for example,
 
 ```shell
-# generate 10 object detection samples under ./yolo/
+# generate 10 object detection samples under ./yolo_data/
 ./COCRDataGen -yolo 10 ./
 ```
 
 3. For CLI, add `-crnn` `[number of samples]` `[an empty, existing directory path]`, for example,
 
 ```shell
-# generate 10 text recognition samples under ./crnn/
+# generate 10 text recognition samples under ./crnn_data/
 ./COCRDataGen -crnn 10 ./
 ```
 

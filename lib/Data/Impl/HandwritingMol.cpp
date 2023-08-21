@@ -403,7 +403,7 @@ void HwMol::dumpAsDarknet(const std::string &_imgPath, const std::string &_label
         if (StdUtil::byProb(hwController->getRevertColorProb())) {// 反转颜色
             resImg = CvUtil::RevertColor(resImg);
         }
-        resImg.saveJPG(_imgPath + suffix + ".jpg");
+        resImg.savePNG(_imgPath + suffix + ".png");
         std::ofstream ofsm(_labelPath + suffix + ".txt");
         ofsm.precision(6);
         if (!ofsm.is_open()) {

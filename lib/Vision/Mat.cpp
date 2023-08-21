@@ -235,11 +235,11 @@ std::vector<unsigned char> Mat::toBuffer() const {
     std::vector<uchar> buffer;
     if (!holder) { return buffer; }
     auto &canvas = *holder;
-    cv::imencode(".jpg", *holder, buffer, {cv::IMWRITE_JPEG_QUALITY, 100});
+    cv::imencode(".png", *holder, buffer, {cv::IMWRITE_PNG_COMPRESSION, 9});
     return buffer;
 }
 
-bool Mat::saveJPG(const std::string &fileName) const {
+bool Mat::savePNG(const std::string &fileName) const {
     // 60 + StdUtil::randInt() % 40 for crnn test sample, yolo all
     // 70 + StdUtil::randInt() % 30 for crnn train sample
     return cv::imwrite(fileName, *holder, {cv::IMWRITE_JPEG_QUALITY, 60 + StdUtil::randInt() % 40});
