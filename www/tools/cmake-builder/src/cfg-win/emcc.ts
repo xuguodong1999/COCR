@@ -42,6 +42,7 @@ const config: ICMakeBuildConfig = {
     config: {
         generator: 'Ninja',
         options: [
+            'CMAKE_NINJA_FORCE_RESPONSE_FILE=1',
             'BUILD_SHARED_LIBS:BOOL=OFF',
             'CMAKE_BUILD_TYPE:STRING=Release',
             `CMAKE_TOOLCHAIN_FILE:FILEPATH=${QT_ROOT}/lib/cmake/Qt6/qt.toolchain.cmake`,
