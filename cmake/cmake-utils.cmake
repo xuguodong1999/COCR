@@ -423,7 +423,7 @@ function(xgd_disable_warnings TARGET)
 endfunction()
 
 function(xgd_target_global_options TARGET)
-    cmake_parse_arguments(param "" "CXX_STANDARD" "" ${ARGN})
+    cmake_parse_arguments(param "" "CXX_STANDARD;WITH_NVCC" "" ${ARGN})
     set(_XGD_COMPILE_OPTIONS "")
     set(_XGD_COMPILE_DEFINITIONS "")
     set(_XGD_LINK_OPTIONS "")
@@ -458,7 +458,8 @@ function(xgd_target_global_options TARGET)
                 -sDEMANGLE_SUPPORT=1
                 -sASYNCIFY
                 -sPTHREAD_POOL_SIZE_STRICT=0
-                -sSAFE_HEAP=1
+                # cause quick3d mouse event crash, reason unknown yet.
+                # -sSAFE_HEAP=1
                 # -sSINGLE_FILE=1
                 -sTOTAL_MEMORY=1024MB
                 -sTOTAL_STACK=4MB
@@ -523,7 +524,11 @@ function(xgd_target_global_options TARGET)
     endif ()
 
     if (_XGD_COMPILE_DEFINITIONS)
-        target_compile_definitions(${TARGET} PRIVATE $<$<NOT:$<COMPILE_LANGUAGE:CUDA>>:${_XGD_COMPILE_DEFINITIONS}>)
+        if (param_WITH_NVCC)
+            target_compile_definitions(${TARGET} PRIVATE $<$<NOT:$<COMPILE_LANGUAGE:CUDA>>:${_XGD_COMPILE_DEFINITIONS}>)
+        else ()
+            target_compile_definitions(${TARGET} PRIVATE ${_XGD_COMPILE_DEFINITIONS})
+        endif ()
     endif ()
     if (_XGD_COMPILE_OPTIONS)
         target_compile_options(${TARGET} PRIVATE $<$<NOT:$<COMPILE_LANGUAGE:CUDA>>:${_XGD_COMPILE_OPTIONS}>)
@@ -565,7 +570,7 @@ function(xgd_add_library TARGET)
     # xgd_add_library(your-awesome-target SRC_DIRS [...] SRC_FILES [...] INCLUDE_DIRS [...] PRIVATE_INCLUDE_DIRS [...])
     cmake_parse_arguments(
             param
-            "STATIC;SHARED;OBJECT"
+            "STATIC;SHARED;OBJECT;WITH_NVCC"
             ""
             "SRC_DIRS;SRC_FILES;INCLUDE_DIRS;PRIVATE_INCLUDE_DIRS;EXCLUDE_SRC_FILES;EXCLUDE_REGEXES"
             ${ARGN}
@@ -819,7 +824,7 @@ function(xgd_add_executable TARGET)
     cmake_parse_arguments(
             param
             "BUNDLE_QT_GUI"
-            ""
+            "WITH_NVCC"
             "SRC_DIRS;SRC_FILES;INCLUDE_DIRS;EXCLUDE_SRC_FILES;EXCLUDE_REGEXES"
             ${ARGN}
     )
@@ -885,7 +890,7 @@ function(xgd_add_executable TARGET)
         endif ()
     endif ()
     target_include_directories(${TARGET} PRIVATE ${param_INCLUDE_DIRS})
-    xgd_target_global_options(${TARGET})
+    xgd_target_global_options(${TARGET} WITH_NVCC "${param_WITH_NVCC}")
     set_target_properties(${TARGET} PROPERTIES BUNDLE_QT_GUI "${param_BUNDLE_QT_GUI}")
     if (ANDROID AND param_BUNDLE_QT_GUI)
         # expose main function
