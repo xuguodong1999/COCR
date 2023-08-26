@@ -45,7 +45,9 @@ if (NOT DEFINED XGD_WASM_ENV)
     set(XGD_WASM_ENV "" CACHE STRING "param passed to -sENVIRONMENT")
 endif ()
 if (NOT DEFINED XGD_QT_MODULES)
-    set(XGD_QT_MODULES "Core;Gui;OpenGL;Widgets;Test" CACHE STRING "")
+    set(XGD_QT_MODULES
+            "Core;Gui;OpenGL;Widgets;Test"
+            CACHE STRING "")
 endif ()
 if (NOT DEFINED XGD_OPTIONAL_QT_MODULES)
     set(XGD_OPTIONAL_QT_MODULES "3DCore;3DExtras" CACHE STRING "")

@@ -10,7 +10,6 @@ xgd_add_library(
 xgd_generate_export_header(${PROJECT_NAME} ${PROJECT_NAME} ".h")
 xgd_link_libraries(${PROJECT_NAME}
         PRIVATE
-        openbabel spdlog spdlog_stream
+        openbabel spdlog spdlog_stream boost_algorithm
         PUBLIC
-        xgd_base xgd_math
-        boost_header)
+        xgd_base xgd_math)

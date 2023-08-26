@@ -103,7 +103,7 @@ macro(xgd_external_find_package)
         find_package(Torch QUIET)
         if (NOT Torch_FOUND)
             set(XGD_USE_TORCH OFF CACHE INTERNAL "" FORCE)
-            message(WARNING "XGD_USE_TORCH set to OFF:"
+            message(STATUS "XGD_USE_TORCH set to OFF:"
                     " Torch_DIR=\"${Torch_DIR}\""
                     " Torch_FOUND=\"${Torch_FOUND}\"")
         else ()
@@ -112,6 +112,7 @@ macro(xgd_external_find_package)
         endif ()
     endif ()
 endmacro()
+
 function(xgd_external_find_runtime)
     if (NOT XGD_NODEJS_RUNTIME)
         find_program(_XGD_NODEJS_RUNTIME NAMES node QUIET)
@@ -141,7 +142,7 @@ function(xgd_external_find_runtime)
         find_program(_XGD_CCACHE_RUNTIME ccache QUIET)
         if (MSVC OR (EMSCRIPTEN AND CMAKE_HOST_WIN32) OR (NOT _XGD_CCACHE_RUNTIME)) # skip windows-rc, windows-emcc
             set(XGD_USE_CCACHE OFF CACHE INTERNAL "" FORCE)
-            message(WARNING "XGD_USE_CCACHE set to OFF:"
+            message(STATUS "XGD_USE_CCACHE set to OFF:"
                     " CCACHE_RUNTIME=\"${CCACHE_RUNTIME}\""
                     " MSVC=\"${MSVC}\" EMSCRIPTEN=\"${EMSCRIPTEN}\""
                     " CMAKE_HOST_WIN32=\"${CMAKE_HOST_WIN32}\"")
@@ -153,6 +154,7 @@ function(xgd_external_find_runtime)
     endif ()
 
 endfunction()
+
 function(xgd_external_check_env)
 
     include(CheckCXXCompilerFlag)
@@ -411,6 +413,9 @@ function(xgd_generate_shader TARGET)
     )
     add_dependencies(${TARGET} ${SUB_TARGET})
 endfunction()
+function(xgd_emcc_link_rawfs_net TARGET)
+    target_link_options(${TARGET} PRIVATE -lwebsocket.js -sNODERAWFS=1 -sENVIRONMENT=node)
+endfunction()
 
 # disable compiler warning ! only for 3rdparty libs
 function(xgd_disable_warnings TARGET)
@@ -602,7 +607,7 @@ function(xgd_add_library TARGET)
             PUBLIC ${param_INCLUDE_DIRS}
             PRIVATE ${param_PRIVATE_INCLUDE_DIRS}
     )
-    xgd_target_global_options(${TARGET})
+    xgd_target_global_options(${TARGET} WITH_NVCC "${param_WITH_NVCC}")
     xgd_exclude_from_all(${TARGET})
 endfunction()
 

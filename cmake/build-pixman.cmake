@@ -2,7 +2,7 @@
 set(ROOT_DIR ${XGD_THIRD_PARTY_DIR}/pixman-src/pixman/pixman)
 set(INC_DIR ${ROOT_DIR})
 set(SRC_DIR ${ROOT_DIR})
-set(GEN_DIR ${CMAKE_BINARY_DIR}/generated/pixman/include)
+set(GEN_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/pixman/include)
 set(EXCLUDE_REGEXES "")
 if (NOT XGD_OPT_ARCH_MIPS)
     list(APPEND EXCLUDE_REGEXES "(.*)-mips-(.*)")

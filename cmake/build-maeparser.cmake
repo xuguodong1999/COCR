@@ -8,5 +8,7 @@ xgd_add_library(
         PRIVATE_INCLUDE_DIRS ${SRC_DIR}
         INCLUDE_DIRS ${INC_DIR}
 )
-xgd_link_libraries(maeparser PRIVATE boost_iostreams boost_header)
+xgd_link_libraries(maeparser
+        PRIVATE boost_iostreams boost_spirit boost_algorithm
+        PUBLIC boost_dynamic_bitset)
 xgd_generate_export_header(maeparser "maeparser" ".hpp")

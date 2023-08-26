@@ -25,4 +25,5 @@ xgd_add_library(
         SRC_FILES ${SRC_DIR}/benchmark_main.cc
         PRIVATE_INCLUDE_DIRS ${INC_DIR}
 )
+target_compile_definitions(benchmark_main PRIVATE "BENCHMARK_STATIC_DEFINE")
 xgd_link_benchmark(benchmark_main)

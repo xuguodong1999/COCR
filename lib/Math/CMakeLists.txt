@@ -8,8 +8,5 @@ xgd_add_library(
 xgd_generate_export_header(${PROJECT_NAME} ${PROJECT_NAME} ".h")
 
 xgd_link_libraries(${PROJECT_NAME}
-        PRIVATE
-        spdlog_stream xgd_base
-        spdlog
-        PUBLIC
-        boost_header)
+        PRIVATE spdlog_stream xgd_base spdlog
+        PUBLIC boost_multiprecision)

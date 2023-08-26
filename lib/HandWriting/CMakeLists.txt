@@ -10,7 +10,6 @@ xgd_link_libraries(${PROJECT_NAME}
         PRIVATE
         spdlog
         PUBLIC
-        xgd_base xgd_vision xgd_math spdlog_stream
-        boost_header)
+        xgd_base xgd_vision xgd_math spdlog_stream)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "XGD_ASSET_DIR=\"${CMAKE_SOURCE_DIR}/assets\"")

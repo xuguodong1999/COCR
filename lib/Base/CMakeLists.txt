@@ -9,8 +9,6 @@ xgd_add_library(
 )
 xgd_generate_export_header(${PROJECT_NAME} ${PROJECT_NAME} ".h")
 xgd_link_libraries(${PROJECT_NAME}
-        PRIVATE
-        spdlog
-        PUBLIC
-        boost_header spdlog_stream)
+        PRIVATE spdlog
+        PUBLIC boost_rational spdlog_stream)
 xgd_link_qt(${PROJECT_NAME} PUBLIC Core Gui)
