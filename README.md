@@ -56,27 +56,27 @@ Qt Beginner's Guide
 
 ```bash
 # download mingw, msvc binary
-wget -r -np -nH http://mirrors.nju.edu.cn/qt/online/qtsdkrepository/windows_x86/desktop/qt6_652/
+wget -r -np -nH -e robots=off http://mirrors.nju.edu.cn/qt/online/qtsdkrepository/windows_x86/desktop/qt6_652/
 # extract all 7z files to a folder called "result"
-find . -name *.7z -exec 7z x {} -aos -o./result \;
+find . -name '*.7z' -exec 7z x {} -aos -o./result \;
 ```
 
 * for linux developer:
 
 ```bash
 # download gcc_64 binary
-wget -r -np -nH http://mirrors.nju.edu.cn/qt/online/qtsdkrepository/linux_x64/desktop/qt6_652/
+wget -r -np -nH -e robots=off http://mirrors.nju.edu.cn/qt/online/qtsdkrepository/linux_x64/desktop/qt6_652/
 # extract all 7z files to a folder called "result"
-find . -name *.7z -exec 7z x {} -aos -o./result \;
+find . -name '*.7z' -exec 7z x {} -aos -o./result \;
 ```
 
 * for macos developer:
 
 ```bash
 # download clang_64 binary
-wget -r -np -nH  http://mirrors.nju.edu.cn/qt/online/qtsdkrepository/mac_x64/desktop/qt6_652/
+wget -r -np -nH -e robots=off http://mirrors.nju.edu.cn/qt/online/qtsdkrepository/mac_x64/desktop/qt6_652/
 # extract all 7z files to a folder called "result"
-find . -name *.7z -exec 7z x {} -aos -o./result \;
+find . -name '*.7z' -exec 7z x {} -aos -o./result \;
 ```
 
 after downloading and extracting, the folder structure looks like:

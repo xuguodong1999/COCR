@@ -870,6 +870,7 @@ function(xgd_add_executable TARGET)
                     # RUNTIME_OUTPUT_DIRECTORY ${XGD_FRONTEND_DIR}/homepage/dist-qt/${TARGET}
                     # QT_WASM_PTHREAD_POOL_SIZE navigator.hardwareConcurrency
                     QT_WASM_PTHREAD_POOL_SIZE 4
+                    OUTPUT_NAME index
             )
         else ()
             # Qt${QT_VERSION_MAJOR}::Platform have "-sMODULARIZE=1;-sEXPORT_NAME=createQtAppInstance" linker flags
@@ -971,7 +972,9 @@ function(xgd_link_gtest TARGET)
             endif ()
         endif ()
         if (EMSCRIPTEN AND NODEJS_RUNTIME)
-            set(OUTPUT_JS ${RUNTIME_OUTPUT_DIRECTORY}/${TARGET}.js)
+            get_target_property(OUT_DIR ${TARGET} RUNTIME_OUTPUT_DIRECTORY)
+            get_target_property(OUT_NAME ${TARGET} OUTPUT_NAME)
+            set(OUTPUT_JS ${OUT_DIR}/${OUT_NAME}.js)
             if (CMAKE_HOST_WIN32)
                 set(OUTPUT_JS "file://${OUTPUT_JS}")
             endif ()
@@ -982,9 +985,11 @@ function(xgd_link_gtest TARGET)
                     "import('${OUTPUT_JS}').then(m => ('function' === typeof m?.default) ? m.default() : 0)")
 
         elseif (XGD_WINE64_RUNTIME AND MINGW AND (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")) # mxe
+            get_target_property(OUT_DIR ${TARGET} RUNTIME_OUTPUT_DIRECTORY)
+            set(OUTPUT_EXE ${OUT_DIR}/${TARGET}.exe)
             set(TEST_COMMAND
                     "${XGD_WINE64_RUNTIME}"
-                    "${RUNTIME_OUTPUT_DIRECTORY}/${TARGET}.exe")
+                    "${OUTPUT_EXE}")
         endif ()
         add_test(NAME ${TARGET} COMMAND ${TEST_COMMAND} WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
         if (NOT TARGET gtest_all)
@@ -1106,4 +1111,22 @@ function(xgd_link_cuda TARGET)
     foreach (COMPONENT ${param_PRIVATE})
         target_link_libraries(${TARGET} PRIVATE CUDA::${COMPONENT})
     endforeach ()
+endfunction()
+
+function(xgd_link_if_static TARGET LIBRARY)
+    get_target_property(LIBRARY_TYPE ${LIBRARY} TYPE)
+    if ("STATIC_LIBRARY" STREQUAL LIBRARY_TYPE)
+        target_link_libraries(${TARGET} PRIVATE ${LIBRARY})
+    endif ()
+endfunction()
+
+function(xgd_link_fluentui TARGET)
+    xgd_link_libraries(${TARGET} PRIVATE fluentui)
+    if (BUILD_SHARED_LIBS)
+        add_dependencies(${TARGET} fluentuiplugin)
+    else ()
+        xgd_link_libraries(${TARGET} PRIVATE fluentuiplugin)
+    endif ()
+    xgd_link_if_static(${TARGET} Qt6::qtgraphicaleffectsplugin)
+    xgd_link_if_static(${TARGET} Qt6::qtgraphicaleffectsprivate)
 endfunction()
